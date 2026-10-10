@@ -36,3 +36,13 @@ MSG_SCI_NOTATION_NOT_SUPPORTED = (
 MSG_NUMBER_TOO_LONG = (
     f"El número excede la longitud máxima permitida ({MAX_NUMBER_STRING_LENGTH} caracteres)."
 )
+
+# ---------------------------------------------------------------------------
+# Determinantes — límite de la expansión por cofactores.
+#
+# La expansión por cofactores es O(n!). Para n=8 son ~40k operaciones
+# (instantáneo); para n=12 son ~479M (inviable en un request interactivo).
+# Se corta en 8 y se sugiere LU más allá, siguiendo el mismo umbral que
+# INVERSE_LATEX_MAX_DIMENSION.
+# ---------------------------------------------------------------------------
+COFACTOR_MAX_DIMENSION = 8
