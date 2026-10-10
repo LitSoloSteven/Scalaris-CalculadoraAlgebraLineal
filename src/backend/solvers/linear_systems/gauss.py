@@ -32,12 +32,22 @@ class GaussSolver:
         directo de la matriz reducida vía `solve_reduction()`. Este modo
         lo usa MatrixInverseSolver ([A|I] → [I|A⁻¹]) y, en el futuro,
         resolver ecuaciones matriciales AX = B.
+    
+    Dos flags opt-in para features que necesitan más información de la eliminación que el resultado final:
+    
+          - capture_multipliers=False (default): cuando True, persiste los multiplicadores de la eliminación como lista de dicts {row, col, value} en `self.multipliers`. Cada multiplicador es exactamente L[row][col] para LU sin pivoteo. **Solo válido con pivot_strategy='none'** (con pivoteo parcial los multiplicadores requieren seguimiento de permutaciones, que es otra feature: PA = LU).
+    
+          - pivot_strategy='partial' (default): 'partial' hace pivoteo parcial clásico (comportamiento histórico). 'none' prohíbe intercambiar filas: si aparece un pivote cero, la columna se registra en `self.zero_pivots` y se salta. Necesario para LU sin pivoteo.    
+    
     """
 
     FULL_REDUCTION: bool = False
 
     def __init__(self, augmented_matrix: Matrix, eps: float = ZERO_EPSILON,
-             variable_names: list[str] | None = None, num_rhs: int = 1):
+             variable_names: list[str] | None = None, num_rhs: int = 1,
+             capture_multipliers: bool = False,
+             pivot_strategy: str = "partial",
+              normalize_pivots: bool = True):
         if not isinstance(num_rhs, int) or isinstance(num_rhs, bool) or num_rhs < 1:
             raise ValueError(
                 f"num_rhs debe ser un entero >= 1 (recibido {num_rhs!r})."
@@ -48,11 +58,28 @@ class GaussSolver:
                 f"matriz aumentada ({augmented_matrix.cols}); si no, no "
                 f"quedan columnas para las variables."
             )
+        if pivot_strategy not in ("partial", "none"):
+            raise ValueError(
+                f"pivot_strategy debe ser 'partial' o 'none' "
+                f"(recibido {pivot_strategy!r})."
+            )
+        if capture_multipliers and pivot_strategy != "none":
+            raise ValueError(
+                "capture_multipliers=True solo es válido con "
+                "pivot_strategy='none'. Con pivoteo parcial los "
+                "multiplicadores requieren seguimiento de permutaciones "
+                "(PA = LU), que es otra feature."
+            )
         self.matrix = augmented_matrix.clone()
         self.eps = eps
         self.variable_names = variable_names
         self.num_rhs = num_rhs
+        self.capture_multipliers = capture_multipliers
+        self.pivot_strategy = pivot_strategy
+        self.normalize_pivots = normalize_pivots
         self.steps = []
+        self.multipliers: list[dict] = []
+        self.zero_pivots: list[int] = []
 
     def _num_vars(self) -> int:
         """Cantidad de columnas que se tratan como variables.
@@ -107,6 +134,13 @@ class GaussSolver:
         factor = target_val / pivot_val
         new_row = [Fraction(tv) - factor * Fraction(pv) for tv, pv in zip(target_row, pivot_row)]
 
+        if self.capture_multipliers:
+            self.multipliers.append({
+                "row": target_idx,
+                "col": col_idx,
+                "value": factor,
+            })
+
         op_desc = f"Fila {target_idx + 1} = Fila {target_idx + 1} − ({format_fraction_str(factor)}) · Fila {pivot_idx + 1}"
 
         return new_row, op_desc
@@ -128,21 +162,33 @@ class GaussSolver:
             if pivot_row >= m:
                 break
 
-            # Pivoteo parcial: elegir el mayor valor absoluto en la columna.
-            max_row = pivot_row
-            max_val = abs(self.matrix.get(pivot_row, col))
-            for r in range(pivot_row + 1, m):
-                val = abs(self.matrix.get(r, col))
-                if val > max_val:
-                    max_val = val
-                    max_row = r
+            if self.pivot_strategy == "partial":
+                # Pivoteo parcial: elegir el mayor valor absoluto en la columna.
+                max_row = pivot_row
+                max_val = abs(self.matrix.get(pivot_row, col))
+                for r in range(pivot_row + 1, m):
+                    val = abs(self.matrix.get(r, col))
+                    if val > max_val:
+                        max_val = val
+                        max_row = r
 
-            if max_val < self.eps:
-                continue
+                if max_val < self.eps:
+                    continue
 
-            if max_row != pivot_row:
-                self.matrix.swap_rows(pivot_row, max_row)
-                self._log_step(f"Intercambio: Fila {pivot_row + 1} ↔ Fila {max_row + 1}", self.matrix)
+                if max_row != pivot_row:
+                    self.matrix.swap_rows(pivot_row, max_row)
+                    self._log_step(f"Intercambio: Fila {pivot_row + 1} ↔ Fila {max_row + 1}", self.matrix)
+            else:  # pivot_strategy == "none"
+                # Sin pivoteo: el pivote es el elemento en la posición actual
+                # de la diagonal. Si es cero, se registra en zero_pivots y se
+                # salta la columna sin avanzar pivot_row. Para LU sin pivoteo
+                # esto señala que A no admite factorización A = LU (se
+                # requiere PA = LU). Para Gauss puro con pivot_strategy='none'
+                # el comportamiento es equivalente al caso "columna toda cero"
+                # del pivoteo parcial.
+                if abs(self.matrix.get(pivot_row, col)) < self.eps:
+                    self.zero_pivots.append(col)
+                    continue
 
             # El texto del paso "Pivote seleccionado" difiere entre los métodos:
             # Gauss lo reporta con el valor, Gauss-Jordan sin él.
@@ -179,18 +225,21 @@ class GaussSolver:
         rank = pivot_row
 
         # Normalizar pivotes a 1. El prefijo del mensaje difiere entre métodos.
-        normalize_prefix = "Normalizar pivote a 1" if full_reduction else "Normalizar pivote"
-        for r, c in enumerate(pivot_cols):
-            pivot_val = self.matrix.get(r, c)
-            if abs(pivot_val) >= self.eps and abs(pivot_val - 1) > self.eps:
-                scale = Fraction(1) / Fraction(pivot_val)
-                row = self._get_row(r)
-                normalized_row = [elem * scale for elem in row]
-                self._set_row(r, normalized_row)
-                self._log_step(
-                    f"{normalize_prefix}: Fila {r + 1} = Fila {r + 1} / {format_fraction_str(pivot_val)}",
-                    self.matrix
-                )
+        # Con normalize_pivots=False se omite este paso: LU necesita U con
+        # los pivotes en su valor original, no en 1.
+        if self.normalize_pivots:
+            normalize_prefix = "Normalizar pivote a 1" if full_reduction else "Normalizar pivote"
+            for r, c in enumerate(pivot_cols):
+                pivot_val = self.matrix.get(r, c)
+                if abs(pivot_val) >= self.eps and abs(pivot_val - 1) > self.eps:
+                    scale = Fraction(1) / Fraction(pivot_val)
+                    row = self._get_row(r)
+                    normalized_row = [elem * scale for elem in row]
+                    self._set_row(r, normalized_row)
+                    self._log_step(
+                        f"{normalize_prefix}: Fila {r + 1} = Fila {r + 1} / {format_fraction_str(pivot_val)}",
+                        self.matrix
+                    )
 
         return rank, pivot_cols
 
