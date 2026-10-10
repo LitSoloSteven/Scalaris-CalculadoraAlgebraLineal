@@ -80,7 +80,7 @@ class GaussSolver:
         self.steps = []
         self.multipliers: list[dict] = []
         self.zero_pivots: list[int] = []
-
+        self.swap_count: int = 0
     def _num_vars(self) -> int:
         """Cantidad de columnas que se tratan como variables.
 
@@ -177,6 +177,7 @@ class GaussSolver:
 
                 if max_row != pivot_row:
                     self.matrix.swap_rows(pivot_row, max_row)
+                    self.swap_count += 1 
                     self._log_step(f"Intercambio: Fila {pivot_row + 1} ↔ Fila {max_row + 1}", self.matrix)
             else:  # pivot_strategy == "none"
                 # Sin pivoteo: el pivote es el elemento en la posición actual

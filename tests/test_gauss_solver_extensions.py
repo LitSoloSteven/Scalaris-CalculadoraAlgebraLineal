@@ -375,3 +375,66 @@ class TestGaussJordanInheritance:
         result = gs.solve_reduction()
         assert result["reduced_matrix"].get(0, 0) == Fraction(2)
         assert result["reduced_matrix"].get(1, 1) == Fraction(1)
+    
+    # =========================================================================
+# GRUPO 7 — Captura de swaps (necesaria para determinante por LU)
+# =========================================================================
+
+class TestSwapCount:
+
+    def test_swap_count_default_is_zero(self):
+        gs = GaussSolver(Matrix(2, 3, [[1, 2, 3], [4, 5, 6]]))
+        assert gs.swap_count == 0
+
+    def test_swap_count_zero_when_no_swap_needed(self):
+        """Con pivoteo parcial, si no hace falta swap, sigue en 0."""
+        gs = GaussSolver(
+            Matrix(2, 3, [["4", "1", "0"], ["2", "3", "0"]]),
+            pivot_strategy="partial",
+        )
+        gs.solve_reduction()
+        assert gs.swap_count == 0
+
+    def test_swap_count_increments_on_pivot_swap(self):
+        """A = [[0, 1], [1, 0]]: pivoteo parcial hace 1 swap."""
+        gs = GaussSolver(
+            Matrix(2, 3, [["0", "1", "0"], ["1", "0", "0"]]),
+            pivot_strategy="partial",
+        )
+        gs.solve_reduction()
+        assert gs.swap_count == 1
+
+    def test_swap_count_zero_with_pivot_strategy_none(self):
+        """Con pivot_strategy='none', nunca hay swaps."""
+        gs = GaussSolver(
+            Matrix(2, 3, [["0", "1", "0"], ["1", "0", "0"]]),
+            pivot_strategy="none",
+        )
+        gs.solve_reduction()
+        assert gs.swap_count == 0
+
+    def test_swap_count_matches_swap_steps(self):
+        """El contador coincide con la cantidad de steps 'Intercambio'."""
+        gs = GaussSolver(
+            Matrix(3, 4, [
+                ["0", "1", "1", "0"],
+                ["0", "2", "3", "0"],
+                ["1", "1", "1", "0"],
+            ]),
+            pivot_strategy="partial",
+        )
+        gs.solve_reduction()
+        swap_steps = [
+            s for s in gs.steps
+            if s["description"].startswith("Intercambio")
+        ]
+        assert gs.swap_count == len(swap_steps)
+
+    def test_swap_count_on_gauss_jordan(self):
+        """Gauss-Jordan hereda swap_count."""
+        gj = GaussJordanSolver(
+            Matrix(2, 3, [["0", "1", "0"], ["1", "0", "0"]]),
+            pivot_strategy="partial",
+        )
+        gj.solve_reduction()
+        assert gj.swap_count == 1
