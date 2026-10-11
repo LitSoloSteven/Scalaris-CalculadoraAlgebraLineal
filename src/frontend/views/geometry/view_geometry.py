@@ -332,8 +332,8 @@ class GeometryUI(GeometryControlsMixin, GeometryScenesMixin):
                     p.schedule_context_refresh()
                 return
 
-            # Clear markInvalid
-            self._js('scalarisGeo.markInvalid(null);')
+            # Limpiar celdas invalidas
+            self._js('if(window.scalaris && window.scalaris.geometria) window.scalaris.geometria.marcarInvalido(null);')
 
             # Reutilizar figura si aplica
             new_fig_key = (self.scene, result.get("n"))
@@ -345,7 +345,7 @@ class GeometryUI(GeometryControlsMixin, GeometryScenesMixin):
                     if self.scene == 'vectores' and result.get("frames"):
                         frames_json = json.dumps(result["frames"])
                         wrap_id = f"geo-fig-{id(self)}"
-                        self._js(f'scalarisGeo.register("{wrap_id}", {frames_json});')
+                        self._js(f'if(window.scalaris && window.scalaris.geometria) window.scalaris.geometria.registrar("{wrap_id}", {frames_json});')
                     # En el camino de reutilización restaura la opacidad atenuada (.geo-figure vuelve a opacity 1) al terminar
                     self._js("""
                         var c = document.querySelector('.geo-figure');
@@ -488,10 +488,10 @@ class GeometryUI(GeometryControlsMixin, GeometryScenesMixin):
                                 ui.label(message).classes('font-bold')
 
                             if error_cell:
-                                # Mark the cell
+                                # Marcar celda con error
                                 selector = self._cell_selector(error_cell)
                                 if selector:
-                                    self._js(f'scalarisGeo.markInvalid({json.dumps(selector)});')
+                                    self._js(f'if(window.scalaris && window.scalaris.geometria) window.scalaris.geometria.marcarInvalido({json.dumps(selector)});')
                                     # "Go to cell" button
                                     ui.button('Ir a la celda', icon='gps_fixed', color=None,
                                               on_click=lambda s=selector: self._js(

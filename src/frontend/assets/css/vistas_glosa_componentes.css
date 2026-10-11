@@ -1,0 +1,282 @@
+/* Chips de sugerencias, botón de explicación y contexto de Glosa */
+.glosa-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    min-width: 0;
+    margin-top: var(--space-2);
+    margin-bottom: var(--space-2);
+}
+
+.glosa-chips-inline {
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-3);
+}
+
+.glosa-chip {
+    -webkit-appearance: none;
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 44px;
+    min-width: 0;
+    max-width: 100%;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: var(--fs-small);
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: var(--radius-pill);
+    background: var(--bg-elevated);
+    color: var(--text-main);
+    border: 1px solid var(--border-input);
+    box-shadow: var(--elev-1);
+    cursor: pointer;
+    transition: transform var(--dur-fast) var(--ease-std);
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-align: left;
+    line-height: 1.3;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .glosa-chip:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--elev-2);
+        border-color: var(--accent);
+        color: var(--accent);
+    }
+}
+
+.glosa-chip:active {
+    transform: scale(0.97);
+    box-shadow: var(--elev-inset);
+    transition-duration: 0ms !important;
+}
+
+.glosa-chip[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.glosa-chip-inline {
+    background: var(--bg-panel);
+}
+
+.glosa-followups {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    margin-top: var(--space-2);
+}
+
+.glosa-followup {
+    -webkit-appearance: none;
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    min-width: 0;
+    max-width: 100%;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: var(--fs-small);
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: var(--radius-btn);
+    background: transparent;
+    color: var(--accent);
+    border: 1px dashed color-mix(in srgb, var(--accent) 40%, transparent);
+    cursor: pointer;
+    overflow-wrap: anywhere;
+    text-align: left;
+    transition: transform var(--dur-fast) var(--ease-std);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .glosa-followup:hover {
+        background: color-mix(in srgb, var(--accent) 8%, transparent);
+        border-color: var(--accent);
+    }
+}
+
+.glosa-followup:active {
+    transform: scale(0.97);
+    background: color-mix(in srgb, var(--accent) 15%, transparent);
+    transition-duration: 0ms !important;
+}
+
+.glosa-followup[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .glosa-chip:hover,
+    .glosa-chip:active,
+    .glosa-followup:active {
+        transform: none;
+    }
+}
+
+.glosa-explain-btn {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    flex-shrink: 0;
+    padding: 0 !important;
+    color: var(--text-sec) !important;
+    transition: transform var(--dur-fast) var(--ease-std);
+    position: relative;
+    border-radius: 50% !important;
+}
+
+.glosa-explain-btn::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: var(--elev-1);
+    opacity: 0;
+    transition: opacity var(--dur-fast) var(--ease-std);
+    pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .glosa-explain-btn:hover {
+        color: var(--accent) !important;
+    }
+
+    .glosa-explain-btn:hover::after {
+        opacity: 1;
+    }
+}
+
+.glosa-explain-btn:active {
+    transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .glosa-explain-btn:active {
+        transform: none;
+    }
+}
+
+.glosa-explain-btn.is-loading {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.glosa-explain-focus {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-1) var(--space-2);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-input);
+    border-radius: var(--radius-badge);
+    box-shadow: var(--elev-1);
+    max-width: 100%;
+    margin-bottom: var(--space-2);
+}
+
+.glosa-explain-focus-icon {
+    color: var(--accent) !important;
+    font-size: 16px !important;
+    flex-shrink: 0;
+}
+
+.glosa-explain-focus-text {
+    color: var(--text-main) !important;
+    font-size: var(--fs-small);
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+}
+
+.glosa-explain-focus-close {
+    color: var(--text-sec) !important;
+    flex-shrink: 0;
+    width: 24px !important;
+    height: 24px !important;
+    min-height: 24px !important;
+    padding: 0 !important;
+}
+
+.glosa-ctx.desactualizado {
+    border-color: var(--warning) !important;
+    background: var(--badge-warn-bg) !important;
+    color: var(--badge-warn-text) !important;
+}
+
+.glosa-ctx-label {
+    font-size: 0.8rem;
+    color: var(--text-main);
+}
+
+.glosa-chip:focus-visible,
+.glosa-followup:focus-visible,
+.glosa-explain-btn:focus-visible {
+    outline: 2px solid var(--focus-ring) !important;
+    outline-offset: 2px;
+}
+
+.glosa-pre {
+    font-family: monospace;
+    overflow-x: auto;
+    background: transparent;
+    padding: var(--space-2);
+    border-radius: var(--radius-input);
+    margin: var(--space-2) 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.glosa-typing-indicator {
+    display: flex;
+    gap: 2px;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+@keyframes glosaTypingPulse {
+    0%,
+    100% {
+        opacity: 0.3;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+.glosa-typing-indicator span {
+    animation: glosaTypingPulse 1.4s infinite linear both;
+}
+
+.glosa-typing-indicator span:nth-child(1) {
+    animation-delay: -0.32s;
+}
+
+.glosa-typing-indicator span:nth-child(2) {
+    animation-delay: -0.16s;
+}
+
+.grid-scroll {
+    contain: content;
+}
+
+.ai-input-wrapper .q-field__control {
+    height: auto !important;
+    min-height: 48px;
+}
+
+@media (max-width: 639px) {
+    .ai-panel-card {
+        inset: 8px !important;
+        width: auto !important;
+        height: auto !important;
+    }
+}
+

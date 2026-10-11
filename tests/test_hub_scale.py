@@ -9,10 +9,13 @@ VIEW_HUB_PATH = Path("src/frontend/views/hub/view_hub.py")
 
 
 def hub_css_block() -> str:
-    content = THEME_CSS_PATH.read_text(encoding="utf-8")
-    start = content.index("/* === HUB: Matriz de áreas y popovers === */")
-    end = content.index("/* === F4: Glosa === */", start)
-    return content[start:end]
+    from tests.comun import RAIZ
+    archivos = [
+        RAIZ / "src" / "frontend" / "assets" / "css" / "vistas_hub_matriz.css",
+        RAIZ / "src" / "frontend" / "assets" / "css" / "vistas_hub_popovers.css",
+        RAIZ / "src" / "frontend" / "assets" / "css" / "vistas_hub_adaptable.css",
+    ]
+    return "\n".join(p.read_text(encoding="utf-8") for p in archivos)
 
 
 def rule_body(css: str, selector: str) -> str:
@@ -32,8 +35,9 @@ def clamp_min_rem(css: str, selector: str) -> Decimal:
 
 
 def test_hub_scale_and_static_safety_contract():
+    from tests.comun import leer_css_completo
     view = VIEW_HUB_PATH.read_text(encoding="utf-8")
-    full_css = THEME_CSS_PATH.read_text(encoding="utf-8")
+    full_css = leer_css_completo()
     css = hub_css_block()
 
     assert "hub-theme" not in view

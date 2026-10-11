@@ -41,23 +41,21 @@ def test_no_backdrop_filter_or_blur_in_frontend():
 
 
 def test_no_literal_colors_in_theme_css_after_f2():
-    """F3(iii): Ningún color literal (#hex, rgb(, rgba() en theme.css desde '/* === F2:'."""
-    with open(THEME_CSS_PATH, 'r', encoding='utf-8') as fp:
-        css_content = fp.read()
-
-    f2_pos = css_content.find('/* === F2:')
-    assert f2_pos != -1, "Marcador '/* === F2:' no encontrado en theme.css"
-
-    css_tail = css_content[f2_pos:]
+    """F3(iii): Ningún color literal (#hex, rgb(, rgba() fuera de tokens.css."""
+    from tests.comun import ARCHIVOS_CSS
     color_re = re.compile(r'(#[0-9a-fA-F]{3,8}\b|rgba?\([^)]+\))')
     violations = []
-    for i, line in enumerate(css_tail.splitlines(), 1):
-        clean = line.split('/*')[0].strip()
-        m = color_re.findall(clean)
-        if m:
-            violations.append(f"Línea {i}: {clean} (colores: {m})")
+    for archivo in ARCHIVOS_CSS:
+        if archivo.name == "tokens.css":
+            continue
+        lineas = archivo.read_text(encoding="utf-8").splitlines()
+        for i, line in enumerate(lineas, 1):
+            clean = line.split('/*')[0].strip()
+            m = color_re.findall(clean)
+            if m:
+                violations.append(f"{archivo.name}:{i} -> {clean} (colores: {m})")
 
-    assert not violations, f"Colores literales encontrados tras F2:\n" + "\n".join(violations)
+    assert not violations, f"Colores literales encontrados fuera de tokens.css:\n" + "\n".join(violations)
 
 
 def test_no_unapproved_numeric_zindex_in_frontend():

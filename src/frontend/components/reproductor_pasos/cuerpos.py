@@ -24,4 +24,4 @@ def render_latex(latex: str) -> None:
     ui.html(
         f'<div id="{identificador}" class="math-scroll-container math-label">$$ {contenido} $$</div>'
     )
-    ui.run_javascript(f"typesetMathWhenReady([{json.dumps(identificador)}]);")
+    ui.run_javascript(f"if(window.scalaris && window.scalaris.renderizarMathJax) window.scalaris.renderizarMathJax([{json.dumps(identificador)}]);")

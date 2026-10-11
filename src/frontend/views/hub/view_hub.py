@@ -49,7 +49,7 @@ class HubUI:
         try:
             await client.connected()
             res = await client.run_javascript(
-                "return window.scalarisReadRecent ? window.scalarisReadRecent() : {ok: false, ids: []};",
+                "return (window.scalaris && window.scalaris.recientes) ? window.scalaris.recientes.leer() : {ok: false, ids: []};",
                 timeout=3.0,
             )
             if isinstance(res, dict) and res.get('ok'):

@@ -79,7 +79,7 @@ class GeometryScenesMixin:
                     # Register frames for vectors scene
                     if scene == 'vectores' and result.get("frames"):
                         frames_json = json.dumps(result["frames"])
-                        self._js(f'scalarisGeo.register("{wrap_id}", {frames_json});')
+                        self._js(f'if(window.scalaris && window.scalaris.geometria) window.scalaris.geometria.registrar("{wrap_id}", {frames_json});')
             return True
         except ImportError:
             if self.figure_container:
@@ -138,7 +138,7 @@ class GeometryScenesMixin:
                     ui.html(f'<div id="{eq_id}" class="math-label text-sm mb-1">$$ {latex} $$</div>')
 
             if eq_ids:
-                self._js(f"typesetMathWhenReady({json.dumps(eq_ids)});")
+                self._js(f"if(window.scalaris && window.scalaris.renderizarMathJax) window.scalaris.renderizarMathJax({json.dumps(eq_ids)});")
 
         # Solution status
         # Orden de ramas: pending primero (pending_param con set is None)
@@ -156,7 +156,7 @@ class GeometryScenesMixin:
                     eq_id = f"geo-sol-{id(sol_set)}"
                     with ui.element('div').classes('math-scroll-container mt-2 mb-1'):
                         ui.html(f'<div id="{eq_id}" class="math-label">$$ \\mathbf{{x}} = {p_latex} $$</div>')
-                    self._js(f"typesetMathWhenReady(['{eq_id}']);")
+                    self._js(f"if(window.scalaris && window.scalaris.renderizarMathJax) window.scalaris.renderizarMathJax(['{eq_id}']);")
 
         elif sol_status == "NO_SOLUTION":
             msg = "El sistema no tiene solución"
@@ -183,7 +183,7 @@ class GeometryScenesMixin:
                         eq_id = f"geo-sol-{id(sol_set)}"
                         with ui.element('div').classes('math-scroll-container mt-2 mb-1'):
                             ui.html(f'<div id="{eq_id}" class="math-label">$$ {latex} $$</div>')
-                        self._js(f"typesetMathWhenReady(['{eq_id}']);")
+                        self._js(f"if(window.scalaris && window.scalaris.renderizarMathJax) window.scalaris.renderizarMathJax(['{eq_id}']);")
 
                     if sol_set.get("free_vars"):
                         vars_str = ", ".join(sol_set["free_vars"])
@@ -201,7 +201,7 @@ class GeometryScenesMixin:
             v_str = ", ".join(v_exact)
             summary_id = f"geo-vec-summary-{id(self)}"
             ui.html(f'<div id="{summary_id}" class="math-label text-sm">$$ \\mathbf{{u}} = ({u_str}), \\quad \\mathbf{{v}} = ({v_str}) $$</div>')
-            self._js(f'typesetMathWhenReady(["{summary_id}"]);')
+            self._js(f'if(window.scalaris && window.scalaris.renderizarMathJax) window.scalaris.renderizarMathJax(["{summary_id}"]);')
 
     def _render_combination_summary(self, result: dict):
         """Render summary for combination scene."""
@@ -220,7 +220,7 @@ class GeometryScenesMixin:
             summary_id = f"geo-comb-summary-{id(self)}"
             vecs_tex = ", \\quad ".join(parts)
             ui.html(f'<div id="{summary_id}" class="math-label text-sm">$$ \\mathbf{{b}} = ({b_str}), \\quad {vecs_tex} $$</div>')
-            self._js(f'typesetMathWhenReady(["{summary_id}"]);')
+            self._js(f'if(window.scalaris && window.scalaris.renderizarMathJax) window.scalaris.renderizarMathJax(["{summary_id}"]);')
 
         if sol_status == "UNIQUE":
             chain = result.get("chain", [])

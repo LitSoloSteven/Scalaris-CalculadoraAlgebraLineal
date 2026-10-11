@@ -48,10 +48,9 @@ def test_glosa_dock_py_contract():
 
 
 def test_theme_css_dock_and_layout_contract():
-    """Verifica contratos en theme.css sobre FAB, transiciones del dock y tokens de layout."""
-    css_path = Path("src/frontend/assets/css/theme.css")
-    assert css_path.exists()
-    content = css_path.read_text(encoding="utf-8")
+    """Verifica contratos en hojas CSS sobre FAB, transiciones del dock y tokens de layout."""
+    from tests.comun import leer_css_completo
+    content = leer_css_completo()
 
     # html[data-glosa="open"] .glosa-fab incluye visibility: hidden
     assert 'html[data-glosa="open"] .glosa-fab' in content

@@ -85,14 +85,29 @@ _HEAD_HTML = f"""
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Estilos de tema y diseño visual -->
-    <link rel="stylesheet" href="/assets/css/theme.css">
+    <!-- Estilos modulares en orden estricto de cascada -->
+    <link rel="stylesheet" href="/assets/css/tokens.css">
+    <link rel="stylesheet" href="/assets/css/base.css">
+    <link rel="stylesheet" href="/assets/css/layout.css">
+    <link rel="stylesheet" href="/assets/css/componentes_entradas.css">
+    <link rel="stylesheet" href="/assets/css/componentes_controles.css">
+    <link rel="stylesheet" href="/assets/css/vistas_navegacion.css">
+    <link rel="stylesheet" href="/assets/css/vistas_hub_matriz.css">
+    <link rel="stylesheet" href="/assets/css/vistas_hub_popovers.css">
+    <link rel="stylesheet" href="/assets/css/vistas_hub_adaptable.css">
+    <link rel="stylesheet" href="/assets/css/vistas_glosa_dock.css">
+    <link rel="stylesheet" href="/assets/css/vistas_glosa_componentes.css">
+    <link rel="stylesheet" href="/assets/css/vistas_inversa.css">
+    <link rel="stylesheet" href="/assets/css/movimiento.css">
     <link rel="stylesheet" href="/assets/css/reproductor_pasos.css">
 
-    <!-- Scripts de interactividad y tema -->
+    <!-- Scripts de interactividad, movimiento y utilidades -->
     <script src="/assets/js/theme.js"></script>
     <script src="/assets/js/app.js"></script>
+    <script src="/assets/js/cuadricula_compartida.js"></script>
+    <script src="/assets/js/recoleccion_basura.js"></script>
     <script src="/assets/js/reproductor_pasos.js"></script>
+    <script src="/assets/js/hub_recientes.js"></script>
     <script src="/assets/js/hub.js"></script>
 """
 

@@ -32,7 +32,8 @@ def get_used_semantic_classes() -> set[str]:
 
 
 def get_css_defined_classes() -> set[str]:
-    content = CSS_PATH.read_text(encoding="utf-8")
+    from tests.comun import leer_css_completo
+    content = leer_css_completo()
     # Buscar todas las clases declaradas en selectores CSS: .clase
     return set(re.findall(r'\.([a-zA-Z0-9_-]+)', content))
 

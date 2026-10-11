@@ -1,33 +1,33 @@
 (function() {
-    window.scalarisLayout = {
-        emit: function(reason) {
+    'use strict';
+    window.scalaris = window.scalaris || {};
+    window.scalaris.diseno = {
+        emitir: function(motivo) {
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
                     setTimeout(() => {
-                        document.dispatchEvent(new CustomEvent('scalaris:layout', { detail: { reason } }));
+                        document.dispatchEvent(new CustomEvent('scalaris:layout', { detail: { motivo } }));
                     }, 120);
                 });
             });
         }
     };
 
-    // Plotly sync
-    let resizeTimeout;
-    function resizePlots() {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-            const plots = document.querySelectorAll('.js-plotly-plot');
-            plots.forEach(plot => {
-                if (plot.isConnected && window.Plotly) {
+    let temporizadorRedimension;
+    function redimensionarGraficos() {
+        clearTimeout(temporizadorRedimension);
+        temporizadorRedimension = setTimeout(() => {
+            const graficos = document.querySelectorAll('.js-plotly-plot');
+            graficos.forEach(grafico => {
+                if (grafico.isConnected && window.Plotly) {
                     try {
-                        const isGL3D = plot._fullLayout && plot._fullLayout._has && plot._fullLayout._has('gl3d');
-                        if (isGL3D) {
-                            // Delay slightly more for GL3D to ensure transition finished
+                        const es3D = grafico._fullLayout && grafico._fullLayout._has && grafico._fullLayout._has('gl3d');
+                        if (es3D) {
                             setTimeout(() => {
-                                if (plot.isConnected) Plotly.Plots.resize(plot);
+                                if (grafico.isConnected) Plotly.Plots.resize(grafico);
                             }, 250);
                         } else {
-                            Plotly.Plots.resize(plot);
+                            Plotly.Plots.resize(grafico);
                         }
                     } catch (e) {}
                 }
@@ -35,44 +35,43 @@
         }, 120);
     }
 
-    document.addEventListener('scalaris:layout', resizePlots);
-    document.addEventListener('scalaris:glosa', resizePlots);
+    document.addEventListener('scalaris:layout', redimensionarGraficos);
+    document.addEventListener('scalaris:glosa', redimensionarGraficos);
 
-    // ResizeObserver per plot
-    const ro = new ResizeObserver((entries) => {
-        let shouldResize = false;
-        for (let entry of entries) {
-            if (entry.target.classList.contains('js-plotly-plot')) {
-                shouldResize = true;
+    const observadorRedimension = new ResizeObserver((entradas) => {
+        let debeRedimensionar = false;
+        for (let entrada of entradas) {
+            if (entrada.target.classList.contains('js-plotly-plot')) {
+                debeRedimensionar = true;
                 break;
             }
         }
-        if (shouldResize) resizePlots();
+        if (debeRedimensionar) redimensionarGraficos();
     });
 
-    let scanPending = false;
-    function scanPlots() {
-        document.querySelectorAll('.js-plotly-plot').forEach(plot => {
-            ro.observe(plot);
+    let escaneoPendiente = false;
+    function escanearGraficos() {
+        document.querySelectorAll('.js-plotly-plot').forEach(grafico => {
+            observadorRedimension.observe(grafico);
         });
-        scanPending = false;
+        escaneoPendiente = false;
     }
 
-    const mo = new MutationObserver((mutations) => {
-        let hasNewNodes = false;
-        for (let mut of mutations) {
+    const observadorMutaciones = new MutationObserver((mutaciones) => {
+        let nodosNuevos = false;
+        for (let mut of mutaciones) {
             if (mut.addedNodes.length > 0) {
-                hasNewNodes = true;
+                nodosNuevos = true;
                 break;
             }
         }
-        if (hasNewNodes && !scanPending) {
-            scanPending = true;
-            requestAnimationFrame(scanPlots);
+        if (nodosNuevos && !escaneoPendiente) {
+            escaneoPendiente = true;
+            requestAnimationFrame(escanearGraficos);
         }
     });
 
-    mo.observe(document.documentElement, { childList: true, subtree: true });
-    document.addEventListener('DOMContentLoaded', scanPlots);
-    scanPlots(); // Initial scan
+    observadorMutaciones.observe(document.documentElement, { childList: true, subtree: true });
+    document.addEventListener('DOMContentLoaded', escanearGraficos);
+    escanearGraficos();
 })();

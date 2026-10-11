@@ -89,7 +89,7 @@ class InverseOpsResultsMixin:
                     )
                     typeset_ids.append('preview-aug')
 
-                ui.run_javascript(f"typesetMathWhenReady({json.dumps(typeset_ids)});")
+                ui.run_javascript(f"if(window.scalaris && window.scalaris.renderizarMathJax) window.scalaris.renderizarMathJax({json.dumps(typeset_ids)});")
         except Exception as e:
             if not self.preview_container or self.preview_container.is_deleted:
                 return
@@ -147,7 +147,7 @@ class InverseOpsResultsMixin:
         """Ejecuta la animación de recolección de basura y limpia la matriz."""
         dialog.close()
         try:
-            await ui.run_javascript('return window.animateGarbageCollection()', timeout=2.0)
+            await ui.run_javascript('return window.scalaris && window.scalaris.animarRecoleccionBasura ? window.scalaris.animarRecoleccionBasura() : Promise.resolve()', timeout=2.0)
         except Exception:
             pass
         self.limpiar_todo()
@@ -220,8 +220,8 @@ class InverseOpsResultsMixin:
                     result.get("determinant_str"),
                 )
 
-            ui.run_javascript('typesetMathWhenReady();')
-            ui.run_javascript("if(window.replayResultAnimation) replayResultAnimation('resultados-inv');")
+            ui.run_javascript('if(window.scalaris && window.scalaris.renderizarMathJax) window.scalaris.renderizarMathJax();')
+            ui.run_javascript("if(window.scalaris && window.scalaris.reproducirAnimacionResultado) window.scalaris.reproducirAnimacionResultado('resultados-inv');")
             ui.run_javascript(
                 "document.getElementById('resultados-inv')?.scrollIntoView({behavior: 'smooth', block: 'start'});"
             )

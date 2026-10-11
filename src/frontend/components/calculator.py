@@ -19,77 +19,14 @@ class CalculatorPanel:
         ]
 
     def inject_scripts(self):
-        ui.add_head_html('''
-            <script>
-            window.lastFocusedInput = null;
-            document.addEventListener('focusin', (e) => {
-                if (e.target && e.target.tagName === 'INPUT' && e.target.closest('.matrix-input')) {
-                    window.lastFocusedInput = e.target;
-                }
-            });
-            
-            function insertSymbol(sym) {
-                if (!sym) return;
-                let active = window.lastFocusedInput;
-                if (!active || !active.isConnected) {
-                    active = document.querySelector('.matrix-input input');
-                    if (!active) return;
-                    active.focus();
-                }
-                if (active && active.tagName === 'INPUT') {
-                    if (sym === 'C') {
-                        active.value = '';
-                    } else if (sym === '±') {
-                        let currentVal = active.value;
-                        if (currentVal.startsWith('-')) {
-                            active.value = currentVal.substring(1);
-                        } else if (currentVal.startsWith('+')) {
-                            active.value = '-' + currentVal.substring(1);
-                        } else if (currentVal.length > 0) {
-                            active.value = '-' + currentVal;
-                        }
-                        active.setSelectionRange(active.value.length, active.value.length);
-                    } else if (sym === '⌫') {
-                        const start = active.selectionStart;
-                        const end = active.selectionEnd;
-                        const currentVal = active.value;
-                        if (start === end && start > 0) {
-                            active.value = currentVal.substring(0, start - 1) + currentVal.substring(end);
-                            active.setSelectionRange(start - 1, start - 1);
-                        } else if (start !== end) {
-                            active.value = currentVal.substring(0, start) + currentVal.substring(end);
-                            active.setSelectionRange(start, start);
-                        }
-                    } else {
-                        const start = active.selectionStart;
-                        const end = active.selectionEnd;
-                        const currentVal = active.value;
-                        active.value = currentVal.substring(0, start) + sym + currentVal.substring(end);
-                        active.setSelectionRange(start + sym.length, start + sym.length);
-                    }
-                    
-                    // Disparar eventos para que NiceGUI y Quasar detecten el cambio
-                    active.dispatchEvent(new Event('input', { bubbles: true }));
-                    active.dispatchEvent(new Event('change', { bubbles: true }));
-                    active.focus();
-                } else {
-                    // Si no hay input activo, intentar buscar el primer input disponible
-                    const inputs = document.querySelectorAll('.matrix-input input');
-                    if (inputs.length > 0) {
-                        inputs[0].focus();
-                        insertSymbol(sym);
-                    }
-                }
-            }
-            </script>
-        ''')
+        ui.add_head_html('<script src="/assets/js/calculadora.js" defer></script>')
 
     def _keypad_matriz(self):
         with ui.grid(columns=4).classes('w-full gap-4'):
             for sym in self.symbols_matrix:
                 if sym:
                     classes = 'btn-neo-calc w-full h-14 p-0 text-xl font-bold ' + ('text-main' if sym != 'C' else '')
-                    btn = ui.button(sym, on_click=lambda s=sym: ui.run_javascript(f"insertSymbol('{s}')"), color=None).classes(classes).props('ripple=false flat')
+                    btn = ui.button(sym, on_click=lambda s=sym: ui.run_javascript(f"if(window.scalaris && window.scalaris.calculadora) window.scalaris.calculadora.insertarSimbolo('{s}')"), color=None).classes(classes).props('ripple=false flat')
                     if sym == 'C': btn.style('color: var(--error) !important')
                 else:
                     ui.label('').classes('w-full h-14') # Espacio en blanco
@@ -99,7 +36,7 @@ class CalculatorPanel:
             for sym in self.symbols_equations:
                 if sym:
                     classes = 'btn-neo-calc w-full h-12 p-0 text-lg font-bold ' + ('text-main' if sym != 'C' else '')
-                    btn = ui.button(sym, on_click=lambda s=sym: ui.run_javascript(f"insertSymbol('{s}')"), color=None).classes(classes).props('ripple=false flat')
+                    btn = ui.button(sym, on_click=lambda s=sym: ui.run_javascript(f"if(window.scalaris && window.scalaris.calculadora) window.scalaris.calculadora.insertarSimbolo('{s}')"), color=None).classes(classes).props('ripple=false flat')
                     if sym == 'C': btn.style('color: var(--error) !important')
                 else:
                     ui.label('').classes('w-full h-12')

@@ -84,7 +84,7 @@ def create_navbar(active_ui=None, active_route='/', active_key=None):
         active_tool = tool_by_route(active_route)
         if active_tool is not None:
             ui.add_body_html(
-                '<script>try { window.scalarisRecordVisit && window.scalarisRecordVisit('
+                '<script>try { window.scalaris && window.scalaris.recientes && window.scalaris.recientes.registrar('
                 + json.dumps(active_tool.id)
                 + '); } catch (_) {}</script>'
             )

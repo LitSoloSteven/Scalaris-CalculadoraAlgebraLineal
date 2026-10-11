@@ -1,40 +1,43 @@
-/** Scalaris — SquareMatrixPanel: animaciones de redimensionado y utilidades de la vista Matriz Inversa */
-window.animateSquareResize = function (matrixId, idx, mode) {
-  return new Promise(resolve => {
-    if (window.scalarisMotionOK ? !window.scalarisMotionOK() : matchMedia('(prefers-reduced-motion: reduce)').matches) { resolve(); return; }
-    const sel = `input[data-matrix-id="${matrixId}"][data-matrix-row="${idx}"], input[data-matrix-id="${matrixId}"][data-matrix-col="${idx}"]`;
-    const frames = mode === 'remove'
-      ? [{ opacity: 1, transform: 'scale(1)' }, { opacity: 0, transform: 'scale(0.85) translateY(-8px)' }]
-      : [{ opacity: 0, transform: 'scale(0.85) translateY(8px)' }, { opacity: 1, transform: 'scale(1)' }];
-    const inputs = document.querySelectorAll(sel);
-    const step = Math.min(15, 120 / Math.max(inputs.length, 1)); // stagger con delay+duración <= 250 ms
-    const anims = [];
-    inputs.forEach((input, i) => {
-      const ctrl = input.closest('.q-field__control');
-      if (ctrl) anims.push(ctrl.animate(frames, { duration: 120, delay: i * step, easing: 'cubic-bezier(0.32, 0.72, 0, 1)', fill: 'forwards' }).finished);
+/**
+ * Scalaris - Animaciones de redimensionado y utilidades para matrices cuadradas
+ */
+(function () {
+  'use strict';
+
+  window.scalaris = window.scalaris || {};
+
+  function animateSquareResize(matrixId, idx, mode) {
+    return new Promise(function (resolve) {
+      var permitido = window.scalaris.cuadricula && window.scalaris.cuadricula.movimientoActivo ?
+        window.scalaris.cuadricula.movimientoActivo() : true;
+      if (!permitido) {
+        resolve();
+        return;
+      }
+      var sel = 'input[data-matrix-id="' + matrixId + '"][data-matrix-row="' + idx + '"], ' +
+        'input[data-matrix-id="' + matrixId + '"][data-matrix-col="' + idx + '"]';
+      var frames = mode === 'remove'
+        ? [{ opacity: 1, transform: 'scale(1)' }, { opacity: 0, transform: 'scale(0.95) translateY(-4px)' }]
+        : [{ opacity: 0, transform: 'scale(0.95) translateY(4px)' }, { opacity: 1, transform: 'scale(1)' }];
+      var inputs = document.querySelectorAll(sel);
+      var dur = mode === 'remove' ? 140 : 180;
+      var step = Math.min(15, 120 / Math.max(inputs.length, 1));
+      var anims = [];
+      inputs.forEach(function (input, i) {
+        var ctrl = input.closest('.q-field__control');
+        if (ctrl) {
+          anims.push(ctrl.animate(frames, {
+            duration: dur,
+            delay: i * step,
+            easing: 'cubic-bezier(0.32, 0.72, 0, 1)',
+            fill: 'forwards'
+          }).finished);
+        }
+      });
+      Promise.all(anims).then(resolve).catch(resolve);
     });
-    Promise.all(anims).then(resolve).catch(resolve);
-  });
-};
-
-window.shakeMatrixCell = function (matrixId, r, c) {
-  const input = document.querySelector(`input[data-matrix-id="${matrixId}"][data-matrix-row="${r}"][data-matrix-col="${c}"]`);
-  if (!input) return;
-  input.scrollIntoView({ block: 'center', inline: 'center', behavior: 'smooth' });
-  input.focus();
-  const wrap = input.closest('.matrix-input');
-  const ctrl = input.closest('.q-field__control');
-  if (wrap) {
-    wrap.classList.remove('animate-shake'); void wrap.offsetWidth; wrap.classList.add('animate-shake');
-    wrap.addEventListener('animationend', () => wrap.classList.remove('animate-shake'), { once: true });
   }
-  if (ctrl) { ctrl.style.outline = '2px solid var(--error)'; setTimeout(() => { ctrl.style.outline = ''; }, 1800); }
-};
 
-window.flashElement = function (id) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  const input = el.tagName === 'INPUT' ? el : (el.querySelector('input') || el);
-  input.scrollIntoView({ block: 'center' });
-  input.focus();
-};
+  window.scalaris.cuadricula = window.scalaris.cuadricula || {};
+  window.scalaris.cuadricula.animarRedimensionCuadrada = animateSquareResize;
+})();

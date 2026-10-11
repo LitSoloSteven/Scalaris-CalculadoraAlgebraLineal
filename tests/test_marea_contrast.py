@@ -10,7 +10,7 @@ import re
 from pathlib import Path
 import pytest
 
-CSS_PATH = Path(__file__).resolve().parent.parent / "src" / "frontend" / "assets" / "css" / "theme.css"
+CSS_PATH = Path(__file__).resolve().parent.parent / "src" / "frontend" / "assets" / "css" / "tokens.css"
 
 
 def parse_tokens(css_path: Path) -> dict[str, dict[str, str]]:

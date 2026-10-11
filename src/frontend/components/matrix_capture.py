@@ -71,30 +71,7 @@ class MatrixCapturePanel:
             idx_row = mat['m'] - 1
             is_m = 'true' if delta_m < 0 else 'false'
             
-            js_salida = f'''
-                return new Promise(resolve => {{
-                    if (window.scalarisMotionOK ? !window.scalarisMotionOK() : (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) {{
-                        return resolve();
-                    }}
-                    let cells = document.querySelectorAll(`input[data-matrix-id='{name}']{target_attr}`);
-                    const anims = [];
-                    cells.forEach(input => {{
-                        let control = input.closest('.q-field__control');
-                        if(control) {{
-                            anims.push(control.animate(
-                                [{{opacity: 1, transform: 'scale(1)'}},
-                                 {{opacity: 0, transform: 'scale(0.85) translateY(-8px)'}}],
-                                {{duration: 240, easing: 'cubic-bezier(0.32,0.72,0,1)', fill: 'forwards'}}
-                            ).finished);
-                        }}
-                    }});
-                    if (anims.length > 0) {{
-                        Promise.all(anims).then(resolve);
-                    }} else {{
-                        resolve();
-                    }}
-                }});
-            '''
+            js_salida = f"return window.scalaris?.cuadricula?.animarSalidaMatriz('{name}', '{target_attr}') || Promise.resolve();"
             await ui.run_javascript(js_salida)
 
         if 1 <= mat['m'] + delta_m <= 10: mat['m'] += delta_m
@@ -114,30 +91,7 @@ class MatrixCapturePanel:
             import asyncio
             await asyncio.sleep(0.05)
             
-            js_entrada = f'''
-                return new Promise(resolve => {{
-                    if (window.scalarisMotionOK ? !window.scalarisMotionOK() : (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) {{
-                        return resolve();
-                    }}
-                    let cells = document.querySelectorAll(`input[data-matrix-id='{name}']{target_attr}`);
-                    const anims = [];
-                    cells.forEach(input => {{
-                        let control = input.closest('.q-field__control');
-                        if(control) {{
-                            anims.push(control.animate(
-                                [{{opacity: 0, transform: 'scale(0.85) translateY(8px)'}},
-                                 {{opacity: 1, transform: 'scale(1)'}}],
-                                {{duration: 240, easing: 'cubic-bezier(0.32,0.72,0,1)', fill: 'forwards'}}
-                            ).finished);
-                        }}
-                    }});
-                    if (anims.length > 0) {{
-                        Promise.all(anims).then(resolve);
-                    }} else {{
-                        resolve();
-                    }}
-                }});
-            '''
+            js_entrada = f"return window.scalaris?.cuadricula?.animarEntradaMatriz('{name}', '{target_attr}') || Promise.resolve();"
             await ui.run_javascript(js_entrada)
 
         if self.on_data_change:

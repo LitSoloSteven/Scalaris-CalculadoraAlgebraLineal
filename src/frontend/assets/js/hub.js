@@ -1,29 +1,16 @@
+/**
+ * Scalaris - Interacción, modales y halo del Hub
+ */
 (function () {
-  var KEY = 'scalaris:recent', MAX = 4;
-  function read() {
-    try {
-      var raw = localStorage.getItem(KEY);
-      var arr = raw ? JSON.parse(raw) : [];
-      if (!Array.isArray(arr)) return { ok: false, ids: [] };
-      return { ok: true, ids: arr.filter(function (x) { return typeof x === 'string'; }) };
-    } catch (_) { return { ok: false, ids: [] }; }
-  }
-  window.scalarisReadRecent = read;
-  window.scalarisRecordVisit = function (id) {
-    if (typeof id !== 'string' || !id) return;
-    try {
-      var ids = read().ids.filter(function (x) { return x !== id; });
-      ids.unshift(id);
-      localStorage.setItem(KEY, JSON.stringify(ids.slice(0, MAX)));
-    } catch (_) { }
-  };
-})();
+  'use strict';
 
-(function () {
+  window.scalaris = window.scalaris || {};
+
   var pendingTimer = null;
   var splashObserver = null;
   var splashWasPresent = false;
   var pendingDeadline = 0;
+
   if (window.location && window.location.pathname === '/') {
     document.documentElement.setAttribute('data-glosa', 'closed');
     if (document.body) document.body.classList.add('hub-page');
@@ -126,7 +113,9 @@
     card.style.transformOrigin = 'calc(50% ' + calcOffset(xOffset) + ') ' + originY;
   }
 
-  function open(pillarId, { instant, originEl } = {}) {
+  function open(pillarId, opciones) {
+    var instant = opciones && opciones.instant;
+    var originEl = opciones && opciones.originEl;
     clearPending();
     var row = originEl || document.getElementById('hub-row-' + pillarId);
     var dialog = document.getElementById('hub-pop-' + pillarId);
@@ -157,7 +146,8 @@
     if (initialFocus) initialFocus.focus({ preventScroll: true });
   }
 
-  function close({ instant } = {}) {
+  function close(opciones) {
+    var instant = opciones && opciones.instant;
     var dialog = activeDialog || document.querySelector('dialog.hub-pop[open]');
     if (!dialog) return;
 
@@ -185,7 +175,7 @@
       if (event.target === card && event.propertyName === 'opacity') finishClose(dialog);
     };
     card.addEventListener('transitionend', closeTransitionHandler);
-    closeTimer = setTimeout(function () { finishClose(dialog); }, 340);
+    closeTimer = setTimeout(function () { finishClose(dialog); }, 220);
   }
 
   function haloDisabled(event) {
@@ -225,108 +215,62 @@
     if (row && row !== nextRow) row.removeAttribute('data-spot-active');
   }
 
+  function manejarClickDelegado(event) {
+    var target = event.target;
+    if (!target || typeof target.closest !== 'function') return;
+    var closeButton = target.closest('.hub-pop-close');
+    if (closeButton) {
+      setInputMode(event.detail === 0);
+      close({ instant: event.detail === 0 });
+      return;
+    }
+    var dialog = target.closest('dialog.hub-pop');
+    if (dialog && target === dialog) {
+      setInputMode(event.detail === 0);
+      close({ instant: event.detail === 0 });
+      return;
+    }
+    var row = target.closest('.hub-row');
+    if (row && !target.closest('.hub-tile')) {
+      setInputMode(event.detail === 0);
+      open(row.id.replace(/^hub-row-/, ''), { instant: event.detail === 0, originEl: row });
+    }
+  }
+
   function registerDelegatedListeners() {
     if (window.__scalarisHubDelegated) return;
     window.__scalarisHubDelegated = true;
-
-    document.addEventListener('click', function (event) {
-      var target = event.target;
-      if (!target || typeof target.closest !== 'function') return;
-
-      var closeButton = target.closest('.hub-pop-close');
-      if (closeButton) {
-        var closeFromKeyboard = event.detail === 0;
-        setInputMode(closeFromKeyboard);
-        close({ instant: closeFromKeyboard });
-        return;
-      }
-
-      var dialog = target.closest('dialog.hub-pop');
-      if (dialog && target === dialog) {
-        var scrimCloseFromKeyboard = event.detail === 0;
-        setInputMode(scrimCloseFromKeyboard);
-        close({ instant: scrimCloseFromKeyboard });
-        return;
-      }
-
-      var row = target.closest('.hub-row');
-      if (!row) return;
-      var pillarId = row.id.replace(/^hub-row-/, '');
-      if (!pillarId) return;
-      var openedFromKeyboard = event.detail === 0;
-      open(pillarId, { instant: openedFromKeyboard, originEl: row });
-    });
-
+    document.addEventListener('click', manejarClickDelegado);
     document.addEventListener('cancel', function (event) {
-      var dialog = event.target;
-      if (!dialog || !dialog.matches || !dialog.matches('dialog.hub-pop')) return;
-      event.preventDefault();
-      close({ instant: true });
-    }, true);
-
-    document.addEventListener('keydown', function (event) {
-      if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
-
-      var target = event.target;
-      if (!target || typeof target.closest !== 'function') return;
-      var row = target.closest('.hub-row');
-      var dialog = activeDialog || target.closest('dialog.hub-pop[open]');
-      if (row || dialog) setInputMode(true);
-
-      if (row && !dialog) {
-        var rows = Array.prototype.slice.call(document.querySelectorAll('.hub-row'));
-        var rowIndex = rows.indexOf(row);
-        var nextIndex = rowIndex;
-        if (event.key === 'ArrowUp') nextIndex = Math.max(0, rowIndex - 1);
-        else if (event.key === 'ArrowDown') nextIndex = Math.min(rows.length - 1, rowIndex + 1);
-        else if (event.key === 'Home') nextIndex = 0;
-        else if (event.key === 'End') nextIndex = rows.length - 1;
-        else return;
-
+      var d = event.target;
+      if (d && d.classList && d.classList.contains('hub-pop')) {
         event.preventDefault();
-        if (rows[nextIndex]) rows[nextIndex].focus({ preventScroll: true });
-        return;
-      }
-
-      var tile = target.closest('.hub-tile');
-      if (!dialog || !tile || (event.key !== 'ArrowUp' && event.key !== 'ArrowDown')) return;
-
-      var tiles = Array.prototype.slice.call(dialog.querySelectorAll('.hub-tile'));
-      var tileIndex = tiles.indexOf(tile);
-      if (tileIndex < 0) return;
-      event.preventDefault();
-      var tileNextIndex = event.key === 'ArrowUp'
-        ? Math.max(0, tileIndex - 1)
-        : Math.min(tiles.length - 1, tileIndex + 1);
-      if (tiles[tileNextIndex]) tiles[tileNextIndex].focus({ preventScroll: true });
-    });
-
-    document.addEventListener('pointermove', function (event) {
-      var target = event.target;
-      if (!target || typeof target.closest !== 'function') return;
-      var row = target.closest('.hub-row');
-      if (!row || haloDisabled(event)) return;
-      setInputMode(false);
-      row.setAttribute('data-spot-active', '');
-      moveSpot(row, event);
-    });
-
-    document.addEventListener('pointerout', clearSpotForPointerOut);
-    document.addEventListener('pointercancel', clearSpotForPointerOut);
-
-    document.addEventListener('scalaris:glosa', function (event) {
-      if (
-        window.location
-        && window.location.pathname === '/'
-        && event.detail
-        && event.detail.open
-        && window.scalarisGlosa
-        && window.scalarisGlosa.close
-      ) {
-        window.scalarisGlosa.close({ instant: true });
+        close({ instant: true });
       }
     });
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && activeDialog) {
+        setInputMode(true);
+        close({ instant: true });
+      }
+    });
+    document.addEventListener('pointerenter', function (e) {
+      if (haloDisabled(e) || !e.target || typeof e.target.closest !== 'function') return;
+      var row = e.target.closest('.hub-row');
+      if (row) { row.setAttribute('data-spot-active', ''); moveSpot(row, e); }
+    }, true);
+    document.addEventListener('pointermove', function (e) {
+      if (haloDisabled(e) || !e.target || typeof e.target.closest !== 'function') return;
+      var row = e.target.closest('.hub-row');
+      if (row) { if (!row.hasAttribute('data-spot-active')) row.setAttribute('data-spot-active', ''); moveSpot(row, e); }
+    }, { capture: true, passive: true });
+    document.addEventListener('pointerout', clearSpotForPointerOut, true);
   }
 
   registerDelegatedListeners();
+
+  window.scalaris.hub = {
+    abrir: open,
+    cerrar: close
+  };
 })();

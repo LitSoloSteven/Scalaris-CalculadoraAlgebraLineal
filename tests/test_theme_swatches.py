@@ -5,7 +5,7 @@ import pytest
 
 from tests.test_f9_contrast import parse_tokens
 
-CSS_PATH = Path("src/frontend/assets/css/theme.css")
+CSS_PATH = Path("src/frontend/assets/css/tokens.css")
 
 EXPECTED_SWATCHES = {
     "--swatch-papel": "#F2F0EB",
@@ -31,9 +31,9 @@ def test_swatches_defined_in_root_and_all_theme_blocks():
     for swatch, val in EXPECTED_SWATCHES.items():
         assert content.count(f"{swatch}: {val};") >= 4
 
-    # Verificar presencia explícita en los 4 bloques temáticos principales del inicio
-    head = content.split("/* === BASE ===")[0]
-    blocks = re.findall(r"(:root[^{]*)\{([^}]+)\}", head, re.DOTALL)
+    # Verificar presencia explícita en los 4 bloques temáticos principales de tokens.css
+    all_blocks = re.findall(r"(:root[^{]*)\{([^}]+)\}", content, re.DOTALL)
+    blocks = [b for b in all_blocks if "--swatch-papel" in b[1]]
     assert len(blocks) == 4, f"Se esperaban 4 bloques principales en el encabezado, se encontraron {len(blocks)}"
 
     for sel, body in blocks:

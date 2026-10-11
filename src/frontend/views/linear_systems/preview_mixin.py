@@ -94,7 +94,7 @@ class LinearSystemsPreviewMixin:
         elif resultado.estado == "ok":
             latex_ecuaciones = html.escape(latex_sistema(matriz, resultado.variables))
             ui.html(self._bloque_latex(id_sistema, latex_ecuaciones, ""))
-        ui.run_javascript(f"typesetMathWhenReady(['{id_matriz}', '{id_sistema}']);")
+        ui.run_javascript(f"if(window.scalaris && window.scalaris.renderizarMathJax) window.scalaris.renderizarMathJax(['{id_matriz}', '{id_sistema}']);")
 
     @staticmethod
     def _bloque_latex(identificador: str, contenido: str, margen: str) -> str:

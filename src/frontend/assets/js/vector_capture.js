@@ -1,18 +1,19 @@
 /**
- * Scalaris — VectorCapturePanel Interactions and Animations
+ * Scalaris - Interacción y navegación en panel de captura de vectores
  */
 (function () {
+  'use strict';
+
   if (window.__vector_listeners_active) return;
   window.__vector_listeners_active = true;
 
-  // Navegación con teclado
   document.addEventListener('keydown', function (e) {
-    let active = document.activeElement;
+    var active = document.activeElement;
     if (active.tagName !== 'INPUT' || active.dataset.vecIdx === undefined) return;
 
-    let idx = parseInt(active.dataset.vecIdx);
-    let vId = active.dataset.vecId;
-    let orientation = active.dataset.vecOrientation;
+    var idx = parseInt(active.dataset.vecIdx, 10);
+    var vId = active.dataset.vecId;
+    var orientation = active.dataset.vecOrientation;
 
     if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
       if (e.key === 'ArrowLeft' && active.selectionStart !== 0) return;
@@ -25,26 +26,32 @@
         if (e.key === 'ArrowRight') idx++;
         if (e.key === 'ArrowLeft') idx--;
       }
-    } else if (e.key === 'Enter') idx++;
-    else return;
+    } else if (e.key === 'Enter') {
+      idx++;
+    } else {
+      return;
+    }
 
-    let next = document.querySelector(`input[data-vec-id="${vId}"][data-vec-idx="${idx}"]`);
-    if (next) { next.focus(); setTimeout(() => next.select(), 10); e.preventDefault(); }
+    var next = document.querySelector('input[data-vec-id="' + vId + '"][data-vec-idx="' + idx + '"]');
+    if (next) {
+      next.focus();
+      setTimeout(function () { next.select(); }, 10);
+      e.preventDefault();
+    }
   });
 
-  // Soporte Paste TSV/CSV simple
   document.addEventListener('paste', function (e) {
-    let active = document.activeElement;
+    var active = document.activeElement;
     if (active.tagName !== 'INPUT' || active.dataset.vecIdx === undefined) return;
     e.preventDefault();
-    let pasteData = (e.clipboardData || window.clipboardData).getData('text');
+    var pasteData = (e.clipboardData || window.clipboardData).getData('text');
 
-    let vals = pasteData.trim().split(/[\n\t,;]+/);
-    let startIdx = parseInt(active.dataset.vecIdx);
-    let vId = active.dataset.vecId;
+    var vals = pasteData.trim().split(/[\n\t,;]+/);
+    var startIdx = parseInt(active.dataset.vecIdx, 10);
+    var vId = active.dataset.vecId;
 
-    vals.forEach((val, i) => {
-      let input = document.querySelector(`input[data-vec-id="${vId}"][data-vec-idx="${startIdx + i}"]`);
+    vals.forEach(function (val, i) {
+      var input = document.querySelector('input[data-vec-id="' + vId + '"][data-vec-idx="' + (startIdx + i) + '"]');
       if (input) {
         input.value = val.trim();
         input.dispatchEvent(new Event('input', { bubbles: true }));
@@ -52,16 +59,15 @@
     });
   });
 
-  // Cross-highlighting de celdas
   document.addEventListener('focusin', function (e) {
-    let active = e.target;
+    var active = e.target;
     if (active.tagName !== 'INPUT' || active.dataset.vecIdx === undefined) return;
-    let idx = active.dataset.vecIdx;
-    let vId = active.dataset.vecId;
+    var idx = active.dataset.vecIdx;
+    var vId = active.dataset.vecId;
 
-    document.querySelectorAll(`input[data-vec-id="${vId}"]`).forEach(inp => {
-      let isSame = (inp.dataset.vecIdx === idx);
-      let control = inp.closest('.q-field__control');
+    document.querySelectorAll('input[data-vec-id="' + vId + '"]').forEach(function (inp) {
+      var isSame = (inp.dataset.vecIdx === idx);
+      var control = inp.closest('.q-field__control');
       if (control) {
         if (isSame) control.classList.add('cross-hl');
         else control.classList.remove('cross-hl');
@@ -70,63 +76,13 @@
   });
 
   document.addEventListener('focusout', function (e) {
-    let active = e.target;
+    var active = e.target;
     if (active.tagName !== 'INPUT' || active.dataset.vecIdx === undefined) return;
-    let vId = active.dataset.vecId;
+    var vId = active.dataset.vecId;
 
-    document.querySelectorAll(`input[data-vec-id="${vId}"]`).forEach(inp => {
-      let control = inp.closest('.q-field__control');
+    document.querySelectorAll('input[data-vec-id="' + vId + '"]').forEach(function (inp) {
+      var control = inp.closest('.q-field__control');
       if (control) control.classList.remove('cross-hl');
     });
   });
 })();
-
-window.animateVectorDimensionRemoval = function (idxRemove) {
-  return new Promise(resolve => {
-    if (window.scalarisMotionOK ? !window.scalarisMotionOK() : (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) {
-      return resolve();
-    }
-    let cells = document.querySelectorAll(`input[data-vec-idx='${idxRemove}']`);
-    const anims = [];
-    cells.forEach(input => {
-      let control = input.closest('.q-field__control');
-      if (control) {
-        anims.push(control.animate(
-          [{ opacity: 1, transform: 'scale(1)' },
-          { opacity: 0, transform: 'scale(0.85) translateY(-8px)' }],
-          { duration: 120, easing: 'cubic-bezier(0.32, 0.72, 0, 1)', fill: 'forwards' }
-        ).finished);
-      }
-    });
-    if (anims.length > 0) {
-      Promise.all(anims).then(resolve);
-    } else {
-      resolve();
-    }
-  });
-};
-
-window.animateVectorDimensionAddition = function (idxAdd) {
-  return new Promise(resolve => {
-    if (window.scalarisMotionOK ? !window.scalarisMotionOK() : (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) {
-      return resolve();
-    }
-    let cells = document.querySelectorAll(`input[data-vec-idx='${idxAdd}']`);
-    const anims = [];
-    cells.forEach(input => {
-      let control = input.closest('.q-field__control');
-      if (control) {
-        anims.push(control.animate(
-          [{ opacity: 0, transform: 'scale(0.85) translateY(8px)' },
-          { opacity: 1, transform: 'scale(1)' }],
-          { duration: 120, easing: 'cubic-bezier(0.32, 0.72, 0, 1)', fill: 'forwards' }
-        ).finished);
-      }
-    });
-    if (anims.length > 0) {
-      Promise.all(anims).then(resolve);
-    } else {
-      resolve();
-    }
-  });
-};

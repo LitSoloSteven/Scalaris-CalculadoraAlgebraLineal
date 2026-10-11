@@ -35,7 +35,7 @@ class LinearSystemsResultsMixin:
     async def ejecutar_animacion_limpieza(self, dialog):
         dialog.close()
         try:
-            await ui.run_javascript('return window.animateGarbageCollection()', timeout=2.0)
+            await ui.run_javascript('return window.scalaris && window.scalaris.animarRecoleccionBasura ? window.scalaris.animarRecoleccionBasura() : Promise.resolve()', timeout=2.0)
         except Exception:
             pass
         self.limpiar_todo()
@@ -146,9 +146,9 @@ class LinearSystemsResultsMixin:
             self._render_steps_section(respuesta)
             self._render_botones_accion(respuesta, matrix_A_vals, vector_b_vals)
 
-        ui.run_javascript('typesetMathWhenReady();')
-        ui.run_javascript("replayResultAnimation('resultados-container');")
-        ui.run_javascript("setTimeout(() => { const el = document.getElementById('resultados-container'); if(el) el.scrollIntoView({behavior: 'smooth', block: 'start'}) }, MOTION.med);")
+        ui.run_javascript('if(window.scalaris && window.scalaris.renderizarMathJax) window.scalaris.renderizarMathJax();')
+        ui.run_javascript("if(window.scalaris && window.scalaris.reproducirAnimacionResultado) window.scalaris.reproducirAnimacionResultado('resultados-container');")
+        ui.run_javascript("setTimeout(() => { const el = document.getElementById('resultados-container'); if(el) el.scrollIntoView({behavior: 'smooth', block: 'start'}) }, (window.scalaris?.movimiento?.medio || 240));")
 
         from src.ai.context import fingerprint
         entrada = {"mode": self.mode_tabs.value, "method": self.method_tabs.value}

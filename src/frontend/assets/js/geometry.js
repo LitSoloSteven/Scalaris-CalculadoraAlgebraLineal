@@ -1,5 +1,5 @@
 /**
- * Scalaris Geometry Visualizer — client-side helpers (F8a).
+ * Scalaris - Visualizador geometrico en cliente.
  *
  * Provides frame registration and instant restyle for the scalar slider,
  * plus cell-error marking. Zero server calls per frame.
@@ -120,10 +120,10 @@
     }
   });
 
-  // Expose public API
-  window.scalarisGeo = {
-    register: register,
-    setFrame: setFrame,
-    markInvalid: markInvalid,
+  window.scalaris = window.scalaris || {};
+  window.scalaris.geometria = {
+    registrar: register,
+    establecerCuadro: setFrame,
+    marcarInvalido: markInvalid
   };
 })();

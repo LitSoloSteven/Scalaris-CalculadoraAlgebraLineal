@@ -106,7 +106,7 @@ class ReproductorPasos:
         self.contenedor_cuerpo.clear()
         self.renderizar_cuerpo(paso, self.contenedor_cuerpo)
         ui.run_javascript(
-            f"window.scalarisPasos.destellar({json.dumps(self.id_tarjeta)});"
+            f"if(window.scalaris && window.scalaris.pasos) window.scalaris.pasos.destellar({json.dumps(self.id_tarjeta)});"
         )
         if autoreproduccion and self.indice_actual == len(self.pasos) - 1:
             self._pausar_reproduccion()
@@ -137,7 +137,7 @@ class ReproductorPasos:
             f'<span id="{identificador}" class="text-sec text-sm leading-relaxed"></span>'
         )
         llamada = (
-            f"window.scalarisPasos.revelar({json.dumps(identificador)}, "
+            f"if(window.scalaris && window.scalaris.pasos) window.scalaris.pasos.revelar({json.dumps(identificador)}, "
             f"{json.dumps(texto)});"
         )
         ui.run_javascript(llamada)
@@ -202,5 +202,5 @@ class ReproductorPasos:
         self.ir_a(indice)
         ui.run_javascript(
             "const e=document.getElementById(" + json.dumps(self.id_tarjeta) + ");"
-            "if(e)e.scrollIntoView({behavior:window.scalarisMotionOK?.()?'smooth':'auto',block:'center'});"
+            "if(e)e.scrollIntoView({behavior:window.scalaris?.movimiento?.permitido?.()?'smooth':'auto',block:'center'});"
         )

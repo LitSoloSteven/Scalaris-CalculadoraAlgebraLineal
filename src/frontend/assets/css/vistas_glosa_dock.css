@@ -1,0 +1,273 @@
+/* Panel lateral desplegable Glosa Dock y botón flotante */
+@media (min-width: 1024px) {
+    :root {
+        --glosa-mode: push;
+    }
+
+    html[data-glosa="open"] .q-page-container {
+        padding-right: var(--glosa-reserve) !important;
+    }
+
+    html[data-glosa="open"] .q-header {
+        right: var(--glosa-reserve) !important;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    :root {
+        --glosa-mode: overlay;
+    }
+}
+
+@media (max-width: 767px) {
+    :root {
+        --glosa-mode: sheet;
+    }
+}
+
+.glosa-dock {
+    position: fixed;
+    z-index: var(--z-dock);
+    background-color: var(--bg-elevated);
+    border-radius: var(--radius-card);
+    box-shadow: var(--elev-3);
+    view-transition-name: glosa-dock;
+}
+
+.glosa-fab {
+    position: fixed;
+    right: calc(var(--space-4) + env(safe-area-inset-right));
+    bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: var(--bg-panel);
+    color: var(--accent);
+    z-index: var(--z-fab);
+    box-shadow: var(--elev-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: none;
+    view-transition-name: glosa-fab;
+    visibility: visible;
+    transition: transform var(--dur-med) var(--ease-std),
+        opacity 120ms var(--ease-std),
+        visibility 0s linear 0s;
+}
+
+@media (max-width: 767px) {
+    .glosa-fab {
+        width: 52px;
+        height: 52px;
+    }
+}
+
+.glosa-fab::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: var(--elev-3);
+    opacity: 0;
+    transition: opacity var(--dur-med) var(--ease-std);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .glosa-fab:hover::before {
+        opacity: 1;
+    }
+}
+
+.glosa-fab:active {
+    transform: scale(0.97);
+    transition: transform 0s;
+}
+
+html[data-glosa="open"] .glosa-fab {
+    opacity: 0;
+    transform: scale(0.95);
+    pointer-events: none;
+    visibility: hidden;
+    transition: transform var(--dur-med) var(--ease-std),
+        opacity 120ms var(--ease-std),
+        visibility 0s linear 120ms;
+}
+
+.hub-page .glosa-fab {
+    display: none;
+}
+
+@media (min-width: 1024px) {
+    .glosa-dock {
+        top: var(--space-4);
+        right: var(--space-4);
+        bottom: var(--space-4);
+        width: var(--glosa-w);
+        transform: translateX(calc(100% + 32px));
+        opacity: 0;
+        visibility: hidden;
+        transition: transform 200ms var(--ease-std), opacity 200ms var(--ease-std), visibility 0s linear 200ms;
+    }
+
+    html[data-glosa="open"] .glosa-dock {
+        transform: translateX(0);
+        opacity: 1;
+        visibility: visible;
+        transition: transform 240ms var(--ease-std), opacity 240ms var(--ease-std);
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    .glosa-dock {
+        top: var(--space-4);
+        right: var(--space-4);
+        bottom: var(--space-4);
+        width: min(400px, 88vw);
+        transform: translateX(calc(100% + 32px));
+        opacity: 0;
+        visibility: hidden;
+        transition: transform 200ms var(--ease-std), opacity 200ms var(--ease-std), visibility 0s linear 200ms;
+    }
+
+    html[data-glosa="open"] .glosa-dock {
+        transform: translateX(0);
+        opacity: 1;
+        visibility: visible;
+        transition: transform 240ms var(--ease-std), opacity 240ms var(--ease-std);
+    }
+}
+
+@media (max-width: 767px) {
+    .glosa-dock {
+        left: 0;
+        right: 0;
+        bottom: var(--glosa-kb, 0px);
+        height: min(92dvh, 800px);
+        border-radius: var(--radius-card) var(--radius-card) 0 0;
+        transform: translateY(100%);
+        opacity: 0;
+        visibility: hidden;
+        transition: transform 200ms var(--ease-std), opacity 200ms var(--ease-std), visibility 0s linear 200ms;
+    }
+
+    html[data-glosa="open"] .glosa-dock {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+        transition: transform 240ms var(--ease-std), opacity 240ms var(--ease-std);
+    }
+}
+
+.glosa-scrim {
+    position: fixed;
+    inset: 0;
+    background-color: var(--scrim);
+    z-index: calc(var(--z-dock) - 1);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 200ms var(--ease-std), visibility 0s linear 200ms;
+    pointer-events: none;
+}
+
+@media (max-width: 1023px) {
+    html[data-glosa="open"] .glosa-scrim {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transition: opacity 240ms var(--ease-std);
+    }
+}
+
+.q-header {
+    z-index: var(--z-nav) !important;
+}
+
+html[data-glosa="open"]:not([data-glosa-ready])::after {
+    content: "";
+    position: fixed;
+    z-index: var(--z-dock);
+    background-color: var(--bg-elevated);
+    border-radius: var(--radius-card);
+    box-shadow: var(--elev-3);
+    top: var(--space-4);
+    right: var(--space-4);
+    bottom: var(--space-4);
+    width: var(--glosa-w);
+}
+
+@media (max-width: 1023px) {
+    html[data-glosa="open"]:not([data-glosa-ready])::after {
+        display: none;
+    }
+}
+
+::view-transition-old(glosa-dock),
+::view-transition-new(glosa-dock),
+::view-transition-old(glosa-fab),
+::view-transition-new(glosa-fab) {
+    animation: none;
+}
+
+.glosa-input .q-field__control {
+    background: var(--input-bg);
+    border: none !important;
+    border-radius: var(--radius-input) !important;
+    box-shadow: var(--elev-inset) !important;
+}
+
+.glosa-input .q-field__control:before,
+.glosa-input .q-field__control:after {
+    display: none !important;
+}
+
+.glosa-input.q-field--focused .q-field__control {
+    outline: 2px solid var(--focus-ring) !important;
+    outline-offset: 2px;
+}
+
+.glosa-input input:-webkit-autofill,
+.glosa-input textarea:-webkit-autofill,
+.glosa-input input:-webkit-autofill:hover,
+.glosa-input textarea:-webkit-autofill:hover,
+.glosa-input input:-webkit-autofill:focus,
+.glosa-input textarea:-webkit-autofill:focus,
+.glosa-input input:-webkit-autofill:active,
+.glosa-input textarea:-webkit-autofill:active {
+    -webkit-text-fill-color: var(--input-text) !important;
+    box-shadow: 0 0 0px 1000px var(--input-bg) inset !important;
+    transition: background-color 5000s linear 0s;
+}
+
+.glosa-input .q-field__native,
+.glosa-input .q-field__input {
+    font-family: 'Space Grotesk', sans-serif !important;
+    color: var(--input-text) !important;
+    -webkit-text-fill-color: var(--input-text) !important;
+    text-align: left !important;
+}
+
+.glosa-input textarea::placeholder {
+    color: var(--text-sec) !important;
+    -webkit-text-fill-color: var(--text-sec) !important;
+    opacity: 1 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .glosa-dock,
+    .glosa-fab,
+    .glosa-scrim {
+        transition-duration: 120ms !important;
+        transition-timing-function: linear !important;
+        transform: none !important;
+    }
+}
+
+html[data-glosa-instant] .glosa-dock,
+html[data-glosa-instant] .glosa-fab,
+html[data-glosa-instant] .glosa-scrim,
+html[data-glosa-instant] .q-page-container,
+html[data-glosa-instant] .q-header {
+    transition: none !important;
+}

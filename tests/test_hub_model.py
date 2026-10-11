@@ -144,8 +144,10 @@ def test_hub_js_static_contract():
 
     assert "addEventListener('scroll'" not in content
     assert 'addEventListener("scroll"' not in content
-    assert "window.scalarisReadRecent =" in content
-    assert "window.scalarisRecordVisit =" in content
+    recientes_content = Path("src/frontend/assets/js/hub_recientes.js").read_text(encoding="utf-8")
+    assert "window.scalaris.recientes =" in recientes_content
+    assert "leer: leerRecientes" in recientes_content
+    assert "registrar: registrarVisita" in recientes_content
     assert "window.scalarisHubSelect" not in content
     assert "function open(" in content
     assert "function close(" in content

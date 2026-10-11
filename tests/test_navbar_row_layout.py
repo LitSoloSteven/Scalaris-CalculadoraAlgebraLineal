@@ -4,15 +4,11 @@ from pathlib import Path
 import re
 import pytest
 
-CSS_PATH = Path("src/frontend/assets/css/theme.css")
+CSS_PATH = Path("src/frontend/assets/css/vistas_navegacion.css")
 
 
 def get_nav_css_block() -> str:
-    content = CSS_PATH.read_text(encoding="utf-8")
-    # Extraer el bloque que va desde .nav-header hasta .hub-root
-    match = re.search(r'(\.nav-header\s*\{.*?)\.hub-root', content, re.DOTALL)
-    assert match, "No se encontro el bloque .nav-* en theme.css"
-    return match.group(1)
+    return CSS_PATH.read_text(encoding="utf-8")
 
 
 def test_navbar_grid_one_row():

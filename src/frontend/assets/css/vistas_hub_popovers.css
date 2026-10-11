@@ -1,0 +1,281 @@
+/* Ventanas modales y popovers del Hub */
+.hub-row:focus-visible,
+.hub-pop-close:focus-visible {
+    outline: 2px solid var(--focus-ring) !important;
+    outline-offset: 3px;
+}
+
+.hub-pop {
+    position: fixed;
+    inset: 0;
+    width: fit-content;
+    height: fit-content;
+    max-width: none;
+    max-height: none;
+    margin: auto;
+    padding: 0;
+    overflow: visible;
+    border: 0;
+    background: transparent;
+    color: var(--text-main);
+}
+
+.hub-pop::backdrop {
+    background: var(--scrim);
+    opacity: 0;
+    transition: opacity 180ms var(--ease-std);
+}
+
+.hub-pop[open][data-open]::backdrop {
+    opacity: 1;
+    transition-duration: 250ms;
+}
+
+.hub-pop-card {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    width: min(92vw, 42rem);
+    max-height: min(82dvh, 44rem);
+    min-height: 0;
+    padding: var(--space-6);
+    border-radius: var(--radius-card);
+    background-color: var(--bg-elevated);
+    box-shadow: var(--elev-3);
+    color: var(--text-main);
+    overflow: hidden;
+    opacity: 0;
+    transform: scale(0.95);
+    transform-origin: 50% 50%;
+    transition: opacity 180ms linear, transform 200ms var(--ease-std);
+}
+
+.hub-pop[open][data-open] .hub-pop-card {
+    opacity: 1;
+    transform: scale(1);
+    transition-duration: 250ms;
+}
+
+@starting-style {
+    .hub-pop[open][data-open] .hub-pop-card {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    .hub-pop[open][data-open]::backdrop {
+        opacity: 0;
+    }
+}
+
+.hub-pop-head {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: var(--space-3);
+    min-width: 0;
+    flex: 0 0 auto;
+}
+
+.hub-pop-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: var(--hub-icon-size, clamp(2.5rem, 6cqi, 4rem));
+    height: var(--hub-icon-size, clamp(2.5rem, 6cqi, 4rem));
+    border-radius: var(--radius-badge);
+    background-color: var(--bg-panel);
+    color: var(--accent);
+}
+
+.hub-pop-title {
+    min-width: 0;
+    margin: 0;
+    font-size: clamp(1.35rem, 2.8cqi, 1.9rem);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text-main);
+    overflow-wrap: anywhere;
+}
+
+.hub-pop-count {
+    min-width: 0;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--accent);
+    text-align: end;
+    overflow-wrap: anywhere;
+}
+
+.hub-pop-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 3rem;
+    height: 3rem;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-badge);
+    background-color: var(--bg-panel);
+    box-shadow: var(--elev-2);
+    color: var(--text-main);
+    cursor: pointer;
+    transition: transform 0ms;
+}
+
+.hub-pop-close:active {
+    transform: scale(0.98);
+}
+
+.hub-pop-close-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hub-tool-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+    padding: var(--space-1);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    list-style: none;
+}
+
+.hub-tool-list > li {
+    --i: 0;
+    display: flex;
+    min-width: 0;
+    flex: 0 0 auto;
+}
+
+.hub-empty-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 5.5rem;
+    padding: var(--space-8);
+    border-radius: var(--radius-card);
+    background-color: var(--bg-panel);
+    box-shadow: var(--elev-1);
+    color: var(--text-sec);
+    text-align: center;
+}
+
+.hub-empty-msg {
+    margin: 0;
+    font-size: 1.0625rem;
+    color: var(--text-sec);
+    overflow-wrap: anywhere;
+}
+
+.hub-tile {
+    position: relative;
+    flex: 1 1 auto;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+        "icon name mark"
+        "icon desc mark";
+    align-items: start;
+    column-gap: var(--space-3);
+    row-gap: var(--space-1);
+    min-width: 0;
+    padding: var(--space-4) var(--space-5);
+    border-radius: var(--radius-card);
+    background-color: var(--bg-panel);
+    box-shadow: var(--elev-2);
+    color: var(--text-main);
+    text-decoration: none;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 180ms var(--ease-std), transform 180ms var(--ease-std);
+    transition-delay: 0ms;
+}
+
+.hub-pop[data-open] .hub-tile {
+    opacity: 1;
+    transform: translateY(0);
+    transition-duration: 220ms;
+    transition-delay: calc(var(--i, 0) * 50ms);
+}
+
+.hub-tile::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: var(--elev-3);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 120ms var(--ease-std);
+}
+
+.hub-tile:active {
+    transform: scale(0.98);
+    transition: transform 0ms;
+}
+
+.hub-tile.is-featured::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--accent);
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+.hub-tile-icon {
+    grid-area: icon;
+    display: inline-flex;
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: var(--accent);
+}
+
+.hub-tile-icon svg {
+    width: 1.6rem !important;
+    height: 1.6rem !important;
+}
+
+.hub-tile-name {
+    grid-area: name;
+    min-width: 0;
+    font-size: 1.1875rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--text-main);
+    overflow-wrap: anywhere;
+}
+
+.hub-tile-desc {
+    grid-area: desc;
+    min-width: 0;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    line-height: 1.35;
+    color: var(--text-sec);
+    overflow-wrap: anywhere;
+}
+
+.hub-tile-mark {
+    grid-area: mark;
+    justify-self: end;
+    align-self: start;
+    min-width: 10ch;
+    min-height: 1.2em;
+    font-size: 0.875rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: right;
+    color: var(--accent);
+    overflow-wrap: anywhere;
+}

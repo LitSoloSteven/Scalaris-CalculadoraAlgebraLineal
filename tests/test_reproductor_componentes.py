@@ -121,9 +121,9 @@ def test_assets_compartidos_se_enlazan_y_destello_deja_el_script_anterior():
     script_matriz = Path("src/frontend/assets/js/square_matrix.js").read_text(encoding="utf-8")
     assert "/assets/css/reproductor_pasos.css" in cabecera
     assert "/assets/js/reproductor_pasos.js" in cabecera
-    assert "window.scalarisPasos =" in script
-    assert "revelar(id, texto)" in script
-    assert "destellar(id)" in script
+    assert "window.scalaris.pasos =" in script
+    assert "revelar: function" in script or "revelar(id" in script
+    assert "destellar: function" in script or "destellar(id" in script
     assert "flashStepCard" not in script_matriz
 
 
@@ -139,7 +139,7 @@ def test_velocidades_y_renderizado_latex_conservan_contrato(monkeypatch):
     assert 'class="math-scroll-container math-label"' in html_renderizado[0]
     assert "$$ x &lt; 1 $$" in html_renderizado[0]
     assert len(llamadas_javascript) == 1
-    assert llamadas_javascript[0].startswith('typesetMathWhenReady(["repro-math-')
+    assert "window.scalaris.renderizarMathJax" in llamadas_javascript[0]
 
 
 def test_adaptador_inversa_preserva_grupos_datos_y_paso_final():

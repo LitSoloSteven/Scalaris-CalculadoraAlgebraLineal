@@ -6,16 +6,19 @@ from src.frontend.views.hub._model import hub_pillars, initial_selection
 from tests.test_f9_contrast import contrast_ratio, hex_to_rgb, parse_tokens
 
 
-THEME_CSS_PATH = Path("src/frontend/assets/css/theme.css")
+THEME_CSS_PATH = Path("src/frontend/assets/css/tokens.css")
 HUB_JS_PATH = Path("src/frontend/assets/js/hub.js")
 VIEW_HUB_PATH = Path("src/frontend/views/hub/view_hub.py")
 
 
 def get_hub_css_block() -> str:
-    content = THEME_CSS_PATH.read_text(encoding="utf-8")
-    start = content.index("/* === HUB: Matriz de áreas y popovers === */")
-    end = content.index("/* === F4: Glosa === */", start)
-    return content[start:end]
+    from tests.comun import RAIZ
+    archivos = [
+        RAIZ / "src" / "frontend" / "assets" / "css" / "vistas_hub_matriz.css",
+        RAIZ / "src" / "frontend" / "assets" / "css" / "vistas_hub_popovers.css",
+        RAIZ / "src" / "frontend" / "assets" / "css" / "vistas_hub_adaptable.css",
+    ]
+    return "\n".join(p.read_text(encoding="utf-8") for p in archivos)
 
 
 def strip_comments(css: str) -> str:
@@ -58,8 +61,10 @@ def test_matrix_dom_contract_and_native_dialogs():
 def test_hub_js_matrix_and_dialog_contract():
     source = HUB_JS_PATH.read_text(encoding="utf-8")
 
-    assert "window.scalarisReadRecent =" in source
-    assert "window.scalarisRecordVisit =" in source
+    recientes_source = Path("src/frontend/assets/js/hub_recientes.js").read_text(encoding="utf-8")
+    assert "window.scalaris.recientes =" in recientes_source
+    assert "leer: leerRecientes" in recientes_source
+    assert "registrar: registrarVisita" in recientes_source
     assert "window.scalarisHubSelect" not in source
     assert "function open(" in source
     assert "function close(" in source
@@ -104,7 +109,7 @@ def test_featured_fallback_marks_row_and_tile():
     assert "row.classes(add='is-featured')" in source
     assert "'Sigue aquí' if sel.has_history else 'Empieza aquí'" in source
     assert "scalarisHubSelect" not in source
-    assert "catch (_) { return { ok: false, ids: [] }; }" in HUB_JS_PATH.read_text(encoding="utf-8")
+    assert "catch (_) { return { ok: false, ids: [] }; }" in Path("src/frontend/assets/js/hub_recientes.js").read_text(encoding="utf-8")
 
 
 def test_empty_and_arbitrary_tool_counts_have_rendering_paths():
@@ -121,7 +126,8 @@ def test_empty_and_arbitrary_tool_counts_have_rendering_paths():
     assert "-webkit-line-clamp: 2" in css
 
 def test_hub_css_uses_tokens_and_avoids_unsafe_effects():
-    full_css = THEME_CSS_PATH.read_text(encoding="utf-8")
+    from tests.comun import leer_css_completo
+    full_css = leer_css_completo()
     css = strip_comments(get_hub_css_block())
 
     assert "100vh" not in css
@@ -166,8 +172,8 @@ def test_every_hub_hover_is_gated_for_fine_pointer():
 
 def test_active_background_token_remains_in_all_four_theme_blocks():
     full_css = THEME_CSS_PATH.read_text(encoding="utf-8")
-    header = full_css.split("/* === BASE ===", 1)[0]
-    blocks = re.findall(r"(:root[^\{]*)\{([^}]+)\}", header, re.DOTALL)
+    all_blocks = re.findall(r"(:root[^\{]*)\{([^}]+)\}", full_css, re.DOTALL)
+    blocks = [b for b in all_blocks if "--hub-card-active-bg" in b[1]]
 
     assert len(blocks) == 4
     assert full_css.count("--hub-card-active-bg:") == 4

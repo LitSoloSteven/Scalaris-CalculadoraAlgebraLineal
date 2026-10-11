@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 from tests.test_f9_contrast import parse_tokens, hex_to_rgb, contrast_ratio
 
-CSS_PATH = Path("src/frontend/assets/css/theme.css")
+CSS_PATH = Path("src/frontend/assets/css/tokens.css")
 
 EXPECTED_MAREA_HEX = {
     "--bg-page": "#CFE3F0",

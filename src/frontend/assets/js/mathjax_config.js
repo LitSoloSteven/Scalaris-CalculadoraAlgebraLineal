@@ -1,5 +1,5 @@
 /**
- * Scalaris — MathJax Configuration
+ * Scalaris - MathJax Configuration
  */
 window.MathJax = {
   tex: {

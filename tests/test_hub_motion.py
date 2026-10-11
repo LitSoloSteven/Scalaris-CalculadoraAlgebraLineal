@@ -11,10 +11,13 @@ VIEW_HUB_PATH = Path("src/frontend/views/hub/view_hub.py")
 
 
 def get_hub_css_block() -> str:
-    content = THEME_CSS_PATH.read_text(encoding="utf-8")
-    start = content.index("/* === HUB: Matriz de áreas y popovers === */")
-    end = content.index("/* === F4: Glosa === */", start)
-    return content[start:end]
+    from tests.comun import RAIZ
+    archivos = [
+        RAIZ / "src" / "frontend" / "assets" / "css" / "vistas_hub_matriz.css",
+        RAIZ / "src" / "frontend" / "assets" / "css" / "vistas_hub_popovers.css",
+        RAIZ / "src" / "frontend" / "assets" / "css" / "vistas_hub_adaptable.css",
+    ]
+    return "\n".join(p.read_text(encoding="utf-8") for p in archivos)
 
 
 def matching_brace(css: str, open_index: int) -> int:
@@ -112,9 +115,10 @@ def test_pointer_halo_is_raf_throttled_and_only_moves_the_spot():
 
 
 def test_spot_token_is_defined_for_all_themes_and_keeps_text_aa():
-    full_css = THEME_CSS_PATH.read_text(encoding="utf-8")
+    from tests.comun import leer_css_completo
+    full_css = leer_css_completo()
     css = get_hub_css_block()
-    tokens = parse_tokens(str(THEME_CSS_PATH))
+    tokens = parse_tokens("src/frontend/assets/css/tokens.css")
 
     assert full_css.count("--hub-spot:") == 4
     assert "color-mix(in srgb, var(--accent) var(--hub-spot), transparent)" in css
@@ -143,10 +147,10 @@ def test_popover_motion_waits_for_close_transition_and_has_fallback():
     assert "cancelCloseWait();" in js
     assert "dialog.removeAttribute('data-open')" in js
     assert "event.propertyName === 'opacity'" in js
-    assert "setTimeout(function () { finishClose(dialog); }, 340)" in js
+    assert "setTimeout(function () { finishClose(dialog); }, 220)" in js
     assert "dialog.close()" in js
-    assert "transition: opacity 220ms var(--ease-std)" in css
-    assert "transition: opacity 220ms var(--ease-std), transform 220ms var(--ease-std)" in css
-    assert "transition-duration: 320ms" in css
+    assert "transition: opacity 180ms var(--ease-std)" in css
+    assert "transition: opacity 180ms linear, transform 200ms var(--ease-std)" in css
+    assert "transition-duration: 250ms" in css
     assert "transform: translateY(100%)" in css
-    assert "transition-duration: 240ms" in css
+    assert "transition-duration: 200ms" in css

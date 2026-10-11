@@ -2,7 +2,7 @@
 import re
 import pytest
 
-CSS_PATH = 'src/frontend/assets/css/theme.css'
+CSS_PATH = 'src/frontend/assets/css/tokens.css'
 
 def parse_tokens(css_path):
     with open(css_path, 'r', encoding='utf-8') as f:

@@ -1,0 +1,266 @@
+/* Tokens estructurales y temas de Scalaris */
+:root {
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 20px;
+    --space-6: 24px;
+    --space-8: 32px;
+    --space-10: 40px;
+    --space-12: 48px;
+
+    --radius-card: 20px;
+    --radius-input: 12px;
+    --radius-btn: 12px;
+    --radius-badge: 8px;
+    --radius-pill: 999px;
+
+    --fs-display: 2rem;
+    --fw-display: 700;
+    --ls-display: -0.02em;
+    --fs-h1: 1.5rem;
+    --fw-h1: 700;
+    --ls-h1: -0.015em;
+    --fs-h2: 1.125rem;
+    --fw-h2: 600;
+    --fs-body: 0.9375rem;
+    --fw-body: 400;
+    --fs-small: 0.8125rem;
+    --fw-small: 500;
+    --fs-mono-math: 1.0625rem;
+
+    --dur-fast: 120ms;
+    --dur-med: 240ms;
+    --dur-slow: 250ms;
+    --ease-std: cubic-bezier(0.32, 0.72, 0, 1);
+
+    --z-nav: 2000;
+    --z-dock: 2400;
+    --z-fab: 2500;
+    --z-modal: 6000;
+    --glosa-w: clamp(360px, 32vw, 440px);
+    --glosa-reserve: calc(var(--glosa-w) + 32px);
+    --fab-reserve: 88px;
+    --cell-w: calc(10ch + 2 * var(--space-2));
+    --scrim: color-mix(in srgb, var(--text-main) 28%, transparent);
+    --swatch-papel: #F2F0EB;
+    --swatch-marea: #CFE3F0;
+    --swatch-medianoche: #082338;
+    --hub-card-active-bg: color-mix(in srgb, var(--accent) 12%, var(--bg-elevated));
+    --hub-spot: 8%;
+
+    --sombra-tab-activa: 0 4px 10px rgba(58, 52, 40, 0.15);
+    --sombra-logo: drop-shadow(0 2px 8px rgba(58, 52, 40, 0.08));
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: color-mix(in srgb, var(--text-sec) 25%, transparent);
+    border-radius: 9999px;
+}
+
+* {
+    scrollbar-color: color-mix(in srgb, var(--text-sec) 25%, transparent) transparent;
+}
+
+:root,
+:root[data-theme="papel"] {
+    color-scheme: light;
+
+    --bg-page: #F2F0EB;
+    --bg-panel: #EDEAE3;
+    --bg-elevated: #F7F5F1;
+    --bg-calc-btn: #F6F4EF;
+    --input-bg: #E5E1D8;
+
+    --text-main: #23262E;
+    --text-sec: #5A6070;
+    --text-placeholder: var(--text-sec);
+    --input-text: #23262E;
+
+    --border-input: rgba(35, 38, 46, 0.08);
+    --shadow-dark: rgba(58, 52, 40, 0.11);
+    --shadow-light: rgba(255, 255, 255, 0.90);
+
+    --accent: #1F6B64;
+    --accent-soft: #D8E8E5;
+    --btn-primary-bg: var(--accent);
+    --btn-primary-text: #F7F5F1;
+    --focus-ring: #1F6B64;
+
+    --error: #B23A31;
+    --badge-err-bg: #F6DED9;
+    --badge-err-text: #8E2A22;
+    --success: #1F7A4D;
+    --badge-suc-bg: #DCEEE2;
+    --badge-suc-text: #14603A;
+    --warning: #A6710B;
+    --badge-warn-bg: #F7E7CB;
+    --badge-warn-text: #7A5208;
+
+    --elev-0: none;
+    --elev-1: 4px 4px 8px var(--shadow-dark), -4px -4px 8px var(--shadow-light);
+    --elev-2: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light);
+    --elev-3: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light);
+    --elev-inset: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+
+    --z-nav: 2000;
+    --z-dock: 2400;
+    --z-fab: 2500;
+    --z-modal: 6000;
+    --glosa-w: clamp(360px, 32vw, 440px);
+    --glosa-reserve: calc(var(--glosa-w) + 32px);
+    --fab-reserve: 88px;
+    --cell-w: calc(10ch + 2 * var(--space-2));
+    --scrim: color-mix(in srgb, var(--text-main) 28%, transparent);
+    --swatch-papel: #F2F0EB;
+    --swatch-marea: #CFE3F0;
+    --swatch-medianoche: #082338;
+    --hub-card-active-bg: color-mix(in srgb, var(--accent) 12%, var(--bg-elevated));
+    --hub-spot: 8%;
+
+    --sombra-tab-activa: 0 4px 10px rgba(58, 52, 40, 0.15);
+    --sombra-logo: drop-shadow(0 2px 8px rgba(58, 52, 40, 0.08));
+    --show-papel: block;
+}
+
+html[data-theme="papel"] {
+    --show-papel: block;
+}
+
+:root[data-theme="marea"] {
+    color-scheme: light;
+
+    --bg-page: #CFE3F0;
+    --bg-panel: #BDD5E6;
+    --bg-elevated: #E4F0F8;
+    --bg-calc-btn: #D6E7F3;
+    --input-bg: #A9C6DB;
+
+    --text-main: #0B1F33;
+    --text-sec: #1F3A52;
+    --text-placeholder: var(--text-sec);
+    --input-text: #0B1F33;
+
+    --border-input: rgba(11, 31, 51, 0.08);
+    --shadow-dark: rgba(28, 66, 96, 0.22);
+    --shadow-light: rgba(255, 255, 255, 0.95);
+
+    --accent: #0B403B;
+    --accent-soft: #C2DEE8;
+    --btn-primary-bg: var(--accent);
+    --btn-primary-text: #E4F0F8;
+    --focus-ring: #0B403B;
+
+    --error: #7A1F18;
+    --badge-err-bg: #F6DED9;
+    --badge-err-text: #8E2A22;
+    --success: #166534;
+    --badge-suc-bg: #DCEEE2;
+    --badge-suc-text: #14603A;
+    --warning: #734D07;
+    --badge-warn-bg: #F7E7CB;
+    --badge-warn-text: #5C3C04;
+
+    --elev-0: none;
+    --elev-1: 4px 4px 8px var(--shadow-dark), -4px -4px 8px var(--shadow-light);
+    --elev-2: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light);
+    --elev-3: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light);
+    --elev-inset: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+
+    --z-nav: 2000;
+    --z-dock: 2400;
+    --z-fab: 2500;
+    --z-modal: 6000;
+    --glosa-w: clamp(360px, 32vw, 440px);
+    --glosa-reserve: calc(var(--glosa-w) + 32px);
+    --fab-reserve: 88px;
+    --cell-w: calc(10ch + 2 * var(--space-2));
+    --scrim: color-mix(in srgb, var(--text-main) 28%, transparent);
+    --swatch-papel: #F2F0EB;
+    --swatch-marea: #CFE3F0;
+    --swatch-medianoche: #082338;
+    --hub-card-active-bg: color-mix(in srgb, var(--accent) 12%, var(--bg-elevated));
+    --hub-spot: 8%;
+
+    --sombra-tab-activa: 0 4px 10px rgba(28, 66, 96, 0.22);
+    --sombra-logo: drop-shadow(0 2px 8px rgba(28, 66, 96, 0.15));
+    --show-marea: block;
+}
+
+html[data-theme="marea"] {
+    --show-marea: block;
+}
+
+:root[data-theme="medianoche"] {
+    color-scheme: dark;
+
+    --bg-page: #082338;
+    --bg-panel: #0A2B45;
+    --bg-elevated: #0D3554;
+    --bg-calc-btn: #0D3554;
+    --input-bg: #061D2E;
+
+    --text-main: #EAF6FF;
+    --text-sec: #B1D4F0;
+    --text-placeholder: var(--text-sec);
+    --input-text: #EAF6FF;
+
+    --border-input: rgba(234, 246, 255, 0.08);
+    --shadow-dark: rgba(0, 0, 0, 0.35);
+    --shadow-light: rgba(255, 255, 255, 0.03);
+
+    --accent: #BFE6E1;
+    --accent-soft: #14403C;
+    --btn-primary-bg: var(--accent);
+    --btn-primary-text: #082338;
+    --focus-ring: #BFE6E1;
+
+    --error: #E8897D;
+    --badge-err-bg: #4A2523;
+    --badge-err-text: #F0A79D;
+    --success: #8FCBA6;
+    --badge-suc-bg: #1D4331;
+    --badge-suc-text: #A8DBBC;
+    --warning: #E3B27E;
+    --badge-warn-bg: #4A3820;
+    --badge-warn-text: #EDC99A;
+
+    --elev-0: none;
+    --elev-1: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 2px 8px var(--shadow-dark);
+    --elev-2: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 4px 16px var(--shadow-dark);
+    --elev-3: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 8px 24px var(--shadow-dark);
+    --elev-inset: inset 2px 2px 6px rgba(0, 0, 0, 0.45), inset -1px -1px 3px rgba(255, 255, 255, 0.04);
+
+    --z-nav: 2000;
+    --z-dock: 2400;
+    --z-fab: 2500;
+    --z-modal: 6000;
+    --glosa-w: clamp(360px, 32vw, 440px);
+    --glosa-reserve: calc(var(--glosa-w) + 32px);
+    --fab-reserve: 88px;
+    --cell-w: calc(10ch + 2 * var(--space-2));
+    --scrim: color-mix(in srgb, var(--input-bg) 60%, transparent);
+    --swatch-papel: #F2F0EB;
+    --swatch-marea: #CFE3F0;
+    --swatch-medianoche: #082338;
+    --hub-card-active-bg: color-mix(in srgb, var(--accent) 12%, var(--bg-elevated));
+    --hub-spot: 8%;
+
+    --sombra-tab-activa: 0 4px 10px rgba(0, 0, 0, 0.35);
+    --sombra-logo: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.4));
+    --show-medianoche: block;
+}
+
+html[data-theme="medianoche"] {
+    --show-medianoche: block;
+}

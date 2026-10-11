@@ -36,7 +36,7 @@ class GlosaDockMixin:
             raise
 
     def open(self):
-        ui.run_javascript('if(window.scalarisGlosa) window.scalarisGlosa.open();')
+        ui.run_javascript('if(window.scalaris && window.scalaris.glosa) window.scalaris.glosa.abrir();')
 
     def build_dock(self):
         with ui.element('aside').classes('glosa-dock flex flex-col no-wrap').props('id="glosa-dock" role="complementary" aria-label="Glosa, asistente de álgebra lineal" data-glosa-keep'):
@@ -269,9 +269,9 @@ class GlosaDockMixin:
         from src.frontend import flags
         if flags.dock_enabled() and not getattr(self, 'is_open', False):
             if from_keyboard:
-                ui.run_javascript("if(window.scalarisGlosa) window.scalarisGlosa.open({instant: true, trigger: 'keyboard'});")
+                ui.run_javascript("if(window.scalaris && window.scalaris.glosa) window.scalaris.glosa.abrir({instant: true, trigger: 'keyboard'});")
             else:
-                ui.run_javascript("if(window.scalarisGlosa) window.scalarisGlosa.open();")
+                ui.run_javascript("if(window.scalaris && window.scalaris.glosa) window.scalaris.glosa.abrir();")
                 
         if from_keyboard and self.input_field and not s.focus:
             ui.run_javascript("setTimeout(() => { const el = document.querySelector('.glosa-input textarea'); if(el) el.focus(); }, 100);")
@@ -295,7 +295,7 @@ class GlosaDockMixin:
             
         from src.frontend import flags
         if flags.dock_enabled() and not getattr(self, 'is_open', False):
-            ui.run_javascript("if(window.scalarisGlosa) window.scalarisGlosa.open();")
+            ui.run_javascript("if(window.scalaris && window.scalaris.glosa) window.scalaris.glosa.abrir();")
             
         self.set_explain_focus(step_meta)
         

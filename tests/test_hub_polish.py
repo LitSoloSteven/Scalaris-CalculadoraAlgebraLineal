@@ -4,7 +4,7 @@ from pathlib import Path
 from tests.test_hub_matrix import matching_brace
 
 
-THEME_CSS_PATH = Path("src/frontend/assets/css/theme.css")
+THEME_CSS_PATH = Path("src/frontend/assets/css/vistas_hub_adaptable.css")
 
 
 def narrow_hub_block() -> str:

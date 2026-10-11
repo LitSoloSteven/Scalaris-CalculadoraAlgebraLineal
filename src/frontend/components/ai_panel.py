@@ -85,14 +85,14 @@ class AIPanel(GlosaDockMixin):
 
     def toggle(self):
         if flags.dock_enabled():
-            ui.run_javascript('if(window.scalarisGlosa) window.scalarisGlosa.toggle();')
+            ui.run_javascript('if(window.scalaris && window.scalaris.glosa) window.scalaris.glosa.alternar();')
             return
         self.is_open = not self.is_open
         self._update_visibility()
         
     def open(self):
         if flags.dock_enabled():
-            ui.run_javascript('if(window.scalarisGlosa) window.scalarisGlosa.open();')
+            ui.run_javascript('if(window.scalaris && window.scalaris.glosa) window.scalaris.glosa.abrir();')
             return
         if not self.is_open:
             self.toggle()

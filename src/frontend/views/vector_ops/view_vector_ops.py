@@ -63,7 +63,7 @@ class VectorOpsUI(VectorOpsResultsMixin):
     def build(self):
         self.ai_panel = AIPanel(self)
         create_app_shell(self, active_route=route_of('vectores'))
-        ui.add_head_html('<script>if(window.typesetMathWhenReady){window.typesetMathWhenReady();}</script>')
+        ui.add_head_html('<script>if(window.scalaris && window.scalaris.renderizarMathJax){window.scalaris.renderizarMathJax();}</script>')
 
         self.panel_add_sub.inject_scripts()
 
@@ -140,7 +140,7 @@ class VectorOpsUI(VectorOpsResultsMixin):
             return
 
         try:
-            await ui.run_javascript('return window.animateGarbageCollection()', timeout=2.0)
+            await ui.run_javascript('return window.scalaris && window.scalaris.animarRecoleccionBasura ? window.scalaris.animarRecoleccionBasura() : Promise.resolve()', timeout=2.0)
         except Exception:
             pass
         self.vector_panel.clear()
@@ -207,7 +207,7 @@ class VectorOpsUI(VectorOpsResultsMixin):
             self._result_fp = fingerprint(entrada)
             self._on_vectors_change()
 
-            ui.run_javascript("setTimeout(() => { if(window.typesetMathWhenReady) window.typesetMathWhenReady(); }, 100);")
+            ui.run_javascript("setTimeout(() => { if(window.scalaris && window.scalaris.renderizarMathJax) window.scalaris.renderizarMathJax(); }, 100);")
 
         except Exception:
             logger.exception("Error inesperado al calcular operaciones con vectores")

@@ -261,10 +261,10 @@ class TransformacionesUI:
             )
             self._renderizar_resultado(respuesta)
 
-        ui.run_javascript("typesetMathWhenReady();")
+        ui.run_javascript("if(window.scalaris && window.scalaris.renderizarMathJax) window.scalaris.renderizarMathJax();")
         ui.run_javascript(
             "setTimeout(() => { const el = document.getElementById('resultados-transformaciones'); "
-            "if(el) el.scrollIntoView({behavior: 'smooth', block: 'start'}) }, 300);"
+            "if(el) el.scrollIntoView({behavior: 'smooth', block: 'start'}) }, 240);"
         )
 
     # ------------------------------------------------------------------

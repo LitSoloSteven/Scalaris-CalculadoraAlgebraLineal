@@ -130,15 +130,19 @@ Llevar la totalidad del repositorio al cumplimiento estricto y verificable de la
   - Suite de 1112 pruebas pasando (`0 failed, 1112 passed`).
 
 ### Fase 4: Sistema de Estilos CSS, Scripts JS y Movimiento (E4, E5, E6)
-- **Estado**: Pendiente
+- **Estado**: Completada
 - **Archivos**:
-  - `src/frontend/assets/css/theme.css` dividido en módulos semánticos $\le 300$ líneas (`tokens.css`, `base.css`, `layout.css`, `componentes.css`, `vistas.css`).
-  - `src/frontend/assets/css/reproductor_pasos.css`.
-  - `src/frontend/assets/js/` (espacio de nombres único `window.scalaris`, animaciones $\le 250\text{ ms}$, scale(0.95), sin animaciones prohibidas).
-- **Criterios de aceptación**:
-  - Todos los archivos CSS $\le 300$ líneas.
-  - Animaciones conformes a E5 y sección 8.
-  - Cero colores literales fuera de definición de tokens.
+  - `src/frontend/assets/css/theme.css`: Eliminado definitivamente.
+  - 14 hojas modulares en `src/frontend/assets/css/` (todas $\le 300$ líneas): `tokens.css` (266), `base.css` (93), `layout.css` (55), `componentes_entradas.css` (185), `componentes_controles.css` (216), `vistas_navegacion.css` (211), `vistas_hub_matriz.css` (297), `vistas_hub_popovers.css` (281), `vistas_hub_adaptable.css` (270), `vistas_glosa_dock.css` (273), `vistas_glosa_componentes.css` (282), `vistas_inversa.css` (146), `movimiento.css` (216), `reproductor_pasos.css` (61).
+  - 17 scripts modulares en `src/frontend/assets/js/` (todos $\le 300$ líneas, funciones $\le 40$ líneas): `app.js` (143), `calculadora.js` (81), `cuadricula_compartida.js` (138), `equation_grid.js` (86), `geometry.js` (129), `glosa_dock.js` (249), `hub.js` (276), `hub_recientes.js` (37), `layout_sync.js` (77), `mathjax_config.js` (12), `matrix_capture.js` (87), `recoleccion_basura.js` (127), `reproductor_pasos.js` (32), `splash.js` (43), `square_matrix.js` (43), `theme.js` (68), `vector_capture.js` (88).
+- **Criterios de aceptación cumplidos**:
+  - `theme.css` descompuesto en 14 hojas cohesivas $\le 300$ líneas cargadas en estricto orden de cascada por `theme.py` y `tests/comun.py` (E6).
+  - Cero colores literales fuera de `tokens.css`; paletas de tokens completas para `papel`, `marea` y `medianoche`. Contraste AA validado en toda la suite.
+  - Espacio de nombres global único `window.scalaris` con métodos en español ASCII; IIFE; módulos compartidos para cuadrículas (`cuadricula_compartida.js`) y recolección (`recoleccion_basura.js`).
+  - Extracción de scripts inline en Python (`calculator.py`, `matrix_capture.py`, `reproductor.py`, `cuerpos.py`) hacia assets JS.
+  - Movimiento conforme a E5: todas las duraciones $\le 250\text{ ms}$; entradas desde `scale(0.95)` y opacidad 0; salidas más rápidas que entradas; fundido de tema y splash por opacidad en 240 ms (sin `clip-path`); eliminados `ease-in`, `ease-elastic`, `ease-in-out`, `filter`, y transiciones de `width` o `clip-path`.
+  - Ampliación de `RUTAS_AUDITADAS` en `tests/test_cumplimiento_reglas.py` incorporando las 14 hojas CSS y los 17 scripts JS (total 71 rutas auditadas).
+  - Suite completa de 1128 pruebas ejecutada con 100% de éxito (1128 pasadas, 0 fallos).
 
 ### Fase 5: Controladores de Interfaz (`src/frontend/controllers`) (E3, E4, E7)
 - **Estado**: Pendiente

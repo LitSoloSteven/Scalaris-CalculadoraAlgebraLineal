@@ -2,9 +2,8 @@ import os
 from pathlib import Path
 
 def test_theme_css_container_queries():
-    css_path = Path("src/frontend/assets/css/theme.css")
-    assert css_path.exists()
-    content = css_path.read_text(encoding="utf-8")
+    from tests.comun import leer_css_completo
+    content = leer_css_completo()
     
     # .view-root tiene container-type: inline-size
     assert ".view-root { container-type: inline-size; }" in content or ".view-root { container-type: inline-size" in content

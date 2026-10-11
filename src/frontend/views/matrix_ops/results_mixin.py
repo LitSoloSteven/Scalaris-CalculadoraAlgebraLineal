@@ -81,11 +81,11 @@ class MatrixOpsResultsMixin:
             self._render_steps_section(respuesta)
             self._render_resultado_final(respuesta)
 
-        ui.run_javascript('typesetMathWhenReady();')
-        ui.run_javascript("replayResultAnimation('resultados-ops');")
+        ui.run_javascript('if(window.scalaris && window.scalaris.renderizarMathJax) window.scalaris.renderizarMathJax();')
+        ui.run_javascript("if(window.scalaris && window.scalaris.reproducirAnimacionResultado) window.scalaris.reproducirAnimacionResultado('resultados-ops');")
         ui.run_javascript(
             "setTimeout(() => { const el = document.getElementById('resultados-ops'); "
-            "if(el) el.scrollIntoView({behavior: 'smooth', block: 'start'}) }, MOTION.med);"
+            "if(el) el.scrollIntoView({behavior: 'smooth', block: 'start'}) }, (window.scalaris?.movimiento?.medio || 240));"
         )
 
         self._actualizar_fingerprint_ia(expresion)

@@ -5,9 +5,8 @@ import pytest
 
 
 def test_theme_css_motion_and_break_ui_tokens():
-    css_path = Path("src/frontend/assets/css/theme.css")
-    assert css_path.exists()
-    content = css_path.read_text(encoding="utf-8")
+    from tests.comun import leer_css_completo, RAIZ
+    content = leer_css_completo()
 
     # Layout container constraints
     assert content.count("container-type: inline-size") == 3
@@ -59,8 +58,8 @@ def test_theme_css_motion_and_break_ui_tokens():
     assert "max-width: 16ch" not in inv_cell_css
     assert "text-overflow: ellipsis" not in inv_cell_css
 
-    # C1: prefers-reduced-motion block
-    reduced_part = content.split("/* === ACCESIBILIDAD: Reduced motion === */")[1].split("/* === MATRIZ INVERSA === */")[0]
+    # C1: prefers-reduced-motion block localizado en movimiento.css
+    reduced_part = (RAIZ / "src" / "frontend" / "assets" / "css" / "movimiento.css").read_text(encoding="utf-8")
     assert "@media (prefers-reduced-motion: reduce)" in reduced_part
     assert ".tw-cursor" in reduced_part
     assert ".glosa-typing-indicator span" in reduced_part
@@ -81,10 +80,11 @@ def test_theme_css_motion_and_break_ui_tokens():
 
 def test_js_app_delegated_tooltip_and_no_key_pulse():
     app_js = Path("src/frontend/assets/js/app.js").read_text(encoding="utf-8")
+    recoleccion_js = Path("src/frontend/assets/js/recoleccion_basura.js").read_text(encoding="utf-8")
     assert "key-pulse" not in app_js
     assert "scrollWidth > target.clientWidth" in app_js
     assert "target.title = target.value" in app_js
-    assert "transform 240ms cubic-bezier(0.32, 0.72, 0, 1), opacity 240ms cubic-bezier(0.32, 0.72, 0, 1)" in app_js
+    assert "transform 160ms cubic-bezier(0.32, 0.72, 0, 1), opacity 160ms cubic-bezier(0.32, 0.72, 0, 1)" in recoleccion_js
 
 
 def test_js_cross_highlighting_and_no_blur():

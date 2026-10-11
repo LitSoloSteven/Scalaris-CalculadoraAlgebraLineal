@@ -8,10 +8,13 @@ HUB_JS_PATH = Path("src/frontend/assets/js/hub.js")
 
 
 def hub_css_block() -> str:
-    content = THEME_CSS_PATH.read_text(encoding="utf-8")
-    start = content.index("/* === HUB: Matriz de áreas y popovers === */")
-    end = content.index("/* === F4: Glosa === */", start)
-    return content[start:end]
+    from tests.comun import RAIZ
+    archivos = [
+        RAIZ / "src" / "frontend" / "assets" / "css" / "vistas_hub_matriz.css",
+        RAIZ / "src" / "frontend" / "assets" / "css" / "vistas_hub_popovers.css",
+        RAIZ / "src" / "frontend" / "assets" / "css" / "vistas_hub_adaptable.css",
+    ]
+    return "\n".join(p.read_text(encoding="utf-8") for p in archivos)
 
 
 def matching_brace(css: str, open_index: int) -> int:
@@ -55,35 +58,35 @@ def test_hub_popover_motion_timing_and_accessibility_contract():
         for value in re.findall(r"(?<![\w.])(\d+)ms\b", declaration)
     ]
     assert durations
-    assert max(durations) <= 340
+    assert max(durations) <= 250
     assert not re.search(r"(?<![\w-])ease-in(?![\w-])", css, re.IGNORECASE)
 
     card_exit = block_for(css, ".hub-pop-card")
     card_entry = block_for(css, ".hub-pop[open][data-open] .hub-pop-card")
     assert "opacity: 0" in card_exit
-    assert duration_ms(card_exit, "transition") == 220
-    assert duration_ms(card_entry, "transition-duration") == 320
+    assert duration_ms(card_exit, "transition") == 180
+    assert duration_ms(card_entry, "transition-duration") == 250
     assert duration_ms(card_entry, "transition-duration") > duration_ms(card_exit, "transition")
 
     mobile = block_for(css, "@media (max-width: 639px)")
     mobile_exit = block_for(mobile, ".hub-pop-card")
     mobile_entry = block_for(mobile, ".hub-pop[open][data-open] .hub-pop-card")
-    assert duration_ms(mobile_exit, "transition-duration") == 240
-    assert duration_ms(mobile_entry, "transition-duration") == 340
+    assert duration_ms(mobile_exit, "transition-duration") == 200
+    assert duration_ms(mobile_entry, "transition-duration") == 250
     assert duration_ms(mobile_entry, "transition-duration") > duration_ms(mobile_exit, "transition-duration")
 
     backdrop_entry = block_for(css, ".hub-pop[open][data-open]::backdrop")
-    assert duration_ms(backdrop_entry, "transition-duration") == 320
+    assert duration_ms(backdrop_entry, "transition-duration") == 250
     tile_entry = block_for(css, ".hub-pop[data-open] .hub-tile")
-    assert duration_ms(tile_entry, "transition-duration") == 280
+    assert duration_ms(tile_entry, "transition-duration") == 220
     assert "calc(var(--i, 0) * 50ms)" in tile_entry
 
     fallback = re.search(
-        r"setTimeout\(function \(\) \{ finishClose\(dialog\); \}, (\d+)\)",
+        r"closeTimer = setTimeout\(function \(\) \{ finishClose\(dialog\); \}, (\d+)\)",
         js,
     )
     assert fallback is not None
-    assert int(fallback.group(1)) > 240
+    assert int(fallback.group(1)) <= 250
     assert "card.addEventListener('transitionend', closeTransitionHandler);" in js
     assert "event.target === card && event.propertyName === 'opacity'" in js
     assert "cancelCloseWait();" in js
