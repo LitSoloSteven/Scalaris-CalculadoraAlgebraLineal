@@ -3,6 +3,8 @@
 ## Objetivo
 Llevar la totalidad del repositorio al cumplimiento estricto y verificable de las reglas SCALARIS (secciones 0 a 14), preservando exactamente el comportamiento matemático y observable bajo las excepciones explícitas autorizadas E1 a E7.
 
+**Estado verificado de cierre global (2026-10-11): pendiente.** Las declaraciones históricas de fases completadas no acreditan cumplimiento de todo el árbol. La ampliación de la auditoría encuentra implementaciones activas duplicadas en `backend/solvers` y `backend/resolutores`, contratos internos duales, identificadores heredados y límites incumplidos. El usuario autorizó expresamente corregir `src` conservando el comportamiento. La fase 8 continúa hasta resolver esa deuda; no se interpreta ningún nombre interno inglés como excepción E4.
+
 ---
 
 ## Excepciones Explícitas del Usuario (Sección 0, Punto 2)
@@ -318,10 +320,75 @@ Las funciones de las pruebas de figuras y escenas renombradas tienen nombres esp
 **h. Plan:** actualizado y conservado. Fase 7 continúa en curso; ninguna de sus tres subentregas se declara cerrada con cumplimiento total.
 
 ### Fase 8: Armonización de la Suite de Pruebas y Cierre (E2)
-- **Estado**: Pendiente
+- **Estado**: En curso; entrega intermedia, sin cierre de auditoría global.
 - **Archivos**: `tests/` completo, `tests/comun.py`, `tests/test_cumplimiento_reglas.py`.
 - **Criterios de aceptación**:
   - Todas las pruebas en `tests/` renombradas a español descriptivo sin prefijos de fase (`f4`, `f8c`, `f9`, etc.).
   - Extracción de helpers duplicados a `tests/comun.py`.
   - Ejecución de `test_cumplimiento_reglas.py` sobre la totalidad del repositorio (`RUTAS_AUDITADAS` cubre todo el proyecto, 100% verificado).
   - Eliminación de este plan temporal al completar satisfactoriamente la auditoría.
+
+#### Avance verificable y continuación
+
+Los ocho bloques de esta fase se mantienen separados para no confundir verificaciones parciales con aceptación global:
+
+| Bloque | Estado |
+|---|---|
+| 1. Inventario inicial, colección y descubrimiento completo de rutas | Completado: datos en `scratch`, manifiesto dinámico de `src` y `tests`. |
+| 2. Auxiliares solicitados de tokens/contraste, clientes, OpenRouter y limpieza de handoff | Completado para las duplicaciones identificadas; consumidores migrados. |
+| 3. Tamaño físico de pruebas Python | Completado: ningún archivo supera 300 líneas, función 40 o clase 200, medido con AST. |
+| 4. Español completo en nombres, variables, docstrings y comentarios | Parcial: archivos con referencias a fases retirados; quedan archivos y símbolos ingleses heredados. |
+| 5. Conservación de intención histórica y tabla acumulada de todas las ediciones E2/E5/E6 | Parcial: comparación estructural contra inicio de fase y familias revisadas; falta conciliación histórica completa. |
+| 6. Correcciones de `src` y auditoría global, incluidos límites de JavaScript | Parcial: alcance completo y arnés Python corregido; deuda real aún produce fallos. |
+| 7. Suite/análisis/revisión finales completamente satisfactorios | Parcial: se ejecutaron, pero cinco auditorías globales fallan; revisiones realmente delegadas. |
+| 8. Informe final, contratos externos definitivos y eliminación del plan | Pendiente del cierre real; conservar este plan para continuar. |
+
+**Archivos y responsabilidades.** Nuevos auxiliares: `tests/comun_estilos.py`, `comun_clientes.py`, `comun_openrouter.py`, `comun_auditoria.py`, `comun_vista_previa.py`; `comun.py` incorpora limpieza de handoff. `rutas_auditadas.py` descubre todos los `.py`, `.js`, `.css` y `.html` de ambos árboles, sin exclusiones por carpeta. El controlador geométrico se separó de rangos/recorte. Operaciones vectoriales se separaron en suma/resta y producto escalar; combinación lineal en soluciones, validación y trazabilidad. Vista previa y pasos largos se dividieron conservando casos. OpenRouter se separó en peticiones, caché y seguridad de mensajes. Los renombrados restantes se registran en el diff del árbol de trabajo, sin commit.
+
+**Conservación y línea base.** VERIFICADO: al iniciar esta fase se recogieron 1161 casos. Las 2720 expresiones de aserción de ese estado se conservan como multiconjunto AST, normalizando únicamente nombres locales por expresión y conservando operadores, constantes, atributos y relaciones entre nombres. Esta comparación no demuestra por sí sola equivalencia de preparación o control de flujo. El revisor de regresiones comparó cuerpos completos de operaciones vectoriales (29), combinación (37), controlador/recorte (37) y vista previa (3 funciones, con parametrización): conservados, salvo dos catálogos de claves trasladados con valores idénticos. Se corrigió una diferencia de recorrido en matrices irregulares del auxiliar de vista previa y se añadieron regresiones.
+
+VERIFICADO: se exportó y ejecutó una instantánea histórica del commit `7142090`, primera versión del arnés de cumplimiento en este historial: **1106 pruebas pasaron**, incluidas siete del arnés. El registro del plan dice 1099; la correspondencia 1099 + 7 es INFERIDA y todavía requiere conciliar el momento exacto de la línea base. La instantánea y su ZIP se eliminaron después de guardar inventario/colección en `scratch`. La comparación de intención histórica completa sigue pendiente. Se restauraron en archivo nuevo los contratos de ausencia de scripts residuales y de tres alias prohibidos, que no aparecían en el arnés al inicio de esta fase.
+
+**Verificación más reciente.** VERIFICADO: suite completa **1181 pasadas, 5 fallidas**, 1186 casos totales. Los cinco fallos son de auditoría: complejidad de `context.py:describir_matriz`, docstring y nombre de `models/matrix.py:Matrix`, banners de `constants.py` y estilo embebido de `vistas/hub/view_hub.py`. Cada fallo muestra solo el primer incumplimiento de su categoría; hay deuda adicional. `compileall` de `src` y `tests`, `node --check` de los 18 archivos JS y `git diff --check` pasan. No se encontró configuración ni instalación de Ruff, mypy, pylint, radon o ESLint; no se instaló nada. Advertencia heredada de Starlette sobre TestClient/httpx: registrada, sin cambiar dependencias. Suite ejecutada con permiso para sockets locales de Windows.
+
+VERIFICADO: el manifiesto contiene **390 rutas**. El diagnóstico exhaustivo de límites disponible en `scratch/limites_pendientes.json` registra 162 incumplimientos: cinco archivos, 16 clases, 27 funciones, 19 firmas, 44 casos de anidamiento y 51 de complejidad. No implica 162 archivos distintos; una función puede infringir varios límites. El contraste contra inicio de fase registra 2720 aserciones existentes conservadas y 49 expresiones nuevas o restauradas. Los datos temporales se conservan exclusivamente para la continuación.
+
+**Revisión coordinada real.** Seguridad, regresiones y mantenibilidad se delegaron a tres agentes de solo lectura con el mismo contexto acotado. Seguridad verificó el cierre de un hallazgo alto heredado: la caché global de Glosa omitía historial y cliente. Ahora la clave incluye mensajes efectivos, modelos y UUID de la instancia; cada panel crea su propio cliente. También se eliminaron cuerpos HTTP y textos de excepciones de los registros cambiados. Regresiones nuevas cubren clientes/historiales y secretos ficticios en registros. El cambio de privacidad es una desviación necesaria conforme a 6.3, sin modificación matemática. No quedaron hallazgos críticos o altos abiertos en las correcciones revisadas.
+
+Los revisores detectaron y se corrigieron falsos positivos al analizar patrones/muestras de prueba como comentarios o estilos renderizados. El arnés cuenta ahora parámetros exclusivos y variádicos, métodos públicos asíncronos, decisiones de comprensiones y alternativas condicionales. `elif` comparte nivel, mientras `else: if` conserva anidamiento real. Las funciones auxiliares introducidas con complejidad excesiva se dividieron. Pendiente: análisis estructural JS, idioma completo y firmas heredadas como `OpenRouterIA.ask` con seis parámetros.
+
+#### Tabla acumulada de aserciones antes / después comprobadas hasta aquí
+
+Las filas históricas siguientes están verificadas mediante `git diff 7142090 HEAD`; no se cambiaron otra vez los valores de movimiento en esta subentrega. La conciliación exhaustiva del resto del historial queda en el bloque 5.
+
+| Aserción antes | Después | Excepción y propósito conservado |
+|---|---|---|
+| Transición de recolección `transform 240ms ... opacity 240ms ...` en `app.js` | `transform 160ms ... opacity 160ms ...` en `recoleccion_basura.js` | E5/E6: misma verificación de transición, módulo propio y duración permitida. |
+| Cierre de diálogo por `setTimeout(..., 340)` | `setTimeout(..., 220)` | E5: mismo cierre de respaldo dentro del límite. |
+| Opacidad de salida de popover `220ms` | `180ms` | E5: salida más rápida que entrada. |
+| Tarjeta: opacidad/transformación `220ms` con curva estándar | Opacidad `180ms linear`, transformación `200ms` con curva estándar | E5: propiedades permitidas y duración acotada. |
+| Entrada general de popover `320ms` | `250ms` | E5: mismo estado de entrada. |
+| Salida móvil `240ms` | `200ms` | E5: mismo estado de salida. |
+| Máximo de duraciones del Hub `<=340` | `<=250` | E5: umbral más estricto. |
+| Duración de tarjeta de escritorio: salida `220`, entrada `320` | Salida `180`, entrada `250` | E5: se mantiene además la aserción entrada > salida. |
+| Duración móvil: salida `240`, entrada `340` | Salida `200`, entrada `250` | E5: se mantiene además entrada > salida. |
+| Entrada de fondo modal `320` | `250` | E5: mismo fondo y estado. |
+| Entrada de herramienta `280` | `220` | E5: mismo escalonamiento y estado. |
+| Respaldo de cierre identificado por `setTimeout` y duración `>240` | Identificado por `closeTimer = setTimeout` y duración `<=250` | E5: adaptación histórica deliberada de temporización; todavía se comprueban listener y cancelación. |
+| Existencia/lectura de `theme.css` | Lectura del conjunto ordenado de hojas; falta de cualquier archivo provoca error | E6: cobertura de carga modular. |
+| Contraste, muestras y tokens leídos de `theme.css` | Leídos de `tokens.css` | E6: mismos pares, parámetros y umbrales numéricos. |
+| Bloque Hub localizado por banners dentro de `theme.css` | Tres hojas `vistas_hub_*` en orden de producción | E6: mismas comprobaciones por selector. |
+| Bloque de accesibilidad localizado por banners | Lectura de `movimiento.css` | E6: mismas comprobaciones de reduced-motion. |
+| Navegación delimitada por expresión regular entre bloques y `assert match` | Lectura directa de `vistas_navegacion.css` | E6: archivo faltante falla por lectura; mismas comprobaciones de reglas. |
+| Bloques de muestras anteriores al banner BASE | Bloques raíz que contienen `--swatch-papel` en `tokens.css` | E6: se conserva el conteo exacto de cuatro y todas las muestras esperadas. |
+| Imports/rutas `components`, `views`, `controllers` | `componentes`, `vistas`, `controladores` | E2/E3: referencias a los mismos consumidores migrados. |
+| Archivos `test_f4`, `test_f8*`, `test_f9*`, `test_p6_*`, `test_hub_motion_h10` | Nombres por responsabilidad en español, sin referencias a fases | E2: casos y parametrización conservados. |
+| Auxiliares CSS y dobles repetidos en módulos | Funciones y clases de módulos comunes; una/seis pasadas de tokens preservadas | E2: mismos valores y comportamiento de preparación. |
+| Dos conjuntos idénticos de claves de combinación lineal | `_CLAVES_RESPUESTA`, con todas las mismas claves | E2: predicado `issubset` intacto en ambos casos. |
+| Muestras de cadenas del propio auditor consideradas infracciones | Comentarios/docstrings reales y cadenas de presentación diferenciados por AST/tokenización | Corrección del arnés ampliado; ninguna ruta se excluye, regresiones positivas y negativas añadidas. |
+
+**Excepciones y contratos.** E1 y autorización posterior permiten corregir backend sin cambiar matemáticas. E2 ampara movimientos, renombrados y extracciones; E3/E4 siguen incompletas y no permiten los alias duales encontrados. E5/E6 sustentan la tabla histórica; E7 sigue pendiente en cálculos de controladores. E4 conserva únicamente las APIs ajenas enumeradas arriba: entre las tocadas, `run_javascript`, `is_deleted`, `status_code`, `text`, `json`, argumentos de requests y fixtures de pytest. `_storage`, `ai_ctx_enabled`, `ask`, `AIResult`, `AIContext` y claves internas inglesas no se declaran contratos externos. El inventario final de nombres conservados se entregará al terminar la migración.
+
+**Producto y riesgos.** VERIFICADO por lectura: Leontief y Transformaciones están habilitados en el catálogo/rutas, pero `_crear_items_algebra` no los incluye; `hub_pillars` usa esos items, de modo que continúan fuera de navegación contextual y Hub. `controller_determinant` ya se llama `controlador_determinante.py`; `ControladorDeterminante` solo se define y reexporta, sin consumidor de funcionalidad en `src` o `tests`. No cambiar decisiones de producto en esta fase. Interfaz visual/teclado/320 px/zoom 200 %: NO PROBADO en esta subentrega, sin cambios visuales implementados. Los pasos manuales anteriores siguen disponibles.
+
+**Punto limpio para continuar:** bloque 4, comenzando por `tests/test_validators_parse_number.py`, archivos restantes en inglés y variables/comentarios heredados. Luego conciliar todos los casos históricos y la tabla; corregir `src` desde `src/ai/context.py` y los árboles duplicados de backend, propagando cada renombrado sin alias; completar el análisis JS y cerrar auditoría. Repetir suite/revisiones cuando nuevas correcciones lo justifiquen. Al cumplir los ocho bloques, trasladar el informe completo a la respuesta y eliminar este plan; retirar los datos temporales de `scratch` tras aprovechar su evidencia. No hay commit, push, instalación ni archivos de entorno modificados.

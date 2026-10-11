@@ -7,20 +7,10 @@ from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_matrices.evaluador import (
     EvaluadorExpresionesMatriciales,
 )
-from src.frontend.componentes.ai_panel import AIPanel
+from tests.comun_clientes import PanelIASimulado
 from src.frontend.controladores.operaciones_matrices.controlador_operaciones_matrices import (
     ControladorOperacionesMatrices,
 )
-
-
-class MockAIPanel(AIPanel):
-    def __init__(self, active_ui, storage_dict=None):
-        self._mock_storage = storage_dict if storage_dict is not None else {"ai_ctx_enabled": True}
-        super().__init__(active_ui)
-
-    @property
-    def _storage(self):
-        return self._mock_storage
 
 
 def test_foco_matriz_suma():
@@ -106,7 +96,7 @@ def test_panel_ia_recolectar_contexto_detalle_paso():
                 input={"expresion": "AB"},
             )
 
-    panel = MockAIPanel(InterfazSimulada(), {"ai_ctx_enabled": True})
+    panel = PanelIASimulado(InterfazSimulada(), {"ai_ctx_enabled": True})
 
     panel.explain_focus = {
         "index": 1,

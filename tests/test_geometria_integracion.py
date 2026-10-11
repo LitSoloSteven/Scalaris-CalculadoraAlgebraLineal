@@ -1,6 +1,7 @@
 """Pruebas de integración de geometría, vectores, inversas y navegación."""
 import json
 import pytest
+from tests.comun import limpiar_almacen_handoff
 
 from src.frontend.componentes import handoff
 from src.frontend.controladores.geometria.controlador_geometria import (
@@ -64,7 +65,7 @@ def test_procesar_vectores_cuadro_predeterminado():
 
 
 def test_almacen_traspaso_eviccion_y_limite_caracteres(monkeypatch):
-    handoff._ALMACEN.clear()
+    limpiar_almacen_handoff()
 
     contador = 1000.0
 

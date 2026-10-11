@@ -1,0 +1,8 @@
+{
+  "antes": 2720,
+  "despues_existentes": 2720,
+  "nuevas_o_restauradas": 49,
+  "faltantes": {},
+  "extras_existentes": {},
+  "metodo": "Multiconjunto AST con renombrado alfa por expresion; no demuestra preparacion o flujo ni equivalencia historica completa."
+}

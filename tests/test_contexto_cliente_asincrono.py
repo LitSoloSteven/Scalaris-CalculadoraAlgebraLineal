@@ -3,29 +3,9 @@ import asyncio
 from pathlib import Path
 import re
 from tests.comun import comprobar_tarea_en_cliente
+from tests.comun_clientes import ClienteSimulado
 from src.frontend.vistas.geometria.vista_geometria import VistaGeometria
 from src.frontend.componentes.glosa_dock import GlosaDockMixin
-
-
-class ClienteSimulado:
-    """Cliente falso que registra el protocolo de contexto y llamadas JavaScript."""
-
-    def __init__(self):
-        self.entradas = 0
-        self.salidas = 0
-        self.llamadas_js = []
-        self.is_deleted = False
-
-    def __enter__(self):
-        self.entradas += 1
-        return self
-
-    def __exit__(self, *args):
-        self.salidas += 1
-
-    def run_javascript(self, codigo: str, *, timeout: float = 1.0):
-        """Registra el código recibido por la API de cliente de NiceGUI."""
-        self.llamadas_js.append(codigo)
 
 
 def test_geometria_ejecuta_js_desde_cliente():

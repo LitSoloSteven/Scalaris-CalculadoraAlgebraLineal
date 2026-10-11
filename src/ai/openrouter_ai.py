@@ -3,10 +3,12 @@
 from dataclasses import dataclass
 from enum import Enum
 import hashlib
+import json
 import logging
 import os
 import threading
 import time
+import uuid
 
 from dotenv import load_dotenv
 import requests
@@ -59,13 +61,12 @@ _cache_respuestas: dict[str, tuple[AIResult, float]] = {}
 
 
 def _calcular_hash_cache(
-    pregunta: str,
-    bloque_contexto: str | None,
-    mas_simple: bool,
+    mensajes: list,
     modelos: list[str],
+    espacio_cliente: str,
 ) -> str:
-    """Genera hash SHA-256 único para la combinación de parámetros de consulta."""
-    datos = f"{pregunta}|{bloque_contexto}|{mas_simple}|{','.join(modelos)}"
+    """Identifica el contenido enviado y aísla las respuestas de cada cliente."""
+    datos = json.dumps([espacio_cliente, modelos, mensajes], ensure_ascii=False)
     return hashlib.sha256(datos.encode("utf-8")).hexdigest()
 
 
@@ -109,7 +110,7 @@ def _manejar_excepcion_red(
         logger.error("Error de conexión al contactar %s", modelo)
         msg = "No hay conexión con el servicio de IA. Revisa tu red y vuelve a intentarlo."
         return AIResult(False, msg, AIErrorKind.NETWORK), True
-    logger.error("Excepción de red en %s: %s", modelo, exc)
+    logger.error("Fallo de red no clasificado al contactar el servicio de IA")
     return None, False
 
 
@@ -131,6 +132,7 @@ class OpenRouterIA:
         """Inicializa credenciales y URL base del servicio."""
         self.api_key = os.getenv("OPENROUTER_API_KEY")
         self.url = URL_OPENROUTER
+        self._espacio_cache = uuid.uuid4().hex
 
     def _validar_precondiciones(
         self, cancel: threading.Event | None
@@ -173,7 +175,6 @@ class OpenRouterIA:
             return procesar_respuesta_exitosa(resp, modelo, AIResult, AIErrorKind), "exito"
         res, accion = clasificar_error_http(
             resp.status_code,
-            resp.text,
             modelo,
             ctx_intento,
             ai_result_cls=AIResult,
@@ -230,10 +231,10 @@ class OpenRouterIA:
         return None, False
 
     def _paso_cache(
-        self, question: str, context: str | None, simpler: bool, modelos: list[str]
+        self, mensajes: list, modelos: list[str]
     ) -> tuple[str, AIResult | None]:
-        """Paso de caché: calcula hash y busca resultado existente si aplica."""
-        clave = _calcular_hash_cache(question, context, simpler, modelos)
+        """Busca una respuesta del mismo cliente y contenido efectivo."""
+        clave = _calcular_hash_cache(mensajes, modelos, self._espacio_cache)
         return clave, _leer_cache(clave, self._tiempo_monotonico())
 
     def _paso_cascada_modelos(
@@ -279,11 +280,11 @@ class OpenRouterIA:
         if self.MODELOS_RESERVA:
             modelos.append(self.MODELOS_RESERVA[0])
 
+        mensajes = build_messages(history or [], question, context_block, simpler=simpler)
         clave_cache = ""
         if cacheable:
-            clave_cache, res_cache = self._paso_cache(question, context_block, simpler, modelos)
+            clave_cache, res_cache = self._paso_cache(mensajes, modelos)
             if res_cache:
                 return res_cache
 
-        mensajes = build_messages(history or [], question, context_block, simpler=simpler)
         return self._paso_cascada_modelos(modelos, mensajes, cancel, clave_cache)

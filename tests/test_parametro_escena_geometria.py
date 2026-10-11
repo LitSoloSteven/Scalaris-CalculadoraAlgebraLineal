@@ -37,7 +37,8 @@ def test_normalizar_escena_desconocida(input_scene, expected_scene):
 
 def test_transferencia_vectores_rechaza_escena_distinta():
     """Un payload de vectores cuya escena no coincida con la URL se rechaza."""
-    _ALMACEN.clear()
+    from tests.comun import limpiar_almacen_handoff
+    limpiar_almacen_handoff()
     token = guardar_vectores("vectores", "combinacion", [["1", "2"], ["3", "4"]])
     result = consumir_vectores(token, allowed_n={2, 3})
 
@@ -63,7 +64,8 @@ def test_transferencia_vectores_rechaza_escena_distinta():
 
 def test_transferencia_vectores_acepta_escena_coincidente():
     """Un payload de vectores cuya escena coincide con la URL se acepta normalmente."""
-    _ALMACEN.clear()
+    from tests.comun import limpiar_almacen_handoff
+    limpiar_almacen_handoff()
     token = guardar_vectores("vectores", "vectores", [["1", "2"], ["3", "4"]])
     result = consumir_vectores(token, allowed_n={2, 3})
 

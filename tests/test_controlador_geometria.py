@@ -4,74 +4,10 @@ import json
 from fractions import Fraction
 import pytest
 
-from src.backend.geometria.recorte import (
-    calcular_rango_automatico,
-    recortar_recta_a_caja,
-)
 from src.frontend.controladores.geometria.controlador_geometria import (
     ControladorGeometria,
     selector_celda_error,
 )
-
-
-def test_rango_automatico_simetrico():
-    rango = calcular_rango_automatico([3.0, -2.0])
-    assert rango[0] == -rango[1]
-    assert rango[1] >= 3.0
-
-
-def test_rango_automatico_minimo():
-    rango = calcular_rango_automatico([0.5])
-    assert rango[1] >= 5.0
-
-
-def test_rango_automatico_escala_125():
-    rango = calcular_rango_automatico([7.0])
-    assert rango == [-10.0, 10.0]
-
-
-def test_rango_automatico_sin_finitos():
-    rango = calcular_rango_automatico([float("inf"), float("-inf"), float("nan")])
-    assert rango == [-5.0, 5.0]
-
-
-def test_rango_automatico_vacio():
-    rango = calcular_rango_automatico([])
-    assert rango == [-5.0, 5.0]
-
-
-def test_rango_automatico_valores_nulos():
-    rango = calcular_rango_automatico([None, 3.0, None])
-    assert rango[0] == -rango[1]
-
-
-def test_rango_automatico_tope_grande():
-    rango = calcular_rango_automatico([1e15])
-    assert rango[1] <= 1e6
-
-
-def test_recorte_recta_caja_interior():
-    resultado = recortar_recta_a_caja([0.0, 0.0], [1.0, 0.0], 5.0)
-    assert resultado is not None
-    assert abs(resultado[0] - (-5.0)) < 1e-6
-    assert abs(resultado[1] - 5.0) < 1e-6
-
-
-def test_recorte_recta_caja_exterior_cruce():
-    resultado = recortar_recta_a_caja([10.0, 0.0], [1.0, 0.0], 5.0)
-    assert resultado is not None
-    assert abs(resultado[0] - (-15.0)) < 1e-6
-    assert abs(resultado[1] - (-5.0)) < 1e-6
-
-
-def test_recorte_recta_caja_paralela_exterior():
-    resultado = recortar_recta_a_caja([0.0, 10.0], [1.0, 0.0], 5.0)
-    assert resultado is None
-
-
-def test_recorte_recta_caja_direccion_cero():
-    resultado = recortar_recta_a_caja([0.0, 0.0], [0.0, 0.0], 5.0)
-    assert resultado is None
 
 
 def test_selector_celda_error_matriz_a():

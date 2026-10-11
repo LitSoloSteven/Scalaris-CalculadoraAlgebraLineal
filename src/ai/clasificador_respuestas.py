@@ -37,8 +37,8 @@ def procesar_respuesta_exitosa(
             "Glosa no devolvió una respuesta. Reformula la pregunta o inténtalo de nuevo.",
             error_kind_cls.EMPTY,
         )
-    except Exception as e:
-        logger.error("Error parseando JSON de respuesta de IA: %s", e)
+    except Exception:
+        logger.error("La respuesta de IA no contiene un JSON válido")
         return ai_result_cls(
             False,
             "Glosa no pudo responder ahora. Vuelve a intentarlo en un momento.",
@@ -78,7 +78,6 @@ def _manejar_limite_tasa(
 
 def clasificar_error_http(
     codigo: int,
-    cuerpo_texto: str,
     modelo: str,
     ctx: ContextoIntento,
     *,
@@ -87,7 +86,7 @@ def clasificar_error_http(
 ) -> tuple[Any, str]:
     """Clasifica errores HTTP en acción ('reintentar', 'fallback', 'terminar') o resultado."""
     if codigo in (401, 403):
-        logger.error("Error de autenticación con OpenRouter: %s - %s", codigo, cuerpo_texto[:200])
+        logger.error("Error de autenticación con OpenRouter: estado %s", codigo)
         res = ai_result_cls(
             False,
             "Glosa no pudo autenticarse con el servicio de IA. Avisa a quien administra Scalaris.",
@@ -100,7 +99,7 @@ def clasificar_error_http(
         return _manejar_limite_tasa(ctx, ai_result_cls, error_kind_cls)
 
     if codigo in CODIGOS_ESTADO_TRANSITORIOS:
-        logger.warning("Error transitorio %s en %s: %s", codigo, modelo, cuerpo_texto[:200])
+        logger.warning("Error transitorio de OpenRouter: estado %s", codigo)
         if (
             ctx.intento == 0
             and ctx.idx_modelo == 0
@@ -109,5 +108,5 @@ def clasificar_error_http(
             return None, "reintentar"
         return None, "fallback"
 
-    logger.error("Error no manejado %s en %s: %s", codigo, modelo, cuerpo_texto[:200])
+    logger.error("Error no manejado de OpenRouter: estado %s", codigo)
     return None, "fallback"

@@ -18,7 +18,7 @@ from src.frontend.vistas.vector_ops._pasos_reproductor import (
 )
 
 
-def test_basic_ops_generate_expected_steps_sequence():
+def test_operaciones_basicas_generan_secuencia_de_pasos_esperada():
     """Suma, resta y multiplicación escalar generan secuencia [inicial, componentes..., resultado]."""
     v1 = Matrix(3, 1, [[1], [2], [3]])
     v2 = Matrix(3, 1, [[4], [5], [6]])
@@ -45,7 +45,7 @@ def test_basic_ops_generate_expected_steps_sequence():
     assert tipos_scal == ["inicial", "componente", "componente", "componente", "resultado"]
 
 
-def test_row_plus_column_sum_includes_ajuste_step():
+def test_suma_fila_columna_incluye_paso_de_ajuste():
     """La suma fila + columna incluye explícitamente el paso de ajuste de orientación."""
     v1_col = Matrix(2, 1, [[3], [1]])
     v2_row = Matrix(1, 2, [[2, 4]])
@@ -60,9 +60,14 @@ def test_row_plus_column_sum_includes_ajuste_step():
     assert "orientación" in pasos[1].descripcion.lower()
 
 
-def test_linear_combination_groups_by_status():
-    """Combinación lineal UNIQUE tiene 4 grupos, INFINITE no tiene comprobación, NO_SOLUTION sin sustitución ni comprobación."""
-    # 1. UNIQUE
+def test_combinacion_lineal_agrupa_por_tipo_de_solucion():
+    """La agrupación incorpora únicamente las etapas aplicables a la solución."""
+    _comprobar_grupos_combinacion_unica()
+    _comprobar_grupos_combinacion_infinita()
+    _comprobar_grupos_combinacion_incompatible()
+
+
+def _comprobar_grupos_combinacion_unica():
     payload_unique = json.dumps({
         "b": {"orientation": "column", "data": ["3", "2"]},
         "vectors": [
@@ -83,7 +88,9 @@ def test_linear_combination_groups_by_status():
     ]
     assert [g.tipo for g in grupos_u] == ["planteamiento", "eliminacion", "sustitucion", "verificacion"]
 
-    # 2. INFINITE
+
+
+def _comprobar_grupos_combinacion_infinita():
     payload_infinite = json.dumps({
         "b": {"orientation": "column", "data": ["3", "6"]},
         "vectors": [
@@ -103,7 +110,9 @@ def test_linear_combination_groups_by_status():
     assert not any(g.tipo == "verificacion" for g in grupos_i)
     assert res_i.get("verification_step") is None
 
-    # 3. NO_SOLUTION
+
+
+def _comprobar_grupos_combinacion_incompatible():
     payload_no_sol = json.dumps({
         "b": {"orientation": "column", "data": ["0", "1"]},
         "vectors": [
@@ -122,7 +131,7 @@ def test_linear_combination_groups_by_status():
     assert not any(g.tipo in ("sustitucion", "verificacion") for g in grupos_n)
 
 
-def test_steps_view_reconstructs_with_matrix():
+def test_pasos_serializados_reconstruyen_matriz():
     """Cada paso de steps_view serializa y reconstruye su matriz usando Matrix."""
     payload = json.dumps({
         "b": {"orientation": "column", "data": ["7", "4", "-3"]},
@@ -144,7 +153,7 @@ def test_steps_view_reconstructs_with_matrix():
         assert reconstructed.cols == mat_dict["cols"]
 
 
-def test_dimension_10_with_9_vectors_no_error():
+def test_dimension_diez_con_nueve_vectores_genera_pasos():
     """Dimensión 10 con 9 vectores ejecuta sin error y genera pasos de reproductor."""
     vectors_data = [
         {"orientation": "column", "data": [("1" if r == c else "0") for r in range(10)]}
@@ -164,8 +173,8 @@ def test_dimension_10_with_9_vectors_no_error():
     assert len(grupos) >= 2
 
 
-def test_legacy_keys_preserved_in_controller():
-    """Verifica que las claves existentes en la salida del controller se preservan intactas."""
+def test_controlador_conserva_claves_contratadas():
+    """La salida conserva las claves del contrato del controlador."""
     payload = json.dumps({
         "b": {"orientation": "column", "data": ["1", "1"]},
         "vectors": [
@@ -189,8 +198,8 @@ def test_legacy_keys_preserved_in_controller():
     assert "formula_latex" in res["verification_step"]
 
 
-def test_no_forbidden_strings_nor_voseo():
-    """Verifica que los módulos nuevos no contienen —, Oops ni voseo."""
+def test_textos_vectoriales_sin_raya_larga_ni_voseo():
+    """Los módulos vectoriales mantienen textos directos en español."""
     files_to_check = [
         Path("src/frontend/vistas/vector_ops/_pasos_reproductor.py"),
         Path("src/frontend/vistas/vector_ops/steps_mixin.py"),

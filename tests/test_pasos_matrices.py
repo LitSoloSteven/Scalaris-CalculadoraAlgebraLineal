@@ -1,4 +1,4 @@
-"""Pruebas para el adaptador del reproductor de pasos en operaciones de matrices (Fase F5)."""
+"""Adaptación de operaciones matriciales al reproductor de pasos."""
 
 import json
 import re
@@ -32,15 +32,8 @@ def test_expresion_compleja_produce_pasos_con_etiquetas_y_grupo_por_suboperacion
     assert len(pasos) == len(res["segment_steps"])
     assert len(grupos) == len(pasos)
 
-    etiquetas_validas = {
-        "Suma",
-        "Resta",
-        "Multiplicación de Matrices",
-        "Multiplicación Escalar",
-        "Transposición",
-        "Negación",
-    }
-
+    etiquetas_validas = {"Suma", "Resta", "Multiplicación de Matrices",
+                        "Multiplicación Escalar", "Transposición", "Negación"}
     for i, paso in enumerate(pasos):
         assert paso.tipo == "operacion"
         assert paso.etiqueta_tipo in etiquetas_validas
@@ -86,7 +79,7 @@ def test_expresion_de_una_sola_operacion_produce_un_paso_y_un_grupo():
     assert grupo.indices_pasos == (0,)
 
 
-def test_transposicion_sin_cell_by_cell_steps():
+def test_transposicion_sin_desglose_por_celdas():
     """La transposición no incluye desglose celda a celda."""
     matrices = {
         "A": {"rows": 2, "cols": 3, "data": [["1", "2", "3"], ["4", "5", "6"]]},
@@ -118,8 +111,8 @@ def test_error_de_dimensiones_no_genera_pasos():
     assert grupos == ()
 
 
-def test_sin_emdash_ni_voseo_en_textos_de_matrices():
-    """Ninguna descripción o explicación contiene '—', 'Oops' ni formas de voseo."""
+def test_textos_matriciales_sin_raya_larga_ni_voseo():
+    """Las descripciones y explicaciones conservan un español directo."""
     matrices = {
         "A": {"rows": 2, "cols": 2, "data": [["1", "2"], ["3", "4"]]},
         "B": {"rows": 2, "cols": 2, "data": [["2", "0"], ["1", "3"]]},

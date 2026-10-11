@@ -50,3 +50,9 @@ async def comprobar_tarea_en_cliente(lanzador, cliente, valor_esperado):
 async def ejecutar_trabajador_simulado(funcion, *args, **kwargs):
     """Ejecuta directamente la función que una prueba delega al trabajador de NiceGUI."""
     return funcion(*args, **kwargs)
+
+
+def limpiar_almacen_handoff():
+    """Vacía el almacén de transferencias para aislar un escenario de prueba."""
+    from src.frontend.componentes.handoff import _ALMACEN
+    _ALMACEN.clear()

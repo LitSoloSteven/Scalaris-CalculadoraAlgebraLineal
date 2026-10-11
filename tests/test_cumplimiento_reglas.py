@@ -3,6 +3,10 @@ import ast
 import re
 from tests.comun import RAIZ
 from tests.rutas_auditadas import RUTAS_AUDITADAS
+from tests.comun_auditoria import (
+    calcular_anidamiento_y_complejidad, cadenas_presentacion,
+    comentarios_y_documentacion, declaraciones_publicas, nombres_parametros,
+)
 
 PALABRAS_INGLES_PROHIBIDAS = {
     'solver', 'solvers', 'matrix', 'rows', 'cols', 'solve',
@@ -20,31 +24,6 @@ PATRONES_COMENTARIOS_PROHIBIDOS = [
     re.compile(r'[\U00010000-\U0010ffff]', re.UNICODE),
     re.compile(r'—'),
 ]
-
-
-def _calcular_anidamiento_y_complejidad(nodo: ast.FunctionDef | ast.AsyncFunctionDef) -> tuple[int, int]:
-    """Calcula el anidamiento máximo de bloques y la complejidad ciclomática aproximada."""
-    max_profundidad = 0
-    complejidad = 1
-    bloques_anidados = (ast.If, ast.For, ast.While, ast.Try, ast.With)
-
-    def _visitar(subnodo: ast.AST, profundidad_actual: int) -> None:
-        nonlocal max_profundidad, complejidad
-        es_bloque = isinstance(subnodo, bloques_anidados)
-        nueva_profundidad = profundidad_actual + (1 if es_bloque else 0)
-        if nueva_profundidad > max_profundidad:
-            max_profundidad = nueva_profundidad
-        if isinstance(subnodo, (ast.If, ast.For, ast.While, ast.ExceptHandler)):
-            complejidad += 1
-        elif isinstance(subnodo, ast.BoolOp):
-            complejidad += len(subnodo.values) - 1
-        for hijo in ast.iter_child_nodes(subnodo):
-            if not isinstance(hijo, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                _visitar(hijo, nueva_profundidad)
-
-    for hijo in ast.iter_child_nodes(nodo):
-        _visitar(hijo, 0)
-    return max_profundidad, complejidad
 
 
 def test_sin_marcadores_de_conflicto_global():
@@ -78,9 +57,9 @@ def test_limites_tamanio_y_complejidad():
             elif isinstance(nodo, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 alt = (nodo.end_lineno or nodo.lineno) - nodo.lineno + 1
                 assert alt <= 40, f'{ruta.name}:{nodo.name} tiene {alt} líneas (máximo 40)'
-                params = [a.arg for a in nodo.args.args if a.arg not in ('self', 'cls')]
+                params = nombres_parametros(nodo)
                 assert len(params) <= 5, f'{ruta.name}:{nodo.name} tiene {len(params)} parámetros'
-                anid, comp = _calcular_anidamiento_y_complejidad(nodo)
+                anid, comp = calcular_anidamiento_y_complejidad(nodo)
                 assert anid <= 3, f'{ruta.name}:{nodo.name} anidamiento {anid} (máximo 3)'
                 assert comp <= 10, f'{ruta.name}:{nodo.name} complejidad {comp} (máximo 10)'
 
@@ -91,10 +70,9 @@ def test_docstrings_publicos():
         if ruta.suffix != '.py' or not ruta.exists():
             continue
         arbol = ast.parse(ruta.read_text(encoding='utf-8'), filename=str(ruta))
-        for nodo in ast.iter_child_nodes(arbol):
-            if isinstance(nodo, (ast.FunctionDef, ast.ClassDef)) and not nodo.name.startswith('_'):
-                doc = ast.get_docstring(nodo)
-                assert doc and doc.strip(), f'Sin docstring público en {ruta.name}:{nodo.name}'
+        for nodo in declaraciones_publicas(arbol):
+            doc = ast.get_docstring(nodo)
+            assert doc and doc.strip(), f'Sin docstring público en {ruta.name}:{nodo.name}'
 
 
 def test_identificadores_idioma_y_ascii():
@@ -114,14 +92,28 @@ def test_identificadores_idioma_y_ascii():
 
 
 def test_comentarios_y_copy_limpios():
-    """Valida ausencia de banners, TODO, FIXME, emojis y raya larga."""
+    """Valida comentarios sobrios y textos de presentación sin marcas decorativas."""
     for ruta in RUTAS_AUDITADAS:
         if not ruta.exists():
             continue
         contenido = ruta.read_text(encoding='utf-8')
-        for patron in PATRONES_COMENTARIOS_PROHIBIDOS:
-            coincidencias = patron.findall(contenido)
-            assert not coincidencias, f'Patrón prohibido en {ruta.name}: {coincidencias}'
+        fragmentos = _fragmentos_comentarios_y_copy(ruta, contenido)
+        for fragmento, patrones in fragmentos:
+            for patron in patrones:
+                coincidencias = patron.findall(fragmento)
+                assert not coincidencias, f'Patrón prohibido en {ruta.name}: {coincidencias}'
+
+
+def _fragmentos_comentarios_y_copy(ruta, contenido):
+    if ruta.suffix != '.py':
+        return [(contenido, PATRONES_COMENTARIOS_PROHIBIDOS)]
+    fragmentos = [(texto, PATRONES_COMENTARIOS_PROHIBIDOS)
+                  for texto in comentarios_y_documentacion(contenido)]
+    arbol = ast.parse(contenido)
+    es_prueba = 'tests' in ruta.relative_to(RAIZ).parts
+    fragmentos.extend((texto, PATRONES_COMENTARIOS_PROHIBIDOS[-2:])
+                      for texto in cadenas_presentacion(arbol, es_prueba))
+    return fragmentos
 
 
 def test_reglas_css():
@@ -143,14 +135,13 @@ def test_reglas_python_frontend():
         if ruta.suffix != '.py' or not ruta.exists():
             continue
         arbol = ast.parse(ruta.read_text(encoding='utf-8'), filename=str(ruta))
-        for nodo in ast.walk(arbol):
-            if isinstance(nodo, ast.Constant) and isinstance(nodo.value, str):
-                val = nodo.value
-                assert 'style="' not in val and "style='" not in val, (
-                    f'Estilos en línea detectados en {ruta.name}'
+        es_prueba = 'tests' in ruta.relative_to(RAIZ).parts
+        for val in cadenas_presentacion(arbol, es_prueba):
+            assert 'style="' not in val and "style='" not in val, (
+                f'Estilos en línea detectados en {ruta.name}'
+            )
+            if any(etiqueta in val for etiqueta in ('<div', '<span', '<table', '<button')):
+                lineas = val.strip().splitlines()
+                assert len(lineas) <= 3, (
+                    f'HTML embebido de {len(lineas)} líneas (> 3) en {ruta.name}'
                 )
-                if any(etiqueta in val for etiqueta in ('<div', '<span', '<table', '<button')):
-                    lineas = val.strip().splitlines()
-                    assert len(lineas) <= 3, (
-                        f'HTML embebido de {len(lineas)} líneas (> 3) en {ruta.name}'
-                    )
