@@ -19,7 +19,9 @@ logger = logging.getLogger(__name__)
 
 from src.frontend.components.app_shell import create_app_shell
 from src.frontend.navigation import route_of
-from src.frontend.controllers.matrix_ops.controller_transformaciones import TransformacionesController
+from src.frontend.controladores.operaciones_matrices import (
+    ControladorTransformaciones,
+)
 
 
 # ══════════════════════════════════════════════════════════════════════════
@@ -250,7 +252,7 @@ class TransformacionesUI:
         variables = [v if v else f"x{j+1}" for j, v in enumerate(vars_raw)]
 
         payload = json.dumps({"A": A_raw, "variables": variables})
-        respuesta_str = TransformacionesController.procesar(payload)
+        respuesta_str = ControladorTransformaciones.procesar(payload)
         respuesta = json.loads(respuesta_str)
         self.last_result = respuesta
 

@@ -1,26 +1,32 @@
-"""Pruebas para los pasos, serialización y reproductor en Sistemas de Ecuaciones (Fase F4)."""
-
+"""Pruebas para los pasos, serialización y reproductor en sistemas de ecuaciones."""
 import json
 from fractions import Fraction
-
 import pytest
 
 from src.backend.models.matrix import Matrix
-from src.frontend.controllers.linear_systems.controller_gauss import MatrixController
-from src.frontend.controllers.linear_systems.controller_gauss_jordan import GaussJordanController
-from src.frontend.views.linear_systems._pasos_reproductor import construir_pasos_reproductor
+from src.frontend.controladores.sistemas_lineales.controlador_gauss import (
+    ControladorGauss,
+)
+from src.frontend.controladores.sistemas_lineales.controlador_gauss_jordan import (
+    ControladorGaussJordan,
+)
+from src.frontend.views.linear_systems._pasos_reproductor import (
+    construir_pasos_reproductor,
+)
 
 
 def _resolver_gauss(payload: dict) -> dict:
-    return json.loads(MatrixController.process_system(json.dumps(payload)))
+    """Resuelve el sistema utilizando el controlador de Gauss."""
+    return json.loads(ControladorGauss.procesar_sistema(json.dumps(payload)))
 
 
 def _resolver_gauss_jordan(payload: dict) -> dict:
-    return json.loads(GaussJordanController.process_system(json.dumps(payload)))
+    """Resuelve el sistema utilizando el controlador de Gauss-Jordan."""
+    return json.loads(ControladorGaussJordan.procesar_sistema(json.dumps(payload)))
 
 
 def test_claves_nuevas_presentes_en_gauss_y_gauss_jordan():
-    """Verifica que tanto Gauss como Gauss-Jordan incluyan las claves nuevas requeridas."""
+    """Verifica que tanto Gauss como Gauss-Jordan incluyan las claves requeridas."""
     payload = {
         "matrix_A": [["2", "1", "-1"], ["-3", "-1", "2"], ["-2", "1", "2"]],
         "vector_b": ["8", "-11", "-3"],
@@ -76,25 +82,21 @@ def test_cada_steps_view_reconstruye_con_matrix():
 def test_kinds_nunca_otro():
     """El tipo de cada paso en steps_view no debe ser nunca 'otro'."""
     payloads = [
-        # Sistema estándar 3x3
         {
             "matrix_A": [["2", "1", "-1"], ["-3", "-1", "2"], ["-2", "1", "2"]],
             "vector_b": ["8", "-11", "-3"],
             "variables": ["x1", "x2", "x3"],
         },
-        # Sistema 3x3 con pivoteo e intercambio
         {
             "matrix_A": [["0", "2", "1"], ["3", "1", "-1"], ["1", "-1", "2"]],
             "vector_b": ["5", "4", "3"],
             "variables": ["x1", "x2", "x3"],
         },
-        # Inconsistente (NO_SOLUTION)
         {
             "matrix_A": [["1", "1"], ["1", "1"]],
             "vector_b": ["1", "2"],
             "variables": ["x1", "x2"],
         },
-        # Indeterminado (INFINITE_SOLUTIONS)
         {
             "matrix_A": [["1", "2", "3"], ["2", "4", "6"], ["-1", "-2", "-3"]],
             "vector_b": ["1", "2", "-1"],
@@ -129,27 +131,26 @@ def test_sistema_3x3_con_intercambio():
         assert primer_swap["swap_rows"] is not None
         assert len(primer_swap["swap_rows"]) == 2
         assert len(primer_swap["rows_changed"]) == 2
-        # El título de al menos un grupo de columna debe mencionar intercambio
         grupos_swap = [g for g in res["groups"] if "intercambio" in g["title"]]
         assert len(grupos_swap) >= 1
 
 
 def test_sistema_10x10_fracciones_denominador_cuatro_digitos():
-    """Sistema 10x10 con denominadores de 4 dígitos debe resolverse y reconstruirse sin error."""
+    """Sistema 10x10 con denominadores de 4 dígitos debe resolverse y reconstruirse."""
     m = 10
-    A = [["0"] * m for _ in range(m)]
-    b = [f"{i + 1}/1001" for i in range(m)]
+    matriz_a = [["0"] * m for _ in range(m)]
+    vector_b = [f"{i + 1}/1001" for i in range(m)]
 
     for i in range(m):
-        A[i][i] = f"{i + 2}/1001"
+        matriz_a[i][i] = f"{i + 2}/1001"
         if i + 1 < m:
-            A[i][i + 1] = "1/1001"
+            matriz_a[i][i + 1] = "1/1001"
         if i > 0:
-            A[i][i - 1] = "1/1001"
+            matriz_a[i][i - 1] = "1/1001"
 
     payload = {
-        "matrix_A": A,
-        "vector_b": b,
+        "matrix_A": matriz_a,
+        "vector_b": vector_b,
         "variables": [f"x{i+1}" for i in range(m)],
     }
 
@@ -222,9 +223,8 @@ def test_claves_antiguas_siguen_identicas():
     assert len(res_gj["verification_steps_latex"]) > 0
 
 
-def test_pasos_reproductor_genera_grupos_esperados_para_unique_infinite_y_no_solution():
-    """_pasos_reproductor debe construir las fases esperadas según el tipo de solución."""
-    # 1. UNIQUE SOLUTION
+def test_pasos_reproductor_genera_grupos_esperados():
+    """Verifica que el reproductor construya las fases requeridas según el tipo de solución."""
     payload_unique = {
         "matrix_A": [["2", "1", "-1"], ["-3", "-1", "2"], ["-2", "1", "2"]],
         "vector_b": ["8", "-11", "-3"],
@@ -234,7 +234,6 @@ def test_pasos_reproductor_genera_grupos_esperados_para_unique_infinite_y_no_sol
     pasos_g, grupos_g = construir_pasos_reproductor(res_u_g, metodo="gauss")
     assert len(pasos_g) > 0
     assert len(grupos_g) >= 3
-    # Gauss debe tener fase de sustitución hacia atrás y comprobación
     titulos_g = [g.titulo for g in grupos_g]
     assert "Sustitución hacia atrás" in titulos_g
     assert "Comprobación Ax = b" in titulos_g
@@ -242,14 +241,12 @@ def test_pasos_reproductor_genera_grupos_esperados_para_unique_infinite_y_no_sol
     assert "sustitucion" in tipos_pasos_g
     assert "verificacion" in tipos_pasos_g
 
-    # Gauss-Jordan debe conservar el rótulo "Solución final"
     res_u_gj = _resolver_gauss_jordan(payload_unique)
     pasos_gj, grupos_gj = construir_pasos_reproductor(res_u_gj, metodo="gauss-jordan")
     titulos_gj = [g.titulo for g in grupos_gj]
     assert "Solución final" in titulos_gj
     assert "Comprobación Ax = b" in titulos_gj
 
-    # 2. INFINITE SOLUTIONS (debe tener sustitución/solución final, pero no verificación)
     payload_inf = {
         "matrix_A": [["1", "2", "3"], ["2", "4", "6"]],
         "vector_b": ["4", "8"],
@@ -261,7 +258,6 @@ def test_pasos_reproductor_genera_grupos_esperados_para_unique_infinite_y_no_sol
     assert "Sustitución hacia atrás" in titulos_inf
     assert "Comprobación Ax = b" not in titulos_inf
 
-    # 3. NO SOLUTION (solo fases de eliminación; no sustitución ni comprobación)
     payload_no_sol = {
         "matrix_A": [["1", "2"], ["2", "4"]],
         "vector_b": ["3", "7"],
@@ -273,5 +269,4 @@ def test_pasos_reproductor_genera_grupos_esperados_para_unique_infinite_y_no_sol
     assert "Sustitución hacia atrás" not in titulos_no
     assert "Solución final" not in titulos_no
     assert "Comprobación Ax = b" not in titulos_no
-    # Todos los pasos de NO_SOLUTION son de eliminación
     assert all(p.tipo in ("inicial", "intercambio", "pivote", "eliminacion", "normalizacion") for p in pasos_no)

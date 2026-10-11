@@ -144,13 +144,30 @@ Llevar la totalidad del repositorio al cumplimiento estricto y verificable de la
   - Ampliación de `RUTAS_AUDITADAS` en `tests/test_cumplimiento_reglas.py` incorporando las 14 hojas CSS y los 17 scripts JS (total 71 rutas auditadas).
   - Suite completa de 1128 pruebas ejecutada con 100% de éxito (1128 pasadas, 0 fallos).
 
-### Fase 5: Controladores de Interfaz (`src/frontend/controllers`) (E3, E4, E7)
-- **Estado**: Pendiente
-- **Archivos**: `src/frontend/controllers/` (`sistemas_lineales`, `operaciones_matrices`, `operaciones_vectores`, `operaciones_inversas`, `geometria`, `_agrupar_pasos.py`, `_step_classifier.py`).
-- **Criterios de aceptación**:
-  - Los controladores únicamente validan, delegan y serializan hacia el backend.
-  - Eliminación de validaciones duplicadas delegando al backend (E7).
-  - Cero código duplicado entre controladores.
+### Fase 5: Controladores de Interfaz (`src/frontend/controladores`) (E1, E2, E3, E4, E7)
+- **Estado**: Completada
+- **Archivos**:
+  - `src/backend/geometria/` (E7): `__init__.py`, `clasificacion.py` (91 líneas), `conjunto_solucion.py` (140 líneas), `planos.py` (47 líneas), `recorte.py` (99 líneas).
+  - `src/frontend/controladores/` (E3, E4):
+    - Base y pasos: `__init__.py`, `utilidades.py` (38 líneas), `clasificador_pasos.py` (72 líneas), `agrupador_pasos.py` (116 líneas), `manejadores_pasos.py` (124 líneas).
+    - `sistemas_lineales/`: `__init__.py`, `compartido.py` (81 líneas), `flujo_comun.py` (116 líneas), `controlador_gauss.py` (53 líneas), `controlador_gauss_jordan.py` (52 líneas).
+    - `operaciones_matrices/`: `__init__.py`, `codificador.py` (27 líneas), `controlador_operaciones_matrices.py` (156 líneas), `controlador_leontief.py` (97 líneas), `controlador_transformaciones.py` (98 líneas), `controlador_determinante.py` (47 líneas).
+    - `operaciones_vectores/`: `__init__.py`, `controlador_operaciones_vectores.py` (175 líneas).
+    - `operaciones_inversas/`: `__init__.py`, `foco_paso.py` (110 líneas), `validador_inversa.py` (83 líneas), `controlador_operaciones_inversas.py` (109 líneas).
+    - `geometria/`: `__init__.py`, `utilidades.py` (57 líneas), `controlador_rectas_planos.py` (260 líneas), `controlador_vectores.py` (116 líneas), `controlador_combinacion.py` (197 líneas), `controlador_geometria.py` (42 líneas).
+- **Criterios de aceptación cumplidos**:
+  - Eliminación total del paquete legacy `src/frontend/controllers` y creación del paquete canónico `src/frontend/controladores`.
+  - Desacoplamiento completo de la lógica matemática de geometría hacia el backend en `src/backend/geometria/` (clasificación analítica de ecuaciones, paralelismo estricto, conjunto solución paramétrico, normales y offset de planos, recorte de rectas a la caja visual en $\mathbb{R}^3$, cálculo de rango) con aritmética exacta (`Fraction`) y cero cambio de comportamiento (E7).
+  - Los controladores se limitan estrictamente a validación de entrada, delegación y serialización de respuesta didáctica.
+  - Reducción drástica de `agrupar_pasos_eliminacion` (~250 líneas) dividida en manejadores modulares por tipo de operación elemental (`manejadores_pasos.py`), manteniendo explicaciones y salidas idénticas.
+  - Flujo común de Gauss y Gauss-Jordan extraído a `sistemas_lineales/flujo_comun.py`, y deserialización compartida unificada en `utilidades.parsear_payload`.
+  - Construcción de `steps_view` unificada con `construir_vista_pasos` compartido.
+  - `controller_inverse_ops` modularizado en `foco_paso.py`, `validador_inversa.py` y `controlador_operaciones_inversas.py`.
+  - `controller_determinant.py` refactorizado a `controlador_determinante.py` cumpliendo todas las reglas de estilo y mantenido como artefacto sin consumidor pendiente de decisión de producto.
+  - Todos los límites duros respetados rigurosamente: archivos $\le 300$ líneas, funciones $\le 40$ líneas, clases $\le 200$ líneas, anidamiento $\le 3$, complejidad ciclomática $\le 10$, parámetros $\le 5$.
+  - Cero alias en inglés (E3); identificadores y contratos internos en español ASCII (E4).
+  - Ampliación de `RUTAS_AUDITADAS` en `tests/test_cumplimiento_reglas.py` a 94 rutas (los 5 módulos de backend geométrico y los 18 módulos de controladores).
+  - Suite completa de 1127 pruebas pasando al 100% y 7 tests de reglas en verde.
 
 ### Fase 6: Componentes de Interfaz (`src/frontend/components`) (E3, E4)
 - **Estado**: Pendiente

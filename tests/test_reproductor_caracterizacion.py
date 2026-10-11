@@ -3,8 +3,10 @@
 import json
 from fractions import Fraction
 
-from src.backend.models.matrix import Matrix
-from src.frontend.controllers.inverse_ops.controller_inverse_ops import InverseOpsController
+from src.backend.modelos.matriz import Matriz
+from src.frontend.controladores.operaciones_inversas import (
+    ControladorOperacionesInversas,
+)
 from src.frontend.components.reproductor_pasos import (
     formatear_decimal,
     formatear_valor,
@@ -20,13 +22,13 @@ TABLA_AUMENTADA = '<div class="inv-scroll"><table class="inv-table"><thead><tr><
 
 def _html_aumentado(**opciones):
     """Renderiza la matriz fija de caracterización con las opciones indicadas."""
-    matriz = Matrix(2, 4, [[Fraction(1, 2), -2, 1, 0], [3, Fraction(-4, 3), 0, 1]])
+    matriz = Matriz(2, 4, [[Fraction(1, 2), -2, 1, 0], [3, Fraction(-4, 3), 0, 1]])
     return html_tabla_aumentada(matriz, 2, **opciones)
 
 
 def _resumen_controlador(datos):
     """Extrae del resultado los campos contractuales independientes del tiempo."""
-    resultado = InverseOpsController.process_inverse(
+    resultado = ControladorOperacionesInversas.procesar_inversa(
         json.dumps({"n": len(datos), "data": datos})
     )
     pasos = [
@@ -38,7 +40,7 @@ def _resumen_controlador(datos):
 
 def test_formateadores_y_tabla_matriz_conservan_su_html():
     """Fija la salida literal de valores, decimales y la tabla de matriz."""
-    matriz = Matrix(2, 2, [[Fraction(1, 2), -2], [3, Fraction(-4, 3)]])
+    matriz = Matriz(2, 2, [[Fraction(1, 2), -2], [3, Fraction(-4, 3)]])
     assert formatear_valor(Fraction(-3, 4), apilada=True) == '−<span class="inv-frac"><span>3</span><span>4</span></span>'
     assert formatear_valor(Fraction(4, 1)) == "4"
     assert formatear_decimal(Fraction(1, 3)) == "0.3333"

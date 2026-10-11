@@ -5,13 +5,15 @@ import re
 
 import pytest
 
-from src.frontend.controllers.matrix_ops.controller_matrix_ops import MatrixOpsController
+from src.frontend.controladores.operaciones_matrices import (
+    ControladorOperacionesMatrices,
+)
 from src.frontend.views.matrix_ops._pasos_reproductor import construir_pasos_matrices
 
 
 def _evaluar(expresion: str, matrices: dict) -> dict:
     """Evalúa la expresión matricial con el controlador y devuelve el dict deserializado."""
-    return json.loads(MatrixOpsController.process_expression(expresion, json.dumps(matrices)))
+    return json.loads(ControladorOperacionesMatrices.procesar_expresion(expresion, json.dumps(matrices)))
 
 
 def test_expresion_compleja_produce_pasos_con_etiquetas_y_grupo_por_suboperacion():

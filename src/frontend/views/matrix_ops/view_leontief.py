@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 from src.frontend.components.app_shell import create_app_shell
 from src.frontend.navigation import route_of
-from src.frontend.controllers.matrix_ops.controller_leontief import LeontiefController
+from src.frontend.controladores.operaciones_matrices import ControladorLeontief
 
 
 # ══════════════════════════════════════════════════════════════════════════
@@ -244,7 +244,7 @@ class LeontiefUI:
         sectores = [s if s else f"Sector {i+1}" for i, s in enumerate(sectores_raw)]
 
         payload = json.dumps({"C": C_raw, "d": d_raw, "sectores": sectores})
-        respuesta_str = LeontiefController.procesar(payload)
+        respuesta_str = ControladorLeontief.procesar(payload)
         respuesta = json.loads(respuesta_str)
         self.last_result = respuesta
 

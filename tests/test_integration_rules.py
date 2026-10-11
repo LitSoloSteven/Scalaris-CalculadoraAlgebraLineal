@@ -5,8 +5,12 @@ from src.backend.utils.parsers import SystemParser
 from src.backend.solvers.matrix_ops.evaluator import MatrixExpressionEvaluator
 from src.backend.models.matrix import Matrix
 from src.backend.utils.formatters import format_fraction_str, number_to_latex
-from src.frontend.controllers.linear_systems.controller_gauss import MatrixController
-from src.frontend.controllers.linear_systems.controller_gauss_jordan import GaussJordanController
+from src.frontend.controladores.sistemas_lineales.controlador_gauss import (
+    ControladorGauss,
+)
+from src.frontend.controladores.sistemas_lineales.controlador_gauss_jordan import (
+    ControladorGaussJordan,
+)
 
 def test_parser_implicit_mul_and_disjoint():
     # "2*x + y = 3\nx - y = 0" parsea bien
@@ -42,15 +46,15 @@ def test_formatters_precision_2_1001():
     assert format_fraction_str(Fraction(1, 1001)) == "1/1001"
     assert number_to_latex(Fraction(2, 1001)) == r"\frac{2}{1001}"
 
-def test_controllers_error_on_non_numeric():
+def test_controladores_error_en_no_numerico():
     payload = json.dumps({
         "matrix_A": [["1", "no_es_numero"], ["3", "4"]],
         "vector_b": ["1", "2"],
         "variables": ["x", "y"]
     })
     
-    res_gauss = json.loads(MatrixController.process_system(payload))
+    res_gauss = json.loads(ControladorGauss.procesar_sistema(payload))
     assert res_gauss["status"] == "ERROR"
-    
-    res_jordan = json.loads(GaussJordanController.process_system(payload))
+
+    res_jordan = json.loads(ControladorGaussJordan.procesar_sistema(payload))
     assert res_jordan["status"] == "ERROR"

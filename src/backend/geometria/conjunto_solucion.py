@@ -1,0 +1,180 @@
+"""Clasificación y representación analítica del conjunto solución en geometría."""
+from dataclasses import dataclass
+from enum import Enum
+from fractions import Fraction
+from typing import Any
+
+
+class TipoSolucionGeometria(str, Enum):
+    """Tipos geométricos del conjunto solución de un sistema lineal."""
+
+    VACIA = "EMPTY"
+    VACIO = "EMPTY"
+    PUNTO = "POINT"
+    RECTA = "LINE"
+    PLANO = "PLANE"
+    ESPACIO_AFIN = "AFFINE_SUBSPACE"
+    SUBESPACIO_AFIN = "AFFINE_SUBSPACE"
+
+    EMPTY = "EMPTY"
+    POINT = "POINT"
+    LINE = "LINE"
+    PLANE = "PLANE"
+    AFFINE_SUBSPACE = "AFFINE_SUBSPACE"
+
+
+@dataclass(frozen=True)
+class ConjuntoSolucion:
+    """Representación del conjunto solución geométrico con aritmética exacta."""
+
+    tipo: TipoSolucionGeometria
+    dimension: int
+    punto: tuple[Fraction, ...] | None
+    direcciones: tuple[tuple[Fraction, ...], ...]
+
+    @property
+    def kind(self) -> TipoSolucionGeometria:
+        """Alias para compatibilidad interna."""
+        return self.tipo
+
+    @property
+    def point(self) -> tuple[Fraction, ...] | None:
+        """Alias para compatibilidad interna."""
+        return self.punto
+
+    @property
+    def directions(self) -> tuple[tuple[Fraction, ...], ...]:
+        """Alias para compatibilidad interna."""
+        return self.direcciones
+
+
+# Alias para pruebas existentes
+SolutionKind = TipoSolucionGeometria
+SolutionSet = ConjuntoSolucion
+
+
+def clasificar_conjunto_solucion(
+    punto: tuple[Fraction, ...] | None,
+    direcciones: tuple[tuple[Fraction, ...], ...],
+) -> TipoSolucionGeometria:
+    """Clasifica el conjunto solución según punto y cantidad de direcciones."""
+    if punto is None:
+        return TipoSolucionGeometria.VACIA
+    cantidad_direcciones = len(direcciones)
+    if cantidad_direcciones == 0:
+        return TipoSolucionGeometria.PUNTO
+    if cantidad_direcciones == 1:
+        return TipoSolucionGeometria.RECTA
+    if cantidad_direcciones == 2:
+        return TipoSolucionGeometria.PLANO
+    return TipoSolucionGeometria.ESPACIO_AFIN
+
+
+classify = clasificar_conjunto_solucion
+
+
+def tiene_parametros_solucion(resultado: dict[str, Any]) -> bool:
+    """Verifica si el diccionario contiene parámetros de solución infinitas."""
+    return resultado.get("solution_param") is not None or resultado.get("parametros_solucion") is not None
+
+
+has_solution_param = tiene_parametros_solucion
+
+
+def obtener_parametros_solucion(resultado: dict[str, Any]) -> dict | None:
+    """Extrae y valida la estructura y tipos de los parámetros de solución."""
+    parametros = resultado.get("solution_param") or resultado.get("parametros_solucion")
+    if parametros is None:
+        return None
+    try:
+        num_vars = parametros["num_vars"]
+        particular = parametros["particular"]
+        direcciones = parametros["directions"]
+        libres = parametros["free_cols"]
+        nombres = parametros["param_names"]
+        if (
+            num_vars != len(particular)
+            or len(direcciones) != len(libres)
+            or len(libres) != len(nombres)
+        ):
+            return None
+        if any(not isinstance(p, Fraction) for p in particular):
+            return None
+        for d in direcciones:
+            if any(not isinstance(v, Fraction) for v in d):
+                return None
+        return parametros
+    except (KeyError, TypeError, ValueError):
+        return None
+
+
+get_solution_param = obtener_parametros_solucion
+
+
+def construir_conjunto_desde_parametros(
+    parametros: dict[str, Any] | None,
+) -> ConjuntoSolucion | None:
+    """Instancia un ConjuntoSolucion a partir del diccionario de parámetros."""
+    if parametros is None:
+        return None
+    punto = tuple(parametros["particular"])
+    direcciones = tuple(tuple(d) for d in parametros["directions"])
+    tipo = clasificar_conjunto_solucion(punto, direcciones)
+    return ConjuntoSolucion(
+        tipo=tipo,
+        dimension=len(direcciones),
+        punto=punto,
+        direcciones=direcciones,
+    )
+
+
+from_solution_param = construir_conjunto_desde_parametros
+
+
+def construir_conjunto_desde_gauss(
+    resultado: dict[str, Any],
+) -> ConjuntoSolucion | None:
+    """Construye el conjunto solución a partir del resultado del resolutor Gauss."""
+    estado = resultado.get("status") or resultado.get("estado")
+    if estado in ("NO_SOLUTION", "SIN_SOLUCION"):
+        return ConjuntoSolucion(
+            tipo=TipoSolucionGeometria.VACIA,
+            dimension=0,
+            punto=None,
+            direcciones=(),
+        )
+    if estado in ("UNIQUE_SOLUTION", "SOLUCION_UNICA"):
+        sol_exacta = resultado.get("solution_exact") or resultado.get("solucion_exacta") or []
+        punto = tuple(Fraction(x) for x in sol_exacta)
+        return ConjuntoSolucion(
+            tipo=TipoSolucionGeometria.PUNTO,
+            dimension=0,
+            punto=punto,
+            direcciones=(),
+        )
+    if estado in ("INFINITE_SOLUTIONS", "SOLUCIONES_INFINITAS"):
+        parametros = obtener_parametros_solucion(resultado)
+        if parametros is not None:
+            return construir_conjunto_desde_parametros(parametros)
+    return None
+
+
+from_gauss_result = construir_conjunto_desde_gauss
+
+
+def validar_solucion_parametrica(
+    filas_coef: list[list[Fraction]],
+    terminos_indep: list[Fraction],
+    particular: list[Fraction],
+    direcciones: list[list[Fraction]],
+) -> bool:
+    """Verifica defensivamente que A · p = b y A · d_k = 0 para toda dirección."""
+    for fila, b_esperado in zip(filas_coef, terminos_indep):
+        valor_p = sum(c * p for c, p in zip(fila, particular))
+        if valor_p != b_esperado:
+            return False
+        for d in direcciones:
+            valor_d = sum(c * v for c, v in zip(fila, d))
+            if valor_d != 0:
+                return False
+    return True

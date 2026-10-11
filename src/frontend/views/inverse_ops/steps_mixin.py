@@ -58,9 +58,11 @@ class InverseOpsStepsMixin:
     def _crear_accion_glosa(self, pasos_fuente: list[dict], total: int):
         """Crea la acción de Glosa y añade el foco exacto del controlador."""
         def explicar(paso):
-            from src.frontend.controllers.inverse_ops.controller_inverse_ops import InverseOpsController
+            from src.frontend.controladores.operaciones_inversas import (
+                ControladorOperacionesInversas,
+            )
 
-            foco = InverseOpsController.build_focus_for_step(pasos_fuente, paso.indice)
+            foco = ControladorOperacionesInversas.construir_foco_paso(pasos_fuente, paso.indice)
             self.ai_panel.trigger_explain_step({
                 "index": paso.indice + 1,
                 "total": total,

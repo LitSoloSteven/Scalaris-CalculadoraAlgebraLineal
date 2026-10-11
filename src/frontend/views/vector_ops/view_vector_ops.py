@@ -9,7 +9,9 @@ from src.frontend.components.app_shell import create_app_shell
 from src.frontend.navigation import route_of
 from src.frontend.components.ai_panel import AIPanel
 from src.frontend.components.vector_capture import VectorCapturePanel
-from src.frontend.controllers.vector_ops.controller_vector_ops import VectorOpsController
+from src.frontend.controladores.operaciones_vectores import (
+    ControladorOperacionesVectores,
+)
 from .results_mixin import VectorOpsResultsMixin
 
 class VectorOpsUI(VectorOpsResultsMixin):
@@ -168,7 +170,7 @@ class VectorOpsUI(VectorOpsResultsMixin):
                     "v2": vecs_dict[v_keys[1]],
                     "strict": self.add_sub_strict
                 }
-                res_str = VectorOpsController.process_add_subtract(json.dumps(payload))
+                res_str = ControladorOperacionesVectores.procesar_suma_resta(json.dumps(payload))
 
             elif self.active_op == 'scalar':
                 v_keys = list(vecs_dict.keys())
@@ -176,7 +178,7 @@ class VectorOpsUI(VectorOpsResultsMixin):
                     "scalar": self.scalar_input.value,
                     "v": vecs_dict[v_keys[0]]
                 }
-                res_str = VectorOpsController.process_scalar_multiply(json.dumps(payload))
+                res_str = ControladorOperacionesVectores.procesar_multiplicacion_escalar(json.dumps(payload))
 
             elif self.active_op == 'lin_comb':
                 b_key = self.panel_lin_comb.first_vector_fixed_label
@@ -190,7 +192,7 @@ class VectorOpsUI(VectorOpsResultsMixin):
                     "b": b_vec,
                     "vectors": other_vecs
                 }
-                res_str = VectorOpsController.process_linear_combination(json.dumps(payload))
+                res_str = ControladorOperacionesVectores.procesar_combinacion_lineal(json.dumps(payload))
 
             res = json.loads(res_str)
             self.current_result = res

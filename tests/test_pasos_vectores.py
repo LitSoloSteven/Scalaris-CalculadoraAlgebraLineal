@@ -9,7 +9,9 @@ import pytest
 
 from src.backend.models.matrix import Matrix
 from src.backend.solvers.vector_ops.operations import VectorOpsSolver
-from src.frontend.controllers.vector_ops.controller_vector_ops import VectorOpsController
+from src.frontend.controladores.operaciones_vectores import (
+    ControladorOperacionesVectores,
+)
 from src.frontend.views.vector_ops._pasos_reproductor import (
     construir_pasos_combinacion_lineal,
     construir_pasos_vector_basico,
@@ -68,7 +70,7 @@ def test_linear_combination_groups_by_status():
             {"orientation": "column", "data": ["0", "1"]},
         ]
     })
-    res_u = json.loads(VectorOpsController.process_linear_combination(payload_unique))
+    res_u = json.loads(ControladorOperacionesVectores.procesar_combinacion_lineal(payload_unique))
     assert res_u["status"] == "UNIQUE"
     pasos_u, grupos_u = construir_pasos_combinacion_lineal(res_u)
     assert len(grupos_u) == 4
@@ -89,7 +91,7 @@ def test_linear_combination_groups_by_status():
             {"orientation": "column", "data": ["2", "4"]},
         ]
     })
-    res_i = json.loads(VectorOpsController.process_linear_combination(payload_infinite))
+    res_i = json.loads(ControladorOperacionesVectores.procesar_combinacion_lineal(payload_infinite))
     assert res_i["status"] == "INFINITE"
     pasos_i, grupos_i = construir_pasos_combinacion_lineal(res_i)
     assert len(grupos_i) == 3
@@ -109,7 +111,7 @@ def test_linear_combination_groups_by_status():
             {"orientation": "column", "data": ["2", "0"]},
         ]
     })
-    res_n = json.loads(VectorOpsController.process_linear_combination(payload_no_sol))
+    res_n = json.loads(ControladorOperacionesVectores.procesar_combinacion_lineal(payload_no_sol))
     assert res_n["status"] == "NO_SOLUTION"
     pasos_n, grupos_n = construir_pasos_combinacion_lineal(res_n)
     assert len(grupos_n) == 2
@@ -129,7 +131,7 @@ def test_steps_view_reconstructs_with_matrix():
             {"orientation": "column", "data": ["2", "5", "6"]},
         ]
     })
-    res = json.loads(VectorOpsController.process_linear_combination(payload))
+    res = json.loads(ControladorOperacionesVectores.procesar_combinacion_lineal(payload))
     steps_view = res.get("steps_view", [])
     assert len(steps_view) > 0
 
@@ -151,7 +153,7 @@ def test_dimension_10_with_9_vectors_no_error():
     b_data = {"orientation": "column", "data": [str(r + 1) for r in range(10)]}
     payload = json.dumps({"b": b_data, "vectors": vectors_data})
 
-    res_str = VectorOpsController.process_linear_combination(payload)
+    res_str = ControladorOperacionesVectores.procesar_combinacion_lineal(payload)
     res = json.loads(res_str)
 
     assert res["status"] in ("UNIQUE", "INFINITE", "NO_SOLUTION")
@@ -171,7 +173,7 @@ def test_legacy_keys_preserved_in_controller():
             {"orientation": "column", "data": ["0", "1"]},
         ]
     })
-    res = json.loads(VectorOpsController.process_linear_combination(payload))
+    res = json.loads(ControladorOperacionesVectores.procesar_combinacion_lineal(payload))
 
     required_keys = [
         "status", "es_combinacion_lineal", "coeficientes_str",
@@ -193,7 +195,7 @@ def test_no_forbidden_strings_nor_voseo():
         Path("src/frontend/views/vector_ops/_pasos_reproductor.py"),
         Path("src/frontend/views/vector_ops/steps_mixin.py"),
         Path("src/frontend/views/vector_ops/results_mixin.py"),
-        Path("src/frontend/controllers/vector_ops/controller_vector_ops.py"),
+        Path("src/frontend/controladores/operaciones_vectores/controlador_operaciones_vectores.py"),
     ]
 
     voseo_pattern = re.compile(

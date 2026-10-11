@@ -10,7 +10,9 @@ from nicegui import ui
 
 from src.frontend.components.reproductor_pasos import ReproductorPasos, render_latex
 from src.frontend.components.reproductor_pasos.modelo import PasoReproductor
-from src.frontend.controllers.matrix_ops.controller_matrix_ops import MatrixOpsController
+from src.frontend.controladores.operaciones_matrices import (
+    ControladorOperacionesMatrices,
+)
 from src.frontend.views.matrix_ops._pasos_reproductor import construir_pasos_matrices
 
 logger = logging.getLogger(__name__)
@@ -66,7 +68,7 @@ class MatrixOpsResultsMixin:
         if matrices_json is None:
             return
 
-        respuesta_json_str = MatrixOpsController.process_expression(
+        respuesta_json_str = ControladorOperacionesMatrices.procesar_expresion(
             expresion, matrices_json
         )
         respuesta = json.loads(respuesta_json_str)

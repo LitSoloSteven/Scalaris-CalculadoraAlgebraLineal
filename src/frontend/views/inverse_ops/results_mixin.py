@@ -11,10 +11,10 @@ from src.frontend.constantes import DEBOUNCE_VISTA_PREVIA_SEGUNDOS
 from src.backend.constants import (
     INVERSE_LATEX_MAX_DIMENSION,
 )
-from src.backend.utils.formatters import format_fraction_str
-from src.backend.utils.validators import MatrixValidator
-from src.frontend.controllers.inverse_ops.controller_inverse_ops import (
-    InverseOpsController,
+from src.backend.utilidades.formateadores import formatear_fraccion_str
+from src.backend.utilidades.validadores import ValidadorMatriz
+from src.frontend.controladores.operaciones_inversas import (
+    ControladorOperacionesInversas,
 )
 from src.frontend.views.inverse_ops._config import (
     CONFIRM_BIG_N,
@@ -55,7 +55,7 @@ class InverseOpsResultsMixin:
                 def sanitize(val: str) -> str:
                     if not val or val == '0':
                         return '0'
-                    ok, _, _ = MatrixValidator.parse_number_exact(val)
+                    ok, _, _ = ValidadorMatriz.parsear_numero_exacto(val)
                     if not ok:
                         return r"\color{gray}{?}"
                     return val
@@ -203,7 +203,7 @@ class InverseOpsResultsMixin:
 
         try:
             payload = json.dumps({"n": n, "data": self.square_panel.get_matrix_data()})
-            result = await run.io_bound(InverseOpsController.process_inverse, payload)
+            result = await run.io_bound(ControladorOperacionesInversas.procesar_inversa, payload)
 
             if self.contenedor_resultados.is_deleted:
                 return
@@ -352,7 +352,7 @@ class InverseOpsResultsMixin:
                         return
                     lines = []
                     for i in range(n):
-                        lines.append("\t".join(format_fraction_str(inv.get(i, j)) for j in range(n)))
+                        lines.append("\t".join(formatear_fraccion_str(inv.get(i, j)) for j in range(n)))
                     text_to_copy = "\n".join(lines)
                     ui.run_javascript(f"navigator.clipboard.writeText({json.dumps(text_to_copy)});")
                     ui.notify('A⁻¹ copiada al portapapeles', type='positive')
@@ -361,7 +361,7 @@ class InverseOpsResultsMixin:
                     if n > 10:
                         ui.notify(f"Sistemas de ecuaciones admite hasta 10×10; tu matriz es de {n}×{n}.", type='warning')
                         return
-                    data = [[format_fraction_str(result['inverse'].get(r, c)) for c in range(n)] for r in range(n)]
+                    data = [[formatear_fraccion_str(result['inverse'].get(r, c)) for c in range(n)] for r in range(n)]
                     from src.frontend.components.handoff import put_matrix, handoff_url
                     from src.frontend.navigation import route_of
                     token = put_matrix('inversa', data)

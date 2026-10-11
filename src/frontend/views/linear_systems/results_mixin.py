@@ -8,8 +8,10 @@ import re
 from nicegui import ui
 
 from src.backend.utils.parsers import SystemParser
-from src.frontend.controllers.linear_systems.controller_gauss import MatrixController
-from src.frontend.controllers.linear_systems.controller_gauss_jordan import GaussJordanController
+from src.frontend.controladores.sistemas_lineales import (
+    ControladorGauss,
+    ControladorGaussJordan,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -133,9 +135,9 @@ class LinearSystemsResultsMixin:
         payload_dict, matrix_A_vals, vector_b_vals, variables = datos_entrada
 
         if self.method_tabs.value == 'gauss':
-            respuesta_json_str = MatrixController.process_system(json.dumps(payload_dict))
+            respuesta_json_str = ControladorGauss.procesar_sistema(json.dumps(payload_dict))
         else:
-            respuesta_json_str = GaussJordanController.process_system(json.dumps(payload_dict))
+            respuesta_json_str = ControladorGaussJordan.procesar_sistema(json.dumps(payload_dict))
 
         respuesta = json.loads(respuesta_json_str)
         self.last_result = respuesta

@@ -5,7 +5,9 @@ from __future__ import annotations
 import re
 
 from src.frontend.components.reproductor_pasos.modelo import GrupoReproductor, PasoReproductor
-from src.frontend.controllers.matrix_ops.controller_matrix_ops import MatrixOpsController
+from src.frontend.controladores.operaciones_matrices import (
+    ControladorOperacionesMatrices,
+)
 
 
 def limpiar_descripcion_operacion(op_display: str | None, default: str) -> str:
@@ -59,7 +61,7 @@ def construir_pasos_matrices(
         op_disp = step.get("operation_display")
         desc = limpiar_descripcion_operacion(op_disp, f"Operación {i + 1}")
         expl = obtener_explicacion_operacion(op_type)
-        meta = MatrixOpsController.build_step_focus(step, i + 1, total)
+        meta = ControladorOperacionesMatrices.construir_foco_paso(step, i + 1, total)
         grupo_idx = i if varias_suboperaciones else 0
 
         pasos.append(

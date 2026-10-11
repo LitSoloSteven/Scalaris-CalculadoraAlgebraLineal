@@ -11,9 +11,9 @@ from nicegui import ui, run
 
 from src.frontend.components.app_shell import create_app_shell
 from src.frontend.components.ai_panel import AIPanel
-from src.frontend.constantes import DEBOUNCE_GEOMETRIA_SEGUNDOS
 from src.frontend.navigation import route_of
-from src.frontend.controllers.geometry.controller_geometry import GeometryController
+from src.frontend.constantes import DEBOUNCE_GEOMETRIA_SEGUNDOS
+from src.frontend.controladores.geometria import ControladorGeometria
 from .scenes_mixin import GeometryScenesMixin
 from .controls_mixin import GeometryControlsMixin
 
@@ -307,11 +307,11 @@ class GeometryUI(GeometryControlsMixin, GeometryScenesMixin):
             # Process
             payload_json = json.dumps(payload)
             if self.scene == 'rectas-planos':
-                result = await run.io_bound(GeometryController.process_lines_planes, payload_json)
+                result = await run.io_bound(ControladorGeometria.procesar_rectas_planos, payload_json)
             elif self.scene == 'vectores':
-                result = await run.io_bound(GeometryController.process_vectors, payload_json)
+                result = await run.io_bound(ControladorGeometria.procesar_vectores, payload_json)
             elif self.scene == 'combinacion':
-                result = await run.io_bound(GeometryController.process_combination, payload_json)
+                result = await run.io_bound(ControladorGeometria.procesar_combinacion, payload_json)
             else:
                 return
 
@@ -502,9 +502,9 @@ class GeometryUI(GeometryControlsMixin, GeometryScenesMixin):
 
     def _cell_selector(self, error_cell: dict) -> str | None:
         """Build a CSS selector for an error cell."""
-        from src.frontend.controllers.geometry.controller_geometry import error_cell_selector
+        from src.frontend.controladores.geometria import selector_celda_error
         grid_n = self.grid.n if self.grid else 2
-        return error_cell_selector(error_cell, scene=self.scene, grid_n=grid_n)
+        return selector_celda_error(error_cell, escena=self.scene, n_cuadricula=grid_n)
 
     # --- AI Context ---
 

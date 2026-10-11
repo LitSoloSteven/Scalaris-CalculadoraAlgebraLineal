@@ -6,11 +6,26 @@ import html
 import re
 from dataclasses import dataclass
 from fractions import Fraction
-from typing import Sequence
+from typing import Any, Sequence
 
 from src.backend.constants import DISPLAY_DECIMALS
-from src.backend.models.matrix import Matrix
+from src.backend.modelos.matriz import Matriz
 from src.frontend.components.reproductor_pasos.catalogo import STACKED_FRAC_MAX_N
+
+
+def _filas_matriz(matriz: Any) -> int:
+    """Obtiene la cantidad de filas de una matriz."""
+    return getattr(matriz, "filas", getattr(matriz, "rows", 0))
+
+
+def _columnas_matriz(matriz: Any) -> int:
+    """Obtiene la cantidad de columnas de una matriz."""
+    return getattr(matriz, "columnas", getattr(matriz, "cols", 0))
+
+
+def _obtener_celda_matriz(matriz: Any, fila: int, columna: int) -> Any:
+    """Obtiene el valor de una celda usando obtener o get."""
+    return matriz.obtener(fila, columna) if hasattr(matriz, "obtener") else matriz.get(fila, columna)
 
 
 @dataclass(frozen=True)
@@ -58,23 +73,26 @@ def etiqueta_variable_html(nombre: str) -> str:
     return html.escape(nombre)
 
 
-def html_tabla_matriz(matriz: Matrix, *, decimales: bool = False) -> str:
+def html_tabla_matriz(matriz: Any, *, decimales: bool = False) -> str:
     """Genera una tabla de matriz con desplazamiento horizontal propio."""
-    compacta = matriz.rows > STACKED_FRAC_MAX_N
+    n_filas = _filas_matriz(matriz)
+    n_cols = _columnas_matriz(matriz)
+    compacta = n_filas > STACKED_FRAC_MAX_N
     apilada = not compacta and not decimales
     encabezado = "<th class='row-label'></th>" + "".join(
-        f"<th>C{columna + 1}</th>" for columna in range(matriz.cols)
+        f"<th>C{columna + 1}</th>" for columna in range(n_cols)
     )
-    filas = [_fila_matriz(matriz, indice, apilada, decimales) for indice in range(matriz.rows)]
+    filas = [_fila_matriz(matriz, indice, apilada, decimales) for indice in range(n_filas)]
     clase = "inv-table compact" if compacta else "inv-table"
     return _html_tabla(clase, encabezado, filas)
 
 
-def _fila_matriz(matriz: Matrix, indice: int, apilada: bool, decimales: bool) -> str:
+def _fila_matriz(matriz: Any, indice: int, apilada: bool, decimales: bool) -> str:
     """Construye una fila de la tabla de matriz con etiquetas y valores."""
+    n_cols = _columnas_matriz(matriz)
     celdas = [f"<th class='row-label'>F{indice + 1}</th>"]
-    for columna in range(matriz.cols):
-        valor = matriz.get(indice, columna)
+    for columna in range(n_cols):
+        valor = _obtener_celda_matriz(matriz, indice, columna)
         contenido = formatear_decimal(valor) if decimales else formatear_valor(valor, apilada=apilada)
         if decimales:
             celdas.append(f"<td>{contenido}</td>")
@@ -91,7 +109,7 @@ def _titulo_aproximado(valor: int | Fraction | float) -> str:
 
 
 def html_tabla_aumentada(
-    matriz: Matrix,
+    matriz: Any,
     n_izq: int,
     *,
     filas_cambiadas: Sequence[int] = (),
@@ -102,16 +120,18 @@ def html_tabla_aumentada(
     etiquetas_der: Sequence[str] | None = None,
 ) -> str:
     """Genera una tabla aumentada con resaltados y etiquetas opcionales."""
-    if n_izq < 0 or n_izq > matriz.cols:
+    n_cols = _columnas_matriz(matriz)
+    n_filas = _filas_matriz(matriz)
+    if n_izq < 0 or n_izq > n_cols:
         raise ValueError("El ancho izquierdo debe caber en la matriz aumentada.")
-    ancho_der = matriz.cols - n_izq
+    ancho_der = n_cols - n_izq
     compacta = n_izq > STACKED_FRAC_MAX_N
     encabezado = _encabezados_aumentados(n_izq, ancho_der, etiquetas_izq, etiquetas_der)
     opciones = _ResaltadosAumentados(
         n_izq, filas_cambiadas, filas_intercambio, pivote,
         bloque_resultado, n_izq <= STACKED_FRAC_MAX_N,
     )
-    filas = [_fila_aumentada(matriz, indice, opciones) for indice in range(matriz.rows)]
+    filas = [_fila_aumentada(matriz, indice, opciones) for indice in range(n_filas)]
     clases = "inv-table compact" if compacta else "inv-table"
     if bloque_resultado:
         clases += " is-result"
@@ -154,8 +174,9 @@ def _fila_aumentada(matriz, indice, opciones):
     clase_fila = "row-swap" if indice in opciones.filas_intercambio else "row-changed" if indice in opciones.filas_cambiadas else ""
     atributo_fila = f' class="{clase_fila}"' if clase_fila else ""
     celdas = [f"<th class='row-label'>F{indice + 1}</th>"]
-    for columna in range(matriz.cols):
-        valor = matriz.get(indice, columna)
+    n_cols = _columnas_matriz(matriz)
+    for columna in range(n_cols):
+        valor = _obtener_celda_matriz(matriz, indice, columna)
         clases = _clases_celda(columna, indice, opciones)
         clase_celda = f' class="{" ".join(clases)}"' if clases else ""
         contenido = formatear_valor(valor, apilada=opciones.apilada)

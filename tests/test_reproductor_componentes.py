@@ -16,8 +16,12 @@ from src.frontend.components.reproductor_pasos import (
 )
 from src.frontend.components.reproductor_pasos import cuerpos
 from src.frontend.components.reproductor_pasos import reproductor as modulo_reproductor
-from src.frontend.views.inverse_ops._adaptador_pasos import adaptar_pasos_inversa
-from src.frontend.controllers.inverse_ops.controller_inverse_ops import InverseOpsController
+from src.frontend.controladores.operaciones_inversas import (
+    ControladorOperacionesInversas,
+)
+from src.frontend.views.inverse_ops._adaptador_pasos import (
+    adaptar_pasos_inversa,
+)
 
 
 class _ControlPrueba:
@@ -144,7 +148,7 @@ def test_velocidades_y_renderizado_latex_conservan_contrato(monkeypatch):
 
 def test_adaptador_inversa_preserva_grupos_datos_y_paso_final():
     """Verifica que el adaptador conserva referencias y metadatos de Glosa."""
-    resultado = InverseOpsController.process_inverse('{"n":2,"data":[[1,2],[3,4]]}')
+    resultado = ControladorOperacionesInversas.procesar_inversa('{"n":2,"data":[[1,2],[3,4]]}')
     pasos, grupos = adaptar_pasos_inversa(resultado)
     assert isinstance(pasos[0], PasoReproductor)
     assert isinstance(grupos[0], GrupoReproductor)
