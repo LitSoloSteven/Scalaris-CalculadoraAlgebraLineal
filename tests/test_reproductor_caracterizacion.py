@@ -7,7 +7,7 @@ from src.backend.modelos.matriz import Matriz
 from src.frontend.controladores.operaciones_inversas import (
     ControladorOperacionesInversas,
 )
-from src.frontend.components.reproductor_pasos import (
+from src.frontend.componentes.reproductor_pasos import (
     formatear_decimal,
     formatear_valor,
     html_chip_tipo,

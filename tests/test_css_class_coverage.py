@@ -9,7 +9,7 @@ CSS_PATH = Path("src/frontend/assets/css/theme.css")
 
 def get_used_semantic_classes() -> set[str]:
     classes_used = set()
-    directories = [Path("src/frontend/components"), Path("src/frontend/views")]
+    directories = [Path("src/frontend/componentes"), Path("src/frontend/vistas")]
 
     for directory in directories:
         for file_path in directory.rglob("*.py"):

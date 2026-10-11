@@ -79,7 +79,7 @@ def test_ast_copy_no_emdash_no_oops_no_voseo():
 
 def test_glosa_greeting_unified():
     """Verifica que '¡Hola! Soy Glosa.' fue reemplazado por 'Hola, soy Glosa.'."""
-    dock_file = os.path.join('src', 'frontend', 'components', 'glosa_dock.py')
+    dock_file = os.path.join('src', 'frontend', 'componentes', 'glosa_bitacora.py')
     with open(dock_file, 'r', encoding='utf-8') as fp:
         content = fp.read()
 

@@ -28,12 +28,12 @@ def test_theme_css_container_queries():
 
 def test_views_migrated_to_container_layout():
     views = [
-        "src/frontend/views/linear_systems/view_linear_systems.py",
-        "src/frontend/views/vector_ops/view_vector_ops.py",
-        "src/frontend/views/matrix_ops/view_matrix_ops.py",
-        "src/frontend/views/inverse_ops/view_inverse_ops.py",
-        "src/frontend/views/numeric_systems/view_numeric_systems.py",
-        "src/frontend/views/numeric_systems/view_roman_calculator.py"
+        "src/frontend/vistas/linear_systems/view_linear_systems.py",
+        "src/frontend/vistas/vector_ops/view_vector_ops.py",
+        "src/frontend/vistas/matrix_ops/view_matrix_ops.py",
+        "src/frontend/vistas/inverse_ops/view_inverse_ops.py",
+        "src/frontend/vistas/numeric_systems/view_numeric_systems.py",
+        "src/frontend/vistas/numeric_systems/view_roman_calculator.py"
     ]
     
     for view in views:
@@ -51,7 +51,7 @@ def test_views_migrated_to_container_layout():
         assert "view-root" in content, f"view-root missing in {view}"
         
 def test_hub_contains_view_root():
-    hub_path = Path("src/frontend/views/hub/view_hub.py")
+    hub_path = Path("src/frontend/vistas/hub/view_hub.py")
     assert hub_path.exists()
     content = hub_path.read_text(encoding="utf-8")
     assert "view-root" in content

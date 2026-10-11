@@ -4,7 +4,7 @@ from pathlib import Path
 
 
 RAIZ = Path(__file__).resolve().parents[1]
-VISTAS_SISTEMAS = RAIZ / "src/frontend/views/linear_systems"
+VISTAS_SISTEMAS = RAIZ / "src/frontend/vistas/linear_systems"
 EXTENSIONES_FUENTE = {".py", ".js", ".css", ".html"}
 
 
@@ -28,5 +28,5 @@ def test_resultados_conservan_el_boton_y_su_handoff():
     contenido = (VISTAS_SISTEMAS / "results_mixin.py").read_text(encoding="utf-8")
     assert "if n_vars in (2, 3):" in contenido
     assert "Ver en el Visualizador" in contenido
-    assert "put_system('sistemas', matrix_A_vals, vector_b_vals)" in contenido
+    assert "guardar_sistema('sistemas', matrix_A_vals, vector_b_vals)" in contenido
     assert ".tooltip('Visualiza el sistema en R² o R³')" in contenido

@@ -8,11 +8,11 @@ from src.backend.solvers.numeric_systems.roman_calculator import (
     RomanCalculator,
     RomanNumeralError,
 )
-from src.frontend.views.numeric_systems.roman_steps import (
+from src.frontend.vistas.numeric_systems.roman_steps import (
     construir_pasos_romanos,
     desglosar_pasos_canonicos,
 )
-from src.frontend.views.numeric_systems.view_roman_calculator import (
+from src.frontend.vistas.numeric_systems.view_roman_calculator import (
     RomanCalculatorUI,
 )
 
@@ -151,9 +151,9 @@ def test_clasificacion_errores_no_genera_pasos():
 def test_sin_emdash_ni_voseo_en_textos_romanos():
     """Garantiza ausencia de guion largo ('—') y de voseo en los módulos de números romanos."""
     archivos = [
-        Path("src/frontend/views/numeric_systems/roman_steps.py"),
-        Path("src/frontend/views/numeric_systems/roman_result_mixin.py"),
-        Path("src/frontend/views/numeric_systems/view_roman_calculator.py"),
+        Path("src/frontend/vistas/numeric_systems/roman_steps.py"),
+        Path("src/frontend/vistas/numeric_systems/roman_result_mixin.py"),
+        Path("src/frontend/vistas/numeric_systems/view_roman_calculator.py"),
     ]
 
     patrones_voseo = [

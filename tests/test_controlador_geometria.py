@@ -75,23 +75,23 @@ def test_recorte_recta_caja_direccion_cero():
 
 
 def test_selector_celda_error_matriz_a():
-    resultado = selector_celda_error({"kind": "A", "row": 1, "col": 2}, scene="rectas-planos", grid_n=2)
+    resultado = selector_celda_error({"kind": "A", "row": 1, "col": 2}, escena="rectas-planos", n_cuadricula=2)
     assert resultado == 'input[data-row="1"][data-col="2"]'
 
 
 def test_selector_celda_error_vector_b():
-    resultado = selector_celda_error({"kind": "b", "row": 1}, scene="rectas-planos", grid_n=2)
+    resultado = selector_celda_error({"kind": "b", "row": 1}, escena="rectas-planos", n_cuadricula=2)
     assert resultado == 'input[data-row="1"][data-col="2"]'
 
 
 def test_selector_celda_error_vector():
-    resultado = selector_celda_error({"kind": "vec", "name": "v_1", "index": 0}, scene="vectores", grid_n=2)
-    assert resultado == 'input[data-vec-id="geo_vec_v_1"][data-vec-idx="0"]'
+    resultado = selector_celda_error({"kind": "vec", "name": "v_1", "index": 0}, escena="vectores", n_cuadricula=2)
+    assert resultado == 'input[data-geometria-vector="geometria_vectores_v_1"][data-geometria-indice="0"]'
 
 
 def test_selector_celda_error_combinacion():
-    resultado = selector_celda_error({"kind": "vec", "name": "b", "index": 1}, scene="combinacion", grid_n=2)
-    assert resultado == 'input[data-vec-id="geo_comb_b"][data-vec-idx="1"]'
+    resultado = selector_celda_error({"kind": "vec", "name": "b", "index": 1}, escena="combinacion", n_cuadricula=2)
+    assert resultado == 'input[data-geometria-vector="geometria_combinacion_b"][data-geometria-indice="1"]'
 
 
 def test_rectas_planos_payload_malformado():

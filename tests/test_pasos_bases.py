@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 
 from src.backend.solvers.numeric_systems.conversor_bases import ConversorBases
-from src.frontend.views.numeric_systems._pasos_bases import construir_pasos_bases
+from src.frontend.vistas.numeric_systems._pasos_bases import construir_pasos_bases
 
 
 def test_decimal_255_generates_expected_groups_and_steps():
@@ -138,9 +138,9 @@ def test_values_are_escaped():
 def test_no_forbidden_strings_nor_voseo():
     """Verifica que los archivos de la fase F7 no contienen —, Oops ni voseo."""
     files_to_check = [
-        Path("src/frontend/views/numeric_systems/_pasos_bases.py"),
-        Path("src/frontend/views/numeric_systems/procedure_mixin.py"),
-        Path("src/frontend/views/numeric_systems/rendering_mixin.py"),
+        Path("src/frontend/vistas/numeric_systems/_pasos_bases.py"),
+        Path("src/frontend/vistas/numeric_systems/procedure_mixin.py"),
+        Path("src/frontend/vistas/numeric_systems/rendering_mixin.py"),
     ]
 
     voseo_pattern = re.compile(

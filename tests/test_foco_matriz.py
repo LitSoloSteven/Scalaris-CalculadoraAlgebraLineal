@@ -7,7 +7,7 @@ from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_matrices.evaluador import (
     EvaluadorExpresionesMatriciales,
 )
-from src.frontend.components.ai_panel import AIPanel
+from src.frontend.componentes.ai_panel import AIPanel
 from src.frontend.controladores.operaciones_matrices.controlador_operaciones_matrices import (
     ControladorOperacionesMatrices,
 )
@@ -98,7 +98,7 @@ def test_foco_matriz_transpuesta():
 
 def test_panel_ia_recolectar_contexto_detalle_paso():
     class InterfazSimulada:
-        def get_ai_context(self):
+        def obtener_contexto_ia(self):
             return AIContext(
                 tool="matrix_ops",
                 view="Matrices",

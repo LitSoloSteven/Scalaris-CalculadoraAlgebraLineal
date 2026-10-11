@@ -12,7 +12,7 @@ from src.backend.solvers.vector_ops.operations import VectorOpsSolver
 from src.frontend.controladores.operaciones_vectores import (
     ControladorOperacionesVectores,
 )
-from src.frontend.views.vector_ops._pasos_reproductor import (
+from src.frontend.vistas.vector_ops._pasos_reproductor import (
     construir_pasos_combinacion_lineal,
     construir_pasos_vector_basico,
 )
@@ -192,9 +192,9 @@ def test_legacy_keys_preserved_in_controller():
 def test_no_forbidden_strings_nor_voseo():
     """Verifica que los módulos nuevos no contienen —, Oops ni voseo."""
     files_to_check = [
-        Path("src/frontend/views/vector_ops/_pasos_reproductor.py"),
-        Path("src/frontend/views/vector_ops/steps_mixin.py"),
-        Path("src/frontend/views/vector_ops/results_mixin.py"),
+        Path("src/frontend/vistas/vector_ops/_pasos_reproductor.py"),
+        Path("src/frontend/vistas/vector_ops/steps_mixin.py"),
+        Path("src/frontend/vistas/vector_ops/results_mixin.py"),
         Path("src/frontend/controladores/operaciones_vectores/controlador_operaciones_vectores.py"),
     ]
 

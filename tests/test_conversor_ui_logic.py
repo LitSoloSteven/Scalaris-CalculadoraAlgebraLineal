@@ -1,6 +1,6 @@
 import asyncio
 import pytest
-from src.frontend.views.numeric_systems.view_numeric_systems import NumericSystemsUI
+from src.frontend.vistas.numeric_systems.view_numeric_systems import NumericSystemsUI
 from src.backend.solvers.numeric_systems.conversor_bases import ConversorBases
 
 def test_numeric_systems_ui_init():

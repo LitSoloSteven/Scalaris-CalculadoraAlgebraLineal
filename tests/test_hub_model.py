@@ -2,7 +2,7 @@
 from pathlib import Path
 import pytest
 
-from src.frontend.views.hub._model import (
+from src.frontend.vistas.hub._model import (
     InitialSelection,
     PillarModel,
     TileModel,

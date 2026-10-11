@@ -93,7 +93,7 @@ def test_math_scroll_container_wraps_all_mathjax():
     target = chr(36) + chr(36)
     violations = []
     for root, _, files in os.walk(FRONTEND_DIR):
-        if 'views' not in root and 'components' not in root:
+        if 'vistas' not in root and 'componentes' not in root:
             continue
         for f in files:
             if not f.endswith('.py'):

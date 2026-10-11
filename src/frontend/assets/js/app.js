@@ -26,6 +26,15 @@
     }
   };
 
+  window.scalaris.navegacion = {
+    centrarActivo: function () {
+      var el = document.querySelector('.nav-items .nav-active');
+      if (el) {
+        el.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'auto' });
+      }
+    }
+  };
+
   window.scalaris.reproducirAnimacionResultado = function (idElemento) {
     var el = document.getElementById(idElemento);
     if (!el) return;

@@ -8,7 +8,7 @@ import pytest
 from src.frontend.controladores.operaciones_matrices import (
     ControladorOperacionesMatrices,
 )
-from src.frontend.views.matrix_ops._pasos_reproductor import construir_pasos_matrices
+from src.frontend.vistas.matrix_ops._pasos_reproductor import construir_pasos_matrices
 
 
 def _evaluar(expresion: str, matrices: dict) -> dict:

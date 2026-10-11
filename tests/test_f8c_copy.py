@@ -36,7 +36,7 @@ def test_no_voseo_in_frontend_and_ai():
 
 def test_square_matrix_panel_max_n_dynamic_copy():
     """Verifica que el panel de matriz cuadrada use el límite dinámico en el texto de ayuda."""
-    panel_file = Path("src/frontend/components/square_matrix_panel.py")
+    panel_file = Path("src/frontend/componentes/square_matrix_panel.py")
     assert panel_file.exists()
     content = panel_file.read_text(encoding="utf-8")
     assert "Máx. 50×50" not in content, "square_matrix_panel.py todavía contiene 'Máx. 50×50' hardcodeado"

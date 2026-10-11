@@ -159,6 +159,6 @@ def suggest(
 class SuggestionProvider(Protocol):
     """Protocolo para vistas capaces de proveer señales dinámicas para Glosa."""
 
-    def get_ai_signals(self) -> Signals | None:
+    def obtener_senales_ia(self) -> Signals | None:
         """Devuelve las señales contextuales de la vista actual."""
         ...

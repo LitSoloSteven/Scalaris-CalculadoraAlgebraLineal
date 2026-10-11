@@ -214,3 +214,60 @@ html[data-theme="medianoche"] .brand-logo-dark {
     transform: scale(0.97);
     transition-duration: 0ms !important;
 }
+
+.btn-neo-calc-limpiar,
+.btn-eliminar-elemento {
+    color: var(--error) !important;
+}
+
+.icono-svg {
+    width: 22px;
+    height: 22px;
+}
+
+.tema-muestra {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1px solid var(--border-input);
+}
+
+.tema-muestra-papel {
+    background-color: var(--swatch-papel);
+}
+
+.tema-muestra-marea {
+    background-color: var(--swatch-marea);
+}
+
+.tema-muestra-medianoche {
+    background-color: var(--swatch-medianoche);
+}
+
+.tema-marca-activa {
+    width: 14px;
+    height: 14px;
+    color: var(--accent);
+}
+
+.tema-marca-papel {
+    display: var(--show-papel, none);
+}
+
+.tema-marca-marea {
+    display: var(--show-marea, none);
+}
+
+.tema-marca-medianoche {
+    display: var(--show-medianoche, none);
+}
+
+.separador-punto {
+    color: var(--accent);
+}
+
+.etiqueta-dimensiones {
+    letter-spacing: 0.08em;
+    font-variant-numeric: tabular-nums;
+    margin-bottom: -2px;
+}

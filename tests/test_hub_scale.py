@@ -5,7 +5,7 @@ import re
 
 
 THEME_CSS_PATH = Path("src/frontend/assets/css/theme.css")
-VIEW_HUB_PATH = Path("src/frontend/views/hub/view_hub.py")
+VIEW_HUB_PATH = Path("src/frontend/vistas/hub/view_hub.py")
 
 
 def hub_css_block() -> str:

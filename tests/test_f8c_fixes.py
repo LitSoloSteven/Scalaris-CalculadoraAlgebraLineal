@@ -1,6 +1,6 @@
 import pytest
 from src.ai.context import fingerprint, is_stale
-from src.frontend.views.numeric_systems.view_roman_calculator import RomanCalculatorUI
+from src.frontend.vistas.numeric_systems.view_roman_calculator import RomanCalculatorUI
 
 def test_fingerprint_accepts_tuple_keys():
     entrada = {"matrices": {"A": {(0, 0): "1", (0, 1): "1/1001"}}, "expresion": "A"}
@@ -36,7 +36,7 @@ def test_bases_fingerprint_with_raw_value():
     entrada_salvada = {"valor": val_raw, "base_origen": "hexadecimal", "base_destino": "todas"}
     fp = fingerprint(entrada_salvada)
 
-    # get_ai_context compares against raw input
+    # obtener_contexto_ia compara las entradas sin normalizar.
     entrada_actual = {"valor": "ff", "base_origen": "hexadecimal", "base_destino": "todas"}
     assert is_stale(entrada_actual, fp) is False
 

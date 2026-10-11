@@ -1,7 +1,7 @@
 """Pruebas unitarias para el registro central de taxonomía y navegación (Fase 1)."""
 import pytest
 
-from src.frontend.components.icons import icon_svg
+from src.frontend.componentes.icons import icon_svg
 from src.frontend.navigation import (
     NAV_FLAT_ORDER,
     PILLARS,

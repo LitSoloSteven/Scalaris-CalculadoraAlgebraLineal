@@ -17,6 +17,18 @@
     pointer-events: none;
     box-shadow: none !important;
     border: none !important;
+    view-transition-name: navbar;
+}
+
+.brand-logo-container {
+    width: 72px;
+    height: 72px;
+}
+
+.brand-logo {
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
 }
 
 .nav-pill {

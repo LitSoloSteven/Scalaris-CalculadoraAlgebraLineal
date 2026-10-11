@@ -2,7 +2,7 @@
 import json
 import pytest
 
-from src.frontend.components import handoff
+from src.frontend.componentes import handoff
 from src.frontend.controladores.geometria.controlador_geometria import (
     ControladorGeometria,
 )
@@ -64,7 +64,7 @@ def test_procesar_vectores_cuadro_predeterminado():
 
 
 def test_almacen_traspaso_eviccion_y_limite_caracteres(monkeypatch):
-    handoff._STORE.clear()
+    handoff._ALMACEN.clear()
 
     contador = 1000.0
 
@@ -73,26 +73,27 @@ def test_almacen_traspaso_eviccion_y_limite_caracteres(monkeypatch):
         contador += 1.0
         return contador
 
-    monkeypatch.setattr(handoff, "_now", hora_simulada)
+    monkeypatch.setattr(handoff, "_ahora", hora_simulada)
 
     tokens = []
     for _ in range(65):
-        t = handoff.put_matrix("test", [["1"]])
+        t = handoff.guardar_matriz("test", [["1"]])
         tokens.append(t)
 
-    assert len(handoff._STORE) <= 64
-    res0 = handoff.consume_matrix(tokens[0], max_n=5)
+    assert len(handoff._ALMACEN) <= 64
+    res0 = handoff.consumir_matriz(tokens[0], max_n=5)
     assert res0.status == "missing"
 
     celda_larga = "1" * 65
-    t_mat = handoff.put_matrix("test", [[celda_larga]])
-    assert handoff.consume_matrix(t_mat, max_n=5).status == "invalid"
+    t_mat = handoff.guardar_matriz("test", [[celda_larga]])
+    assert handoff.consumir_matriz(t_mat, max_n=5).status == "invalid"
 
-    t_sys = handoff.put_system("test", [[celda_larga]], ["1"])
-    assert handoff.consume_system(t_sys, max_m=5, allowed_n={1, 2, 3}).status == "invalid"
+    t_sys = handoff.guardar_sistema("test", [[celda_larga]], ["1"])
+    assert handoff.consumir_sistema(t_sys, max_m=5, allowed_n={1, 2, 3}).status == "invalid"
 
-    t_vec = handoff.put_vectors("test", "vectores", [[celda_larga, "1"]])
-    assert handoff.consume_vectors(t_vec, allowed_n={2, 3}).status == "invalid"
+    t_vec = handoff.guardar_vectores("test", "vectores", [[celda_larga, "1"]])
+    assert handoff.consumir_vectores(t_vec, allowed_n={2, 3}).status == "invalid"
+
 
 
 def test_ubicacion_redireccion():

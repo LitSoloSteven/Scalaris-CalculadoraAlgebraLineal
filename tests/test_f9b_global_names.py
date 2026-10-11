@@ -111,7 +111,7 @@ def test_detector_catches_missing_imports_mental_verification():
     como la que ocurrió en ai_panel.py antes de F9b (asyncio, json, html).
     """
     sample_code = '''
-def schedule_context_refresh():
+def programar_actualizacion_contexto():
     async def _debounced():
         await asyncio.sleep(0.25)
     _debounced()

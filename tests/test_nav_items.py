@@ -1,7 +1,7 @@
 """Pruebas unitarias de NavItem, VISUALIZER_SCENES y nav_items (Fase P2a)."""
 import pytest
 
-from src.frontend.components.icons import icon_svg
+from src.frontend.componentes.icons import icon_svg
 from src.frontend.navigation import (
     VISUALIZER_SCENES,
     NavItem,
@@ -10,14 +10,14 @@ from src.frontend.navigation import (
     nav_items,
     visible_tools,
 )
-from src.frontend.views.geometry.view_geometry import VALID_SCENES
+from src.frontend.vistas.geometria.vista_geometria import ESCENAS_VALIDAS
 
 
 def test_visualizer_scenes_match_view_geometry_valid_scenes():
-    """Garantiza que las escenas del registro coincidan exactamente con VALID_SCENES."""
+    """Garantiza que las escenas del registro coincidan exactamente con ESCENAS_VALIDAS."""
     scene_keys = tuple(item[0] for item in VISUALIZER_SCENES)
-    assert scene_keys == VALID_SCENES, (
-        f"Desfase en escenas: VISUALIZER_SCENES={scene_keys} vs VALID_SCENES={VALID_SCENES}"
+    assert scene_keys == ESCENAS_VALIDAS, (
+        f"Desfase en escenas: VISUALIZER_SCENES={scene_keys} vs ESCENAS_VALIDAS={ESCENAS_VALIDAS}"
     )
 
 
@@ -87,10 +87,10 @@ def test_nav_item_icons_render_svg():
 def test_app_shell_hub_route_no_navbar():
     """Verifica que create_app_shell omita la creacion de navbar en HUB_ROUTE."""
     from unittest.mock import patch
-    from src.frontend.components.app_shell import create_app_shell
+    from src.frontend.componentes.app_shell import create_app_shell
     from src.frontend.navigation import HUB_ROUTE
 
-    with patch("src.frontend.components.app_shell.create_navbar") as mock_navbar:
+    with patch("src.frontend.componentes.app_shell.create_navbar") as mock_navbar:
         create_app_shell(active_route=HUB_ROUTE)
         mock_navbar.assert_not_called()
 
@@ -100,7 +100,7 @@ def test_app_shell_hub_route_no_navbar():
 
 def test_create_navbar_execution():
     """Verifica ejecucion de create_navbar con ruta de pilar, ruta desconocida y active_key explicito."""
-    from src.frontend.components.navbar import create_navbar
+    from src.frontend.componentes.navbar import create_navbar
 
     # Ruta de pilar deduciendo active_key
     create_navbar(active_route="/algebra-lineal/sistemas")

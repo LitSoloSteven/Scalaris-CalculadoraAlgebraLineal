@@ -53,3 +53,27 @@
     min-width: 0;
     max-width: 100%;
 }
+
+.ai-panel-superposicion {
+    position: fixed;
+    inset: 0;
+    background: var(--scrim);
+    z-index: calc(var(--z-dock) - 1);
+    transition: opacity 240ms var(--ease-std);
+    pointer-events: none;
+}
+
+.ai-panel-tarjeta {
+    position: fixed;
+    right: 16px;
+    top: 88px;
+    width: min(420px, calc(100vw - 32px));
+    height: calc(100dvh - 104px);
+    background: var(--bg-elevated);
+    z-index: var(--z-dock);
+    border: 1px solid var(--border-input);
+    border-radius: var(--radius-card);
+    box-shadow: var(--elev-3);
+    overflow: hidden;
+    transition: transform 240ms var(--ease-std), opacity 240ms var(--ease-std);
+}

@@ -2,7 +2,7 @@
 
 import pytest
 
-from src.frontend.views.linear_systems._vista_previa import (
+from src.frontend.vistas.linear_systems._vista_previa import (
     analizar_ecuaciones,
     latex_matriz_aumentada,
     latex_sistema,

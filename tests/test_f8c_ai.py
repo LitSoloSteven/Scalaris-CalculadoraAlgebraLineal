@@ -3,7 +3,7 @@ from fractions import Fraction
 
 from src.ai.prompts import build_messages, trim_history
 from src.ai.context import serialize_context, AIContext, fingerprint, is_stale, MAXIMO_CARACTERES_CONTEXTO
-from src.frontend.components.glosa_chips import _is_keyboard_event
+from src.frontend.componentes.glosa_chips import _is_keyboard_event
 from src.backend.models.matrix import Matrix
 
 def test_build_messages_roles_and_question():

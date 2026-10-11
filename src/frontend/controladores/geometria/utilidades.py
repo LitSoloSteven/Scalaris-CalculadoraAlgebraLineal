@@ -9,13 +9,11 @@ def selector_celda_error(
     *,
     escena: str = "",
     n_cuadricula: int = 0,
-    **opciones,
 ) -> str | None:
     """Genera el selector CSS para enfocar la celda inválida en la interfaz."""
     if not celda_error:
         return None
-    esc = opciones.get("scene", escena)
-    n = opciones.get("grid_n", n_cuadricula)
+    n = n_cuadricula
     tipo = celda_error.get("kind")
     if tipo == "A":
         fila = celda_error.get("row", 0)
@@ -27,8 +25,8 @@ def selector_celda_error(
     if tipo == "vec":
         nombre = celda_error.get("name", "")
         indice = celda_error.get("index", 0)
-        panel_id = "geo_vec" if esc == "vectores" else "geo_comb"
-        return f'input[data-vec-id="{panel_id}_{nombre}"][data-vec-idx="{indice}"]'
+        panel_id = "geometria_vectores" if escena == "vectores" else "geometria_combinacion"
+        return f'input[data-geometria-vector="{panel_id}_{nombre}"][data-geometria-indice="{indice}"]'
     return None
 
 

@@ -29,14 +29,14 @@ COLORES_CUADRICULA_GRAFICOS: dict[str, str] = {
     "medianoche": "rgba(255,255,255,0.06)",
 }
 
-# Constantes públicas para compatibilidad con escenas existentes
-CHART_PALETTE = PALETAS_POR_TEMA["papel"]
-CHART_MARKER_LIGHT = "#FFFFFF"
-CHART_MARKER_BORDER = "#23262E"
-CHART_GRID_COLOR = "rgba(128,128,128,0.2)"
-CHART_ZERO_COLOR = "rgba(128,128,128,0.5)"
-CHART_FONT_COLOR = COLORES_TEXTO_GRAFICOS
-CHART_SOLUTION_COLOR = COLORES_SOLUCION_POR_TEMA["papel"]
+PALETA_GRAFICOS = PALETAS_POR_TEMA["papel"]
+COLOR_MARCADOR_CLARO = "#FFFFFF"
+COLOR_MARCADOR_BORDE = "#23262E"
+COLOR_CUADRICULA = "rgba(128,128,128,0.2)"
+COLOR_CERO = "rgba(128,128,128,0.5)"
+COLOR_TRANSPARENTE = "rgba(0,0,0,0)"
+COLORES_TEXTO = COLORES_TEXTO_GRAFICOS
+COLOR_SOLUCION = COLORES_SOLUCION_POR_TEMA["papel"]
 
 
 def obtener_paleta_tema(tema: str = "papel") -> list[str]:
@@ -98,6 +98,7 @@ _HEAD_HTML = f"""
     <link rel="stylesheet" href="/assets/css/vistas_glosa_dock.css">
     <link rel="stylesheet" href="/assets/css/vistas_glosa_componentes.css">
     <link rel="stylesheet" href="/assets/css/vistas_inversa.css">
+    <link rel="stylesheet" href="/assets/css/vistas_geometria.css">
     <link rel="stylesheet" href="/assets/css/movimiento.css">
     <link rel="stylesheet" href="/assets/css/reproductor_pasos.css">
 

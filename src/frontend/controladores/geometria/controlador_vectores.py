@@ -3,6 +3,7 @@ from fractions import Fraction
 import json
 
 from src.backend.geometria.recorte import calcular_rango_automatico
+from src.backend.geometria.transferencia import LIMITES_VECTORES_ESCENA
 from src.backend.utilidades.validadores import ValidadorMatriz
 from src.frontend.controladores.geometria.utilidades import (
     a_flotante_seguro,
@@ -65,7 +66,8 @@ def _validar_y_extraer_par_vectores(
         return None, None, 0, {"status": "ERROR", "message": json.loads(err).get("message", ""), "error_cell": None}
 
     vectores_raw = (datos or {}).get("vectors", [])
-    if not isinstance(vectores_raw, list) or len(vectores_raw) != 2:
+    minimo, maximo = LIMITES_VECTORES_ESCENA['vectores']
+    if not isinstance(vectores_raw, list) or not minimo <= len(vectores_raw) <= maximo:
         return None, None, 0, {"status": "ERROR", "message": "Se necesitan exactamente 2 vectores.", "error_cell": None}
 
     vectores, err_dict = _parsear_vectores_entrada(vectores_raw)

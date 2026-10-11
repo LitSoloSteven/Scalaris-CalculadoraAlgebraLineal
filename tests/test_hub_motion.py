@@ -7,7 +7,7 @@ from tests.test_f9_contrast import contrast_ratio, hex_to_rgb, parse_tokens
 
 THEME_CSS_PATH = Path("src/frontend/assets/css/theme.css")
 HUB_JS_PATH = Path("src/frontend/assets/js/hub.js")
-VIEW_HUB_PATH = Path("src/frontend/views/hub/view_hub.py")
+VIEW_HUB_PATH = Path("src/frontend/vistas/hub/view_hub.py")
 
 
 def get_hub_css_block() -> str:

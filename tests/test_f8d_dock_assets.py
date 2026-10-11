@@ -29,9 +29,10 @@ def test_glosa_dock_js_contract():
 
 def test_glosa_dock_py_contract():
     """Verifica contratos de accesibilidad en glosa_dock.py."""
-    py_path = Path("src/frontend/components/glosa_dock.py")
-    assert py_path.exists()
-    content = py_path.read_text(encoding="utf-8")
+    py_path = Path("src/frontend/componentes/glosa_dock.py")
+    pie_path = Path("src/frontend/componentes/glosa_pie.py")
+    assert py_path.exists() and pie_path.exists()
+    content = py_path.read_text(encoding="utf-8") + "\n" + pie_path.read_text(encoding="utf-8")
 
     # El FAB incluye aria-controls="glosa-dock" y aria-expanded="false"
     fab_match = re.search(r"classes\(['\"]glosa-fab['\"]\)\.props\(([^)]+)\)", content)

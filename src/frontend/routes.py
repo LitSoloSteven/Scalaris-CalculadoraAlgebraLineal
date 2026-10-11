@@ -40,28 +40,28 @@ def _registrar_paginas_algebra() -> None:
     @ui.page(route_of("sistemas"), title=tool_by_id("sistemas").page_title)
     def pagina_sistemas(method: str = "gauss", handoff: str = ""):
         metodo = method if method in ("gauss", "gauss-jordan") else "gauss"
-        from src.frontend.views.linear_systems.view_linear_systems import LinearSystemsUI
+        from src.frontend.vistas.linear_systems.view_linear_systems import LinearSystemsUI
 
         setup_theme()
         LinearSystemsUI(initial_method=metodo).build(handoff_token=handoff)
 
     @ui.page(route_of("vectores"), title=tool_by_id("vectores").page_title)
     def pagina_vectores():
-        from src.frontend.views.vector_ops.view_vector_ops import VectorOpsUI
+        from src.frontend.vistas.vector_ops.view_vector_ops import VectorOpsUI
 
         setup_theme()
         VectorOpsUI().build()
 
     @ui.page(route_of("matrices"), title=tool_by_id("matrices").page_title)
     def pagina_matrices():
-        from src.frontend.views.matrix_ops.view_matrix_ops import MatrixOpsUI
+        from src.frontend.vistas.matrix_ops.view_matrix_ops import MatrixOpsUI
 
         setup_theme()
         MatrixOpsUI().build()
 
     @ui.page(route_of("inversa"), title=tool_by_id("inversa").page_title)
     def pagina_inversa(handoff: str = ""):
-        from src.frontend.views.inverse_ops.view_inverse_ops import InverseOpsUI
+        from src.frontend.vistas.inverse_ops.view_inverse_ops import InverseOpsUI
 
         setup_theme()
         InverseOpsUI().build(handoff_token=handoff)
@@ -72,21 +72,21 @@ def _registrar_paginas_avanzadas() -> None:
 
     @ui.page(route_of("visualizador"), title=tool_by_id("visualizador").page_title)
     def pagina_geometria(escena: str = "rectas-planos", handoff: str = ""):
-        from src.frontend.views.geometry.view_geometry import GeometryUI
+        from src.frontend.vistas.geometria.vista_geometria import VistaGeometria
 
         setup_theme()
-        GeometryUI().build(escena=escena, handoff_token=handoff)
+        VistaGeometria().construir(escena=escena, token_handoff=handoff)
 
     @ui.page(route_of("leontief"), title=tool_by_id("leontief").page_title)
     def pagina_leontief():
-        from src.frontend.views.matrix_ops.view_matrix_ops import LeontiefUI
+        from src.frontend.vistas.matrix_ops.view_matrix_ops import LeontiefUI
 
         setup_theme()
         LeontiefUI().build()
 
     @ui.page(route_of("transformaciones"), title=tool_by_id("transformaciones").page_title)
     def pagina_transformaciones():
-        from src.frontend.views.matrix_ops.view_transformaciones import TransformacionesUI
+        from src.frontend.vistas.matrix_ops.view_transformaciones import TransformacionesUI
 
         setup_theme()
         TransformacionesUI().build()
@@ -97,14 +97,14 @@ def _registrar_paginas_utilidades() -> None:
 
     @ui.page(route_of("bases"), title=tool_by_id("bases").page_title)
     def pagina_bases():
-        from src.frontend.views.numeric_systems.view_numeric_systems import NumericSystemsUI
+        from src.frontend.vistas.numeric_systems.view_numeric_systems import NumericSystemsUI
 
         setup_theme()
         NumericSystemsUI().build()
 
     @ui.page(route_of("romanos"), title=tool_by_id("romanos").page_title)
     def pagina_romanos():
-        from src.frontend.views.numeric_systems.view_roman_calculator import RomanCalculatorUI
+        from src.frontend.vistas.numeric_systems.view_roman_calculator import RomanCalculatorUI
 
         setup_theme()
         RomanCalculatorUI().build()
@@ -117,7 +117,7 @@ def _registrar_pagina_hub() -> None:
 
     @ui.page(HUB_ROUTE, title=HUB_PAGE_TITLE)
     async def pagina_inicio_hub(client: Client, glosa: str = ""):
-        from src.frontend.views.hub.view_hub import HubUI
+        from src.frontend.vistas.hub.view_hub import HubUI
 
         setup_theme()
         await HubUI(glosa_open=(glosa == "1")).build(client)

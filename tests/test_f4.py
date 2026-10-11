@@ -1,8 +1,8 @@
 import pytest
 import os
 from src.frontend.app import resolver_secreto_almacenamiento
-from src.frontend.components.glosa_render import render_glosa_text
-from src.frontend.components.ai_panel import AIPanel
+from src.frontend.componentes.glosa_render import render_glosa_text
+from src.frontend.componentes.ai_panel import AIPanel
 
 def test_storage_secret_dev():
     env = {"SCALARIS_ENV": "development"}
@@ -42,7 +42,7 @@ def test_glosa_history():
     assert len(panel.chat_history) == 0
 
 def test_glosa_assets():
-    from src.frontend.components.icons import icon_svg
+    from src.frontend.componentes.icons import icon_svg
     assert '<svg' in icon_svg('glosa')
 
 def test_glosa_contrast():

@@ -8,7 +8,7 @@ from src.frontend.navigation import (
     TOOLS,
     NAV_FLAT_ORDER,
 )
-from src.frontend.views.hub._recent import normalize_recent
+from src.frontend.vistas.hub._recent import normalize_recent
 
 
 def test_visualizador_in_nav_groups():

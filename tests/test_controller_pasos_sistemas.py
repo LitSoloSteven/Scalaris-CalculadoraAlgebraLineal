@@ -10,7 +10,7 @@ from src.frontend.controladores.sistemas_lineales.controlador_gauss import (
 from src.frontend.controladores.sistemas_lineales.controlador_gauss_jordan import (
     ControladorGaussJordan,
 )
-from src.frontend.views.linear_systems._pasos_reproductor import (
+from src.frontend.vistas.linear_systems._pasos_reproductor import (
     construir_pasos_reproductor,
 )
 

@@ -108,23 +108,23 @@ def test_js_cross_highlighting_and_no_blur():
 
 def test_python_components_break_ui_and_animations():
     # Matrix capture py
-    mat_py = Path("src/frontend/components/matrix_capture.py").read_text(encoding="utf-8")
+    mat_py = Path("src/frontend/componentes/matrix_capture.py").read_text(encoding="utf-8")
     assert "filter: 'blur" not in mat_py
     assert "grid-cell" in mat_py
     assert "w-20" not in mat_py
 
     # Equation grid py
-    eq_py = Path("src/frontend/components/equation_grid.py").read_text(encoding="utf-8")
+    eq_py = Path("src/frontend/componentes/equation_grid.py").read_text(encoding="utf-8")
     assert "grid-cell" in eq_py
     assert "w-20" not in eq_py
 
     # Vector capture py
-    vec_py = Path("src/frontend/components/vector_capture.py").read_text(encoding="utf-8")
+    vec_py = Path("src/frontend/componentes/vector_capture.py").read_text(encoding="utf-8")
     assert "grid-cell" in vec_py
     assert "w-20" not in vec_py
 
     # Square matrix panel py
-    sq_py = Path("src/frontend/components/square_matrix_panel.py").read_text(encoding="utf-8")
+    sq_py = Path("src/frontend/componentes/square_matrix_panel.py").read_text(encoding="utf-8")
     assert "CELL_PX" not in sq_py
     assert "grid-cell" in sq_py
     assert "grid-cell-compact" in sq_py
@@ -132,16 +132,16 @@ def test_python_components_break_ui_and_animations():
 
 def test_views_sanitization_and_break_ui():
     # Numeric systems interaction mixin: no animate-shake
-    num_mixin = Path("src/frontend/views/numeric_systems/interaction_mixin.py").read_text(encoding="utf-8")
+    num_mixin = Path("src/frontend/vistas/numeric_systems/interaction_mixin.py").read_text(encoding="utf-8")
     assert "animate-shake" not in num_mixin
 
     # Linear systems results mixin: solution chips styling
-    lin_res = Path("src/frontend/views/linear_systems/results_mixin.py").read_text(encoding="utf-8")
+    lin_res = Path("src/frontend/vistas/linear_systems/results_mixin.py").read_text(encoding="utf-8")
     assert "overflow-wrap: anywhere;" in lin_res
     assert "min-w-0 max-w-full" in lin_res
 
     # Vector ops results mixin: ui.html in math-scroll-container instead of ui.markdown
-    vec_res = Path("src/frontend/views/vector_ops/results_mixin.py").read_text(encoding="utf-8")
+    vec_res = Path("src/frontend/vistas/vector_ops/results_mixin.py").read_text(encoding="utf-8")
     assert "math-scroll-container" in vec_res
     assert "html.escape(coef_str)" in vec_res
     assert "html.escape(sol_str)" in vec_res

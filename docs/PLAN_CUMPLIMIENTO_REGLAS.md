@@ -58,6 +58,18 @@ Llevar la totalidad del repositorio al cumplimiento estricto y verificable de la
 | formatters | formateadores | Módulo de utilidades |
 | constants | constantes | Módulo de backend |
 | exceptions | excepciones | Módulo de backend |
+| GeometryUI | VistaGeometria | Orquestación de las tres escenas geométricas |
+| view_geometry / controls_mixin / scenes_mixin / _scenes | vista_geometria / mixin_controles / mixin_escenas / _escenas | Módulos de vistas/geometria; sin alias |
+| GeometryControlsMixin / GeometryScenesMixin | MixinControlesGeometria / MixinEscenasGeometria | Clases de composición |
+| VALID_SCENES / normalize_scene | ESCENAS_VALIDAS / normalizar_escena | Catálogo y normalización |
+| build_lines_planes_figure / build_vectors_figure / build_combination_figure | construir_figura_rectas_planos / construir_figura_vectores / construir_figura_combinacion | Constructores de figuras |
+| get_ai_context / get_ai_signals | obtener_contexto_ia / obtener_senales_ia | Vistas, paneles, protocolos y dobles de pruebas |
+| schedule_context_refresh / render_inline_chips | programar_actualizacion_contexto / renderizar_sugerencias_en_linea | Paneles y todos sus consumidores |
+| geometry.js / window.scalaris.geometry | geometria.js / window.scalaris.geometria | Asset y espacio de nombres del cliente |
+| data-vec-id / data-vec-idx / data-vec-orientation | data-geometria-vector / data-geometria-indice / data-geometria-orientacion | Selectores, cliente y controles geométricos |
+| geo_vec / geo_comb / geo-cell-error | geometria_vectores / geometria_combinacion / geometria-celda-error | Identificadores de panel y marcado de error |
+| scene / grid_n / theme | escena / n_cuadricula / tema | Parámetros del selector y constructores de figuras; no claves JSON heredadas |
+| frame_index / handoff_token | indice_cuadro / token_handoff | Parámetros de figura vectorial y construcción de geometría |
 
 ---
 
@@ -169,20 +181,141 @@ Llevar la totalidad del repositorio al cumplimiento estricto y verificable de la
   - Ampliación de `RUTAS_AUDITADAS` en `tests/test_cumplimiento_reglas.py` a 94 rutas (los 5 módulos de backend geométrico y los 18 módulos de controladores).
   - Suite completa de 1127 pruebas pasando al 100% y 7 tests de reglas en verde.
 
-### Fase 6: Componentes de Interfaz (`src/frontend/components`) (E3, E4)
-- **Estado**: Pendiente
-- **Archivos**: `src/frontend/components/` (`ai_panel.py`, `glosa_dock.py`, `matrix_capture.py`, `vector_capture.py`, `square_matrix_panel.py`, `handoff.py`, etc.).
-- **Criterios de aceptación**:
-  - Ningún componente supera 300 líneas ni contiene lógica de dominio.
-  - Accesibilidad completa: foco visible, nombres accesibles, roles semánticos y cifras tabulares.
+### Fase 6: Componentes de Interfaz (`src/frontend/componentes`) (E3, E4, E7)
+- **Estado**: Completada
+- **Archivos creados y auditados (33 módulos en `src/frontend/componentes/`)**:
+  - Base y utilidades: `__init__.py`, `cuadricula_base.py` (91 líneas), `tareas.py` (22 líneas), `icons.py` (31 líneas), `theme_switcher.py` (52 líneas), `app_shell.py` (26 líneas), `navbar.py` (140 líneas).
+  - Captura y calculadoras: `calculator.py` (97 líneas), `matrix_capture.py` (119 líneas), `vector_capture.py` (114 líneas), `square_matrix_panel.py` (104 líneas), `equation_grid.py` (91 líneas), `exportador_ecuaciones.py` (55 líneas).
+  - Transferencia segura: `handoff.py` (261 líneas).
+  - Paneles de IA: `ai_panel.py` (124 líneas), `ai_panel_legacy.py` (80 líneas).
+  - Asistente Glosa Dock modularizado: `glosa_dock.py` (117 líneas), `glosa_cabecera.py` (42 líneas), `glosa_bitacora.py` (69 líneas), `glosa_pie.py` (80 líneas), `glosa_chips.py` (38 líneas), `glosa_envio.py` (107 líneas), `glosa_foco.py` (54 líneas), `glosa_render.py` (28 líneas).
+  - Reproductor de pasos desacoplado: `reproductor_pasos/__init__.py`, `reproductor_pasos/modelo.py` (23 líneas), `reproductor_pasos/catalogo.py` (33 líneas), `reproductor_pasos/controles.py` (148 líneas), `reproductor_pasos/indice.py` (77 líneas), `reproductor_pasos/cuerpos.py` (42 líneas), `reproductor_pasos/html_tablas.py` (54 líneas), `reproductor_pasos/vista.py` (76 líneas), `reproductor_pasos/reproductor.py` (115 líneas).
+- **Criterios de aceptación cumplidos**:
+  - Eliminación completa del paquete legado `src/frontend/components` y reemplazo formal por `src/frontend/componentes`.
+  - Descomposición de `glosa_dock.py` (~330 líneas originales) en 8 submódulos altamente cohesivos (cabecera, bitácora, pie, chips, envío, foco, render, dock orquestador).
+  - Unificación de ejecución asíncrona segura (`_spawn`) en `tareas.py: lanzar_tarea`, eliminando duplicaciones entre el dock y la geometría.
+  - Separación de `ai_panel.py` en ruta nativa dock y ruta legacy aislada (`ai_panel_legacy.py`), migrando estilos de escritura a clases CSS.
+  - Extracción de la lógica duplicada de cuadrículas (límites, celdas, adición/remoción, focus traversal y sanitización) a `cuadricula_base.py`.
+  - JS embebido eliminado; solo llamadas breves a scripts precompilados de assets.
+  - Delegación estricta de validación y límites de celdas al backend (`ValidadorMatriz.validar_celda` y `LONGITUD_MAXIMA_CELDA = 64`) conforme a E7.
+  - Handoff parametrizado con `_consumir_transferencia` y mensajes centralizados en `textos.py`.
+  - Escape HTML riguroso en `render_glosa_text` contra XSS; clases CSS en lugar de estilos en línea.
+  - Cumplimiento estricto de todos los límites duros: 33 archivos $\le 300$ líneas, funciones $\le 40$, clases $\le 200$, parámetros $\le 5$, anidamiento $\le 3$, complejidad $\le 10$.
+  - `RUTAS_AUDITADAS` en `tests/test_cumplimiento_reglas.py` ampliado con los 33 módulos de componentes.
+  - 1115 pruebas pasando al 100% (incluyendo auditoría de accesibilidad, contratos de dock y pruebas de límites).
 
-### Fase 7: Vistas de Usuario (`src/frontend/views`) (E3, E4, E5)
-- **Estado**: Pendiente
-- **Archivos**: `src/frontend/views/` (`hub/`, `linear_systems/`, `matrix_ops/`, `vector_ops/`, `inverse_ops/`, `geometry/`, `numeric_systems/`).
+### Fase 7: Vistas de Usuario (`src/frontend/vistas`) (E1 a E7)
+- **Estado**: En curso. Se retoma primero la subentrega de geometría; operaciones matriciales y resto siguen pendientes.
+- **Plan de cambios de geometría**:
+  1. Medir los límites y ejecutar la suite inicial con `venv/Scripts/python.exe`.
+  2. Renombrar `views` a `vistas`, y geometría a nombres canónicos; propagar consumidores sin alias.
+  3. Completar la extracción de actualización, controles, resúmenes, estados y contexto de IA.
+  4. Llevar armado de cargas a controladores y reglas de transferencia y cálculo gráfico al backend.
+  5. Reutilizar la paleta central y retirar estilos en línea; asegurar scroll y estados accesibles.
+  6. Añadir pruebas nuevas de datos límite, cancelación y escape; ampliar las rutas auditadas.
+  7. Ejecutar suite, auditoría y tres revisores independientes; registrar informe y detenerse.
+- **Archivos**: `src/frontend/vistas/` (`hub/`, `linear_systems/`, `matrix_ops/`, `vector_ops/`, `inverse_ops/`, `geometria/`, `numeric_systems/`). Los subpaquetes restantes aún requieren sus nombres canónicos.
 - **Criterios de aceptación**:
   - Vistas orquestan sin lógica de negocio ni parseo.
   - Cadenas HTML/JS/CSS largas extraídas a assets o plantillas.
   - Copy en tuteo, sin raya larga ni exclamaciones en éxito.
+
+#### Informe 12.4: avance de geometría, 11 de octubre de 2026
+
+**Estado: punto de continuación, sin cierre de la subentrega ni de la fase.** La implementación estructural y las regresiones descritas están verificadas; siguen pendientes contratos internos E4, dominio heredado E7 y comprobación visual. Las afirmaciones históricas de las fases 1 a 6 sobre cero alias y cumplimiento total no constituyen evidencia de esos requisitos en el árbol actual.
+
+**a. Archivos y alcance (VERIFICADO).** Se preservó el trabajo previo sin commit, push, instalación ni edición de `.env`. El estado inicial ya incluía la migración incompleta de componentes y extracciones parciales de geometría; el diff contra HEAD incorpora ese trabajo anterior.
+
+- Renombrado del paquete completo `src/frontend/views` a `src/frontend/vistas`. En los otros seis subpaquetes solo se propagaron rutas y los cuatro métodos compartidos de IA.
+- Renombrados geométricos: `geometry` a `geometria`, `view_geometry.py` a `vista_geometria.py`, `controls_mixin.py` a `mixin_controles.py`, `scenes_mixin.py` a `mixin_escenas.py`, `_scenes.py` a `_escenas.py`, y `assets/js/geometry.js` a `assets/js/geometria.js`. Las rutas anteriores se retiraron sin alias.
+- Geometría reorganizada en 15 módulos: `__init__.py`, `vista_geometria.py`, `mixin_controles.py`, `mixin_escenas.py`, `_actualizacion_geometria.py`, `_contexto_ia_geometria.py`, `_escenas.py`, `_estados_geometria.py`, `_figuras_comunes.py`, `_figura_combinacion.py`, `_figura_rectas_planos.py`, `_figura_vectores.py`, `_handoff_geometria.py`, `_panel_vectores.py`, `_resumen_geometria.py`. Se completaron extracciones previas y se añadieron estados, resumen y adaptación del panel.
+- Creados `src/backend/geometria/muestreo.py`, `transferencia.py`, `src/frontend/controladores/geometria/captura.py` y `src/frontend/assets/css/vistas_geometria.css`. Retirado el intermediario `_payload_geometria.py`, sustituyéndolo por captura del controlador.
+- Modificados consumidores: `routes.py`, `suggestions.py`, `theme.py`; métodos de IA en `componentes/ai_panel.py`, `glosa_dock.py`, `glosa_pie.py`; `controladores/geometria/utilidades.py`, `controlador_vectores.py`, `controlador_combinacion.py`; `assets/js/vector_capture.js`, `cuadricula_compartida.js`; clase de error en `assets/css/componentes_entradas.css`.
+- Pruebas renombradas: `test_f8d_geometry_view_flow.py` a `test_flujo_vista_geometria.py`, `test_f8e_slot_context.py` a `test_contexto_cliente_asincrono.py`, `test_geometry_figures.py` a `test_figuras_geometria.py`, `test_geometry_scene_param.py` a `test_parametro_escena_geometria.py`. Sus aserciones e intención se conservaron.
+- Creados `tests/test_geometria_datos_extremos.py`, `test_geometria_actualizacion_cancelable.py`, `test_geometria_regresiones_revision.py`, `test_geometria_script_cliente.py`, `geometria_cliente_simulado.js` y `rutas_auditadas.py`. Modificados `tests/comun.py`, `test_cumplimiento_reglas.py` y consumidores de nombres, rutas y selectores. Restauradas las 12 pruebas de los tres archivos encontrados vacíos: `test_css_class_coverage.py`, `test_f8c_styles_motion.py`, `test_f9_static_audit.py`.
+
+**b. Criterios y evidencia.**
+
+| Criterio | Estado | Evidencia y límite |
+|---|---|---|
+| Modularización geométrica | VERIFICADO | 15 módulos; máximo 147 líneas por archivo, 29 por función y 124 por clase, medidos con AST. La vista inicial tenía 358 líneas y su clase 324; el mixin de escenas tenía una clase de 237 líneas. |
+| Auditoría del alcance | VERIFICADO | 172 rutas existentes, incluidas todas las vistas geométricas; siete comprobaciones pasan. El arnés no analiza límites de funciones JS ni todos los parámetros exclusivos por palabra clave. No demuestra cumplimiento global de E4. |
+| Regresiones y exactitud cubierta | VERIFICADO | Suite completa: 1161 pruebas pasadas. Casos nuevos de vacío, una y diez ecuaciones, fracciones, enteros de 80 cifras, rechazo por límite real del parser, cardinalidades y planos degenerados. Los resultados comprobados conservan Fraction; no se afirma equivalencia matemática exhaustiva. |
+| Cancelación y confirmación | VERIFICADO | Pruebas de cancelación normal y absorbida por io_bound, deduplicación de carga confirmada, cancelación del debounce y retiro del marcado inválido. |
+| Cliente y seguridad de presentación | VERIFICADO | DOM simulado ejecuta JS con Node: cuadros 2D/3D, aria-valuetext, foco, limpieza de recursos, espera del montaje, reemplazo con cuadro pendiente y fallo/reintento. Escape HTML de fórmulas, selectores serializados y textContent. |
+| Dominio extraído en esta entrega | VERIFICADO | Muestreo de rectas/planos al backend; cantidades de vectores compartidas por transferencia, controles y validadores; carga capturada por controladores. |
+| Separación completa del dominio | NO PROBADO | Quedan cálculos heredados en los controladores: cuadros de ku + v, suma estática y cadena acumulada. Requieren traslado E7 y regresiones. |
+| Idioma y cero alias de todo el repositorio | NO PROBADO | Los nombres migrados se propagaron; siguen contratos y APIs internas heredados en inglés. El catálogo del arnés no detecta todos estos casos. |
+| 320 px, zoom 200 %, temas y lector de pantalla | NO PROBADO | CSS dispone scroll propio, min-width:0, foco y cifras tabulares. Su resultado visual, táctil y con lector necesita los pasos manuales siguientes. |
+| Compatibilidad visual de las figuras | INFERIDO | Las trazas conservan los contratos comprobados y se restauró grosor 3D. No se compararon capturas de pantalla. |
+
+Comandos finales: `venv/Scripts/python.exe -m pytest -q`, `venv/Scripts/python.exe -m pytest tests/test_cumplimiento_reglas.py -q`, `venv/Scripts/python.exe -m compileall -q src tests`, `node --check` sobre geometría, captura vectorial, cuadrícula compartida y arnés del cliente. El pytest asíncrono se ejecutó con aprobación automática fuera del sandbox por bloqueo de sockets locales de asyncio en Windows. Se conserva una advertencia de deprecación Starlette/httpx; no se instalaron dependencias.
+
+**c. Revisión independiente (DELEGACIÓN REAL).** Seguridad, bugs y mantenibilidad se ejecutaron en paralelo, en dos pasadas de solo lectura, con igual contexto. No hubo hallazgos críticos ni altos. Seguridad no encontró vulnerabilidades nuevas sustentadas. Se deduplicaron y corrigieron los medios siguientes:
+
+| Hallazgo | Resolución y evidencia |
+|---|---|
+| io_bound absorbe CancelledError y devuelve None, causando falso error | Guardia de cancelación tras el trabajador; regresión que simula el contrato instalado. |
+| Celda corregida sigue aria-invalid | Limpieza al confirmar éxito y al vaciar; regresiones de transición. |
+| Selector incorrecto tras eliminar un vector intermedio | Identificador de celda basado en la posición enviada al controlador; prueba con eliminación de v_1 y error en v_2. |
+| Transferencia 2D conserva etiqueta 3D | Sincronización de etiqueta y botones; prueba con componentes reales. |
+| Grosor de columnas 3D cambia de 3 a 2 | Restaurado a 3; nueva aserción de figura. |
+| Cantidades de vectores duplicadas | Catálogo backend consumido por controles y ambos validadores, preservando mensajes. |
+| Registro JS reemplazado deja cuadro anterior pendiente | Cancelación del requestAnimationFrame anterior y guardia de identidad; regresión del cliente que invoca incluso el callback antiguo. |
+
+La segunda pasada confirmó las primeras correcciones y descubrió el último problema de cuadros pendientes, corregido y probado por el agente principal después de esa revisión. No se atribuye una tercera aprobación a los revisores. Pendientes sustentados: E4/E7 heredados y cobertura incompleta del arnés.
+
+**d. Desviaciones y excepciones.** Se eligió el avance de geometría permitido por el usuario; no se abordaron las otras subentregas. La API real del panel era `build`, y se corrigió la llamada inexistente `build_container`. Se restituyeron pruebas vacías antes de aceptar el resultado de la suite. Las correcciones baratas señaladas por revisión permanecen en el alcance geométrico.
+
+- E1: backend editable, sin manual de requerimientos; muestreo gráfico trasladado conservando orden de operaciones y tolerancia.
+- E2: pruebas existentes siguen renombrados y se restituyen sin retirar aserciones; lógica nueva lleva archivos nuevos.
+- E3: propagación de los nombres efectivamente migrados a todos sus consumidores, sin alias añadidos.
+- E4: conservación de APIs NiceGUI, Quasar, Tailwind, Plotly, MathJax, FastAPI y stdlib; propiedades CSS, eventos y APIs del navegador; dunders; tokens existentes; variables de entorno; payload externo de OpenRouter; carpetas frontend/backend/ai y main.py; tecnicismos token, hash, cache y mixin. Los nombres internos heredados NO se consideran excepciones autorizadas: quedan pendientes.
+- E5: geometría evita animación al actualizar cuadros; teclado y reduced-motion sin escala; no se cambiaron valores de aserciones de movimiento en esta subentrega.
+- E6: hoja geométrica añadida al orden de carga de producción y de tests; uso del conjunto CSS existente.
+- E7: captura al controlador, muestreo y restricciones al backend; cálculos restantes de controladores se enumeran como deuda.
+
+**e. Pruebas existentes y aserciones antes/después.** Los cambios masivos son renombrados de rutas, clases, métodos y dobles. No se cambiaron valores numéricos, estados matemáticos ni expectativas funcionales de pruebas existentes por otro motivo. Los auxiliares duplicados de tareas y trabajadores se centralizaron en `tests/comun.py`; el manifiesto de auditoría se extrajo a `tests/rutas_auditadas.py` conservando comprobaciones y ampliando cobertura.
+
+Las funciones de las pruebas de figuras y escenas renombradas tienen nombres españoles descriptivos, y se filtraron comentarios redundantes y docstrings en inglés conforme a las instrucciones de comentarios del usuario. Ninguna de esas ediciones cambia sus aserciones.
+
+| Aserción o referencia antes | Después | Motivo |
+|---|---|---|
+| src.frontend.views / src/frontend/views | src.frontend.vistas / src/frontend/vistas | E3, renombrado del paquete en imports y comprobaciones estáticas. |
+| src/frontend/components | src/frontend/componentes | E3, consumidores de la migración previa, incluidas las pruebas restauradas. |
+| GeometryUI, GeometryControlsMixin, GeometryScenesMixin | VistaGeometria, MixinControlesGeometria, MixinEscenasGeometria | E3/E4, clases canónicas. |
+| VALID_SCENES, normalize_scene | ESCENAS_VALIDAS, normalizar_escena | E3/E4, catálogo y método. |
+| get_ai_context, get_ai_signals | obtener_contexto_ia, obtener_senales_ia | E3/E4, métodos y dobles de toda la suite. |
+| schedule_context_refresh, render_inline_chips | programar_actualizacion_contexto, renderizar_sugerencias_en_linea | E3/E4, método observado por mocks y comprobaciones de fuente. |
+| _client, _js, _spawn, _debounced_update, _render_error de geometría | _cliente, _ejecutar_js, _lanzar_tarea, _actualizar_con_debounce, _renderizar_error | E3/E4, flujo y aislamiento del cliente; contexto del dock conservado. |
+| Constructores build_*_figure y argumento theme | construir_figura_* y argumento tema | E3/E4; aserciones de trazas y layout conservadas. |
+| input[data-vec-id="geo_vec_v_1"][data-vec-idx="0"] | input[data-geometria-vector="geometria_vectores_v_1"][data-geometria-indice="0"] | E3/E4, selector exacto en test_controlador_geometria. |
+| input[data-vec-id="geo_comb_b"][data-vec-idx="1"] | input[data-geometria-vector="geometria_combinacion_b"][data-geometria-indice="1"] | E3/E4, selector exacto en test_controlador_geometria. |
+| kwargs scene y grid_n del selector | escena y n_cuadricula | E3/E4, misma selección de celda. |
+| Ausencia de contenido en tres archivos de pruebas | 12 pruebas originales restauradas desde HEAD | Restitución E2; mismas aserciones, solo rutas de paquetes renombradas. |
+
+**Revisión de interfaz.** Esta tabla registra implementación; no sustituye inspección visual.
+
+| Before | After | Why |
+|---|---|---|
+| Fórmulas y estados mezclados en la vista | Funciones de resumen y estados con escape y scroll propio | Reducir tamaño y contener valores anchos. |
+| Error podía dejar una celda marcada tras corregirla | Éxito y vacío retiran clase y aria-invalid | El estado accesible debe corresponder a la entrada actual. |
+| Error de un cuadro JS podía quedar silencioso | Aviso role=alert y reintento al mover el control | Explicar el fallo del parámetro y permitir recuperación. |
+| Listener y cuadros podían sobrevivir a reemplazos | Limpieza del observador, listener y requestAnimationFrame | Evitar actualizaciones obsoletas y recursos huérfanos. |
+| Dimensión recibida y cabecera podían discrepar | Dimensión, etiqueta, botones y componentes sincronizados | Representar correctamente la transferencia. |
+
+**f. Pendientes, riesgos y punto exacto de continuación.**
+
+1. E4: migrar conjuntamente productores y consumidores de `status`, `message`, `matrix_A`, `vector_b`, `vectors`, `data`, `orientation`, `frames`, `set`, `chain`, estados ingleses y contratos de IA. Retirar alias heredados y renombrar módulos/APIs internas pendientes. Esta entrega no declara que esos nombres estén autorizados por E4.
+2. E7: mover cuadros de vectores, suma y cadena acumulada desde controladores al backend, preservando Fraction, mensajes y resultados. Revisar otros cálculos heredados de los controladores geométricos.
+3. Auditoría: completar análisis JS y parámetros exclusivos por palabra clave con pruebas nuevas; no debilitar el arnés existente. La armonización global de nombres/comentarios/tamaños de tests sigue en fase 8.
+4. Comprobación manual NO PROBADA: desde la raíz ejecutar `.\venv\Scripts\python.exe src/main.py`; usar la dirección anunciada por NiceGUI. Abrir `/visualizador?escena=rectas-planos`, `?escena=vectores` y `?escena=combinacion`. Repetir en papel, marea y medianoche, con viewport de 320 px y luego zoom de navegador al 200 %. Confirmar ausencia de scroll horizontal de toda la página y acceso al scroll propio de fórmulas/figuras y a todas las acciones.
+5. En rectas/planos comprobar vacío, una ecuación, diez ecuaciones, fracciones 1/3 y coeficientes de 80 cifras. Introducir abc, usar «Ir a la celda», corregirlo y verificar que desaparecen marca y anuncio de error. En vectores probar 2D/3D y deslizador con ratón, táctil y flechas de teclado, con reduced-motion activado; contrastar etiqueta k y figura. En combinación eliminar v_1 después de añadir v_2 y repetir error/foco en la celda restante. Transferir dos vectores 2D y confirmar cabecera 2. Comprobar anuncios de carga/error/vacío con lector de pantalla y foco visible.
+6. Después del cierre real de geometría, continuar operaciones matriciales (inversa, Leontief y transformaciones) y luego las vistas restantes. No empezar fase 8 en este punto.
+
+**g. Backend:** no aplica MANUAL DE REQUERIMIENTOS PARA BACKEND por E1.
+
+**h. Plan:** actualizado y conservado. Fase 7 continúa en curso; ninguna de sus tres subentregas se declara cerrada con cumplimiento total.
 
 ### Fase 8: Armonización de la Suite de Pruebas y Cierre (E2)
 - **Estado**: Pendiente

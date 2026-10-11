@@ -5,7 +5,7 @@ from fractions import Fraction
 from types import SimpleNamespace
 
 from src.backend.models.matrix import Matrix
-from src.frontend.components.reproductor_pasos import (
+from src.frontend.componentes.reproductor_pasos import (
     CATALOGO_TIPOS,
     VELOCIDADES_AUTOREPRODUCCION,
     GrupoReproductor,
@@ -14,12 +14,12 @@ from src.frontend.components.reproductor_pasos import (
     etiqueta_variable_html,
     html_tabla_aumentada,
 )
-from src.frontend.components.reproductor_pasos import cuerpos
-from src.frontend.components.reproductor_pasos import reproductor as modulo_reproductor
+from src.frontend.componentes.reproductor_pasos import cuerpos
+from src.frontend.componentes.reproductor_pasos import reproductor as modulo_reproductor
 from src.frontend.controladores.operaciones_inversas import (
     ControladorOperacionesInversas,
 )
-from src.frontend.views.inverse_ops._adaptador_pasos import (
+from src.frontend.vistas.inverse_ops._adaptador_pasos import (
     adaptar_pasos_inversa,
 )
 

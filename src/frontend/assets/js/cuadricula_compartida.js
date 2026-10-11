@@ -115,12 +115,12 @@
   }
 
   function animarSalidaVector(indice) {
-    var celdas = document.querySelectorAll("input[data-vec-idx='" + indice + "']");
+    var celdas = document.querySelectorAll("input[data-geometria-indice='" + indice + "']");
     return animarSalidaCeldas(Array.from(celdas));
   }
 
   function animarEntradaVector(indice) {
-    var celdas = document.querySelectorAll("input[data-vec-idx='" + indice + "']");
+    var celdas = document.querySelectorAll("input[data-geometria-indice='" + indice + "']");
     return animarEntradaCeldas(Array.from(celdas));
   }
 

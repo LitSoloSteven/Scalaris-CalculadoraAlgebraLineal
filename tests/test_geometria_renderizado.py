@@ -196,25 +196,25 @@ def test_controlador_simulado_sin_parametros_solucion(monkeypatch):
 
 def test_figuras_recta_dos_dimensiones_y_plano_tres_dimensiones():
     pytest.importorskip("plotly")
-    from src.frontend.views.geometry._scenes import build_lines_planes_figure
+    from src.frontend.vistas.geometria._escenas import construir_figura_rectas_planos
 
     payload_2d = json.dumps({"matrix_A": [["1", "1"]], "vector_b": ["2"]})
     res_2d = ControladorGeometria.procesar_rectas_planos(payload_2d)
-    fig_2d = build_lines_planes_figure(res_2d, theme="papel")
+    fig_2d = construir_figura_rectas_planos(res_2d, tema="papel")
     nombres_2d = [t.name for t in fig_2d.data]
     assert "Conjunto solución (recta)" in nombres_2d
     assert "Ecuación 1" in nombres_2d
 
     payload_3d = json.dumps({"matrix_A": [["1", "1", "1"]], "vector_b": ["1"]})
     res_3d = ControladorGeometria.procesar_rectas_planos(payload_3d)
-    fig_3d = build_lines_planes_figure(res_3d, theme="papel")
+    fig_3d = construir_figura_rectas_planos(res_3d, tema="papel")
     nombres_3d = [t.name for t in fig_3d.data]
     assert "Conjunto solución (plano)" in nombres_3d
     assert "Ecuación 1" in nombres_3d
 
     payload_ws = json.dumps({"matrix_A": [["0", "0"]], "vector_b": ["0"]})
     res_ws = ControladorGeometria.procesar_rectas_planos(payload_ws)
-    fig_ws = build_lines_planes_figure(res_ws, theme="papel")
+    fig_ws = construir_figura_rectas_planos(res_ws, tema="papel")
     nombres_ws = [t.name for t in fig_ws.data]
     assert "Conjunto solución (recta)" not in nombres_ws
     assert "Conjunto solución (plano)" not in nombres_ws
@@ -224,7 +224,7 @@ def test_vista_construir_payload_cuadricula_vacia():
     class CuadriculaSimulada:
         def is_strictly_empty(self):
             return True
-        def get_matrix_data(self):
+        def obtener_datos_matriz(self):
             return [["", ""]], [""]
 
     class InterfazSimulada:
@@ -236,7 +236,7 @@ def test_vista_construir_payload_cuadricula_vacia():
             if self.scene == "rectas-planos":
                 if not self.grid or self.grid.is_strictly_empty():
                     return None
-                matrix_a, vector_b = self.grid.get_matrix_data()
+                matrix_a, vector_b = self.grid.obtener_datos_matriz()
                 if not matrix_a or not matrix_a[0]:
                     return None
                 return {"matrix_A": matrix_a, "vector_b": vector_b}

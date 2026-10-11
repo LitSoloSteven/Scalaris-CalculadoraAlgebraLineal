@@ -1,157 +1,24 @@
-"""Pruebas de cumplimiento estricto de las reglas SCALARIS.
-
-Audita límites duros (líneas, funciones, complejidad, anidamiento, parámetros),
-docstrings, comentarios prohibidos, convenciones de idioma, CSS y frontend.
-La lista RUTAS_AUDITADAS comienza vacía en la Fase 0 y crece en cada fase.
-"""
-
+"""Auditoría de límites, documentación, idioma, comentarios, CSS y cadenas embebidas."""
 import ast
-from pathlib import Path
 import re
-
-RAIZ = Path(__file__).resolve().parent.parent
-
-# Lista de rutas bajo auditoría formal que se amplía en cada fase cerrada
-RUTAS_AUDITADAS: list[Path] = [
-    RAIZ / "src" / "backend" / "constantes.py",
-    RAIZ / "src" / "backend" / "excepciones.py",
-    RAIZ / "src" / "backend" / "modelos" / "matriz.py",
-    RAIZ / "src" / "backend" / "utilidades" / "analizadores.py",
-    RAIZ / "src" / "backend" / "utilidades" / "formateadores.py",
-    RAIZ / "src" / "backend" / "utilidades" / "utilidades_matematicas.py",
-    RAIZ / "src" / "backend" / "utilidades" / "validadores.py",
-    RAIZ / "src" / "backend" / "utilidades" / "verificacion.py",
-    RAIZ / "src" / "backend" / "utilidades" / "reglas_dominio.py",
-    RAIZ / "src" / "backend" / "resolutores" / "__init__.py",
-    RAIZ / "src" / "backend" / "resolutores" / "trazado.py",
-    RAIZ / "src" / "backend" / "resolutores" / "sistemas_lineales" / "__init__.py",
-    RAIZ / "src" / "backend" / "resolutores" / "sistemas_lineales" / "modelo_solucion.py",
-    RAIZ / "src" / "backend" / "resolutores" / "sistemas_lineales" / "analisis_rouche.py",
-    RAIZ / "src" / "backend" / "resolutores" / "sistemas_lineales" / "sustitucion.py",
-    RAIZ / "src" / "backend" / "resolutores" / "sistemas_lineales" / "gauss.py",
-    RAIZ / "src" / "backend" / "resolutores" / "sistemas_lineales" / "gauss_jordan.py",
-    RAIZ / "src" / "backend" / "resolutores" / "operaciones_matrices" / "__init__.py",
-    RAIZ / "src" / "backend" / "resolutores" / "operaciones_matrices" / "formateadores.py",
-    RAIZ / "src" / "backend" / "resolutores" / "operaciones_matrices" / "operaciones.py",
-    RAIZ / "src" / "backend" / "resolutores" / "operaciones_matrices" / "determinante.py",
-    RAIZ / "src" / "backend" / "resolutores" / "operaciones_matrices" / "inversa.py",
-    RAIZ / "src" / "backend" / "resolutores" / "operaciones_matrices" / "evaluador.py",
-    RAIZ / "src" / "backend" / "resolutores" / "operaciones_matrices" / "analizador_expresiones.py",
-    RAIZ / "src" / "backend" / "resolutores" / "operaciones_matrices" / "transformaciones.py",
-    RAIZ / "src" / "backend" / "resolutores" / "operaciones_matrices" / "leontief.py",
-    RAIZ / "src" / "backend" / "resolutores" / "operaciones_vectores" / "__init__.py",
-    RAIZ / "src" / "backend" / "resolutores" / "operaciones_vectores" / "base.py",
-    RAIZ / "src" / "backend" / "resolutores" / "operaciones_vectores" / "formateadores.py",
-    RAIZ / "src" / "backend" / "resolutores" / "operaciones_vectores" / "operaciones.py",
-    RAIZ / "src" / "backend" / "resolutores" / "operaciones_vectores" / "planteamiento.py",
-    RAIZ / "src" / "backend" / "resolutores" / "operaciones_vectores" / "combinacion_lineal.py",
-    RAIZ / "src" / "backend" / "resolutores" / "sistemas_numericos" / "__init__.py",
-    RAIZ / "src" / "backend" / "resolutores" / "sistemas_numericos" / "conversor_bases.py",
-    RAIZ / "src" / "backend" / "resolutores" / "sistemas_numericos" / "calculadora_romana.py",
-    RAIZ / "src" / "ai" / "constantes.py",
-    RAIZ / "src" / "ai" / "context.py",
-    RAIZ / "src" / "ai" / "estrategias_recorte.py",
-    RAIZ / "src" / "ai" / "clasificador_respuestas.py",
-    RAIZ / "src" / "ai" / "openrouter_ai.py",
-    RAIZ / "src" / "ai" / "prompts.py",
-    RAIZ / "src" / "main.py",
-    RAIZ / "src" / "frontend" / "app.py",
-    RAIZ / "src" / "frontend" / "routes.py",
-    RAIZ / "src" / "frontend" / "flags.py",
-    RAIZ / "src" / "frontend" / "helpers.py",
-    RAIZ / "src" / "frontend" / "suggestions.py",
-    RAIZ / "src" / "frontend" / "catalogo_sugerencias.py",
-    RAIZ / "src" / "frontend" / "theme.py",
-    RAIZ / "src" / "frontend" / "constantes.py",
-    RAIZ / "src" / "frontend" / "textos.py",
-    RAIZ / "src" / "frontend" / "navigation" / "__init__.py",
-    RAIZ / "src" / "frontend" / "navigation" / "modelo.py",
-    RAIZ / "src" / "frontend" / "navigation" / "catalogo.py",
-    RAIZ / "src" / "frontend" / "navigation" / "consultas.py",
-    RAIZ / "src" / "frontend" / "navigation" / "redirecciones.py",
-    RAIZ / "src" / "frontend" / "assets" / "css" / "tokens.css",
-    RAIZ / "src" / "frontend" / "assets" / "css" / "base.css",
-    RAIZ / "src" / "frontend" / "assets" / "css" / "layout.css",
-    RAIZ / "src" / "frontend" / "assets" / "css" / "componentes_entradas.css",
-    RAIZ / "src" / "frontend" / "assets" / "css" / "componentes_controles.css",
-    RAIZ / "src" / "frontend" / "assets" / "css" / "vistas_navegacion.css",
-    RAIZ / "src" / "frontend" / "assets" / "css" / "vistas_hub_matriz.css",
-    RAIZ / "src" / "frontend" / "assets" / "css" / "vistas_hub_popovers.css",
-    RAIZ / "src" / "frontend" / "assets" / "css" / "vistas_hub_adaptable.css",
-    RAIZ / "src" / "frontend" / "assets" / "css" / "vistas_glosa_dock.css",
-    RAIZ / "src" / "frontend" / "assets" / "css" / "vistas_glosa_componentes.css",
-    RAIZ / "src" / "frontend" / "assets" / "css" / "vistas_inversa.css",
-    RAIZ / "src" / "frontend" / "assets" / "css" / "movimiento.css",
-    RAIZ / "src" / "frontend" / "assets" / "css" / "reproductor_pasos.css",
-    RAIZ / "src" / "frontend" / "assets" / "js" / "app.js",
-    RAIZ / "src" / "frontend" / "assets" / "js" / "calculadora.js",
-    RAIZ / "src" / "frontend" / "assets" / "js" / "cuadricula_compartida.js",
-    RAIZ / "src" / "frontend" / "assets" / "js" / "equation_grid.js",
-    RAIZ / "src" / "frontend" / "assets" / "js" / "geometry.js",
-    RAIZ / "src" / "frontend" / "assets" / "js" / "glosa_dock.js",
-    RAIZ / "src" / "frontend" / "assets" / "js" / "hub.js",
-    RAIZ / "src" / "frontend" / "assets" / "js" / "hub_recientes.js",
-    RAIZ / "src" / "frontend" / "assets" / "js" / "layout_sync.js",
-    RAIZ / "src" / "frontend" / "assets" / "js" / "mathjax_config.js",
-    RAIZ / "src" / "frontend" / "assets" / "js" / "matrix_capture.js",
-    RAIZ / "src" / "frontend" / "assets" / "js" / "recoleccion_basura.js",
-    RAIZ / "src" / "frontend" / "assets" / "js" / "reproductor_pasos.js",
-    RAIZ / "src" / "frontend" / "assets" / "js" / "splash.js",
-    RAIZ / "src" / "frontend" / "assets" / "js" / "square_matrix.js",
-    RAIZ / "src" / "frontend" / "assets" / "js" / "theme.js",
-    RAIZ / "src" / "frontend" / "assets" / "js" / "vector_capture.js",
-    RAIZ / "src" / "backend" / "geometria" / "__init__.py",
-    RAIZ / "src" / "backend" / "geometria" / "clasificacion.py",
-    RAIZ / "src" / "backend" / "geometria" / "recorte.py",
-    RAIZ / "src" / "backend" / "geometria" / "planos.py",
-    RAIZ / "src" / "backend" / "geometria" / "conjunto_solucion.py",
-    RAIZ / "src" / "frontend" / "controladores" / "__init__.py",
-    RAIZ / "src" / "frontend" / "controladores" / "utilidades.py",
-    RAIZ / "src" / "frontend" / "controladores" / "clasificador_pasos.py",
-    RAIZ / "src" / "frontend" / "controladores" / "agrupador_pasos.py",
-    RAIZ / "src" / "frontend" / "controladores" / "manejadores_pasos.py",
-    RAIZ / "src" / "frontend" / "controladores" / "sistemas_lineales" / "__init__.py",
-    RAIZ / "src" / "frontend" / "controladores" / "sistemas_lineales" / "compartido.py",
-    RAIZ / "src" / "frontend" / "controladores" / "sistemas_lineales" / "flujo_comun.py",
-    RAIZ / "src" / "frontend" / "controladores" / "sistemas_lineales" / "controlador_gauss.py",
-    RAIZ / "src" / "frontend" / "controladores" / "sistemas_lineales" / "controlador_gauss_jordan.py",
-    RAIZ / "src" / "frontend" / "controladores" / "operaciones_matrices" / "__init__.py",
-    RAIZ / "src" / "frontend" / "controladores" / "operaciones_matrices" / "codificador.py",
-    RAIZ / "src" / "frontend" / "controladores" / "operaciones_matrices" / "controlador_operaciones_matrices.py",
-    RAIZ / "src" / "frontend" / "controladores" / "operaciones_matrices" / "controlador_leontief.py",
-    RAIZ / "src" / "frontend" / "controladores" / "operaciones_matrices" / "controlador_transformaciones.py",
-    RAIZ / "src" / "frontend" / "controladores" / "operaciones_matrices" / "controlador_determinante.py",
-    RAIZ / "src" / "frontend" / "controladores" / "operaciones_vectores" / "__init__.py",
-    RAIZ / "src" / "frontend" / "controladores" / "operaciones_vectores" / "controlador_operaciones_vectores.py",
-    RAIZ / "src" / "frontend" / "controladores" / "operaciones_inversas" / "__init__.py",
-    RAIZ / "src" / "frontend" / "controladores" / "operaciones_inversas" / "foco_paso.py",
-    RAIZ / "src" / "frontend" / "controladores" / "operaciones_inversas" / "validador_inversa.py",
-    RAIZ / "src" / "frontend" / "controladores" / "operaciones_inversas" / "controlador_operaciones_inversas.py",
-    RAIZ / "src" / "frontend" / "controladores" / "geometria" / "__init__.py",
-    RAIZ / "src" / "frontend" / "controladores" / "geometria" / "utilidades.py",
-    RAIZ / "src" / "frontend" / "controladores" / "geometria" / "controlador_rectas_planos.py",
-    RAIZ / "src" / "frontend" / "controladores" / "geometria" / "controlador_vectores.py",
-    RAIZ / "src" / "frontend" / "controladores" / "geometria" / "controlador_combinacion.py",
-    RAIZ / "src" / "frontend" / "controladores" / "geometria" / "controlador_geometria.py",
-]
+from tests.comun import RAIZ
+from tests.rutas_auditadas import RUTAS_AUDITADAS
 
 PALABRAS_INGLES_PROHIBIDAS = {
-    "solver", "solvers", "matrix", "rows", "cols", "solve",
-    "step", "steps", "controller", "view", "components", "models",
+    'solver', 'solvers', 'matrix', 'rows', 'cols', 'solve',
+    'step', 'steps', 'controller', 'view', 'components', 'models',
 }
-
 EXCEPCIONES_E4_PERMITIDAS = {
-    "app", "main", "ui", "props", "classes", "style", "value",
-    "on_click", "on_change", "slot", "row", "column", "card",
-    "button", "input", "label", "icon", "dialog", "select",
+    'app', 'main', 'ui', 'props', 'classes', 'style', 'value',
+    'on_click', 'on_change', 'slot', 'row', 'column', 'card',
+    'button', 'input', 'label', 'icon', 'dialog', 'select',
 }
-
 PATRONES_COMENTARIOS_PROHIBIDOS = [
-    re.compile(r"^\s*#\s*[-=*#]{3,}", re.MULTILINE),
-    re.compile(r"\b(TODO|FIXME|HACK|XXX)\b", re.IGNORECASE),
-    re.compile(r"\b(F8[a-z]?|F4|F9[a-z]?|LIT-\d+|Paso\s+\d+)\b", re.IGNORECASE),
-    re.compile(r"[\U00010000-\U0010ffff]", re.UNICODE),
-    re.compile(r"—"),
+    re.compile(r'^\s*#\s*[-=*#]{3,}', re.MULTILINE),
+    re.compile(r'\b(TODO|FIXME|HACK|XXX)\b', re.IGNORECASE),
+    re.compile(r'\b(F8[a-z]?|F4|F9[a-z]?|LIT-\d+|Paso\s+\d+)\b', re.IGNORECASE),
+    re.compile(r'[\U00010000-\U0010ffff]', re.UNICODE),
+    re.compile(r'—'),
 ]
 
 
@@ -167,34 +34,31 @@ def _calcular_anidamiento_y_complejidad(nodo: ast.FunctionDef | ast.AsyncFunctio
         nueva_profundidad = profundidad_actual + (1 if es_bloque else 0)
         if nueva_profundidad > max_profundidad:
             max_profundidad = nueva_profundidad
-
         if isinstance(subnodo, (ast.If, ast.For, ast.While, ast.ExceptHandler)):
             complejidad += 1
         elif isinstance(subnodo, ast.BoolOp):
             complejidad += len(subnodo.values) - 1
-
         for hijo in ast.iter_child_nodes(subnodo):
             if not isinstance(hijo, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 _visitar(hijo, nueva_profundidad)
 
     for hijo in ast.iter_child_nodes(nodo):
         _visitar(hijo, 0)
-
     return max_profundidad, complejidad
 
 
 def test_sin_marcadores_de_conflicto_global():
     """Verifica que ningún archivo de código contenga marcadores de git."""
-    extensiones = {".py", ".js", ".css", ".html"}
-    patron = re.compile(r"^(<{7}|={7}|>{7})(?:[ \t\r\n]|$)", re.MULTILINE)
+    extensiones = {'.py', '.js', '.css', '.html'}
+    patron = re.compile(r'^(<{7}|={7}|>{7})(?:[ \t\r\n]|$)', re.MULTILINE)
     archivos = [
-        p for p in RAIZ.glob("src/**/*") if p.is_file() and p.suffix in extensiones
+        p for p in RAIZ.glob('src/**/*') if p.is_file() and p.suffix in extensiones
     ] + [
-        p for p in RAIZ.glob("tests/**/*.py") if p.is_file()
+        p for p in RAIZ.glob('tests/**/*.py') if p.is_file()
     ]
     for ruta in archivos:
-        contenido = ruta.read_text(encoding="utf-8", errors="ignore")
-        assert not patron.findall(contenido), f"Marcador de conflicto en {ruta.name}"
+        contenido = ruta.read_text(encoding='utf-8', errors='ignore')
+        assert not patron.findall(contenido), f'Marcador de conflicto en {ruta.name}'
 
 
 def test_limites_tamanio_y_complejidad():
@@ -202,52 +66,51 @@ def test_limites_tamanio_y_complejidad():
     for ruta in RUTAS_AUDITADAS:
         if not ruta.exists():
             continue
-        lineas = ruta.read_text(encoding="utf-8").splitlines()
-        assert len(lineas) <= 300, f"{ruta.name} tiene {len(lineas)} líneas (máximo 300)"
-
-        if ruta.suffix != ".py":
+        lineas = ruta.read_text(encoding='utf-8').splitlines()
+        assert len(lineas) <= 300, f'{ruta.name} tiene {len(lineas)} líneas (máximo 300)'
+        if ruta.suffix != '.py':
             continue
-        arbol = ast.parse("\n".join(lineas), filename=str(ruta))
+        arbol = ast.parse('\n'.join(lineas), filename=str(ruta))
         for nodo in ast.walk(arbol):
             if isinstance(nodo, ast.ClassDef):
                 alt = (nodo.end_lineno or nodo.lineno) - nodo.lineno + 1
-                assert alt <= 200, f"{ruta.name}:{nodo.name} tiene {alt} líneas (máximo 200)"
+                assert alt <= 200, f'{ruta.name}:{nodo.name} tiene {alt} líneas (máximo 200)'
             elif isinstance(nodo, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 alt = (nodo.end_lineno or nodo.lineno) - nodo.lineno + 1
-                assert alt <= 40, f"{ruta.name}:{nodo.name} tiene {alt} líneas (máximo 40)"
-                params = [a.arg for a in nodo.args.args if a.arg not in ("self", "cls")]
-                assert len(params) <= 5, f"{ruta.name}:{nodo.name} tiene {len(params)} parámetros"
+                assert alt <= 40, f'{ruta.name}:{nodo.name} tiene {alt} líneas (máximo 40)'
+                params = [a.arg for a in nodo.args.args if a.arg not in ('self', 'cls')]
+                assert len(params) <= 5, f'{ruta.name}:{nodo.name} tiene {len(params)} parámetros'
                 anid, comp = _calcular_anidamiento_y_complejidad(nodo)
-                assert anid <= 3, f"{ruta.name}:{nodo.name} anidamiento {anid} (máximo 3)"
-                assert comp <= 10, f"{ruta.name}:{nodo.name} complejidad {comp} (máximo 10)"
+                assert anid <= 3, f'{ruta.name}:{nodo.name} anidamiento {anid} (máximo 3)'
+                assert comp <= 10, f'{ruta.name}:{nodo.name} complejidad {comp} (máximo 10)'
 
 
 def test_docstrings_publicos():
     """Verifica que toda clase y función pública posea docstring no vacío."""
     for ruta in RUTAS_AUDITADAS:
-        if ruta.suffix != ".py" or not ruta.exists():
+        if ruta.suffix != '.py' or not ruta.exists():
             continue
-        arbol = ast.parse(ruta.read_text(encoding="utf-8"), filename=str(ruta))
+        arbol = ast.parse(ruta.read_text(encoding='utf-8'), filename=str(ruta))
         for nodo in ast.iter_child_nodes(arbol):
-            if isinstance(nodo, (ast.FunctionDef, ast.ClassDef)) and not nodo.name.startswith("_"):
+            if isinstance(nodo, (ast.FunctionDef, ast.ClassDef)) and not nodo.name.startswith('_'):
                 doc = ast.get_docstring(nodo)
-                assert doc and doc.strip(), f"Sin docstring público en {ruta.name}:{nodo.name}"
+                assert doc and doc.strip(), f'Sin docstring público en {ruta.name}:{nodo.name}'
 
 
 def test_identificadores_idioma_y_ascii():
     """Comprueba identificadores en ASCII y ausencia de nombres ingleses prohibidos."""
     for ruta in RUTAS_AUDITADAS:
-        if ruta.suffix != ".py" or not ruta.exists():
+        if ruta.suffix != '.py' or not ruta.exists():
             continue
-        arbol = ast.parse(ruta.read_text(encoding="utf-8"), filename=str(ruta))
+        arbol = ast.parse(ruta.read_text(encoding='utf-8'), filename=str(ruta))
         for nodo in ast.walk(arbol):
-            nombre = getattr(nodo, "id", None) or getattr(nodo, "name", None)
-            if not isinstance(nombre, str) or nombre.startswith("__"):
+            nombre = getattr(nodo, 'id', None) or getattr(nodo, 'name', None)
+            if not isinstance(nombre, str) or nombre.startswith('__'):
                 continue
             assert nombre.isascii(), f"Identificador no ASCII '{nombre}' en {ruta.name}"
-            partes = set(re.split(r"[_\d]+", nombre.lower()))
+            partes = set(re.split(r'[_\d]+', nombre.lower()))
             conflictos = (partes & PALABRAS_INGLES_PROHIBIDAS) - EXCEPCIONES_E4_PERMITIDAS
-            assert not conflictos, f"Términos en inglés {conflictos} en {ruta.name}:{nombre}"
+            assert not conflictos, f'Términos en inglés {conflictos} en {ruta.name}:{nombre}'
 
 
 def test_comentarios_y_copy_limpios():
@@ -255,39 +118,39 @@ def test_comentarios_y_copy_limpios():
     for ruta in RUTAS_AUDITADAS:
         if not ruta.exists():
             continue
-        contenido = ruta.read_text(encoding="utf-8")
+        contenido = ruta.read_text(encoding='utf-8')
         for patron in PATRONES_COMENTARIOS_PROHIBIDOS:
             coincidencias = patron.findall(contenido)
-            assert not coincidencias, f"Patrón prohibido en {ruta.name}: {coincidencias}"
+            assert not coincidencias, f'Patrón prohibido en {ruta.name}: {coincidencias}'
 
 
 def test_reglas_css():
     """Valida reglas de movimiento, tokens de color y ausencia de vh en hojas CSS."""
     for ruta in RUTAS_AUDITADAS:
-        if ruta.suffix != ".css" or not ruta.exists():
+        if ruta.suffix != '.css' or not ruta.exists():
             continue
-        css = ruta.read_text(encoding="utf-8")
-        assert not re.search(r"\b\d+vh\b", css), f"Uso de 'vh' prohibido en {ruta.name}"
-        assert not re.search(r"transition:\s*all\b", css), f"transition: all en {ruta.name}"
-        assert not re.search(r"ease-in\b", css), f"ease-in prohibido en {ruta.name}"
-        duraciones = [int(m) for m in re.findall(r"(\d+)ms", css)]
-        assert all(d <= 250 for d in duraciones), f"Duración > 250ms en {ruta.name}"
+        css = ruta.read_text(encoding='utf-8')
+        assert not re.search(r'\b\d+vh\b', css), f"Uso de 'vh' prohibido en {ruta.name}"
+        assert not re.search(r'transition:\s*all\b', css), f'transition: all en {ruta.name}'
+        assert not re.search(r'ease-in\b', css), f'ease-in prohibido en {ruta.name}'
+        duraciones = [int(m) for m in re.findall(r'(\d+)ms', css)]
+        assert all(d <= 250 for d in duraciones), f'Duración > 250ms en {ruta.name}'
 
 
 def test_reglas_python_frontend():
     """Valida ausencia de estilos en línea y cadenas extensas embebidas en Python."""
     for ruta in RUTAS_AUDITADAS:
-        if ruta.suffix != ".py" or not ruta.exists():
+        if ruta.suffix != '.py' or not ruta.exists():
             continue
-        arbol = ast.parse(ruta.read_text(encoding="utf-8"), filename=str(ruta))
+        arbol = ast.parse(ruta.read_text(encoding='utf-8'), filename=str(ruta))
         for nodo in ast.walk(arbol):
             if isinstance(nodo, ast.Constant) and isinstance(nodo.value, str):
                 val = nodo.value
                 assert 'style="' not in val and "style='" not in val, (
-                    f"Estilos en línea detectados en {ruta.name}"
+                    f'Estilos en línea detectados en {ruta.name}'
                 )
-                if any(etiqueta in val for etiqueta in ("<div", "<span", "<table", "<button")):
+                if any(etiqueta in val for etiqueta in ('<div', '<span', '<table', '<button')):
                     lineas = val.strip().splitlines()
                     assert len(lineas) <= 3, (
-                        f"HTML embebido de {len(lineas)} líneas (> 3) en {ruta.name}"
+                        f'HTML embebido de {len(lineas)} líneas (> 3) en {ruta.name}'
                     )

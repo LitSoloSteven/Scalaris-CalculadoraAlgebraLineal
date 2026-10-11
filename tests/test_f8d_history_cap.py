@@ -1,7 +1,7 @@
 import asyncio
 from unittest.mock import AsyncMock
-from src.frontend.components.ai_panel import AIPanel, MAX_HISTORY
-from src.frontend.components.glosa_dock import MAX_HISTORY as DOCK_MAX_HISTORY
+from src.frontend.componentes.ai_panel import AIPanel, MAX_HISTORY
+from src.frontend.componentes.glosa_dock import MAX_HISTORY as DOCK_MAX_HISTORY
 
 
 class MockAIPanel(AIPanel):

@@ -6,6 +6,7 @@ from typing import Any
 from src.backend.constantes import (
     LIMITE_RECONSTRUCCION_ESTRICTA,
     LONGITUD_MAXIMA_CADENA_NUMERO,
+    LONGITUD_MAXIMA_CELDA,
     MSJ_NOTACION_CIENTIFICA_NO_SOPORTADA,
     MSJ_NUMERO_DEMASIADO_LARGO,
 )
@@ -18,6 +19,19 @@ class ValidadorMatriz:
     """Métodos estáticos para validación y parseo de matrices y números."""
 
     verificar_solucion = staticmethod(verificar_solucion)
+
+    @staticmethod
+    def es_numero_exacto(val: Any) -> bool:
+        """Determina si una entrada es representable como fracción numérica exacta."""
+        return ValidadorMatriz.parsear_numero_exacto(val)[0]
+
+    @staticmethod
+    def validar_celda(celda: Any, longitud_maxima: int = LONGITUD_MAXIMA_CELDA) -> bool:
+        """Valida que una celda de entrada sea texto no vacío, no exceda la longitud y sea número exacto."""
+        if not isinstance(celda, str) or not (1 <= len(celda) <= longitud_maxima):
+            return False
+        return ValidadorMatriz.es_numero_exacto(celda)
+
 
     @staticmethod
     def _rechazar_cadena_no_soportada(val_limpio: str) -> str | None:

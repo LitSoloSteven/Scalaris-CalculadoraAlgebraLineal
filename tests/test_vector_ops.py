@@ -56,7 +56,7 @@ def test_add_preserves_large_denominator():
     assert res["result_matrix"].data == [[1], [0]]
 
 
-def test_add_negative_components():
+def test_adicion_componentes_negativos():
     v1 = Matrix(2, 1, [[-3], [5]])
     v2 = Matrix(2, 1, [[2], [-8]])
     res = VectorOpsSolver().add(v1, v2)
@@ -256,7 +256,7 @@ def test_add_produces_one_step_per_component_plus_initial():
     assert len(res["steps"]) == 4
 
 
-def test_add_latex_details_count_matches_components():
+def test_adicion_conteo_detalles_latex_coincide_con_componentes():
     v1 = Matrix(3, 1, [[1], [2], [3]])
     v2 = Matrix(3, 1, [[4], [5], [6]])
     res = VectorOpsSolver().add(v1, v2)

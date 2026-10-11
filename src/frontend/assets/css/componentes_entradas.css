@@ -73,7 +73,7 @@
     text-align: center !important;
 }
 
-.geo-cell-error {
+.geometria-celda-error {
     box-shadow: var(--elev-inset), 0 0 0 2px var(--error) !important;
 }
 
@@ -182,4 +182,91 @@
 
 .neo-checkbox.q-checkbox--checked .q-checkbox__icon {
     color: var(--btn-primary-text) !important;
+}
+
+.cuadricula-desplazamiento {
+    max-height: 60dvh;
+}
+
+.cuadricula-contenido {
+    min-width: max-content;
+}
+
+.cuadricula-cabecera-fija {
+    position: sticky;
+    top: 0;
+    min-width: max-content;
+}
+
+.cuadricula-fila-sin-ajuste {
+    flex-wrap: nowrap;
+}
+
+.glosa-area-chat {
+    min-height: 0;
+    overscroll-behavior: contain;
+}
+
+.glosa-campo-entrada {
+    max-height: 120px;
+    min-width: 0;
+}
+
+.glosa-boton-enviar {
+    border-radius: 12px !important;
+}
+
+.glosa-ctx-panel {
+    background: var(--bg-panel);
+    border-radius: 8px;
+}
+
+.glosa-ctx-borde {
+    border: 1px solid var(--border-input);
+}
+
+.glosa-icono-vacio {
+    width: 48px;
+    height: 48px;
+    opacity: 0.5;
+}
+
+.glosa-burbuja-error {
+    background: var(--badge-err-bg);
+    color: var(--badge-err-text);
+    border-radius: 16px 16px 16px 4px;
+    box-shadow: none !important;
+    max-width: 85%;
+}
+
+.glosa-burbuja-usuario {
+    background: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+    border-radius: 16px 16px 4px 16px;
+    box-shadow: none !important;
+    max-width: 85%;
+    min-width: 0;
+}
+
+.glosa-burbuja-asistente {
+    background: var(--bg-panel);
+    color: var(--text-main);
+    border-radius: 16px 16px 16px 4px;
+    box-shadow: none !important;
+    max-width: 85%;
+    min-width: 0;
+}
+
+.glosa-texto-bloque {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.glosa-chip-texto {
+    pointer-events: none;
+}
+
+.glosa-chips-deshabilitado {
+    opacity: 0.6;
+    pointer-events: none;
 }

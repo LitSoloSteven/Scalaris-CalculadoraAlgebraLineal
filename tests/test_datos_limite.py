@@ -10,7 +10,7 @@ from src.backend.solvers.numeric_systems.roman_calculator import (
     RomanNumeralError,
 )
 from src.backend.utilidades.validadores import ValidadorMatriz
-from src.frontend.components.glosa_render import render_glosa_text
+from src.frontend.componentes.glosa_render import render_glosa_text
 from src.frontend.controladores.geometria.controlador_geometria import (
     ControladorGeometria,
 )
@@ -244,4 +244,4 @@ def test_render_glosa_text_casos_limite():
     assert "&lt;script" in salida_html
     assert "&lt;img" in salida_html
     assert '<pre class="glosa-pre"><code>' in salida_html
-    assert "overflow-wrap: anywhere;" in salida_html
+    assert 'class="glosa-texto-bloque"' in salida_html

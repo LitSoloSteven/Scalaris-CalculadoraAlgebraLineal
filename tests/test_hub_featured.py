@@ -3,8 +3,8 @@ import dataclasses
 
 import pytest
 
-from src.frontend.views.hub import _recent
-from src.frontend.views.hub._recent import pick_featured
+from src.frontend.vistas.hub import _recent
+from src.frontend.vistas.hub._recent import pick_featured
 
 
 def test_valid_history_picks_first_id():

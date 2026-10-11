@@ -6,6 +6,7 @@ from typing import Any
 
 from src.backend.excepciones import AlgebraLinealError
 from src.backend.geometria.recorte import calcular_rango_automatico
+from src.backend.geometria.transferencia import LIMITES_VECTORES_ESCENA
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_vectores.combinacion_lineal import (
     ResolutorCombinacionLineal,
@@ -87,7 +88,8 @@ def _construir_cadena_acumulada(resultado: dict, matrices_columnas: list[Matriz]
 
 def _validar_lista_vectores_raw(vectors_raw: Any) -> str | None:
     """Verifica que la lista de vectores columna tenga entre 1 y 4 elementos."""
-    if not isinstance(vectors_raw, list) or not (1 <= len(vectors_raw) <= 4):
+    minimo, maximo = LIMITES_VECTORES_ESCENA['combinacion']
+    if not isinstance(vectors_raw, list) or not (minimo - 1 <= len(vectors_raw) <= maximo - 1):
         return "Se necesitan entre 1 y 4 vectores columna."
     return None
 
