@@ -1,81 +1,77 @@
-/**
- * Scalaris - Controlador de botones del teclado numérico y calculadora
- */
-(function () {
-  'use strict';
+/** Edición de la celda matricial enfocada mediante el teclado numérico. */
+'use strict';
 
+{
   window.scalaris = window.scalaris || {};
+  let ultimaEntradaEnfocada = null;
 
-  var ultimoInputEnfocado = null;
-
-  document.addEventListener('focusin', function (evento) {
-    var objetivo = evento.target;
+  document.addEventListener('focusin', function registrarEntradaEnfocada(evento) {
+    const objetivo = evento.target;
     if (objetivo && objetivo.tagName === 'INPUT' && objetivo.closest('.matrix-input')) {
-      ultimoInputEnfocado = objetivo;
+      ultimaEntradaEnfocada = objetivo;
     }
   });
 
+  /** Inserta el símbolo en la última celda conectada o en la primera disponible. */
   function insertarSimbolo(simbolo) {
     if (!simbolo) return;
-    var activo = ultimoInputEnfocado;
-    if (!activo || !activo.isConnected) {
-      activo = document.querySelector('.matrix-input input');
-      if (!activo) return;
-      activo.focus();
+    let activa = ultimaEntradaEnfocada;
+    if (!activa || !activa.isConnected) {
+      activa = document.querySelector('.matrix-input input');
+      if (!activa) return;
+      activa.focus();
     }
-    if (activo && activo.tagName === 'INPUT') {
-      aplicarSimboloEnInput(activo, simbolo);
+    if (activa && activa.tagName === 'INPUT') {
+      aplicarSimboloEnEntrada(activa, simbolo);
     }
   }
 
-  function aplicarSimboloEnInput(input, simbolo) {
+  function aplicarSimboloEnEntrada(entrada, simbolo) {
     if (simbolo === 'C') {
-      input.value = '';
+      entrada.value = '';
     } else if (simbolo === '±') {
-      alternarSigno(input);
+      alternarSigno(entrada);
     } else if (simbolo === '⌫') {
-      borrarCaracter(input);
+      borrarCaracter(entrada);
     } else {
-      insertarTextoEnCursor(input, simbolo);
+      insertarTextoEnCursor(entrada, simbolo);
     }
-    input.dispatchEvent(new Event('input', { bubbles: true }));
+    entrada.dispatchEvent(new Event('input', { bubbles: true }));
   }
 
-  function alternarSigno(input) {
-    var valor = input.value;
+  function alternarSigno(entrada) {
+    const valor = entrada.value;
     if (valor.startsWith('-')) {
-      input.value = valor.substring(1);
+      entrada.value = valor.substring(1);
     } else if (valor.startsWith('+')) {
-      input.value = '-' + valor.substring(1);
+      entrada.value = '-' + valor.substring(1);
     } else if (valor.length > 0) {
-      input.value = '-' + valor;
+      entrada.value = '-' + valor;
     }
-    input.setSelectionRange(input.value.length, input.value.length);
+    entrada.setSelectionRange(entrada.value.length, entrada.value.length);
   }
 
-  function borrarCaracter(input) {
-    var inicio = input.selectionStart;
-    var fin = input.selectionEnd;
-    var valor = input.value;
+  function borrarCaracter(entrada) {
+    const inicio = entrada.selectionStart;
+    const fin = entrada.selectionEnd;
+    const valor = entrada.value;
     if (inicio === fin && inicio > 0) {
-      input.value = valor.substring(0, inicio - 1) + valor.substring(fin);
-      input.setSelectionRange(inicio - 1, inicio - 1);
+      entrada.value = valor.substring(0, inicio - 1) + valor.substring(fin);
+      entrada.setSelectionRange(inicio - 1, inicio - 1);
     } else if (inicio !== fin) {
-      input.value = valor.substring(0, inicio) + valor.substring(fin);
-      input.setSelectionRange(inicio, inicio);
+      entrada.value = valor.substring(0, inicio) + valor.substring(fin);
+      entrada.setSelectionRange(inicio, inicio);
     }
   }
 
-  function insertarTextoEnCursor(input, texto) {
-    var inicio = input.selectionStart;
-    var fin = input.selectionEnd;
-    var valor = input.value;
-    input.value = valor.substring(0, inicio) + texto + valor.substring(fin);
-    var nuevaPos = inicio + texto.length;
-    input.setSelectionRange(nuevaPos, nuevaPos);
+  function insertarTextoEnCursor(entrada, texto) {
+    const inicio = entrada.selectionStart;
+    const fin = entrada.selectionEnd;
+    const valor = entrada.value;
+    entrada.value = valor.substring(0, inicio) + texto + valor.substring(fin);
+    const nuevaPosicion = inicio + texto.length;
+    entrada.setSelectionRange(nuevaPosicion, nuevaPosicion);
   }
 
-  window.scalaris.calculadora = {
-    insertarSimbolo: insertarSimbolo
-  };
-})();
+  window.scalaris.calculadora = { insertarSimbolo };
+}

@@ -127,7 +127,7 @@ def test_calculadora_romana_operaciones_y_excepciones():
     assert exc_info.value.codigo == ERROR_CERO_NO_REPRESENTABLE
 
 
-def test_conversiones_enteros_romanos_canónicos():
+def test_conversiones_enteros_romanos_canonicos():
     """Verifica conversión bidireccional estricta de números romanos."""
     assert entero_a_romano(1994) == "MCMXCIV"
     assert romano_a_entero("MCMXCIV") == 1994

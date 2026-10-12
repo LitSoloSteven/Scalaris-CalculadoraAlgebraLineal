@@ -47,7 +47,7 @@ def renderizar_pildora_contexto(instancia: Any) -> None:
         except Exception:
             ctx_obj = None
 
-    if ctx_obj is None or getattr(ctx_obj, "empty", False):
+    if ctx_obj is None or getattr(ctx_obj, "vacio", False):
         _renderizar_pildora_vacia(instancia, enabled)
         return
 
@@ -65,14 +65,14 @@ def _renderizar_pildora_vacia(instancia: Any, enabled: bool) -> None:
 
 def _renderizar_pildora_activa(instancia: Any, ctx_obj: Any, enabled: bool) -> None:
     """Construye la etiqueta con el nombre de la herramienta activa y su frescura."""
-    lbl = f"Viendo: {ctx_obj.label}"
-    if ctx_obj.stale:
+    lbl = f"Viendo: {ctx_obj.etiqueta}"
+    if ctx_obj.desactualizado:
         lbl = "Los datos cambiaron desde el último cálculo"
-    elif ctx_obj.window_note:
-        lbl += f" ({ctx_obj.window_note})"
+    elif ctx_obj.nota_ventana:
+        lbl += f" ({ctx_obj.nota_ventana})"
 
     classes = "glosa-ctx row items-center gap-2 w-full justify-between px-3 py-2 glosa-ctx-panel glosa-ctx-borde"
-    if ctx_obj.stale:
+    if ctx_obj.desactualizado:
         classes += " desactualizado"
 
     with ui.row().classes(classes):

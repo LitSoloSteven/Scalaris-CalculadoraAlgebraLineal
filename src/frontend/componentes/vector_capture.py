@@ -5,11 +5,11 @@ from functools import partial
 from typing import Any, Callable
 from nicegui import ui
 
-from src.backend.utilidades.validadores import ValidadorMatriz
 from src.frontend.componentes.cuadricula_base import (
     DIMENSION_MINIMA,
     actualizar_estados_botones_dimension,
-    props_celda_accesible,
+    animar_salida_cuadricula,
+    props_vector_accesible,
     purgar_cache_unidimensional,
 )
 
@@ -21,7 +21,7 @@ def _construir_acciones_vector(instancia: VectorCapturePanel, name: str) -> None
     with ui.row().classes("items-center gap-1"):
         if instancia.allow_orientation_toggle:
             ui.button(
-                icon="swap_horiz", on_click=partial(instancia.toggle_orientation, name), color=None
+                icon="swap_horiz", on_click=partial(instancia.alternar_orientacion, name), color=None
             ).classes("btn-neo-icon w-8 h-8 p-0 flex-shrink-0").props('ripple=false aria-label="Cambiar orientacion"').tooltip("Cambiar orientacion")
         if name != instancia.first_vector_fixed_label:
             ui.button(
@@ -42,19 +42,6 @@ def _construir_tarjeta_vector(instancia: VectorCapturePanel, name: str) -> None:
 
         v["ui_container"] = ui.column().classes("items-center")
         instancia.render_vector_grid(name)
-
-
-def _extraer_datos_vectores(vectors: dict[str, dict[str, Any]], dim: int) -> dict[str, list[Any]]:
-    """Convierte el cache de vectores a listas de numeros exactos."""
-    resultado = {}
-    for name, v in vectors.items():
-        vals = []
-        for i in range(dim):
-            txt = v["cache"].get(i, "").strip() or "0"
-            valida, frac, _ = ValidadorMatriz.parse_number_exact(txt)
-            vals.append(frac if valida else 0)
-        resultado[name] = vals
-    return resultado
 
 
 def _cargar_datos_vectores(
@@ -111,7 +98,7 @@ class VectorCapturePanel:
     @staticmethod
     def inject_scripts() -> None:
         """Inyecta los scripts para animaciones vectoriales."""
-        ui.add_head_html('<script src="/assets/js/vector_capture.js"></script>')
+        ui.add_head_html('<script src="/assets/js/captura_vectores.js"></script>')
         ui.add_head_html('<script src="/assets/js/square_matrix.js"></script>')
 
     def get_next_available_name(self) -> str:
@@ -169,11 +156,10 @@ class VectorCapturePanel:
         if self.btn_dim_inc:
             self.btn_dim_inc.disable()
 
-        if delta < 0:
-            try:
-                await ui.run_javascript(f"return window.animateVectorDimensionRemoval({self.dim - 1});")
-            except Exception:
-                pass
+        if delta < 0 and self.container is not None:
+            await animar_salida_cuadricula(
+                f"#{self.container.html_id} input[data-geometria-indice='{self.dim - 1}']"
+            )
 
         self.dim = nueva_dim
         for v in self.vectors.values():
@@ -190,13 +176,15 @@ class VectorCapturePanel:
         if self.on_data_change:
             self.on_data_change()
 
-    def toggle_orientation(self, name: str) -> None:
+    def alternar_orientacion(self, nombre: str) -> None:
         """Alterna entre disposicion vertical (columna) y horizontal (fila)."""
-        if not self.allow_orientation_toggle or name not in self.vectors:
+        if not self.allow_orientation_toggle or nombre not in self.vectors:
             return
-        v = self.vectors[name]
-        v["orientation"] = "row" if v["orientation"] == "column" else "column"
-        self.render_vector_grid(name)
+        vector = self.vectors[nombre]
+        vector["orientation"] = "row" if vector["orientation"] == "column" else "column"
+        self.render_vector_grid(nombre)
+        if self.on_data_change:
+            self.on_data_change()
 
     def render_vector_grid(self, name: str) -> None:
         """Renderiza los componentes de entrada del vector indicado."""
@@ -214,11 +202,8 @@ class VectorCapturePanel:
             with ui.row().classes(f"items-center gap-2 p-2 {clase_fila}"):
                 for i in range(self.dim):
                     val = v["cache"].get(i, "")
-                    props = props_celda_accesible(
-                        i if v["orientation"] == "column" else 0,
-                        0 if v["orientation"] == "column" else i,
-                        id_matriz=name,
-                        nombre_campo=f"{name}_{i}",
+                    props = props_vector_accesible(
+                        i, v["orientation"], nombre_vector=name, identificador_panel=self.panel_id,
                     )
                     ui.input(
                         value=val,
@@ -264,10 +249,6 @@ class VectorCapturePanel:
             self.add_vector()
         else:
             self.render_all_vectors()
-
-    def get_vectors_dict(self) -> dict[str, list[Any]]:
-        """Extrae el contenido de cada vector parseado como fracciones numericas."""
-        return _extraer_datos_vectores(self.vectors, self.dim)
 
     def load_data(self, vectors_dict: dict[str, list[str]], orientation: str = "column") -> None:
         """Carga vectores desde un diccionario reemplazando las entradas activas."""

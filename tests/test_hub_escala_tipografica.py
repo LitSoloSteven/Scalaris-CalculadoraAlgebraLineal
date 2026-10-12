@@ -35,7 +35,7 @@ def test_escala_hub_y_propiedades_permitidas():
     css = leer_css_hub()
 
     assert "hub-theme" not in view
-    assert "render_theme_button" not in view
+    assert "renderizar_boton_tema" not in view
     assert ".hub-theme" not in full_css
     assert "width: min(100%, 72rem)" in cuerpo_regla(css, ".hub-matrix")
 

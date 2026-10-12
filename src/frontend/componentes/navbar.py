@@ -9,7 +9,7 @@ from nicegui import ui
 
 from src.frontend import flags
 from src.frontend.componentes.icons import icon_svg
-from src.frontend.componentes.theme_switcher import render_theme_button
+from src.frontend.componentes.selector_tema import renderizar_boton_tema
 from src.frontend.navigation import (
     HUB_ROUTE,
     NAV_FLAT_ORDER,
@@ -22,7 +22,7 @@ from src.frontend.navigation import (
 )
 
 
-def create_navbar(active_ui=None, active_route: str = "/", active_key: str | None = None):
+def create_navbar(active_ui=None, active_route: str = "/", active_key: str | None = None, al_alternar_ia=None):
     """Genera la barra de navegación contextual plana o por pilares según flags."""
     clave_activa = default_item_key(active_route) if active_key is None else active_key
 
@@ -30,7 +30,7 @@ def create_navbar(active_ui=None, active_route: str = "/", active_key: str | Non
         _renderizar_logotipo()
         with ui.element("div").classes("panel-card nav-pill pointer-events-auto"):
             if not flags.nav_v2():
-                _renderizar_barra_plana(active_ui, active_route)
+                _renderizar_barra_plana(active_ui, active_route, al_alternar_ia)
             else:
                 _renderizar_barra_pilares(active_route, clave_activa)
 
@@ -51,7 +51,7 @@ def _renderizar_logotipo() -> None:
         )
 
 
-def _renderizar_barra_plana(active_ui: Any, active_route: str) -> None:
+def _renderizar_barra_plana(active_ui: Any, active_route: str, al_alternar_ia=None) -> None:
     """Renderiza la botonera lineal de herramientas en modo clásico."""
     with ui.row().classes("items-center gap-4"):
         for tool_id in NAV_FLAT_ORDER:
@@ -68,13 +68,13 @@ def _renderizar_barra_plana(active_ui: Any, active_route: str) -> None:
                 if active_ui and hasattr(active_ui, "ai_panel"):
                     active_ui.ai_panel.toggle()
 
-            with ui.button(on_click=toggle_ai, color=None).classes(
+            with ui.button(on_click=al_alternar_ia or toggle_ai, color=None).classes(
                 "btn-neo-icon p-0 text-main"
             ).props('flat ripple=false aria-label="Glosa"').tooltip("Glosa"):
                 ui.html(icon_svg("tutor_ia"))
 
         ui.element("div").classes("nav-sep")
-        render_theme_button()
+        renderizar_boton_tema()
 
 
 def _renderizar_barra_pilares(active_route: str, clave_activa: str) -> None:
@@ -90,7 +90,7 @@ def _renderizar_barra_pilares(active_route: str, clave_activa: str) -> None:
         _renderizar_items_centro(pillar, items, clave_activa)
 
     with ui.element("div").classes("theme-switcher-btn nav-theme"):
-        render_theme_button()
+        renderizar_boton_tema()
 
 
 def _renderizar_items_centro(pillar: Any, items: Any, clave_activa: str) -> None:

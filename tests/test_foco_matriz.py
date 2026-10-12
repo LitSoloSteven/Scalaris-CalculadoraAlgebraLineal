@@ -2,7 +2,7 @@
 from fractions import Fraction
 import pytest
 
-from src.ai.context import AIContext, StepRef
+from src.ai.contexto import ContextoIA
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_matrices.evaluador import (
     EvaluadorExpresionesMatriciales,
@@ -14,6 +14,7 @@ from src.frontend.controladores.operaciones_matrices.controlador_operaciones_mat
 
 
 def test_foco_matriz_suma():
+    """El foco de suma conserva operación y ejemplo breve de una celda."""
     evaluador = EvaluadorExpresionesMatriciales()
     matriz_a = Matriz(2, 2, [[Fraction(1), Fraction(2)], [Fraction(3), Fraction(4)]])
     matriz_b = Matriz(2, 2, [[Fraction(5), Fraction(6)], [Fraction(7), Fraction(8)]])
@@ -42,6 +43,7 @@ def test_foco_matriz_suma():
 
 
 def test_foco_matriz_multiplicacion():
+    """El foco de producto conserva forma y ejemplo de fila por columna."""
     evaluador = EvaluadorExpresionesMatriciales()
     matriz_a = Matriz(2, 3, [[Fraction(1), Fraction(2), Fraction(0)], [Fraction(3), Fraction(4), Fraction(1)]])
     matriz_b = Matriz(3, 2, [[Fraction(2), Fraction(1)], [Fraction(0), Fraction(1)], [Fraction(1), Fraction(0)]])
@@ -69,6 +71,7 @@ def test_foco_matriz_multiplicacion():
 
 
 def test_foco_matriz_transpuesta():
+    """El foco de transposición conserva forma y ausencia de ejemplo de celda."""
     evaluador = EvaluadorExpresionesMatriciales()
     matriz_a = Matriz(2, 2, [[Fraction(1), Fraction(2)], [Fraction(3), Fraction(4)]])
     resultado = evaluador.evaluar("A^T", {"A": matriz_a})
@@ -87,13 +90,16 @@ def test_foco_matriz_transpuesta():
 
 
 def test_panel_ia_recolectar_contexto_detalle_paso():
+    """El panel adjunta el detalle del paso seleccionado al ejercicio actual."""
     class InterfazSimulada:
+        """Entrega el ejercicio matricial mediante el contrato de contexto vigente."""
         def obtener_contexto_ia(self):
-            return AIContext(
-                tool="matrix_ops",
-                view="Matrices",
-                label="Matriz A y B",
-                input={"expresion": "AB"},
+            """Devuelve las entradas del ejercicio para su explicación."""
+            return ContextoIA(
+                herramienta="matrix_ops",
+                vista="Matrices",
+                etiqueta="Matriz A y B",
+                entrada={"expresion": "AB"},
             )
 
     panel = PanelIASimulado(InterfazSimulada(), {"ai_ctx_enabled": True})
@@ -106,5 +112,5 @@ def test_panel_ia_recolectar_contexto_detalle_paso():
         "detail": {"forma": "2×2", "ejemplo": "Celda (1, 1): 1*2 = 2"},
     }
 
-    ctx_text = panel._collect_context()
-    assert "2×2" in ctx_text or "Multiplicación" in ctx_text
+    texto_contexto = panel._collect_context()
+    assert "2×2" in texto_contexto or "Multiplicación" in texto_contexto

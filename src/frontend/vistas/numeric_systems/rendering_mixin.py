@@ -50,9 +50,9 @@ class NumericSystemsRenderingMixin(NumericSystemsProcedureMixin):
         self._aplicar_opacidad_tarjetas(revelar=revelar_tarjetas)
         self._mostrar_procedimiento()
 
-        from src.ai.context import fingerprint
+        from src.ai.huellas import calcular_huella
         entrada = {"valor": val_raw, "base_origen": self.base_activa, "base_destino": self.base_destino}
-        self._result_fp = fingerprint(entrada)
+        self._result_fp = calcular_huella(entrada)
         p = getattr(self, 'ai_panel', None)
         if p and hasattr(p, 'programar_actualizacion_contexto'):
             p.programar_actualizacion_contexto()

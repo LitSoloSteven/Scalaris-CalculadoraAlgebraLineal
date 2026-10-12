@@ -49,7 +49,7 @@ class SquareMatrixPanel:
     @staticmethod
     def inject_scripts() -> None:
         """Inyecta los scripts necesarios para navegación y animación de matriz cuadrada."""
-        ui.add_head_html('<script src="/assets/js/matrix_capture.js"></script>')
+        ui.add_head_html('<script src="/assets/js/captura_matrices.js"></script>')
         ui.add_head_html('<script src="/assets/js/square_matrix.js"></script>')
 
     def build_container(self) -> ui.column:
@@ -109,7 +109,7 @@ class SquareMatrixPanel:
 
     def _anadir_fila_dom(self, r: int) -> None:
         """Crea una fila DOM y sus celdas de entrada asociadas."""
-        with ui.row().classes("items-center gap-2 mb-2 no-wrap").props(f'data-matrix-row="{r}"') as row_ui:
+        with ui.row().classes("items-center gap-2 mb-2 no-wrap").props(f'data-matriz-fila="{r}"') as row_ui:
             row_cells: list[ui.input] = []
             for c in range(self.n):
                 celda = self._crear_celda_ui(r, c)

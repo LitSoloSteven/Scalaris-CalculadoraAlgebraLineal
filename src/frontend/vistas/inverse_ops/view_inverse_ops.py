@@ -144,7 +144,7 @@ class InverseOpsUI(InverseOpsResultsMixin, InverseOpsStepsMixin, InverseOpsHisto
                 "pasos_totales": self.last_result.get("stats", {}).get("total", 0),
             }
             if n <= AI_CONTEXT_MAX_N and inv_obj:
-                from src.ai.context import describir_matriz
+                from src.ai.contexto import describir_matriz
                 inv_rows = inv_obj.data if hasattr(inv_obj, 'data') else inv_obj
                 formatted_rows = [[format_fraction_str(c) for c in row] for row in inv_rows]
                 res_dict["inverse"] = describir_matriz(formatted_rows)
@@ -156,29 +156,30 @@ class InverseOpsUI(InverseOpsResultsMixin, InverseOpsStepsMixin, InverseOpsHisto
         return {"status": "ERROR"}
 
     def obtener_contexto_ia(self):
-        from src.ai.context import AIContext, describir_matriz, sanitize_user_string, is_stale, window_note_from
+        from src.ai.contexto import ContextoIA, EstadoContexto, describir_matriz, sanear_cadena_usuario, generar_nota_ventana
+        from src.ai.huellas import esta_desactualizado
         n = self.square_panel.n
         if self.square_panel.is_empty():
-            return AIContext(tool="inversa", view="Matriz inversa", label="Matriz A", input={}, empty=True)
+            return ContextoIA(herramienta="inversa", vista="Matriz inversa", etiqueta="Matriz A", entrada={}, estado=EstadoContexto(vacio=True))
 
         data = self.square_panel.obtener_datos_matriz()
         data_sanitized = [
-            [sanitize_user_string(data[i][j] or "", 32) for j in range(n)]
+            [sanear_cadena_usuario(data[i][j] or "", 32) for j in range(n)]
             for i in range(n)
         ]
 
         desc_a = describir_matriz(data_sanitized)
-        ctx = AIContext(
-            tool="inversa",
-            view="Matriz inversa",
-            label=f"A ({n}×{n})",
-            input={"A": desc_a}
+        ctx = ContextoIA(
+            herramienta="inversa",
+            vista="Matriz inversa",
+            etiqueta=f"A ({n}×{n})",
+            entrada={"A": desc_a}
         )
-        ctx.window_note = window_note_from(desc_a)
-        ctx.stale = is_stale({"data": data}, getattr(self, '_result_fp', None))
+        ctx.nota_ventana = generar_nota_ventana(desc_a)
+        ctx.desactualizado = esta_desactualizado({"data": data}, getattr(self, '_result_fp', None))
 
         if getattr(self, 'last_result', None):
-            ctx.result = None if ctx.stale else self._preparar_resultado_ia(n)
+            ctx.resultado = None if ctx.desactualizado else self._preparar_resultado_ia(n)
 
         return ctx
 
@@ -198,7 +199,7 @@ class InverseOpsUI(InverseOpsResultsMixin, InverseOpsStepsMixin, InverseOpsHisto
             invalid = first_invalid_cell(items)
             
             res = getattr(self, 'last_result', None)
-            if res and not getattr(self.obtener_contexto_ia(), 'stale', True):
+            if res and not getattr(self.obtener_contexto_ia(), 'desactualizado', True):
                 st = res.get("status")
                 if st == "SUCCESS":
                     state = "success"

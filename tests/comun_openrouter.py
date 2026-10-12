@@ -2,7 +2,7 @@
 import json
 import pytest
 
-from src.ai.openrouter_ai import OpenRouterIA
+from src.ai.cliente_openrouter import ClienteOpenRouter
 
 
 class RespuestaSimulada:
@@ -21,10 +21,10 @@ class RespuestaSimulada:
 @pytest.fixture(autouse=True)
 def limpiar_estado_openrouter(monkeypatch):
     """Aísla la caché y los modelos de reserva antes y después de cada caso."""
-    import src.ai.openrouter_ai as modulo_openrouter
-    with modulo_openrouter._bloqueo_cache:
-        modulo_openrouter._cache_respuestas.clear()
-    monkeypatch.setattr(OpenRouterIA, "MODELOS_RESERVA", [])
+    import src.ai.cache_respuestas as modulo_cache
+    with modulo_cache._bloqueo_cache:
+        modulo_cache._cache_respuestas.clear()
+    monkeypatch.setattr(ClienteOpenRouter, "MODELOS_RESERVA", [])
     yield
-    with modulo_openrouter._bloqueo_cache:
-        modulo_openrouter._cache_respuestas.clear()
+    with modulo_cache._bloqueo_cache:
+        modulo_cache._cache_respuestas.clear()

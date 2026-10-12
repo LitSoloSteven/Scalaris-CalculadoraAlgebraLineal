@@ -120,7 +120,7 @@ def test_catalogo_y_hoja_nueva_definen_todos_los_tipos():
 
 def test_assets_compartidos_se_enlazan_y_destello_deja_el_script_anterior():
     """Confirma la carga global de assets y la eliminación del nombre antiguo."""
-    cabecera = Path("src/frontend/theme.py").read_text(encoding="utf-8")
+    cabecera = Path("src/frontend/assets/plantillas/cabecera.html").read_text(encoding="utf-8")
     script = Path("src/frontend/assets/js/reproductor_pasos.js").read_text(encoding="utf-8")
     script_matriz = Path("src/frontend/assets/js/square_matrix.js").read_text(encoding="utf-8")
     assert "/assets/css/reproductor_pasos.css" in cabecera

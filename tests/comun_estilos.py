@@ -25,6 +25,17 @@ def _declaraciones_tokens(cuerpo):
     return tokens
 
 
+def extraer_clases_semanticas(contenido, patron):
+    """Recoge nombres semánticos coincidentes con un patrón de clases HTML o Python."""
+    clases = set()
+    for coincidencia in re.findall(patron, contenido):
+        for palabra in coincidencia.split():
+            nombre = re.sub(r'[^a-zA-Z0-9_-]', '', palabra)
+            if any(nombre.startswith(prefijo) for prefijo in ('nav-', 'hub-', 'glosa-')):
+                clases.add(nombre)
+    return clases
+
+
 def analizar_tokens(ruta, pasadas=6, exigir_cierre=True):
     """Extrae los tres temas y resuelve referencias según el lector original."""
     contenido = Path(ruta).read_text(encoding="utf-8")

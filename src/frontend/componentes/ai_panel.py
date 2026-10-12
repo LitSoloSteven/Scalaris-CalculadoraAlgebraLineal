@@ -6,8 +6,8 @@ import logging
 from typing import Any
 from nicegui import app, ui
 
-from src.ai.context import StepRef, serialize_context
-from src.ai.openrouter_ai import OpenRouterIA
+from src.ai.contexto import CapturaPaso, ReferenciaPaso, serializar_contexto
+from src.ai.cliente_openrouter import ClienteOpenRouter
 from src.frontend import flags
 from src.frontend.componentes.ai_panel_legacy import (
     actualizar_visibilidad_legacy,
@@ -40,22 +40,23 @@ def _recopilar_contexto_didactico(active_ui: Any, explain_focus: dict[str, Any] 
         return ""
     try:
         ctx_obj = active_ui.obtener_contexto_ia()
-        if ctx_obj is None or getattr(ctx_obj, "empty", False):
+        if ctx_obj is None or getattr(ctx_obj, "vacio", False):
             return ""
 
         if explain_focus:
             columnas_foco = tuple(explain_focus["cols"]) if explain_focus.get("cols") else None
-            ctx_obj.focus = StepRef(
-                index=explain_focus["index"],
+            ctx_obj.foco = ReferenciaPaso(
+                indice=explain_focus["index"],
                 total=explain_focus["total"],
-                kind=explain_focus["kind"],
-                op=explain_focus["op"],
-                rows_before=explain_focus.get("rows_before", {}),
-                rows_after=explain_focus.get("rows_after", {}),
-                cols=columnas_foco,
-                detail=explain_focus.get("detail"),
+                tipo=explain_focus["kind"],
+                operacion=explain_focus["op"],
+                captura=CapturaPaso(
+                    filas_antes=explain_focus.get("rows_before", {}),
+                    filas_despues=explain_focus.get("rows_after", {}),
+                    columnas=columnas_foco, detalle=explain_focus.get("detail"),
+                ),
             )
-        return serialize_context(ctx_obj)
+        return serializar_contexto(ctx_obj)
     except Exception:
         logger.exception("Error al recopilar el contexto para la IA")
         ui.notify("No pudimos leer tu ejercicio; enviamos solo tu pregunta.", type="warning")
@@ -102,7 +103,7 @@ class AIPanel(GlosaDockMixin):
             self._client = None
 
         self.active_ui = active_ui
-        self.motor_ia = OpenRouterIA()
+        self.motor_ia = ClienteOpenRouter()
         self.panel_container = None
         self.overlay = None
         self.chat_area = None

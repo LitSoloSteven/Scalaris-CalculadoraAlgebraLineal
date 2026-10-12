@@ -103,7 +103,7 @@ def _extraer_detalles_paso(
     filas_actuales: list,
 ) -> tuple[list[int] | None, dict, dict, list | None, int]:
     """Calcula pivote y extractos de filas antes y después según la operación."""
-    from src.ai.context import extraer_filas
+    from src.ai.contexto import extraer_filas
 
     r1, r2 = parsed.get("row1"), parsed.get("row2")
     if kind == "pivote" and r1 is not None and parsed.get("col") is not None:

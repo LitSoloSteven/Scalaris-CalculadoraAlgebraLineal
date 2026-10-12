@@ -3,7 +3,7 @@ import logging
 import pytest
 import requests
 
-from src.ai.openrouter_ai import OpenRouterIA
+from src.ai.cliente_openrouter import ClienteOpenRouter
 from tests.comun_openrouter import RespuestaSimulada, limpiar_estado_openrouter
 
 
@@ -16,10 +16,10 @@ def test_registro_http_omite_cuerpo_privado_y_caracteres_control(monkeypatch, ca
     def responder(url, headers=None, json=None, timeout=None):
         return RespuestaSimulada(codigo, text=secreto)
 
-    monkeypatch.setattr(OpenRouterIA, "_peticiones_post", staticmethod(responder))
-    monkeypatch.setattr(OpenRouterIA, "_tiempo_dormir", staticmethod(lambda _: None))
+    monkeypatch.setattr(ClienteOpenRouter, "_peticiones_post", staticmethod(responder))
+    monkeypatch.setattr(ClienteOpenRouter, "_tiempo_dormir", staticmethod(lambda _: None))
     with caplog.at_level(logging.WARNING):
-        OpenRouterIA().ask("Consulta")
+        ClienteOpenRouter().preguntar("Consulta")
     assert str(codigo) in caplog.text
     assert "secreto-ficticio" not in caplog.text
     assert "registro-inyectado" not in caplog.text
@@ -32,10 +32,10 @@ def test_registro_red_omite_detalles_de_excepcion(monkeypatch, caplog):
     def fallar(url, headers=None, json=None, timeout=None):
         raise requests.exceptions.RequestException("secreto-ficticio\nregistro-inyectado")
 
-    monkeypatch.setattr(OpenRouterIA, "_peticiones_post", staticmethod(fallar))
+    monkeypatch.setattr(ClienteOpenRouter, "_peticiones_post", staticmethod(fallar))
     with caplog.at_level(logging.ERROR):
-        respuesta = OpenRouterIA().ask("Consulta")
-    assert not respuesta.ok
+        respuesta = ClienteOpenRouter().preguntar("Consulta")
+    assert not respuesta.exito
     assert caplog.records
     assert "secreto-ficticio" not in caplog.text
     assert "registro-inyectado" not in caplog.text

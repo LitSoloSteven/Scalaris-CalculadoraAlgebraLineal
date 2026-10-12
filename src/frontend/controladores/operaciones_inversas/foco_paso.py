@@ -1,7 +1,7 @@
 """Cálculo de foco visual (filas antes/después y columnas) para un paso del reproductor."""
 from typing import Any
 
-from src.ai.context import extraer_filas
+from src.ai.contexto import extraer_filas
 from src.frontend.controladores.clasificador_pasos import clasificar_paso
 
 

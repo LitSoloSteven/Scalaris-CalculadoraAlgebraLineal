@@ -1,1126 +1,824 @@
 [
   {
-    "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\ai\\context.py",
-    "tipo": "complejidad",
-    "nombre": "describir_matriz",
-    "linea": 175,
-    "valor": 13
-  },
-  {
-    "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\ai\\context.py",
-    "tipo": "parametros",
-    "nombre": "__init__",
-    "linea": 40,
-    "valor": 9
-  },
-  {
-    "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\ai\\context.py",
-    "tipo": "parametros",
-    "nombre": "__init__",
-    "linea": 87,
-    "valor": 10
-  },
-  {
-    "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\ai\\openrouter_ai.py",
-    "tipo": "parametros",
-    "nombre": "ask",
-    "linea": 264,
-    "valor": 6
-  },
-  {
-    "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\ai\\prompts.py",
-    "tipo": "complejidad",
-    "nombre": "trim_history",
-    "linea": 21,
-    "valor": 11
-  },
-  {
-    "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\geometria\\conjunto_solucion.py",
-    "tipo": "complejidad",
-    "nombre": "obtener_parametros_solucion",
-    "linea": 84,
-    "valor": 12
-  },
-  {
-    "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\modelos\\matriz.py",
-    "tipo": "complejidad",
-    "nombre": "__init__",
-    "linea": 22,
-    "valor": 13
-  },
-  {
-    "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\models\\matrix.py",
-    "tipo": "complejidad",
-    "nombre": "_normalizar_valor",
-    "linea": 36,
-    "valor": 11
-  },
-  {
-    "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\resolutores\\operaciones_matrices\\inversa.py",
-    "tipo": "complejidad",
-    "nombre": "_verificar_producto",
-    "linea": 62,
-    "valor": 13
-  },
-  {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\linear_systems\\gauss.py",
+    "nombre": "gauss.py",
     "tipo": "archivo",
-    "valor": 448
+    "valor": 445
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\linear_systems\\gauss.py",
-    "tipo": "clase",
     "nombre": "GaussSolver",
-    "linea": 23,
-    "valor": 426
+    "tipo": "clase",
+    "valor": 423
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\linear_systems\\gauss.py",
-    "tipo": "funcion",
     "nombre": "_eliminate",
-    "linea": 115,
+    "tipo": "funcion",
     "valor": 82
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\linear_systems\\gauss.py",
-    "tipo": "complejidad",
     "nombre": "_eliminate",
-    "linea": 115,
+    "tipo": "complejidad",
     "valor": 18
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\linear_systems\\gauss.py",
-    "tipo": "funcion",
     "nombre": "_back_substitute",
-    "linea": 198,
-    "valor": 116
+    "tipo": "funcion",
+    "valor": 114
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\linear_systems\\gauss.py",
-    "tipo": "anidamiento",
     "nombre": "_back_substitute",
-    "linea": 198,
+    "tipo": "anidamiento",
     "valor": 4
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\linear_systems\\gauss.py",
-    "tipo": "complejidad",
     "nombre": "_back_substitute",
-    "linea": 198,
+    "tipo": "complejidad",
     "valor": 27
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\linear_systems\\gauss.py",
-    "tipo": "funcion",
     "nombre": "solve",
-    "linea": 338,
+    "tipo": "funcion",
     "valor": 100
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\matrix_ops\\determinant.py",
-    "tipo": "funcion",
     "nombre": "resolver_laplace",
-    "linea": 46,
-    "valor": 45
-  },
-  {
-    "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\matrix_ops\\determinant.py",
     "tipo": "funcion",
-    "nombre": "resolver_lu",
-    "linea": 93,
     "valor": 45
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\matrix_ops\\determinant.py",
-    "tipo": "anidamiento",
     "nombre": "resolver_lu",
-    "linea": 93,
+    "tipo": "funcion",
+    "valor": 45
+  },
+  {
+    "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\matrix_ops\\determinant.py",
+    "nombre": "resolver_lu",
+    "tipo": "anidamiento",
     "valor": 4
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\matrix_ops\\determinant.py",
-    "tipo": "complejidad",
     "nombre": "resolver_lu",
-    "linea": 93,
+    "tipo": "complejidad",
     "valor": 13
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\matrix_ops\\determinant.py",
-    "tipo": "complejidad",
     "nombre": "_det_recursivo",
-    "linea": 54,
+    "tipo": "complejidad",
     "valor": 13
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\matrix_ops\\evaluator.py",
-    "tipo": "clase",
     "nombre": "MatrixExpressionEvaluator",
-    "linea": 17,
+    "tipo": "clase",
     "valor": 264
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\matrix_ops\\evaluator.py",
-    "tipo": "funcion",
     "nombre": "_tokenize",
-    "linea": 27,
+    "tipo": "funcion",
     "valor": 45
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\matrix_ops\\evaluator.py",
-    "tipo": "complejidad",
     "nombre": "_to_rpn",
-    "linea": 73,
+    "tipo": "complejidad",
     "valor": 16
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\matrix_ops\\evaluator.py",
-    "tipo": "funcion",
     "nombre": "evaluate",
-    "linea": 113,
+    "tipo": "funcion",
     "valor": 162
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\matrix_ops\\evaluator.py",
-    "tipo": "anidamiento",
     "nombre": "evaluate",
-    "linea": 113,
+    "tipo": "anidamiento",
     "valor": 5
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\matrix_ops\\evaluator.py",
-    "tipo": "complejidad",
     "nombre": "evaluate",
-    "linea": 113,
+    "tipo": "complejidad",
     "valor": 32
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\matrix_ops\\inverse.py",
-    "tipo": "clase",
     "nombre": "MatrixInverseSolver",
-    "linea": 25,
+    "tipo": "clase",
     "valor": 247
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\matrix_ops\\inverse.py",
-    "tipo": "funcion",
     "nombre": "solve",
-    "linea": 36,
+    "tipo": "funcion",
     "valor": 96
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\matrix_ops\\inverse.py",
-    "tipo": "complejidad",
     "nombre": "solve",
-    "linea": 36,
+    "tipo": "complejidad",
     "valor": 11
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\matrix_ops\\leontief.py",
-    "tipo": "clase",
     "nombre": "LeontiefSolver",
-    "linea": 23,
+    "tipo": "clase",
     "valor": 224
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\matrix_ops\\leontief.py",
-    "tipo": "funcion",
     "nombre": "resolver",
-    "linea": 44,
+    "tipo": "funcion",
     "valor": 104
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\matrix_ops\\leontief.py",
-    "tipo": "complejidad",
     "nombre": "resolver",
-    "linea": 44,
+    "tipo": "complejidad",
     "valor": 14
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\matrix_ops\\leontief.py",
-    "tipo": "funcion",
     "nombre": "_hawkins_simon",
-    "linea": 164,
+    "tipo": "funcion",
     "valor": 44
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\matrix_ops\\operations.py",
+    "nombre": "operations.py",
     "tipo": "archivo",
     "valor": 324
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\matrix_ops\\operations.py",
-    "tipo": "clase",
     "nombre": "MatrixOpsSolver",
-    "linea": 12,
+    "tipo": "clase",
     "valor": 313
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\matrix_ops\\operations.py",
-    "tipo": "funcion",
     "nombre": "_elementwise_binary_op",
-    "linea": 18,
+    "tipo": "funcion",
     "valor": 63
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\matrix_ops\\operations.py",
-    "tipo": "funcion",
     "nombre": "scalar_multiply",
-    "linea": 96,
+    "tipo": "funcion",
     "valor": 61
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\matrix_ops\\operations.py",
-    "tipo": "funcion",
     "nombre": "multiply",
-    "linea": 158,
+    "tipo": "funcion",
     "valor": 65
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\matrix_ops\\operations.py",
-    "tipo": "funcion",
     "nombre": "determinant",
-    "linea": 241,
+    "tipo": "funcion",
     "valor": 75
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\matrix_ops\\operations.py",
-    "tipo": "complejidad",
     "nombre": "determinant",
-    "linea": 241,
+    "tipo": "complejidad",
     "valor": 12
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\matrix_ops\\transformations.py",
-    "tipo": "clase",
     "nombre": "LinearTransformationSolver",
-    "linea": 39,
+    "tipo": "clase",
     "valor": 234
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\matrix_ops\\transformations.py",
-    "tipo": "funcion",
     "nombre": "resolver",
-    "linea": 53,
+    "tipo": "funcion",
     "valor": 145
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\matrix_ops\\transformations.py",
-    "tipo": "anidamiento",
     "nombre": "resolver",
-    "linea": 53,
+    "tipo": "anidamiento",
     "valor": 4
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\matrix_ops\\transformations.py",
-    "tipo": "complejidad",
     "nombre": "resolver",
-    "linea": 53,
+    "tipo": "complejidad",
     "valor": 25
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\matrix_ops\\transformations.py",
-    "tipo": "funcion",
     "nombre": "_base_nucleo",
-    "linea": 206,
+    "tipo": "funcion",
     "valor": 45
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\numeric_systems\\roman_calculator.py",
+    "nombre": "roman_calculator.py",
     "tipo": "archivo",
     "valor": 321
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\numeric_systems\\roman_calculator.py",
-    "tipo": "funcion",
     "nombre": "roman_to_int",
-    "linea": 115,
+    "tipo": "funcion",
     "valor": 51
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\numeric_systems\\roman_calculator.py",
-    "tipo": "funcion",
     "nombre": "restar",
-    "linea": 209,
+    "tipo": "funcion",
     "valor": 45
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\numeric_systems\\roman_calculator.py",
-    "tipo": "funcion",
     "nombre": "multiplicar_un_digito",
-    "linea": 256,
+    "tipo": "funcion",
     "valor": 66
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\vector_ops\\linear_combination.py",
+    "nombre": "linear_combination.py",
     "tipo": "archivo",
     "valor": 441
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\vector_ops\\linear_combination.py",
-    "tipo": "clase",
     "nombre": "LinearCombinationSolver",
-    "linea": 41,
+    "tipo": "clase",
     "valor": 401
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\vector_ops\\linear_combination.py",
-    "tipo": "funcion",
     "nombre": "_build_setup_steps",
-    "linea": 61,
+    "tipo": "funcion",
     "valor": 78
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\vector_ops\\linear_combination.py",
-    "tipo": "funcion",
     "nombre": "_build_verification_step",
-    "linea": 141,
+    "tipo": "funcion",
     "valor": 97
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\vector_ops\\linear_combination.py",
-    "tipo": "complejidad",
     "nombre": "_build_verification_step",
-    "linea": 141,
+    "tipo": "complejidad",
     "valor": 20
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\vector_ops\\linear_combination.py",
-    "tipo": "funcion",
     "nombre": "solve",
-    "linea": 239,
+    "tipo": "funcion",
     "valor": 199
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\vector_ops\\linear_combination.py",
-    "tipo": "complejidad",
     "nombre": "solve",
-    "linea": 239,
+    "tipo": "complejidad",
     "valor": 32
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\vector_ops\\operations.py",
-    "tipo": "clase",
     "nombre": "VectorOpsSolver",
-    "linea": 29,
+    "tipo": "clase",
     "valor": 237
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\vector_ops\\operations.py",
-    "tipo": "funcion",
     "nombre": "_binary_op",
-    "linea": 34,
+    "tipo": "funcion",
     "valor": 86
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\vector_ops\\operations.py",
-    "tipo": "parametros",
     "nombre": "_binary_op",
-    "linea": 34,
+    "tipo": "parametros",
     "valor": 8
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\solvers\\vector_ops\\operations.py",
-    "tipo": "funcion",
     "nombre": "scalar_multiply",
-    "linea": 162,
+    "tipo": "funcion",
     "valor": 98
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\utilidades\\analizadores.py",
-    "tipo": "complejidad",
     "nombre": "parsear_sistema",
-    "linea": 105,
+    "tipo": "complejidad",
     "valor": 11
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\utilidades\\formateadores.py",
-    "tipo": "complejidad",
     "nombre": "formatear_expresion_parametrica",
-    "linea": 76,
+    "tipo": "complejidad",
     "valor": 11
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\utils\\formatters.py",
-    "tipo": "complejidad",
     "nombre": "format_parametric_expr",
-    "linea": 76,
+    "tipo": "complejidad",
     "valor": 11
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\utils\\parsers.py",
-    "tipo": "funcion",
     "nombre": "parse_system",
-    "linea": 14,
+    "tipo": "funcion",
     "valor": 66
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\utils\\parsers.py",
-    "tipo": "complejidad",
     "nombre": "parse_system",
-    "linea": 14,
+    "tipo": "complejidad",
     "valor": 14
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\utils\\parsers.py",
-    "tipo": "funcion",
     "nombre": "_parse_lhs",
-    "linea": 82,
+    "tipo": "funcion",
     "valor": 44
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\utils\\parsers.py",
-    "tipo": "anidamiento",
     "nombre": "_parse_lhs",
-    "linea": 82,
+    "tipo": "anidamiento",
     "valor": 4
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\utils\\parsers.py",
-    "tipo": "complejidad",
     "nombre": "_parse_lhs",
-    "linea": 82,
+    "tipo": "complejidad",
     "valor": 11
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\utils\\validators.py",
+    "nombre": "validators.py",
     "tipo": "archivo",
     "valor": 317
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\utils\\validators.py",
-    "tipo": "clase",
     "nombre": "MatrixValidator",
-    "linea": 12,
+    "tipo": "clase",
     "valor": 274
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\utils\\validators.py",
-    "tipo": "funcion",
     "nombre": "verify_solution",
-    "linea": 180,
+    "tipo": "funcion",
     "valor": 88
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\backend\\utils\\validators.py",
-    "tipo": "complejidad",
     "nombre": "verify_solution",
-    "linea": 180,
+    "tipo": "complejidad",
     "valor": 15
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\componentes\\handoff.py",
-    "tipo": "complejidad",
     "nombre": "validar_payload_sistema",
-    "linea": 182,
+    "tipo": "complejidad",
     "valor": 11
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\componentes\\matrix_capture.py",
-    "tipo": "complejidad",
     "nombre": "adjust_size",
-    "linea": 147,
+    "tipo": "complejidad",
     "valor": 12
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\componentes\\reproductor_pasos\\html_tablas.py",
-    "tipo": "parametros",
     "nombre": "html_tabla_aumentada",
-    "linea": 109,
+    "tipo": "parametros",
     "valor": 8
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\componentes\\reproductor_pasos\\reproductor.py",
-    "tipo": "parametros",
     "nombre": "__init__",
-    "linea": 27,
+    "tipo": "parametros",
     "valor": 9
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\componentes\\vector_capture.py",
-    "tipo": "parametros",
     "nombre": "__init__",
-    "linea": 86,
+    "tipo": "parametros",
     "valor": 6
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\controladores\\geometria\\controlador_combinacion.py",
-    "tipo": "complejidad",
     "nombre": "_construir_cadena_acumulada",
-    "linea": 60,
+    "tipo": "complejidad",
     "valor": 13
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\controladores\\geometria\\controlador_combinacion.py",
-    "tipo": "complejidad",
     "nombre": "procesar_combinacion",
-    "linea": 151,
+    "tipo": "complejidad",
     "valor": 21
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\controladores\\geometria\\controlador_rectas_planos.py",
-    "tipo": "complejidad",
     "nombre": "_construir_set_data",
-    "linea": 137,
+    "tipo": "complejidad",
     "valor": 18
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\controladores\\geometria\\controlador_rectas_planos.py",
-    "tipo": "complejidad",
     "nombre": "_validar_entrada_sistema",
-    "linea": 174,
+    "tipo": "complejidad",
     "valor": 11
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\controladores\\geometria\\controlador_vectores.py",
-    "tipo": "complejidad",
     "nombre": "procesar_vectores",
-    "linea": 87,
+    "tipo": "complejidad",
     "valor": 14
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\controladores\\operaciones_inversas\\foco_paso.py",
-    "tipo": "complejidad",
     "nombre": "_determinar_indices_foco",
-    "linea": 31,
+    "tipo": "complejidad",
     "valor": 17
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\controladores\\operaciones_inversas\\validador_inversa.py",
-    "tipo": "parametros",
     "nombre": "construir_resultado_vacio",
-    "linea": 15,
+    "tipo": "parametros",
     "valor": 7
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\controladores\\sistemas_lineales\\flujo_comun.py",
-    "tipo": "complejidad",
     "nombre": "_construir_respuesta_payload",
-    "linea": 32,
+    "tipo": "complejidad",
     "valor": 11
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\suggestions.py",
-    "tipo": "complejidad",
     "nombre": "select_chips",
-    "linea": 119,
+    "tipo": "complejidad",
     "valor": 15
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\hub\\_recent.py",
-    "tipo": "anidamiento",
     "nombre": "normalize_recent",
-    "linea": 7,
+    "tipo": "anidamiento",
     "valor": 4
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\hub\\view_hub.py",
-    "tipo": "anidamiento",
     "nombre": "_render_matrix",
-    "linea": 111,
+    "tipo": "anidamiento",
     "valor": 6
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\hub\\view_hub.py",
-    "tipo": "anidamiento",
     "nombre": "_render_dialog_body",
-    "linea": 165,
+    "tipo": "anidamiento",
     "valor": 4
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\inverse_ops\\_tarjeta_inversa.py",
-    "tipo": "anidamiento",
     "nombre": "_renderizar_tarjeta_matriz",
-    "linea": 115,
+    "tipo": "anidamiento",
     "valor": 4
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\inverse_ops\\_tarjeta_inversa.py",
-    "tipo": "anidamiento",
     "nombre": "_renderizar_comprobaciones",
-    "linea": 178,
+    "tipo": "anidamiento",
     "valor": 4
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\inverse_ops\\history_mixin.py",
-    "tipo": "anidamiento",
     "nombre": "_render_history",
-    "linea": 27,
+    "tipo": "anidamiento",
     "valor": 5
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\inverse_ops\\results_mixin.py",
-    "tipo": "clase",
     "nombre": "InverseOpsResultsMixin",
-    "linea": 34,
+    "tipo": "clase",
     "valor": 231
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\linear_systems\\_pasos_reproductor.py",
-    "tipo": "parametros",
     "nombre": "_construir_pasos_eliminacion",
-    "linea": 71,
+    "tipo": "parametros",
     "valor": 6
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\linear_systems\\_vista_previa.py",
-    "tipo": "complejidad",
     "nombre": "analizar_ecuaciones",
-    "linea": 33,
+    "tipo": "complejidad",
     "valor": 13
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\linear_systems\\_vista_previa.py",
-    "tipo": "complejidad",
     "nombre": "latex_matriz_aumentada",
-    "linea": 64,
+    "tipo": "complejidad",
     "valor": 12
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\linear_systems\\_vista_previa.py",
-    "tipo": "complejidad",
     "nombre": "matriz_desde_celdas",
-    "linea": 105,
+    "tipo": "complejidad",
     "valor": 15
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\linear_systems\\history_mixin.py",
-    "tipo": "parametros",
     "nombre": "_add_to_history",
-    "linea": 9,
+    "tipo": "parametros",
     "valor": 6
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\linear_systems\\history_mixin.py",
-    "tipo": "anidamiento",
     "nombre": "_render_history",
-    "linea": 23,
+    "tipo": "anidamiento",
     "valor": 4
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\linear_systems\\results_mixin.py",
-    "tipo": "clase",
     "nombre": "LinearSystemsResultsMixin",
-    "linea": 19,
+    "tipo": "clase",
     "valor": 242
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\linear_systems\\results_mixin.py",
-    "tipo": "anidamiento",
     "nombre": "_obtener_payload",
-    "linea": 99,
+    "tipo": "anidamiento",
     "valor": 4
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\linear_systems\\results_mixin.py",
-    "tipo": "complejidad",
     "nombre": "_obtener_payload",
-    "linea": 99,
+    "tipo": "complejidad",
     "valor": 11
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\linear_systems\\sync_mixin.py",
-    "tipo": "anidamiento",
     "nombre": "render_ecuaciones",
-    "linea": 27,
+    "tipo": "anidamiento",
     "valor": 4
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\linear_systems\\sync_mixin.py",
-    "tipo": "anidamiento",
     "nombre": "sync_from_matrix",
-    "linea": 46,
+    "tipo": "anidamiento",
     "valor": 4
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\linear_systems\\view_linear_systems.py",
-    "tipo": "clase",
     "nombre": "LinearSystemsUI",
-    "linea": 16,
-    "valor": 255
+    "tipo": "clase",
+    "valor": 256
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\linear_systems\\view_linear_systems.py",
-    "tipo": "anidamiento",
     "nombre": "_render_columna_edicion",
-    "linea": 92,
+    "tipo": "anidamiento",
     "valor": 4
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\linear_systems\\view_linear_systems.py",
-    "tipo": "anidamiento",
     "nombre": "_procesar_handoff_sistemas",
-    "linea": 162,
+    "tipo": "anidamiento",
     "valor": 5
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\linear_systems\\view_linear_systems.py",
-    "tipo": "complejidad",
     "nombre": "_construir_datos_ia_desde_input",
-    "linea": 185,
+    "tipo": "complejidad",
     "valor": 14
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\linear_systems\\view_linear_systems.py",
-    "tipo": "complejidad",
     "nombre": "obtener_senales_ia",
-    "linea": 239,
+    "tipo": "complejidad",
     "valor": 13
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\matrix_ops\\_render_leontief.py",
-    "tipo": "anidamiento",
     "nombre": "_renderizar_vector_produccion",
-    "linea": 47,
+    "tipo": "anidamiento",
     "valor": 5
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\matrix_ops\\_render_leontief.py",
-    "tipo": "anidamiento",
     "nombre": "_renderizar_analisis_sectorial",
-    "linea": 63,
+    "tipo": "anidamiento",
     "valor": 5
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\matrix_ops\\_render_leontief.py",
-    "tipo": "anidamiento",
     "nombre": "renderizar_hawkins_simon",
-    "linea": 85,
+    "tipo": "anidamiento",
     "valor": 4
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\matrix_ops\\_render_transformaciones.py",
-    "tipo": "anidamiento",
     "nombre": "_renderizar_metricas_dimension",
-    "linea": 41,
+    "tipo": "anidamiento",
     "valor": 4
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\matrix_ops\\_render_transformaciones.py",
-    "tipo": "anidamiento",
     "nombre": "_renderizar_conclusiones",
-    "linea": 62,
+    "tipo": "anidamiento",
     "valor": 4
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\matrix_ops\\_render_transformaciones.py",
-    "tipo": "anidamiento",
     "nombre": "_renderizar_pasos",
-    "linea": 105,
+    "tipo": "anidamiento",
     "valor": 4
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\matrix_ops\\results_mixin.py",
-    "tipo": "anidamiento",
     "nombre": "cargar_detalle",
-    "linea": 181,
+    "tipo": "anidamiento",
     "valor": 4
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\matrix_ops\\view_leontief.py",
-    "tipo": "clase",
     "nombre": "LeontiefUI",
-    "linea": 28,
+    "tipo": "clase",
     "valor": 229
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\matrix_ops\\view_leontief.py",
-    "tipo": "anidamiento",
     "nombre": "build",
-    "linea": 44,
+    "tipo": "anidamiento",
     "valor": 4
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\matrix_ops\\view_leontief.py",
-    "tipo": "anidamiento",
     "nombre": "_generar_cuadricula_C",
-    "linea": 125,
+    "tipo": "anidamiento",
     "valor": 4
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\matrix_ops\\view_matrix_ops.py",
-    "tipo": "complejidad",
     "nombre": "obtener_contexto_ia",
-    "linea": 125,
+    "tipo": "complejidad",
     "valor": 12
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\matrix_ops\\view_matrix_ops.py",
-    "tipo": "anidamiento",
     "nombre": "obtener_senales_ia",
-    "linea": 174,
+    "tipo": "anidamiento",
     "valor": 4
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\matrix_ops\\view_matrix_ops.py",
-    "tipo": "complejidad",
     "nombre": "obtener_senales_ia",
-    "linea": 174,
+    "tipo": "complejidad",
     "valor": 13
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\matrix_ops\\view_transformaciones.py",
-    "tipo": "clase",
     "nombre": "TransformacionesUI",
-    "linea": 33,
+    "tipo": "clase",
     "valor": 219
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\matrix_ops\\view_transformaciones.py",
-    "tipo": "anidamiento",
     "nombre": "build",
-    "linea": 50,
+    "tipo": "anidamiento",
     "valor": 4
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\matrix_ops\\view_transformaciones.py",
-    "tipo": "anidamiento",
     "nombre": "_generar_cuadricula_A",
-    "linea": 132,
+    "tipo": "anidamiento",
     "valor": 4
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\numeric_systems\\_pasos_bases.py",
-    "tipo": "parametros",
     "nombre": "_crear_paso_resultado_expansion",
-    "linea": 102,
+    "tipo": "parametros",
     "valor": 6
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\numeric_systems\\_pasos_bases.py",
-    "tipo": "parametros",
     "nombre": "_crear_paso_lectura_division",
-    "linea": 149,
+    "tipo": "parametros",
     "valor": 6
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\numeric_systems\\interaction_mixin.py",
-    "tipo": "anidamiento",
     "nombre": "_cambiar_base_destino",
-    "linea": 24,
+    "tipo": "anidamiento",
     "valor": 4
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\numeric_systems\\roman_steps.py",
-    "tipo": "parametros",
     "nombre": "_crear_pasos_multiplicacion",
-    "linea": 104,
+    "tipo": "parametros",
     "valor": 8
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\numeric_systems\\roman_steps.py",
-    "tipo": "parametros",
     "nombre": "_crear_pasos_operacion",
-    "linea": 160,
+    "tipo": "parametros",
     "valor": 8
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\numeric_systems\\roman_steps.py",
-    "tipo": "parametros",
     "nombre": "_crear_pasos_construccion",
-    "linea": 214,
+    "tipo": "parametros",
     "valor": 6
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\numeric_systems\\view_numeric_systems.py",
-    "tipo": "complejidad",
     "nombre": "obtener_senales_ia",
-    "linea": 156,
+    "tipo": "complejidad",
     "valor": 14
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\numeric_systems\\view_roman_calculator.py",
-    "tipo": "clase",
     "nombre": "RomanCalculatorUI",
-    "linea": 26,
+    "tipo": "clase",
     "valor": 260
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\numeric_systems\\view_roman_calculator.py",
-    "tipo": "anidamiento",
     "nombre": "build",
-    "linea": 43,
+    "tipo": "anidamiento",
     "valor": 4
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\numeric_systems\\view_roman_calculator.py",
-    "tipo": "parametros",
     "nombre": "_render_success_view",
-    "linea": 177,
+    "tipo": "parametros",
     "valor": 6
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\numeric_systems\\view_roman_calculator.py",
-    "tipo": "complejidad",
     "nombre": "obtener_contexto_ia",
-    "linea": 226,
+    "tipo": "complejidad",
     "valor": 15
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\numeric_systems\\view_roman_calculator.py",
-    "tipo": "anidamiento",
     "nombre": "obtener_senales_ia",
-    "linea": 258,
+    "tipo": "anidamiento",
     "valor": 4
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\numeric_systems\\view_roman_calculator.py",
-    "tipo": "complejidad",
     "nombre": "obtener_senales_ia",
-    "linea": 258,
+    "tipo": "complejidad",
     "valor": 15
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\vector_ops\\_pasos_reproductor.py",
-    "tipo": "parametros",
     "nombre": "_construir_pasos_gauss",
-    "linea": 134,
+    "tipo": "parametros",
     "valor": 7
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\vector_ops\\_pasos_reproductor.py",
-    "tipo": "parametros",
     "nombre": "_agregar_fase_planteamiento_gauss",
-    "linea": 208,
+    "tipo": "parametros",
     "valor": 6
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\vector_ops\\results_mixin.py",
-    "tipo": "complejidad",
     "nombre": "_preparar_datos_visualizador",
-    "linea": 150,
+    "tipo": "complejidad",
     "valor": 15
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\vector_ops\\steps_mixin.py",
-    "tipo": "parametros",
     "nombre": "_render_vector_player",
-    "linea": 20,
+    "tipo": "parametros",
     "valor": 6
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\vector_ops\\view_vector_ops.py",
-    "tipo": "clase",
     "nombre": "VectorOpsUI",
-    "linea": 17,
-    "valor": 260
+    "tipo": "clase",
+    "valor": 262
   },
   {
     "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\src\\frontend\\vistas\\vector_ops\\view_vector_ops.py",
-    "tipo": "complejidad",
     "nombre": "obtener_senales_ia",
-    "linea": 245,
+    "tipo": "complejidad",
     "valor": 13
-  },
-  {
-    "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\tests\\test_auditoria_estilos_accesibilidad.py",
-    "tipo": "anidamiento",
-    "nombre": "test_interfaz_sin_altura_estatica_pantalla",
-    "linea": 11,
-    "valor": 5
-  },
-  {
-    "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\tests\\test_auditoria_estilos_accesibilidad.py",
-    "tipo": "anidamiento",
-    "nombre": "test_interfaz_sin_filtros_de_desenfoque",
-    "linea": 26,
-    "valor": 5
-  },
-  {
-    "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\tests\\test_auditoria_estilos_accesibilidad.py",
-    "tipo": "anidamiento",
-    "nombre": "test_interfaz_sin_capas_numericas_elevadas",
-    "linea": 61,
-    "valor": 6
-  },
-  {
-    "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\tests\\test_auditoria_estilos_accesibilidad.py",
-    "tipo": "anidamiento",
-    "nombre": "test_formulas_tienen_contenedor_desplazable",
-    "linea": 90,
-    "valor": 5
-  },
-  {
-    "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\tests\\test_auditoria_estilos_accesibilidad.py",
-    "tipo": "anidamiento",
-    "nombre": "test_botones_icono_tienen_nombre_accesible",
-    "linea": 116,
-    "valor": 7
-  },
-  {
-    "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\tests\\test_auditoria_estilos_accesibilidad.py",
-    "tipo": "complejidad",
-    "nombre": "test_botones_icono_tienen_nombre_accesible",
-    "linea": 116,
-    "valor": 18
-  },
-  {
-    "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\tests\\test_auditoria_higiene.py",
-    "tipo": "anidamiento",
-    "nombre": "test_cero_alias_de_compatibilidad_historicos",
-    "linea": 19,
-    "valor": 5
-  },
-  {
-    "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\tests\\test_auditoria_nombres_accesibles.py",
-    "tipo": "anidamiento",
-    "nombre": "_extraer_cadenas_propiedades",
-    "linea": 13,
-    "valor": 4
-  },
-  {
-    "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\tests\\test_auditoria_nombres_globales.py",
-    "tipo": "complejidad",
-    "nombre": "reunir_nombres_enlazados",
-    "linea": 23,
-    "valor": 17
-  },
-  {
-    "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\tests\\test_auditoria_textos_interfaz.py",
-    "tipo": "anidamiento",
-    "nombre": "test_textos_sin_raya_larga_interjecciones_ni_voseo",
-    "linea": 23,
-    "valor": 5
-  },
-  {
-    "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\tests\\test_auditoria_textos_interfaz.py",
-    "tipo": "anidamiento",
-    "nombre": "_infracciones_cadenas",
-    "linea": 57,
-    "valor": 5
-  },
-  {
-    "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\tests\\test_auditoria_textos_interfaz.py",
-    "tipo": "complejidad",
-    "nombre": "_infracciones_cadenas",
-    "linea": 57,
-    "valor": 13
-  },
-  {
-    "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\tests\\test_css_class_coverage.py",
-    "tipo": "anidamiento",
-    "nombre": "get_used_semantic_classes",
-    "linea": 10,
-    "valor": 5
-  },
-  {
-    "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\tests\\test_css_class_coverage.py",
-    "tipo": "complejidad",
-    "nombre": "get_used_semantic_classes",
-    "linea": 10,
-    "valor": 11
-  },
-  {
-    "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\tests\\test_gauss_solution_param.py",
-    "tipo": "anidamiento",
-    "nombre": "test_invariants_hold_on_random_systems",
-    "linea": 124,
-    "valor": 4
-  },
-  {
-    "ruta": "C:\\Users\\stive\\calculadora-algebra-uam\\tests\\test_pasos_matrices.py",
-    "tipo": "anidamiento",
-    "nombre": "test_textos_matriciales_sin_raya_larga_ni_voseo",
-    "linea": 114,
-    "valor": 4
   }
 ]

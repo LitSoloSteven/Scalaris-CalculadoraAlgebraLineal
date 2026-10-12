@@ -17,234 +17,248 @@ from src.ai.constantes import (
 )
 
 
-def _json_default(obj: Any) -> Any:
+def _valor_json_predeterminado(objeto: Any) -> Any:
     """Serializador por defecto para fracciones y objetos estructurados."""
     from fractions import Fraction
-    if isinstance(obj, Fraction):
-        return str(obj)
-    if hasattr(obj, "rows") and hasattr(obj, "cols"):
-        return {"rows": getattr(obj, "rows"), "cols": getattr(obj, "cols")}
-    return str(obj)[:LONGITUD_TEXTO_CORTO]
+    if isinstance(objeto, Fraction):
+        return str(objeto)
+    if hasattr(objeto, "rows") and hasattr(objeto, "cols"):
+        return {"filas": getattr(objeto, "rows"), "columnas": getattr(objeto, "cols")}
+    return str(objeto)[:LONGITUD_TEXTO_CORTO]
 
 
-def _build_minimal_fallback(
-    herramienta: str, vista: str, max_caracteres: int
+def construir_contexto_minimo(
+    herramienta: str, vista: str, maximo_caracteres: int
 ) -> str:
-    """Genera bloque de contexto mínimo garantizando no exceder el límite."""
-    t = str(herramienta or "")[:LONGITUD_ETIQUETA_FALLBACK]
-    v = str(vista or "")[:LONGITUD_ETIQUETA_FALLBACK]
-    min_dict = {"v": 1, "tool": t, "view": v, "meta": {"truncated": True}}
-    min_json = json.dumps(min_dict, ensure_ascii=False, separators=(",", ":"))
-    if len(min_json) > max_caracteres:
-        base_len = len('{"v":1,"tool":"","view":"","meta":{"truncated":true}}')
-        disponible = max(0, max_caracteres - base_len)
-        t_len = min(len(t), disponible // 2)
-        v_len = min(len(v), disponible - t_len)
-        min_dict["tool"] = t[:t_len]
-        min_dict["view"] = v[:v_len]
-        min_json = json.dumps(min_dict, ensure_ascii=False, separators=(",", ":"))
-    return f"[CONTEXTO]\n{min_json}\n[/CONTEXTO]"
+    """Acota el bloque completo; lanza ValueError si el límite no admite el esquema mínimo."""
+    nombre_herramienta = str(herramienta or "")[:LONGITUD_ETIQUETA_FALLBACK]
+    nombre_vista = str(vista or "")[:LONGITUD_ETIQUETA_FALLBACK]
+    datos = {"version": 1, "herramienta": nombre_herramienta, "vista": nombre_vista,
+             "metadatos": {"truncado": True}}
+    base = dict(datos, herramienta="", vista="")
+    longitud_base = len(_formatear_bloque_contexto(base))
+    if maximo_caracteres < longitud_base:
+        raise ValueError("El límite de contexto no admite el bloque mínimo de datos.")
+    bloque = _formatear_bloque_contexto(datos)
+    if len(bloque) > maximo_caracteres:
+        disponible = maximo_caracteres - longitud_base
+        longitud_herramienta = min(len(nombre_herramienta), disponible // 2)
+        longitud_vista = min(len(nombre_vista), disponible - longitud_herramienta)
+        datos["herramienta"] = nombre_herramienta[:longitud_herramienta]
+        datos["vista"] = nombre_vista[:longitud_vista]
+        bloque = _formatear_bloque_contexto(datos)
+    while len(bloque) > maximo_caracteres:
+        campo = "herramienta" if len(datos["herramienta"]) > len(datos["vista"]) else "vista"
+        datos[campo] = datos[campo][:-1]
+        bloque = _formatear_bloque_contexto(datos)
+    return bloque
 
 
-def _recorte_eliminar_detalle_foco(c: Any) -> None:
-    """Estrategia 1: Elimina el detalle opcional del paso enfocado."""
-    if c.foco and c.foco.detalle:
-        c.foco = dataclasses.replace(c.foco, detalle=None)
+def _recorte_eliminar_detalle_foco(contexto: Any) -> None:
+    """Elimina el detalle opcional del paso enfocado."""
+    if contexto.foco and contexto.foco.captura.detalle:
+        captura = dataclasses.replace(contexto.foco.captura, detalle=None)
+        contexto.foco = dataclasses.replace(contexto.foco, captura=captura)
 
 
-def _recorte_eliminar_extras_resultado(c: Any) -> None:
-    """Estrategia 2: Elimina pasos y matrices intermedias del resultado."""
-    if c.resultado:
+def _recorte_eliminar_extras_resultado(contexto: Any) -> None:
+    """Elimina pasos y matrices intermedias del resultado."""
+    if contexto.resultado:
         for clave in ("inverse", "steps", "segment_steps", "pasos"):
-            c.resultado.pop(clave, None)
+            contexto.resultado.pop(clave, None)
 
 
-def _reducir_matriz_en_diccionario(mat_dict: dict, ancho_objetivo: int) -> None:
+def _reducir_matriz_en_diccionario(matriz: dict, ancho_objetivo: int) -> None:
     """Reduce la ventana visible de una matriz en el diccionario de entrada."""
-    if not isinstance(mat_dict, dict) or "data" not in mat_dict:
+    if not isinstance(matriz, dict) or "datos" not in matriz:
         return
-    if "window" not in mat_dict:
-        filas_len = len(mat_dict["data"])
-        columnas_len = len(mat_dict["data"][0]) if filas_len else 0
-        mat_dict["window"] = [filas_len, columnas_len]
+    if "ventana" not in matriz:
+        total_filas = len(matriz["datos"])
+        total_columnas = len(matriz["datos"][0]) if total_filas else 0
+        matriz["ventana"] = [total_filas, total_columnas]
 
-    w_r, w_c = mat_dict["window"]
-    nuevo_r = min(w_r, ancho_objetivo)
-    nuevo_c = min(w_c, ancho_objetivo)
-    if nuevo_r == 0:
-        mat_dict.pop("data", None)
-        mat_dict["window"] = [0, 0]
+    filas_visibles, columnas_visibles = matriz["ventana"]
+    nuevas_filas = min(filas_visibles, ancho_objetivo)
+    nuevas_columnas = min(columnas_visibles, ancho_objetivo)
+    if nuevas_filas == 0:
+        matriz.pop("datos", None)
+        matriz["ventana"] = [0, 0]
         return
 
-    mat_dict["data"] = [fila[:nuevo_c] for fila in mat_dict["data"][:nuevo_r]]
-    mat_dict["window"] = [nuevo_r, nuevo_c]
+    matriz["datos"] = [fila[:nuevas_columnas] for fila in matriz["datos"][:nuevas_filas]]
+    matriz["ventana"] = [nuevas_filas, nuevas_columnas]
 
 
-def _reducir_vector_en_diccionario(v: dict, ancho_objetivo: int) -> None:
+def _reducir_vector_en_diccionario(vector: dict, ancho_objetivo: int) -> None:
     """Reduce el vector en diccionario si su longitud excede el objetivo."""
-    if len(v.get("data", [])) <= ancho_objetivo:
+    if len(vector.get("datos", [])) <= ancho_objetivo:
         return
-    v["data"] = v["data"][:ancho_objetivo]
-    if "window" not in v:
-        orientacion = v.get("orientation")
-        v["window"] = [ancho_objetivo, 1] if orientacion == "column" else [1, ancho_objetivo]
+    vector["datos"] = vector["datos"][:ancho_objetivo]
+    if "ventana" not in vector:
+        orientacion = vector.get("orientacion")
+        vector["ventana"] = [ancho_objetivo, 1] if orientacion == "columna" else [1, ancho_objetivo]
 
 
-def _reducir_elemento_entrada(v: Any, ancho_objetivo: int) -> None:
+def _reducir_elemento_entrada(elemento: Any, ancho_objetivo: int) -> None:
     """Reduce matrices o vectores individuales encontrados en la entrada."""
-    if not isinstance(v, dict):
+    if not isinstance(elemento, dict):
         return
-    if "rows" in v and "cols" in v and "data" in v:
-        _reducir_matriz_en_diccionario(v, ancho_objetivo)
-    elif "data" in v and "orientation" in v:
-        _reducir_vector_en_diccionario(v, ancho_objetivo)
+    if "filas" in elemento and "columnas" in elemento and "datos" in elemento:
+        _reducir_matriz_en_diccionario(elemento, ancho_objetivo)
+    elif "datos" in elemento and "orientacion" in elemento:
+        _reducir_vector_en_diccionario(elemento, ancho_objetivo)
 
 
-def _recorte_ventanas_entrada(c: Any, ancho_objetivo: int) -> None:
-    """Estrategia 3: Reduce el tamaño de ventana de matrices o vectores."""
-    if "data" in c.entrada:
-        _reducir_matriz_en_diccionario(c.entrada, ancho_objetivo)
+def _recorte_ventanas_entrada(contexto: Any, ancho_objetivo: int) -> None:
+    """Reduce el tamaño de ventana de matrices o vectores."""
+    if "datos" in contexto.entrada:
+        _reducir_matriz_en_diccionario(contexto.entrada, ancho_objetivo)
         return
-    for v in c.entrada.values():
-        _reducir_elemento_entrada(v, ancho_objetivo)
+    for elemento in contexto.entrada.values():
+        _reducir_elemento_entrada(elemento, ancho_objetivo)
 
 
-def _recorte_resultado_a_estado(c: Any) -> None:
-    """Estrategia 4: Colapsa el resultado a únicamente el estado y mensaje esencial."""
-    if not c.resultado:
+def _recorte_resultado_a_estado(contexto: Any) -> None:
+    """Conserva únicamente el estado y mensaje esencial del resultado."""
+    if not contexto.resultado:
         return
-    estado = c.resultado.get("status", "")
+    estado = contexto.resultado.get("status", "")
     linea = (
-        c.resultado.get("message")
-        or c.resultado.get("clasificacion")
+        contexto.resultado.get("message")
+        or contexto.resultado.get("clasificacion")
         or ""
     )
-    c.resultado = {"status": estado}
+    contexto.resultado = {"status": estado}
     if linea:
-        c.resultado["message"] = linea
+        contexto.resultado["message"] = linea
 
 
-def _conservar_solo_primera_fila(dic: dict) -> None:
+def _conservar_solo_primera_fila(filas: dict) -> None:
     """Conserva únicamente la primera fila del diccionario dejando las demás fuera."""
-    if len(dic) <= 1:
+    if len(filas) <= 1:
         return
-    primer_clave = next(iter(dic.keys()))
-    for k in list(dic.keys()):
-        if k != primer_clave:
-            dic.pop(k, None)
+    primera_clave = next(iter(filas.keys()))
+    for clave in list(filas.keys()):
+        if clave != primera_clave:
+            filas.pop(clave, None)
 
 
-def _recorte_filas_foco(c: Any) -> None:
-    """Estrategia 5: Conserva únicamente la primera fila antes y después en el foco."""
-    if not c.foco:
+def _recorte_filas_foco(contexto: Any) -> None:
+    """Conserva únicamente la primera fila antes y después en el foco."""
+    if not contexto.foco:
         return
-    _conservar_solo_primera_fila(c.foco.filas_antes)
-    _conservar_solo_primera_fila(c.foco.filas_despues)
+    _conservar_solo_primera_fila(contexto.foco.captura.filas_antes)
+    _conservar_solo_primera_fila(contexto.foco.captura.filas_despues)
 
 
-def _truncar_filas_a_4_columnas(dic: dict) -> None:
+def _truncar_filas_a_4_columnas(filas: dict) -> None:
     """Trunca las listas de valores de cada fila a 4 elementos."""
-    for k in dic:
-        dic[k] = dic[k][:4]
+    for clave in filas:
+        filas[clave] = filas[clave][:4]
 
 
-def _recorte_columnas_foco(c: Any) -> None:
-    """Estrategia 6: Trunca celdas de filas a 4 elementos y remueve columnas del foco."""
-    if not c.foco:
+def _recorte_columnas_foco(contexto: Any) -> None:
+    """Trunca celdas de filas a cuatro elementos y retira el rango de columnas del foco."""
+    if not contexto.foco:
         return
-    _truncar_filas_a_4_columnas(c.foco.filas_antes)
-    _truncar_filas_a_4_columnas(c.foco.filas_despues)
-    c.foco = dataclasses.replace(c.foco, columnas=None)
+    _truncar_filas_a_4_columnas(contexto.foco.captura.filas_antes)
+    _truncar_filas_a_4_columnas(contexto.foco.captura.filas_despues)
+    captura = dataclasses.replace(contexto.foco.captura, columnas=None)
+    contexto.foco = dataclasses.replace(contexto.foco, captura=captura)
 
 
 def _construir_foco_diccionario(foco: Any) -> dict:
-    """Serializa el objeto StepRef a diccionario para el contexto."""
-    f = {
-        "index": foco.indice,
+    """Serializa la referencia y su captura sin incluir campos opcionales vacíos."""
+    datos = {
+        "indice": foco.indice,
         "total": foco.total,
-        "kind": foco.tipo,
-        "op": foco.operacion,
-        "rows_before": foco.filas_antes,
-        "rows_after": foco.filas_despues,
+        "tipo": foco.tipo,
+        "operacion": foco.operacion,
+        "filas_antes": foco.captura.filas_antes,
+        "filas_despues": foco.captura.filas_despues,
     }
-    if foco.columnas:
-        f["cols"] = list(foco.columnas)
-    if foco.detalle:
-        f["detail"] = foco.detalle
-    return f
+    if foco.captura.columnas:
+        datos["columnas"] = list(foco.captura.columnas)
+    if foco.captura.detalle:
+        datos["detalle"] = foco.captura.detalle
+    return datos
 
 
-def _construir_meta_contexto(c: Any, truncado: bool) -> dict:
+def _construir_meta_contexto(contexto: Any, truncado: bool) -> dict:
     """Construye metadatos de ventana, obsolescencia y truncado."""
-    from src.ai.context import window_note_from
+    from src.ai.matrices_contexto import generar_nota_ventana
 
-    meta = {}
-    if c.nota_ventana:
-        meta["window"] = c.nota_ventana
-    elif isinstance(c.entrada, dict):
-        wn = window_note_from(*c.entrada.values())
-        if wn:
-            meta["window"] = wn
-    if c.desactualizado:
-        meta["stale"] = True
+    metadatos = {}
+    if contexto.nota_ventana:
+        metadatos["ventana"] = contexto.nota_ventana
+    elif isinstance(contexto.entrada, dict):
+        nota = generar_nota_ventana(*contexto.entrada.values())
+        if nota:
+            metadatos["ventana"] = nota
+    if contexto.desactualizado:
+        metadatos["desactualizado"] = True
     if truncado:
-        meta["truncated"] = True
-    return meta
+        metadatos["truncado"] = True
+    return metadatos
 
 
-def _construir_diccionario_contexto(c: Any, truncado: bool) -> dict:
+def _construir_diccionario_contexto(contexto: Any, truncado: bool) -> dict:
     """Construye el diccionario de datos para serialización JSON."""
-    d = {
-        "v": 1,
-        "tool": c.herramienta,
-        "view": c.vista,
-        "input": c.entrada,
+    datos = {
+        "version": 1,
+        "herramienta": contexto.herramienta,
+        "vista": contexto.vista,
+        "entrada": contexto.entrada,
     }
-    if c.resultado is not None:
-        d["result"] = c.resultado
-    if c.foco is not None:
-        d["focus"] = _construir_foco_diccionario(c.foco)
-    meta = _construir_meta_contexto(c, truncado)
-    if meta:
-        d["meta"] = meta
-    return d
+    if contexto.resultado is not None:
+        datos["resultado"] = contexto.resultado
+    if contexto.foco is not None:
+        datos["foco"] = _construir_foco_diccionario(contexto.foco)
+    metadatos = _construir_meta_contexto(contexto, truncado)
+    if metadatos:
+        datos["metadatos"] = metadatos
+    return datos
 
 
-def _formatear_cadena_contexto(c: Any, truncado: bool = False) -> str:
+def _formatear_cadena_contexto(contexto: Any, truncado: bool = False) -> str:
     """Genera el bloque delimitado [CONTEXTO] en formato JSON."""
-    datos = _construir_diccionario_contexto(c, truncado)
-    res = json.dumps(
-        datos, ensure_ascii=False, separators=(",", ":"), default=_json_default
+    datos = _construir_diccionario_contexto(contexto, truncado)
+    return _formatear_bloque_contexto(datos)
+
+
+def _formatear_bloque_contexto(datos: dict) -> str:
+    contenido = json.dumps(
+        datos, ensure_ascii=False, separators=(",", ":"), default=_valor_json_predeterminado
     )
-    return f"[CONTEXTO]\n{res}\n[/CONTEXTO]"
+    return f"[CONTEXTO]\n{contenido}\n[/CONTEXTO]"
 
 
 def ejecutar_cascada_recortes(
-    ctx: Any, *, max_chars: int = MAXIMO_CARACTERES_CONTEXTO
+    contexto: Any, *, maximo_caracteres: int = MAXIMO_CARACTERES_CONTEXTO
 ) -> str:
     """Aplica la cascada ordenada de estrategias de recorte hasta cumplir el límite."""
-    contexto_trabajo = copy.deepcopy(ctx)
+    contexto_trabajo = copy.deepcopy(contexto)
     cadena = _formatear_cadena_contexto(contexto_trabajo, truncado=False)
-    if len(cadena) <= max_chars:
+    if len(cadena) <= maximo_caracteres:
         return cadena
 
     pasos_recorte = [
-        lambda c: _recorte_eliminar_detalle_foco(c),
-        lambda c: _recorte_eliminar_extras_resultado(c),
-        lambda c: _recorte_ventanas_entrada(c, 4),
-        lambda c: _recorte_ventanas_entrada(c, 3),
-        lambda c: _recorte_ventanas_entrada(c, 0),
-        lambda c: _recorte_resultado_a_estado(c),
-        lambda c: _recorte_filas_foco(c),
-        lambda c: _recorte_columnas_foco(c),
+        _recorte_eliminar_detalle_foco,
+        _recorte_eliminar_extras_resultado,
+        lambda ejercicio: _recorte_ventanas_entrada(ejercicio, 4),
+        lambda ejercicio: _recorte_ventanas_entrada(ejercicio, 3),
+        lambda ejercicio: _recorte_ventanas_entrada(ejercicio, 0),
+        _recorte_resultado_a_estado,
+        _recorte_filas_foco,
+        _recorte_columnas_foco,
     ]
 
     for aplicar_estrategia in pasos_recorte:
         aplicar_estrategia(contexto_trabajo)
         cadena = _formatear_cadena_contexto(contexto_trabajo, truncado=True)
-        if len(cadena) <= max_chars:
+        if len(cadena) <= maximo_caracteres:
             return cadena
 
-    return _build_minimal_fallback(
-        contexto_trabajo.herramienta, contexto_trabajo.vista, max_chars
+    return construir_contexto_minimo(
+        contexto_trabajo.herramienta, contexto_trabajo.vista, maximo_caracteres
     )

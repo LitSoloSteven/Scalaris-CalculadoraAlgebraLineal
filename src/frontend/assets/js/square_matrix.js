@@ -14,8 +14,8 @@
         resolve();
         return;
       }
-      var sel = 'input[data-matrix-id="' + matrixId + '"][data-matrix-row="' + idx + '"], ' +
-        'input[data-matrix-id="' + matrixId + '"][data-matrix-col="' + idx + '"]';
+      var sel = 'input[data-matriz-identificador="' + matrixId + '"][data-matriz-fila="' + idx + '"], ' +
+        'input[data-matriz-identificador="' + matrixId + '"][data-matriz-columna="' + idx + '"]';
       var frames = mode === 'remove'
         ? [{ opacity: 1, transform: 'scale(1)' }, { opacity: 0, transform: 'scale(0.95) translateY(-4px)' }]
         : [{ opacity: 0, transform: 'scale(0.95) translateY(4px)' }, { opacity: 1, transform: 'scale(1)' }];

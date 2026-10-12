@@ -184,7 +184,7 @@ class LinearSystemsUI(
 
     def _construir_datos_ia_desde_input(self) -> tuple[bool, str, dict, dict]:
         """Extrae y formatea datos del sistema para el contexto IA."""
-        from src.ai.context import describir_matriz, sanitize_user_string
+        from src.ai.contexto import describir_matriz, sanear_cadena_usuario
         empty = True
         label = "Sistema Lineal"
         input_data = {}
@@ -192,7 +192,7 @@ class LinearSystemsUI(
         entrada_actual = {"mode": self.mode_tabs.value, "method": method_val}
 
         if self.mode_tabs.value == 'Ecuaciones':
-            lineas = [sanitize_user_string(inp.value, 120) for inp in self.ecuaciones_inputs if inp.value]
+            lineas = [sanear_cadena_usuario(inp.value, 120) for inp in self.ecuaciones_inputs if inp.value]
             entrada_actual["ecuaciones"] = [inp.value for inp in self.ecuaciones_inputs]
             if lineas:
                 empty = False
@@ -206,33 +206,34 @@ class LinearSystemsUI(
                 empty = False
                 n_eq, n_vars = len(matrix_A_vals), len(matrix_A_vals[0])
                 label = f"Sistema {n_eq}×{n_vars} (matriz)"
-                data_a = [[sanitize_user_string(c, 32) for c in r] for r in matrix_A_vals]
-                data_b = [[sanitize_user_string(v, 32)] for v in vector_b_vals]
+                data_a = [[sanear_cadena_usuario(c, 32) for c in r] for r in matrix_A_vals]
+                data_b = [[sanear_cadena_usuario(v, 32)] for v in vector_b_vals]
                 input_data = {"A": describir_matriz(data_a), "b": describir_matriz(data_b)}
 
         return empty, label, input_data, entrada_actual
 
     def obtener_contexto_ia(self):
-        from src.ai.context import AIContext, is_stale, window_note_from
+        from src.ai.contexto import ContextoIA, EstadoContexto, generar_nota_ventana
+        from src.ai.huellas import esta_desactualizado
         empty, label, input_data, entrada_actual = self._construir_datos_ia_desde_input()
 
         if empty:
-            return AIContext("sistemas", "Sistemas de ecuaciones", label, {}, empty=True)
+            return ContextoIA("sistemas", "Sistemas de ecuaciones", label, {}, estado=EstadoContexto(vacio=True))
 
-        ctx = AIContext("sistemas", "Sistemas de ecuaciones", label, input_data)
+        ctx = ContextoIA("sistemas", "Sistemas de ecuaciones", label, input_data)
         if "A" in input_data and "b" in input_data:
-            ctx.window_note = window_note_from(input_data["A"], input_data["b"])
+            ctx.nota_ventana = generar_nota_ventana(input_data["A"], input_data["b"])
 
-        ctx.stale = is_stale(entrada_actual, getattr(self, '_result_fp', None))
+        ctx.desactualizado = esta_desactualizado(entrada_actual, getattr(self, '_result_fp', None))
         if getattr(self, 'last_result', None):
-            if ctx.stale:
-                ctx.result = None
+            if ctx.desactualizado:
+                ctx.resultado = None
             else:
                 res = self.last_result
-                ctx.result = {"status": res.get("status", "ERROR")}
+                ctx.resultado = {"status": res.get("status", "ERROR")}
                 msg = res.get("classification") or res.get("message")
                 if msg:
-                    ctx.result["message"] = msg
+                    ctx.resultado["message"] = msg
 
         return ctx
 
@@ -255,7 +256,7 @@ class LinearSystemsUI(
                 flags.add("m_gt_n")
                 
             res = getattr(self, 'last_result', None)
-            if res and not getattr(self.obtener_contexto_ia(), 'stale', True):
+            if res and not getattr(self.obtener_contexto_ia(), 'desactualizado', True):
                 st = res.get("status")
                 if st == "UNIQUE_SOLUTION": state = "unique"
                 elif st == "INFINITE_SOLUTIONS": state = "infinite"

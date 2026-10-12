@@ -8,6 +8,7 @@ from src.backend.resolutores.operaciones_matrices.formateadores import matriz_a_
 from src.backend.resolutores.operaciones_vectores.combinacion_lineal import (
     ResolutorCombinacionLineal,
 )
+from src.backend.resolutores.operaciones_vectores.captura import construir_vector_desde_dict
 from src.backend.resolutores.operaciones_vectores.operaciones import (
     ResolutorOperacionesVectores,
 )
@@ -25,23 +26,6 @@ from src.frontend.controladores.utilidades import (
 )
 
 logger = logging.getLogger(__name__)
-
-
-def construir_vector_desde_dict(vec_dict: dict) -> Matriz:
-    """Instancia una Matriz columna o fila a partir del diccionario de entrada."""
-    orientacion = vec_dict.get("orientation", "column")
-    datos_crudos = vec_dict.get("data", [])
-
-    valores_parseados = []
-    for val_str in datos_crudos:
-        exito, val, err = ValidadorMatriz.parsear_numero_exacto(str(val_str))
-        if not exito:
-            raise ValueError(f"Valor inválido: {val_str}. {err}")
-        valores_parseados.append(val)
-
-    if orientacion == "column":
-        return Matriz(len(valores_parseados), 1, [[v] for v in valores_parseados])
-    return Matriz(1, len(valores_parseados), [valores_parseados])
 
 
 def _asegurar_latex_en_paso(paso: dict) -> None:
@@ -96,9 +80,9 @@ class ControladorOperacionesVectores:
 
             resolutor = ResolutorOperacionesVectores()
             if op == "add":
-                res = resolutor.sumar(v1, v2, name1="v_1", name2="v_2", strict=estricto)
+                res = resolutor.sumar(v1, v2, nombre1="v_1", nombre2="v_2", estricto=estricto)
             else:
-                res = resolutor.restar(v1, v2, name1="v_1", name2="v_2", strict=estricto)
+                res = resolutor.restar(v1, v2, nombre1="v_1", nombre2="v_2", estricto=estricto)
 
             for paso in res.get("steps", []):
                 paso.pop("matrix", None)
@@ -129,7 +113,7 @@ class ControladorOperacionesVectores:
 
             v = construir_vector_desde_dict(datos.get("v", {}))
             resolutor = ResolutorOperacionesVectores()
-            res = resolutor.multiplicar_escalar(k, v, name="v", result_name="w")
+            res = resolutor.multiplicar_escalar(k, v, nombre="v", nombre_resultado="w")
 
             for paso in res.get("steps", []):
                 paso.pop("matrix", None)

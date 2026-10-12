@@ -152,14 +152,14 @@ class LinearSystemsResultsMixin:
         ui.run_javascript("if(window.scalaris && window.scalaris.reproducirAnimacionResultado) window.scalaris.reproducirAnimacionResultado('resultados-container');")
         ui.run_javascript("setTimeout(() => { const el = document.getElementById('resultados-container'); if(el) el.scrollIntoView({behavior: 'smooth', block: 'start'}) }, (window.scalaris?.movimiento?.medio || 240));")
 
-        from src.ai.context import fingerprint
+        from src.ai.huellas import calcular_huella
         entrada = {"mode": self.mode_tabs.value, "method": self.method_tabs.value}
         if self.mode_tabs.value == 'Ecuaciones':
             entrada["ecuaciones"] = [inp.value for inp in self.ecuaciones_inputs]
         else:
             entrada["A"] = matrix_A_vals
             entrada["b"] = vector_b_vals
-        self._result_fp = fingerprint(entrada)
+        self._result_fp = calcular_huella(entrada)
         p = getattr(self, 'ai_panel', None)
         if p and hasattr(p, 'programar_actualizacion_contexto'):
             p.programar_actualizacion_contexto()

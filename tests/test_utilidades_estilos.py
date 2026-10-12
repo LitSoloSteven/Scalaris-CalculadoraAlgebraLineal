@@ -4,6 +4,7 @@ import pytest
 from tests.comun_estilos import (
     analizar_tokens, hexadecimal_a_rgb, luminancia_relativa,
     razon_contraste, bloque_css, buscar_cierre_bloque,
+    extraer_clases_semanticas,
 )
 
 
@@ -45,3 +46,11 @@ def test_bloques_anidados_y_bloque_sin_cierre():
     assert bloque_css("@media { .a { opacity: 0; } }", "@media") == " .a { opacity: 0; } "
     with pytest.raises(AssertionError, match="Bloque CSS sin cerrar"):
         buscar_cierre_bloque(".a {", 3)
+
+
+def test_clases_semanticas_filtran_prefijos_y_limpian_interpolaciones():
+    """El lector mantiene los prefijos semánticos y descarta clases ajenas."""
+    contenido = 'class="hub-card nav-item glosa-panel flex hub-{clave}"'
+    assert extraer_clases_semanticas(contenido, r'class="([^"]+)"') == {
+        "hub-card", "nav-item", "glosa-panel", "hub-clave",
+    }

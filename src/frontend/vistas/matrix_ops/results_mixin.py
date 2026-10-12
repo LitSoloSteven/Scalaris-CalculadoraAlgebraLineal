@@ -90,11 +90,11 @@ class MatrixOpsResultsMixin:
             "if(el) el.scrollIntoView({behavior: 'smooth', block: 'start'}) }, (window.scalaris?.movimiento?.medio || 240));"
         )
 
-        self._actualizar_fingerprint_ia(expresion)
+        self._actualizar_huella_ia(expresion)
 
-    def _actualizar_fingerprint_ia(self, expresion: str):
-        """Calcula el fingerprint de entrada y programa la actualización de Glosa."""
-        from src.ai.context import fingerprint
+    def _actualizar_huella_ia(self, expresion: str):
+        """Registra la huella de entrada y programa la actualización de Glosa."""
+        from src.ai.huellas import calcular_huella
 
         entrada = {
             "matrices": {
@@ -103,7 +103,7 @@ class MatrixOpsResultsMixin:
             },
             "expresion": (expresion or "").strip(),
         }
-        self._result_fp = fingerprint(entrada)
+        self._result_fp = calcular_huella(entrada)
         p = getattr(self, 'ai_panel', None)
         if p and hasattr(p, 'programar_actualizacion_contexto'):
             p.programar_actualizacion_contexto()

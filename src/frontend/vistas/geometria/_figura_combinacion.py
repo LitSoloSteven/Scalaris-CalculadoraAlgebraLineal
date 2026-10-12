@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from typing import Any
-from src.frontend.theme import PALETA_GRAFICOS, COLOR_MARCADOR_CLARO, COLOR_MARCADOR_BORDE, COLORES_TEXTO
+from src.frontend.tema import PALETA_GRAFICOS, COLOR_MARCADOR_CLARO, COLOR_MARCADOR_BORDE, COLORES_TEXTO
 from ._figuras_comunes import disposicion_2d, disposicion_3d
 
 

@@ -191,8 +191,8 @@ class InverseOpsResultsMixin:
             "document.getElementById('resultados-inv')?.scrollIntoView({behavior: 'smooth', block: 'start'});"
         )
 
-        from src.ai.context import fingerprint
-        self._result_fp = fingerprint({"data": self.square_panel.obtener_datos_matriz()})
+        from src.ai.huellas import calcular_huella
+        self._result_fp = calcular_huella({"data": self.square_panel.obtener_datos_matriz()})
         p = getattr(self, 'ai_panel', None)
         if p and hasattr(p, 'programar_actualizacion_contexto'):
             p.programar_actualizacion_contexto()

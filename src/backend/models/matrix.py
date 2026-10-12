@@ -1,19 +1,12 @@
 from fractions import Fraction
 from typing import Union
 
-from src.backend.constants import (
-    ZERO_EPSILON,
-    FRACTION_RECONSTRUCTION_LIMIT,
-    MAX_NUMBER_STRING_LENGTH,
-    MSG_SCI_NOTATION_NOT_SUPPORTED,
-    MSG_NUMBER_TOO_LONG,
-)
+from src.backend.constants import ZERO_EPSILON
 from src.backend.exceptions import MatrixDataError
 
 from src.backend.modelos.matriz import Matriz
 
 Numeric = Union[float, Fraction, int]
-NumericLike = Union[Numeric, str]
 
 
 class Matrix(Matriz):
@@ -31,49 +24,6 @@ class Matrix(Matriz):
         self.rows = self.filas
         self.cols = self.columnas
         self.data = self.datos
-
-    @staticmethod
-    def _normalizar_valor(valor: NumericLike) -> Numeric:
-        """Conserva Fraction/int intactos. Parsea strings como Fraction exacto
-        (formato 'a/b' o decimal). Convierte float simple a Fraction.
-
-        Los strings NO pasan por limit_denominator: si el usuario escribió
-        '1/1001', se respeta el denominador 1001, no se trunca a 1/1000.
-
-        Rechaza (DoS):
-          - Strings con 'e'/'E' → notación científica, prohibida.
-          - Strings con longitud > MAX_NUMBER_STRING_LENGTH.
-
-        Ambos chequeos se aplican ANTES de tocar Fraction, en O(1).
-        """
-        if isinstance(valor, (Fraction, int)):
-            return valor
-
-        if isinstance(valor, str):
-            val_limpio = valor.strip()
-            if not val_limpio:
-                return Fraction(0)
-            if "e" in val_limpio or "E" in val_limpio:
-                raise MatrixDataError(MSG_SCI_NOTATION_NOT_SUPPORTED)
-            if len(val_limpio) > MAX_NUMBER_STRING_LENGTH:
-                raise MatrixDataError(MSG_NUMBER_TOO_LONG)
-            try:
-                return Fraction(val_limpio)
-            except (ValueError, ZeroDivisionError):
-                raise MatrixDataError(f"Valor no parseable como número: '{valor}'.")
-
-        if isinstance(valor, float):
-            try:
-                frac = Fraction(valor).limit_denominator(FRACTION_RECONSTRUCTION_LIMIT)
-                if abs(float(frac) - valor) < ZERO_EPSILON:
-                    return frac
-            except (ValueError, OverflowError):
-                pass
-            return valor
-
-        raise MatrixDataError(f"Tipo no soportado en celda: {type(valor).__name__}.")
-
-    _normalize_val = _normalizar_valor
 
     def _verificar_limites(self, fila: int, columna: int) -> None:
         if not (0 <= fila < self.rows and 0 <= columna < self.cols):

@@ -4,7 +4,7 @@ import logging
 import re
 from typing import Any
 
-from src.ai.context import sanitize_user_string
+from src.ai.contexto import sanear_cadena_usuario
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_matrices.evaluador import (
     EvaluadorExpresionesMatriciales,
@@ -78,7 +78,7 @@ def _extraer_ejemplo_celda(pasos_celda: Any) -> str | None:
         return None
     for pc in pasos_celda:
         if isinstance(pc, dict) and pc.get("detail_latex") and pc.get("description"):
-            return sanitize_user_string(pc["description"], 120)
+            return sanear_cadena_usuario(pc["description"], 120)
     return None
 
 

@@ -111,7 +111,7 @@ class MatrixCapturePanel:
     @staticmethod
     def inject_scripts() -> None:
         """Inyecta el script asociado para animaciones de celdas matriciales."""
-        ui.add_head_html('<script src="/assets/js/matrix_capture.js"></script>')
+        ui.add_head_html('<script src="/assets/js/captura_matrices.js"></script>')
 
     def get_next_available_name(self) -> str | None:
         """Obtiene la primera letra disponible del abecedario para nombrar una nueva matriz."""
@@ -157,8 +157,8 @@ class MatrixCapturePanel:
 
         self._deshabilitar_botones_matriz(mat)
         if delta_m < 0 or delta_n < 0:
-            target = f"[data-matrix-row='{mat['m'] - 1}']" if delta_m < 0 else f"[data-matrix-col='{mat['n'] - 1}']"
-            await animar_salida_cuadricula(target, es_fila=(delta_m < 0), indice=mat["m"] - 1, nombre_matriz=name)
+            target = f"[data-matriz-fila='{mat['m'] - 1}']" if delta_m < 0 else f"[data-matriz-columna='{mat['n'] - 1}']"
+            await animar_salida_cuadricula(target, nombre_matriz=name)
 
         if delta_m:
             mat["m"] = nuevo_m
@@ -169,7 +169,7 @@ class MatrixCapturePanel:
         self.renderizar_cuadricula(name)
 
         if delta_m > 0 or delta_n > 0:
-            target = f"[data-matrix-row='{mat['m'] - 1}']" if delta_m > 0 else f"[data-matrix-col='{mat['n'] - 1}']"
+            target = f"[data-matriz-fila='{mat['m'] - 1}']" if delta_m > 0 else f"[data-matriz-columna='{mat['n'] - 1}']"
             await animar_entrada_cuadricula(target, nombre_matriz=name)
 
         if self.on_data_change:

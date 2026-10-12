@@ -26,6 +26,17 @@ class Matriz:
         datos: list[list[Numerico]] | None = None,
     ):
         """Inicializa la matriz verificando dimensiones y normalizando datos."""
+        self._validar_dimensiones_modelo(filas, columnas)
+        self.filas = filas
+        self.columnas = columnas
+        if datos is not None:
+            self._validar_forma_datos(datos, filas, columnas)
+            self.datos = [[self._normalizar_valor(valor) for valor in fila] for fila in datos]
+        else:
+            self.datos = [[Fraction(0) for _ in range(columnas)] for _ in range(filas)]
+
+    @staticmethod
+    def _validar_dimensiones_modelo(filas: int, columnas: int) -> None:
         if not isinstance(filas, int) or not isinstance(columnas, int):
             raise ErrorDatosMatriz(
                 f"Las dimensiones deben ser enteros (filas={filas!r}, columnas={columnas!r})."
@@ -35,22 +46,17 @@ class Matriz:
                 f"Las dimensiones deben ser positivas (recibido {filas}×{columnas})."
             )
 
-        self.filas = filas
-        self.columnas = columnas
-
-        if datos is not None:
-            if len(datos) != filas:
+    @staticmethod
+    def _validar_forma_datos(datos: list, filas: int, columnas: int) -> None:
+        if len(datos) != filas:
+            raise ErrorDatosMatriz(
+                f"Se esperaban {filas} filas; datos trae {len(datos)}."
+            )
+        for i, fila in enumerate(datos):
+            if len(fila) != columnas:
                 raise ErrorDatosMatriz(
-                    f"Se esperaban {filas} filas; datos trae {len(datos)}."
+                    f"Fila {i + 1} tiene {len(fila)} columnas; se esperaban {columnas}."
                 )
-            for i, fila in enumerate(datos):
-                if len(fila) != columnas:
-                    raise ErrorDatosMatriz(
-                        f"Fila {i + 1} tiene {len(fila)} columnas; se esperaban {columnas}."
-                    )
-            self.datos = [[self._normalizar_valor(val) for val in fila] for fila in datos]
-        else:
-            self.datos = [[Fraction(0) for _ in range(columnas)] for _ in range(filas)]
 
     @staticmethod
     def _normalizar_cadena(valor: str) -> Numerico:

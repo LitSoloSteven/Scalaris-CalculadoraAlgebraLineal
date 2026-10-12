@@ -6,7 +6,6 @@ error HTTP (401, 403, 429, 5xx) en decisiones de reintento, conmutación o final
 
 from dataclasses import dataclass
 import logging
-from typing import Any
 import requests
 
 from src.ai.constantes import (
@@ -14,12 +13,15 @@ from src.ai.constantes import (
     TIEMPO_RESTANTE_MINIMO_PARA_REINTENTO,
 )
 
-logger = logging.getLogger(__name__)
+from src.ai.respuestas import ResultadoIA, TipoErrorIA
+from src.ai.textos import ERROR_SERVICIO
+
+registro = logging.getLogger(__name__)
 
 
 def procesar_respuesta_exitosa(
-    respuesta: requests.Response, modelo: str, ai_result_cls: type, error_kind_cls: type
-) -> Any:
+    respuesta: requests.Response, modelo: str
+) -> ResultadoIA:
     """Parsea el JSON de una respuesta HTTP 200 y extrae el texto generado."""
     try:
         datos = respuesta.json()
@@ -30,20 +32,16 @@ def procesar_respuesta_exitosa(
             else None
         )
         if contenido:
-            return ai_result_cls(True, contenido, model=modelo)
-        logger.error("Respuesta de IA vacía con estado 200. Modelo: %s", modelo)
-        return ai_result_cls(
+            return ResultadoIA(True, contenido, modelo=modelo)
+        registro.error("Respuesta de IA vacía con estado 200. Modelo: %s", modelo)
+        return ResultadoIA(
             False,
             "Glosa no devolvió una respuesta. Reformula la pregunta o inténtalo de nuevo.",
-            error_kind_cls.EMPTY,
+            TipoErrorIA.VACIO,
         )
     except Exception:
-        logger.error("La respuesta de IA no contiene un JSON válido")
-        return ai_result_cls(
-            False,
-            "Glosa no pudo responder ahora. Vuelve a intentarlo en un momento.",
-            error_kind_cls.SERVICE,
-        )
+        registro.error("La respuesta de IA no contiene un JSON válido")
+        return ResultadoIA(False, ERROR_SERVICIO, TipoErrorIA.SERVICIO)
 
 
 @dataclass
@@ -51,62 +49,75 @@ class ContextoIntento:
     """Metadatos de la iteración actual en la cascada de llamadas a modelos."""
 
     intento: int
-    idx_modelo: int
+    indice_modelo: int
     tiempo_restante: float
     total_modelos: int
 
 
 def _manejar_limite_tasa(
-    ctx: ContextoIntento, ai_result_cls: type, error_kind_cls: type
-) -> tuple[Any, str]:
-    """Determina si un error 429 debe reintentarse, pasar a fallback o terminar."""
+    contexto: ContextoIntento,
+) -> tuple[ResultadoIA | None, str]:
+    """Determina si el límite permite reintentar, usar la reserva o terminar."""
     if (
-        ctx.intento == 0
-        and ctx.idx_modelo == 0
-        and ctx.tiempo_restante > TIEMPO_RESTANTE_MINIMO_PARA_REINTENTO
+        contexto.intento == 0
+        and contexto.indice_modelo == 0
+        and contexto.tiempo_restante > TIEMPO_RESTANTE_MINIMO_PARA_REINTENTO
     ):
         return None, "reintentar"
-    if ctx.idx_modelo == 0 and ctx.total_modelos > 1:
-        return None, "fallback"
-    res = ai_result_cls(
+    if contexto.indice_modelo == 0 and contexto.total_modelos > 1:
+        return None, "reserva"
+    resultado = ResultadoIA(
         False,
         "Glosa está recibiendo muchas consultas ahora. Espera unos segundos y vuelve a intentarlo.",
-        error_kind_cls.RATE_LIMIT,
+        TipoErrorIA.LIMITE_PETICIONES,
     )
-    return res, "terminar"
+    return resultado, "terminar"
 
 
 def clasificar_error_http(
-    codigo: int,
-    modelo: str,
-    ctx: ContextoIntento,
-    *,
-    ai_result_cls: type,
-    error_kind_cls: type,
-) -> tuple[Any, str]:
-    """Clasifica errores HTTP en acción ('reintentar', 'fallback', 'terminar') o resultado."""
+    codigo: int, modelo: str, contexto: ContextoIntento,
+) -> tuple[ResultadoIA | None, str]:
+    """Clasifica el estado HTTP en reintento, reserva o resultado definitivo."""
     if codigo in (401, 403):
-        logger.error("Error de autenticación con OpenRouter: estado %s", codigo)
-        res = ai_result_cls(
+        registro.error("Error de autenticación con OpenRouter: estado %s", codigo)
+        resultado = ResultadoIA(
             False,
             "Glosa no pudo autenticarse con el servicio de IA. Avisa a quien administra Scalaris.",
-            error_kind_cls.AUTH,
+            TipoErrorIA.AUTENTICACION,
         )
-        return res, "terminar"
+        return resultado, "terminar"
 
     if codigo == 429:
-        logger.warning("Límite de tasa en %s", modelo)
-        return _manejar_limite_tasa(ctx, ai_result_cls, error_kind_cls)
+        registro.warning("Límite de tasa en %s", modelo)
+        return _manejar_limite_tasa(contexto)
 
     if codigo in CODIGOS_ESTADO_TRANSITORIOS:
-        logger.warning("Error transitorio de OpenRouter: estado %s", codigo)
+        registro.warning("Error transitorio de OpenRouter: estado %s", codigo)
         if (
-            ctx.intento == 0
-            and ctx.idx_modelo == 0
-            and ctx.tiempo_restante > TIEMPO_RESTANTE_MINIMO_PARA_REINTENTO
+            contexto.intento == 0
+            and contexto.indice_modelo == 0
+            and contexto.tiempo_restante > TIEMPO_RESTANTE_MINIMO_PARA_REINTENTO
         ):
             return None, "reintentar"
-        return None, "fallback"
+        return None, "reserva"
 
-    logger.error("Error no manejado de OpenRouter: estado %s", codigo)
-    return None, "fallback"
+    registro.error("Error no manejado de OpenRouter: estado %s", codigo)
+    return None, "reserva"
+
+
+def clasificar_excepcion_red(
+    error: Exception, modelo: str, indice_modelo: int, total_modelos: int,
+) -> tuple[ResultadoIA | None, bool]:
+    """Clasifica fallos de transporte sin copiar detalles privados al registro."""
+    if isinstance(error, requests.exceptions.Timeout):
+        registro.warning("Tiempo de espera agotado al contactar %s", modelo)
+        if indice_modelo == 0 and total_modelos > 1:
+            return None, False
+        mensaje = "Glosa tardó demasiado en responder. Vuelve a intentarlo en unos segundos."
+        return ResultadoIA(False, mensaje, TipoErrorIA.TIEMPO_AGOTADO), True
+    if isinstance(error, requests.exceptions.ConnectionError):
+        registro.error("Error de conexión al contactar %s", modelo)
+        mensaje = "No hay conexión con el servicio de IA. Revisa tu red y vuelve a intentarlo."
+        return ResultadoIA(False, mensaje, TipoErrorIA.RED), True
+    registro.error("Fallo de red no clasificado al contactar el servicio de IA")
+    return None, False

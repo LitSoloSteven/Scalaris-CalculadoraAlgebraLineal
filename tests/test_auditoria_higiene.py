@@ -2,6 +2,7 @@
 import ast
 from tests.comun import RAIZ
 from tests.rutas_auditadas import RUTAS_AUDITADAS
+from tests.comun_recorrido_codigo import nombres_de_asignaciones
 
 
 def test_higiene_sin_scripts_residuales():
@@ -25,10 +26,7 @@ def test_cero_alias_de_compatibilidad_historicos():
         if ruta.suffix != ".py":
             continue
         arbol = ast.parse(ruta.read_text(encoding="utf-8"), filename=str(ruta))
-        for nodo in ast.walk(arbol):
-            if isinstance(nodo, ast.Assign):
-                for destino in nodo.targets:
-                    if isinstance(destino, ast.Name):
-                        assert destino.id not in nombres_alias_prohibidos, (
-                            f"Alias prohibido '{destino.id}' detectado en {ruta.name}"
-                        )
+        for destino in nombres_de_asignaciones(arbol):
+            assert destino.id not in nombres_alias_prohibidos, (
+                f"Alias prohibido '{destino.id}' detectado en {ruta.name}"
+            )

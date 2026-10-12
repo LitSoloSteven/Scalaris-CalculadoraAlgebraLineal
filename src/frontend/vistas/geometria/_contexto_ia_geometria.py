@@ -1,7 +1,8 @@
 """Contexto y sugerencias de IA para la escena y el resultado vigente."""
 from __future__ import annotations
 
-from src.ai.context import AIContext, is_stale, sanitize_user_string
+from src.ai.contexto import ContextoIA, EstadoContexto, sanear_cadena_usuario
+from src.ai.huellas import esta_desactualizado
 from src.frontend.suggestions import Signals
 
 ESTADOS_SENALES = {
@@ -15,14 +16,14 @@ def _extraer_datos_entrada_ia(vista) -> dict:
     carga = vista._construir_carga() or {}
     datos = {'scene': vista.escena}
     if vista.escena == 'rectas-planos':
-        datos['matrix_A'] = [[sanitize_user_string(str(valor), 32) for valor in fila]
+        datos['matrix_A'] = [[sanear_cadena_usuario(str(valor), 32) for valor in fila]
                              for fila in carga.get('matrix_A', [])]
-        datos['vector_b'] = [sanitize_user_string(str(valor), 32) for valor in carga.get('vector_b', [])]
+        datos['vector_b'] = [sanear_cadena_usuario(str(valor), 32) for valor in carga.get('vector_b', [])]
     else:
-        datos['vectors'] = [[sanitize_user_string(str(valor), 32) for valor in vector.get('data', [])]
+        datos['vectors'] = [[sanear_cadena_usuario(str(valor), 32) for valor in vector.get('data', [])]
                             for vector in carga.get('vectors', [])]
         if vista.escena == 'combinacion':
-            datos['b'] = [sanitize_user_string(str(valor), 32) for valor in carga.get('b', {}).get('data', [])]
+            datos['b'] = [sanear_cadena_usuario(str(valor), 32) for valor in carga.get('b', {}).get('data', [])]
     return datos
 
 
@@ -41,16 +42,16 @@ def _extraer_datos_resultado_ia(vista, resultado: dict) -> dict:
     return datos
 
 
-def obtener_contexto_ia(vista) -> AIContext:
+def obtener_contexto_ia(vista) -> ContextoIA:
     """Describe las entradas y expone solo el resultado que corresponde a ellas."""
     datos = _extraer_datos_entrada_ia(vista)
-    contexto = AIContext('visualizador', 'Visualizador geométrico', f'Escena: {vista.escena}', datos,
-                         empty=vista.ultimo_resultado is None)
+    contexto = ContextoIA('visualizador', 'Visualizador geométrico', f'Escena: {vista.escena}', datos,
+                         estado=EstadoContexto(vacio=vista.ultimo_resultado is None))
     if vista.ultimo_resultado is None:
         return contexto
     entrada = {'scene': vista.escena, 'payload': vista._construir_carga()}
-    contexto.stale = is_stale(entrada, vista._huella_resultado)
-    contexto.result = None if contexto.stale else _extraer_datos_resultado_ia(vista, vista.ultimo_resultado)
+    contexto.desactualizado = esta_desactualizado(entrada, vista._huella_resultado)
+    contexto.resultado = None if contexto.desactualizado else _extraer_datos_resultado_ia(vista, vista.ultimo_resultado)
     return contexto
 
 

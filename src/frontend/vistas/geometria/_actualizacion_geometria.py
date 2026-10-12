@@ -6,7 +6,7 @@ import json
 import logging
 from nicegui import run
 
-from src.ai.context import fingerprint
+from src.ai.huellas import calcular_huella
 from src.frontend.controladores.geometria import ControladorGeometria
 from ._estados_geometria import aplicar_estado_carga
 
@@ -29,7 +29,7 @@ def limpiar_estado_figura(vista) -> None:
 def refrescar_contexto(vista, carga: dict | None = None) -> None:
     """Registra la entrada resuelta y notifica a Glosa del cambio de contexto."""
     if carga is not None:
-        vista._huella_resultado = fingerprint({"scene": vista.escena, "payload": carga})
+        vista._huella_resultado = calcular_huella({"scene": vista.escena, "payload": carga})
     if vista.panel_ia:
         vista.panel_ia.programar_actualizacion_contexto()
 

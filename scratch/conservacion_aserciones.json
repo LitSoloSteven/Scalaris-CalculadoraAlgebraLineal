@@ -1,8 +1,77 @@
 {
+  "referencia_inicial": "e85f186bfa5c653ee9aafc213e9214f5dfd03a7d",
   "antes": 2720,
-  "despues_existentes": 2720,
-  "nuevas_o_restauradas": 49,
-  "faltantes": {},
-  "extras_existentes": {},
-  "metodo": "Multiconjunto AST con renombrado alfa por expresion; no demuestra preparacion o flujo ni equivalencia historica completa."
+  "despues_total": 2929,
+  "diferencias_tras_renombrados": {
+    "Compare(left=Constant(value='—'), ops=[NotIn()], comparators=[Name(id='nombre_0', ctx=Load())])": 1,
+    "Compare(left=Constant(value='Oops'), ops=[NotIn()], comparators=[Name(id='nombre_0', ctx=Load())])": 1,
+    "UnaryOp(op=Not(), operand=Call(func=Attribute(value=Name(id='nombre_0', ctx=Load()), attr='search', ctx=Load()), args=[Name(id='nombre_1', ctx=Load()), Name(id='nombre_2', ctx=Load()), Attribute(value=Name(id='nombre_0', ctx=Load()), attr='IGNORECASE', ctx=Load())]))": 1
+  },
+  "nuevas_o_restauradas": 212,
+  "equivalencias_autorizadas": {
+    "scrollWidth > target.clientWidth": "scrollWidth > objetivo.clientWidth",
+    "target.title = target.value": "objetivo.title = objetivo.value",
+    "render_theme_button": "renderizar_boton_tema",
+    ".cross-hl {": ".cuadricula-resaltado-cruzado {",
+    "cross-hl": "cuadricula-resaltado-cruzado"
+  },
+  "atributos_de_doble_renombrados": {
+    "styles": "estilos"
+  },
+  "deduplicacion_revisada": {
+    "archivo": "test_pasos_matrices.py",
+    "antes": 6,
+    "despues": 3,
+    "helper": "comprobar_textos_sobrios",
+    "familias": [
+      "descripcion/explicacion de pasos",
+      "titulo/resumen de grupos"
+    ],
+    "expresiones": 6,
+    "controles_efectivos_antes": 400,
+    "controles_efectivos_despues": 400
+  },
+  "metodo": "Multiconjunto AST con alfa de nombres locales y mapas nominales explicitos E2/E3/E4. Tres predicados sintacticos menos por deduplicacion E2 revisada de400controles. La equivalencia global de intencion historica requiere revision aparte; esto no la acredita.",
+  "atributos_renombrados": {
+    "styles": "estilos",
+    "ok": "exito",
+    "text": "texto",
+    "kind": "tipo_error",
+    "model": "modelo",
+    "cached": "desde_cache",
+    "NO_KEY": "SIN_CLAVE",
+    "AUTH": "AUTENTICACION",
+    "TIMEOUT": "TIEMPO_AGOTADO",
+    "RATE_LIMIT": "LIMITE_PETICIONES",
+    "EMPTY": "VACIO",
+    "NETWORK": "RED",
+    "SERVICE": "SERVICIO",
+    "CANCELLED": "CANCELADO",
+    "input": "entrada",
+    "empty": "vacio",
+    "window_note": "nota_ventana"
+  },
+  "renombrados_mensajes": {
+    "prompts.py": "mensajes.py",
+    "build_messages": "construir_mensajes",
+    "trim_history": "recortar_historial",
+    "SYSTEM_PROMPT": "INSTRUCCIONES_SISTEMA"
+  },
+  "claves_contexto_renombradas": {
+    "rows": "filas",
+    "cols": "columnas",
+    "data": "datos",
+    "window": "ventana",
+    "invalid": "invalidos",
+    "meta": "metadatos",
+    "truncated": "truncado",
+    "v": "version"
+  },
+  "selectores_renombrados": {
+    "data-matrix-id": "data-matriz-identificador",
+    "data-matrix-row": "data-matriz-fila",
+    "data-matrix-col": "data-matriz-columna",
+    "data-row": "data-ecuaciones-fila",
+    "data-col": "data-ecuaciones-columna"
+  }
 }

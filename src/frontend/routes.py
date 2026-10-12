@@ -15,7 +15,7 @@ from src.frontend.navigation import (
     route_of,
     tool_by_id,
 )
-from src.frontend.theme import setup_theme
+from src.frontend.tema import configurar_tema
 
 
 def registrar_redirecciones_legacy(aplicacion_destino: Any) -> None:
@@ -42,28 +42,28 @@ def _registrar_paginas_algebra() -> None:
         metodo = method if method in ("gauss", "gauss-jordan") else "gauss"
         from src.frontend.vistas.linear_systems.view_linear_systems import LinearSystemsUI
 
-        setup_theme()
+        configurar_tema()
         LinearSystemsUI(initial_method=metodo).build(handoff_token=handoff)
 
     @ui.page(route_of("vectores"), title=tool_by_id("vectores").page_title)
     def pagina_vectores():
-        from src.frontend.vistas.vector_ops.view_vector_ops import VectorOpsUI
+        from src.frontend.vistas.operaciones_vectores.vista_operaciones_vectores import VistaOperacionesVectores
 
-        setup_theme()
-        VectorOpsUI().build()
+        configurar_tema()
+        VistaOperacionesVectores().construir()
 
     @ui.page(route_of("matrices"), title=tool_by_id("matrices").page_title)
     def pagina_matrices():
         from src.frontend.vistas.matrix_ops.view_matrix_ops import MatrixOpsUI
 
-        setup_theme()
+        configurar_tema()
         MatrixOpsUI().build()
 
     @ui.page(route_of("inversa"), title=tool_by_id("inversa").page_title)
     def pagina_inversa(handoff: str = ""):
         from src.frontend.vistas.inverse_ops.view_inverse_ops import InverseOpsUI
 
-        setup_theme()
+        configurar_tema()
         InverseOpsUI().build(handoff_token=handoff)
 
 
@@ -74,21 +74,21 @@ def _registrar_paginas_avanzadas() -> None:
     def pagina_geometria(escena: str = "rectas-planos", handoff: str = ""):
         from src.frontend.vistas.geometria.vista_geometria import VistaGeometria
 
-        setup_theme()
+        configurar_tema()
         VistaGeometria().construir(escena=escena, token_handoff=handoff)
 
     @ui.page(route_of("leontief"), title=tool_by_id("leontief").page_title)
     def pagina_leontief():
         from src.frontend.vistas.matrix_ops.view_matrix_ops import LeontiefUI
 
-        setup_theme()
+        configurar_tema()
         LeontiefUI().build()
 
     @ui.page(route_of("transformaciones"), title=tool_by_id("transformaciones").page_title)
     def pagina_transformaciones():
         from src.frontend.vistas.matrix_ops.view_transformaciones import TransformacionesUI
 
-        setup_theme()
+        configurar_tema()
         TransformacionesUI().build()
 
 
@@ -99,14 +99,14 @@ def _registrar_paginas_utilidades() -> None:
     def pagina_bases():
         from src.frontend.vistas.numeric_systems.view_numeric_systems import NumericSystemsUI
 
-        setup_theme()
+        configurar_tema()
         NumericSystemsUI().build()
 
     @ui.page(route_of("romanos"), title=tool_by_id("romanos").page_title)
     def pagina_romanos():
         from src.frontend.vistas.numeric_systems.view_roman_calculator import RomanCalculatorUI
 
-        setup_theme()
+        configurar_tema()
         RomanCalculatorUI().build()
 
 
@@ -119,7 +119,7 @@ def _registrar_pagina_hub() -> None:
     async def pagina_inicio_hub(client: Client, glosa: str = ""):
         from src.frontend.vistas.hub.view_hub import HubUI
 
-        setup_theme()
+        configurar_tema()
         await HubUI(glosa_open=(glosa == "1")).build(client)
 
 

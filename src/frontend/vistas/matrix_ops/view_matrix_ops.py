@@ -111,12 +111,12 @@ class MatrixOpsUI(MatrixOpsResultsMixin):
 
     def _extraer_datos_matrices_ia(self, mats: dict) -> tuple[dict, list]:
         """Extrae matrices sanitizadas y descripciones de texto para IA."""
-        from src.ai.context import describir_matriz, sanitize_user_string
+        from src.ai.contexto import describir_matriz, sanear_cadena_usuario
         input_data = {}
         descs = []
         for k, v in mats.items():
             if "data" in v:
-                sanitized = [[sanitize_user_string(c, 32) for c in r] for r in v["data"]]
+                sanitized = [[sanear_cadena_usuario(c, 32) for c in r] for r in v["data"]]
                 d = describir_matriz(sanitized)
                 input_data[k] = d
                 descs.append(d)
@@ -124,7 +124,8 @@ class MatrixOpsUI(MatrixOpsResultsMixin):
 
     def obtener_contexto_ia(self):
         """Proporciona el contexto serializado al asistente Glosa."""
-        from src.ai.context import AIContext, is_stale, sanitize_user_string, window_note_from
+        from src.ai.contexto import ContextoIA, EstadoContexto, sanear_cadena_usuario, generar_nota_ventana
+        from src.ai.huellas import esta_desactualizado
         try:
             mats = self.capture_panel.obtener_diccionario_matrices()
         except Exception:
@@ -132,29 +133,29 @@ class MatrixOpsUI(MatrixOpsResultsMixin):
 
         expr_val = self.input_expresion.value if hasattr(self, 'input_expresion') and self.input_expresion else ""
         if not mats and not expr_val:
-            return AIContext("matrix_ops", "Matrices", "Operaciones", {}, empty=True)
+            return ContextoIA("matrix_ops", "Matrices", "Operaciones", {}, estado=EstadoContexto(vacio=True))
 
         input_data, descs = self._extraer_datos_matrices_ia(mats)
         if expr_val:
-            input_data["expresion"] = sanitize_user_string(expr_val, 200)
+            input_data["expresion"] = sanear_cadena_usuario(expr_val, 200)
 
-        ctx = AIContext("matrix_ops", "Matrices", "Matrices y Expresión", input_data)
-        ctx.window_note = window_note_from(*descs)
+        ctx = ContextoIA("matrix_ops", "Matrices", "Matrices y Expresión", input_data)
+        ctx.nota_ventana = generar_nota_ventana(*descs)
 
         entrada_actual = {
             "matrices": {name: dict(m.get('cache', {})) for name, m in self.capture_panel.matrices.items()},
             "expresion": (expr_val or "").strip(),
         }
-        ctx.stale = is_stale(entrada_actual, getattr(self, '_result_fp', None))
+        ctx.desactualizado = esta_desactualizado(entrada_actual, getattr(self, '_result_fp', None))
 
         if getattr(self, 'last_result', None):
-            if ctx.stale:
-                ctx.result = None
+            if ctx.desactualizado:
+                ctx.resultado = None
             else:
                 res = self.last_result
-                ctx.result = {"status": res.get("status", "ERROR"), "message": res.get("message", "")}
+                ctx.resultado = {"status": res.get("status", "ERROR"), "message": res.get("message", "")}
                 if res.get("final_variable"):
-                    ctx.result["final_variable"] = res["final_variable"]
+                    ctx.resultado["final_variable"] = res["final_variable"]
 
         return ctx
 
@@ -197,7 +198,7 @@ class MatrixOpsUI(MatrixOpsResultsMixin):
 
             invalid = first_invalid_cell(items)
             res = getattr(self, 'last_result', None)
-            if res and not getattr(self.obtener_contexto_ia(), 'stale', True):
+            if res and not getattr(self.obtener_contexto_ia(), 'desactualizado', True):
                 state = self._evaluar_estado_resultado(res, expr, flags)
 
             return Signals(tool="matrices", state=state, flags=frozenset(flags), invalid=invalid)

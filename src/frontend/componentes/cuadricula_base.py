@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import asyncio
+import json
 from typing import Any
 from nicegui import ui
 
@@ -47,43 +48,56 @@ def props_celda_accesible(
 ) -> str:
     """Construye las propiedades HTML accesibles incluyendo fila y columna para lectores."""
     aria = f'aria-label="Fila {fila + 1}, columna {columna + 1}"'
-    base = f'data-row="{fila}" data-col="{columna}" {aria} borderless autocomplete="new-password"'
+    base = f'{aria} borderless autocomplete="new-password"'
     if id_matriz:
-        base += f' data-matrix-id="{id_matriz}" data-matrix-row="{fila}" data-matrix-col="{columna}"'
+        base += f' data-matriz-identificador="{id_matriz}" data-matriz-fila="{fila}" data-matriz-columna="{columna}"'
+    else:
+        base += f' data-ecuaciones-fila="{fila}" data-ecuaciones-columna="{columna}"'
     if nombre_campo:
         base += f' name="{nombre_campo}"'
     return base
 
 
+def props_vector_accesible(
+    indice: int, orientacion: str, *, nombre_vector: str, identificador_panel: str
+) -> str:
+    """Identifica una componente y su orientación para navegación y pegado vectoriales."""
+    es_columna = orientacion == "column"
+    propiedades = props_celda_accesible(
+        indice if es_columna else 0, 0 if es_columna else indice,
+        id_matriz=nombre_vector, nombre_campo=f"{nombre_vector}_{indice}",
+    )
+    orientacion_cliente = "columna" if es_columna else "fila"
+    return (f'{propiedades} data-geometria-vector="{identificador_panel}_{nombre_vector}" '
+            f'data-geometria-indice="{indice}" data-geometria-orientacion="{orientacion_cliente}"')
+
+
 async def animar_salida_cuadricula(
-    target_selector: str,
+    selector_destino: str,
     *,
-    es_fila: bool = True,
-    indice: int = 0,
     nombre_matriz: str | None = None,
 ) -> None:
     """Invoca la animación de salida de celdas antes de redimensionar la cuadrícula."""
-    if nombre_matriz:
-        js = f"return window.scalaris?.cuadricula?.animarSalidaMatriz('{nombre_matriz}', '{target_selector}') || Promise.resolve();"
-    else:
-        is_m = "true" if es_fila else "false"
-        js = f'return window.animateGridCellRemoval("{target_selector}", {is_m}, {indice});'
-    try:
-        await ui.run_javascript(js)
-    except Exception:
-        pass
+    await _animar_cuadricula("Salida", selector_destino, nombre_matriz)
 
 
 async def animar_entrada_cuadricula(
-    target_selector: str, *, nombre_matriz: str | None = None
+    selector_destino: str, *, nombre_matriz: str | None = None
 ) -> None:
     """Aplica una pausa breve y dispara la animación de entrada para celdas agregadas."""
     await asyncio.sleep(0.05)
+    await _animar_cuadricula("Entrada", selector_destino, nombre_matriz)
+
+
+async def _animar_cuadricula(accion: str, selector_destino: str, nombre_matriz: str | None) -> None:
     if nombre_matriz:
-        js = f"return window.scalaris?.cuadricula?.animarEntradaMatriz('{nombre_matriz}', '{target_selector}') || Promise.resolve();"
+        argumentos = f"{json.dumps(nombre_matriz)}, {json.dumps(selector_destino)}"
+        tipo_destino = "Matriz"
     else:
-        js = f'return window.animateGridCellAddition("{target_selector}");'
+        argumentos = f"Array.from(document.querySelectorAll({json.dumps(selector_destino)}))"
+        tipo_destino = "Celdas"
+    codigo = f"return window.scalaris?.cuadricula?.animar{accion}{tipo_destino}({argumentos}) || Promise.resolve();"
     try:
-        await ui.run_javascript(js)
+        await ui.run_javascript(codigo)
     except Exception:
         pass

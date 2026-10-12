@@ -1,6 +1,6 @@
 /* Los cuadros ya calculados cambian sin eventos de servidor ni animación. */
-(function () {
-  'use strict';
+'use strict';
+{
   window.scalaris = window.scalaris || {};
   window.scalaris.geometria?.limpiar();
   const registro = new Map();
@@ -136,4 +136,4 @@
   }
 
   window.scalaris.geometria = { registrar, establecerCuadro, marcarInvalido, enfocarCelda, limpiar };
-})();
+}

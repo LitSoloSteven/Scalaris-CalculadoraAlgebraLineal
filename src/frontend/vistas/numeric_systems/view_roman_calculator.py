@@ -8,7 +8,8 @@ from typing import Any
 
 from nicegui import ui
 
-from src.ai.context import AIContext, fingerprint, is_stale, sanitize_user_string
+from src.ai.contexto import ContextoIA, EstadoContexto, sanear_cadena_usuario
+from src.ai.huellas import calcular_huella, esta_desactualizado
 from src.backend.resolutores.sistemas_numericos.calculadora_romana import (
     CalculadoraRomana as RomanCalculator,
     ErrorNumeroRomano as RomanNumeralError,
@@ -196,9 +197,9 @@ class RomanCalculatorUI(RomanResultMixin):
                 self.ai_panel.renderizar_sugerencias_en_linea()
 
     def _finalizar_calculo(self, val_a: str, val_b: str, op: str) -> None:
-        """Actualiza el fingerprint y el contexto de IA."""
+        """Registra la huella de entrada y actualiza el contexto de IA."""
         entrada = {"a": val_a, "b": val_b, "operacion": op}
-        self._result_fp = fingerprint(entrada)
+        self._result_fp = calcular_huella(entrada)
         self._notify_change()
 
     @staticmethod
@@ -223,33 +224,33 @@ class RomanCalculatorUI(RomanResultMixin):
             return "err_syntax"
         return None
 
-    def obtener_contexto_ia(self) -> AIContext:
+    def obtener_contexto_ia(self) -> ContextoIA:
         """Construye el contexto de IA para el panel de Glosa."""
         val_a = self.input_a.value if self.input_a else ""
         val_b = self.input_b.value if self.input_b else ""
         op_val = getattr(self.tabs_op, "value", "suma") if self.tabs_op else "suma"
         if not val_a and not val_b:
-            return AIContext("romanos", "Números romanos", "Calculadora Romana", {}, empty=True)
+            return ContextoIA("romanos", "Números romanos", "Calculadora Romana", {}, estado=EstadoContexto(vacio=True))
 
-        ctx = AIContext(
+        ctx = ContextoIA(
             "romanos", "Números romanos", f"Operación: {op_val}",
             {
-                "operando_a": sanitize_user_string(val_a, 32) if val_a else "",
-                "operando_b": sanitize_user_string(val_b, 32) if val_b else "",
+                "operando_a": sanear_cadena_usuario(val_a, 32) if val_a else "",
+                "operando_b": sanear_cadena_usuario(val_b, 32) if val_b else "",
                 "operacion": op_val,
             },
         )
         entrada_actual = {"a": (val_a or "").strip().upper(), "b": (val_b or "").strip().upper(), "operacion": op_val}
-        ctx.stale = is_stale(entrada_actual, getattr(self, "_result_fp", None))
+        ctx.desactualizado = esta_desactualizado(entrada_actual, getattr(self, "_result_fp", None))
 
         if getattr(self, "last_result", None):
-            ctx.result = None if ctx.stale else {
+            ctx.resultado = None if ctx.desactualizado else {
                 "status": "SUCCESS",
                 "resultado_romano": self.last_result.resultado_romano,
                 "resultado_decimal": self.last_result.resultado_decimal,
             }
         elif self.lbl_error and self.lbl_error.text:
-            ctx.result = None if ctx.stale else {
+            ctx.resultado = None if ctx.desactualizado else {
                 "status": "ERROR",
                 "message": self.lbl_error.text,
             }
@@ -268,7 +269,7 @@ class RomanCalculatorUI(RomanResultMixin):
             elif v_b and not re.match(ROMAN_REGEX, v_b):
                 invalid = InvalidCell(label="Operando B")
 
-            if not getattr(self.obtener_contexto_ia(), "stale", False):
+            if not getattr(self.obtener_contexto_ia(), "desactualizado", False):
                 if getattr(self, "last_result", None):
                     state = "ok"
                 elif getattr(self, "last_error", None):

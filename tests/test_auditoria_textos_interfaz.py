@@ -1,93 +1,79 @@
-"""Auditoría de textos visibles de la interfaz y del asistente.
-
-Verifica mediante análisis estático de AST que ninguna constante de cadena
-(excluyendo docstrings) en src/frontend y src/ai contenga raya larga, 'Oops' ni
-formas de voseo no autorizadas.
-Verifica además la presencia de 'Hola, soy Glosa.' y la ausencia de '¡Hola! Soy Glosa.',
-así como la alineación de nombres con navigation.py.
-"""
+"""Auditoría de textos visibles, saludo del asistente y nombres de navegación."""
 import ast
 import os
 import re
-from src.frontend.navigation import TOOLS, PILLARS
+from src.frontend.navigation import TOOLS
+from tests.comun_recorrido_codigo import recorrer_archivos_codigo, pares_padre_hijo
+from tests.comun_textos import PATRONES_VOSEO
 
 
-def _es_docstring(node: ast.Constant, parent: ast.AST) -> bool:
-    """Detecta si un nodo ast.Constant representa el docstring del nodo padre."""
-    if isinstance(parent, (ast.Module, ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
-        if parent.body and isinstance(parent.body[0], ast.Expr) and parent.body[0].value is node:
+def _es_docstring(nodo: ast.Constant, padre: ast.AST) -> bool:
+    """Comprueba si el literal coincide con la primera expresión de una declaración."""
+    if isinstance(padre, (ast.Module, ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+        if padre.body and isinstance(padre.body[0], ast.Expr) and padre.body[0].value is nodo:
             return True
     return False
 
 
 def test_textos_sin_raya_larga_interjecciones_ni_voseo():
-    """Ninguna constante de cadena en src/frontend y src/ai contiene '—', 'Oops' ni voseo."""
-    voseo_patterns = [
-        r'\bvos\b',
-        r'\bpodés\b',
-        r'\btenés\b',
-        r'\bquerés\b',
-        r'\bhacé\b',
-        r'\bmirá\b',
-        r'\bfijate\b',
-        r'\bacá\b',
-    ]
-    bad_substrings = ['—', 'Oops']
+    """Las constantes de interfaz y asistente mantienen puntuación sobria y tuteo."""
+    fragmentos = ['—', 'Oops']
+    infracciones = []
+    for ruta in recorrer_archivos_codigo(['src/frontend', 'src/ai'], ('.py',)):
+        infracciones.extend(_infracciones_archivo(ruta, fragmentos, PATRONES_VOSEO))
+    assert not infracciones, "Infracciones de textos detectadas:\n" + "\n".join(infracciones)
 
-    violations = []
 
-    for root_dir in ['src/frontend', 'src/ai']:
-        for root, _, files in os.walk(root_dir):
-            for f in files:
-                if not f.endswith('.py'):
-                    continue
-                path = os.path.join(root, f)
-                with open(path, 'r', encoding='utf-8') as fp:
-                    try:
-                        tree = ast.parse(fp.read(), filename=path)
-                    except Exception as e:
-                        violations.append(f"Error parseando {path}: {e}")
-                        continue
-
-                violations.extend(_infracciones_cadenas(tree, path, bad_substrings, voseo_patterns))
-
-    assert not violations, "Violaciones de copy detectadas:\n" + "\n".join(violations)
+def _infracciones_archivo(ruta, fragmentos, patrones):
+    contenido = ruta.read_text(encoding='utf-8')
+    try:
+        arbol = ast.parse(contenido, filename=str(ruta))
+    except Exception as error:
+        return [f"Error analizando {ruta}: {error}"]
+    return _infracciones_cadenas(arbol, ruta, fragmentos, patrones)
 
 
 def _infracciones_cadenas(arbol, ruta, fragmentos, patrones):
     infracciones = []
-    for padre in ast.walk(arbol):
-        for hijo in ast.iter_child_nodes(padre):
-            if isinstance(hijo, ast.Constant) and isinstance(hijo.value, str):
-                if _es_docstring(hijo, padre):
-                    continue
-                valor = hijo.value
-                relativa = os.path.relpath(ruta).replace('\\', '/')
-                # La migración del historial reconoce el saludo anterior del asistente.
-                if 'ai_panel.py' in relativa and ('—' in valor or 'Tutor IA' in valor):
-                    continue
-                for fragmento in fragmentos:
-                    if fragmento in valor:
-                        infracciones.append(f"{relativa}:{hijo.lineno} contiene {repr(fragmento)}: {valor[:60]}")
-                for patron in patrones:
-                    if re.search(patron, valor, re.IGNORECASE):
-                        infracciones.append(f"{relativa}:{hijo.lineno} coincide con patrón voseo {patron}: {valor[:60]}")
+    relativa = os.path.relpath(ruta).replace('\\', '/')
+    for padre, hijo in pares_padre_hijo(arbol):
+        if not isinstance(hijo, ast.Constant) or not isinstance(hijo.value, str):
+            continue
+        if _es_docstring(hijo, padre) or _es_saludo_anterior(relativa, hijo.value):
+            continue
+        infracciones.extend(_infracciones_literal(relativa, hijo, fragmentos, patrones))
+    return infracciones
+
+
+def _es_saludo_anterior(ruta, valor):
+    # La migración del historial reconoce el saludo anterior del asistente.
+    return 'ai_panel.py' in ruta and ('—' in valor or 'Tutor IA' in valor)
+
+
+def _infracciones_literal(ruta, nodo, fragmentos, patrones):
+    valor = nodo.value
+    infracciones = []
+    for fragmento in fragmentos:
+        if fragmento in valor:
+            infracciones.append(f"{ruta}:{nodo.lineno} contiene {repr(fragmento)}: {valor[:60]}")
+    for patron in patrones:
+        if re.search(patron, valor, re.IGNORECASE):
+            infracciones.append(f"{ruta}:{nodo.lineno} coincide con patrón voseo {patron}: {valor[:60]}")
     return infracciones
 
 
 def test_saludo_glosa_unificado():
     """El saludo de Glosa conserva tuteo y puntuación sobria."""
-    dock_file = os.path.join('src', 'frontend', 'componentes', 'glosa_bitacora.py')
-    with open(dock_file, 'r', encoding='utf-8') as fp:
-        content = fp.read()
-
-    assert "¡Hola! Soy Glosa." not in content, "Aún contiene '¡Hola! Soy Glosa.'"
-    assert "Hola, soy Glosa." in content, "No contiene 'Hola, soy Glosa.'"
+    ruta = os.path.join('src', 'frontend', 'componentes', 'glosa_bitacora.py')
+    with open(ruta, 'r', encoding='utf-8') as archivo:
+        contenido = archivo.read()
+    assert "¡Hola! Soy Glosa." not in contenido, "Aún contiene '¡Hola! Soy Glosa.'"
+    assert "Hola, soy Glosa." in contenido, "No contiene 'Hola, soy Glosa.'"
 
 
 def test_nombres_navegacion_alineados():
     """Verifica la alineación de nombres con navigation.py."""
-    expected_tools = {
+    herramientas_esperadas = {
         "/algebra-lineal/sistemas": "Sistemas de ecuaciones",
         "/algebra-lineal/inversa": "Matriz inversa",
         "/algebra-lineal/matrices": "Matrices",
@@ -97,9 +83,9 @@ def test_nombres_navegacion_alineados():
         "/utilidades/romanos": "Números romanos",
     }
 
-    tool_by_route = {t.route: t.name for t in TOOLS}
-    for route, expected_name in expected_tools.items():
-        assert route in tool_by_route, f"Ruta {route} no encontrada en TOOLS"
-        assert tool_by_route[route] == expected_name, (
-            f"Ruta {route} tiene nombre {tool_by_route[route]}, se esperaba {expected_name}"
+    herramientas_por_ruta = {herramienta.route: herramienta.name for herramienta in TOOLS}
+    for ruta, nombre_esperado in herramientas_esperadas.items():
+        assert ruta in herramientas_por_ruta, f"Ruta {ruta} no encontrada en el catálogo"
+        assert herramientas_por_ruta[ruta] == nombre_esperado, (
+            f"Ruta {ruta} tiene nombre {herramientas_por_ruta[ruta]}, se esperaba {nombre_esperado}"
         )

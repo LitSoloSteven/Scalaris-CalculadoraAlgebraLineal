@@ -1,7 +1,7 @@
 """Funciones compartidas de disposicion y malla para figuras Plotly de geometria."""
 from __future__ import annotations
 
-from src.frontend.theme import COLOR_CUADRICULA, COLOR_CERO, COLOR_TRANSPARENTE
+from src.frontend.tema import COLOR_CUADRICULA, COLOR_CERO, COLOR_TRANSPARENTE
 
 
 def disposicion_2d(fig, *, rango_ejes: list[float], color_fuente: str, revision: str = "rectas"):

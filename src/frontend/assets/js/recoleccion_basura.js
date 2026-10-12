@@ -1,8 +1,6 @@
-/**
- * Scalaris - Animación de recolección de basura / limpieza de matrices
- */
-(function () {
-  'use strict';
+/* La limpieza espera que terminen los desplazamientos antes de retirar las celdas. */
+'use strict';
+{
 
   window.scalaris = window.scalaris || {};
 
@@ -125,4 +123,4 @@
 
 
   window.scalaris.animarRecoleccionBasura = animarRecoleccionBasura;
-})();
+}

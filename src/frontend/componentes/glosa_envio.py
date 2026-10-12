@@ -8,8 +8,9 @@ import time
 from typing import Any
 from nicegui import run, ui
 
-from src.ai.openrouter_ai import AIErrorKind, AIResult
-from src.ai.prompts import construir_pregunta_explicar_paso
+from src.ai.respuestas import OpcionesConsulta, ResultadoIA, TipoErrorIA
+from src.ai.textos import CONSULTA_CANCELADA, ERROR_SERVICIO
+from src.ai.mensajes import construir_pregunta_explicar_paso
 from src.frontend import flags
 from src.frontend.constantes import ANTI_REBOTE_GLOSA_SEGUNDOS, MAX_HISTORIAL
 from src.frontend.textos import MSJ_ANTI_REBOTE_GLOSA
@@ -182,7 +183,7 @@ class EnvioGlosaMixin:
         resultado = await self._consultar_motor_ia(texto_limpio, cacheable, simpler, cancel_event)
         if self._request_counter == req_id:
             finalizar_envio(self, fila_escritura, cancel_btn_row)
-            if resultado.kind != AIErrorKind.CANCELLED:
+            if resultado.tipo_error != TipoErrorIA.CANCELADO:
                 self._procesar_resultado(resultado)
 
     def _preparar_interfaz_envio(
@@ -228,36 +229,34 @@ class EnvioGlosaMixin:
             self._render_message(self.chat_history[-1], idx=len(self.chat_history) - 1)
 
     async def _consultar_motor_ia(
-        self, texto: str, cacheable: bool, simpler: bool, cancel_event: threading.Event
-    ) -> AIResult:
+        self, texto: str, usar_cache: bool, respuesta_simple: bool, cancelar: threading.Event
+    ) -> ResultadoIA:
         """Invoca el motor de IA en hilo secundario para evitar bloquear el bucle de eventos."""
-        ctx_block = self._collect_context()
+        contexto = self._collect_context()
         historial = self.chat_history[:-1]
         try:
-            return await run.io_bound(
-                self.motor_ia.ask,
+            resultado = await run.io_bound(
+                self.motor_ia.preguntar,
                 texto,
-                history=historial,
-                context_block=ctx_block,
-                cancel=cancel_event,
-                cacheable=cacheable,
-                simpler=simpler,
+                historial=historial,
+                contexto=contexto,
+                cancelar=cancelar,
+                opciones=OpcionesConsulta(usar_cache, respuesta_simple),
             )
+            if resultado is None:
+                return ResultadoIA(False, CONSULTA_CANCELADA, TipoErrorIA.CANCELADO)
+            return resultado
         except Exception:
-            logger.exception("Error inesperado en consulta de Glosa")
-            return AIResult(
-                False,
-                "Glosa no pudo responder ahora. Vuelve a intentarlo en un momento.",
-                kind=AIErrorKind.SERVICE,
-            )
+            logger.error("Error inesperado en consulta de Glosa")
+            return ResultadoIA(False, ERROR_SERVICIO, tipo_error=TipoErrorIA.SERVICIO)
 
-    def _procesar_resultado(self, resultado: AIResult) -> None:
+    def _procesar_resultado(self, resultado: ResultadoIA) -> None:
         """Inserta la respuesta exitosa o de error en la bitacora y la presenta."""
-        if not resultado.ok:
-            puede_reintentar = resultado.kind not in (AIErrorKind.NO_KEY, AIErrorKind.AUTH)
-            msg = {"text": resultado.text, "sent": False, "error": True, "retry": puede_reintentar}
+        if not resultado.exito:
+            puede_reintentar = resultado.tipo_error not in (TipoErrorIA.SIN_CLAVE, TipoErrorIA.AUTENTICACION)
+            msg = {"text": resultado.texto, "sent": False, "error": True, "retry": puede_reintentar}
         else:
-            msg = {"text": resultado.text, "sent": False, "error": False}
+            msg = {"text": resultado.texto, "sent": False, "error": False}
 
         self.chat_history.append(msg)
         if len(self.chat_history) > MAX_HISTORY:

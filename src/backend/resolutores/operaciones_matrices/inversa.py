@@ -17,6 +17,12 @@ from src.backend.resolutores.sistemas_lineales.gauss_jordan import (
 from src.backend.utilidades.formateadores import formatear_fraccion_str, numero_a_latex
 
 
+def _construir_identidad(dimension: int) -> Matriz:
+    datos = [[Fraction(1 if i == j else 0) for j in range(dimension)]
+             for i in range(dimension)]
+    return Matriz(dimension, dimension, datos)
+
+
 class ResolutorInversa:
     """Calcula la matriz inversa A^-1 con desgloses, pasos y verificaciones algebraicas."""
 
@@ -71,7 +77,7 @@ class ResolutorInversa:
         der = matriz_a if inverso else inversa
         res = self.resolutor_ops.multiplicar(izq, der)
         prod = res.get("matriz_resultado")
-        identidad = Matriz(n, n, [[Fraction(1 if i == j else 0) for j in range(n)] for i in range(n)])
+        identidad = _construir_identidad(n)
         es_exacto = (prod == identidad) if prod else False
         etiq = "A^{-1} \\cdot A = I" if inverso else "A \\cdot A^{-1} = I"
         status_word = "Correcto" if es_exacto else "Incorrecto"
@@ -99,7 +105,7 @@ class ResolutorInversa:
         n = matriz_a.filas
         res_mul = self.resolutor_ops.multiplicar(trans_inv, trans_a)
         prod = res_mul.get("matriz_resultado")
-        identidad = Matriz(n, n, [[Fraction(1 if i == j else 0) for j in range(n)] for i in range(n)])
+        identidad = _construir_identidad(n)
         es_exacto = (prod == identidad) if prod else False
         status_word = "Coinciden" if es_exacto else "Difieren"
         prod_tex = matriz_a_latex(prod) if prod else ""

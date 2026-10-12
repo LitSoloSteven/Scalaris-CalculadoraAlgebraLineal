@@ -12,12 +12,12 @@ from src.frontend.controladores.geometria.controlador_geometria import (
 
 def test_selector_celda_error_matriz_a():
     resultado = selector_celda_error({"kind": "A", "row": 1, "col": 2}, escena="rectas-planos", n_cuadricula=2)
-    assert resultado == 'input[data-row="1"][data-col="2"]'
+    assert resultado == 'input[data-ecuaciones-fila="1"][data-ecuaciones-columna="2"]'
 
 
 def test_selector_celda_error_vector_b():
     resultado = selector_celda_error({"kind": "b", "row": 1}, escena="rectas-planos", n_cuadricula=2)
-    assert resultado == 'input[data-row="1"][data-col="2"]'
+    assert resultado == 'input[data-ecuaciones-fila="1"][data-ecuaciones-columna="2"]'
 
 
 def test_selector_celda_error_vector():

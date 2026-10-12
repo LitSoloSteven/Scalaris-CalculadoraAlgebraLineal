@@ -9,7 +9,6 @@ from src.frontend.textos import (
     MSJ_ERROR_PRODUCCION_SIN_SECRETO,
     MSJ_SECRETO_DEV_INSEGURO,
 )
-from src.frontend.theme import setup_theme  # Reexport para compatibilidad
 
 logger = logging.getLogger(__name__)
 

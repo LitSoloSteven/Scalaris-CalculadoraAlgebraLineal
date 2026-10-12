@@ -87,25 +87,35 @@ def obtener_parametros_solucion(resultado: dict[str, Any]) -> dict | None:
     if parametros is None:
         return None
     try:
-        num_vars = parametros["num_vars"]
-        particular = parametros["particular"]
-        direcciones = parametros["directions"]
-        libres = parametros["free_cols"]
-        nombres = parametros["param_names"]
-        if (
-            num_vars != len(particular)
-            or len(direcciones) != len(libres)
-            or len(libres) != len(nombres)
-        ):
+        campos = (
+            parametros["num_vars"], parametros["particular"], parametros["directions"],
+            parametros["free_cols"], parametros["param_names"],
+        )
+        if not _dimensiones_parametros_coinciden(campos):
             return None
-        if any(not isinstance(p, Fraction) for p in particular):
+        if not _coeficientes_parametros_son_exactos(campos[1], campos[2]):
             return None
-        for d in direcciones:
-            if any(not isinstance(v, Fraction) for v in d):
-                return None
         return parametros
     except (KeyError, TypeError, ValueError):
         return None
+
+
+def _dimensiones_parametros_coinciden(campos: tuple) -> bool:
+    cantidad_variables, particular, direcciones, libres, nombres = campos
+    return not (
+        cantidad_variables != len(particular)
+        or len(direcciones) != len(libres)
+        or len(libres) != len(nombres)
+    )
+
+
+def _coeficientes_parametros_son_exactos(particular: list, direcciones: list) -> bool:
+    if any(not isinstance(valor, Fraction) for valor in particular):
+        return False
+    for direccion in direcciones:
+        if any(not isinstance(valor, Fraction) for valor in direccion):
+            return False
+    return True
 
 
 get_solution_param = obtener_parametros_solucion

@@ -2,34 +2,12 @@
 
 from __future__ import annotations
 
-import re
-
 from src.backend.models.matrix import Matrix
-from src.frontend.componentes.reproductor_pasos.cuerpos import render_latex
+from src.frontend.componentes.reproductor_pasos.cuerpos import CuerpoLatex
+from src.frontend.componentes.reproductor_pasos.textos import limpiar_latex_plano
 from src.frontend.componentes.reproductor_pasos.html_tablas import html_tabla_aumentada
 from src.frontend.componentes.reproductor_pasos.modelo import GrupoReproductor, PasoReproductor
 from src.frontend.helpers import formatear_paso_mathjax
-
-
-class _CuerpoLatex:
-    """Cuerpo ejecutable que renderiza la expresión LaTeX mediante render_latex."""
-
-    def __init__(self, latex: str) -> None:
-        self.latex = latex
-
-    def __call__(self) -> None:
-        render_latex(self.latex)
-
-    def __str__(self) -> str:
-        return self.latex
-
-
-def _limpiar_latex_plano(texto: str) -> str:
-    """Elimina etiquetas y comandos LaTeX comunes para dejar una descripción corta en texto plano."""
-    t = re.sub(r"\\text\{([^}]*)\}", r"\1", str(texto))
-    t = t.replace(r"\implies", "=>").replace(r"\;", " ").replace(r"\\", " ")
-    t = re.sub(r"[{}\\]", "", t)
-    return " ".join(t.split())
 
 
 def _crear_paso_eliminacion(
@@ -111,7 +89,7 @@ def _construir_pasos_sustitucion(
     for i, linea in enumerate(back_steps):
         curr_idx = inicio_paso + i
         indices.append(curr_idx)
-        op_texto = _limpiar_latex_plano(linea)
+        op_texto = limpiar_latex_plano(linea)
         meta = {
             "index": curr_idx + 1, "total": total_pasos, "kind": "sustitucion",
             "op": op_texto, "rows_before": {}, "rows_after": {}, "cols": None,
@@ -120,7 +98,7 @@ def _construir_pasos_sustitucion(
             PasoReproductor(
                 indice=curr_idx, tipo="sustitucion", descripcion=op_texto,
                 explicacion=expl, indice_grupo=inicio_grupo,
-                cuerpo=_CuerpoLatex(formatear_paso_mathjax(linea)), meta_explicar=meta,
+                cuerpo=CuerpoLatex(formatear_paso_mathjax(linea)), meta_explicar=meta,
             )
         )
 
@@ -145,7 +123,7 @@ def _construir_pasos_verificacion(
     for i, linea in enumerate(verif_steps):
         curr_idx = inicio_paso + i
         indices.append(curr_idx)
-        op_texto = _limpiar_latex_plano(linea)
+        op_texto = limpiar_latex_plano(linea)
         meta = {
             "index": curr_idx + 1, "total": total_pasos, "kind": "verificacion",
             "op": op_texto, "rows_before": {}, "rows_after": {}, "cols": None,
@@ -154,7 +132,7 @@ def _construir_pasos_verificacion(
             PasoReproductor(
                 indice=curr_idx, tipo="verificacion", descripcion=op_texto,
                 explicacion=expl, indice_grupo=inicio_grupo,
-                cuerpo=_CuerpoLatex(formatear_paso_mathjax(linea)), meta_explicar=meta,
+                cuerpo=CuerpoLatex(formatear_paso_mathjax(linea)), meta_explicar=meta,
             )
         )
 

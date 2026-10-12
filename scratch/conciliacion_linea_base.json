@@ -1,0 +1,12 @@
+{
+  "commit_limpio": "71420904a7bf8ea0e50ed2b88727eb2552f20bc9",
+  "testpaths": "tests",
+  "suite_historica": 1099,
+  "pruebas_anteriores_al_arnes": 1092,
+  "auditorias_anadidas": 7,
+  "coleccion_ampliada_anterior": 1106,
+  "casos_src_fuera_testpaths": 7,
+  "diferencia_en_pruebas_desde_padre": "A\ttests/test_cumplimiento_reglas.py",
+  "resultado_ejecucion": "1099 passed, 1 warning",
+  "nota": "El padre conserva conflictos y falla la coleccion; no se altera. El commit limpio solo agrega el arnes a tests. La coleccion ampliada incluye seis casos backend y uno de controlador fuera de testpaths."
+}

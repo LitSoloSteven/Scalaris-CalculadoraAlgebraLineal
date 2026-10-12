@@ -114,8 +114,8 @@ def test_contexto_vectores_contiene_entrada_actual(monkeypatch):
     vista.escena = 'vectores'
     monkeypatch.setattr(vista, '_construir_carga', lambda: {'vectors': [{'data': ['1/3', '2']}, {'data': ['4', '5']}]})
     contexto = obtener_contexto_ia(vista)
-    assert contexto.input['vectors'] == [['1/3', '2'], ['4', '5']]
-    assert contexto.empty is True
+    assert contexto.entrada['vectors'] == [['1/3', '2'], ['4', '5']]
+    assert contexto.vacio is True
 
 
 def test_auditoria_incluye_toda_geometria_y_rutas_existentes():

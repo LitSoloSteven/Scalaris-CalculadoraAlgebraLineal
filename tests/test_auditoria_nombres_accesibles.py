@@ -1,62 +1,45 @@
-"""Auditoría estática AST de accesibilidad (a11y) para src/frontend.
-
-Verifica:
-1. ui.button con keyword `icon=` y sin texto posicional debe incluir 'aria-label' en sus .props(...).
-2. ui.switch sin texto posicional debe incluir 'aria-label' (en props o keywords).
-"""
+"""Auditoría de nombres accesibles en botones e interruptores de NiceGUI."""
 from __future__ import annotations
 
 import ast
 from pathlib import Path
+from tests.comun_recorrido_codigo import cadena_estatica, pares_padre_hijo
 
 
-def _extraer_cadenas_propiedades(call_node: ast.Call) -> list[str]:
-    """Extrae literales de cadena (estáticos o f-strings) de los argumentos de .props(...)."""
-    res = []
-    for a in call_node.args:
-        if isinstance(a, ast.Constant) and isinstance(a.value, str):
-            res.append(a.value)
-        elif isinstance(a, ast.JoinedStr):
-            parts = []
-            for val in a.values:
-                if isinstance(val, ast.Constant) and isinstance(val.value, str):
-                    parts.append(val.value)
-                else:
-                    parts.append("")
-            res.append("".join(parts))
-    return res
+def _extraer_cadenas_propiedades(llamada: ast.Call) -> list[str]:
+    """Extrae literales y partes estáticas de los argumentos de propiedades."""
+    cadenas = []
+    for argumento in llamada.args:
+        contenido = cadena_estatica(argumento)
+        if contenido is not None:
+            cadenas.append(contenido)
+    return cadenas
 
 
-def _reunir_propiedades_encadenadas(node: ast.AST, parent_map: dict[ast.AST, ast.AST]) -> list[str]:
-    """Sube por la cadena de llamadas (.classes(...).props(...).style(...)) recopilando strings de props."""
-    curr = node
-    props_str = []
-    while curr in parent_map:
-        parent = parent_map[curr]
-        if isinstance(parent, ast.Attribute) and parent.value == curr and parent.attr == "props":
-            call_parent = parent_map.get(parent)
-            if isinstance(call_parent, ast.Call):
-                props_str.extend(_extraer_cadenas_propiedades(call_parent))
-        curr = parent
-    return props_str
+def _reunir_propiedades_encadenadas(nodo: ast.AST, padres: dict[ast.AST, ast.AST]) -> list[str]:
+    """Recorre la cadena de llamadas y recoge las cadenas de propiedades."""
+    actual = nodo
+    propiedades = []
+    while actual in padres:
+        padre = padres[actual]
+        if isinstance(padre, ast.Attribute) and padre.value == actual and padre.attr == "props":
+            llamada = padres.get(padre)
+            if isinstance(llamada, ast.Call):
+                propiedades.extend(_extraer_cadenas_propiedades(llamada))
+        actual = padre
+    return propiedades
 
 
-def buscar_infracciones_accesibilidad(tree: ast.AST, file_path_str: str) -> list[tuple[str, str, int, str]]:
-    """Encuentra violaciones de accesibilidad en ui.button y ui.switch."""
-    parent_map = {}
-    for parent in ast.walk(tree):
-        for child in ast.iter_child_nodes(parent):
-            parent_map[child] = parent
-
-    violations = []
-    for node in ast.walk(tree):
-        if not isinstance(node, ast.Call):
+def buscar_infracciones_accesibilidad(arbol: ast.AST, ruta: str) -> list[tuple[str, str, int, str]]:
+    """Encuentra controles de NiceGUI que carecen de nombre accesible."""
+    padres = {hijo: padre for padre, hijo in pares_padre_hijo(arbol)}
+    infracciones = []
+    for nodo in ast.walk(arbol):
+        if not isinstance(nodo, ast.Call):
             continue
-
-        violations.extend(_infracciones_boton(node, parent_map, file_path_str))
-        violations.extend(_infracciones_interruptor(node, parent_map, file_path_str))
-
-    return violations
+        infracciones.extend(_infracciones_boton(nodo, padres, ruta))
+        infracciones.extend(_infracciones_interruptor(nodo, padres, ruta))
+    return infracciones
 
 
 def _es_control_ui(nodo, nombre):
@@ -90,36 +73,32 @@ def _infracciones_interruptor(nodo, padres, ruta):
 
 def test_botones_e_interruptores_con_nombre_accesible():
     """Audita todos los archivos en src/frontend para que no existan ui.button ni ui.switch sin accesibilidad."""
-    frontend_dir = Path(__file__).resolve().parent.parent / "src" / "frontend"
-    all_violations = []
-
-    for py_file in frontend_dir.rglob("*.py"):
-        code = py_file.read_text(encoding="utf-8")
-        tree = ast.parse(code, filename=str(py_file))
-        violations = buscar_infracciones_accesibilidad(tree, py_file.as_posix())
-        all_violations.extend(violations)
-
-    if all_violations:
-        lines = [
-            f"[{kind}] {p}:{line} (props: '{props}')"
-            for kind, p, line, props in all_violations
+    carpeta_interfaz = Path(__file__).resolve().parent.parent / "src" / "frontend"
+    infracciones = []
+    for ruta in carpeta_interfaz.rglob("*.py"):
+        codigo = ruta.read_text(encoding="utf-8")
+        arbol = ast.parse(codigo, filename=str(ruta))
+        infracciones.extend(buscar_infracciones_accesibilidad(arbol, ruta.as_posix()))
+    if infracciones:
+        lineas = [
+            f"[{tipo}] {ruta}:{linea} (propiedades: '{propiedades}')"
+            for tipo, ruta, linea, propiedades in infracciones
         ]
-        report = "\n".join(lines)
+        informe = "\n".join(lineas)
         raise AssertionError(
-            f"Se encontraron {len(all_violations)} elementos UI sin aria-label ni texto:\n{report}"
+            f"Se encontraron {len(infracciones)} elementos de interfaz sin aria-label ni texto:\n{informe}"
         )
 
 
 def test_detector_identifica_controles_sin_nombre():
     """Verifica que el auditor detecte llamadas inválidas sintéticas."""
-    bad_code = '''
+    codigo_invalido = '''
 def build():
     btn = ui.button(icon="send").props("ripple=false")
     sw = ui.switch(value=True).props("dense size=sm")
 '''
-    tree = ast.parse(bad_code)
-    violations = buscar_infracciones_accesibilidad(tree, "synthetic.py")
-
-    kinds = [v[0] for v in violations]
-    assert "BUTTON" in kinds
-    assert "SWITCH" in kinds
+    arbol = ast.parse(codigo_invalido)
+    infracciones = buscar_infracciones_accesibilidad(arbol, "synthetic.py")
+    tipos = [infraccion[0] for infraccion in infracciones]
+    assert "BUTTON" in tipos
+    assert "SWITCH" in tipos

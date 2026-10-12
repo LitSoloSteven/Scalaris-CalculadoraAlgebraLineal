@@ -12,7 +12,7 @@ from src.backend.solvers.vector_ops.operations import VectorOpsSolver
 from src.frontend.controladores.operaciones_vectores import (
     ControladorOperacionesVectores,
 )
-from src.frontend.vistas.vector_ops._pasos_reproductor import (
+from src.frontend.vistas.operaciones_vectores._pasos_reproductor import (
     construir_pasos_combinacion_lineal,
     construir_pasos_vector_basico,
 )
@@ -201,9 +201,9 @@ def test_controlador_conserva_claves_contratadas():
 def test_textos_vectoriales_sin_raya_larga_ni_voseo():
     """Los módulos vectoriales mantienen textos directos en español."""
     files_to_check = [
-        Path("src/frontend/vistas/vector_ops/_pasos_reproductor.py"),
-        Path("src/frontend/vistas/vector_ops/steps_mixin.py"),
-        Path("src/frontend/vistas/vector_ops/results_mixin.py"),
+        Path("src/frontend/vistas/operaciones_vectores/_pasos_reproductor.py"),
+        Path("src/frontend/vistas/operaciones_vectores/mixin_pasos.py"),
+        Path("src/frontend/vistas/operaciones_vectores/mixin_resultados.py"),
         Path("src/frontend/controladores/operaciones_vectores/controlador_operaciones_vectores.py"),
     ]
 

@@ -1,9 +1,7 @@
 """Adaptación de operaciones matriciales al reproductor de pasos."""
 
 import json
-import re
-
-import pytest
+from tests.comun_textos import PATRONES_VOSEO, comprobar_textos_sobrios
 
 from src.frontend.controladores.operaciones_matrices import (
     ControladorOperacionesMatrices,
@@ -119,24 +117,11 @@ def test_textos_matriciales_sin_raya_larga_ni_voseo():
         "C": {"rows": 2, "cols": 2, "data": [["5", "1"], ["2", "4"]]},
         "D": {"rows": 2, "cols": 2, "data": [["1", "-1"], ["0", "2"]]},
     }
-    voseo_patterns = [
-        r'\bvos\b', r'\bpodés\b', r'\btenés\b', r'\bquerés\b',
-        r'\bhacé\b', r'\bmirá\b', r'\bfijate\b', r'\bacá\b',
-    ]
-
     expresiones = ["2A - B(C - D^T)", "A + B", "-A", "3 * A", "A * B", "A^T"]
-    for expr in expresiones:
-        res = _evaluar(expr, matrices)
-        pasos, grupos = construir_pasos_matrices(res)
+    for expresion in expresiones:
+        resultado = _evaluar(expresion, matrices)
+        pasos, grupos = construir_pasos_matrices(resultado)
         for paso in pasos:
-            for texto in (paso.descripcion, paso.explicacion):
-                assert "—" not in texto, f"Em-dash encontrado en {texto}"
-                assert "Oops" not in texto, f"Oops encontrado en {texto}"
-                for pat in voseo_patterns:
-                    assert not re.search(pat, texto, re.IGNORECASE), f"Voseo '{pat}' en {texto}"
+            comprobar_textos_sobrios((paso.descripcion, paso.explicacion), PATRONES_VOSEO)
         for grupo in grupos:
-            for texto in (grupo.titulo, grupo.resumen):
-                assert "—" not in texto, f"Em-dash encontrado en grupo {texto}"
-                assert "Oops" not in texto, f"Oops encontrado en grupo {texto}"
-                for pat in voseo_patterns:
-                    assert not re.search(pat, texto, re.IGNORECASE), f"Voseo '{pat}' en grupo {texto}"
+            comprobar_textos_sobrios((grupo.titulo, grupo.resumen), PATRONES_VOSEO, "en grupo")

@@ -1,20 +1,7 @@
-"""Operaciones vectoriales en R^n: suma, resta, multiplicación escalar.
+"""Suma, resta y multiplicación escalar de vectores representados como matrices.
 
-Los vectores se representan como Matrix de shape n×1 (columna) o 1×n
-(fila), siguiendo la convención del curso (Lay, Anton: "una matriz con
-una sola columna es un vector columna"). No se crea una clase Vector:
-se reutiliza Matrix para aprovechar _normalize_val, bounds checking y
-los formatters existentes, evitando duplicar validación.
-
-Suma, resta y multiplicación escalar aceptan ambos órdenes. Con
-strict=False (default) un operando con orientación distinta al primero
-se transpone automáticamente; con strict=True se rechaza cualquier
-mismatch de shape. El resultado siempre tiene la orientación del primer
-operando.
-
-La combinación lineal vive en `linear_combination.LinearCombinationSolver`.
-Es la entrada canónica: `LinearCombinationSolver().solve(b, vectors, ...)`.
-No hay fachada en VectorOpsSolver desde la Fase 3 del refactor del backend.
+El modo estricto rechaza orientaciones diferentes; el modo automático transpone
+el segundo operando y conserva la orientación del primero.
 """
 
 from src.backend.exceptions import InvalidVectorError

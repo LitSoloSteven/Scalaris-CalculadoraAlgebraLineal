@@ -98,7 +98,7 @@ class EquationGrid:
     @staticmethod
     def inject_scripts() -> None:
         """Inyecta el script asociado para animaciones de la cuadricula de ecuaciones."""
-        ui.add_head_html('<script src="/assets/js/equation_grid.js"></script>')
+        ui.add_head_html('<script src="/assets/js/captura_ecuaciones.js"></script>')
 
     async def adjust_size(self, delta_m: int = 0, delta_n: int = 0) -> None:
         """Ajusta las dimensiones de ecuaciones o variables con animacion."""
@@ -111,8 +111,8 @@ class EquationGrid:
 
         self._deshabilitar_botones_redimension()
         if delta_m < 0 or delta_n < 0:
-            target = f"[data-row='{self.m - 1}']" if delta_m < 0 else f"[data-col='{self.n - 1}']"
-            await animar_salida_cuadricula(target, es_fila=(delta_m < 0), indice=self.m - 1)
+            target = f"[data-ecuaciones-fila='{self.m - 1}']" if delta_m < 0 else f"[data-ecuaciones-columna='{self.n - 1}']"
+            await animar_salida_cuadricula(target)
 
         self.m = nuevo_m
         self.n = nuevo_n
@@ -124,7 +124,7 @@ class EquationGrid:
             self.on_data_change()
 
         if delta_m > 0 or delta_n > 0:
-            target = f"[data-row='{self.m - 1}']" if delta_m > 0 else f"[data-col='{self.n - 1}']"
+            target = f"[data-ecuaciones-fila='{self.m - 1}']" if delta_m > 0 else f"[data-ecuaciones-columna='{self.n - 1}']"
             await animar_entrada_cuadricula(target)
 
     def _deshabilitar_botones_redimension(self) -> None:

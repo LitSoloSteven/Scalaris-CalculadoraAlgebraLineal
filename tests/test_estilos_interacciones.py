@@ -2,6 +2,7 @@
 from pathlib import Path
 import re
 import pytest
+from tests.comun_javascript import leer_captura_cliente, leer_interacciones_cliente
 
 
 def test_tokens_movimiento_y_entradas_resistentes():
@@ -24,7 +25,7 @@ def _comprobar_contenedores_y_celdas(content):
 
     assert "@keyframes keyPulse" not in content
     assert ".key-pulse" not in content
-    assert ".cross-hl {" in content
+    assert ".cuadricula-resaltado-cruzado {" in content
 
 
 
@@ -83,27 +84,27 @@ def _comprobar_movimiento_reducido_y_sugerencias(content, raiz):
 
 def test_cliente_delega_ayuda_y_no_anima_teclado():
     """La ayuda de entradas largas se delega y la recolección conserva su curva."""
-    app_js = Path("src/frontend/assets/js/app.js").read_text(encoding="utf-8")
+    app_js = leer_interacciones_cliente()
     recoleccion_js = Path("src/frontend/assets/js/recoleccion_basura.js").read_text(encoding="utf-8")
     assert "key-pulse" not in app_js
-    assert "scrollWidth > target.clientWidth" in app_js
-    assert "target.title = target.value" in app_js
+    assert "scrollWidth > objetivo.clientWidth" in app_js
+    assert "objetivo.title = objetivo.value" in app_js
     assert "transform 160ms cubic-bezier(0.32, 0.72, 0, 1), opacity 160ms cubic-bezier(0.32, 0.72, 0, 1)" in recoleccion_js
 
 
 def test_cliente_resaltado_cruzado_sin_desenfoque():
     """Las cuadrículas resaltan celdas sin cambiar fondo ni aplicar desenfoque."""
-    eq_grid = Path("src/frontend/assets/js/equation_grid.js").read_text(encoding="utf-8")
-    assert "cross-hl" in eq_grid
+    eq_grid = leer_captura_cliente("captura_ecuaciones.js")
+    assert "cuadricula-resaltado-cruzado" in eq_grid
     assert "filter: blur" not in eq_grid
     assert "style.background =" not in eq_grid
 
-    mat_cap = Path("src/frontend/assets/js/matrix_capture.js").read_text(encoding="utf-8")
-    assert "cross-hl" in mat_cap
+    mat_cap = leer_captura_cliente("captura_matrices.js")
+    assert "cuadricula-resaltado-cruzado" in mat_cap
     assert "style.background =" not in mat_cap
 
-    vec_cap = Path("src/frontend/assets/js/vector_capture.js").read_text(encoding="utf-8")
-    assert "cross-hl" in vec_cap
+    vec_cap = leer_captura_cliente("captura_vectores.js")
+    assert "cuadricula-resaltado-cruzado" in vec_cap
     assert "filter: blur" not in vec_cap
     assert "style.background =" not in vec_cap
 
@@ -141,7 +142,7 @@ def test_vistas_sanean_resultados_y_contienen_contenido_ancho():
     assert "overflow-wrap: anywhere;" in lin_res
     assert "min-w-0 max-w-full" in lin_res
 
-    vec_res = Path("src/frontend/vistas/vector_ops/results_mixin.py").read_text(encoding="utf-8")
+    vec_res = Path("src/frontend/vistas/operaciones_vectores/mixin_resultados.py").read_text(encoding="utf-8")
     assert "math-scroll-container" in vec_res
-    assert "html.escape(coef_str)" in vec_res
-    assert "html.escape(sol_str)" in vec_res
+    assert "html.escape(coeficientes)" in vec_res
+    assert "html.escape(solucion)" in vec_res

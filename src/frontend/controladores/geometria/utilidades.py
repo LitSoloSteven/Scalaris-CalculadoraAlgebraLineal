@@ -18,10 +18,10 @@ def selector_celda_error(
     if tipo == "A":
         fila = celda_error.get("row", 0)
         col = celda_error.get("col", 0)
-        return f'input[data-row="{fila}"][data-col="{col}"]'
+        return f'input[data-ecuaciones-fila="{fila}"][data-ecuaciones-columna="{col}"]'
     if tipo == "b":
         fila = celda_error.get("row", 0)
-        return f'input[data-row="{fila}"][data-col="{n}"]'
+        return f'input[data-ecuaciones-fila="{fila}"][data-ecuaciones-columna="{n}"]'
     if tipo == "vec":
         nombre = celda_error.get("name", "")
         indice = celda_error.get("index", 0)

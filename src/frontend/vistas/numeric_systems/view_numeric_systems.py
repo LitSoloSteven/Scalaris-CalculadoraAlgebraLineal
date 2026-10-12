@@ -115,38 +115,39 @@ class NumericSystemsUI(NumericSystemsInteractionMixin, NumericSystemsRenderingMi
         self._actualizar_ejemplos()
 
     def obtener_contexto_ia(self):
-        from src.ai.context import AIContext, sanitize_user_string, is_stale
+        from src.ai.contexto import ContextoIA, EstadoContexto, sanear_cadena_usuario
+        from src.ai.huellas import esta_desactualizado
         val = getattr(getattr(self, 'input_valor', None), 'value', None)
         if not val:
-            return AIContext("bases", "Conversor de bases", "Conversión", {}, empty=True)
+            return ContextoIA("bases", "Conversor de bases", "Conversión", {}, estado=EstadoContexto(vacio=True))
             
         base_orig = getattr(getattr(self, 'tabs_origen', None), 'value', self.base_activa)
         base_dest = getattr(getattr(self, 'tabs_destino', None), 'value', self.base_destino)
         
-        ctx = AIContext(
+        ctx = ContextoIA(
             "bases", 
             "Conversor de bases", 
             f"{base_orig} a {base_dest}", 
             {
-                "valor_entrada": sanitize_user_string(val, 64),
+                "valor_entrada": sanear_cadena_usuario(val, 64),
                 "base_origen": base_orig,
                 "base_destino": base_dest
             }
         )
         
         entrada_actual = {"valor": val, "base_origen": self.base_activa, "base_destino": self.base_destino}
-        ctx.stale = is_stale(entrada_actual, getattr(self, '_result_fp', None))
+        ctx.desactualizado = esta_desactualizado(entrada_actual, getattr(self, '_result_fp', None))
         
         if getattr(self, 'tiene_resultado', False):
-            if ctx.stale:
-                ctx.result = None
+            if ctx.desactualizado:
+                ctx.resultado = None
             else:
-                ctx.result = {
+                ctx.resultado = {
                     "status": "SUCCESS",
                     "resultados": self.resultados.copy()
                 }
         elif getattr(getattr(self, 'lbl_error', None), 'text', None):
-            ctx.result = {
+            ctx.resultado = {
                 "status": "ERROR",
                 "message": self.lbl_error.text
             }
@@ -166,7 +167,7 @@ class NumericSystemsUI(NumericSystemsInteractionMixin, NumericSystemsRenderingMi
                 if not re.match(self.regex_bases[self.base_activa], val.replace(" ", "")):
                     invalid = InvalidCell(label="el número")
                     
-            if getattr(self, 'tiene_resultado', False) and not getattr(self.obtener_contexto_ia(), 'stale', True):
+            if getattr(self, 'tiene_resultado', False) and not getattr(self.obtener_contexto_ia(), 'desactualizado', True):
                 state = "result"
                 
                 res = getattr(self, 'resultados_completos', {})

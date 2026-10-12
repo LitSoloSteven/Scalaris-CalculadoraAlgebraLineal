@@ -74,8 +74,7 @@ class GaussSolver:
         return [self.matrix.get(row_idx, c) for c in range(self.matrix.cols)]
 
     def _set_row(self, row_idx: int, row_values: list) -> None:
-        # No forzar a float: Matrix._normalize_val conserva Fraction/int tal cual,
-        # así se preserva la precisión exacta ganada en _eliminate_row_exact.
+        # Convertir a float perdería la precisión de las fracciones exactas.
         for c, val in enumerate(row_values):
             self.matrix.set(row_idx, c, val)
 
@@ -226,9 +225,7 @@ class GaussSolver:
 
         for i in range(len(pivot_cols) - 1, -1, -1):
             p_col = pivot_cols[i]
-             # Matrix.get() ya garantiza Fraction exacto (vía _normalize_val).
-            # Reaplicar limit_denominator(1000) truncaría fracciones con
-            # denominador > 1000 e introduciría error silencioso en la solución.
+            # Limitar el denominador a 1000 alteraría fracciones con denominadores mayores.
             a_ii = Fraction(self.matrix.get(i, p_col))
             b_i = Fraction(self.matrix.get(i, num_vars))
 
