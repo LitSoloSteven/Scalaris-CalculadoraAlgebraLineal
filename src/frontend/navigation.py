@@ -2,184 +2,59 @@
 
 Módulo puro de Python (solo stdlib) que actúa como única fuente de verdad
 para la jerarquía de pilares, herramientas, metadatos de rutas y redirecciones legacy.
+Los modelos viven en `_nav_modelos` y los datos en `_nav_catalogo`; aquí se
+reexportan para conservar la API pública.
 """
 from __future__ import annotations
 
 import urllib.parse
-from dataclasses import dataclass
 
-
-@dataclass(frozen=True)
-class Pillar:
-    """Representa una categoría superior o pilar conceptual en Scalaris."""
-    id: str
-    name: str
-    icon: str = ""
-    short_name: str = ""
-    prefix: str = ""
-
-
-@dataclass(frozen=True)
-class Tool:
-    """Representa una herramienta interactiva dentro de la suite."""
-    id: str
-    name: str
-    descriptor: str
-    route: str
-    pillar_id: str
-    icon: str
-    page_title: str
-    example_latex: str
-    enabled: bool = True
-
-
-@dataclass(frozen=True)
-class LegacyRedirect:
-    """Define una regla de redirección desde una URL previa hacia la nueva taxonomía."""
-    path: str
-    target_route: str
-    fixed_query: tuple[tuple[str, str], ...] = ()
-    permanent: bool = True
-
-
-@dataclass(frozen=True)
-class NavItem:
-    """Elemento interactivo de navegación contextual para pilares y escenas."""
-    key: str
-    label: str
-    short_label: str
-    descriptor: str
-    icon: str
-    route: str
-    query: tuple[tuple[str, str], ...]
-    tool_id: str
-
-
-VISUALIZER_SCENES: tuple[tuple[str, str, str, str, str], ...] = (
-    ("rectas-planos", "Rectas y planos", "Rectas", "Sistemas de 2 y 3 variables", "escena_rectas_planos"),
-    ("vectores", "Vectores", "Vectores", "Suma y escalamiento de u y v", "vectores"),
-    ("combinacion", "Combinación lineal", "Combinación", "Cómo se forma b con tus vectores", "escena_combinacion"),
+from src.frontend._nav_catalogo import (
+    ALIAS_PILARES,
+    NAV_FLAT_ORDER,
+    ORDEN_ITEMS_POR_PILAR,
+    PILLARS,
+    SHORT_LABELS,
+    TOOLS,
+    VISUALIZER_SCENES,
 )
+from src.frontend._nav_modelos import LegacyRedirect, NavItem, Pillar, Tool
 
-_SHORT_LABELS: dict[str, str] = {
-    "sistemas": "Sistemas",
-    "vectores": "Vectores",
-    "matrices": "Matrices",
-    "inversa": "Inversa",
-    "bases": "Bases",
-    "romanos": "Romanos",
-}
-
-
-# --- Constantes y Taxonomía Base ---
+__all__ = [
+    "HUB_ENABLED",
+    "HUB_PAGE_TITLE",
+    "HUB_ROUTE",
+    "LegacyRedirect",
+    "NAV_FLAT_ORDER",
+    "NavItem",
+    "PILLARS",
+    "Pillar",
+    "TOOLS",
+    "Tool",
+    "VISUALIZER_SCENES",
+    "breadcrumb",
+    "default_item_key",
+    "legacy_redirects",
+    "nav_groups",
+    "nav_item_href",
+    "nav_items",
+    "pillar_for_route",
+    "pillar_of",
+    "redirect_location",
+    "route_of",
+    "tool_by_id",
+    "tool_by_route",
+    "visible_tools",
+]
 
 HUB_ENABLED: bool = True
 HUB_ROUTE: str = "/"
 HUB_PAGE_TITLE: str = "Inicio | Scalaris"
 
-PILLARS: tuple[Pillar, ...] = (
-    Pillar(id="algebra", name="Álgebra lineal", icon="algebra_lineal", short_name="Álgebra lineal", prefix="/algebra-lineal"),
-    Pillar(id="visualizador", name="Visualizador geométrico", icon="geometria", short_name="Visualizador", prefix="/visualizador"),
-    Pillar(id="utilidades", name="Utilidades numéricas", icon="utilidades", short_name="Utilidades", prefix="/utilidades"),
-)
-
+_SHORT_LABELS: dict[str, str] = SHORT_LABELS
 _PILLARS_BY_ID: dict[str, Pillar] = {p.id: p for p in PILLARS}
-
-TOOLS: tuple[Tool, ...] = (
-    Tool(
-        id="sistemas",
-        name="Sistemas de ecuaciones",
-        descriptor="SEL: Gauss y Gauss-Jordan",
-        route="/algebra-lineal/sistemas",
-        pillar_id="algebra",
-        icon="sistemas_lineales",
-        page_title="Sistemas de ecuaciones lineales (SEL) | Scalaris",
-        example_latex=r"A\mathbf{x} = \mathbf{b}",
-        enabled=True,
-    ),
-    Tool(
-        id="vectores",
-        name="Vectores",
-        descriptor="Operaciones y combinación lineal",
-        route="/algebra-lineal/vectores",
-        pillar_id="algebra",
-        icon="vectores",
-        page_title="Vectores | Scalaris",
-        example_latex=r"c_1\mathbf{v}_1 + c_2\mathbf{v}_2 = \mathbf{b}",
-        enabled=True,
-    ),
-    Tool(
-        id="matrices",
-        name="Matrices",
-        descriptor="Expresiones, transpuesta y producto",
-        route="/algebra-lineal/matrices",
-        pillar_id="algebra",
-        icon="operaciones_matrices",
-        page_title="Matrices | Scalaris",
-        example_latex=r"2A - B(C - D^{T})",
-        enabled=True,
-    ),
-    Tool(
-        id="inversa",
-        name="Matriz inversa",
-        descriptor="Gauss-Jordan sobre [A | I]",
-        route="/algebra-lineal/inversa",
-        pillar_id="algebra",
-        icon="matriz_inversa",
-        page_title="Matriz inversa | Scalaris",
-        example_latex=r"A^{-1}",
-        enabled=True,
-    ),
-    Tool(
-        id="visualizador",
-        name="Rectas, planos y vectores",
-        descriptor="Escenas interactivas en R² y R³",
-        route="/visualizador",
-        pillar_id="visualizador",
-        icon="geometria",
-        page_title="Visualizador geométrico | Scalaris",
-        example_latex=r"\mathbf{x} = \mathbf{p} + t\,\mathbf{d}",
-        enabled=True,
-    ),
-    Tool(
-        id="bases",
-        name="Conversor de bases",
-        descriptor="Decimal, binario, octal y hexadecimal",
-        route="/utilidades/bases",
-        pillar_id="utilidades",
-        icon="conversor_bases",
-        page_title="Conversor de bases | Scalaris",
-        example_latex=r"1010_2 = 10_{10}",
-        enabled=True,
-    ),
-    Tool(
-        id="romanos",
-        name="Números romanos",
-        descriptor="Suma, resta y multiplicación",
-        route="/utilidades/romanos",
-        pillar_id="utilidades",
-        icon="romanos",
-        page_title="Números romanos | Scalaris",
-        example_latex=r"\text{XIV} + \text{IX} = \text{XXIII}",
-        enabled=True,
-    ),
-)
-
 _TOOLS_BY_ID: dict[str, Tool] = {t.id: t for t in TOOLS}
 
-# Orden plano para la barra de navegación en Fase 1 (se eliminará en Fase 2)
-NAV_FLAT_ORDER: tuple[str, ...] = (
-    "sistemas",
-    "matrices",
-    "inversa",
-    "vectores",
-    "visualizador",
-    "bases",
-    "romanos",
-)
-
-
-# --- API Pública de Navegación ---
 
 def tool_by_id(tool_id: str) -> Tool:
     """Devuelve la Tool correspondiente al id dado.
@@ -271,7 +146,6 @@ def legacy_redirects() -> tuple[LegacyRedirect, ...]:
         redirects.append(LegacyRedirect(path="/", target_route="/algebra-lineal/sistemas", permanent=False))
         redirects.append(LegacyRedirect(path="/ia", target_route="/algebra-lineal/sistemas", permanent=False))
     else:
-        # En F2 con Hub activado: '/' es la página Hub y '/ia' va a '/?glosa=1'
         redirects.append(LegacyRedirect(path="/ia", target_route="/", fixed_query=(("glosa", "1"),), permanent=True))
 
     redirects.extend([
@@ -310,64 +184,47 @@ def redirect_location(redirect: LegacyRedirect, incoming_items: list[tuple[str, 
     return redirect.target_route
 
 
+def _item_de_herramienta(tool: Tool) -> NavItem:
+    """Convierte una herramienta en su item de navegación contextual."""
+    return NavItem(
+        key=tool.id,
+        label=tool.name,
+        short_label=_SHORT_LABELS[tool.id],
+        descriptor=tool.descriptor,
+        icon=tool.icon,
+        route=tool.route,
+        query=(),
+        tool_id=tool.id,
+    )
+
+
+def _items_visualizador() -> tuple[NavItem, ...]:
+    """Construye un item por cada escena del visualizador geométrico."""
+    ruta = tool_by_id("visualizador").route
+    return tuple(
+        NavItem(
+            key=f"vis:{escena}",
+            label=label,
+            short_label=short_label,
+            descriptor=descriptor,
+            icon=icon,
+            route=ruta,
+            query=(("escena", escena),),
+            tool_id="visualizador",
+        )
+        for escena, label, short_label, descriptor, icon in VISUALIZER_SCENES
+    )
+
+
 def nav_items(pillar_id: str) -> tuple[NavItem, ...]:
     """Devuelve los items de navegacion contextual asociados a un pilar."""
-    if pillar_id in ("algebra", "algebra-lineal"):
-        order = ("sistemas", "vectores", "matrices", "inversa")
-        items = []
-        for tid in order:
-            t = tool_by_id(tid)
-            items.append(
-                NavItem(
-                    key=t.id,
-                    label=t.name,
-                    short_label=_SHORT_LABELS[t.id],
-                    descriptor=t.descriptor,
-                    icon=t.icon,
-                    route=t.route,
-                    query=(),
-                    tool_id=t.id,
-                )
-            )
-        return tuple(items)
-
-    if pillar_id in ("visualizador", "geometria"):
-        items = []
-        for escena, label, short_label, descriptor, icon in VISUALIZER_SCENES:
-            items.append(
-                NavItem(
-                    key=f"vis:{escena}",
-                    label=label,
-                    short_label=short_label,
-                    descriptor=descriptor,
-                    icon=icon,
-                    route="/visualizador",
-                    query=(("escena", escena),),
-                    tool_id="visualizador",
-                )
-            )
-        return tuple(items)
-
-    if pillar_id in ("utilidades", "utilidades-numericas"):
-        order = ("bases", "romanos")
-        items = []
-        for tid in order:
-            t = tool_by_id(tid)
-            items.append(
-                NavItem(
-                    key=t.id,
-                    label=t.name,
-                    short_label=_SHORT_LABELS[t.id],
-                    descriptor=t.descriptor,
-                    icon=t.icon,
-                    route=t.route,
-                    query=(),
-                    tool_id=t.id,
-                )
-            )
-        return tuple(items)
-
-    return ()
+    pilar = ALIAS_PILARES.get(pillar_id, pillar_id)
+    if pilar == "visualizador":
+        return _items_visualizador()
+    orden = ORDEN_ITEMS_POR_PILAR.get(pilar)
+    if orden is None:
+        return ()
+    return tuple(_item_de_herramienta(tool_by_id(tool_id)) for tool_id in orden)
 
 
 def nav_item_href(item: NavItem) -> str:

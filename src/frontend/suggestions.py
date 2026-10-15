@@ -55,6 +55,15 @@ _CATALOG = [
     ("inversa", "success", "inversa.ok.sistema", "¿Qué relación tiene con Ax = b?", "state"),
     ("inversa", "singular", "inversa.sing.det", "¿Qué significa que el determinante sea cero?", "state"),
     ("inversa", "singular", "inversa.sing.porque", "¿Por qué una matriz singular no tiene inversa?", "state"),
+    # Determinantes
+    ("determinantes", "none", "determinantes.none.metodo", "¿Cuándo conviene cofactores y cuándo eliminación?", "state"),
+    ("determinantes", "none", "determinantes.none.inversa", "¿Qué relación hay entre det(A) y la inversa?", "state"),
+    ("determinantes", "success", "determinantes.ok.invertible", "¿Por qué det(A) ≠ 0 significa que A es invertible?", "state"),
+    ("determinantes", "success", "determinantes.ok.comparar", "¿Cómo compruebo este resultado con el otro método?", "state"),
+    ("determinantes", "singular", "determinantes.sing.porque", "¿Por qué det(A) = 0 hace singular a la matriz?", "state"),
+    ("determinantes", "singular", "determinantes.sing.dependencia", "¿Qué dependencia hay entre filas o columnas cuando det(A) = 0?", "state"),
+    ("determinantes", "flag_swap", "determinantes.flag.swap", "¿Por qué un intercambio de filas cambia el signo?", "flag"),
+    ("determinantes", "flag_signos", "determinantes.flag.signos", "¿Cómo se decide el signo de cada término?", "flag"),
     # Matrices
     ("matrices", "empty", "matrices.empty.sintaxis", "¿Qué sintaxis acepto, por ejemplo 2A − B(C − Dᵀ)?", "state"),
     ("matrices", "dim_error", "matrices.dim.porque", "¿Por qué no puedo operar estas dimensiones?", "state"),
