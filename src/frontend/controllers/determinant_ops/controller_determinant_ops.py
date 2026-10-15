@@ -17,6 +17,7 @@ from src.frontend.controllers._matriz_cuadrada import parsear_matriz_cuadrada
 from src.frontend.controllers.determinant_ops._config import (
     COFACTORES_MAX_N,
     LU_MAX_N,
+    METODO_COFACTORES,
     METODOS,
 )
 from src.frontend.controllers.determinant_ops._foco import foco_paso
@@ -31,6 +32,15 @@ from src.frontend.controllers.determinant_ops._resultado import (
 from src.frontend.controllers.linear_systems._shared import parse_payload
 
 logger = logging.getLogger(__name__)
+
+MENSAJE_ERROR_NUMERICO = (
+    "No se pudo completar el cálculo con estos valores. "
+    "Usa números más pequeños e inténtalo de nuevo."
+)
+MENSAJE_ERROR_INESPERADO = (
+    "Ocurrió un error inesperado al calcular el determinante. "
+    "Revisa los datos e inténtalo de nuevo."
+)
 
 
 def _extraer_mensaje_error_payload(err_json: Any) -> str:
@@ -47,22 +57,26 @@ def _extraer_mensaje_error_payload(err_json: Any) -> str:
     return "Payload JSON inválido."
 
 
+def _n_entero(datos: dict[str, Any]) -> int:
+    """Devuelve n si es un entero válido (no booleano) o 0 en otro caso."""
+    n_val = datos.get("n")
+    return n_val if isinstance(n_val, int) and not isinstance(n_val, bool) else 0
+
+
 def _resolver(
     matriz: Matrix,
     metodo: str,
 ) -> tuple[dict[str, Any], list[dict[str, Any]], list[dict[str, Any]], dict[str, int]]:
     """Ejecuta el solver del método elegido y construye sus pasos didácticos."""
-    if metodo == "cofactores":
+    if metodo == METODO_COFACTORES:
         res = determinant_by_cofactors(matriz)
-        if res.get("status") != "SUCCESS":
-            return res, [], [], {}
-        pasos, grupos, stats = construir_pasos_cofactores(res, matriz.rows)
-        return res, pasos, grupos, stats
-
-    res = determinant_by_lu(matriz)
+        constructor = construir_pasos_cofactores
+    else:
+        res = determinant_by_lu(matriz)
+        constructor = construir_pasos_lu
     if res.get("status") != "SUCCESS":
         return res, [], [], {}
-    pasos, grupos, stats = construir_pasos_lu(res, matriz.rows)
+    pasos, grupos, stats = constructor(res, matriz.rows)
     return res, pasos, grupos, stats
 
 
@@ -70,7 +84,7 @@ def _validar_metodo_y_limite(
     datos: dict[str, Any],
 ) -> tuple[str | None, int | None, str | None]:
     """Valida el método solicitado y verifica el límite de dimensión aplicable."""
-    metodo_raw = datos.get("metodo", "cofactores")
+    metodo_raw = datos.get("metodo", METODO_COFACTORES)
     metodo = str(metodo_raw).strip() if isinstance(metodo_raw, str) else ""
     if metodo not in METODOS:
         return (
@@ -79,13 +93,7 @@ def _validar_metodo_y_limite(
             "El método seleccionado no es válido. Elige Cofactores o Eliminación con pivoteo.",
         )
 
-    n_val = datos.get("n")
-    if (
-        metodo == "cofactores"
-        and isinstance(n_val, int)
-        and not isinstance(n_val, bool)
-        and n_val > COFACTORES_MAX_N
-    ):
+    if metodo == METODO_COFACTORES and _n_entero(datos) > COFACTORES_MAX_N:
         return (
             metodo,
             None,
@@ -93,8 +101,39 @@ def _validar_metodo_y_limite(
             f"Usa eliminación con pivoteo para matrices más grandes.",
         )
 
-    max_n = COFACTORES_MAX_N if metodo == "cofactores" else LU_MAX_N
+    max_n = COFACTORES_MAX_N if metodo == METODO_COFACTORES else LU_MAX_N
     return metodo, max_n, None
+
+
+def _leer_entrada(
+    payload_json: str,
+    inicio: float,
+) -> tuple[tuple[Matrix, str] | None, dict[str, Any] | None]:
+    """Valida payload, método y matriz; devuelve ((matriz, metodo), None) o (None, error)."""
+    datos, err_json = parse_payload(payload_json)
+    if err_json is not None or not isinstance(datos, dict):
+        mensaje = _extraer_mensaje_error_payload(err_json)
+        return None, resultado_error(mensaje, elapsed_s=time.perf_counter() - inicio)
+
+    metodo, max_n, err_metodo = _validar_metodo_y_limite(datos)
+    if err_metodo is not None or metodo is None or max_n is None:
+        return None, resultado_error(
+            err_metodo or "Método inválido.",
+            n=_n_entero(datos),
+            metodo=metodo or "",
+            elapsed_s=time.perf_counter() - inicio,
+        )
+
+    matriz, err_mat = parsear_matriz_cuadrada(datos, max_n=max_n)
+    if err_mat is not None or matriz is None:
+        return None, resultado_error(
+            err_mat["message"],
+            n=err_mat.get("n", 0),
+            metodo=metodo,
+            elapsed_s=time.perf_counter() - inicio,
+            error_cell=err_mat.get("error_cell"),
+        )
+    return (matriz, metodo), None
 
 
 class DeterminantOpsController:
@@ -144,35 +183,10 @@ class DeterminantOpsController:
         """Procesa una solicitud JSON de cálculo de determinante y devuelve el resultado."""
         inicio = time.perf_counter()
         try:
-            datos, err_json = parse_payload(payload_json)
-            if err_json is not None or not isinstance(datos, dict):
-                msg = _extraer_mensaje_error_payload(err_json)
-                return resultado_error(msg, elapsed_s=time.perf_counter() - inicio)
-
-            metodo, max_n, err_metodo = _validar_metodo_y_limite(datos)
-            if err_metodo is not None or metodo is None or max_n is None:
-                n_raw = (
-                    datos.get("n")
-                    if isinstance(datos.get("n"), int) and not isinstance(datos.get("n"), bool)
-                    else 0
-                )
-                return resultado_error(
-                    err_metodo or "Método inválido.",
-                    n=n_raw,
-                    metodo=metodo or "",
-                    elapsed_s=time.perf_counter() - inicio,
-                )
-
-            matriz, err_mat = parsear_matriz_cuadrada(datos, max_n=max_n)
-            if err_mat is not None or matriz is None:
-                return resultado_error(
-                    err_mat["message"],
-                    n=err_mat.get("n", 0),
-                    metodo=metodo,
-                    elapsed_s=time.perf_counter() - inicio,
-                    error_cell=err_mat.get("error_cell"),
-                )
-
+            entrada, error = _leer_entrada(payload_json, inicio)
+            if error is not None:
+                return error
+            matriz, metodo = entrada
             res_backend, pasos, grupos, stats = _resolver(matriz, metodo)
             if res_backend.get("status") != "SUCCESS":
                 return resultado_error(
@@ -182,25 +196,16 @@ class DeterminantOpsController:
                     elapsed_s=time.perf_counter() - inicio,
                     matrix_a=matriz,
                 )
-
             return armar_resultado(
-                res_backend,
-                pasos,
-                grupos,
-                stats,
-                matriz=matriz,
-                n=matriz.rows,
-                metodo=metodo,
+                res_backend, pasos, grupos, stats,
+                matriz=matriz, n=matriz.rows, metodo=metodo,
                 elapsed_s=time.perf_counter() - inicio,
             )
-        except (ValueError, AlgebraLinealError) as exc:
-            return resultado_error(
-                str(exc), elapsed_s=time.perf_counter() - inicio
-            )
+        except AlgebraLinealError as exc:
+            return resultado_error(str(exc), elapsed_s=time.perf_counter() - inicio)
+        except ValueError:
+            logger.exception("Error numérico en process_determinant")
+            return resultado_error(MENSAJE_ERROR_NUMERICO, elapsed_s=time.perf_counter() - inicio)
         except Exception:
             logger.exception("Error inesperado en process_determinant")
-            return resultado_error(
-                "Ocurrió un error inesperado al calcular el determinante. "
-                "Revisa los datos e inténtalo de nuevo.",
-                elapsed_s=time.perf_counter() - inicio,
-            )
+            return resultado_error(MENSAJE_ERROR_INESPERADO, elapsed_s=time.perf_counter() - inicio)

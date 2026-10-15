@@ -46,7 +46,7 @@ class InitialSelection:
 
 PILLAR_METADATA: dict[str, dict[str, str]] = {
     "algebra": {
-        "blurb": "Sistemas, vectores, matrices e inversa, con cada paso a la vista.",
+        "blurb": "Sistemas, vectores, matrices, inversa y determinantes, con cada paso a la vista.",
         "unit_singular": "herramienta",
         "unit_plural": "herramientas",
     },

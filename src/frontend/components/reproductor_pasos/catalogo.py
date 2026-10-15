@@ -23,6 +23,9 @@ CATALOGO_TIPOS = {
     "decodificacion": {"etiqueta": "Decodificación", "icono": "code"},
     "construccion": {"etiqueta": "Construcción", "icono": "build"},
     "resultado": {"etiqueta": "Resultado", "icono": "check_circle"},
+    "menor": {"etiqueta": "Menor", "icono": "grid_view"},
+    "producto": {"etiqueta": "Producto", "icono": "calculate"},
+    "singular": {"etiqueta": "Singular", "icono": "block"},
 }
 VELOCIDADES_AUTOREPRODUCCION = {"Lenta": 1.2, "Normal": 0.6, "Rápida": 0.2}
 STACKED_FRAC_MAX_N = 6

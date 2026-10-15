@@ -16,6 +16,8 @@ from src.frontend.navigation import (
 )
 from src.frontend.theme import setup_theme
 
+METODOS_SISTEMAS = ("gauss", "gauss-jordan")
+
 
 def register_legacy_redirects(target_app) -> None:
     """Registra los manejadores HTTP GET para las rutas legacy de Scalaris.
@@ -36,13 +38,11 @@ def register_legacy_redirects(target_app) -> None:
         target_app.get(rule.path)(_make_handler(rule))
 
 
-def register_routes() -> None:
-    """Registra todas las redirecciones legacy y páginas canónicas de la aplicación."""
-    register_legacy_redirects(app)
-
+def _registrar_paginas_algebra_base() -> None:
+    """Registra Sistemas, Vectores y Matrices."""
     @ui.page(route_of("sistemas"), title=tool_by_id("sistemas").page_title)
     def linear_systems_page(method: str = "gauss", handoff: str = ""):
-        if method not in ("gauss", "gauss-jordan"):
+        if method not in METODOS_SISTEMAS:
             method = "gauss"
         from src.frontend.views.linear_systems.view_linear_systems import LinearSystemsUI
         setup_theme()
@@ -63,6 +63,9 @@ def register_routes() -> None:
         app_ui = MatrixOpsUI()
         app_ui.build()
 
+
+def _registrar_paginas_algebra_matricial() -> None:
+    """Registra Matriz inversa y Determinantes."""
     @ui.page(route_of("inversa"), title=tool_by_id("inversa").page_title)
     def matrix_inverse_page(handoff: str = ""):
         from src.frontend.views.inverse_ops.view_inverse_ops import InverseOpsUI
@@ -70,6 +73,16 @@ def register_routes() -> None:
         app_ui = InverseOpsUI()
         app_ui.build(handoff_token=handoff)
 
+    @ui.page(route_of("determinantes"), title=tool_by_id("determinantes").page_title)
+    def determinant_page(handoff: str = ""):
+        from src.frontend.views.determinant_ops.view_determinant_ops import DeterminantOpsUI
+        setup_theme()
+        app_ui = DeterminantOpsUI()
+        app_ui.build(handoff_token=handoff)
+
+
+def _registrar_paginas_visualizador_y_utilidades() -> None:
+    """Registra el Visualizador, el Conversor de bases y los Números romanos."""
     @ui.page(route_of("visualizador"), title=tool_by_id("visualizador").page_title)
     def geometry_page(escena: str = "rectas-planos", handoff: str = ""):
         from src.frontend.views.geometry.view_geometry import GeometryUI
@@ -91,10 +104,24 @@ def register_routes() -> None:
         app_ui = RomanCalculatorUI()
         app_ui.build()
 
-    if navigation.HUB_ENABLED:
-        @ui.page(HUB_ROUTE, title=HUB_PAGE_TITLE)
-        async def hub_page(client: Client, glosa: str = ''):
-            from src.frontend.views.hub.view_hub import HubUI
-            setup_theme()
-            app_ui = HubUI(glosa_open=(glosa == '1'))
-            await app_ui.build(client)
+
+def _registrar_hub() -> None:
+    """Registra la página de inicio cuando el Hub está habilitado."""
+    if not navigation.HUB_ENABLED:
+        return
+
+    @ui.page(HUB_ROUTE, title=HUB_PAGE_TITLE)
+    async def hub_page(client: Client, glosa: str = ""):
+        from src.frontend.views.hub.view_hub import HubUI
+        setup_theme()
+        app_ui = HubUI(glosa_open=(glosa == "1"))
+        await app_ui.build(client)
+
+
+def register_routes() -> None:
+    """Registra todas las redirecciones legacy y páginas canónicas de la aplicación."""
+    register_legacy_redirects(app)
+    _registrar_paginas_algebra_base()
+    _registrar_paginas_algebra_matricial()
+    _registrar_paginas_visualizador_y_utilidades()
+    _registrar_hub()

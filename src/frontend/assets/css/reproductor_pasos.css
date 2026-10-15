@@ -12,13 +12,15 @@
 
 .chip-intercambio,
 .chip-ajuste,
-.chip-division {
+.chip-division,
+.chip-singular {
     background: var(--badge-warn-bg);
     color: var(--badge-warn-text);
 }
 
 .chip-pivote,
-.chip-componente {
+.chip-componente,
+.chip-menor {
     background: var(--bg-elevated);
     color: var(--accent);
     outline: 1px solid var(--accent);
@@ -26,7 +28,8 @@
 
 .chip-normalizacion,
 .chip-verificacion,
-.chip-construccion {
+.chip-construccion,
+.chip-producto {
     background: var(--badge-suc-bg);
     color: var(--badge-suc-text);
 }

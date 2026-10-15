@@ -6,48 +6,26 @@ from typing import Any
 
 from src.backend.utils.formatters import format_fraction_str
 from src.frontend.controllers._agrupar_pasos import agrupar_pasos_eliminacion
+from src.frontend.controllers.determinant_ops._pasos_comunes import (
+    construir_caso_1x1,
+    crear_paso,
+    resumen_operaciones,
+)
 
 
-def _construir_caso_1x1(
+def _caso_1x1(
     resultado: dict[str, Any],
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, int]]:
     """Genera el único paso cuando la matriz de entrada es 1×1."""
-    det = Fraction(resultado.get("determinant", 0))
-    det_str = format_fraction_str(det)
     pasos_raw = resultado.get("steps") or []
     paso_cero = pasos_raw[0] if pasos_raw else {}
-
-    paso = {
-        "index": 0,
-        "kind": "final",
-        "description": f"Resultado: det(A) = {det_str}",
-        "explanation": (
-            f"En una matriz 1×1 el determinante es su único elemento: "
-            f"det(A) = {det_str}."
-        ),
-        "group_index": 0,
-        "matrix": paso_cero.get("matrix"),
-        "pivot": None,
-        "rows_changed": [],
-        "swap_rows": None,
-        "detail_latex": paso_cero.get("detail_latex"),
-        "menor": None,
-    }
-    grupo = {
-        "title": "Resultado",
-        "summary": "1 operación",
-        "kind": "final",
-        "step_indices": [0],
-    }
-    stats = {
-        "total": 1,
-        "pivotes": 0,
-        "intercambios": 0,
-        "eliminaciones": 0,
-        "menores": 0,
-        "terminos_cero": 0,
-    }
-    return [paso], [grupo], stats
+    return construir_caso_1x1(
+        resultado,
+        matriz=paso_cero.get("matrix"),
+        detalle_latex=paso_cero.get("detail_latex"),
+        menores=0,
+        terminos_cero=0,
+    )
 
 
 def _explicar_paso_lu(paso: dict[str, Any], intercambios_acumulados: int) -> str:
@@ -91,7 +69,7 @@ def _postprocesar_pasos_base(
     pasos: list[dict[str, Any]],
     grupos: list[dict[str, Any]],
     pasos_raw: list[dict[str, Any]],
-) -> int:
+) -> None:
     """Ajusta títulos, descripciones, explicaciones y claves de los pasos agrupados."""
     for grupo in grupos:
         if grupo.get("kind") == "inicial":
@@ -103,8 +81,6 @@ def _postprocesar_pasos_base(
             paso["description"] = "Matriz inicial A"
         elif paso.get("kind") == "intercambio":
             intercambios += 1
-        elif paso.get("kind") == "eliminacion" and idx < len(pasos_raw):
-            paso["description"] = pasos_raw[idx].get("description", paso.get("description", ""))
 
         paso["explanation"] = _explicar_paso_lu(paso, intercambios)
         paso["detail_latex"] = (
@@ -117,7 +93,27 @@ def _postprocesar_pasos_base(
         paso.setdefault("rows_changed", [])
         paso.setdefault("swap_rows", None)
 
-    return intercambios
+
+def _textos_cierre(det: Fraction, intercambios: int) -> tuple[str, str, str, str]:
+    """Devuelve tipo, título de grupo, descripción y explicación del paso de cierre."""
+    if det == 0:
+        return (
+            "singular",
+            "Matriz singular",
+            "Diagonal con pivote cero: det(A) = 0",
+            "Al menos una columna quedó sin pivote no nulo, lo que deja un cero "
+            "en la diagonal de U. El determinante es 0 y la matriz A no tiene inversa.",
+        )
+    det_str = format_fraction_str(det)
+    factor_signo = "−1" if intercambios % 2 == 1 else "+1"
+    return (
+        "producto",
+        "Producto de la diagonal",
+        f"Producto de la diagonal: det(A) = {det_str}",
+        f"Multiplicamos los pivotes de la diagonal principal de U y aplicamos "
+        f"el signo (−1)^{intercambios} = {factor_signo} por los intercambios de fila: "
+        f"det(A) = {det_str}.",
+    )
 
 
 def _construir_paso_cierre(
@@ -129,45 +125,17 @@ def _construir_paso_cierre(
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     """Crea el paso y grupo final (producto de la diagonal o detección de singularidad)."""
     det = Fraction(resultado.get("determinant", 0))
-    det_str = format_fraction_str(det)
-    swaps = int(resultado.get("swap_count", 0))
-
-    if det == 0:
-        kind = "singular"
-        titulo_grupo = "Matriz singular"
-        descripcion = "Diagonal con pivote cero: det(A) = 0"
-        explicacion = (
-            "Al menos una columna quedó sin pivote no nulo, lo que deja un cero "
-            "en la diagonal de U. El determinante es 0 y la matriz A no tiene inversa."
-        )
-    else:
-        kind = "producto"
-        titulo_grupo = "Producto de la diagonal"
-        descripcion = f"Producto de la diagonal: det(A) = {det_str}"
-        factor_signo = "−1" if swaps % 2 == 1 else "+1"
-        explicacion = (
-            f"Multiplicamos los pivotes de la diagonal principal de U y aplicamos "
-            f"el signo (−1)^{swaps} = {factor_signo} por los intercambios de fila: "
-            f"det(A) = {det_str}."
-        )
-
-    paso = {
-        "index": indice_paso,
-        "kind": kind,
-        "description": descripcion,
-        "explanation": explicacion,
-        "group_index": indice_grupo,
-        "matrix": ultima_matriz,
-        "pivot": None,
-        "rows_changed": [],
-        "swap_rows": None,
-        "detail_latex": paso_final_raw.get("detail_latex"),
-        "menor": None,
-    }
+    tipo, titulo_grupo, descripcion, explicacion = _textos_cierre(
+        det, int(resultado.get("swap_count", 0))
+    )
+    paso = crear_paso(
+        indice_paso, tipo, indice_grupo, (descripcion, explicacion),
+        matrix=ultima_matriz, detail_latex=paso_final_raw.get("detail_latex"),
+    )
     grupo = {
         "title": titulo_grupo,
-        "summary": "1 operación",
-        "kind": kind,
+        "summary": resumen_operaciones(1),
+        "kind": tipo,
         "step_indices": [indice_paso],
     }
     return paso, grupo
@@ -179,7 +147,7 @@ def construir_pasos_lu(
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, int]]:
     """Construye pasos, grupos y estadísticas para determinant_by_lu."""
     if n == 1:
-        return _construir_caso_1x1(resultado)
+        return _caso_1x1(resultado)
 
     pasos_raw = resultado.get("steps") or []
     pasos_gauss_raw = pasos_raw[:-1] if len(pasos_raw) > 1 else []
@@ -199,11 +167,7 @@ def construir_pasos_lu(
 
     ultima_matriz = pasos[-1].get("matrix") if pasos else None
     paso_final, grupo_final = _construir_paso_cierre(
-        resultado,
-        paso_cierre_raw,
-        ultima_matriz,
-        len(pasos),
-        len(grupos),
+        resultado, paso_cierre_raw, ultima_matriz, len(pasos), len(grupos)
     )
     pasos.append(paso_final)
     grupos.append(grupo_final)

@@ -31,9 +31,12 @@ from src.backend.solvers.matrix_ops.determinants import recommend_method
 from src.backend.solvers.matrix_ops.formatters import matrix_to_latex
 from src.backend.solvers.matrix_ops.operations import MatrixOpsSolver
 from src.backend.utils.formatters import format_fraction_str, number_to_latex
-from src.frontend.controllers.determinant_ops._config import LATEX_MAX_N
+from src.frontend.controllers.determinant_ops._config import LATEX_MAX_N, METODO_COFACTORES
+from src.frontend.controllers.determinant_ops._pasos_comunes import latex_suma_terminos
 
 DECIMALES_TIEMPO = 4
+MENSAJE_SINGULAR = "El determinante es 0: la matriz es singular y no tiene inversa."
+MENSAJE_INVERTIBLE = "Determinante calculado: la matriz es invertible (det ≠ 0)."
 
 
 def _matriz_a_vmatrix_latex(matriz: Matrix | None, n: int) -> str | None:
@@ -69,28 +72,9 @@ def _construir_verificacion_terminos(
     determinante: Fraction,
 ) -> dict[str, Any]:
     """Verifica que la suma de signo * coeficiente * menor coincida con det(A)."""
-    suma = Fraction(0)
-    terminos_tex: list[str] = []
-
-    for idx, minor in enumerate(minors):
-        signo = Fraction(int(minor.get("sign", 1)))
-        coef = Fraction(minor.get("coeff", 0))
-        valor = Fraction(minor.get("value", 0))
-        aporte = signo * coef * valor
-        suma += aporte
-
-        if aporte == 0:
-            terminos_tex.append("0" if idx == 0 else "+ 0")
-        elif idx == 0:
-            terminos_tex.append(number_to_latex(aporte))
-        elif aporte > 0:
-            terminos_tex.append(f"+ {number_to_latex(aporte)}")
-        else:
-            terminos_tex.append(f"- {number_to_latex(abs(aporte))}")
-
+    cuerpo_suma, suma = latex_suma_terminos(minors)
     coincide = suma == determinante
     estado_tex = "Correcto" if coincide else "Incorrecto"
-    cuerpo_suma = " ".join(terminos_tex) if terminos_tex else "0"
     return {
         "key": "terminos",
         "title": "La suma de los términos es det(A)",
@@ -100,6 +84,20 @@ def _construir_verificacion_terminos(
             f"\\quad (\\text{{{estado_tex}}})"
         ),
     }
+
+
+def _construir_verificaciones(
+    matriz: Matrix,
+    determinante: Fraction,
+    metodo: str,
+    respuesta_backend: dict[str, Any],
+) -> list[dict[str, Any]]:
+    """Reúne las comprobaciones aplicables; la de términos solo existe si hay menores."""
+    verificaciones = [_construir_verificacion_cruzada(matriz, determinante)]
+    menores = respuesta_backend.get("minors") or []
+    if metodo == METODO_COFACTORES and menores:
+        verificaciones.append(_construir_verificacion_terminos(menores, determinante))
+    return verificaciones
 
 
 def resultado_error(
@@ -149,24 +147,11 @@ def armar_resultado(
     """Ensambla el diccionario final de éxito o singularidad para la vista."""
     det = Fraction(respuesta_backend.get("determinant", 0))
     es_singular = det == 0
-    status = "SINGULAR" if es_singular else "SUCCESS"
-    mensaje = (
-        "El determinante es 0: la matriz es singular y no tiene inversa."
-        if es_singular
-        else "Determinante calculado: la matriz es invertible (det ≠ 0)."
-    )
-
-    verificaciones = [_construir_verificacion_cruzada(matriz, det)]
-    if metodo == "cofactores":
-        minors = respuesta_backend.get("minors") or []
-        verificaciones.append(_construir_verificacion_terminos(minors, det))
-
     pivotes_raw = respuesta_backend.get("pivots") or []
-    pivotes_str = [format_fraction_str(Fraction(p)) for p in pivotes_raw]
 
     return {
-        "status": status,
-        "message": mensaje,
+        "status": "SINGULAR" if es_singular else "SUCCESS",
+        "message": MENSAJE_SINGULAR if es_singular else MENSAJE_INVERTIBLE,
         "n": n,
         "metodo": metodo,
         "elapsed_s": round(float(elapsed_s), DECIMALES_TIEMPO),
@@ -180,8 +165,8 @@ def armar_resultado(
         "groups": grupos,
         "stats": stats,
         "swap_count": int(respuesta_backend.get("swap_count", 0)),
-        "pivotes_str": pivotes_str,
-        "verifications": verificaciones,
+        "pivotes_str": [format_fraction_str(Fraction(p)) for p in pivotes_raw],
+        "verifications": _construir_verificaciones(matriz, det, metodo, respuesta_backend),
         "recomendacion": recommend_method(n),
         "error_cell": None,
     }
