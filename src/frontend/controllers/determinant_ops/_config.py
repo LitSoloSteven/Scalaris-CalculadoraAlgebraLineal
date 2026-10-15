@@ -8,6 +8,7 @@ from src.backend.constants import (
 )
 
 METODOS: tuple[str, str] = ("cofactores", "lu")
+METODO_COFACTORES, METODO_LU = METODOS
 
 COFACTORES_MAX_N: int = COFACTOR_MAX_DIMENSION
 
@@ -17,6 +18,6 @@ LU_MAX_N: int = INVERSE_MAX_DIMENSION
 LATEX_MAX_N: int = INVERSE_LATEX_MAX_DIMENSION
 
 ETIQUETAS_METODO: dict[str, str] = {
-    "cofactores": "Cofactores",
-    "lu": "Eliminación con pivoteo",
+    METODO_COFACTORES: "Cofactores",
+    METODO_LU: "Eliminación con pivoteo",
 }

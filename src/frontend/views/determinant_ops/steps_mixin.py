@@ -160,7 +160,7 @@ class DeterminantOpsStepsMixin:
         with contenedor:
             try:
                 renderizador(cuerpo.paso, cuerpo)
-            except (ValueError, TypeError, KeyError):
+            except Exception:
                 logger.error("No se pudo dibujar el paso %s", paso.indice, exc_info=True)
                 ui.label(MENSAJE_ERROR_PASO).classes("badge-error")
 
