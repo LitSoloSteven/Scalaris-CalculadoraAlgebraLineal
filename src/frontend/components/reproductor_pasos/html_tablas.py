@@ -26,15 +26,7 @@ class _ResaltadosAumentados:
 
 
 def formatear_valor(valor: int | Fraction | float | str, *, apilada: bool = False) -> str:
-    """Formatea un número o texto para una celda.
-
-    Args:
-        valor: Valor numérico exacto o texto que se mostrará.
-        apilada: Indica si las fracciones se muestran en vertical.
-
-    Returns:
-        Contenido HTML seguro de la celda.
-    """
+    """Formatea un número o texto para una celda."""
     if isinstance(valor, int) or (isinstance(valor, Fraction) and valor.denominator == 1):
         return str(valor.numerator if isinstance(valor, Fraction) else valor)
     if isinstance(valor, Fraction):
@@ -47,14 +39,7 @@ def formatear_valor(valor: int | Fraction | float | str, *, apilada: bool = Fals
 
 
 def formatear_decimal(valor: int | Fraction | float | str) -> str:
-    """Devuelve una aproximación decimal sin ceros finales redundantes.
-
-    Args:
-        valor: Valor numérico que se convertirá a decimal.
-
-    Returns:
-        Decimal formateado o texto escapado si no puede convertirse.
-    """
+    """Devuelve una aproximación decimal sin ceros finales redundantes."""
     try:
         numero = float(valor)
         if abs(numero) < 1e-12:
@@ -66,14 +51,7 @@ def formatear_decimal(valor: int | Fraction | float | str) -> str:
 
 
 def etiqueta_variable_html(nombre: str) -> str:
-    """Convierte un subíndice numérico o escapa el nombre recibido.
-
-    Args:
-        nombre: Etiqueta de variable que se mostrará en una cabecera.
-
-    Returns:
-        HTML escapado o etiqueta con un elemento ``sub``.
-    """
+    """Convierte un subíndice numérico o escapa el nombre recibido."""
     coincidencia = re.fullmatch(r"([A-Za-z]+)_?(\d+)", nombre)
     if coincidencia:
         return f"{coincidencia.group(1)}<sub>{coincidencia.group(2)}</sub>"
@@ -81,15 +59,7 @@ def etiqueta_variable_html(nombre: str) -> str:
 
 
 def html_tabla_matriz(matriz: Matrix, *, decimales: bool = False) -> str:
-    """Genera una tabla de matriz con desplazamiento horizontal propio.
-
-    Args:
-        matriz: Matriz cuyos valores se mostrarán.
-        decimales: Indica si se muestran aproximaciones decimales.
-
-    Returns:
-        Tabla HTML con las clases visuales existentes.
-    """
+    """Genera una tabla de matriz con desplazamiento horizontal propio."""
     compacta = matriz.rows > STACKED_FRAC_MAX_N
     apilada = not compacta and not decimales
     encabezado = "<th class='row-label'></th>" + "".join(
@@ -131,12 +101,7 @@ def html_tabla_aumentada(
     etiquetas_izq: Sequence[str] | None = None,
     etiquetas_der: Sequence[str] | None = None,
 ) -> str:
-    """Genera una tabla aumentada con resaltados y etiquetas opcionales.
-
-    Args: matriz, ancho izquierdo, filas cambiadas o intercambiadas, pivote, resultado y etiquetas.
-    Returns: HTML con scroll propio.
-    Raises: ``ValueError`` si el ancho o la cantidad de etiquetas no coincide.
-    """
+    """Genera una tabla aumentada con resaltados y etiquetas opcionales."""
     if n_izq < 0 or n_izq > matriz.cols:
         raise ValueError("El ancho izquierdo debe caber en la matriz aumentada.")
     ancho_der = matriz.cols - n_izq
@@ -153,15 +118,25 @@ def html_tabla_aumentada(
     return _html_tabla(clases, encabezado, filas)
 
 
-def _encabezados_aumentados(n_izq, ancho_der, etiquetas_izq, etiquetas_der) -> str:
+def _encabezados_aumentados(
+    n_izq: int,
+    ancho_der: int,
+    etiquetas_izq: Sequence[str] | None,
+    etiquetas_der: Sequence[str] | None,
+) -> str:
     """Construye los encabezados de bloques y valida las etiquetas recibidas."""
     izquierda = _validar_etiquetas(etiquetas_izq, n_izq)
     derecha = _validar_etiquetas(etiquetas_der, ancho_der)
     cabecera_izq = "".join(f"<th>{etiqueta}</th>" for etiqueta in izquierda)
-    cabecera_der = "".join(
-        f"<th{' class=\'sep-left\'' if indice == 0 else ''}>{etiqueta}</th>"
-        for indice, etiqueta in enumerate(derecha)
-    )
+
+    th_der = []
+    for indice, etiqueta in enumerate(derecha):
+        if indice == 0:
+            th_der.append(f"<th class='sep-left'>{etiqueta}</th>")
+        else:
+            th_der.append(f"<th>{etiqueta}</th>")
+    cabecera_der = "".join(th_der)
+
     return f"<th class='row-label'></th>{cabecera_izq}{cabecera_der}"
 
 
