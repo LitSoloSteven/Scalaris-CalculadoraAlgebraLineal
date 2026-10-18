@@ -79,6 +79,14 @@ def _registrar_paginas_algebra() -> None:
 def _registrar_paginas_avanzadas() -> None:
     """Registra las páginas de visualización y extensiones matriciales."""
 
+    @ui.page(ruta_de("determinantes"), title=herramienta_por_identificador("determinantes").titulo_pagina)
+    def pagina_determinantes():
+        """Construye la captura pública de determinantes mediante triangulación LU."""
+        from src.frontend.vistas.operaciones_matrices.vista_determinante import VistaDeterminante
+
+        configurar_tema()
+        VistaDeterminante().construir()
+
     @ui.page(ruta_de("visualizador"), title=herramienta_por_identificador("visualizador").titulo_pagina)
     def pagina_geometria(escena: str = "rectas-planos", handoff: str = ""):
         """Construye la página de geometria con sus controles y contexto."""

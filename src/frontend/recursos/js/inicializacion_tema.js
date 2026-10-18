@@ -7,7 +7,8 @@
   window.scalaris.graficos = JSON.parse(configuracion.textContent);
   window.scalaris.tema = {
     preparar: function prepararTemaAlmacenado() {
-      const tema = localStorage.getItem('tema') || 'papel';
+      let tema = 'papel';
+      try { tema = localStorage.getItem('tema') || tema; } catch (_) { /* Tema base si se bloquea el almacenamiento. */ }
       const raiz = document.documentElement;
       raiz.setAttribute('data-tema', tema);
       raiz.style.colorScheme = tema === 'medianoche' ? 'dark' : 'light';

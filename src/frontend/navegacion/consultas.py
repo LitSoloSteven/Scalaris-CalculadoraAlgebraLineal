@@ -27,6 +27,9 @@ def ruta_de(identificador_herramienta: str) -> str:
 def herramienta_por_ruta(ruta: str) -> Herramienta | None:
     """Busca y devuelve la herramienta activa asociada a la ruta dada."""
     ruta_limpia = _normalizar_ruta(ruta)
+    consulta = urllib.parse.parse_qs(urllib.parse.urlsplit(ruta).query)
+    if ruta_limpia == ruta_de("matrices") and consulta.get("operacion") == ["determinante"]:
+        return herramienta_por_identificador("determinantes")
     for herramienta in HERRAMIENTAS:
         if herramienta.ruta.rstrip("/") == ruta_limpia:
             return herramienta
@@ -121,7 +124,7 @@ def _crear_elementos_visualizador() -> tuple[ElementoNavegacion, ...]:
 def elementos_navegacion(identificador_pilar: str) -> tuple[ElementoNavegacion, ...]:
     """Devuelve los elementos de navegación contextual asociados a un pilar."""
     if identificador_pilar == "algebra":
-        return _crear_elementos_herramientas(("sistemas", "vectores", "matrices", "inversa"))
+        return _crear_elementos_herramientas(("sistemas", "vectores", "matrices", "inversa", "determinantes"))
     if identificador_pilar == "visualizador":
         return _crear_elementos_visualizador()
     if identificador_pilar == "utilidades":

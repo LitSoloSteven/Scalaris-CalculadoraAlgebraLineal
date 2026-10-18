@@ -1,28 +1,24 @@
-"""Conexión del menú de temas con la API real del cliente."""
+"""Conexión del menú con la selección local y el origen de su activación."""
 from src.frontend.componentes import selector_tema
 
 
-def test_opciones_de_tema_invocan_api_de_cliente(monkeypatch):
-    """Cada opción del menú real llama al tema que le corresponde."""
-    manejadores = []
-    codigos = []
+def test_opciones_de_tema_delegan_en_cliente_sin_viaje_al_servidor(monkeypatch):
+    """El menú expone sus valores sin callbacks que pierdan el evento original."""
+    opciones_creadas = []
     crear_elemento = selector_tema.ui.menu_item
 
     def registrar_opcion(*argumentos, **opciones):
-        """Procesa registrar opcion con los datos recibidos."""
-        manejadores.append(opciones["on_click"])
-        return crear_elemento(*argumentos, **opciones)
+        """Conserva las propiedades y eventos del componente real."""
+        elemento = crear_elemento(*argumentos, **opciones)
+        opciones_creadas.append((elemento, opciones))
+        return elemento
 
     monkeypatch.setattr(selector_tema.ui, "menu_item", registrar_opcion)
-    monkeypatch.setattr(selector_tema.ui, "run_javascript", codigos.append)
     boton = selector_tema.renderizar_boton_tema()
     assert boton is not None
-    assert len(manejadores) == 3
-    assert codigos == []
-    for manejador in manejadores:
-        manejador()
-    assert codigos == [
-        "window.scalaris.tema.establecer('papel')",
-        "window.scalaris.tema.establecer('marea')",
-        "window.scalaris.tema.establecer('medianoche')",
+    assert len(opciones_creadas) == 3
+    assert all("on_click" not in argumentos for _, argumentos in opciones_creadas)
+    assert [elemento._props["data-tema-opcion"] for elemento, _ in opciones_creadas] == [
+        "papel", "marea", "medianoche",
     ]
+    assert all(elemento._props["role"] == "menuitemradio" for elemento, _ in opciones_creadas)

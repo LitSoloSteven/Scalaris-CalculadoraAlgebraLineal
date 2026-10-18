@@ -15,20 +15,6 @@
             return document.documentElement.getAttribute('data-entrada') !== 'teclado';
         }
     };
-    window.scalaris.ultimoClic = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-    document.addEventListener('click', function (evento) {
-        window.scalaris.ultimoClic = { x: evento.clientX, y: evento.clientY };
-    }, { capture: true });
-})();
-
-/** Centra el enlace activo sin desplazamiento animado. */
-(function registrarNavegacion() {
-    window.scalaris.navegacion = {
-        centrarActivo: function () {
-            var elemento = document.querySelector('.navegacion-elementos .navegacion-activa');
-            if (elemento) elemento.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'auto' });
-        }
-    };
 })();
 
 /** Reproduce una animación de resultado y retira su listener al terminar. */

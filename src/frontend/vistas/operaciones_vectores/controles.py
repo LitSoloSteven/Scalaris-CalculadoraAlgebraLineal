@@ -36,7 +36,9 @@ def construir_escalar(vista):
 
 def _construir_pestanas(vista):
     with ui.row().classes("w-full justify-between items-center mb-8 gap-4 flex-wrap"):
-        with ui.tabs().classes("pestanas-controles pestanas-metodo max-w-full").props("dense no-caps mobile-arrows") as vista.pestanas:
+        with ui.tabs().classes("pestanas-controles pestanas-vectores").props(
+            'no-caps mobile-arrows outside-arrows align="left" aria-label="Operaciones con vectores"'
+        ) as vista.pestanas:
             ui.tab("suma_resta", label="Suma / Resta")
             ui.tab("escalar", label="Escalar × Vector")
             ui.tab("combinacion_lineal", label="Combinación Lineal")
@@ -60,7 +62,7 @@ def _construir_capturas(vista):
 
 def construir_panel_izquierdo(vista):
     """Monta pestañas, mínimos de captura y acciones de cálculo y limpieza."""
-    with ui.column().classes("disposicion-panel p-8 bg-[var(--bg-page)]"):
+    with ui.column().classes("disposicion-panel vectores-panel-captura p-8 bg-[var(--bg-page)]"):
         _construir_pestanas(vista)
         _construir_capturas(vista)
         with ui.row().classes("w-full justify-between mt-8 pt-4 border-t border-[var(--border-input)] items-center"):

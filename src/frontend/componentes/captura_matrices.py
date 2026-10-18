@@ -10,7 +10,6 @@ from src.frontend.componentes.cuadricula_base import (
     DIMENSION_MINIMA,
     cache_matriz_desde_datos,
     deshabilitar_botones_dimension,
-    sincronizar_cache_celdas,
     actualizar_estados_botones_dimension,
     animar_entrada_cuadricula,
     animar_salida_cuadricula,
@@ -31,49 +30,52 @@ def _validar_deltas(matriz: dict[str, Any], incremento_filas: int, incremento_co
     return nuevo_m, nuevo_n
 
 
-def _construir_cabecera_tarjeta(panel: PanelCapturaMatrices, nombre: str, matriz: dict[str, Any]) -> None:
+def _construir_cabecera_tarjeta(nombre: str, matriz: dict[str, Any]) -> None:
     """Compone título, distintivo de dimensiones y acciones de la matriz indicada."""
-    with ui.row().classes("w-full justify-between items-center mb-2"):
-        with ui.row().classes("items-center gap-2"):
-            ui.label(f"Matriz {nombre}").classes("font-bold texto-principal text-base")
-            matriz["etiqueta_dimension_matriz"] = ui.html(
-                f'{nombre} <span class="separador-punto">·</span> {matriz["filas"]} &times; {matriz["columnas"]}'
-            ).classes("fuente-pequena texto-secundario uppercase etiqueta-dimensiones")
+    with ui.element("header").classes("captura-matriz-cabecera"):
+        ui.label(f"Matriz {nombre}").classes("captura-matriz-titulo texto-principal").props(f'id="matriz-titulo-{nombre}"')
+        matriz["etiqueta_dimension_matriz"] = ui.html(
+            f'{nombre} <span class="separador-punto">·</span> {matriz["filas"]} &times; {matriz["columnas"]}'
+        ).classes("texto-secundario etiqueta-dimensiones")
 
-        with ui.row().classes("items-center gap-2"):
-            if panel.al_invertir:
-                ui.button("Invertir", on_click=lambda nombre_matriz=nombre: panel.al_invertir(nombre_matriz)).classes(
-                    "boton-discreto text-xs"
-                ).props('ripple=false aria-label="Invertir Matriz"')
-            ui.button(
-                icon="delete", on_click=partial(panel.eliminar_matriz, nombre), color=None
-            ).classes("boton-discreto w-8 h-8 p-0 ml-1 boton-eliminar-elemento").props(
-                'ripple=false aria-label="Eliminar Matriz"'
-            ).tooltip("Eliminar Matriz")
+
+def _construir_acciones_tarjeta(panel: PanelCapturaMatrices, nombre: str) -> None:
+    """Ofrece la transferencia a inversa y la eliminación junto a las dimensiones."""
+    with ui.row().classes("captura-matriz-acciones"):
+        if panel.al_invertir:
+            ui.button(icon="arrow_forward", color=None, on_click=lambda: panel.al_invertir(nombre)).classes(
+                "boton-discreto captura-matriz-accion"
+            ).props(f'ripple=false aria-label="Abrir matriz {nombre} en Matriz inversa"').tooltip(
+                f"Envía una copia de la matriz {nombre} a Matriz inversa para calcular su inversa."
+            )
+        ui.button(icon="delete", on_click=partial(panel.eliminar_matriz, nombre), color=None).classes(
+            "boton-discreto captura-matriz-accion boton-eliminar-elemento"
+        ).props(f'ripple=false aria-label="Eliminar matriz {nombre}"').tooltip(f"Eliminar matriz {nombre}")
 
 
 def _construir_controles_dimension_interfaz(panel: Any, nombre: str, matriz: dict[str, Any]) -> None:
     """Construye los botones de filas y columnas de la tarjeta."""
-    with ui.row().classes("w-full justify-start items-center gap-4 mb-2"):
-        with ui.row().classes("items-center gap-1"):
+    with ui.element("div").classes("captura-matriz-herramientas"):
+        with ui.row().classes("captura-matriz-dimension").props(f'role="group" aria-label="Filas de la matriz {nombre}"'):
             ui.label("Filas:").classes("text-sm texto-secundario mr-1")
             matriz["boton_quitar_fila"] = ui.button(
                 icon="remove", on_click=partial(panel.ajustar_tamano, nombre, incremento_filas=-1), color=None
-            ).classes("boton-icono w-8 h-8 p-0 flex-shrink-0").props('ripple=false aria-label="Quitar Fila"')
+            ).classes("boton-icono captura-matriz-accion").props(f'ripple=false aria-label="Quitar fila de matriz {nombre}"')
             matriz["etiqueta_filas"] = ui.label(str(matriz["filas"])).classes("font-bold w-4 text-center")
             matriz["boton_agregar_fila"] = ui.button(
                 icon="add", on_click=partial(panel.ajustar_tamano, nombre, incremento_filas=1), color=None
-            ).classes("boton-icono w-8 h-8 p-0 flex-shrink-0").props('ripple=false aria-label="Añadir Fila"')
+            ).classes("boton-icono captura-matriz-accion").props(f'ripple=false aria-label="Añadir fila a matriz {nombre}"')
 
-        with ui.row().classes("items-center gap-1"):
+        with ui.row().classes("captura-matriz-dimension").props(f'role="group" aria-label="Columnas de la matriz {nombre}"'):
             ui.label("Columnas:").classes("text-sm texto-secundario mr-1")
             matriz["boton_quitar_columna"] = ui.button(
                 icon="remove", on_click=partial(panel.ajustar_tamano, nombre, incremento_columnas=-1), color=None
-            ).classes("boton-icono w-8 h-8 p-0 flex-shrink-0").props('ripple=false aria-label="Quitar Columna"')
+            ).classes("boton-icono captura-matriz-accion").props(f'ripple=false aria-label="Quitar columna de matriz {nombre}"')
             matriz["etiqueta_dimension"] = ui.label(str(matriz["columnas"])).classes("font-bold w-4 text-center")
             matriz["boton_agregar_columna"] = ui.button(
                 icon="add", on_click=partial(panel.ajustar_tamano, nombre, incremento_columnas=1), color=None
-            ).classes("boton-icono w-8 h-8 p-0 flex-shrink-0").props('ripple=false aria-label="Añadir Columna"')
+            ).classes("boton-icono captura-matriz-accion").props(f'ripple=false aria-label="Añadir columna a matriz {nombre}"')
+        _construir_acciones_tarjeta(panel, nombre)
 
 
 class PanelCapturaMatrices:
@@ -152,7 +154,10 @@ class PanelCapturaMatrices:
 
     def _sincronizar_cache_matriz(self, matriz: dict[str, Any]) -> None:
         """Copia valores actuales de la UI al cache de celdas."""
-        sincronizar_cache_celdas(matriz["entradas"], matriz["cache"])
+        matriz["cache"].update({
+            (r, c): celda.value
+            for r, fila in enumerate(matriz["entradas"]) for c, celda in enumerate(fila)
+        })
 
     def _deshabilitar_botones_matriz(self, matriz: dict[str, Any]) -> None:
         """Deshabilita temporalmente los botones de dimension de la matriz."""
@@ -212,6 +217,8 @@ class PanelCapturaMatrices:
         """Reconstruye todos los paneles de matriz registrados."""
         if not self.contenedor:
             return
+        for matriz in self.matrices.values():
+            self._sincronizar_cache_matriz(matriz)
         self.contenedor.clear()
         with self.contenedor:
             for nombre in sorted(self.matrices.keys()):
@@ -220,11 +227,11 @@ class PanelCapturaMatrices:
     def _construir_tarjeta_matriz(self, nombre: str) -> None:
         """Genera la tarjeta contenedora y cabecera de control para una matriz."""
         matriz = self.matrices[nombre]
-        with ui.column().classes("panel-tarjeta p-4 mb-4 w-full"):
-            _construir_cabecera_tarjeta(self, nombre, matriz)
+        with ui.column().classes("panel-tarjeta captura-matriz").props(f'role="group" aria-labelledby="matriz-titulo-{nombre}"'):
+            _construir_cabecera_tarjeta(nombre, matriz)
             self._construir_controles_dimension(nombre, matriz)
             matriz["contenedor"] = ui.column().classes(
-                "overflow-auto w-full cuadricula-area-desplazamiento cuadricula-desplazamiento"
+                "overflow-auto w-full cuadricula-area-desplazamiento cuadricula-desplazamiento captura-matriz-cuadricula"
             )
             self.renderizar_cuadricula(nombre)
 

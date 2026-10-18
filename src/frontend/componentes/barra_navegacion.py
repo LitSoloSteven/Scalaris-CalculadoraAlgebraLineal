@@ -10,7 +10,6 @@ from nicegui import ui
 from src.frontend import banderas
 from src.frontend.componentes.iconos import icono_svg
 from src.frontend.componentes.selector_tema import renderizar_boton_tema
-from src.frontend.componentes.accesos_algebra import renderizar_accesos_algebra
 from src.frontend.navegacion import (
     RUTA_INICIO,
     ORDEN_NAVEGACION_PLANA,
@@ -92,7 +91,6 @@ def _renderizar_barra_pilares(ruta_activa: str, clave_activa: str) -> None:
         _renderizar_elementos_centro(pilar, elementos, clave_activa)
 
     with ui.element("div").classes("tema-boton-selector navegacion-tema"):
-        renderizar_accesos_algebra()
         renderizar_boton_tema()
 
 
@@ -104,11 +102,14 @@ def _renderizar_elementos_centro(pilar: Any, elementos: Any, clave_activa: str) 
         ui.html(icono_svg(pilar.icono))
         ui.html(html.escape(pilar.nombre_corto), tag="span").classes("navegacion-nombre-pilar")
 
-    with ui.element("nav").classes("navegacion-elementos").props(
-        f'aria-label="Herramientas de {pilar.nombre_corto}"'
-    ):
-        for elemento in elementos:
-            _renderizar_elemento_pilar(elemento, clave_activa)
+    with ui.element("div").classes("navegacion-recorrido"):
+        ui.html("‹", tag="span").classes("navegacion-indicio navegacion-indicio-antes").props('aria-hidden="true"')
+        with ui.element("nav").classes("navegacion-elementos").props(
+            f'aria-label="Herramientas de {pilar.nombre_corto}"'
+        ):
+            for elemento in elementos:
+                _renderizar_elemento_pilar(elemento, clave_activa)
+        ui.html("›", tag="span").classes("navegacion-indicio navegacion-indicio-despues").props('aria-hidden="true"')
 
 
 
@@ -122,20 +123,23 @@ def _renderizar_elemento_pilar(elemento: Any, clave_activa: str) -> None:
     with ui.element("a").classes(clases_elemento).props(propiedades_elemento).tooltip(elemento.etiqueta):
         ui.html(icono_svg(elemento.icono))
         ui.html(html.escape(elemento.etiqueta), tag="span").classes("navegacion-etiqueta-completa")
-        ui.html(html.escape(elemento.etiqueta_corta), tag="span").classes("navegacion-etiqueta-breve")
 
 
 def _registrar_navegacion_reciente(ruta_activa: str) -> None:
-    """Registra la herramienta activa en el historial reciente del cliente y centra el foco."""
+    """Registra la herramienta reciente y deja visible su enlace sin mover el foco."""
     from nicegui import context
-    try:
-        if not getattr(context.client, "has_socket_connection", False):
-            return
-        herramienta_activa = herramienta_por_ruta(ruta_activa)
+    cliente = context.client
+    herramienta_activa = herramienta_por_ruta(ruta_activa)
+
+    def registrar():
+        """Espera la conexión inicial antes de enviar el registro al navegador."""
         if herramienta_activa is not None:
-            ui.run_javascript(
+            cliente.run_javascript(
                 f"window.scalaris?.recientes?.registrar?.({json.dumps(herramienta_activa.identificador)});"
             )
-        ui.run_javascript("window.scalaris?.navegacion?.centrarActivo?.();")
-    except Exception:
-        pass
+        cliente.run_javascript("window.scalaris?.navegacion?.centrarActivo?.();")
+
+    if cliente.has_socket_connection:
+        registrar()
+    else:
+        cliente.on_connect(registrar)

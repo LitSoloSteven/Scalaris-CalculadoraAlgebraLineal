@@ -22,7 +22,10 @@ function crearClienteSimulado() {
             setAttribute: (nombre, valor) => atributos.set(nombre, valor),
             getAttribute: nombre => atributos.get(nombre),
         },
-        addEventListener: (nombre, manejador) => eventos.set(nombre, manejador),
+        addEventListener: (nombre, manejador) => {
+            const anterior = eventos.get(nombre);
+            eventos.set(nombre, evento => { anterior?.(evento); manejador(evento); });
+        },
         getElementById: nombre => elementos.get(nombre),
         querySelector: () => null,
         querySelectorAll: () => [],
@@ -30,6 +33,7 @@ function crearClienteSimulado() {
     const ventana = { innerWidth: 800, innerHeight: 600, matchMedia: () => ({ matches: false }) };
     const contexto = maquinaVirtual.createContext({
         window: ventana, document: documento, Date,
+        MutationObserver: class { observe() {} },
         setTimeout: (manejador, espera) => temporizadores.push({ manejador, espera }),
         clearTimeout: identificador => { if (identificador) temporizadores[identificador - 1].cancelado = true; },
     });
@@ -39,7 +43,7 @@ function crearClienteSimulado() {
     return { ventana, documento, eventos, elementos, temporizadores, contexto };
 }
 
-prueba("las entradas conservan teclado, puntero, movimiento reducido y posición de clic", () => {
+prueba("las entradas conservan teclado, puntero y movimiento reducido", () => {
     const cliente = crearClienteSimulado();
     afirmar.equal(cliente.ventana.scalaris.movimiento.permitido(), true);
     cliente.eventos.get("keydown")();
@@ -48,9 +52,6 @@ prueba("las entradas conservan teclado, puntero, movimiento reducido y posición
     afirmar.equal(cliente.ventana.scalaris.movimiento.permitido(), true);
     cliente.ventana.matchMedia = () => ({ matches: true });
     afirmar.equal(cliente.ventana.scalaris.movimiento.permitido(), false);
-    cliente.eventos.get("click")({ clientX: 25, clientY: 70 });
-    afirmar.equal(cliente.ventana.scalaris.ultimoClic.x, 25);
-    afirmar.equal(cliente.ventana.scalaris.ultimoClic.y, 70);
 });
 
 prueba("la ayuda de celda muestra el valor completo y se retira al caber", () => {
@@ -134,4 +135,22 @@ prueba("el clic de salto impide que callbacks pendientes dupliquen el texto", ()
     afirmar.equal(cursor.style.display, "none");
     afirmar.equal(cliente.eventos.has("clic_escritura"), false);
     afirmar.equal(cliente.temporizadores[0].cancelado, true);
+});
+
+prueba("el tema espera a las figuras de NiceGUI y absorbe un fallo de Plotly", async () => {
+    const cliente = crearClienteSimulado();
+    let finalizar, resuelta = false;
+    const figura = { isConnected: true, _fullLayout: {} };
+    cliente.documento.querySelectorAll = () => [figura];
+    cliente.ventana.getElement = elemento => {
+        afirmar.equal(elemento, figura);
+        return { Plotly: { relayout: () => new Promise(resolver => { finalizar = resolver; }) } };
+    };
+    const actualizacion = cliente.ventana.scalaris.actualizarTemaPlotly('marea').then(() => { resuelta = true; });
+    await Promise.resolve();
+    afirmar.equal(resuelta, false);
+    finalizar(); await actualizacion;
+    afirmar.equal(resuelta, true);
+    cliente.ventana.getElement = () => ({ Plotly: { relayout: () => Promise.reject(new Error('Gráfico retirado')) } });
+    await afirmar.doesNotReject(cliente.ventana.scalaris.actualizarTemaPlotly('medianoche'));
 });

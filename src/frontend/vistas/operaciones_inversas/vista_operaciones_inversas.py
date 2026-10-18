@@ -73,13 +73,14 @@ class VistaOperacionesInversas(MixinResultadosOperacionesInversas, MixinPasosOpe
         with ui.column().classes('disposicion-panel'):
             self.panel_matriz_cuadrada.construir_contenedor()
             with ui.row().classes('w-full mt-6 gap-4'):
-                ui.button(
+                with ui.button(
                     icon='delete',
                     on_click=self.confirmar_limpieza,
                     color=None,
                 ).classes('boton-discreto flex-1 py-3').props(
                     'ripple=false id="boton-limpiar-principal" aria-label="Limpiar"'
-                ).tooltip('Limpiar')
+                ):
+                    ui.tooltip('Limpiar').props('target="#boton-limpiar-principal"')
 
                 ui.button(
                     'Calcular inversa',

@@ -218,31 +218,23 @@ html[data-inicio-pendiente] .inicio-fila {
 }
 
 .inicio-titulo-fila {
-    display: -webkit-box;
+    display: block;
     min-width: 0;
     font-size: clamp(1.4rem, 3cqi, 2.1rem);
     font-weight: 700;
     line-height: 1.2;
     color: var(--text-main);
-    overflow: hidden;
     overflow-wrap: anywhere;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
 }
 
 .inicio-descripcion-fila {
-    display: -webkit-box;
+    display: block;
     min-width: 0;
     font-size: clamp(0.9375rem, 1.5cqi, 1.1875rem);
     font-weight: var(--fw-small);
     line-height: 1.35;
     color: var(--text-sec);
-    overflow: hidden;
     overflow-wrap: anywhere;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
 }
 
 .inicio-detalle-celda {

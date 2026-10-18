@@ -10,6 +10,7 @@ RAIZ = Path(__file__).resolve().parent.parent
 ARCHIVOS_CSS = [
     RAIZ / "src" / "frontend" / "recursos" / "css" / "tokens.css",
     RAIZ / "src" / "frontend" / "recursos" / "css" / "base.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "presentacion.css",
     RAIZ / "src" / "frontend" / "recursos" / "css" / "disposicion.css",
     RAIZ / "src" / "frontend" / "recursos" / "css" / "componentes_entradas.css",
     RAIZ / "src" / "frontend" / "recursos" / "css" / "componentes_controles.css",
@@ -21,6 +22,8 @@ ARCHIVOS_CSS = [
     RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_glosa_componentes.css",
     RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_glosa_bitacora.css",
     RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_inversa.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_matrices.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_vectores.css",
     RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_geometria.css",
     RAIZ / "src" / "frontend" / "recursos" / "css" / "movimiento.css",
     RAIZ / "src" / "frontend" / "recursos" / "css" / "reproductor_pasos.css",

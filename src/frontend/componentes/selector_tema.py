@@ -10,7 +10,7 @@ def renderizar_boton_tema():
     """Renderiza el botón de tema con su menú desplegable accesible."""
     boton_tema = ui.button(color=None).classes("boton-icono p-0 texto-principal").props(
         'flat ripple=false aria-label="Seleccionar Tema" aria-haspopup="menu" aria-expanded="false"'
-    ).tooltip("Seleccionar Tema")
+    )
 
     with boton_tema:
         ui.html(icono_svg("temas"))
@@ -31,14 +31,14 @@ def _renderizar_opciones_tema() -> None:
         ("Medianoche", "medianoche"),
     )
     for etiqueta, id_tema in opciones:
-        with ui.menu_item(
-            on_click=lambda tema=id_tema: ui.run_javascript(f"window.scalaris.tema.establecer('{tema}')")
-        ).classes("rounded-lg mb-1 flex items-center gap-3 w-full").props('role="menuitem"'):
+        with ui.menu_item().classes("rounded-lg mb-1 flex items-center gap-3 w-full").props(
+            f'role="menuitemradio" aria-checked="false" data-tema-opcion="{id_tema}"'
+        ):
             ui.html(f'<div class="tema-muestra tema-muestra-{id_tema}"></div>')
             ui.label(etiqueta).classes("flex-1")
             ui.html(
                 f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" '
                 f'stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" '
-                f'class="tema-marca-activa tema-marca-{id_tema}">'
+                f'class="tema-marca-activa" aria-hidden="true">'
                 f'<polyline points="20 6 9 17 4 12"></polyline></svg>'
             )

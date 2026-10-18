@@ -47,17 +47,10 @@ class VistaOperacionesMatrices(MixinResultadosOperacionesMatrices, MixinContexto
 
     def _navegar_a_inversa(self, nombre: str) -> None:
         """Valida y redirige a la vista de matriz inversa mediante handoff."""
-        matriz = self.panel_captura_matrices.matrices.get(nombre)
+        matriz = self.panel_captura_matrices.obtener_datos_crudos().get(nombre)
         if matriz is None:
             return
-        datos = []
-        for indice_fila in range(matriz['filas']):
-            fila = [str(matriz['cache'].get((indice_fila, c), '0')).strip() or '0' for c in range(matriz['columnas'])]
-            datos.append(fila)
-
-        transferencia = ControladorOperacionesMatrices.preparar_inversa(
-            nombre, {"filas": matriz['filas'], "columnas": matriz['columnas'], "datos": datos}
-        )
+        transferencia = ControladorOperacionesMatrices.preparar_inversa(nombre, matriz)
         if transferencia.get("mensaje"):
             ui.notify(transferencia["mensaje"], type='warning')
             return
@@ -68,13 +61,13 @@ class VistaOperacionesMatrices(MixinResultadosOperacionesMatrices, MixinContexto
         ui.navigate.to(url_transferencia(ruta_de('inversa'), token))
 
     def _renderizar_panel_expresion(self) -> None:
-        """Renderiza el entrada de la expresión matemática y el botón Evaluar."""
-        with ui.column().classes('w-full panel-tarjeta p-6 mt-4'):
-            ui.label('Expresión Matemática').classes('text-lg font-bold texto-principal mb-2')
+        """Renderiza la entrada de la expresión matemática y el botón Evaluar."""
+        with ui.column().classes('panel-tarjeta matrices-panel-expresion'):
+            ui.label('Expresión matemática').classes('text-lg font-bold texto-principal')
             self.entrada_expresion = ui.input(
                 placeholder='Ej. A + B * C'
             ).classes('matriz-entrada w-full text-xl py-2').props(
-                'borderless autocomplete="new-password"'
+                'borderless autocomplete="new-password" aria-label="Expresión matemática"'
             )
             self.entrada_expresion.on_value_change(lambda _: self._al_cambiar_matriz())
 
@@ -83,7 +76,7 @@ class VistaOperacionesMatrices(MixinResultadosOperacionesMatrices, MixinContexto
                 icon='calculate',
                 on_click=lambda evento: self.evaluar_expresion(evento.sender),
                 color=None,
-            ).classes('boton-principal w-full py-3 mt-4').props('ripple=false')
+            ).classes('boton-principal w-full py-3').props('ripple=false')
 
     def construir(self):
         """Construye los paneles de captura, expresión y resultados."""
@@ -92,15 +85,13 @@ class VistaOperacionesMatrices(MixinResultadosOperacionesMatrices, MixinContexto
         self.panel_captura_matrices.inyectar_recursos_cliente()
         self.panel_captura_matrices.al_cambiar_datos = self._al_cambiar_matriz
 
-        with ui.column().classes('w-full max-w-7xl mx-auto p-6 mt-4 vista-raiz'):
+        with ui.column().classes('w-full max-w-7xl mx-auto p-6 mt-4 vista-raiz matrices-vista'):
             with ui.row().classes('w-full justify-between items-center mb-8 gap-4 flex-wrap'):
                 ui.label('Matrices').classes('text-2xl font-bold texto-principal')
 
             with ui.element('div').classes('disposicion-dividida mb-8'):
-                with ui.column().classes('disposicion-panel'):
-                    self.panel_captura_matrices.al_invertir = self._navegar_a_inversa
-                    self.panel_captura_matrices.construir(ui.column().classes('w-full'))
-                    self._renderizar_panel_expresion()
+                with ui.column().classes('disposicion-panel matrices-panel-captura'):
+                    self._renderizar_panel_captura()
 
                 with ui.column().classes('disposicion-panel'):
                     self.contenedor_resultados = ui.column().classes(
@@ -109,3 +100,13 @@ class VistaOperacionesMatrices(MixinResultadosOperacionesMatrices, MixinContexto
                     self.restablecer_resultados()
 
         self.panel_ia.construir()
+
+    def _renderizar_panel_captura(self) -> None:
+        """Sitúa la acción de añadir sobre la lista y separa el panel de expresión."""
+        with ui.row().classes('matrices-acciones-lista'):
+            ui.button('Añadir matriz', icon='add', color=None, on_click=self.panel_captura_matrices.agregar_matriz).classes(
+                'boton-discreto'
+            ).props('ripple=false')
+        self.panel_captura_matrices.al_invertir = self._navegar_a_inversa
+        self.panel_captura_matrices.construir(ui.column().classes('captura-matrices-lista'))
+        self._renderizar_panel_expresion()

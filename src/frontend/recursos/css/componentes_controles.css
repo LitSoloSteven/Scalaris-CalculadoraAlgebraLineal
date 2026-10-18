@@ -247,18 +247,11 @@ html[data-tema="medianoche"] .marca-logotipo-oscuro {
     width: 14px;
     height: 14px;
     color: var(--accent);
+    visibility: hidden;
 }
 
-.tema-marca-papel {
-    display: var(--show-papel, none);
-}
-
-.tema-marca-marea {
-    display: var(--show-marea, none);
-}
-
-.tema-marca-medianoche {
-    display: var(--show-medianoche, none);
+[data-tema-opcion][aria-checked="true"] .tema-marca-activa {
+    visibility: visible;
 }
 
 .separador-punto {

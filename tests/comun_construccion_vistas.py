@@ -17,6 +17,7 @@ VISTAS_RUTAS = {
     "vectores": ("operaciones_vectores.vista_operaciones_vectores", "VistaOperacionesVectores"),
     "matrices": ("operaciones_matrices.vista_operaciones_matrices", "VistaOperacionesMatrices"),
     "inversa": ("operaciones_inversas.vista_operaciones_inversas", "VistaOperacionesInversas"),
+    "determinantes": ("operaciones_matrices.vista_determinante", "VistaDeterminante"),
     "visualizador": ("geometria.vista_geometria", "VistaGeometria"),
     "leontief": ("operaciones_matrices.vista_leontief", "VistaLeontief"),
     "transformaciones": ("operaciones_matrices.vista_transformaciones", "VistaTransformaciones"),
@@ -36,7 +37,7 @@ class RespuestaCliente:
 
 
 def registrar_paginas(monkeypatch) -> dict:
-    """Usa el registro real y conserva sus diez constructores públicos de página."""
+    """Usa el registro real y conserva sus constructores públicos de página."""
     paginas = {}
 
     def registrar(ruta, **opciones):

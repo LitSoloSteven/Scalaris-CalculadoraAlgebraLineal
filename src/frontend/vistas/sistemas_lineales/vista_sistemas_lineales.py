@@ -101,9 +101,10 @@ class VistaSistemasLineales(
                     self._renderizar_panel_ecuaciones()
 
             with ui.row().classes('w-full mt-6 gap-4'):
-                ui.button(
+                with ui.button(
                     icon='delete', on_click=self.confirmar_limpieza, color=None
-                ).classes('boton-discreto flex-1 py-3').props('ripple=false id="boton-limpiar-principal" aria-label="Limpiar"').tooltip('Limpiar')
+                ).classes('boton-discreto flex-1 py-3').props('ripple=false id="boton-limpiar-principal" aria-label="Limpiar"'):
+                    ui.tooltip('Limpiar').props('target="#boton-limpiar-principal"')
                 ui.button(
                     'Resolver', on_click=lambda evento: self.resolver_sistema(evento.sender), color=None
                 ).classes('boton-principal flex-[2] py-3').props('ripple=false')

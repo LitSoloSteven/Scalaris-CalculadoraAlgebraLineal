@@ -13,7 +13,7 @@ from src.frontend.controladores.inicio._modelo import (
 
 
 def test_estructura_areas_inicio():
-    """Verifica que pilares_inicio devuelva 3 pilares con 4, 3 y 2 tarjetas respectivamente."""
+    """Verifica que pilares_inicio devuelva 3 pilares con 5, 3 y 2 tarjetas respectivamente."""
     pilares = pilares_inicio()
     assert len(pilares) == 3
     assert all(isinstance(p, ModeloPilar) for p in pilares)
@@ -22,8 +22,8 @@ def test_estructura_areas_inicio():
 
     assert p_algebra.identificador == "algebra"
     assert p_algebra.nombre_corto == "Álgebra lineal"
-    assert len(p_algebra.tarjetas) == 4
-    assert [t.clave for t in p_algebra.tarjetas] == ["sistemas", "vectores", "matrices", "inversa"]
+    assert len(p_algebra.tarjetas) == 5
+    assert [t.clave for t in p_algebra.tarjetas] == ["sistemas", "vectores", "matrices", "inversa", "determinantes"]
     assert all(isinstance(t, ModeloTarjeta) for t in p_algebra.tarjetas)
 
     assert p_vis.identificador == "visualizador"
@@ -91,6 +91,7 @@ def test_seleccion_inicial_visualizador():
         (["inversa", "sistemas"], "algebra", "inversa"),
         (["vectores"], "algebra", "vectores"),
         (["matrices"], "algebra", "matrices"),
+        (["determinantes"], "algebra", "determinantes"),
         (["bases"], "utilidades", "bases"),
         (["visualizador"], "visualizador", "vis:rectas-planos"),
         (["visualizador", "romanos"], "visualizador", "vis:rectas-planos"),
@@ -153,8 +154,9 @@ def test_contrato_estatico_cliente_inicio():
     assert "function cerrar(" in contenido
     assert "dialogo.showModal()" in contenido
     assert "evento.detail === 0" in contenido
-    assert "data-inicio-pendiente" in contenido
-    assert "}, 1200);" in contenido
+    entrada = Path("src/frontend/recursos/js/inicio_entrada.js").read_text(encoding="utf-8")
+    assert "data-inicio-pendiente" in entrada
+    assert "presentacion.terminada.then(esperarContenido)" in entrada
     assert "hub-carousel" not in contenido
     assert "ResizeObserver" not in contenido
     assert "onPointerDown" not in contenido

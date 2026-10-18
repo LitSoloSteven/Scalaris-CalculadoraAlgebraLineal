@@ -1,0 +1,128 @@
+.matrices-panel-captura,
+.captura-matrices-lista {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    min-width: 0;
+    width: 100%;
+}
+
+.matrices-acciones-lista {
+    width: 100%;
+    justify-content: flex-end;
+}
+
+.captura-matriz,
+.matrices-panel-expresion {
+    width: 100%;
+    min-width: 0;
+    padding: var(--space-6);
+    gap: var(--space-6);
+}
+
+.captura-matriz-cabecera {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    min-width: 0;
+    width: 100%;
+}
+
+.captura-matriz {
+    container-type: inline-size;
+    container-name: tarjeta-matriz;
+}
+
+.captura-matriz-titulo {
+    font-size: var(--fs-h2);
+    font-weight: var(--fw-h1);
+}
+
+.captura-matriz .etiqueta-dimensiones {
+    font-size: var(--fs-body);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+.captura-matriz-herramientas {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    width: 100%;
+    min-width: 0;
+}
+
+.captura-matriz-dimension,
+.captura-matriz-acciones {
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: var(--space-2);
+}
+
+.captura-matriz .captura-matriz-accion {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    padding: 0;
+    flex: none;
+}
+
+.captura-matriz-cuadricula {
+    min-width: 0;
+    max-width: 100%;
+    padding: var(--space-1);
+}
+
+.captura-matriz-cuadricula .cuadricula-contenido {
+    gap: var(--space-4);
+    min-width: max-content;
+    max-width: none;
+}
+
+.captura-matriz .cuadricula-celda {
+    flex: none;
+    min-width: var(--cell-w);
+    max-width: none;
+}
+
+.captura-matriz-cuadricula [data-cuadricula-fila] {
+    gap: var(--space-2);
+    margin-bottom: 0;
+    max-width: none;
+}
+
+.matrices-panel-expresion .q-field {
+    min-width: 0;
+}
+
+@container (max-width: 24rem) {
+    .captura-matriz,
+    .matrices-panel-expresion {
+        padding: var(--space-4);
+    }
+}
+
+@container tarjeta-matriz (max-width: 14rem) {
+    .captura-matriz-dimension {
+        display: grid;
+        grid-template-columns: 44px 1rem 44px;
+    }
+
+    .captura-matriz-dimension > :first-child {
+        grid-column: 1 / -1;
+    }
+}
+
+@container tarjeta-matriz (max-width: 8rem) {
+    .captura-matriz-dimension {
+        grid-template-columns: repeat(2, 44px);
+        justify-items: center;
+    }
+
+    .captura-matriz-dimension > .font-bold {
+        grid-column: 1 / -1;
+        grid-row: 2;
+    }
+}

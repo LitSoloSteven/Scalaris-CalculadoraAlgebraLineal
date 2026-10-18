@@ -7,7 +7,6 @@ from nicegui import ui
 from src.frontend.componentes.panel_ia import PanelIA
 from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.iconos import icono_svg
-from src.frontend.componentes.accesos_algebra import renderizar_accesos_algebra
 from src.frontend.navegacion import RUTA_INICIO
 from src.frontend.controladores.inicio._modelo import (
     ModeloTarjeta, formatear_cantidad_elementos, pilares_inicio, seleccion_inicial,
@@ -107,18 +106,14 @@ class VistaInicio:
     def _renderizar_cabecera(self) -> None:
         """Renderiza el encabezado y logo de Scalaris."""
         with ui.element('header').classes('inicio-cabecera'):
-            with (
-                ui.element('div').classes('inicio-marca'),
-                ui.element('div').classes('marca-contenedor-logotipo flex items-center justify-center w-14 h-14'),
-            ):
-                ui.html('''
-                    <img src="/assets/LogoOscuro.png" alt="" class="marca-logotipo marca-logotipo-oscuro h-14 w-14 object-contain" />
-                    <img src="/assets/LogoClaro.png" alt="" class="marca-logotipo marca-logotipo-claro h-14 w-14 object-contain" />
-                ''')
+            with ui.element('div').classes('inicio-marca'):
+                with ui.element('div').classes('inicio-logotipo marca-contenedor-logotipo'):
+                    ui.html('''
+                        <img src="/assets/LogoOscuro.png" alt="" class="marca-logotipo marca-logotipo-oscuro" />
+                        <img src="/assets/LogoClaro.png" alt="" class="marca-logotipo marca-logotipo-claro" />
+                    ''')
                 _elemento_texto('h1', 'Scalaris', 'inicio-titulo')
             _elemento_texto('p', 'Álgebra lineal y utilidades numéricas, con cada paso a la vista.', 'inicio-descripcion')
-            with ui.row().classes('items-center justify-center gap-3'):
-                renderizar_accesos_algebra()
 
     def _renderizar_matriz(self, pilares: list) -> None:
         """Renderiza los botones de áreas en la matriz de inicio."""

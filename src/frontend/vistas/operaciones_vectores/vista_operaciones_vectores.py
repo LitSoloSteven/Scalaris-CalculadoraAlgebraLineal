@@ -83,7 +83,7 @@ class VistaOperacionesVectores(MixinResultadosVectores):
         crear_estructura_aplicacion(self, ruta_activa=ruta_de("vectores"), al_alternar_ia=self.panel_ia.alternar)
         self.panel_suma_resta.inyectar_recursos_cliente()
         with (
-            ui.column().classes("w-full max-w-7xl mx-auto p-6 mt-4 vista-raiz"),
+            ui.column().classes("w-full max-w-7xl mx-auto p-6 mt-4 vista-raiz vectores-vista"),
             ui.element("div").classes("disposicion-dividida mb-8"),
         ):
             controles.construir_panel_izquierdo(self)

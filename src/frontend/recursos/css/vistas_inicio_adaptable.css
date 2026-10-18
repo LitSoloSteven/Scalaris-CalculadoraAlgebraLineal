@@ -21,21 +21,29 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: var(--space-2);
+    gap: var(--space-4);
     text-align: center;
     min-width: 0;
     padding-inline: var(--space-4);
-    margin-bottom: var(--space-8);
+    margin-bottom: var(--space-12);
 }
 
 .inicio-marca {
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: var(--space-3);
     min-width: 0;
     flex-shrink: 0;
+    max-width: 100%;
+}
+
+.inicio-marca .inicio-logotipo,
+.inicio-logotipo .marca-logotipo {
+    width: 3.5rem;
+    height: 3.5rem;
+    flex: none;
 }
 
 .inicio-titulo {
@@ -46,7 +54,8 @@
     letter-spacing: var(--ls-display);
     line-height: 1.15;
     color: var(--text-main);
-    overflow-wrap: anywhere;
+    white-space: nowrap;
+    flex: none;
 }
 
 .inicio-descripcion {
@@ -136,10 +145,6 @@
         padding-inline: var(--space-4);
     }
 
-    .inicio-cabecera {
-        padding-inline: var(--space-4);
-    }
-
     .inicio-cuerpo-fila {
         gap: var(--space-2);
         padding: var(--space-2);
@@ -192,6 +197,20 @@
     .inicio-tarjeta-marca {
         min-width: 0;
         justify-self: start;
+    }
+}
+
+@container (max-width: 24rem) {
+    .inicio-cabecera {
+        padding-inline: 0;
+    }
+
+    .inicio-marca {
+        flex-direction: column;
+    }
+
+    .inicio-titulo {
+        font-size: clamp(1.5rem, 16cqi, 2.5rem);
     }
 }
 

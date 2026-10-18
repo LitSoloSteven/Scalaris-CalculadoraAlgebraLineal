@@ -9,7 +9,8 @@ def test_estilos_consultas_por_contenedor():
     assert ".vista-raiz { container-type: inline-size; }" in contenido or ".vista-raiz { container-type: inline-size" in contenido
     assert ".inicio-raiz { container-type: inline-size; }" in contenido or ".inicio-raiz { container-type: inline-size" in contenido
     cantidad = contenido.count("container-type: inline-size")
-    assert cantidad == 3, f"Se esperaban tres declaraciones de contenedor, se encontraron {cantidad}"
+    assert cantidad == 4, f"Se esperaban cuatro declaraciones de contenedor, se encontraron {cantidad}"
+    assert "container-name: tarjeta-matriz;" in contenido
     assert "@container" in contenido
     assert ".disposicion-dividida" in contenido
     assert ".disposicion-cuadricula-dos" in contenido

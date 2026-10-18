@@ -3,49 +3,8 @@
 
   window.scalaris = window.scalaris || {};
 
-  let temporizadorPendiente = null;
-  let observadorPresentacion = null;
-  let presentacionEstabaPresente = false;
-  let limiteEsperaPendiente = 0;
-
-  if (window.location && window.location.pathname === '/') {
-    document.documentElement.setAttribute('data-glosa', 'cerrado');
-    if (document.body) document.body.classList.add('inicio-pagina');
-    document.documentElement.setAttribute('data-inicio-pendiente', '');
-    limiteEsperaPendiente = Date.now() + 3400;
-    presentacionEstabaPresente = Boolean(document.getElementById('aplicacion-presentacion-fondo'));
-    if (window.MutationObserver) {
-      observadorPresentacion = new MutationObserver(function () {
-        let existePresentacion = Boolean(document.getElementById('aplicacion-presentacion-fondo'));
-        if (existePresentacion) presentacionEstabaPresente = true;
-        else if (presentacionEstabaPresente) finalizar_pendiente();
-      });
-      observadorPresentacion.observe(document.documentElement, { childList: true, subtree: true });
-    }
-    temporizadorPendiente = setTimeout(function () {
-      temporizadorPendiente = null;
-      if (document.getElementById('aplicacion-presentacion-fondo')) {
-        temporizadorPendiente = setTimeout(finalizar_pendiente, Math.max(0, limiteEsperaPendiente - Date.now()));
-      } else {
-        finalizar_pendiente();
-      }
-    }, 1200);
-  }
-
-  function finalizar_pendiente() {
-    if (temporizadorPendiente) {
-      clearTimeout(temporizadorPendiente);
-      temporizadorPendiente = null;
-    }
-    if (observadorPresentacion) {
-      observadorPresentacion.disconnect();
-      observadorPresentacion = null;
-    }
-    document.documentElement.removeAttribute('data-inicio-pendiente');
-  }
-
   function limpiar_pendiente() {
-    if (!document.getElementById('aplicacion-presentacion-fondo')) finalizar_pendiente();
+    if (!window.scalaris.presentacion?.activa) window.scalaris.entradaInicio?.finalizar();
   }
 
   let dialogoActivo = null;

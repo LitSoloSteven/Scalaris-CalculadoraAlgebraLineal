@@ -69,9 +69,10 @@ def test_filas_y_tarjetas_inicio_limitan_retardos():
     assert "min(indice_tarjeta, 3)" in vista
     assert "evento.detail === 0" in js
     assert "html[data-entrada=\"teclado\"]" in css
-    assert "limiteEsperaPendiente = Date.now() + 3400" in js
-    assert "aplicacion-presentacion-fondo" in js
-    assert "new MutationObserver" in js
+    entrada = Path("src/frontend/recursos/js/inicio_entrada.js").read_text(encoding="utf-8")
+    assert "presentacion.terminada.then(esperarContenido)" in entrada
+    assert "new MutationObserver" in entrada
+    assert "requestAnimationFrame(finalizar)" in entrada
 
 
 def test_halo_puntero_limita_cuadros_y_solo_mueve_su_capa():

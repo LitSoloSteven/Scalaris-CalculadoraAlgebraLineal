@@ -1,0 +1,45 @@
+.pestanas-controles.pestanas-vectores {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.pestanas-vectores .q-tab {
+    flex: 1 0 auto;
+    padding-inline: var(--space-4) !important;
+    min-height: 44px !important;
+}
+
+.pestanas-vectores .q-tab__label {
+    font-size: var(--fs-body);
+    white-space: nowrap;
+}
+
+.pestanas-vectores .q-tabs__content {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+}
+
+.pestanas-vectores.q-tabs--scrollable .q-tabs__content {
+    width: calc(100% - 72px) !important;
+    margin-inline: 36px;
+}
+@container (max-width: 40rem) {
+    .vectores-panel-captura { padding: 0; }
+}
+
+@media (max-width: 280px) {
+    .vectores-vista { padding-inline: 0 !important; }
+    .pestanas-vectores .q-tabs__arrow { display: none; }
+    .pestanas-vectores.q-tabs--scrollable .q-tabs__content {
+        width: 100% !important;
+        margin-inline: 0;
+    }
+    .pestanas-vectores .q-tab { padding-inline: var(--space-2) !important; }
+    .pestanas-vectores .q-tab__label {
+        white-space: normal;
+        max-width: calc(100vw - var(--space-12));
+    }
+}
+

@@ -3,21 +3,29 @@
 const maquinaVirtual = require("node:vm");
 const { cargarAssetCliente } = require("./comun_cliente_javascript.js");
 
-/** Simula atributos de tema, almacenamiento, logotipos y temporizadores. */
-function crearTemaSimulado(temaInicial = null, ancho = 1200) {
-    const atributos = new Map();
-    const eventos = new Map();
-    const almacen = new Map(temaInicial === null ? [] : [["tema", temaInicial]]);
-    const logotipo = { src: "original" };
-    const temporizadores = [];
-    const animaciones = [];
-    const graficos = { texto: { papel: "texto" }, cuadricula: { papel: "cuadricula" } };
-    const raiz = {
+/** Observa el estado visual y la limpieza de las animaciones de tema. */
+function crearRaizTema(atributos, animaciones) {
+    return {
         style: {},
         setAttribute: (nombre, valor) => atributos.set(nombre, valor),
         getAttribute: nombre => atributos.get(nombre),
-        animate: (fotogramas, opciones) => animaciones.push({ fotogramas, opciones }),
+        hasAttribute: nombre => atributos.has(nombre),
+        removeAttribute: nombre => atributos.delete(nombre),
+        animate: (fotogramas, opciones) => {
+            const animacion = { fotogramas, opciones, finished: Promise.resolve(), cancel() { this.cancelada = true; } };
+            animaciones.push(animacion);
+            return animacion;
+        },
     };
+}
+
+/** Simula atributos de tema, almacenamiento, logotipos y temporizadores. */
+function crearTemaSimulado(temaInicial = null, ancho = 1200) {
+    const atributos = new Map(), eventos = new Map();
+    const almacen = new Map(temaInicial === null ? [] : [["tema", temaInicial]]);
+    const logotipo = { src: "original" }, temporizadores = [], animaciones = [];
+    const graficos = { texto: { papel: "texto" }, cuadricula: { papel: "cuadricula" } };
+    const raiz = crearRaizTema(atributos, animaciones);
     const documento = {
         documentElement: raiz,
         getElementById: () => ({ textContent: JSON.stringify(graficos) }),
@@ -27,7 +35,9 @@ function crearTemaSimulado(temaInicial = null, ancho = 1200) {
     };
     const ventana = {
         innerWidth: ancho, innerHeight: 800,
-        matchMedia: consulta => ({ matches: consulta === '(min-width: 1024px)' && ancho >= 1024 }),
+        matchMedia: consulta => ({ matches: consulta === '(min-width: 1024px)' && ancho >= 1024,
+            addEventListener: (_, funcion) => eventos.set('preferenciaTema', funcion) }),
+        addEventListener: (nombre, manejador) => eventos.set(nombre, manejador),
     };
     const almacenamiento = {
         getItem: nombre => almacen.get(nombre) ?? null,
@@ -49,4 +59,11 @@ function cargarTemaCompleto(cliente) {
     cargarAssetCliente("tema.js", cliente.contexto);
 }
 
-module.exports = { crearTemaSimulado, cargarTemaCompleto };
+/** Conserva pendientes las capturas hasta que la prueba decida finalizarlas. */
+function simularTransicion(cambiar, ready = Promise.resolve()) {
+    cambiar?.();
+    return { ready, finished: new Promise(() => {}), updateCallbackDone: Promise.resolve(),
+        skipTransition() { this.omitida = true; } };
+}
+
+module.exports = { crearTemaSimulado, cargarTemaCompleto, simularTransicion };

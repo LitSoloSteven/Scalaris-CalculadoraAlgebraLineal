@@ -67,6 +67,7 @@ def _etiquetas_recursos_cliente(nombre_catalogo: str) -> str:
 _PLANTILLAS = Path(__file__).parent / "recursos" / "plantillas"
 _CABECERA_HTML = Template((_PLANTILLAS / "cabecera.html").read_text(encoding="utf-8")).substitute(
     configuracion_graficos=_CONFIGURACION_GRAFICOS_JSON.replace("<", "\\u003c"),
+    plantilla_presentacion=(_PLANTILLAS / "presentacion.html").read_text(encoding="utf-8"),
     etiquetas_interacciones=_etiquetas_recursos_cliente("catalogo_interacciones.json"),
     etiquetas_captura=_etiquetas_recursos_cliente("catalogo_captura.json"),
 )

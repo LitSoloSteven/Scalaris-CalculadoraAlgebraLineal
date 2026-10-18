@@ -21,7 +21,7 @@ def test_escenas_coinciden_con_vista_geometrica():
 def test_elementos_por_pilar_en_orden():
     """Cada pilar ofrece sus herramientas en el orden previsto."""
     elementos_algebra = elementos_navegacion("algebra")
-    assert [elemento.clave for elemento in elementos_algebra] == ["sistemas", "vectores", "matrices", "inversa"]
+    assert [elemento.clave for elemento in elementos_algebra] == ["sistemas", "vectores", "matrices", "inversa", "determinantes"]
     elementos_visualizador = elementos_navegacion("visualizador")
     assert [elemento.clave for elemento in elementos_visualizador] == ["vis:rectas-planos", "vis:vectores", "vis:combinacion"]
     elementos_utilidades = elementos_navegacion("utilidades")
@@ -30,13 +30,13 @@ def test_elementos_por_pilar_en_orden():
 
 
 def test_claves_unicas_entre_pilares():
-    """Los nueve elementos tienen claves distintas entre todos los pilares."""
+    """Los diez elementos tienen claves distintas entre todos los pilares."""
     claves = []
     for pilar in ("algebra", "visualizador", "utilidades"):
         for elemento in elementos_navegacion(pilar):
             claves.append(elemento.clave)
-    assert len(claves) == 9
-    assert len(set(claves)) == 9
+    assert len(claves) == 10
+    assert len(set(claves)) == 10
 
 
 def test_enlaces_validos_y_etiquetas_completas():
@@ -57,6 +57,8 @@ def test_clave_predeterminada_por_ruta():
     assert predeterminado_elemento_clave("/algebra-lineal/vectores") == "vectores"
     assert predeterminado_elemento_clave("/algebra-lineal/matrices") == "matrices"
     assert predeterminado_elemento_clave("/algebra-lineal/inversa") == "inversa"
+    assert predeterminado_elemento_clave("/algebra-lineal/determinantes") == "determinantes"
+    assert predeterminado_elemento_clave("/algebra-lineal/matrices?operacion=determinante") == "determinantes"
     assert predeterminado_elemento_clave("/utilidades/bases") == "bases"
     assert predeterminado_elemento_clave("/utilidades/romanos") == "romanos"
     assert predeterminado_elemento_clave("/visualizador") == "vis:rectas-planos"
@@ -82,8 +84,13 @@ def test_contenedor_omite_barra_en_inicio():
         barra_simulada.assert_called_once_with(None, ruta_activa="/algebra-lineal/sistemas", clave_activa="sistemas")
 
 
-def test_barra_con_rutas_conocidas_y_desconocidas():
+def test_barra_con_rutas_conocidas_y_desconocidas(monkeypatch):
     """La barra acepta claves explícitas, inferidas y una ruta desconocida."""
-    crear_barra_navegacion(ruta_activa="/algebra-lineal/sistemas")
-    crear_barra_navegacion(ruta_activa="/visualizador", clave_activa="vis:vectores")
-    crear_barra_navegacion(ruta_activa="/ruta-desconocida")
+    from nicegui import Client, core, ui
+    monkeypatch.setattr(core, "script_mode", False)
+    cliente = Client(ui.page("/prueba_barra_contextual"))
+    with cliente:
+        crear_barra_navegacion(ruta_activa="/algebra-lineal/sistemas")
+        crear_barra_navegacion(ruta_activa="/visualizador", clave_activa="vis:vectores")
+        crear_barra_navegacion(ruta_activa="/ruta-desconocida")
+    cliente.delete()

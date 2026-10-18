@@ -3,6 +3,9 @@ from __future__ import annotations
 
 # Catálogo declarativo de datos puros: mapea nombres a marcado vectorial interno.
 CATALOGO_ICONOS: dict[str, str] = {
+    "determinantes": (
+        '<path d="M5 4v16M19 4v16M9 7l6 10"></path>'
+    ),
     "sistemas_lineales": (
         '<line x1="4" y1="20" x2="20" y2="4"></line>'
         '<line x1="4" y1="8" x2="20" y2="16"></line>'

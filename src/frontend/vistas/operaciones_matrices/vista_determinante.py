@@ -23,10 +23,11 @@ class VistaDeterminante:
 
     def construir(self) -> None:
         """Monta captura, estado accesible y acceso al asistente."""
-        crear_estructura_aplicacion(self, ruta_activa=ruta_de("matrices"))
+        crear_estructura_aplicacion(self, ruta_activa=ruta_de("determinantes"))
+        ui.page_title("Determinantes | Scalaris")
         self.panel_matriz.inyectar_recursos_cliente()
         with ui.column().classes("vista-raiz w-full max-w-7xl mx-auto p-6 gap-4"):
-            ui.label("Determinante").classes("text-2xl font-bold texto-principal")
+            ui.label("Determinantes").classes("text-2xl font-bold texto-principal")
             ui.label("Triangulación LU con aritmética exacta.").classes("texto-secundario")
             self.panel_matriz.construir_contenedor()
             ui.button("Calcular determinante", on_click=self.calcular, color=None).classes("boton-principal").props("ripple=false")

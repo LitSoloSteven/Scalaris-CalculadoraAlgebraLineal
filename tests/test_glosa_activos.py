@@ -52,5 +52,5 @@ def test_contrato_css_panel_lateral_y_disposicion():
     assert contenido.count("visibility 0s linear 200ms") >= 3
 
     assert "100vh" not in contenido
-    assert contenido.count("container-type: inline-size") == 3
+    assert contenido.count("container-type: inline-size") == 4
     assert contenido.count("--fab-reserve:") >= 4

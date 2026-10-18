@@ -129,11 +129,6 @@
 
     --sombra-tab-activa: 0 4px 10px rgba(58, 52, 40, 0.15);
     --sombra-logo: drop-shadow(0 2px 8px rgba(58, 52, 40, 0.08));
-    --show-papel: block;
-}
-
-html[data-tema="papel"] {
-    --show-papel: block;
 }
 
 :root[data-tema="marea"] {
@@ -193,11 +188,6 @@ html[data-tema="papel"] {
 
     --sombra-tab-activa: 0 4px 10px rgba(28, 66, 96, 0.22);
     --sombra-logo: drop-shadow(0 2px 8px rgba(28, 66, 96, 0.15));
-    --show-marea: block;
-}
-
-html[data-tema="marea"] {
-    --show-marea: block;
 }
 
 :root[data-tema="medianoche"] {
@@ -257,9 +247,4 @@ html[data-tema="marea"] {
 
     --sombra-tab-activa: 0 4px 10px rgba(0, 0, 0, 0.35);
     --sombra-logo: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.4));
-    --show-medianoche: block;
-}
-
-html[data-tema="medianoche"] {
-    --show-medianoche: block;
 }

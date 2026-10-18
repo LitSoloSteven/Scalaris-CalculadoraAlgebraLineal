@@ -28,18 +28,18 @@ def test_navegacion_cuadricula_de_una_fila():
     assert re.search(r'height:\s*(?:6[4-9]|7[0-2])px', pastilla) or re.search(r'min-height:\s*(?:6[4-9]|7[0-2])px', pastilla)
 
 
-def test_navegacion_zona_central_permite_desplazamiento():
-    """La zona central puede encogerse y desplazarse sin barra visible."""
+def test_solo_la_lista_permite_desplazamiento():
+    """La lista desplaza etiquetas completas y conserva indicadores de continuidad."""
     css = leer_estilos_navegacion()
-    assert ".navegacion-centro" in css
     centro = re.search(r'\.navegacion-centro\s*\{(.*?)\}', css, re.DOTALL).group(1)
+    lista = re.search(r'\.navegacion-elementos\s*\{(.*?)\}', css, re.DOTALL).group(1)
+    assert "overflow: hidden;" in centro
     assert "min-width: 0;" in centro
-    assert "overflow-x: auto;" in centro
-    assert "scrollbar-width: none;" in centro
-    assert "mask-image:" in centro
-    assert ".navegacion-centro::-webkit-scrollbar" in css
-    barra_desplazamiento = re.search(r'\.navegacion-centro::-webkit-scrollbar\s*\{(.*?)\}', css, re.DOTALL).group(1)
-    assert "display: none;" in barra_desplazamiento
+    assert "overflow-x: auto;" in lista
+    assert "scrollbar-width: thin;" in lista
+    assert "overscroll-behavior-x: contain;" in lista
+    assert "data-opciones-antes" in css
+    assert "data-opciones-despues" in css
 
 
 def test_navegacion_inicio_y_tema_no_se_encogen():
@@ -51,23 +51,16 @@ def test_navegacion_inicio_y_tema_no_se_encogen():
     assert "tema-boton-selector" in coincidencia.group(1) or "navegacion-tema" in coincidencia.group(1)
 
 
-def test_navegacion_muestra_una_sola_etiqueta():
-    """Cada anchura muestra una única variante de la etiqueta."""
+def test_navegacion_muestra_etiquetas_completas_sin_recortes():
+    """El móvil conserva el texto completo y un foco visible dentro de la lista."""
     css = leer_estilos_navegacion()
-    completa_predeterminada = re.search(r'\n\.navegacion-etiqueta-completa\s*\{(.*?)\}', css, re.DOTALL).group(1)
-    corta_predeterminada = re.search(r'\n\.navegacion-etiqueta-breve\s*\{(.*?)\}', css, re.DOTALL).group(1)
-    assert "display: none;" in completa_predeterminada
-    assert "display: none;" in corta_predeterminada
-    consulta_700 = re.search(r'@container\s+barra-navegacion\s*\(\s*min-width:\s*700px\s*\)\s*\{(.*?)\n\}', css, re.DOTALL).group(1)
-    assert ".navegacion-etiqueta-breve" in consulta_700
-    assert "display: inline;" in consulta_700
-    assert ".navegacion-etiqueta-completa" in consulta_700
-    assert "display: none;" in consulta_700
-    consulta_960 = re.search(r'@container\s+barra-navegacion\s*\(\s*min-width:\s*960px\s*\)\s*\{(.*?)\n\}', css, re.DOTALL).group(1)
-    assert ".navegacion-etiqueta-completa" in consulta_960
-    assert "display: inline;" in consulta_960
-    assert ".navegacion-etiqueta-breve" in consulta_960
-    assert "display: none;" in consulta_960
+    etiqueta = re.search(r'\.navegacion-etiqueta-completa\s*\{(.*?)\}', css, re.DOTALL).group(1)
+    assert "display: inline;" in etiqueta
+    assert "white-space: nowrap;" in etiqueta
+    assert "text-overflow" not in css
+    assert "navegacion-etiqueta-breve" not in css
+    assert ".navegacion-elemento:focus-visible" in css
+    assert "outline: 2px solid var(--accent);" in css
 
 
 def test_navegacion_colores_definidos_por_tokens():

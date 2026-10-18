@@ -16,7 +16,7 @@ def test_tokens_movimiento_y_entradas_resistentes():
 
 
 def _comprobar_contenedores_y_celdas(contenido):
-    assert contenido.count("container-type: inline-size") == 3
+    assert contenido.count("container-type: inline-size") == 4
     assert "100vh" not in contenido
     assert contenido.count("--fab-reserve:") >= 4
 

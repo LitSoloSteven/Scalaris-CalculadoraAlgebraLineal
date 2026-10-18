@@ -3,7 +3,7 @@
 const afirmar = require("node:assert/strict");
 const prueba = require("node:test");
 const { cargarAssetCliente } = require("./comun_cliente_javascript.js");
-const { crearTemaSimulado, cargarTemaCompleto } = require("./comun_tema_cliente.js");
+const { crearTemaSimulado, cargarTemaCompleto, simularTransicion } = require("./comun_tema_cliente.js");
 
 prueba("los valores canónicos se leen antes de cargar los estilos", () => {
     for (const [almacenado, esperado] of [["papel", "papel"], ["marea", "marea"], ["medianoche", "medianoche"]]) {
@@ -37,8 +37,6 @@ prueba("aplicar tema cambia atributos logotipo almacenamiento y figuras", () => 
     afirmar.equal(cliente.documento.documentElement.style.colorScheme, "dark");
     afirmar.equal(cliente.logotipo.src, "/assets/LogoClaro.png");
     afirmar.equal(cliente.almacen.get("tema"), "medianoche");
-    afirmar.equal(cliente.temporizadores[0].espera, 50);
-    cliente.temporizadores[0].manejador();
     afirmar.deepEqual(llamadas, ["medianoche"]);
     cliente.ventana.scalaris.tema.aplicar("papel");
     afirmar.equal(cliente.logotipo.src, "/assets/LogoOscuro.png");
@@ -56,13 +54,14 @@ prueba("sin transición nativa el cambio de tema es inmediato", () => {
 prueba("la transición nativa conserva fotogramas duración y curva", async () => {
     const cliente = crearTemaSimulado();
     cargarTemaCompleto(cliente);
-    cliente.documento.startViewTransition = cambiar => { cambiar(); return { ready: Promise.resolve() }; };
-    cliente.ventana.scalaris.tema.establecer("medianoche");
+    cliente.documento.startViewTransition = cambiar => simularTransicion(cambiar);
+    cliente.ventana.scalaris.tema.establecer("medianoche", { x: 1100, y: 50 });
     await Promise.resolve();
     afirmar.equal(cliente.atributos.get("data-tema"), "medianoche");
     afirmar.equal(cliente.animaciones.length, 1);
-    afirmar.equal(JSON.stringify(cliente.animaciones[0].fotogramas), '[{"opacity":0},{"opacity":1}]');
-    afirmar.equal(cliente.animaciones[0].opciones.duration, 240);
+    afirmar.equal(cliente.animaciones[0].fotogramas.clipPath[0], 'circle(0px at 1100px 50px)');
+    afirmar.equal(cliente.animaciones[0].fotogramas.clipPath[1], `circle(${Math.hypot(1100, 750)}px at 1100px 50px)`);
+    afirmar.equal(cliente.animaciones[0].opciones.duration, 500);
     afirmar.equal(cliente.animaciones[0].opciones.easing, "cubic-bezier(0.32, 0.72, 0, 1)");
     afirmar.equal(cliente.animaciones[0].opciones.pseudoElement, "::view-transition-new(root)");
 });
@@ -71,7 +70,7 @@ prueba("el rechazo de la transición vuelve a aplicar el tema", async () => {
     const cliente = crearTemaSimulado();
     cargarTemaCompleto(cliente);
     const rechazo = new Error("transición simulada");
-    cliente.documento.startViewTransition = () => ({ ready: Promise.reject(rechazo) });
+    cliente.documento.startViewTransition = () => simularTransicion(null, Promise.reject(rechazo));
     cliente.ventana.scalaris.tema.establecer("marea");
     await Promise.resolve();
     await Promise.resolve();
@@ -96,15 +95,16 @@ prueba("el fallo de almacenamiento de Glosa conserva el atributo anterior", () =
     afirmar.equal(cliente.atributos.get("data-glosa"), "abierto");
 });
 
-prueba("la activación por teclado aplica el tema sin transición", () => {
+prueba("la activación por teclado conserva la transición sin movimiento reducido", async () => {
     const cliente = crearTemaSimulado();
     cargarTemaCompleto(cliente);
     cargarAssetCliente("interacciones_globales.js", cliente.contexto);
-    cliente.documento.startViewTransition = () => { throw new Error("no debe iniciar transición"); };
+    cliente.documento.startViewTransition = cambiar => simularTransicion(cambiar);
     cliente.eventos.get("keydown")();
     afirmar.doesNotThrow(() => cliente.ventana.scalaris.tema.establecer("marea"));
     afirmar.equal(cliente.atributos.get("data-tema"), "marea");
-    afirmar.equal(cliente.animaciones.length, 0);
+    await Promise.resolve();
+    afirmar.equal(cliente.animaciones.length, 1);
 });
 
 prueba("la preferencia de movimiento reducido aplica el tema sin transición", () => {
@@ -123,8 +123,7 @@ prueba("el rechazo de una transición antigua no sobrescribe la última selecci�
     cargarTemaCompleto(cliente);
     const rechazos = [];
     cliente.documento.startViewTransition = cambiar => {
-        cambiar();
-        return { ready: new Promise((resolver, rechazar) => rechazos.push(rechazar)) };
+        return simularTransicion(cambiar, new Promise((resolver, rechazar) => rechazos.push(rechazar)));
     };
     cliente.ventana.scalaris.tema.establecer("marea");
     cliente.ventana.scalaris.tema.establecer("medianoche");
@@ -144,7 +143,7 @@ prueba("un cambio directo invalida el callback diferido de una transición anter
     let resolverPendiente;
     cliente.documento.startViewTransition = cambiar => {
         cambioPendiente = cambiar;
-        return { ready: new Promise(resolver => { resolverPendiente = resolver; }) };
+        return simularTransicion(null, new Promise(resolver => { resolverPendiente = resolver; }));
     };
     cliente.ventana.scalaris.tema.establecer("marea");
     cliente.ventana.scalaris.tema.aplicar("medianoche");
@@ -155,16 +154,85 @@ prueba("un cambio directo invalida el callback diferido de una transición anter
     afirmar.equal(cliente.animaciones.length, 0);
 });
 
-prueba("la actualización diferida de figuras ignora selecciones anteriores", () => {
+prueba("las figuras reciben la selección actual antes de capturar el tema", () => {
     const cliente = crearTemaSimulado();
     cargarTemaCompleto(cliente);
     const llamadas = [];
     cliente.ventana.scalaris.actualizarTemaPlotly = tema => llamadas.push(tema);
     cliente.ventana.scalaris.tema.aplicar("marea");
     cliente.ventana.scalaris.tema.aplicar("medianoche");
-    cliente.temporizadores[0].manejador();
-    afirmar.deepEqual(llamadas, []);
-    cliente.temporizadores[1].manejador();
-    afirmar.deepEqual(llamadas, ["medianoche"]);
+    afirmar.deepEqual(llamadas, ["marea", "medianoche"]);
     afirmar.equal(cliente.atributos.get("data-tema"), "medianoche");
+});
+
+prueba("las seis combinaciones persisten la paleta y el logotipo correctos", async () => {
+    const temas = ['papel', 'marea', 'medianoche'];
+    for (const origen of temas) {
+        for (const destino of temas.filter(tema => tema !== origen)) {
+            const cliente = crearTemaSimulado(origen);
+            cargarTemaCompleto(cliente);
+            cliente.documento.startViewTransition = cambiar => simularTransicion(cambiar);
+            cliente.ventana.scalaris.tema.establecer(destino, { x: 100, y: 60 });
+            await Promise.resolve();
+            afirmar.equal(cliente.almacen.get('tema'), destino);
+            afirmar.equal(cliente.atributos.get('data-tema'), destino);
+            afirmar.equal(cliente.logotipo.src, destino === 'medianoche' ? '/assets/LogoClaro.png' : '/assets/LogoOscuro.png');
+            afirmar.equal(cliente.animaciones.length, 1);
+        }
+    }
+});
+
+prueba("la finalización y la navegación limpian solamente su propia captura", async () => {
+    const cliente = crearTemaSimulado();
+    cargarTemaCompleto(cliente);
+    let finalizar;
+    const transicion = simularTransicion();
+    transicion.finished = new Promise(resolver => { finalizar = resolver; });
+    cliente.documento.startViewTransition = cambiar => { cambiar(); return transicion; };
+    cliente.ventana.scalaris.tema.establecer('marea');
+    await Promise.resolve();
+    afirmar.equal(cliente.atributos.has('data-tema-circular'), true);
+    cliente.eventos.get('pageswap')();
+    afirmar.equal(transicion.omitida, true);
+    afirmar.equal(cliente.animaciones[0].cancelada, true);
+    finalizar(); await Promise.resolve();
+    afirmar.equal(cliente.atributos.has('data-tema-circular'), false);
+});
+
+prueba("la presentación y la navegación activas aplican directamente sin iniciar otra transición", () => {
+    for (const caso of ['presentacion', 'navegacion']) {
+        const cliente = crearTemaSimulado();
+        cargarTemaCompleto(cliente);
+        cliente.documento.startViewTransition = () => { throw new Error('No debe competir'); };
+        if (caso === 'presentacion') cliente.ventana.scalaris.presentacion = { activa: true };
+        else cliente.atributos.set('data-navegacion-circular', '');
+        cliente.ventana.scalaris.tema.establecer('medianoche');
+        afirmar.equal(cliente.atributos.get('data-tema'), 'medianoche');
+        afirmar.equal(cliente.atributos.has('data-tema-circular'), false);
+    }
+});
+
+prueba("un cambio de preferencia cancela la expansión antes de animar", async () => {
+    const cliente = crearTemaSimulado();
+    cargarTemaCompleto(cliente);
+    const transicion = simularTransicion();
+    cliente.documento.startViewTransition = cambiar => { cambiar(); return transicion; };
+    cliente.ventana.scalaris.tema.establecer('marea');
+    cliente.eventos.get('preferenciaTema')({ matches: true });
+    await Promise.resolve();
+    afirmar.equal(transicion.omitida, true);
+    afirmar.equal(cliente.animaciones.length, 0);
+});
+
+prueba("el almacenamiento bloqueado y los fallos síncronos de la API conservan el cambio", async () => {
+    const cliente = crearTemaSimulado();
+    cliente.almacenamiento.getItem = () => { throw new Error('Bloqueado'); };
+    cliente.almacenamiento.setItem = () => { throw new Error('Bloqueado'); };
+    cargarTemaCompleto(cliente);
+    afirmar.equal(cliente.atributos.get('data-tema'), 'papel');
+    cliente.documento.startViewTransition = () => { throw new Error('No disponible'); };
+    afirmar.doesNotThrow(() => cliente.ventana.scalaris.tema.establecer('medianoche'));
+    await Promise.resolve();
+    afirmar.equal(cliente.atributos.get('data-tema'), 'medianoche');
+    afirmar.equal(cliente.atributos.has('data-tema-circular'), false);
 });

@@ -110,7 +110,8 @@ def test_renderizado_herramientas_vacias_y_cantidades_variables():
     assert "overflow-y: auto" in css
     assert "overscroll-behavior: contain" in css
     assert "overflow-wrap: anywhere" in css
-    assert "-webkit-line-clamp: 2" in css
+    assert "-webkit-line-clamp:" not in css
+    assert "line-clamp:" not in css
 
 def test_css_inicio_usa_tokens_y_efectos_permitidos():
     """Las reglas usan tokens definidos y evitan efectos y capas no autorizados."""

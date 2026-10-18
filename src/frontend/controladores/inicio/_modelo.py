@@ -46,7 +46,7 @@ class SeleccionInicial:
 
 METADATOS_PILARES: dict[str, dict[str, str]] = {
     "algebra": {
-        "descripcion": "Sistemas, vectores, matrices e inversa, con cada paso a la vista.",
+        "descripcion": "Sistemas, vectores, matrices, inversa y determinantes, con cada paso a la vista.",
         "unidad_singular": "herramienta",
         "unidad_plural": "herramientas",
     },

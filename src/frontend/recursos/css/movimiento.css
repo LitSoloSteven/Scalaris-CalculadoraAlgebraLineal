@@ -116,6 +116,24 @@
     navigation: auto;
 }
 
+/* La barra y Glosa participan en la misma captura circular que el contenido. */
+html[data-navegacion-circular] .navegacion-cabecera,
+html[data-navegacion-circular] .glosa-panel-lateral,
+html[data-navegacion-circular] .glosa-boton-flotante {
+    view-transition-name: none;
+}
+
+html[data-tema-circular] .navegacion-cabecera,
+html[data-tema-circular] .glosa-panel-lateral,
+html[data-tema-circular] .glosa-boton-flotante {
+    view-transition-name: none;
+}
+
+html[data-vista-revelada] .q-page,
+html[data-vista-revelada] .nicegui-content {
+    animation: none;
+}
+
 ::view-transition-old(root),
 ::view-transition-new(root) {
     animation: none;
