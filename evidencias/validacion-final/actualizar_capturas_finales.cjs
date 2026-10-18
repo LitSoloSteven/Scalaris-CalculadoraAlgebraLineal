@@ -1,0 +1,3 @@
+'use strict';
+const {afirmar,base,crearZoom,estable,captura}=require('./comun_navegador.cjs');
+(async()=>{const contexto=await crearZoom({tema:'papel'});try{const pagina=await contexto.newPage();await pagina.goto(base+'/algebra-lineal/vectores');afirmar.equal(await contexto.aplicarZoom(),2);for(const tema of ['papel','marea','medianoche']){await pagina.evaluate(t=>scalaris.tema.aplicar(t),tema);await pagina.goto(base+'/algebra-lineal/vectores');await estable(pagina);await pagina.waitForTimeout(800);await captura(pagina,'vectores-zoom200-'+tema);}}finally{await contexto.close();}})().catch(error=>{console.error(error);process.exitCode=1;});

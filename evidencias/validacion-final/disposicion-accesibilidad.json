@@ -1,0 +1,263 @@
+[
+  {
+    "perfil": "escritorio",
+    "tema": "papel",
+    "zoom": 1,
+    "ventana": {
+      "ancho": 1440,
+      "exterior": 1440,
+      "escala": 1
+    },
+    "inicio": {
+      "texto": "Scalaris",
+      "hermanos": true,
+      "ancho": 188,
+      "contenido": 188,
+      "separacion": 48,
+      "descripcionesCompletas": true
+    },
+    "vectores": [
+      {
+        "etiquetas": [
+          "Suma / Resta",
+          "Escalar × Vector",
+          "Combinación Lineal"
+        ],
+        "teclado": true,
+        "solapamientos": false
+      }
+    ]
+  },
+  {
+    "perfil": "escritorio",
+    "tema": "marea",
+    "zoom": 1,
+    "ventana": {
+      "ancho": 1440,
+      "exterior": 1440,
+      "escala": 1
+    },
+    "inicio": {
+      "texto": "Scalaris",
+      "hermanos": true,
+      "ancho": 188,
+      "contenido": 188,
+      "separacion": 48,
+      "descripcionesCompletas": true
+    },
+    "vectores": [
+      {
+        "etiquetas": [
+          "Suma / Resta",
+          "Escalar × Vector",
+          "Combinación Lineal"
+        ],
+        "teclado": true,
+        "solapamientos": false
+      }
+    ]
+  },
+  {
+    "perfil": "escritorio",
+    "tema": "medianoche",
+    "zoom": 1,
+    "ventana": {
+      "ancho": 1440,
+      "exterior": 1440,
+      "escala": 1
+    },
+    "inicio": {
+      "texto": "Scalaris",
+      "hermanos": true,
+      "ancho": 188,
+      "contenido": 188,
+      "separacion": 48,
+      "descripcionesCompletas": true
+    },
+    "vectores": [
+      {
+        "etiquetas": [
+          "Suma / Resta",
+          "Escalar × Vector",
+          "Combinación Lineal"
+        ],
+        "teclado": true,
+        "solapamientos": false
+      }
+    ]
+  },
+  {
+    "perfil": "movil",
+    "tema": "papel",
+    "zoom": 1,
+    "ventana": {
+      "ancho": 390,
+      "exterior": 534,
+      "escala": 1
+    },
+    "inicio": {
+      "texto": "Scalaris",
+      "hermanos": true,
+      "ancho": 146,
+      "contenido": 146,
+      "separacion": 48,
+      "descripcionesCompletas": true
+    },
+    "vectores": [
+      {
+        "etiquetas": [
+          "Suma / Resta",
+          "Escalar × Vector",
+          "Combinación Lineal"
+        ],
+        "teclado": true,
+        "solapamientos": false
+      }
+    ]
+  },
+  {
+    "perfil": "movil",
+    "tema": "marea",
+    "zoom": 1,
+    "ventana": {
+      "ancho": 390,
+      "exterior": 534,
+      "escala": 1
+    },
+    "inicio": {
+      "texto": "Scalaris",
+      "hermanos": true,
+      "ancho": 146,
+      "contenido": 146,
+      "separacion": 48,
+      "descripcionesCompletas": true
+    },
+    "vectores": [
+      {
+        "etiquetas": [
+          "Suma / Resta",
+          "Escalar × Vector",
+          "Combinación Lineal"
+        ],
+        "teclado": true,
+        "solapamientos": false
+      }
+    ]
+  },
+  {
+    "perfil": "movil",
+    "tema": "medianoche",
+    "zoom": 1,
+    "ventana": {
+      "ancho": 390,
+      "exterior": 534,
+      "escala": 1
+    },
+    "inicio": {
+      "texto": "Scalaris",
+      "hermanos": true,
+      "ancho": 146,
+      "contenido": 146,
+      "separacion": 48,
+      "descripcionesCompletas": true
+    },
+    "vectores": [
+      {
+        "etiquetas": [
+          "Suma / Resta",
+          "Escalar × Vector",
+          "Combinación Lineal"
+        ],
+        "teclado": true,
+        "solapamientos": false
+      }
+    ]
+  },
+  {
+    "perfil": "zoom200",
+    "tema": "papel",
+    "zoom": 2,
+    "ventana": {
+      "ancho": 709,
+      "exterior": 1440,
+      "escala": 2
+    },
+    "inicio": {
+      "texto": "Scalaris",
+      "hermanos": true,
+      "ancho": 146,
+      "contenido": 146,
+      "separacion": 48,
+      "descripcionesCompletas": true
+    },
+    "vectores": [
+      {
+        "etiquetas": [
+          "Suma / Resta",
+          "Escalar × Vector",
+          "Combinación Lineal"
+        ],
+        "teclado": true,
+        "solapamientos": false
+      }
+    ]
+  },
+  {
+    "perfil": "zoom200",
+    "tema": "marea",
+    "zoom": 2,
+    "ventana": {
+      "ancho": 709,
+      "exterior": 1440,
+      "escala": 2
+    },
+    "inicio": {
+      "texto": "Scalaris",
+      "hermanos": true,
+      "ancho": 146,
+      "contenido": 146,
+      "separacion": 48,
+      "descripcionesCompletas": true
+    },
+    "vectores": [
+      {
+        "etiquetas": [
+          "Suma / Resta",
+          "Escalar × Vector",
+          "Combinación Lineal"
+        ],
+        "teclado": true,
+        "solapamientos": false
+      }
+    ]
+  },
+  {
+    "perfil": "zoom200",
+    "tema": "medianoche",
+    "zoom": 2,
+    "ventana": {
+      "ancho": 709,
+      "exterior": 1440,
+      "escala": 2
+    },
+    "inicio": {
+      "texto": "Scalaris",
+      "hermanos": true,
+      "ancho": 146,
+      "contenido": 146,
+      "separacion": 48,
+      "descripcionesCompletas": true
+    },
+    "vectores": [
+      {
+        "etiquetas": [
+          "Suma / Resta",
+          "Escalar × Vector",
+          "Combinación Lineal"
+        ],
+        "teclado": true,
+        "solapamientos": false
+      }
+    ]
+  }
+]

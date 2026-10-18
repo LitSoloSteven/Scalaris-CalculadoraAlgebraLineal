@@ -1,0 +1,79 @@
+{
+  "matrices": {
+    "operaciones": [
+      "añadir",
+      "redimensionar filas y columnas",
+      "reducir",
+      "eliminar",
+      "evaluar",
+      "error sin pérdida",
+      "transferir copia exacta"
+    ],
+    "resultado": "check\nExpresión 'A+A' resuelta con éxito.\nEvaluación paso a paso\nhelp_outline\n¿Como leer los pasos?\nkeyboard_arrow_down\nPaso 1 de 1\ntune\nSuma\nOperaciones de la expresión\nSumamos las matrices celda a ▌\n𝑇\n1\n=\n𝐴\n+\n𝐴\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n[\n1\n3\n+\n1\n3\n\t\n0\n+\n0\n\t\n0\n+\n0\n\n\n0\n+\n0\n\t\n1\n+\n1\n\t\n0\n+\n0\n\n\n0\n+\n0\n\t\n0\n+\n0\n\t\n1\n+\n1\n]\narrow_forward\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n[\n2\n3\n\t\n0\n\t\n0\n\n\n0\n\t\n2\n\t\n0\n\n\n0\n\t\n0\n\t\n2\n]\nvisibility\nVer d"
+  },
+  "determinantes": {
+    "casos": [
+      {
+        "nombre": "uno-por-uno",
+        "n": 1,
+        "valores": [
+          "7/11"
+        ],
+        "esperado": "7/11"
+      },
+      {
+        "nombre": "identidad",
+        "n": 3,
+        "valores": [
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1
+        ],
+        "esperado": "1"
+      },
+      {
+        "nombre": "singular",
+        "n": 2,
+        "valores": [
+          1,
+          2,
+          2,
+          4
+        ],
+        "esperado": "0"
+      },
+      {
+        "nombre": "intercambio-filas",
+        "n": 2,
+        "valores": [
+          0,
+          1,
+          1,
+          0
+        ],
+        "esperado": "-1"
+      },
+      {
+        "nombre": "fracciones",
+        "n": 2,
+        "valores": [
+          "1/2",
+          "1/3",
+          "2/5",
+          "3/7"
+        ],
+        "esperado": "17/210"
+      }
+    ],
+    "descarteAlEditar": true,
+    "recalculo": "9",
+    "enlaceAnterior": true
+  },
+  "errores": []
+}

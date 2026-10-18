@@ -1,0 +1,32 @@
+{
+  "resultados": [
+    {
+      "tema": "papel",
+      "figuras": [
+        {
+          "color": "#23262E",
+          "esperado": "#23262E"
+        }
+      ]
+    },
+    {
+      "tema": "marea",
+      "figuras": [
+        {
+          "color": "#0B1F33",
+          "esperado": "#0B1F33"
+        }
+      ]
+    },
+    {
+      "tema": "medianoche",
+      "figuras": [
+        {
+          "color": "#EAF6FF",
+          "esperado": "#EAF6FF"
+        }
+      ]
+    }
+  ],
+  "errores": []
+}

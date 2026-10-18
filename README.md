@@ -411,6 +411,12 @@ Otros detalles cuidados a propósito:
 
 ## ⌨️ Experiencia de usuario y atajos
 
+La presentación de Scalaris se reproduce una sola vez por sesión de pestaña al abrir `/` sin parámetros: logotipo, anillo, Scalaris, UAM, pulso, barra y salida, durante unos tres segundos. Recargar o regresar al inicio no la repite. Entrar primero por otra ruta o por una URL con consulta consume esa presentación sin mostrarla, como en la referencia. Si el almacenamiento de sesión no está disponible, se omite. Con movimiento reducido se muestra la marca estática durante unos 400 ms, con un fundido breve. Una interacción de teclado o puntero permite omitirla; abandonar u ocultar la página cancela la secuencia. Las tarjetas del inicio entran después de retirar la presentación y montar su contenido.
+
+Los enlaces internos cargan documentos de NiceGUI. Cuando el navegador admite transiciones entre documentos, la pantalla entrante se revela con una expansión circular de 500 ms desde el enlace activado, incluyendo la barra y Glosa. Con teclado se utiliza el centro del enlace; Atrás y Adelante parten del centro de la ventana. El origen se consume una sola vez y no se reutiliza al recargar. La expansión espera al montaje de la interfaz, con un respaldo de un segundo. Con movimiento reducido o sin la API se conserva la navegación normal.
+
+El cambio de tema usa una expansión circular de 500 ms desde la opción activada; con teclado, desde su centro. Cada selección cancela la expansión anterior y la última conserva la paleta, los logotipos, las marcas del menú y los gráficos. La captura espera la actualización de Plotly y la decodificación de los logotipos. Durante la presentación inicial o una navegación en curso, con movimiento reducido o sin soporte, el tema se aplica directamente. El almacenamiento bloqueado permite seguir cambiando la paleta, aunque impide conservarla al recargar.
+
 Pensado para gente que resuelve muchos sistemas seguidos, no solo uno:
 
 - **Navegación por teclado** en cualquier grid (matriz, captura de matrices, captura de vectores): flechas para moverte entre celdas, `Enter` para bajar una fila.
@@ -461,6 +467,11 @@ pytest tests/test_gauss_precision.py -v
 ---
 
 ## 🛡️ Manejo de errores y validación
+
+La validación de las etapas visuales, sus capturas, pruebas temporales de animación,
+comandos y limitaciones del entorno están en
+`evidencias/validacion-final/INFORME.md`. Incluye recorridos con zoom real del
+200 %, teclado, movimiento reducido y desplazamiento táctil emulado.
 
 El proyecto trata los errores de entrada del usuario como **datos esperables**, no como excepciones a atrapar por accidente:
 

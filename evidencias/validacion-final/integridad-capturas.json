@@ -1,0 +1,440 @@
+[
+  {
+    "archivo": "determinante-edicion-descarta-obsoleto-movil.png",
+    "ancho": 390,
+    "alto": 1072,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "determinante-edicion-descarta-obsoleto-zoom200.png",
+    "ancho": 1418,
+    "alto": 902,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "determinante-edicion-descarta-obsoleto.png",
+    "ancho": 1440,
+    "alto": 1072,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "determinante-fracciones-movil.png",
+    "ancho": 390,
+    "alto": 1146,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "determinante-fracciones-zoom200.png",
+    "ancho": 1418,
+    "alto": 902,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "determinante-fracciones.png",
+    "ancho": 1440,
+    "alto": 1072,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "determinante-identidad-movil.png",
+    "ancho": 390,
+    "alto": 1157,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "determinante-identidad-zoom200.png",
+    "ancho": 1418,
+    "alto": 902,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "determinante-identidad.png",
+    "ancho": 1440,
+    "alto": 1072,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "determinante-intercambio-filas-movil.png",
+    "ancho": 390,
+    "alto": 1123,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "determinante-intercambio-filas-zoom200.png",
+    "ancho": 1418,
+    "alto": 902,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "determinante-intercambio-filas.png",
+    "ancho": 1440,
+    "alto": 1072,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "determinante-singular-movil.png",
+    "ancho": 390,
+    "alto": 1161,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "determinante-singular-zoom200.png",
+    "ancho": 1418,
+    "alto": 902,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "determinante-singular.png",
+    "ancho": 1440,
+    "alto": 1072,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "determinante-uno-por-uno-movil.png",
+    "ancho": 390,
+    "alto": 1072,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "determinante-uno-por-uno-zoom200.png",
+    "ancho": 1418,
+    "alto": 902,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "determinante-uno-por-uno.png",
+    "ancho": 1440,
+    "alto": 1072,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "grafico-sincronizado-medianoche.png",
+    "ancho": 1440,
+    "alto": 1124,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "inicio-escritorio-marea.png",
+    "ancho": 1440,
+    "alto": 1000,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "inicio-escritorio-medianoche.png",
+    "ancho": 1440,
+    "alto": 1000,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "inicio-escritorio-papel.png",
+    "ancho": 1440,
+    "alto": 1000,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "inicio-movil-marea.png",
+    "ancho": 390,
+    "alto": 1000,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "inicio-movil-medianoche.png",
+    "ancho": 390,
+    "alto": 1000,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "inicio-movil-papel.png",
+    "ancho": 390,
+    "alto": 1000,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "inicio-zoom200-marea.png",
+    "ancho": 1418,
+    "alto": 902,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "inicio-zoom200-medianoche.png",
+    "ancho": 1418,
+    "alto": 902,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "inicio-zoom200-papel.png",
+    "ancho": 1418,
+    "alto": 902,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "inversa-calculada-movil.png",
+    "ancho": 390,
+    "alto": 3647,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "inversa-calculada-zoom200.png",
+    "ancho": 1418,
+    "alto": 902,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "inversa-calculada.png",
+    "ancho": 1440,
+    "alto": 2583,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "inversa-transferencia-fracciones-movil.png",
+    "ancho": 390,
+    "alto": 2036,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "inversa-transferencia-fracciones-zoom200.png",
+    "ancho": 1418,
+    "alto": 902,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "inversa-transferencia-fracciones.png",
+    "ancho": 1440,
+    "alto": 1403,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "matrices-error-conserva-captura-movil.png",
+    "ancho": 390,
+    "alto": 1695,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "matrices-error-conserva-captura-zoom200.png",
+    "ancho": 1418,
+    "alto": 902,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "matrices-error-conserva-captura.png",
+    "ancho": 1440,
+    "alto": 1175,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "matrices-escritorio-marea.png",
+    "ancho": 1440,
+    "alto": 1582,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "matrices-escritorio-medianoche.png",
+    "ancho": 1440,
+    "alto": 1582,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "matrices-escritorio-papel.png",
+    "ancho": 1440,
+    "alto": 1582,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "matrices-evaluacion-exacta-movil.png",
+    "ancho": 390,
+    "alto": 2216,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "matrices-evaluacion-exacta-zoom200.png",
+    "ancho": 1418,
+    "alto": 902,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "matrices-evaluacion-exacta.png",
+    "ancho": 1440,
+    "alto": 1189,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "matrices-movil-marea.png",
+    "ancho": 390,
+    "alto": 2206,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "matrices-movil-medianoche.png",
+    "ancho": 390,
+    "alto": 2206,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "matrices-movil-papel.png",
+    "ancho": 390,
+    "alto": 2206,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "matrices-varias-escritorio-movil.png",
+    "ancho": 390,
+    "alto": 2206,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "matrices-varias-escritorio-zoom200.png",
+    "ancho": 1418,
+    "alto": 902,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "matrices-varias-escritorio.png",
+    "ancho": 1440,
+    "alto": 1582,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "matrices-zoom200-marea.png",
+    "ancho": 1418,
+    "alto": 902,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "matrices-zoom200-medianoche.png",
+    "ancho": 1418,
+    "alto": 902,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "matrices-zoom200-papel.png",
+    "ancho": 1418,
+    "alto": 902,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "presentacion-marea.png",
+    "ancho": 1440,
+    "alto": 1000,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "presentacion-medianoche.png",
+    "ancho": 1440,
+    "alto": 1000,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "presentacion-papel.png",
+    "ancho": 1440,
+    "alto": 1000,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "tema-escritorio-marea.png",
+    "ancho": 1440,
+    "alto": 1516,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "tema-escritorio-medianoche.png",
+    "ancho": 1440,
+    "alto": 1516,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "tema-escritorio-papel.png",
+    "ancho": 1440,
+    "alto": 1516,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "tema-movil-marea.png",
+    "ancho": 390,
+    "alto": 2068,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "tema-movil-medianoche.png",
+    "ancho": 390,
+    "alto": 2068,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "tema-movil-papel.png",
+    "ancho": 390,
+    "alto": 2068,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "tema-zoom200-marea.png",
+    "ancho": 1418,
+    "alto": 902,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "tema-zoom200-medianoche.png",
+    "ancho": 1418,
+    "alto": 902,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "tema-zoom200-papel.png",
+    "ancho": 1418,
+    "alto": 902,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "vectores-escritorio-marea.png",
+    "ancho": 1440,
+    "alto": 1257,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "vectores-escritorio-medianoche.png",
+    "ancho": 1440,
+    "alto": 1115,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "vectores-escritorio-papel.png",
+    "ancho": 1440,
+    "alto": 1257,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "vectores-movil-marea.png",
+    "ancho": 390,
+    "alto": 1661,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "vectores-movil-medianoche.png",
+    "ancho": 390,
+    "alto": 1661,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "vectores-movil-papel.png",
+    "ancho": 390,
+    "alto": 1661,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "vectores-zoom200-marea.png",
+    "ancho": 1418,
+    "alto": 902,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "vectores-zoom200-medianoche.png",
+    "ancho": 1418,
+    "alto": 902,
+    "coloresMuestreados": 5
+  },
+  {
+    "archivo": "vectores-zoom200-papel.png",
+    "ancho": 1418,
+    "alto": 902,
+    "coloresMuestreados": 5
+  }
+]

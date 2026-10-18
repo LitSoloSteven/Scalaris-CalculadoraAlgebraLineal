@@ -1,0 +1,5 @@
+PRESENTACION papel false correcta
+PRESENTACION marea false correcta
+PRESENTACION medianoche false correcta
+PRESENTACION papel true correcta
+ANIMACIONES verificadas temporalmente
