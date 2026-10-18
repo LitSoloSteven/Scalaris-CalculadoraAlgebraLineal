@@ -1,70 +1,63 @@
 """Utilidades compartidas de serialización y parseo para controladores de interfaz."""
 import json
-from typing import Any
 
-from src.backend.utilidades.formateadores import formatear_fraccion_str
+from src.backend.modelos.matriz import Matriz
+from src.backend.utilidades.formateadores import formatear_fraccion_texto
 
 
-def parsear_payload(
-    payload_json: str,
-    mensaje_esperado: str = "El payload debe ser un objeto JSON.",
+def parsear_carga_json(
+    carga_json: str,
+    mensaje_esperado: str = "La carga debe ser un objeto JSON. Revisa los datos y vuelve a enviarlos.",
 ) -> tuple[dict | None, str | None]:
-    """Valida la sintaxis del string JSON y asegura que sea un diccionario."""
+    """Devuelve el objeto JSON de la carga o un error serializado si su sintaxis o tipo falla."""
     try:
-        datos = json.loads(payload_json)
+        datos = json.loads(carga_json)
     except json.JSONDecodeError as error:
         mensaje_error = (
-            f"Payload JSON malformado: {error.msg} "
-            f"(línea {error.lineno}, columna {error.colno})."
+            f"Carga JSON inválida: JSON malformado (línea {error.lineno}, columna {error.colno}). "
+            "Revisa las comillas y los separadores y vuelve a enviarlo."
         )
-        return None, json.dumps({"status": "ERROR", "message": mensaje_error})
+        return None, json.dumps({"estado": "ERROR", "mensaje": mensaje_error})
 
     if not isinstance(datos, dict):
-        return None, json.dumps({"status": "ERROR", "message": mensaje_esperado})
+        return None, json.dumps({"estado": "ERROR", "mensaje": mensaje_esperado})
 
     return datos, None
 
 
-def serializar_matriz(matriz: Any) -> dict:
+def extraer_datos_matriz(matriz: Matriz) -> list[list]:
+    """Devuelve una copia de las filas y valores exactos de la matriz recibida."""
+    return [[matriz.obtener(fila, columna) for columna in range(matriz.columnas)]
+            for fila in range(matriz.filas)]
+
+
+def serializar_matriz(matriz: Matriz) -> dict:
     """Serializa una matriz a un diccionario con filas, columnas y datos en cadena."""
-    columnas = getattr(matriz, "columnas", getattr(matriz, "cols", 0))
-    filas = getattr(matriz, "filas", getattr(matriz, "rows", 0))
-
-    datos_formateados = []
-    for r in range(filas):
-        fila = []
-        for c in range(columnas):
-            valor = matriz.obtener(r, c) if hasattr(matriz, "obtener") else matriz.get(r, c)
-            fila.append(formatear_fraccion_str(valor))
-        datos_formateados.append(fila)
-
     return {
-        "rows": filas,
-        "cols": columnas,
-        "data": datos_formateados,
-        "filas": filas,
-        "columnas": columnas,
-        "datos": datos_formateados,
+        "filas": matriz.filas,
+        "columnas": matriz.columnas,
+        "datos": [[formatear_fraccion_texto(valor) for valor in fila]
+                  for fila in extraer_datos_matriz(matriz)],
     }
 
 
 def construir_vista_pasos(pasos: list[dict]) -> list[dict]:
     """Genera la estructura estandarizada de pasos para la vista del reproductor."""
     vista_pasos = []
-    for p in pasos:
-        mat = p.get("matrix")
-        matriz_serializada = serializar_matriz(mat) if mat is not None else None
-        pivote = list(p["pivot"]) if p.get("pivot") is not None else None
-        filas_intercambio = list(p["swap_rows"]) if p.get("swap_rows") is not None else None
+    for paso in pasos:
+        matriz = paso.get("matriz")
+        matriz_serializada = serializar_matriz(matriz) if matriz is not None else None
+        pivote = list(paso["pivote"]) if paso.get("pivote") is not None else None
+        filas_intercambio = list(paso["filas_intercambiadas"]) if paso.get("filas_intercambiadas") is not None else None
         vista_pasos.append({
-            "index": p["index"],
-            "kind": p["kind"],
-            "description": p["description"],
-            "explanation": p["explanation"],
-            "group_index": p["group_index"],
-            "pivot": pivote,
-            "rows_changed": list(p.get("rows_changed", [])),
-            "swap_rows": filas_intercambio,
-            "matrix": matriz_serializada,
+            "indice": paso["indice"],
+            "tipo": paso["tipo"],
+            "descripcion": paso["descripcion"],
+            "explicacion": paso["explicacion"],
+            "indice_grupo": paso["indice_grupo"],
+            "pivote": pivote,
+            "filas_cambiadas": list(paso.get("filas_cambiadas", [])),
+            "filas_intercambiadas": filas_intercambio,
+            "matriz": matriz_serializada,
         })
     return vista_pasos

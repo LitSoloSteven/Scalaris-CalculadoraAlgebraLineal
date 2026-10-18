@@ -1,5 +1,7 @@
 """Resolutor de combinación lineal de vectores en R^n."""
 
+from src.backend.constantes import INFINITA, UNICA
+
 import re
 
 from src.backend.constantes import (
@@ -11,7 +13,7 @@ from src.backend.constantes import (
 from src.backend.excepciones import ErrorVectorInvalido
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_vectores.base import (
-    BaseResolutorVectores,
+    _BaseResolutorVectores,
 )
 from src.backend.resolutores.operaciones_vectores.formateadores import (
     matriz_aumentada_gauss_a_latex,
@@ -23,26 +25,22 @@ from src.backend.resolutores.operaciones_vectores.planteamiento import (
 from src.backend.resolutores.sistemas_lineales.gauss import ResolutorGauss
 
 
-def _limpiar_pasos_gauss(pasos_brutos: list[dict], k: int) -> list[dict]:
+def _limpiar_pasos_gauss(pasos_brutos: list[dict], numero_vectores: int) -> list[dict]:
     """Descarta el paso inicial redundante y normaliza descripciones y LaTeX."""
     limpios = []
     lista = pasos_brutos[1:] if len(pasos_brutos) > 1 else pasos_brutos
-    for idx, paso in enumerate(lista, start=1):
-        m = paso.get("matriz") or paso.get("matrix")
-        mat_tex = paso.get("detalle_latex") or paso.get("detail_latex")
-        if not mat_tex and m:
-            mat_tex = matriz_aumentada_gauss_a_latex(m, k)
-        desc_bruta = paso.get("descripcion", "") or paso.get("description", "")
+    for indice, paso in enumerate(lista, start=1):
+        matriz_paso = paso.get("matriz")
+        matriz_latex = paso.get("detalle_latex")
+        if not matriz_latex and matriz_paso:
+            matriz_latex = matriz_aumentada_gauss_a_latex(matriz_paso, numero_vectores)
+        desc_bruta = paso.get("descripcion", "")
         desc_limpia = re.sub(r"^\d+\.\s*", "", desc_bruta)
         limpios.append({
-            "numero_paso": idx,
-            "step_number": idx,
+            "numero_paso": indice,
             "descripcion": desc_limpia,
-            "description": desc_limpia,
-            "matriz": m.clonar() if m else None,
-            "matrix": m.clonar() if m else None,
-            "detalle_latex": mat_tex,
-            "detail_latex": mat_tex,
+            "matriz": matriz_paso.clonar() if matriz_paso else None,
+            "detalle_latex": matriz_latex,
         })
     return limpios
 
@@ -51,119 +49,100 @@ def _construir_error_combinacion_lineal(mensaje: str) -> dict:
     """Construye la respuesta estructurada de error."""
     return {
         "estado": ERROR,
-        "status": "ERROR",
         "es_combinacion_lineal": False,
         "coeficientes": None,
-        "coeficientes_str": None,
+        "coeficientes_texto": None,
         "solucion_parametrica": None,
         "parametros_libres": [],
         "mensaje": mensaje,
-        "message": mensaje,
         "pasos_planteamiento": [],
-        "setup_steps": [],
         "pasos": [],
-        "steps": [],
         "pasos_gauss": [],
-        "gauss_steps": [],
-        "pasos_sustitucion": [],
-        "back_substitution_steps": [],
+        "pasos_sustitucion_regresiva": [],
         "paso_verificacion": None,
-        "verification_step": None,
     }
 
 
-def _construir_aumentada(b: Matriz, vectores: list[Matriz]) -> Matriz:
+def _construir_aumentada(objetivo: Matriz, vectores: list[Matriz]) -> Matriz:
     """Construye la matriz aumentada [v_1 | ... | v_k | b]."""
-    n, k = b.filas, len(vectores)
+    dimension, numero_vectores = objetivo.filas, len(vectores)
     datos = [
-        [vectores[j].obtener(i, 0) for j in range(k)] + [b.obtener(i, 0)]
-        for i in range(n)
+        [vectores[j].obtener(i, 0) for j in range(numero_vectores)] + [objetivo.obtener(i, 0)]
+        for i in range(dimension)
     ]
-    return Matriz(n, k + 1, datos)
+    return Matriz(dimension, numero_vectores + 1, datos)
 
 
 def _validar_listas_nombres(
-    k: int,
+    numero_vectores: int,
     variables: list[str] | None,
     vectores: list[str] | None,
 ) -> str | None:
     """Valida tamaños y tipos de las listas de nombres opcionales."""
-    if variables is not None and (not isinstance(variables, list) or len(variables) != k):
-        return f"nombres_variables debe ser lista de longitud {k}."
-    if vectores is not None and (not isinstance(vectores, list) or len(vectores) != k):
-        return f"nombres_vectores debe ser lista de longitud {k}."
+    for nombre, lista in (("nombres_variables", variables), ("nombres_vectores", vectores)):
+        if lista is not None:
+            if not isinstance(lista, list):
+                return f"{nombre} debe ser una lista."
+            if len(lista) != numero_vectores:
+                return f"{nombre} tiene {len(lista)} nombres; se esperaban {numero_vectores} (uno por vector)."
     return None
 
 
 def _empaquetar_unica(
-    b: Matriz,
+    objetivo: Matriz,
     vectores: list[Matriz],
-    config: tuple[list[str], list[str], str],
+    configuracion: tuple[list[str], list[str], str],
     resultado_gauss: dict,
     pasos_agrupados: tuple[list[dict], list[dict], list[dict]],
 ) -> dict:
     """Empaqueta el resultado cuando existe combinación lineal única."""
-    vars_nom, vecs_nom, sujeto = config
+    variables_efectivas, nombres_vectores_efectivos, sujeto = configuracion
     planteamiento, gauss_limpios, combinados = pasos_agrupados
-    coefs = list(resultado_gauss.get("solucion_exacta", []))
-    coefs_str = list(resultado_gauss.get("solucion", []))
-    verificacion = construir_paso_comprobacion(b, vectores, coefs, vars_nom, vecs_nom)
-    msg = f"b es combinación lineal {sujeto} (representación única)."
+    coeficientes = list(resultado_gauss.get("solucion_exacta", []))
+    coeficientes_texto = list(resultado_gauss.get("solucion", []))
+    verificacion = construir_paso_comprobacion(objetivo, vectores, coeficientes, variables_efectivas, nombres_vectores_efectivos)
+    mensaje_resultado = f"b es combinación lineal {sujeto} (representación única)."
     return {
-        "estado": SOLUCION_UNICA,
-        "status": "UNIQUE",
+        "estado": UNICA,
         "es_combinacion_lineal": True,
-        "coeficientes": coefs,
-        "coeficientes_str": coefs_str,
+        "coeficientes": coeficientes,
+        "coeficientes_texto": coeficientes_texto,
         "solucion_parametrica": None,
         "parametros_libres": [],
-        "mensaje": msg,
-        "message": msg,
+        "mensaje": mensaje_resultado,
         "pasos_planteamiento": planteamiento,
-        "setup_steps": planteamiento,
         "pasos": combinados,
-        "steps": combinados,
         "pasos_gauss": gauss_limpios,
-        "gauss_steps": gauss_limpios,
-        "pasos_sustitucion": resultado_gauss.get("back_substitution_steps") or resultado_gauss.get("pasos_sustitucion_regresiva", []),
-        "back_substitution_steps": resultado_gauss.get("back_substitution_steps") or resultado_gauss.get("pasos_sustitucion_regresiva", []),
+        "pasos_sustitucion_regresiva": resultado_gauss.get("pasos_sustitucion_regresiva", []),
         "paso_verificacion": verificacion,
-        "verification_step": verificacion,
     }
 
 
 def _empaquetar_infinitas(
-    config: tuple[list[str], str],
+    configuracion: tuple[list[str], str],
     resultado_gauss: dict,
     pasos_agrupados: tuple[list[dict], list[dict], list[dict]],
 ) -> dict:
     """Empaqueta el resultado cuando hay infinitas combinaciones lineales."""
-    vars_nom, sujeto = config
+    variables_efectivas, sujeto = configuracion
     planteamiento, gauss_limpios, combinados = pasos_agrupados
     sol = list(resultado_gauss.get("solucion", []))
     columnas_libres = resultado_gauss.get("columnas_libres") or []
-    libres = [vars_nom[c] for c in columnas_libres]
-    msg = f"b es combinación lineal {sujeto}. Existen infinitas representaciones; se muestra la paramétrica."
+    libres = [variables_efectivas[c] for c in columnas_libres]
+    mensaje_resultado = f"b es combinación lineal {sujeto}. Existen infinitas representaciones; se muestra la paramétrica."
     return {
-        "estado": SOLUCIONES_INFINITAS,
-        "status": "INFINITE",
+        "estado": INFINITA,
         "es_combinacion_lineal": True,
         "coeficientes": None,
-        "coeficientes_str": None,
+        "coeficientes_texto": None,
         "solucion_parametrica": sol,
         "parametros_libres": libres,
-        "mensaje": msg,
-        "message": msg,
+        "mensaje": mensaje_resultado,
         "pasos_planteamiento": planteamiento,
-        "setup_steps": planteamiento,
         "pasos": combinados,
-        "steps": combinados,
         "pasos_gauss": gauss_limpios,
-        "gauss_steps": gauss_limpios,
-        "pasos_sustitucion": resultado_gauss.get("back_substitution_steps") or resultado_gauss.get("pasos_sustitucion_regresiva", []),
-        "back_substitution_steps": resultado_gauss.get("back_substitution_steps") or resultado_gauss.get("pasos_sustitucion_regresiva", []),
+        "pasos_sustitucion_regresiva": resultado_gauss.get("pasos_sustitucion_regresiva", []),
         "paso_verificacion": None,
-        "verification_step": None,
     }
 
 
@@ -173,60 +152,52 @@ def _empaquetar_sin_solucion(
 ) -> dict:
     """Empaqueta el resultado cuando no existe combinación lineal."""
     planteamiento, gauss_limpios, combinados = pasos_agrupados
-    msg = f"b NO es combinación lineal {sujeto}."
+    mensaje_resultado = f"b NO es combinación lineal {sujeto}."
     return {
         "estado": SIN_SOLUCION,
-        "status": "NO_SOLUTION",
         "es_combinacion_lineal": False,
         "coeficientes": None,
-        "coeficientes_str": None,
+        "coeficientes_texto": None,
         "solucion_parametrica": None,
         "parametros_libres": [],
-        "mensaje": msg,
-        "message": msg,
+        "mensaje": mensaje_resultado,
         "pasos_planteamiento": planteamiento,
-        "setup_steps": planteamiento,
         "pasos": combinados,
-        "steps": combinados,
         "pasos_gauss": gauss_limpios,
-        "gauss_steps": gauss_limpios,
-        "pasos_sustitucion": [],
-        "back_substitution_steps": [],
+        "pasos_sustitucion_regresiva": [],
         "paso_verificacion": None,
-        "verification_step": None,
     }
 
 
 def _combinar_pasos_vectoriales(planteamiento: list[dict], gauss: list[dict]) -> list[dict]:
     """Combina pasos de planteamiento y pasos gaussianos con numeración continua."""
-    combinados = [dict(s) for s in planteamiento]
-    for idx, gs in enumerate(gauss, start=len(planteamiento) + 1):
-        s_copia = dict(gs)
-        s_copia["numero_paso"] = idx
-        s_copia["step_number"] = idx
+    combinados = [dict(paso) for paso in planteamiento]
+    for indice, paso_gauss in enumerate(gauss, start=len(planteamiento) + 1):
+        s_copia = dict(paso_gauss)
+        s_copia["numero_paso"] = indice
         combinados.append(s_copia)
     return combinados
 
 
-class ResolutorCombinacionLineal(BaseResolutorVectores):
+class ResolutorCombinacionLineal(_BaseResolutorVectores):
     """Determina si un vector b es combinación lineal de un conjunto de vectores."""
 
-    def _validar_dimensiones_vectores(self, b: Matriz, vectores: list[Matriz]) -> str | None:
+    def _validar_dimensiones_vectores(self, objetivo: Matriz, vectores: list[Matriz]) -> str | None:
         """Verifica compatibilidad de dimensiones de columna entre b y vectores."""
         try:
-            self.validar_vector_columna(b, "b")
-            n = b.filas
-            for i, v in enumerate(vectores):
-                self.validar_vector_columna(v, f"v_{i + 1}")
-                if v.filas != n:
-                    return f"Dimensiones incompatibles: b tiene dim {n}, v_{i + 1} tiene dim {v.filas}."
-        except ErrorVectorInvalido as e:
-            return str(e)
+            self.validar_vector_columna(objetivo, "b")
+            dimension = objetivo.filas
+            for i, vector in enumerate(vectores):
+                self.validar_vector_columna(vector, f"v_{i + 1}")
+                if vector.filas != dimension:
+                    return f"Dimensiones incompatibles: b tiene dim {dimension}, v_{i + 1} tiene dim {vector.filas}."
+        except ErrorVectorInvalido as error:
+            return str(error)
         return None
 
     def _validar_entradas(
         self,
-        b: Matriz,
+        objetivo: Matriz,
         vectores: list[Matriz],
         nombres_variables: list[str] | None,
         nombres_vectores: list[str] | None,
@@ -234,42 +205,42 @@ class ResolutorCombinacionLineal(BaseResolutorVectores):
         """Valida que los vectores y nombres cumplan los invariantes de dimensión."""
         if not isinstance(vectores, list) or len(vectores) == 0:
             return "Se requiere al menos un vector."
-        err_nombres = _validar_listas_nombres(len(vectores), nombres_variables, nombres_vectores)
-        if err_nombres:
-            return err_nombres
-        return self._validar_dimensiones_vectores(b, vectores)
+        error_nombres = _validar_listas_nombres(len(vectores), nombres_variables, nombres_vectores)
+        if error_nombres:
+            return error_nombres
+        return self._validar_dimensiones_vectores(objetivo, vectores)
 
     def resolver(
         self,
-        b: Matriz,
+        objetivo: Matriz,
         vectores: list[Matriz],
         *,
         nombres_variables: list[str] | None = None,
         nombres_vectores: list[str] | None = None,
     ) -> dict:
         """Determina si b es combinación lineal de vectores mediante eliminación de Gauss."""
-        err = self._validar_entradas(b, vectores, nombres_variables, nombres_vectores)
-        if err:
-            return _construir_error_combinacion_lineal(err)
+        error = self._validar_entradas(objetivo, vectores, nombres_variables, nombres_vectores)
+        if error:
+            return _construir_error_combinacion_lineal(error)
 
-        k = len(vectores)
-        sujeto = "del vector" if k == 1 else f"de los {k} vectores"
-        vars_nom = nombres_variables if nombres_variables else [f"c_{j + 1}" for j in range(k)]
-        vecs_nom = nombres_vectores if nombres_vectores else [f"v_{j + 1}" for j in range(k)]
+        numero_vectores = len(vectores)
+        sujeto = "del vector" if numero_vectores == 1 else f"de los {numero_vectores} vectores"
+        variables_efectivas = nombres_variables if nombres_variables else [f"c_{j + 1}" for j in range(numero_vectores)]
+        nombres_vectores_efectivos = nombres_vectores if nombres_vectores else [f"v_{j + 1}" for j in range(numero_vectores)]
 
-        aumentada = _construir_aumentada(b, vectores)
-        planteamiento = construir_pasos_planteamiento(b, vectores, vars_nom, aumentada=aumentada)
+        aumentada = _construir_aumentada(objetivo, vectores)
+        planteamiento = construir_pasos_planteamiento(objetivo, vectores, variables_efectivas, aumentada=aumentada)
 
-        resolutor_g = ResolutorGauss(aumentada, nombres_variables=vars_nom)
-        res_g = resolutor_g.resolver()
-        gauss_limpios = _limpiar_pasos_gauss(res_g.get("pasos", []), k)
+        resolutor_g = ResolutorGauss(aumentada, nombres_variables=variables_efectivas)
+        resultado_gauss = resolutor_g.resolver()
+        gauss_limpios = _limpiar_pasos_gauss(resultado_gauss.get("pasos", []), numero_vectores)
         pasos_combinados = _combinar_pasos_vectoriales(planteamiento, gauss_limpios)
 
-        estado_g = res_g["estado"]
+        estado_g = resultado_gauss["estado"]
         agrupados = (planteamiento, gauss_limpios, pasos_combinados)
         if estado_g == SOLUCION_UNICA:
-            return _empaquetar_unica(b, vectores, (vars_nom, vecs_nom, sujeto), res_g, agrupados)
+            return _empaquetar_unica(objetivo, vectores, (variables_efectivas, nombres_vectores_efectivos, sujeto), resultado_gauss, agrupados)
         if estado_g == SOLUCIONES_INFINITAS:
-            return _empaquetar_infinitas((vars_nom, sujeto), res_g, agrupados)
+            return _empaquetar_infinitas((variables_efectivas, sujeto), resultado_gauss, agrupados)
         return _empaquetar_sin_solucion(sujeto, agrupados)
 

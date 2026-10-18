@@ -23,7 +23,7 @@ def test_verificacion_producto_conserva_orden_y_diccionario_completo(direccion, 
     inversa = Matriz(1, 1, [["1/2"]])
     resolutor = ResolutorInversa()
     multiplicar = Mock(return_value={"matriz_resultado": producto})
-    resolutor.resolutor_ops.multiplicar = multiplicar
+    resolutor.resolutor_operaciones_matrices.multiplicar = multiplicar
     resultado = resolutor._verificar_producto(matriz, inversa, 1, inverso)
     esperado_izquierda, esperado_derecha = (inversa, matriz) if inverso else (matriz, inversa)
     assert multiplicar.call_count == 1
@@ -34,8 +34,9 @@ def test_verificacion_producto_conserva_orden_y_diccionario_completo(direccion, 
     descripcion = f"Verificación {descripcion_operacion} = I."
     assert resultado == {
         "propiedad": f"{nombre_izquierda} \\cdot {nombre_derecha} = I",
-        "description": descripcion, "descripcion": descripcion,
+        "nombre_izquierdo": nombre_izquierda, "nombre_derecho": nombre_derecha,
+        "descripcion": descripcion,
         "se_cumple": cumple, "coincide": cumple,
-        "matriz_producto_latex": latex, "product_latex": latex,
-        "detalle_latex": detalle, "detail_latex": detalle,
+        "matriz_producto_latex": latex,
+        "detalle_latex": detalle,
     }

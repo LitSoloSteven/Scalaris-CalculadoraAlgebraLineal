@@ -2,93 +2,84 @@
 
 from fractions import Fraction
 
-from src.backend.models.matrix import Matrix
-from src.backend.solvers.vector_ops.linear_combination import LinearCombinationSolver
-from src.backend.solvers.vector_ops.operations import VectorOpsSolver
+from src.backend.modelos.matriz import Matriz
+from src.backend.resolutores.operaciones_vectores.combinacion_lineal import ResolutorCombinacionLineal
+from src.backend.resolutores.operaciones_vectores.operaciones import ResolutorOperacionesVectores
+from tests.comun_combinacion import preparar_combinacion_canonica
 
 
 def test_combinacion_lineal_flujo_canonico():
     """Valida el ejemplo canónico de Lay en R³."""
-    a1 = Matrix(3, 1, [[1], [-2], [-5]])
-    a2 = Matrix(3, 1, [[2], [5], [6]])
-    b = Matrix(3, 1, [[7], [4], [-3]])
+    resolutor, a1, a2, b, res = preparar_combinacion_canonica()
 
-    resolutor = LinearCombinationSolver()
-    res = resolutor.solve(
-        b,
-        [a1, a2],
-        variable_names=["x_1", "x_2"],
-        vector_names=["a_1", "a_2"],
-    )
-
-    assert res["status"] == "UNIQUE"
+    assert res["estado"] == "UNICA"
     assert res["es_combinacion_lineal"] is True
     assert res["coeficientes"] == [Fraction(3), Fraction(2)]
-    assert res["coeficientes_str"] == ["3", "2"]
-    assert len(res["setup_steps"]) == 5
+    assert res["coeficientes_texto"] == ["3", "2"]
+    assert len(res["pasos_planteamiento"]) == 5
 
-    assert "1. Ecuación vectorial" in res["setup_steps"][0]["description"]
-    assert "2. Multiplicación de los escalares" in res["setup_steps"][1]["description"]
-    assert "3. Suma vectorial" in res["setup_steps"][2]["description"]
-    assert "4. Sistema de ecuaciones lineales" in res["setup_steps"][3]["description"]
-    assert "5. Matriz aumentada" in res["setup_steps"][4]["description"]
+    assert "1. Ecuación vectorial" in res["pasos_planteamiento"][0]["descripcion"]
+    assert "2. Multiplicación de los escalares" in res["pasos_planteamiento"][1]["descripcion"]
+    assert "3. Suma vectorial" in res["pasos_planteamiento"][2]["descripcion"]
+    assert "4. Sistema de ecuaciones lineales" in res["pasos_planteamiento"][3]["descripcion"]
+    assert "5. Matriz aumentada" in res["pasos_planteamiento"][4]["descripcion"]
 
-    v_step = res["verification_step"]
-    assert v_step is not None
-    assert v_step["coincide"] is True
-    assert r"\checkmark" in v_step["detail_latex"]
+    paso_verificacion = res["paso_verificacion"]
+    assert paso_verificacion is not None
+    assert paso_verificacion["coincide"] is True
+    assert r"\checkmark" in paso_verificacion["detalle_latex"]
 
 
 def test_combinacion_lineal_coeficientes_fraccionarios():
     """Valida combinación lineal con coeficientes fraccionarios exactos."""
-    v1 = Matrix(2, 1, [[2], [0]])
-    v2 = Matrix(2, 1, [[0], [3]])
-    b = Matrix(2, 1, [[1], [1]])
+    v1 = Matriz(2, 1, [[2], [0]])
+    v2 = Matriz(2, 1, [[0], [3]])
+    b = Matriz(2, 1, [[1], [1]])
 
-    resolutor = LinearCombinationSolver()
-    res = resolutor.solve(
+    resolutor = ResolutorCombinacionLineal()
+    res = resolutor.resolver(
         b,
         [v1, v2],
-        variable_names=["c_1", "c_2"],
-        vector_names=["v_1", "v_2"],
+        nombres_variables=["c_1", "c_2"],
+        nombres_vectores=["v_1", "v_2"],
     )
 
-    assert res["status"] == "UNIQUE"
+    assert res["estado"] == "UNICA"
     assert res["es_combinacion_lineal"] is True
     assert res["coeficientes"] == [Fraction(1, 2), Fraction(1, 3)]
-    assert res["coeficientes_str"] == ["1/2", "1/3"]
-    assert res["verification_step"]["coincide"] is True
+    assert res["coeficientes_texto"] == ["1/2", "1/3"]
+    assert res["paso_verificacion"]["coincide"] is True
 
 
 def test_combinacion_lineal_un_solo_vector():
     """Valida combinación lineal con un único vector (k=1)."""
-    v1 = Matrix(3, 1, [[2], [4], [6]])
-    b = Matrix(3, 1, [[6], [12], [18]])
+    v1 = Matriz(3, 1, [[2], [4], [6]])
+    b = Matriz(3, 1, [[6], [12], [18]])
 
-    resolutor = LinearCombinationSolver()
-    res = resolutor.solve(b, [v1], variable_names=["c_1"], vector_names=["v_1"])
+    resolutor = ResolutorCombinacionLineal()
+    res = resolutor.resolver(b, [v1], nombres_variables=["c_1"], nombres_vectores=["v_1"])
 
-    assert res["status"] == "UNIQUE"
+    assert res["estado"] == "UNICA"
     assert res["es_combinacion_lineal"] is True
     assert res["coeficientes"] == [Fraction(3)]
-    assert res["verification_step"]["coincide"] is True
+    assert res["paso_verificacion"]["coincide"] is True
 
 
 def test_operaciones_vectores_vector_completo():
     """Valida que suma, resta y escalar retornen el vector resultante completo."""
-    resolutor = VectorOpsSolver()
-    v1 = Matrix(3, 1, [[1], [-2], [5]])
-    v2 = Matrix(3, 1, [[3], [4], [-1]])
+    resolutor = ResolutorOperacionesVectores()
+    v1 = Matriz(3, 1, [[1], [-2], [5]])
+    v2 = Matriz(3, 1, [[3], [4], [-1]])
 
-    res_add = resolutor.add(v1, v2, name1="v_1", name2="v_2")
-    assert res_add["status"] == "SUCCESS"
-    assert "result_vector_latex" in res_add
-    assert res_add["latex_details"][-1] == res_add["result_vector_latex"]
+    resultado_suma = resolutor.sumar(v1, v2, nombre1="v_1", nombre2="v_2")
+    assert resultado_suma["estado"] == "EXITO"
+    assert "vector_resultado_latex" in resultado_suma
+    assert resultado_suma["detalles_latex"][-1] == resultado_suma["vector_resultado_latex"]
 
-    res_sub = resolutor.subtract(v1, v2, name1="v_1", name2="v_2")
-    assert res_sub["status"] == "SUCCESS"
-    assert res_sub["latex_details"][-1] == res_sub["result_vector_latex"]
+    resultado_resta = resolutor.restar(v1, v2, nombre1="v_1", nombre2="v_2")
+    assert resultado_resta["estado"] == "EXITO"
+    assert resultado_resta["detalles_latex"][-1] == resultado_resta["vector_resultado_latex"]
 
-    res_esc = resolutor.scalar_multiply(-3, v1, name="v", result_name="w")
-    assert res_esc["status"] == "SUCCESS"
-    assert res_esc["latex_details"][-1] == res_esc["result_vector_latex"]
+    res_esc = resolutor.multiplicar_escalar(-3, v1, nombre="v", nombre_resultado="w")
+    assert res_esc["estado"] == "EXITO"
+    assert res_esc["detalles_latex"][-1] == res_esc["vector_resultado_latex"]

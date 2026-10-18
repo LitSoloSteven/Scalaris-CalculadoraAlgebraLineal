@@ -18,10 +18,10 @@ def test_consumidor_monta_un_panel_vectorial_con_celdas_reales(metodo, nombre_pa
         with contenedor:
             getattr(controles, metodo)(vista)
         panel = getattr(vista, nombre_panel)
-        assert panel.container is not None
-        assert panel.container in list(contenedor.descendants())
-        entradas = [elemento for elemento in panel.container.descendants() if isinstance(elemento, ui.input)]
-        assert len(entradas) == panel.dim
+        assert panel.contenedor is not None
+        assert panel.contenedor in list(contenedor.descendants())
+        entradas = [elemento for elemento in panel.contenedor.descendants() if isinstance(elemento, ui.input)]
+        assert len(entradas) == panel.dimension
         assert [entrada._props["data-geometria-indice"] for entrada in entradas] == ["0", "1", "2"]
     finally:
         contenedor.delete()

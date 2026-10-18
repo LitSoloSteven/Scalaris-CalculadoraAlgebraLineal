@@ -15,10 +15,12 @@ from src.backend.resolutores.sistemas_lineales.gauss import ResolutorGauss
 
 
 def test_clasificar_vacio():
-    assert clasificar_conjunto_solucion(None, ()) == TipoSolucionGeometria.VACIO
+    """Verifica clasificar vacio."""
+    assert clasificar_conjunto_solucion(None, ()) == TipoSolucionGeometria.VACIA
 
 
 def test_clasificar_punto():
+    """Verifica clasificar punto."""
     assert (
         clasificar_conjunto_solucion((Fraction(1), Fraction(2)), ())
         == TipoSolucionGeometria.PUNTO
@@ -26,6 +28,7 @@ def test_clasificar_punto():
 
 
 def test_clasificar_recta():
+    """Verifica clasificar recta."""
     direcciones = ((Fraction(1), Fraction(0)),)
     assert (
         clasificar_conjunto_solucion((Fraction(0), Fraction(0)), direcciones)
@@ -34,6 +37,7 @@ def test_clasificar_recta():
 
 
 def test_clasificar_plano():
+    """Verifica clasificar plano."""
     direcciones = (
         (Fraction(1), Fraction(0), Fraction(0)),
         (Fraction(0), Fraction(1), Fraction(0)),
@@ -45,14 +49,16 @@ def test_clasificar_plano():
 
 
 def test_clasificar_subespacio_afin():
+    """Verifica clasificar subespacio afin."""
     direcciones = tuple((Fraction(i), Fraction(0), Fraction(0)) for i in range(3))
     assert (
         clasificar_conjunto_solucion((Fraction(0),) * 3, direcciones)
-        == TipoSolucionGeometria.SUBESPACIO_AFIN
+        == TipoSolucionGeometria.ESPACIO_AFIN
     )
 
 
 def test_construir_desde_gauss_solucion_unica():
+    """Verifica construir desde gauss solucion unica."""
     datos = [
         [Fraction(1), Fraction(1), Fraction(3)],
         [Fraction(1), Fraction(-1), Fraction(1)],
@@ -66,6 +72,7 @@ def test_construir_desde_gauss_solucion_unica():
 
 
 def test_construir_desde_gauss_sin_solucion():
+    """Verifica construir desde gauss sin solucion."""
     datos = [
         [Fraction(1), Fraction(1), Fraction(1)],
         [Fraction(1), Fraction(1), Fraction(2)],
@@ -74,10 +81,11 @@ def test_construir_desde_gauss_sin_solucion():
     resultado = ResolutorGauss(matriz).resolver()
     conjunto = construir_conjunto_desde_gauss(resultado)
     assert conjunto is not None
-    assert conjunto.tipo == TipoSolucionGeometria.VACIO
+    assert conjunto.tipo == TipoSolucionGeometria.VACIA
 
 
 def test_construir_desde_gauss_soluciones_infinitas():
+    """Verifica construir desde gauss soluciones infinitas."""
     datos = [[Fraction(1), Fraction(1), Fraction(1)]]
     matriz = Matriz(1, 3, datos)
     resultado = ResolutorGauss(matriz).resolver()
@@ -91,20 +99,23 @@ def test_construir_desde_gauss_soluciones_infinitas():
 
 
 def test_tiene_parametros_solucion_verdadero():
-    assert tiene_parametros_solucion({"solution_param": "algo"})
+    """Verifica tiene parametros solucion verdadero."""
+    assert tiene_parametros_solucion({"parametros_solucion": "algo"})
 
 
 def test_tiene_parametros_solucion_falso():
-    assert not tiene_parametros_solucion({"status": "OK"})
+    """Verifica tiene parametros solucion falso."""
+    assert not tiene_parametros_solucion({"estado": "EXITO"})
 
 
 def test_tiene_parametros_solucion_clave_presente_invalida():
+    """Verifica tiene parametros solucion clave presente invalida."""
     resultado = {
-        "status": "INFINITE_SOLUTIONS",
-        "solution_param": "x = 1 + t",
-        "solution": ["1 + t"],
-        "solution_exact": None,
-        "free_cols": [1],
+        "estado": "SOLUCIONES_INFINITAS",
+        "parametros_solucion": "x = 1 + t",
+        "solucion": ["1 + t"],
+        "solucion_exacta": None,
+        "columnas_libres": [1],
     }
     conjunto = construir_conjunto_desde_gauss(resultado)
     assert conjunto is None
@@ -112,13 +123,14 @@ def test_tiene_parametros_solucion_clave_presente_invalida():
 
 
 def test_obtener_parametros_solucion_valido():
+    """Verifica obtener parametros solucion valido."""
     resultado = {
-        "solution_param": {
-            "num_vars": 2,
+        "parametros_solucion": {
+            "numero_variables": 2,
             "particular": [Fraction(1), Fraction(0)],
-            "directions": [[Fraction(-1), Fraction(1)]],
-            "free_cols": [1],
-            "param_names": ["t"],
+            "direcciones": [[Fraction(-1), Fraction(1)]],
+            "columnas_libres": [1],
+            "nombres_parametros": ["t"],
         }
     }
     sp = obtener_parametros_solucion(resultado)
@@ -126,13 +138,14 @@ def test_obtener_parametros_solucion_valido():
 
 
 def test_obtener_parametros_solucion_invalido():
+    """Verifica obtener parametros solucion invalido."""
     resultado = {
-        "solution_param": {
-            "num_vars": 2,
+        "parametros_solucion": {
+            "numero_variables": 2,
             "particular": [1, 0],
-            "directions": [[-1, 1]],
-            "free_cols": [1],
-            "param_names": ["t"],
+            "direcciones": [[-1, 1]],
+            "columnas_libres": [1],
+            "nombres_parametros": ["t"],
         }
     }
     assert obtener_parametros_solucion(resultado) is None

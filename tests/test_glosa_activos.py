@@ -1,60 +1,56 @@
-"""Contratos estáticos de los activos del dock de Glosa.
-
-INFERIDO: Estas pruebas verifican el contrato estático en los archivos de código (JS, Python, CSS),
-no el comportamiento en un navegador en vivo.
-"""
+"""Contratos estáticos de los activos del panel lateral de Glosa."""
 from pathlib import Path
 import re
 import pytest
 
 
 def test_contrato_cliente_glosa():
-    """Verifica contratos en glosa_dock.js."""
-    js_path = Path("src/frontend/assets/js/glosa_dock.js")
-    assert js_path.exists()
-    content = js_path.read_text(encoding="utf-8")
+    """Verifica contratos en glosa_panel_lateral.js."""
+    ruta_javascript = Path("src/frontend/recursos/js/glosa_panel_lateral.js")
+    assert ruta_javascript.exists()
+    contenido = ruta_javascript.read_text(encoding="utf-8")
 
-    assert "html.hasAttribute('data-glosa-instant')" in content
-    instant_match = re.search(r"const instant\s*=\s*([^;]+);", content)
-    assert instant_match is not None
-    assert "html.hasAttribute('data-glosa-instant')" in instant_match.group(1)
+    assert "html.hasAttribute('data-glosa-instantaneo')" in contenido
+    coincidencia_inmediata = re.search(r"const instantaneo\s*=\s*([^;]+);", contenido)
+    assert coincidencia_inmediata is not None
+    assert "html.hasAttribute('data-glosa-instantaneo')" in coincidencia_inmediata.group(1)
 
-    assert "documentElement.style.setProperty('--glosa-kb'" not in content
+    assert "documentElement.style.setProperty('--glosa-kb'" not in contenido
 
-    assert "dock.style.setProperty('--glosa-kb', '0px')" in content
+    assert "panelLateral.style.setProperty('--glosa-kb', '0px')" in contenido
 
 
 def test_contrato_accesibilidad_glosa():
-    """Verifica contratos de accesibilidad en glosa_dock.py."""
-    py_path = Path("src/frontend/componentes/glosa_dock.py")
-    pie_path = Path("src/frontend/componentes/glosa_pie.py")
-    assert py_path.exists() and pie_path.exists()
-    content = py_path.read_text(encoding="utf-8") + "\n" + pie_path.read_text(encoding="utf-8")
+    """Verifica contratos de accesibilidad en glosa_panel_lateral.py."""
+    ruta_python = Path("src/frontend/componentes/glosa_panel_lateral.py")
+    ruta_pie = Path("src/frontend/componentes/glosa_pie.py")
+    assert ruta_python.exists() and ruta_pie.exists()
+    contenido = ruta_python.read_text(encoding="utf-8") + "\n" + ruta_pie.read_text(encoding="utf-8")
 
-    fab_match = re.search(r"classes\(['\"]glosa-fab['\"]\)\.props\(([^)]+)\)", content)
-    assert fab_match is not None
-    fab_props = fab_match.group(1)
-    assert 'aria-controls="glosa-dock"' in fab_props
-    assert 'aria-expanded="false"' in fab_props
+    coincidencia_boton_flotante = re.search(r"classes\(['\"]glosa-boton-flotante['\"]\)\.props\(([^)]+)\)", contenido)
+    assert coincidencia_boton_flotante is not None
+    propiedades_boton_flotante = coincidencia_boton_flotante.group(1)
+    assert 'aria-controls="glosa-panel-lateral"' in propiedades_boton_flotante
+    assert 'aria-expanded="false"' in propiedades_boton_flotante
 
-    aside_match = re.search(r"ui\.element\(['\"]aside['\"]\)[^;]+?props\(([^)]+)\)", content)
-    assert aside_match is not None
-    aside_props = aside_match.group(1)
-    assert "aria-expanded" not in aside_props
+    coincidencia_panel_lateral = re.search(r"ui\.element\(['\"]aside['\"]\)[^;]+?props\(([^)]+)\)", contenido)
+    assert coincidencia_panel_lateral is not None
+    propiedades_panel_lateral = coincidencia_panel_lateral.group(1)
+    assert "aria-expanded" not in propiedades_panel_lateral
 
 
-def test_contrato_css_dock_y_disposicion():
-    """Verifica contratos en hojas CSS sobre FAB, transiciones del dock y tokens de layout."""
+def test_contrato_css_panel_lateral_y_disposicion():
+    """Verifica contratos en hojas CSS sobre botón flotante, transiciones del panel lateral y tokens de disposición."""
     from tests.comun import leer_css_completo
-    content = leer_css_completo()
+    contenido = leer_css_completo()
 
-    assert 'html[data-glosa="open"] .glosa-fab' in content
-    fab_open_css = content.split('html[data-glosa="open"] .glosa-fab')[1].split("}")[0]
-    assert "visibility: hidden" in fab_open_css
+    assert 'html[data-glosa="abierto"] .glosa-boton-flotante' in contenido
+    css_boton_flotante_abierto = contenido.split('html[data-glosa="abierto"] .glosa-boton-flotante')[1].split("}")[0]
+    assert "visibility: hidden" in css_boton_flotante_abierto
 
-    assert content.count("transform 200ms") >= 3
-    assert content.count("visibility 0s linear 200ms") >= 3
+    assert contenido.count("transform 200ms") >= 3
+    assert contenido.count("visibility 0s linear 200ms") >= 3
 
-    assert "100vh" not in content
-    assert content.count("container-type: inline-size") == 3
-    assert content.count("--fab-reserve:") >= 4
+    assert "100vh" not in contenido
+    assert contenido.count("container-type: inline-size") == 3
+    assert contenido.count("--fab-reserve:") >= 4

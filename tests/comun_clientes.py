@@ -2,8 +2,8 @@
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from src.frontend.componentes.ai_panel import AIPanel
-from src.frontend.routes import registrar_redirecciones_legacy
+from src.frontend.componentes.panel_ia import PanelIA
+from src.frontend.rutas import registrar_redirecciones_heredadas
 
 
 class ClienteSimulado:
@@ -27,20 +27,20 @@ class ClienteSimulado:
         self.llamadas_js.append(codigo)
 
 
-class PanelIASimulado(AIPanel):
+class PanelIASimulado(PanelIA):
     """Panel de IA cuyo almacenamiento se inyecta sin una sesión real."""
 
     def __init__(self, interfaz=None, almacen=None):
-        self._almacen_simulado = almacen if almacen is not None else {"ai_ctx_enabled": True}
+        self._almacen_simulado = almacen if almacen is not None else {"ia_contexto_habilitado": True}
         super().__init__(interfaz)
 
     @property
-    def _storage(self):
+    def _almacen(self):
         return self._almacen_simulado
 
 
 def crear_cliente_redirecciones():
     """Crea una aplicación mínima que expone las redirecciones registradas."""
     aplicacion = FastAPI()
-    registrar_redirecciones_legacy(aplicacion)
+    registrar_redirecciones_heredadas(aplicacion)
     return TestClient(aplicacion, follow_redirects=False)

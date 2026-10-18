@@ -11,18 +11,19 @@ class MatrizSimulada:
         self.columnas = len(datos[0])
 
     def obtener(self, r, c):
+        """Devuelve el valor simulado de la celda solicitada."""
         return self.datos[r][c]
 
 
 def test_construir_metadatos_pasos():
     """Valida la generación de metadatos de filas y tipo de operación."""
     pasos = [
-        {"description": "Intercambio: Fila 1 ↔ Fila 2", "matrix": MatrizSimulada([[1, 2], [3, 4]])},
-        {"description": "Fila 2 = Fila 2 − (3) · Fila 1", "matrix": MatrizSimulada([[1, 2], [0, -2]])},
+        {"descripcion": "Intercambio: Fila 1 ↔ Fila 2", "matriz": MatrizSimulada([[1, 2], [3, 4]])},
+        {"descripcion": "Fila 2 = Fila 2 − (3) · Fila 1", "matriz": MatrizSimulada([[1, 2], [0, -2]])},
     ]
     meta = construir_metadatos_pasos(pasos)
     assert len(meta) == 2
-    assert meta[0]["kind"] == "intercambio"
-    assert meta[1]["kind"] == "eliminacion"
-    assert meta[1]["index"] == 2
+    assert meta[0]["tipo"] == "intercambio"
+    assert meta[1]["tipo"] == "eliminacion"
+    assert meta[1]["indice"] == 2
     assert meta[1]["total"] == 2

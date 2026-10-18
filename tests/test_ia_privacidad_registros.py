@@ -14,7 +14,8 @@ def test_registro_http_omite_cuerpo_privado_y_caracteres_control(monkeypatch, ca
     secreto = "secreto-ficticio\nregistro-inyectado"
 
     def responder(url, headers=None, json=None, timeout=None):
-        return RespuestaSimulada(codigo, text=secreto)
+        """Devuelve la respuesta simulada para aislar la comunicación de red."""
+        return RespuestaSimulada(codigo, texto=secreto)
 
     monkeypatch.setattr(ClienteOpenRouter, "_peticiones_post", staticmethod(responder))
     monkeypatch.setattr(ClienteOpenRouter, "_tiempo_dormir", staticmethod(lambda _: None))
@@ -30,6 +31,7 @@ def test_registro_red_omite_detalles_de_excepcion(monkeypatch, caplog):
     monkeypatch.setenv("OPENROUTER_API_KEY", "clave-ficticia")
 
     def fallar(url, headers=None, json=None, timeout=None):
+        """Procesa fallar con los datos recibidos."""
         raise requests.exceptions.RequestException("secreto-ficticio\nregistro-inyectado")
 
     monkeypatch.setattr(ClienteOpenRouter, "_peticiones_post", staticmethod(fallar))

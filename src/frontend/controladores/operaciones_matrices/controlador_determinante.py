@@ -1,10 +1,11 @@
-"""Controlador de determinantes (pendiente de decisión de producto en frontend)."""
+"""Validación y delegación del cálculo pedagógico de determinantes."""
 from typing import Any
 
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_matrices.determinante import (
     ResolutorDeterminante,
 )
+from src.backend.resolutores.operaciones_matrices.captura_inversa import validar_y_parsear_matriz_cuadrada
 
 
 class ControladorDeterminante:
@@ -18,8 +19,8 @@ class ControladorDeterminante:
     @staticmethod
     def procesar(datos_matriz: list[list[Any]], metodo: str = "auto") -> dict[str, Any]:
         """Calcula el determinante usando el algoritmo especificado o recomendado."""
-        n = len(datos_matriz)
-        matriz = Matriz(n, n, datos_matriz)
+        dimension = len(datos_matriz)
+        matriz = Matriz(dimension, dimension, datos_matriz)
         recomendacion = ResolutorDeterminante.recomendar_metodo(datos_matriz)
 
         metodo_efectivo = metodo
@@ -33,3 +34,12 @@ class ControladorDeterminante:
 
         resultado["recomendacion"] = recomendacion
         return resultado
+
+    @staticmethod
+    def procesar_captura(datos_crudos: dict) -> dict[str, Any]:
+        """Valida captura cuadrada y calcula por LU sin expansión recursiva de cofactores."""
+        matriz, _, error = validar_y_parsear_matriz_cuadrada(datos_crudos)
+        if error:
+            return error
+        resultado = ControladorDeterminante.procesar(matriz.datos, metodo="lu")
+        return {"estado": "EXITO", **resultado}

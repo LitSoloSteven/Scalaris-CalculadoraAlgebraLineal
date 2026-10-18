@@ -6,9 +6,10 @@ from dataclasses import dataclass
 from typing import Any, Sequence
 
 from nicegui import ui
+from src.frontend.componentes.glosa_foco import crear_accion_explicacion
 
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos
-from src.frontend.componentes.reproductor_pasos.cuerpos import render_latex
+from src.frontend.componentes.reproductor_pasos.cuerpos import renderizar_latex
 from src.frontend.componentes.reproductor_pasos.modelo import (
     GrupoReproductor,
     PasoReproductor,
@@ -38,25 +39,11 @@ class MixinPasosVectores:
         if getattr(self, "reproductor_pasos", None) is not None:
             self.reproductor_pasos.detener()
 
-        accion_glosa = (
-            self._crear_accion_glosa_vectores(pasos)
-            if self.panel_ia
-            else None
-        )
+        accion_glosa = crear_accion_explicacion(self.panel_ia, pasos)
 
-        self.reproductor_pasos = ReproductorPasos(
-            pasos,
-            grupos,
-            renderizar_cuerpo=self._renderizar_cuerpo_vectores,
-            uid=opciones.identificador,
-            titulo=opciones.titulo,
-            lineas_ayuda=opciones.lineas_ayuda or _LINEAS_AYUDA_VECTORES,
-            tipos_leyenda=opciones.tipos_leyenda,
-            al_explicar=accion_glosa,
-            esta_ocupado=lambda: bool(
-                getattr(self.panel_ia, "_is_sending", False)
-            ),
-        )
+        self.reproductor_pasos = ReproductorPasos(pasos, grupos, renderizar_cuerpo=self._renderizar_cuerpo_vectores, identificador=opciones.identificador, opciones={'titulo': opciones.titulo, 'lineas_ayuda': opciones.lineas_ayuda or _LINEAS_AYUDA_VECTORES, 'tipos_leyenda': opciones.tipos_leyenda, 'al_explicar': accion_glosa, 'esta_ocupado': lambda: bool(
+                getattr(self.panel_ia, "_esta_enviando", False)
+            )})
         self.reproductor_pasos.construir()
 
     def _renderizar_cuerpo_vectores(self, paso: PasoReproductor, contenedor: Any) -> None:
@@ -69,23 +56,11 @@ class MixinPasosVectores:
                 if cuerpo.strip().startswith("<"):
                     ui.html(cuerpo)
                 else:
-                    render_latex(cuerpo)
+                    renderizar_latex(cuerpo)
             else:
-                render_latex(str(cuerpo))
+                renderizar_latex(str(cuerpo))
 
-    def _crear_accion_glosa_vectores(self, pasos: Sequence[PasoReproductor]):
-        """Crea el callback para explicar el paso actual con el panel de Glosa."""
-        def explicar(paso: PasoReproductor) -> None:
-            if not self.panel_ia:
-                return
-            meta = paso.meta_explicar or {}
-            self.panel_ia.disparar_explicacion_paso({
-                "index": paso.indice + 1,
-                "total": len(pasos),
-                **meta,
-            })
 
-        return explicar
 
 
 _LINEAS_AYUDA_VECTORES = (

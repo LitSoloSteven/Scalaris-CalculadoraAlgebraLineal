@@ -1,5 +1,6 @@
 """Límites de contexto con matrices, vectores y focos de gran tamaño."""
 import json
+from tests.comun_contexto import comprobar_contexto_truncado
 
 from src.ai.contexto import (
     ContextoIA, EstadoContexto,
@@ -50,16 +51,12 @@ def test_matrices_10x10_fracciones_largas():
         datos_matriz = [[fraccion] * 10 for _ in range(10)]
         matrices[f"M_{i+1}"] = {"filas": 10, "columnas": 10, "datos": datos_matriz}
     contexto = ContextoIA(
-        herramienta="matrix_ops",
+        herramienta="matrices",
         vista="Operaciones con Matrices",
         etiqueta="10 matrices",
         entrada=matrices,
     )
-    serializado = serializar_contexto(contexto)
-    assert len(serializado) <= MAXIMO_CARACTERES_CONTEXTO
-    datos = extraer_json_contexto(serializado)
-    assert isinstance(datos, dict)
-    assert datos.get("metadatos", {}).get("truncado") is True
+    serializado, datos = comprobar_contexto_truncado(contexto, extraer_json_contexto)
 
 
 def test_vectores_dimension_10_con_9_vectores():
@@ -72,16 +69,12 @@ def test_vectores_dimension_10_con_9_vectores():
             "orientacion": "columna",
         }
     contexto = ContextoIA(
-        herramienta="vector_ops",
+        herramienta="vectores",
         vista="Vectores",
         etiqueta="9 vectores",
         entrada=vectores,
     )
-    serializado = serializar_contexto(contexto)
-    assert len(serializado) <= MAXIMO_CARACTERES_CONTEXTO
-    datos = extraer_json_contexto(serializado)
-    assert isinstance(datos, dict)
-    assert datos.get("metadatos", {}).get("truncado") is True
+    serializado, datos = comprobar_contexto_truncado(contexto, extraer_json_contexto)
 
 
 def test_foco_12_columnas_fracciones_largas():
@@ -130,7 +123,7 @@ def test_recorte_final_no_modifica_referencia_inmutable():
         etiqueta="Paso 1",
         entrada={"M": describir_matriz(matriz_grande)},
         estado=EstadoContexto(
-            resultado={"status": "OK", "steps": ["paso1", "paso2"], "message": "Resuelto"},
+            resultado={"estado": "EXITO", "pasos": ["paso1", "paso2"], "mensaje": "Resuelto"},
             foco=foco,
         ),
     )

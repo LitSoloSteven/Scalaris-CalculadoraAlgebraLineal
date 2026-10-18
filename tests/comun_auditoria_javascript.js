@@ -97,8 +97,10 @@ function recogerDeclaraciones(nodo, resumen, padre = null) {
 }
 
 /** Analiza texto JavaScript sin ejecutarlo y devuelve sus declaraciones medidas. */
-function analizarJavascript(contenido) {
-    const arbol = analizador.parse(contenido, { ecmaVersion: "latest", sourceType: "module", locations: true });
+function analizarJavascript(contenido, opciones = {}) {
+    const arbol = analizador.parse(contenido, {
+        ecmaVersion: "latest", sourceType: "module", locations: true, ...opciones,
+    });
     const resumen = { funciones: [], clases: [] };
     recogerDeclaraciones(arbol, resumen);
     return resumen;
@@ -108,7 +110,10 @@ function analizarJavascript(contenido) {
 function ejecutarAnalisis() {
     const archivos = JSON.parse(sistemaArchivos.readFileSync(0, "utf8"));
     const resultados = archivos.map(archivo => ({
-        ruta: archivo.ruta, ...analizarJavascript(archivo.contenido),
+        ruta: archivo.ruta, linea: archivo.linea || 1, origen: archivo.origen || "archivo",
+        ...analizarJavascript(archivo.contenido, {
+            allowReturnOutsideFunction: archivo.origen === "python",
+        }),
     }));
     process.stdout.write(JSON.stringify(resultados));
 }

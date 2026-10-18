@@ -1,15 +1,15 @@
 """Precisión de literales decimales en productos matriciales."""
 from fractions import Fraction
-from src.backend.models.matrix import Matrix
-from src.backend.solvers.matrix_ops.evaluator import MatrixExpressionEvaluator
+from src.backend.modelos.matriz import Matriz
+from src.backend.resolutores.operaciones_matrices.evaluador import EvaluadorExpresionesMatriciales
 
 
 def _producto_escalar(token: str, valor_matricial: Fraction) -> Fraction:
-    evaluador = MatrixExpressionEvaluator()
-    matriz_a = Matrix(1, 1, [[valor_matricial]])
-    resultado = evaluador.evaluate(f"{token}A", {"A": matriz_a})
-    assert resultado["status"] == "SUCCESS", resultado.get("message")
-    return resultado["result_matrix"].data[0][0]
+    evaluador = EvaluadorExpresionesMatriciales()
+    matriz_a = Matriz(1, 1, [[valor_matricial]])
+    resultado = evaluador.evaluar(f"{token}A", {"A": matriz_a})
+    assert resultado["estado"] == "EXITO", resultado.get("mensaje")
+    return resultado["matriz_resultado"].datos[0][0]
 
 
 def test_decimal_muy_pequeno_conserva_valor_no_nulo():

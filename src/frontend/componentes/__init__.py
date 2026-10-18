@@ -1,21 +1,21 @@
 """Componentes reutilizables de UI de Scalaris."""
 
-from .ai_panel import AIPanel
-from .app_shell import create_app_shell
-from .calculator import CalculatorPanel
-from .equation_grid import EquationGrid
-from .matrix_capture import MatrixCapturePanel
-from .navbar import create_navbar
-from .square_matrix_panel import SquareMatrixPanel
-from .vector_capture import VectorCapturePanel
+from .panel_ia import PanelIA
+from .estructura_aplicacion import crear_estructura_aplicacion
+from .calculadora import PanelCalculadora
+from .cuadricula_ecuaciones import CuadriculaEcuaciones
+from .captura_matrices import PanelCapturaMatrices
+from .barra_navegacion import crear_barra_navegacion
+from .panel_matriz_cuadrada import PanelMatrizCuadrada
+from .captura_vectores import PanelCapturaVectores
 
 __all__ = [
-    "AIPanel",
-    "CalculatorPanel",
-    "EquationGrid",
-    "MatrixCapturePanel",
-    "SquareMatrixPanel",
-    "VectorCapturePanel",
-    "create_app_shell",
-    "create_navbar",
+    "PanelIA",
+    "PanelCalculadora",
+    "CuadriculaEcuaciones",
+    "PanelCapturaMatrices",
+    "PanelMatrizCuadrada",
+    "PanelCapturaVectores",
+    "crear_estructura_aplicacion",
+    "crear_barra_navegacion",
 ]

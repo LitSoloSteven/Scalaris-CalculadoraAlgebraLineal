@@ -24,12 +24,12 @@ def test_entradas_vacias_conservan_estado_inicial():
 def test_una_ecuacion_conserva_fracciones_exactas():
     """La captura no altera el término ni los coeficientes antes del controlador."""
     carga = construir_carga_sistema([['1/3', '0']], ['2/7'], False)
-    assert carga == {'matrix_A': [['1/3', '0']], 'vector_b': ['2/7']}
+    assert carga == {'matriz_a': [['1/3', '0']], 'vector_b': ['2/7']}
     resultado = ControladorGeometria.procesar_rectas_planos(json.dumps(carga))
-    assert resultado['status'] == 'OK'
-    assert resultado['solution_status'] == 'INFINITE_SOLUTIONS'
-    assert resultado['equations'][0]['coeffs_exact'] == ['1/3', '0']
-    assert resultado['set']['point_exact'][0] == str(Fraction(6, 7))
+    assert resultado['estado'] == 'EXITO'
+    assert resultado['estado_solucion'] == 'SOLUCIONES_INFINITAS'
+    assert resultado['ecuaciones'][0]['coeficientes_exactos'] == ['1/3', '0']
+    assert resultado['conjunto_solucion']['punto_exacto'][0] == str(Fraction(6, 7))
 
 
 def test_muchas_ecuaciones_generan_todas_las_trazas():
@@ -38,8 +38,8 @@ def test_muchas_ecuaciones_generan_todas_las_trazas():
     vector = [str(i + 2) for i in range(1, 11)]
     carga = construir_carga_sistema(matriz, vector, False)
     resultado = ControladorGeometria.procesar_rectas_planos(json.dumps(carga))
-    assert resultado['status'] == 'OK'
-    assert resultado['set']['point_exact'] == ['1', '2']
+    assert resultado['estado'] == 'EXITO'
+    assert resultado['conjunto_solucion']['punto_exacto'] == ['1', '2']
     figura = construir_figura_rectas_planos(resultado)
     assert sum(traza.name.startswith('Ecuación') for traza in figura.data) == 10
     figura.to_json()
@@ -49,14 +49,14 @@ def test_valor_largo_conserva_texto_y_controlador_rechaza_exceso():
     """La captura mantiene los dígitos; el dominio limita la entrada excesiva."""
     numero = '9' * 80
     carga = construir_carga_vectores('vectores', 2, [{0: numero}, {1: '1'}])
-    assert carga['vectors'][0]['data'][0] == numero
+    assert carga['vectores'][0]['datos'][0] == numero
     resultado = ControladorGeometria.procesar_vectores(json.dumps(carga))
-    assert resultado['status'] == 'OK'
-    assert resultado['u']['exact'][0] == numero
-    carga['vectors'][0]['data'][0] = '9' * (LONGITUD_MAXIMA_CADENA_NUMERO + 1)
+    assert resultado['estado'] == 'EXITO'
+    assert resultado['vector_u']['exacta'][0] == numero
+    carga['vectores'][0]['datos'][0] = '9' * (LONGITUD_MAXIMA_CADENA_NUMERO + 1)
     resultado = ControladorGeometria.procesar_vectores(json.dumps(carga))
-    assert resultado['status'] == 'ERROR'
-    assert resultado['error_cell'] == {'kind': 'vec', 'name': 'u', 'index': 0}
+    assert resultado['estado'] == 'ERROR'
+    assert resultado['celda_error'] == {'tipo': 'vector', 'nombre': 'u', 'indice': 0}
 
 
 @pytest.mark.parametrize('escena,cantidad', [('vectores', 1), ('vectores', 3), ('combinacion', 1), ('combinacion', 6)])
@@ -97,12 +97,12 @@ def test_controles_reales_crean_la_familia_minima(escena):
     vista.contenedor_controles = ui.column()
     vista._construir_controles(escena)
     panel = vista.panel_vectores if escena == 'vectores' else vista.panel_combinacion
-    assert len(panel.vectors) == 2
-    assert panel.on_data_change == vista._notificar_cambio_datos
+    assert len(panel.vectores) == 2
+    assert panel.al_cambiar_datos == vista._notificar_cambio_datos
     vista.contenedor_controles.delete()
 
 
 def test_representacion_vacia_no_genera_trazas_ficticias():
     """Los constructores admiten ausencia de elementos sin inventar resultados."""
-    assert not construir_figura_rectas_planos({'equations': [], 'set': None}).data
-    assert not construir_figura_combinacion({'vectors': [], 'chain': [], 'b': {}}).data
+    assert not construir_figura_rectas_planos({'ecuaciones': [], 'conjunto_solucion': None}).data
+    assert not construir_figura_combinacion({'vectores': [], 'cadena': [], 'objetivo': {}}).data

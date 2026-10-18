@@ -1,9 +1,10 @@
 """Pruebas de integración de geometría, vectores, inversas y navegación."""
+from tests.comun_entradas import copiar_entrada_prueba
 import json
 import pytest
-from tests.comun import limpiar_almacen_handoff
+from tests.comun import limpiar_almacen_transferencia
 
-from src.frontend.componentes import handoff
+from src.frontend.componentes import transferencia
 from src.frontend.controladores.geometria.controlador_geometria import (
     ControladorGeometria,
 )
@@ -13,36 +14,38 @@ from src.frontend.controladores.operaciones_inversas.controlador_operaciones_inv
 from src.frontend.controladores.operaciones_vectores.controlador_operaciones_vectores import (
     ControladorOperacionesVectores,
 )
-from src.frontend.navigation import LegacyRedirect, redirect_location
+from src.frontend.navegacion import RedireccionHeredada, ubicacion_redireccion
 
 
 def test_procesar_rectas_planos_fracciones_exactas():
-    payload = json.dumps({
-        "matrix_A": [["1001/1000", "1"], ["0", "1"]],
+    """Verifica procesar rectas planos fracciones exactas."""
+    carga = json.dumps({
+        "matriz_a": [["1001/1000", "1"], ["0", "1"]],
         "vector_b": ["1001/1000", "2"],
     })
-    res = ControladorGeometria.procesar_rectas_planos(payload)
-    assert res["status"] == "OK"
-    eq0 = res["equations"][0]
-    assert eq0["coeffs_exact"][0] == "1001/1000"
-    assert eq0["b_exact"] == "1001/1000"
+    res = ControladorGeometria.procesar_rectas_planos(carga)
+    assert res["estado"] == "EXITO"
+    eq0 = res["ecuaciones"][0]
+    assert eq0["coeficientes_exactos"][0] == "1001/1000"
+    assert eq0["objetivo_exacto"] == "1001/1000"
 
 
 def test_segmento_soluciones_infinitas_dos_dimensiones():
-    payload = json.dumps({
-        "matrix_A": [["1", "1"], ["2", "2"]],
+    """Verifica segmento soluciones infinitas dos dimensiones."""
+    carga = json.dumps({
+        "matriz_a": [["1", "1"], ["2", "2"]],
         "vector_b": ["2", "4"],
     })
-    res = ControladorGeometria.procesar_rectas_planos(payload)
-    assert res["status"] == "OK"
-    sol_set = res["set"]
-    assert sol_set is not None
-    assert sol_set["kind"] == "LINE"
-    assert sol_set["dimension"] == 1
+    res = ControladorGeometria.procesar_rectas_planos(carga)
+    assert res["estado"] == "EXITO"
+    conjunto_solucion = res["conjunto_solucion"]
+    assert conjunto_solucion is not None
+    assert conjunto_solucion["tipo"] == "RECTA"
+    assert conjunto_solucion["dimension"] == 1
 
-    seg = sol_set["segment"]
+    seg = conjunto_solucion["segmento"]
     assert seg is not None and len(seg) == 2
-    h = res["range"][1]
+    h = res["rango"][1]
 
     for pt in seg:
         x, y = pt[0], pt[1]
@@ -52,60 +55,59 @@ def test_segmento_soluciones_infinitas_dos_dimensiones():
 
 
 def test_procesar_vectores_cuadro_predeterminado():
-    payload = json.dumps({
-        "vectors": [
-            {"data": ["1", "2"], "orientation": "column"},
-            {"data": ["3", "4"], "orientation": "column"},
-        ],
-    })
-    res = ControladorGeometria.procesar_vectores(payload)
-    assert res["status"] == "OK"
-    df = res["default_frame"]
-    assert res["frames"][df]["k_exact"] == "1"
+    """Verifica procesar vectores cuadro predeterminado."""
+    carga = json.dumps(copiar_entrada_prueba('vectores_plano'))
+    res = ControladorGeometria.procesar_vectores(carga)
+    assert res["estado"] == "EXITO"
+    cuadro_predeterminado = res["cuadro_predeterminado"]
+    assert res["cuadros"][cuadro_predeterminado]["escalar_exacto"] == "1"
 
 
 def test_almacen_traspaso_eviccion_y_limite_caracteres(monkeypatch):
-    limpiar_almacen_handoff()
+    """Verifica almacen traspaso eviccion y limite caracteres."""
+    limpiar_almacen_transferencia()
 
     contador = 1000.0
 
     def hora_simulada():
+        """Procesa hora simulada con los datos recibidos."""
         nonlocal contador
         contador += 1.0
         return contador
 
-    monkeypatch.setattr(handoff, "_ahora", hora_simulada)
+    monkeypatch.setattr(transferencia, "_ahora", hora_simulada)
 
     tokens = []
     for _ in range(65):
-        t = handoff.guardar_matriz("test", [["1"]])
+        t = transferencia.guardar_matriz("test", [["1"]])
         tokens.append(t)
 
-    assert len(handoff._ALMACEN) <= 64
-    res0 = handoff.consumir_matriz(tokens[0], max_n=5)
-    assert res0.status == "missing"
+    assert len(transferencia._ALMACEN) <= 64
+    res0 = transferencia.consumir_matriz(tokens[0], dimension_maxima=5)
+    assert res0.estado == "ausente"
 
     celda_larga = "1" * 65
-    t_mat = handoff.guardar_matriz("test", [[celda_larga]])
-    assert handoff.consumir_matriz(t_mat, max_n=5).status == "invalid"
+    t_mat = transferencia.guardar_matriz("test", [[celda_larga]])
+    assert transferencia.consumir_matriz(t_mat, dimension_maxima=5).estado == "invalida"
 
-    t_sys = handoff.guardar_sistema("test", [[celda_larga]], ["1"])
-    assert handoff.consumir_sistema(t_sys, max_m=5, allowed_n={1, 2, 3}).status == "invalid"
+    t_sys = transferencia.guardar_sistema("test", [[celda_larga]], ["1"])
+    assert transferencia.consumir_sistema(t_sys, maximo_ecuaciones=5, dimensiones_permitidas={1, 2, 3}).estado == "invalida"
 
-    t_vec = handoff.guardar_vectores("test", "vectores", [[celda_larga, "1"]])
-    assert handoff.consumir_vectores(t_vec, allowed_n={2, 3}).status == "invalid"
+    t_vec = transferencia.guardar_vectores("test", "vectores", [[celda_larga, "1"]])
+    assert transferencia.consumir_vectores(t_vec, dimensiones_permitidas={2, 3}).estado == "invalida"
 
 
 
 def test_ubicacion_redireccion():
-    regla = LegacyRedirect(path="/old", target_route="/new", fixed_query=(("fixed_key", "val_fixed"),))
+    """Verifica ubicacion redireccion."""
+    regla = RedireccionHeredada(ruta="/old", ruta_destino="/new", consulta_fija=(("fixed_key", "val_fixed"),))
     entrante = [
         ("a", "1"),
         ("a", "2"),
         ("x", ""),
         ("fixed_key", "override_ignored"),
     ]
-    loc = redirect_location(regla, entrante)
+    loc = ubicacion_redireccion(regla, entrante)
     assert "fixed_key=val_fixed" in loc
     assert "override_ignored" not in loc
     assert "a=1" in loc
@@ -114,52 +116,49 @@ def test_ubicacion_redireccion():
 
 
 def test_geometria_fuera_de_rango_y_segmento_invisible():
-    p1 = json.dumps({"matrix_A": [["1", "0"], ["0", "1"]], "vector_b": ["10000000000", "1"]})
-    r1 = ControladorGeometria.procesar_rectas_planos(p1)
-    assert r1["out_of_range"] is True
+    """Verifica geometria fuera de rango y segmento invisible."""
+    p1 = json.dumps({"matriz_a": [["1", "0"], ["0", "1"]], "vector_b": ["10000000000", "1"]})
+    respuesta_primera = ControladorGeometria.procesar_rectas_planos(p1)
+    assert respuesta_primera["fuera_de_rango"] is True
 
-    p2 = json.dumps({"matrix_A": [["1", "1"], ["2", "2"]], "vector_b": ["10000000000", "20000000000"]})
-    r2 = ControladorGeometria.procesar_rectas_planos(p2)
-    assert r2["set"]["segment_visible"] is False
+    p2 = json.dumps({"matriz_a": [["1", "1"], ["2", "2"]], "vector_b": ["10000000000", "20000000000"]})
+    respuesta_segunda = ControladorGeometria.procesar_rectas_planos(p2)
+    assert respuesta_segunda["conjunto_solucion"]["segmento_visible"] is False
 
 
 def test_combinacion_lineal_vectores_metadatos_pasos():
-    payload = json.dumps({
-        "b": {"data": ["5", "6"], "orientation": "column"},
-        "vectors": [
-            {"data": ["1", "0"], "orientation": "column"},
-            {"data": ["0", "1"], "orientation": "column"},
-        ],
-    })
-    res_json = ControladorOperacionesVectores.procesar_combinacion_lineal(payload)
+    """Verifica combinacion lineal vectores metadatos pasos."""
+    carga = json.dumps(copiar_entrada_prueba('combinacion_plano'))
+    res_json = ControladorOperacionesVectores.procesar_combinacion_lineal(carga)
     res = json.loads(res_json)
-    meta = res["steps_meta"]
-    gauss_steps = res["gauss_steps"]
+    meta = res["metadatos_pasos"]
+    pasos_gauss = res["pasos_gauss"]
 
-    assert len(meta) == len(gauss_steps)
+    assert len(meta) == len(pasos_gauss)
     for i, m in enumerate(meta):
-        assert m["index"] == i + 1
+        assert m["indice"] == i + 1
 
-    for s in res.get("setup_steps", []):
-        assert "matrix" not in s
-    for s in res.get("gauss_steps", []):
-        assert "matrix" not in s
-    for s in res.get("steps", []):
-        assert "matrix" not in s
+    for s in res.get("pasos_planteamiento", []):
+        assert "matriz" not in s
+    for s in res.get("pasos_gauss", []):
+        assert "matriz" not in s
+    for s in res.get("pasos", []):
+        assert "matriz" not in s
 
 
 def test_inversa_construir_foco_doce_por_doce():
+    """Verifica inversa construir foco doce por doce."""
     n = 12
     datos = [["2" if i == j else ("1" if i < j else "0") for j in range(n)] for i in range(n)]
-    payload = json.dumps({"n": n, "data": datos})
-    res = ControladorOperacionesInversas.procesar_inversa(payload)
-    assert res["status"] == "SUCCESS"
+    carga = json.dumps({"dimension": n, "datos": datos})
+    res = ControladorOperacionesInversas.procesar_inversa(carga)
+    assert res["estado"] == "EXITO"
 
-    indices_elim = [i for i, s in enumerate(res["steps"]) if s["kind"] == "eliminacion"]
+    indices_elim = [i for i, s in enumerate(res["pasos"]) if s["tipo"] == "eliminacion"]
     assert len(indices_elim) > 0
-    idx = indices_elim[0]
+    indice = indices_elim[0]
 
-    foco = ControladorOperacionesInversas.construir_foco_paso(res["steps"], idx)
-    assert len(foco["rows_before"]) > 0
-    assert len(foco["rows_after"]) > 0
-    assert foco["cols"] is not None
+    foco = ControladorOperacionesInversas.construir_foco_paso(res["pasos"], indice)
+    assert len(foco["filas_antes"]) > 0
+    assert len(foco["filas_despues"]) > 0
+    assert foco["columnas"] is not None

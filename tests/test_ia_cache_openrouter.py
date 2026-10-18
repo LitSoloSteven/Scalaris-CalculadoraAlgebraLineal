@@ -8,15 +8,15 @@ def test_cache_conserva_respuestas_y_respeta_identidad_y_expiracion(monkeypatch)
     """La caché distingue opciones, contexto y vencimiento sin peticiones de más."""
     monkeypatch.setenv("OPENROUTER_API_KEY", "test-key")
     tiempo_actual = 1000.0
-    def consultar_reloj():
+    def _consultar_reloj():
         return tiempo_actual
     llamadas_red = 0
-    def responder(url, headers=None, json=None, timeout=None):
+    def _responder(url, headers=None, json=None, timeout=None):
         nonlocal llamadas_red
         llamadas_red += 1
         return RespuestaSimulada(200, {"choices": [{"message": {"content": f"Respuesta #{llamadas_red}"}}]})
-    monkeypatch.setattr(ClienteOpenRouter, "_tiempo_monotonico", staticmethod(consultar_reloj))
-    monkeypatch.setattr(ClienteOpenRouter, "_peticiones_post", staticmethod(responder))
+    monkeypatch.setattr(ClienteOpenRouter, "_tiempo_monotonico", staticmethod(_consultar_reloj))
+    monkeypatch.setattr(ClienteOpenRouter, "_peticiones_post", staticmethod(_responder))
     cliente = ClienteOpenRouter()
     primero = cliente.preguntar("¿Qué es un vector?", opciones=OpcionesConsulta(usar_cache=True))
     assert primero.exito is True

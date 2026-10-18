@@ -10,7 +10,7 @@ if str(DIRECTORIO_RAIZ) not in sys.path:
 load_dotenv(DIRECTORIO_RAIZ / ".env")
 load_dotenv(DIRECTORIO_RAIZ / "src" / "ai" / ".env")
 
-from src.frontend.app import ejecutar
+from src.frontend.aplicacion import ejecutar
 
 if __name__ in {"__main__", "__mp_main__"}:
     ejecutar()

@@ -19,7 +19,7 @@ class MixinEscenasGeometria:
             return 'papel'
         try:
             return await cliente.run_javascript(
-                "document.documentElement.getAttribute('data-theme') || 'papel'", timeout=3.0,
+                "document.documentElement.getAttribute('data-tema') || 'papel'", timeout=3.0,
             ) or 'papel'
         except TimeoutError:
             return 'papel'
@@ -36,16 +36,16 @@ class MixinEscenasGeometria:
         return constructor(resultado, tema=await self._tema_actual())
 
     def _registrar_cuadros(self, resultado: dict):
-        if self.escena == 'vectores' and resultado.get('frames'):
+        if self.escena == 'vectores' and resultado.get('cuadros'):
             identificador = f'geometria-figura-{id(self)}'
-            cuadros = json.dumps(resultado['frames'])
-            self._ejecutar_js(f'window.scalaris?.geometria?.registrar("{identificador}", {cuadros});')
+            cuadros = json.dumps(resultado['cuadros'])
+            self._ejecutar_javascript(f'window.scalaris?.geometria?.registrar("{identificador}", {cuadros});')
 
     def _montar_figura(self, figura, resultado: dict, escena: str):
         if not self.contenedor_figura:
             return
         self.contenedor_figura.clear()
-        descripcion = (resultado.get('set') or {}).get('description') or f'Visualización geométrica: {escena}'
+        descripcion = (resultado.get('conjunto_solucion') or {}).get('descripcion') or f'Visualización geométrica: {escena}'
         with self.contenedor_figura:
             self._montar_contenedor_figura(figura, descripcion)
         self._registrar_cuadros(resultado)
@@ -65,7 +65,7 @@ class MixinEscenasGeometria:
             self._montar_figura(figura, resultado, escena)
             return True
         except ImportError:
-            self._renderizar_error({'message': 'No se pudo cargar el módulo de gráficos. Recarga la página e inténtalo de nuevo.'})
+            self._renderizar_error({'mensaje': 'No se pudo cargar el módulo de gráficos. Recarga la página e inténtalo de nuevo.'})
             return False
         except Exception:
             registro.exception('No se pudo construir la figura geométrica')

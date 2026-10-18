@@ -1,4 +1,4 @@
-"""Invocaciones Python de animaciones verificadas contra los assets reales del cliente."""
+"""Invocaciones Python de animaciones verificadas contra los recursos reales del cliente."""
 import asyncio
 
 import pytest
@@ -21,6 +21,7 @@ def test_codigo_emitido_conserva_selector_y_ejecuta_animacion(monkeypatch, metod
     codigos = []
 
     async def registrar_codigo(codigo):
+        """Procesa registrar codigo con los datos recibidos."""
         codigos.append(codigo)
 
     monkeypatch.setattr(cuadricula_base.ui, "run_javascript", registrar_codigo)

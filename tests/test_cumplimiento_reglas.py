@@ -57,8 +57,8 @@ def test_limites_tamanio_y_complejidad():
             elif isinstance(nodo, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 alt = (nodo.end_lineno or nodo.lineno) - nodo.lineno + 1
                 assert alt <= 40, f'{ruta.name}:{nodo.name} tiene {alt} líneas (máximo 40)'
-                params = nombres_parametros(nodo)
-                assert len(params) <= 5, f'{ruta.name}:{nodo.name} tiene {len(params)} parámetros'
+                parametros = nombres_parametros(nodo)
+                assert len(parametros) <= 5, f'{ruta.name}:{nodo.name} tiene {len(parametros)} parámetros'
                 anid, comp = calcular_anidamiento_y_complejidad(nodo)
                 assert anid <= 3, f'{ruta.name}:{nodo.name} anidamiento {anid} (máximo 3)'
                 assert comp <= 10, f'{ruta.name}:{nodo.name} complejidad {comp} (máximo 10)'
@@ -91,20 +91,20 @@ def test_identificadores_idioma_y_ascii():
             assert not conflictos, f'Términos en inglés {conflictos} en {ruta.name}:{nombre}'
 
 
-def test_comentarios_y_copy_limpios():
+def test_comentarios_y_textos_limpios():
     """Valida comentarios sobrios y textos de presentación sin marcas decorativas."""
     for ruta in RUTAS_AUDITADAS:
         if not ruta.exists():
             continue
         contenido = ruta.read_text(encoding='utf-8')
-        fragmentos = _fragmentos_comentarios_y_copy(ruta, contenido)
+        fragmentos = _fragmentos_comentarios_y_textos(ruta, contenido)
         for fragmento, patrones in fragmentos:
             for patron in patrones:
                 coincidencias = patron.findall(fragmento)
                 assert not coincidencias, f'Patrón prohibido en {ruta.name}: {coincidencias}'
 
 
-def _fragmentos_comentarios_y_copy(ruta, contenido):
+def _fragmentos_comentarios_y_textos(ruta, contenido):
     if ruta.suffix != '.py':
         return [(contenido, PATRONES_COMENTARIOS_PROHIBIDOS)]
     fragmentos = [(texto, PATRONES_COMENTARIOS_PROHIBIDOS)
@@ -136,12 +136,12 @@ def test_reglas_python_frontend():
             continue
         arbol = ast.parse(ruta.read_text(encoding='utf-8'), filename=str(ruta))
         es_prueba = 'tests' in ruta.relative_to(RAIZ).parts
-        for val in cadenas_presentacion(arbol, es_prueba):
-            assert 'style="' not in val and "style='" not in val, (
+        for valor in cadenas_presentacion(arbol, es_prueba):
+            assert 'style="' not in valor and "style='" not in valor, (
                 f'Estilos en línea detectados en {ruta.name}'
             )
-            if any(etiqueta in val for etiqueta in ('<div', '<span', '<table', '<button')):
-                lineas = val.strip().splitlines()
+            if any(etiqueta in valor for etiqueta in ('<div', '<span', '<table', '<button')):
+                lineas = valor.strip().splitlines()
                 assert len(lineas) <= 3, (
                     f'HTML embebido de {len(lineas)} líneas (> 3) en {ruta.name}'
                 )

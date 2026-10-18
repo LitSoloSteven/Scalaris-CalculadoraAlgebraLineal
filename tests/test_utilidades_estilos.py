@@ -20,9 +20,9 @@ def test_tokens_respetan_temas_y_comentarios(tmp_path):
     """La raíz inicia Papel y las declaraciones temáticas actualizan sus tokens."""
     ruta = tmp_path / "tokens.css"
     ruta.write_text(
-        ':root {--a: #000000; color: red;} :root[data-theme="papel"] {--a: #111111;}'
-        ':root[data-theme="marea"] {--a: #222222 /* motivo */;}'
-        ':root[data-theme="medianoche"] {--a: #333333;}', encoding="utf-8",
+        ':root {--a: #000000; color: red;} :root[data-tema="papel"] {--a: #111111;}'
+        ':root[data-tema="marea"] {--a: #222222 /* motivo */;}'
+        ':root[data-tema="medianoche"] {--a: #333333;}', encoding="utf-8",
     )
     assert analizar_tokens(ruta) == {
         "papel": {"--a": "#111111"}, "marea": {"--a": "#222222"},
@@ -50,7 +50,7 @@ def test_bloques_anidados_y_bloque_sin_cierre():
 
 def test_clases_semanticas_filtran_prefijos_y_limpian_interpolaciones():
     """El lector mantiene los prefijos semánticos y descarta clases ajenas."""
-    contenido = 'class="hub-card nav-item glosa-panel flex hub-{clave}"'
+    contenido = 'class="inicio-tarjeta navegacion-elemento glosa-panel flex inicio-{clave}"'
     assert extraer_clases_semanticas(contenido, r'class="([^"]+)"') == {
-        "hub-card", "nav-item", "glosa-panel", "hub-clave",
+        "inicio-tarjeta", "navegacion-elemento", "glosa-panel", "inicio-clave",
     }

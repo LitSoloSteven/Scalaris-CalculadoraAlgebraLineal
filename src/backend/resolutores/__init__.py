@@ -9,7 +9,6 @@ from src.backend.resolutores.operaciones_matrices import (
     ResolutorTransformacionesLineales,
 )
 from src.backend.resolutores.operaciones_vectores import (
-    BaseResolutorVectores,
     ResolutorCombinacionLineal,
     ResolutorOperacionesVectores,
 )
@@ -37,7 +36,6 @@ __all__ = [
     "EvaluadorExpresionesMatriciales",
     "ResolutorTransformacionesLineales",
     "ResolutorModeloLeontief",
-    "BaseResolutorVectores",
     "ResolutorOperacionesVectores",
     "ResolutorCombinacionLineal",
     "ConversorBases",

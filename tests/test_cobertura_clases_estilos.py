@@ -6,7 +6,7 @@ from tests.comun_estilos import extraer_clases_semanticas
 
 
 def reunir_clases_semanticas_usadas() -> set[str]:
-    """Recoge clases de navegación, Hub y Glosa de llamadas y fragmentos HTML."""
+    """Recoge clases de navegación, inicio y Glosa de llamadas y fragmentos HTML."""
     clases_usadas = set()
     directorios = [Path("src/frontend/componentes"), Path("src/frontend/vistas")]
     patrones = [r'''(?:classes\(|class=)[fF]?['"]([^'"]+)['"]''',

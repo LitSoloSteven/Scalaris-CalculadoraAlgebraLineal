@@ -8,15 +8,15 @@ def clasificar_ecuacion(
     dimension: int,
 ) -> str:
     """Clasifica una ecuación según sus coeficientes y dimensión."""
-    if all(c == 0 for c in coeficientes):
+    if all(coeficiente == 0 for coeficiente in coeficientes):
         if termino_independiente == 0:
             return "trivial"
-        return "contradiction"
+        return "contradiccion"
     if dimension == 2:
-        return "line"
+        return "recta"
     if dimension == 3:
-        return "plane"
-    return "line"
+        return "plano"
+    return "recta"
 
 
 def son_proporcionales(

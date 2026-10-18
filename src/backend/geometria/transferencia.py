@@ -1,5 +1,6 @@
 """Restricciones de escena para familias de vectores transferidas."""
 from __future__ import annotations
+from src.backend.constantes import MENSAJE_TRANSFERENCIA_DATOS_INVALIDOS
 
 LIMITES_VECTORES_ESCENA = {'vectores': (2, 2), 'combinacion': (2, 5)}
 
@@ -7,7 +8,7 @@ LIMITES_VECTORES_ESCENA = {'vectores': (2, 2), 'combinacion': (2, 5)}
 def validar_transferencia_escena(escena: str, escena_recibida: str, vectores: list) -> str | None:
     """Devuelve el motivo de rechazo por escena o cantidad, o None si cumple."""
     if escena_recibida != escena:
-        return 'Los datos recibidos no son válidos, así que empezamos con la herramienta vacía.'
+        return MENSAJE_TRANSFERENCIA_DATOS_INVALIDOS
     minimo, maximo = LIMITES_VECTORES_ESCENA[escena]
     if minimo <= len(vectores) <= maximo:
         return None
@@ -18,10 +19,10 @@ def validar_transferencia_escena(escena: str, escena_recibida: str, vectores: li
 
 def _obtener_familia_escena(operacion: str, vectores: dict) -> tuple[list, str]:
     if operacion == "suma_resta":
-        datos = [vector["data"] for vector in vectores.values()]
+        datos = [vector["datos"] for vector in vectores.values()]
         escena = "vectores"
     elif operacion == "combinacion_lineal" and "b" in vectores:
-        datos = [vectores["b"]["data"]] + [vector["data"] for nombre, vector in vectores.items() if nombre != "b"]
+        datos = [vectores["b"]["datos"]] + [vector["datos"] for nombre, vector in vectores.items() if nombre != "b"]
         escena = "combinacion"
     else:
         return [], ""

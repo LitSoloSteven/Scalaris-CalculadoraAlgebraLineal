@@ -6,7 +6,7 @@ import subprocess
 import pytest
 from nicegui import ui
 
-from src.frontend.componentes.vector_capture import VectorCapturePanel
+from src.frontend.componentes.captura_vectores import PanelCapturaVectores
 from tests.comun import RAIZ
 
 
@@ -21,15 +21,15 @@ def _observar_adaptador(propiedades):
     return json.loads(proceso.stdout)
 
 
-@pytest.mark.parametrize("orientacion,esperada", [("column", "columna"), ("row", "fila")])
+@pytest.mark.parametrize("orientacion,esperada", [("columna", "columna"), ("fila", "fila")])
 def test_panel_vectorial_emite_el_contrato_que_ejecuta_su_adaptador(orientacion, esperada):
     """Enter y pegado funcionan sobre las propiedades reales, en ambos ejes."""
-    panel = VectorCapturePanel("p_add", max_vectors=2, default_orientation=orientacion)
+    panel = PanelCapturaVectores("p_add", opciones={'maximo_vectores': 2, 'orientacion_inicial': orientacion})
     contenedor = ui.column()
     try:
         with contenedor:
-            panel.build(contenedor)
-        entradas = [elemento for elemento in panel.vectors["u"]["ui_container"].descendants() if isinstance(elemento, ui.input)]
+            panel.construir(contenedor)
+        entradas = [elemento for elemento in panel.vectores["u"]["contenedor"].descendants() if isinstance(elemento, ui.input)]
         propiedades = [entrada._props for entrada in entradas]
         assert [datos["data-geometria-vector"] for datos in propiedades] == ["p_add_u"] * 3
         assert [datos["data-geometria-indice"] for datos in propiedades] == ["0", "1", "2"]

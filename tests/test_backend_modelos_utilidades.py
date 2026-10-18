@@ -21,7 +21,7 @@ from src.backend.modelos.matriz import Matriz
 from src.backend.utilidades.analizadores import AnalizadorSistema
 from src.backend.utilidades.formateadores import (
     formatear_expresion_parametrica,
-    formatear_fraccion_str,
+    formatear_fraccion_texto,
     formatear_variable_para_latex,
     numero_a_latex,
 )
@@ -81,8 +81,8 @@ def test_utilidades_matematicas():
 
 def test_formateadores_exactos():
     """Valida formateo de números a cadenas y LaTeX exacto."""
-    assert formatear_fraccion_str(Fraction(3, 4)) == "3/4"
-    assert formatear_fraccion_str(5) == "5"
+    assert formatear_fraccion_texto(Fraction(3, 4)) == "3/4"
+    assert formatear_fraccion_texto(5) == "5"
     assert numero_a_latex(Fraction(-1, 2)) == r"-\frac{1}{2}"
     assert formatear_variable_para_latex("x1") == "x_{1}"
     assert formatear_expresion_parametrica(Fraction(2), {"t": Fraction(3, 2)}) == "2 + (3/2)t"
@@ -91,10 +91,10 @@ def test_formateadores_exactos():
 def test_analizador_sistema():
     """Valida parseo de sistemas de ecuaciones a Matriz aumentada."""
     texto = "2x + y = 5\nx - y = 1"
-    ok, mat, vars_detectadas, _ = AnalizadorSistema.parsear_sistema(texto)
+    ok, mat, variables_detectadas, _ = AnalizadorSistema.parsear_sistema(texto)
     assert ok and mat is not None
     assert mat.filas == 2 and mat.columnas == 3
-    assert vars_detectadas == ["x", "y"]
+    assert variables_detectadas == ["x", "y"]
 
 
 def test_validadores_y_reglas_dominio():

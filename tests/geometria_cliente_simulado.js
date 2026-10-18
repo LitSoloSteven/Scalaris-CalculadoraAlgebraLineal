@@ -64,8 +64,8 @@ const entorno = {
 function comprobarDeslizadorDosDimensiones() {
   vm.runInNewContext(codigo, entorno);
   entorno.window.scalaris.geometria.registrar('figura', [
-    { ku: [0, 0], ku_plus_v: [0, 1], k_exact: '0' },
-    { ku: [1, 2], ku_plus_v: [3, 4], k_exact: '1/2' }
+    { escalar_por_u: [0, 0], escalar_por_u_mas_v: [0, 1], escalar_exacto: '0' },
+    { escalar_por_u: [1, 2], escalar_por_u_mas_v: [3, 4], escalar_exacto: '1/2' }
   ]);
   Array.from(oyentes)[0]({ target: deslizador });
   assert.equal(etiqueta.textContent, '1/2');
@@ -80,7 +80,7 @@ function comprobarDeslizadorDosDimensiones() {
 }
 
 function comprobarCuadroTresDimensiones() {
-  entorno.window.scalaris.geometria.registrar('figura', [{ ku: [1, 2, 3], ku_plus_v: [4, 5, 6], k_exact: '1' }]);
+  entorno.window.scalaris.geometria.registrar('figura', [{ escalar_por_u: [1, 2, 3], escalar_por_u_mas_v: [4, 5, 6], escalar_exacto: '1' }]);
   llamadas.length = 0;
   entorno.window.scalaris.geometria.establecerCuadro('figura', 0);
   assert.equal(llamadas.length, 4);
@@ -109,8 +109,8 @@ function comprobarLimpiezaYRecarga() {
   assert.equal(llamadas.length, 0);
   elementos.set('figura', envoltura);
   entorno.window.scalaris.geometria.registrar('figura', [
-    { ku: [0, 0], ku_plus_v: [0, 1], k_exact: '0' },
-    { ku: [1, 2], ku_plus_v: [3, 4], k_exact: '1' }
+    { escalar_por_u: [0, 0], escalar_por_u_mas_v: [0, 1], escalar_exacto: '0' },
+    { escalar_por_u: [1, 2], escalar_por_u_mas_v: [3, 4], escalar_exacto: '1' }
   ]);
   Array.from(oyentes)[0]({ target: deslizador });
   assert.equal(solicitudes.size, 1);
@@ -127,7 +127,7 @@ function comprobarLimpiezaYRecarga() {
 function comprobarRegistroAntesDeMontar() {
   vm.runInNewContext(codigo, entorno);
   elementos.delete('figura');
-  entorno.window.scalaris.geometria.registrar('figura', [{ ku: [1, 2], ku_plus_v: [3, 4], k_exact: '1' }]);
+  entorno.window.scalaris.geometria.registrar('figura', [{ escalar_por_u: [1, 2], escalar_por_u_mas_v: [3, 4], escalar_exacto: '1' }]);
   observadorActual.funcion();
   elementos.set('figura', envoltura);
   observadorActual.funcion();
@@ -141,13 +141,13 @@ function comprobarRegistroConCuadroPendiente() {
   vm.runInNewContext(codigo, entorno);
   const cliente = entorno.window.scalaris.geometria;
   cliente.registrar('figura', [
-    { ku: [0, 0], ku_plus_v: [0, 1], k_exact: '0' },
-    { ku: [1, 2], ku_plus_v: [3, 4], k_exact: '1' }
+    { escalar_por_u: [0, 0], escalar_por_u_mas_v: [0, 1], escalar_exacto: '0' },
+    { escalar_por_u: [1, 2], escalar_por_u_mas_v: [3, 4], escalar_exacto: '1' }
   ]);
   Array.from(oyentes)[0]({ target: deslizador });
   const antigua = Array.from(solicitudes.values())[0];
   assert.equal(solicitudes.size, 1);
-  cliente.registrar('figura', [{ ku: [5, 6], ku_plus_v: [7, 8], k_exact: '0' }]);
+  cliente.registrar('figura', [{ escalar_por_u: [5, 6], escalar_por_u_mas_v: [7, 8], escalar_exacto: '0' }]);
   assert.equal(solicitudes.size, 0);
   llamadas.length = 0;
   antigua();
@@ -157,7 +157,7 @@ function comprobarRegistroConCuadroPendiente() {
 
 async function comprobarFalloVisible() {
   vm.runInNewContext(codigo, entorno);
-  entorno.window.scalaris.geometria.registrar('figura', [{ ku: [1, 2], ku_plus_v: [3, 4], k_exact: '1' }]);
+  entorno.window.scalaris.geometria.registrar('figura', [{ escalar_por_u: [1, 2], escalar_por_u_mas_v: [3, 4], escalar_exacto: '1' }]);
   entorno.window.Plotly.restyle = () => { throw new Error('Fallo simulado'); };
   entorno.window.scalaris.geometria.establecerCuadro('figura', 0);
   assert.equal(aviso.textContent, 'No pudimos actualizar el parámetro. Vuelve a mover el control.');

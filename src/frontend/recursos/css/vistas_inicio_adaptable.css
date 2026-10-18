@@ -1,0 +1,273 @@
+.inicio-orden-0 { --i: 0; }
+.inicio-orden-1 { --i: 1; }
+.inicio-orden-2 { --i: 2; }
+.inicio-orden-3 { --i: 3; }
+
+.inicio-raiz { container-type: inline-size;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: calc(100dvh - 2 * var(--space-4));
+    width: 100%;
+    max-width: 80rem;
+    margin-inline: auto;
+    padding: var(--space-4) var(--space-6);
+    min-width: 0;
+}
+
+.inicio-cabecera {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    text-align: center;
+    min-width: 0;
+    padding-inline: var(--space-4);
+    margin-bottom: var(--space-8);
+}
+
+.inicio-marca {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    min-width: 0;
+    flex-shrink: 0;
+}
+
+.inicio-titulo {
+    margin: 0;
+    font-family: inherit;
+    font-size: clamp(2.5rem, 4.2cqi, 3.5rem);
+    font-weight: var(--fw-display);
+    letter-spacing: var(--ls-display);
+    line-height: 1.15;
+    color: var(--text-main);
+    overflow-wrap: anywhere;
+}
+
+.inicio-descripcion {
+    margin: 0;
+    font-size: clamp(1.0625rem, 1.7cqi, 1.3125rem);
+    font-weight: var(--fw-body);
+    line-height: 1.4;
+    color: var(--text-sec);
+    flex: none;
+    min-width: 0;
+    max-width: 62ch;
+    margin-inline: auto;
+    text-align: center;
+    text-wrap: balance;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 559px) {
+    .inicio-cuerpo-fila {
+        grid-template-columns: auto minmax(0, 1fr);
+        grid-template-areas:
+            "icono nombre"
+            "icono detalle";
+        padding: var(--space-4);
+        gap: var(--space-3);
+    }
+
+    .inicio-icono-celda {
+        grid-area: icono;
+    }
+
+    .inicio-nombre-celda {
+        grid-area: nombre;
+    }
+
+    .inicio-detalle-celda {
+        grid-area: detalle;
+        grid-template-columns: minmax(0, 1fr) auto auto;
+        grid-template-areas: "conteo marca indicador";
+        justify-items: start;
+        gap: var(--space-1);
+    }
+
+    .inicio-conteo-fila,
+    .inicio-marca-fila {
+        text-align: start;
+    }
+}
+
+@media (max-width: 639px) {
+    .inicio-dialogo {
+        inset-inline: 0;
+        inset-block-start: auto;
+        inset-block-end: 0;
+        width: 100%;
+        height: auto;
+        max-width: 100%;
+        max-height: 85dvh;
+        margin: 0;
+    }
+
+    .inicio-dialogo-tarjeta {
+        width: 100%;
+        max-height: 85dvh;
+        border-radius: var(--radius-card) var(--radius-card) 0 0;
+        padding: var(--space-5);
+        padding-block-end: calc(var(--space-5) + env(safe-area-inset-bottom));
+        transform: translateY(100%);
+        transition-duration: 200ms;
+    }
+
+    .inicio-dialogo[open][data-abierto] .inicio-dialogo-tarjeta {
+        transform: translateY(0);
+        transition-duration: 250ms;
+    }
+
+    @starting-style {
+        .inicio-dialogo[open][data-abierto] .inicio-dialogo-tarjeta {
+            opacity: 0;
+            transform: translateY(100%);
+        }
+    }
+}
+
+@media (max-width: 359px) {
+    .inicio-raiz {
+        padding-inline: var(--space-4);
+    }
+
+    .inicio-cabecera {
+        padding-inline: var(--space-4);
+    }
+
+    .inicio-cuerpo-fila {
+        gap: var(--space-2);
+        padding: var(--space-2);
+    }
+
+    .inicio-marca-fila {
+        min-height: 2.4em;
+        text-align: start;
+    }
+
+    .inicio-dialogo-tarjeta {
+        padding-inline: var(--space-4);
+    }
+
+    .inicio-dialogo-cabecera {
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas:
+            "titulo cerrar"
+            "conteo conteo";
+        gap: var(--space-2);
+    }
+
+    .inicio-dialogo-icono {
+        display: none;
+    }
+
+    .inicio-dialogo-titulo {
+        grid-area: titulo;
+    }
+
+    .inicio-dialogo-conteo {
+        grid-area: conteo;
+        text-align: start;
+    }
+
+    .inicio-dialogo-cerrar {
+        grid-area: cerrar;
+    }
+
+    .inicio-tarjeta {
+        grid-template-columns: auto minmax(0, 1fr);
+        grid-template-areas:
+            "icono nombre"
+            "icono descripcion"
+            "marca marca";
+        column-gap: var(--space-2);
+        padding-inline: var(--space-3);
+    }
+
+    .inicio-tarjeta-marca {
+        min-width: 0;
+        justify-self: start;
+    }
+}
+
+@media (max-width: 479px) {
+    .inicio-matriz::before,
+    .inicio-matriz::after {
+        display: none;
+    }
+}
+
+.transferencia-aviso {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    width: 100%;
+    min-width: 0;
+    color: var(--text-sec);
+    font-size: var(--fs-small);
+    font-weight: var(--fw-small);
+    overflow-wrap: anywhere;
+}
+
+html[data-entrada="teclado"] .inicio-fila,
+html[data-entrada="teclado"] .inicio-matriz::before,
+html[data-entrada="teclado"] .inicio-matriz::after,
+html[data-entrada="teclado"] .inicio-cuerpo-fila,
+html[data-entrada="teclado"] .inicio-cuerpo-fila::before,
+html[data-entrada="teclado"] .inicio-cuerpo-fila::after,
+html[data-entrada="teclado"] .inicio-icono-celda,
+html[data-entrada="teclado"] .inicio-capa-destacada,
+html[data-entrada="teclado"] .inicio-dialogo::backdrop,
+html[data-entrada="teclado"] .inicio-dialogo-tarjeta,
+html[data-entrada="teclado"] .inicio-tarjeta,
+html[data-entrada="teclado"] .inicio-tarjeta::after {
+    transition: none !important;
+    transition-delay: 0ms !important;
+}
+
+html[data-entrada="teclado"] .inicio-capa-destacada {
+    opacity: 0;
+}
+
+@media (hover: none), (pointer: coarse) {
+    .inicio-capa-destacada {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .inicio-fila,
+    .inicio-matriz::before,
+    .inicio-matriz::after,
+    .inicio-cuerpo-fila,
+    .inicio-cuerpo-fila::before,
+    .inicio-cuerpo-fila::after,
+    .inicio-icono-celda,
+    .inicio-dialogo::backdrop,
+    .inicio-dialogo-tarjeta,
+    .inicio-tarjeta,
+    .inicio-tarjeta::after {
+        transform: none !important;
+        transition: opacity 120ms linear;
+        transition-delay: 0ms !important;
+    }
+
+    .inicio-capa-destacada {
+        display: none;
+    }
+
+    .inicio-fila:active,
+    .inicio-tarjeta:active,
+    .inicio-dialogo-cerrar:active {
+        transform: none !important;
+    }
+}
+
+html[data-inicio-dialogo-abierto] {
+    overflow: hidden;
+}

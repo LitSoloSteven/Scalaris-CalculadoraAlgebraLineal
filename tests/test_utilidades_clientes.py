@@ -1,7 +1,7 @@
 """Contratos de aislamiento y registro de los clientes de pruebas."""
 from tests.comun_clientes import ClienteSimulado, PanelIASimulado
-from tests.comun import limpiar_almacen_handoff
-from src.frontend.componentes.handoff import _ALMACEN, guardar_matriz
+from tests.comun import limpiar_almacen_transferencia
+from src.frontend.componentes.transferencia import _ALMACEN, guardar_matriz
 
 
 def test_cliente_registra_contexto_y_javascript():
@@ -24,20 +24,20 @@ def test_paneles_con_almacen_vacio_no_comparten_estado():
     segundo_almacen = {}
     primero = PanelIASimulado(almacen=primer_almacen)
     segundo = PanelIASimulado(almacen=segundo_almacen)
-    primero._storage["propio"] = 1
-    assert primero._storage is primer_almacen
-    assert segundo._storage is segundo_almacen
-    assert primero._storage["propio"] == 1
-    assert segundo._storage == {
-        "ai_chat_history": [], "ai_ctx_enabled": True, "ai_panel_open": False,
+    primero._almacen["propio"] = 1
+    assert primero._almacen is primer_almacen
+    assert segundo._almacen is segundo_almacen
+    assert primero._almacen["propio"] == 1
+    assert segundo._almacen == {
+        "ia_historial_chat": [], "ia_contexto_habilitado": True, "ia_panel_abierto": False,
     }
 
 
-def test_limpieza_almacen_handoff_es_repetible():
+def test_limpieza_almacen_transferencia_es_repetible():
     """La limpieza elimina transferencias y admite un almacén ya vacío."""
     guardar_matriz("prueba", [["1"]])
     assert _ALMACEN
-    limpiar_almacen_handoff()
+    limpiar_almacen_transferencia()
     assert _ALMACEN == {}
-    limpiar_almacen_handoff()
+    limpiar_almacen_transferencia()
     assert _ALMACEN == {}

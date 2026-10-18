@@ -1,0 +1,61 @@
+.pasos-etiqueta-inicial,
+.pasos-etiqueta-eliminacion,
+.pasos-etiqueta-otro,
+.pasos-etiqueta-planteamiento,
+.pasos-etiqueta-sustitucion,
+.pasos-etiqueta-operacion,
+.pasos-etiqueta-expansion,
+.pasos-etiqueta-decodificacion {
+    background: var(--accent-soft);
+    color: var(--accent);
+}
+
+.pasos-etiqueta-intercambio,
+.pasos-etiqueta-ajuste,
+.pasos-etiqueta-division {
+    background: var(--badge-warn-bg);
+    color: var(--badge-warn-text);
+}
+
+.pasos-etiqueta-pivote,
+.pasos-etiqueta-componente {
+    background: var(--bg-elevated);
+    color: var(--accent);
+    outline: 1px solid var(--accent);
+}
+
+.pasos-etiqueta-normalizacion,
+.pasos-etiqueta-verificacion,
+.pasos-etiqueta-construccion {
+    background: var(--badge-suc-bg);
+    color: var(--badge-suc-text);
+}
+
+.pasos-etiqueta-final,
+.pasos-etiqueta-lectura,
+.pasos-etiqueta-resultado {
+    background: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+}
+
+.repro-cuerpo {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .repro-cuerpo {
+        scrollbar-gutter: stable;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .repro-cuerpo {
+        scroll-behavior: auto !important;
+        transition-duration: 0ms !important;
+        animation: none !important;
+    }
+}

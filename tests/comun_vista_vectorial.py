@@ -26,6 +26,6 @@ def vista_vectorial_montada(monkeypatch):
 
 
 async def ejecutar_calculo_en_panel(vista):
-    """Proporciona al callback el contexto de cliente que aporta un evento NiceGUI."""
+    """Proporciona al manejador el contexto de cliente que aporta un evento NiceGUI."""
     with vista.panel_resultados:
         await vista.calcular()

@@ -36,17 +36,17 @@ class AnalizadorSistema:
         if len(partes) != 2:
             return False, {}, Fraction(0), f"Línea {indice}: Debe contener un único '=' ('{linea}')."
 
-        cadena_izq, cadena_der = partes[0].strip(), partes[1].strip()
-        exito_der, valor_der, err_der = ValidadorMatriz.parsear_numero_exacto(cadena_der)
-        if not exito_der:
-            return False, {}, Fraction(0), f"Línea {indice}: Término independiente inválido '{cadena_der}': {err_der}"
+        cadena_izquierda, cadena_derecha = partes[0].strip(), partes[1].strip()
+        exito_derecha, valor_derecha, error_derecha = ValidadorMatriz.parsear_numero_exacto(cadena_derecha)
+        if not exito_derecha:
+            return False, {}, Fraction(0), f"Línea {indice}: Término independiente inválido '{cadena_derecha}': {error_derecha}"
 
-        coefs_izq, const_izq, err_izq = cls._parsear_lado_izquierdo(cadena_izq)
-        if err_izq:
-            return False, {}, Fraction(0), f"Línea {indice}: {err_izq}"
+        coeficientes_izquierda, constante_izquierda, error_izquierda = cls._parsear_lado_izquierdo(cadena_izquierda)
+        if error_izquierda:
+            return False, {}, Fraction(0), f"Línea {indice}: {error_izquierda}"
 
-        valor_der -= const_izq
-        return True, coefs_izq, valor_der, ""
+        valor_derecha -= constante_izquierda
+        return True, coeficientes_izquierda, valor_derecha, ""
 
     @classmethod
     def _procesar_termino(
@@ -54,48 +54,48 @@ class AnalizadorSistema:
         coincidencia: re.Match,
     ) -> tuple[bool, str | None, Fraction, str]:
         """Extrae el signo, valor y variable o constante de un término sintáctico."""
-        signo_str, coef_str, nombre_var, const_str = coincidencia.groups()
-        signo = -1 if signo_str == "-" else 1
+        signo_texto, coeficiente_texto, nombre_variable, constante_texto = coincidencia.groups()
+        signo = -1 if signo_texto == "-" else 1
 
-        if nombre_var:
-            if not coef_str:
-                val = Fraction(1)
+        if nombre_variable:
+            if not coeficiente_texto:
+                valor = Fraction(1)
             else:
-                exito, valor_parsed, _ = ValidadorMatriz.parsear_numero_exacto(coef_str)
+                exito, valor_analizado, _ = ValidadorMatriz.parsear_numero_exacto(coeficiente_texto)
                 if not exito:
-                    return False, None, Fraction(0), f"Coeficiente inválido '{coef_str}' en la variable '{nombre_var}'."
-                val = valor_parsed
-            return True, nombre_var, signo * val, ""
+                    return False, None, Fraction(0), f"Coeficiente inválido '{coeficiente_texto}' en la variable '{nombre_variable}'."
+                valor = valor_analizado
+            return True, nombre_variable, signo * valor, ""
 
-        if const_str:
-            exito, valor_parsed, _ = ValidadorMatriz.parsear_numero_exacto(const_str)
+        if constante_texto:
+            exito, valor_analizado, _ = ValidadorMatriz.parsear_numero_exacto(constante_texto)
             if not exito:
-                return False, None, Fraction(0), f"Término independiente inválido '{const_str}'."
-            return True, None, signo * valor_parsed, ""
+                return False, None, Fraction(0), f"Término independiente inválido '{constante_texto}'."
+            return True, None, signo * valor_analizado, ""
 
         return True, None, Fraction(0), ""
 
     @classmethod
     def _parsear_lado_izquierdo(
         cls,
-        cadena_izq: str,
+        cadena_izquierda: str,
     ) -> tuple[dict[str, Fraction], Fraction, str | None]:
         """Extrae los coeficientes de variables y constantes del lado izquierdo."""
         coeficientes: dict[str, Fraction] = {}
         suma_constantes = Fraction(0)
-        cadena_limpia = cadena_izq.replace(" ", "")
+        cadena_limpia = cadena_izquierda.replace(" ", "")
 
-        coincidencias = list(cls.EXPRESION_REGULAR_TERMINO.finditer(cadena_izq))
-        reconstruido = "".join(m.group(0).replace(" ", "") for m in coincidencias)
+        coincidencias = list(cls.EXPRESION_REGULAR_TERMINO.finditer(cadena_izquierda))
+        reconstruido = "".join(coincidencia.group(0).replace(" ", "") for coincidencia in coincidencias)
         if len(reconstruido) != len(cadena_limpia):
-            return {}, Fraction(0), f"Contiene operadores o sintaxis no válida en '{cadena_izq}'."
+            return {}, Fraction(0), f"Contiene operadores o sintaxis no válida en '{cadena_izquierda}'."
 
-        for match in coincidencias:
-            ok, var, valor, err = cls._procesar_termino(match)
-            if not ok:
-                return {}, Fraction(0), err
-            if var:
-                coeficientes[var] = coeficientes.get(var, Fraction(0)) + valor
+        for coincidencia_termino in coincidencias:
+            correcto, variable, valor, error = cls._procesar_termino(coincidencia_termino)
+            if not correcto:
+                return {}, Fraction(0), error
+            if variable:
+                coeficientes[variable] = coeficientes.get(variable, Fraction(0)) + valor
             else:
                 suma_constantes += valor
 
@@ -116,29 +116,35 @@ class AnalizadorSistema:
         todas_variables = set()
 
         for indice, linea in enumerate(lineas, 1):
-            ok, coefs, valor_der, err = cls._parsear_renglon(indice, linea)
-            if not ok:
-                return False, None, [], err
-            ecuaciones_analizadas.append((coefs, valor_der))
-            todas_variables.update(coefs.keys())
+            correcto, coeficientes, valor_derecha, error = cls._parsear_renglon(indice, linea)
+            if not correcto:
+                return False, None, [], error
+            ecuaciones_analizadas.append((coeficientes, valor_derecha))
+            todas_variables.update(coeficientes.keys())
 
         if not todas_variables:
             return False, None, [], "No se detectaron variables válidas en el sistema."
 
-        vars_ordenadas = sorted(list(todas_variables), key=_clave_orden_natural)
+        variables_ordenadas = sorted(list(todas_variables), key=_clave_orden_natural)
 
-        if variables_estrictas:
-            coherente, err_coh = ValidadorMatriz.validar_coherencia_variables(ecuaciones_analizadas)
-            if not coherente:
-                return False, None, [], err_coh
+        coherente, error_coherencia = _validar_coherencia(ecuaciones_analizadas, variables_estrictas)
+        if not coherente:
+            return False, None, [], error_coherencia
 
         filas = len(ecuaciones_analizadas)
-        columnas = len(vars_ordenadas) + 1
+        columnas = len(variables_ordenadas) + 1
         datos_matriz = []
 
-        for coefs, valor_der in ecuaciones_analizadas:
-            fila = [coefs.get(v, Fraction(0)) for v in vars_ordenadas]
-            fila.append(valor_der)
+        for coeficientes, valor_derecha in ecuaciones_analizadas:
+            fila = [coeficientes.get(nombre_variable, Fraction(0)) for nombre_variable in variables_ordenadas]
+            fila.append(valor_derecha)
             datos_matriz.append(fila)
 
-        return True, Matriz(filas, columnas, datos_matriz), vars_ordenadas, "Sistema procesado correctamente."
+        return True, Matriz(filas, columnas, datos_matriz), variables_ordenadas, "Sistema procesado correctamente."
+
+
+def _validar_coherencia(ecuaciones: list, variables_estrictas: bool) -> tuple[bool, str]:
+    """Comprueba la relación entre variables solo cuando la captura la exige."""
+    if variables_estrictas:
+        return ValidadorMatriz.validar_coherencia_variables(ecuaciones)
+    return True, ""

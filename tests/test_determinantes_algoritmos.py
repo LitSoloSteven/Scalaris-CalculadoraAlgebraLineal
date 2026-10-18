@@ -1,13 +1,13 @@
 from fractions import Fraction
-from src.backend.models.matrix import Matrix
-from src.backend.solvers.matrix_ops.determinant import DeterminantSolver
+from src.backend.modelos.matriz import Matriz
+from src.backend.resolutores.operaciones_matrices.determinante import ResolutorDeterminante
 
 
 def test_determinante_casos_base_2x2():
     """Los algoritmos de determinante coinciden para una matriz de dos filas."""
-    mat = Matrix(2, 2, [[1, 2], [3, 4]])
-    res_laplace = DeterminantSolver.resolver_laplace(mat)
-    res_lu = DeterminantSolver.resolver_lu(mat)
+    mat = Matriz(2, 2, [[1, 2], [3, 4]])
+    res_laplace = ResolutorDeterminante.resolver_laplace(mat)
+    res_lu = ResolutorDeterminante.resolver_lu(mat)
 
     assert res_laplace["determinante"] == Fraction(-2)
     assert res_lu["determinante"] == Fraction(-2)
@@ -15,9 +15,10 @@ def test_determinante_casos_base_2x2():
 
 
 def test_determinante_matriz_singular():
-    mat = Matrix(3, 3, [[1, 2, 3], [2, 4, 6], [1, 1, 1]])
-    res_lu = DeterminantSolver.resolver_lu(mat)
-    res_laplace = DeterminantSolver.resolver_laplace(mat)
+    """Verifica determinante matriz singular."""
+    mat = Matriz(3, 3, [[1, 2, 3], [2, 4, 6], [1, 1, 1]])
+    res_lu = ResolutorDeterminante.resolver_lu(mat)
+    res_laplace = ResolutorDeterminante.resolver_laplace(mat)
 
     assert res_lu["determinante"] == Fraction(0)
     assert res_laplace["determinante"] == Fraction(0)
@@ -25,10 +26,11 @@ def test_determinante_matriz_singular():
 
 
 def test_recomendacion_heuristica():
+    """Verifica recomendacion heuristica."""
     mat_densa_4x4 = [[1, 2, 3, 4], [5, 6, 7, 8], [2, 1, 0, 3], [4, 3, 2, 1]]
-    rec = DeterminantSolver.recomendar_metodo(mat_densa_4x4)
+    rec = ResolutorDeterminante.recomendar_metodo(mat_densa_4x4)
     assert rec["metodo_recomendado"] == "lu"
 
     mat_con_ceros = [[1, 0, 0], [2, 3, 4], [5, 6, 7]]
-    rec2 = DeterminantSolver.recomendar_metodo(mat_con_ceros)
+    rec2 = ResolutorDeterminante.recomendar_metodo(mat_con_ceros)
     assert rec2["metodo_recomendado"] == "laplace"

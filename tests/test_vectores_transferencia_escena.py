@@ -12,14 +12,14 @@ from src.backend.geometria.transferencia import preparar_vectores_visualizador
 ])
 def test_transferencia_conserva_limites_y_orden(operacion, cantidad, dimension, escena):
     """Se conserva el orden de captura y el objetivo encabeza la combinación."""
-    vectores = {nombre: {"data": [str(indice)] * dimension}
+    vectores = {nombre: {"datos": [str(indice)] * dimension}
                 for indice, nombre in enumerate(["b", "u", "v", "w", "x", "y"][:cantidad])}
     datos, destino = preparar_vectores_visualizador(operacion, vectores)
     assert destino == escena
-    assert datos == [vector["data"] for vector in vectores.values()] if escena else datos == []
+    assert datos == [vector["datos"] for vector in vectores.values()] if escena else datos == []
 
 
 def test_transferencia_rechaza_dimensiones_distintas_y_objetivo_ausente():
     """La familia irregular o sin b no produce una transferencia de combinación."""
-    assert preparar_vectores_visualizador("suma_resta", {"u": {"data": [1, 2]}, "v": {"data": [1, 2, 3]}}) == ([], "")
-    assert preparar_vectores_visualizador("combinacion_lineal", {"u": {"data": [1, 2]}, "v": {"data": [1, 2]}}) == ([], "")
+    assert preparar_vectores_visualizador("suma_resta", {"u": {"datos": [1, 2]}, "v": {"datos": [1, 2, 3]}}) == ([], "")
+    assert preparar_vectores_visualizador("combinacion_lineal", {"u": {"datos": [1, 2]}, "v": {"datos": [1, 2]}}) == ([], "")

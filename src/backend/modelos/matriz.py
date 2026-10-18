@@ -7,8 +7,8 @@ from src.backend.constantes import (
     CERO_EPSILON,
     LIMITE_RECONSTRUCCION_FRACCION,
     LONGITUD_MAXIMA_CADENA_NUMERO,
-    MSJ_NOTACION_CIENTIFICA_NO_SOPORTADA,
-    MSJ_NUMERO_DEMASIADO_LARGO,
+    MENSAJE_NOTACION_CIENTIFICA_NO_SOPORTADA,
+    MENSAJE_NUMERO_DEMASIADO_LARGO,
 )
 from src.backend.excepciones import ErrorDatosMatriz
 
@@ -61,15 +61,15 @@ class Matriz:
     @staticmethod
     def _normalizar_cadena(valor: str) -> Numerico:
         """Convierte una cadena a fracción aplicando guardas DoS."""
-        val_limpio = valor.strip()
-        if not val_limpio:
+        valor_limpio = valor.strip()
+        if not valor_limpio:
             return Fraction(0)
-        if "e" in val_limpio or "E" in val_limpio:
-            raise ErrorDatosMatriz(MSJ_NOTACION_CIENTIFICA_NO_SOPORTADA)
-        if len(val_limpio) > LONGITUD_MAXIMA_CADENA_NUMERO:
-            raise ErrorDatosMatriz(MSJ_NUMERO_DEMASIADO_LARGO)
+        if "e" in valor_limpio or "E" in valor_limpio:
+            raise ErrorDatosMatriz(MENSAJE_NOTACION_CIENTIFICA_NO_SOPORTADA)
+        if len(valor_limpio) > LONGITUD_MAXIMA_CADENA_NUMERO:
+            raise ErrorDatosMatriz(MENSAJE_NUMERO_DEMASIADO_LARGO)
         try:
-            return Fraction(val_limpio)
+            return Fraction(valor_limpio)
         except (ValueError, ZeroDivisionError):
             raise ErrorDatosMatriz(f"Valor no parseable como número: '{valor}'.")
 
@@ -150,10 +150,10 @@ class Matriz:
 
     def __str__(self) -> str:
         """Genera una representación en texto con números formateados."""
-        from src.backend.utilidades.formateadores import formatear_fraccion_str
+        from src.backend.utilidades.formateadores import formatear_fraccion_texto
 
-        filas_str = []
+        filas_texto = []
         for fila in self.datos:
-            fila_formateada = [f"{formatear_fraccion_str(val):>8}" for val in fila]
-            filas_str.append("[ " + " ".join(fila_formateada) + " ]")
-        return "\n".join(filas_str)
+            fila_formateada = [f"{formatear_fraccion_texto(valor):>8}" for valor in fila]
+            filas_texto.append("[ " + " ".join(fila_formateada) + " ]")
+        return "\n".join(filas_texto)

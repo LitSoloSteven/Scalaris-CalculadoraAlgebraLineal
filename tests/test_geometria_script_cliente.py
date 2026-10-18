@@ -12,6 +12,6 @@ def test_deslizador_errores_foco_y_limpieza_de_cliente():
         pytest.skip('Node no está disponible; no se instalan herramientas para esta prueba.')
     resultado = subprocess.run([
         ejecutable, str(RAIZ / 'tests/geometria_cliente_simulado.js'),
-        str(RAIZ / 'src/frontend/assets/js/geometria.js'),
+        str(RAIZ / 'src/frontend/recursos/js/geometria.js'),
     ], capture_output=True, text=True, timeout=10)
     assert resultado.returncode == 0, resultado.stdout + resultado.stderr

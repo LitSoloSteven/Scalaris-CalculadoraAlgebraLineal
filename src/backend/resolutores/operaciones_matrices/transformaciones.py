@@ -8,7 +8,7 @@ from src.backend.resolutores.operaciones_matrices.formateadores import matriz_a_
 from src.backend.resolutores.sistemas_lineales.gauss_jordan import (
     ResolutorGaussJordan,
 )
-from src.backend.utilidades.formateadores import formatear_fraccion_str
+from src.backend.utilidades.formateadores import formatear_fraccion_texto
 
 
 class ResolutorTransformacionesLineales:
@@ -23,7 +23,7 @@ class ResolutorTransformacionesLineales:
         m_red: Matriz,
         columnas_pivote: list[int],
         columnas_libres: list[int],
-        n: int,
+        numero_variables: int,
         nombres: list[str],
     ) -> list[dict]:
         """Calcula la base del espacio nulo ker(T) despejando variables desde la RREF."""
@@ -31,23 +31,23 @@ class ResolutorTransformacionesLineales:
             return []
         m_filas = m_red.filas if m_red else 0
         base = []
-        for k, libre_col in enumerate(columnas_libres):
-            vector = [Fraction(0)] * n
-            vector[libre_col] = Fraction(1)
-            for r, piv_col in enumerate(columnas_pivote):
+        for k, libre_columna in enumerate(columnas_libres):
+            vector = [Fraction(0)] * numero_variables
+            vector[libre_columna] = Fraction(1)
+            for r, pivote_columna in enumerate(columnas_pivote):
                 if r >= m_filas:
                     break
-                val = Fraction(0)
-                for lc in columnas_libres:
-                    val -= Fraction(m_red.obtener(r, lc)) * vector[lc]
-                vector[piv_col] = val
+                valor = Fraction(0)
+                for columna_libre in columnas_libres:
+                    valor -= Fraction(m_red.obtener(r, columna_libre)) * vector[columna_libre]
+                vector[pivote_columna] = valor
 
-            componentes = [formatear_fraccion_str(v) for v in vector]
+            componentes = [formatear_fraccion_texto(componente) for componente in vector]
             param_etiqueta = f"t_{k+1}" if len(columnas_libres) > 1 else "t"
-            var_nom = nombres[libre_col] if libre_col < len(nombres) else f"x_{libre_col+1}"
+            variable_nombre = nombres[libre_columna] if libre_columna < len(nombres) else f"x_{libre_columna+1}"
             base.append({
                 "parametro": param_etiqueta,
-                "variable_libre": var_nom,
+                "variable_libre": variable_nombre,
                 "vector": componentes,
             })
         return base
@@ -55,56 +55,56 @@ class ResolutorTransformacionesLineales:
     def _base_imagen(self, matriz_a: Matriz, columnas_pivote: list[int]) -> list[dict]:
         """Calcula la base del espacio columna Im(T) a partir de las columnas pivote originales."""
         base = []
-        for col in columnas_pivote:
+        for columna in columnas_pivote:
             componentes = [
-                formatear_fraccion_str(Fraction(matriz_a.obtener(r, col)))
+                formatear_fraccion_texto(Fraction(matriz_a.obtener(r, columna)))
                 for r in range(matriz_a.filas)
             ]
             base.append({
-                "indice_columna": col + 1,
+                "indice_columna": columna + 1,
                 "vector": componentes,
             })
         return base
 
     def _construir_conclusiones(
         self,
-        es_iny: bool,
-        es_sob: bool,
+        es_inyectiva: bool,
+        es_sobreyectiva: bool,
         nulidad: int,
         rango: int,
-        m: int,
+        numero_ecuaciones: int,
     ) -> dict[str, str | None]:
         """Genera el texto de conclusiones sobre inyectividad, sobreyectividad y biyectividad."""
-        iny_txt = (
+        inyectiva_texto = (
             "T es INYECTIVA: ker(T) = {0} (nulidad = 0)."
-            if es_iny else f"T NO es inyectiva: ker(T) tiene dimensión {nulidad} > 0."
+            if es_inyectiva else f"T NO es inyectiva: ker(T) tiene dimensión {nulidad} > 0."
         )
-        sob_txt = (
-            f"T es SOBREYECTIVA: Im(T) = R^{m} (rango = {rango} = m)."
-            if es_sob else f"T NO es sobreyectiva: Im(T) ⊊ R^{m} (rango = {rango} < {m})."
+        sobreyectiva_texto = (
+            f"T es SOBREYECTIVA: Im(T) = R^{numero_ecuaciones} (rango = {rango} = m)."
+            if es_sobreyectiva else f"T NO es sobreyectiva: Im(T) ⊊ R^{numero_ecuaciones} (rango = {rango} < {numero_ecuaciones})."
         )
-        if es_iny and es_sob:
-            biy_txt = "T es BIYECTIVA (isomorfismo)."
-        elif not es_iny and not es_sob:
-            biy_txt = "T no es inyectiva ni sobreyectiva."
+        if es_inyectiva and es_sobreyectiva:
+            biyectiva_texto = "T es BIYECTIVA (isomorfismo)."
+        elif not es_inyectiva and not es_sobreyectiva:
+            biyectiva_texto = "T no es inyectiva ni sobreyectiva."
         else:
-            biy_txt = None
+            biyectiva_texto = None
 
         return {
-            "inyectividad": iny_txt,
-            "sobreyectividad": sob_txt,
-            "biyectividad": biy_txt,
+            "inyectividad": inyectiva_texto,
+            "sobreyectividad": sobreyectiva_texto,
+            "biyectividad": biyectiva_texto,
         }
 
     def _reducir_sistema_homogeneo(self, matriz_a: Matriz, nombres: list[str]) -> dict:
         """Crea la matriz aumentada con ceros y ejecuta la reducción Gauss-Jordan."""
-        m, n = matriz_a.filas, matriz_a.columnas
-        datos_aug = [
-            [matriz_a.obtener(i, j) for j in range(n)] + [Fraction(0)]
-            for i in range(m)
+        numero_ecuaciones, numero_variables = matriz_a.filas, matriz_a.columnas
+        datos_aumentada = [
+            [matriz_a.obtener(i, j) for j in range(numero_variables)] + [Fraction(0)]
+            for i in range(numero_ecuaciones)
         ]
-        aug = Matriz(m, n + 1, datos_aug)
-        resolutor_gj = ResolutorGaussJordan(aug, nombres_variables=nombres)
+        matriz_aumentada = Matriz(numero_ecuaciones, numero_variables + 1, datos_aumentada)
+        resolutor_gj = ResolutorGaussJordan(matriz_aumentada, nombres_variables=nombres)
         return resolutor_gj.resolver_reduccion()
 
     def _empaquetar_resultado(
@@ -115,19 +115,17 @@ class ResolutorTransformacionesLineales:
         bases: tuple[list[dict], list[dict], list[dict]],
     ) -> dict:
         """Empaqueta el diccionario completo con propiedades y conclusiones del análisis."""
-        m, n, rango, nulidad = dimensiones
+        numero_ecuaciones, numero_variables, rango, nulidad = dimensiones
         columnas_pivote, columnas_libres = columnas
         base_nucleo, base_imagen, pasos_reduccion = bases
         es_inyectiva = (nulidad == 0)
-        es_sobreyectiva = (rango == m)
-        msg = f"Análisis de transformación lineal T: R^{n} → R^{m} completado."
+        es_sobreyectiva = (rango == numero_ecuaciones)
+        mensaje_resultado = f"Análisis de transformación lineal T: R^{numero_variables} → R^{numero_ecuaciones} completado."
         return {
             "estado": EXITO,
-            "status": "SUCCESS",
-            "mensaje": msg,
-            "message": msg,
-            "m": m,
-            "n": n,
+            "mensaje": mensaje_resultado,
+            "dimension_codominio": numero_ecuaciones,
+            "dimension_dominio": numero_variables,
             "rango": rango,
             "nulidad": nulidad,
             "columnas_pivote": columnas_pivote,
@@ -136,9 +134,9 @@ class ResolutorTransformacionesLineales:
             "es_sobreyectiva": es_sobreyectiva,
             "base_nucleo": base_nucleo,
             "base_imagen": base_imagen,
-            "teorema_dimension": f"rango(T) + nulidad(T) = n  →  {rango} + {nulidad} = {n}  ✓",
-            "conclusiones": self._construir_conclusiones(es_inyectiva, es_sobreyectiva, nulidad, rango, m),
-            "callout_convencion": (
+            "teorema_dimension": f"rango(T) + nulidad(T) = n  →  {rango} + {nulidad} = {numero_variables}  ✓",
+            "conclusiones": self._construir_conclusiones(es_inyectiva, es_sobreyectiva, nulidad, rango, numero_ecuaciones),
+            "aviso_convencion": (
                 "CONVENCIÓN ADOPTADA (columna estándar): la base de Im(T) está "
                 "formada por las columnas pivote de A. Algunos textos usan la "
                 "convención fila (vectores transpuestos); en ese caso la base "
@@ -154,43 +152,41 @@ class ResolutorTransformacionesLineales:
     ) -> dict:
         """Analiza integralmente la transformacion T(x) = Ax."""
         if not isinstance(matriz_a, Matriz):
-            err = "Se esperaba una instancia de Matriz."
-            return {"estado": ERROR, "status": "ERROR", "mensaje": err, "message": err}
+            error = "Se esperaba una instancia de Matriz."
+            return {"estado": ERROR, "mensaje": error}
 
-        m, n = matriz_a.filas, matriz_a.columnas
+        numero_ecuaciones, numero_variables = matriz_a.filas, matriz_a.columnas
         nombres = (
             nombres_variables
-            if (nombres_variables and len(nombres_variables) == n)
-            else [f"x_{{{i+1}}}" for i in range(n)]
+            if (nombres_variables and len(nombres_variables) == numero_variables)
+            else [f"x_{{{i+1}}}" for i in range(numero_variables)]
         )
         reduccion = self._reducir_sistema_homogeneo(matriz_a, nombres)
 
         columnas_pivote = reduccion["columnas_pivote"]
         rango = len(columnas_pivote)
-        nulidad = n - rango
-        columnas_libres = [c for c in range(n) if c not in columnas_pivote]
+        nulidad = numero_variables - rango
+        columnas_libres = [c for c in range(numero_variables) if c not in columnas_pivote]
         m_red = reduccion["matriz_reducida"]
 
-        base_nucleo = self._base_nucleo(m_red, columnas_pivote, columnas_libres, n, nombres)
+        base_nucleo = self._base_nucleo(m_red, columnas_pivote, columnas_libres, numero_variables, nombres)
         base_imagen = self._base_imagen(matriz_a, columnas_pivote)
         pasos_reduccion = _formatear_pasos_reduccion(reduccion["pasos"])
 
         return self._empaquetar_resultado(
             matriz_a,
-            (m, n, rango, nulidad),
+            (numero_ecuaciones, numero_variables, rango, nulidad),
             (columnas_pivote, columnas_libres),
             (base_nucleo, base_imagen, pasos_reduccion),
         )
 
 
 def _formatear_pasos_reduccion(pasos: list[dict]) -> list[dict]:
-    """Formatea los pasos de reducción Gauss-Jordan con LaTeX y claves duales."""
+    """Formatea los pasos de reducción Gauss-Jordan con LaTeX y claves canónicas."""
     return [
         {
-            "descripcion": p.get("descripcion", p.get("description", "")),
-            "description": p.get("description", p.get("descripcion", "")),
-            "matriz": matriz_a_latex(p.get("matriz", p.get("matrix"))),
-            "matrix": matriz_a_latex(p.get("matriz", p.get("matrix"))),
+            "descripcion": paso.get("descripcion", ""),
+            "matriz": matriz_a_latex(paso.get("matriz")),
         }
-        for p in pasos
+        for paso in pasos
     ]

@@ -58,7 +58,7 @@ def test_normalizacion_conserva_orden_y_precision_con_subclase():
 
 
 def test_dimensiones_booleanas_conservan_comportamiento_de_entero():
-    """True mantiene su aceptación histórica como dimensión entera positiva."""
+    """verdadero mantiene su aceptación histórica como dimensión entera positiva."""
     matriz = Matriz(True, 1, [["2/3"]])
     assert matriz.filas is True
     assert matriz.datos == [[Fraction(2, 3)]]

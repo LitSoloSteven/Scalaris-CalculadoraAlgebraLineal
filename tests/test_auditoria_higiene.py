@@ -5,8 +5,8 @@ from tests.rutas_auditadas import RUTAS_AUDITADAS
 from tests.comun_recorrido_codigo import nombres_de_asignaciones
 
 
-def test_higiene_sin_scripts_residuales():
-    """Los scripts de parcheo y su directorio de resultados permanecen ausentes."""
+def test_higiene_sin_codigo_cliente_residuales():
+    """Los código cliente de parcheo y su directorio de resultados permanecen ausentes."""
     archivos_residuales = [
         "check_dry_refactor.py", "replace_ls.py", "replace_romanos.py",
         "replace_script.py", "replace_vo.py",

@@ -2,7 +2,7 @@
 
 import pytest
 
-from src.frontend.vistas.linear_systems._vista_previa import (
+from src.backend.resolutores.sistemas_lineales.vista_previa import (
     analizar_ecuaciones,
     latex_matriz_aumentada,
     latex_sistema,
@@ -90,7 +90,7 @@ def test_resultado_es_inmutable_tambien_en_su_matriz():
         resultado.matriz[0][0] = 2
 
 
-def test_limpia_raya_larga_reflejada_en_error_del_parser():
+def test_limpia_raya_larga_reflejada_en_error_del_analizador():
     """Evita que un texto inválido refleje una raya larga en el mensaje."""
     resultado = analizar_ecuaciones(["x — = 1"])
 

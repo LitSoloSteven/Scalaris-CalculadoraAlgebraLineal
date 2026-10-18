@@ -3,146 +3,148 @@ from pathlib import Path
 import re
 import pytest
 from tests.comun_javascript import leer_captura_cliente, leer_interacciones_cliente
+from tests.comun_estilos import bloque_css
 
 
 def test_tokens_movimiento_y_entradas_resistentes():
     """Conserva las restricciones de contenedores, celdas y movimiento."""
     from tests.comun import leer_css_completo, RAIZ
-    content = leer_css_completo()
-    _comprobar_contenedores_y_celdas(content)
-    _comprobar_curvas_y_entradas(content)
-    _comprobar_movimiento_reducido_y_sugerencias(content, RAIZ)
+    contenido = leer_css_completo()
+    _comprobar_contenedores_y_celdas(contenido)
+    _comprobar_curvas_y_entradas(contenido)
+    _comprobar_movimiento_reducido_y_sugerencias(contenido, RAIZ)
 
 
-def _comprobar_contenedores_y_celdas(content):
-    assert content.count("container-type: inline-size") == 3
-    assert "100vh" not in content
-    assert content.count("--fab-reserve:") >= 4
+def _comprobar_contenedores_y_celdas(contenido):
+    assert contenido.count("container-type: inline-size") == 3
+    assert "100vh" not in contenido
+    assert contenido.count("--fab-reserve:") >= 4
 
-    assert content.count("--cell-w:") >= 4
-    assert ".grid-cell {" in content
-    assert ".grid-cell-compact {" in content
+    assert contenido.count("--cell-w:") >= 4
+    assert ".cuadricula-celda {" in contenido
+    assert ".cuadricula-celda-compacta {" in contenido
 
-    assert "@keyframes keyPulse" not in content
-    assert ".key-pulse" not in content
-    assert ".cuadricula-resaltado-cruzado {" in content
-
-
-
-def _comprobar_curvas_y_entradas(content):
-    assert "transition: transform var(--dur-med) var(--ease-std), opacity var(--dur-med) var(--ease-std) !important;" in content
-    assert "var(--ease-elastic)" not in content.split(".neo-tabs .q-tab__indicator")[1].split("}")[0]
-
-    icon_btn_css = content.split(".btn-neo-icon {")[1].split("}")[0]
-    assert "var(--ease-elastic)" not in icon_btn_css
-    assert "var(--ease-std)" in icon_btn_css
-
-    calc_btn_css = content.split(".btn-neo-calc {")[1].split("}")[0]
-    assert "var(--ease-elastic)" not in calc_btn_css
-    assert "var(--ease-std)" in calc_btn_css
-
-    logo_css = content.split(".brand-logo-link {")[1].split("}")[0]
-    assert "var(--ease-elastic)" not in logo_css
-    assert "var(--ease-std)" in logo_css
-
-    slide_up_css = content.split(".animate-slide-up {")[1].split("}")[0]
-    assert "var(--dur-med)" in slide_up_css
-    assert "var(--ease-std)" in slide_up_css
-
-    slide_bounce_css = content.split(".animate-slide-bounce {")[1].split("}")[0]
-    assert "var(--dur-med)" in slide_bounce_css
-    assert "var(--ease-std)" in slide_bounce_css
-
-    squash_css = content.split(".squash-bounce {")[1].split("}")[0]
-    assert "var(--dur-med)" in squash_css
-    assert "var(--ease-std)" in squash_css
+    assert "@keyframes keyPulse" not in contenido
+    assert ".key-pulse" not in contenido
+    assert ".cuadricula-resaltado-cruzado {" in contenido
 
 
 
-def _comprobar_movimiento_reducido_y_sugerencias(content, raiz):
-    inv_cell_css = content.split(".inv-table th,")[1].split(".inv-table thead th {")[0]
-    assert "max-width: 16ch" not in inv_cell_css
-    assert "text-overflow: ellipsis" not in inv_cell_css
+def _comprobar_curvas_y_entradas(contenido):
+    assert "transition: transform var(--dur-med) var(--ease-std), opacity var(--dur-med) var(--ease-std) !important;" in contenido
+    assert "var(--ease-elastic)" not in contenido.split(".pestanas-controles .q-tab__indicator")[1].split("}")[0]
 
-    reduced_part = (raiz / "src" / "frontend" / "assets" / "css" / "movimiento.css").read_text(encoding="utf-8")
-    assert "@media (prefers-reduced-motion: reduce)" in reduced_part
-    assert ".tw-cursor" in reduced_part
-    assert ".glosa-typing-indicator span" in reduced_part
-    assert ".animate-shake" in reduced_part
-    assert ".squash-bounce" in reduced_part
-    assert ".animate-slide-up" in reduced_part
-    assert "animation: none !important;" in reduced_part
-    assert "transition-duration: 120ms !important;" in reduced_part
+    css_boton_icono = contenido.split(".boton-icono {")[1].split("}")[0]
+    assert "var(--ease-elastic)" not in css_boton_icono
+    assert "var(--ease-std)" in css_boton_icono
 
-    assert ".glosa-chips {" in content
-    assert ".glosa-chips-inline {" in content
-    assert ".glosa-chip {" in content
-    assert ".glosa-chip-inline {" in content
-    assert ".glosa-followups {" in content
-    assert ".glosa-followup {" in content
+    css_boton_calculadora = contenido.split(".calculadora-boton {")[1].split("}")[0]
+    assert "var(--ease-elastic)" not in css_boton_calculadora
+    assert "var(--ease-std)" in css_boton_calculadora
+
+    css_logo = contenido.split(".marca-enlace-logotipo {")[1].split("}")[0]
+    assert "var(--ease-elastic)" not in css_logo
+    assert "var(--ease-std)" in css_logo
+
+    css_deslizamiento_vertical = contenido.split(".movimiento-entrada {")[1].split("}")[0]
+    assert "var(--dur-med)" in css_deslizamiento_vertical
+    assert "var(--ease-std)" in css_deslizamiento_vertical
+
+    css_rebote = contenido.split(".movimiento-rebote {")[1].split("}")[0]
+    assert "var(--dur-med)" in css_rebote
+    assert "var(--ease-std)" in css_rebote
+
+    css_compresion = contenido.split(".movimiento-compresion {")[1].split("}")[0]
+    assert "var(--dur-med)" in css_compresion
+    assert "var(--ease-std)" in css_compresion
+
+
+
+def _comprobar_movimiento_reducido_y_sugerencias(contenido, raiz):
+    css_celda_inversa = contenido.split(".inversa-tabla th,")[1].split(".inversa-tabla thead th {")[0]
+    assert "max-width: 16ch" not in css_celda_inversa
+    assert "text-overflow: ellipsis" not in css_celda_inversa
+
+    parte_movimiento_reducido = (raiz / "src" / "frontend" / "recursos" / "css" / "movimiento.css").read_text(encoding="utf-8")
+    assert "@media (prefers-reduced-motion: reduce)" in parte_movimiento_reducido
+    assert ".escritura-cursor" in parte_movimiento_reducido
+    assert ".glosa-indicador-escritura span" in parte_movimiento_reducido
+    assert ".movimiento-sacudida" in parte_movimiento_reducido
+    assert ".movimiento-compresion" in parte_movimiento_reducido
+    assert ".movimiento-entrada" in parte_movimiento_reducido
+    assert "animation: none !important;" in parte_movimiento_reducido
+    assert "transition-duration: 120ms !important;" in parte_movimiento_reducido
+
+    assert ".glosa-sugerencias {" in contenido
+    assert ".glosa-sugerencias-en-linea {" in contenido
+    assert ".glosa-sugerencia {" in contenido
+    assert ".glosa-sugerencia-en-linea {" in contenido
+    assert ".glosa-seguimientos {" in contenido
+    assert ".glosa-seguimiento {" in contenido
 
 
 def test_cliente_delega_ayuda_y_no_anima_teclado():
     """La ayuda de entradas largas se delega y la recolección conserva su curva."""
-    app_js = leer_interacciones_cliente()
-    recoleccion_js = Path("src/frontend/assets/js/recoleccion_basura.js").read_text(encoding="utf-8")
-    assert "key-pulse" not in app_js
-    assert "scrollWidth > objetivo.clientWidth" in app_js
-    assert "objetivo.title = objetivo.value" in app_js
+    javascript_aplicacion = leer_interacciones_cliente()
+    recoleccion_js = Path("src/frontend/recursos/js/recoleccion_basura.js").read_text(encoding="utf-8")
+    assert "key-pulse" not in javascript_aplicacion
+    assert "scrollWidth > objetivo.clientWidth" in javascript_aplicacion
+    assert "objetivo.title = objetivo.value" in javascript_aplicacion
     assert "transform 160ms cubic-bezier(0.32, 0.72, 0, 1), opacity 160ms cubic-bezier(0.32, 0.72, 0, 1)" in recoleccion_js
 
 
 def test_cliente_resaltado_cruzado_sin_desenfoque():
     """Las cuadrículas resaltan celdas sin cambiar fondo ni aplicar desenfoque."""
-    eq_grid = leer_captura_cliente("captura_ecuaciones.js")
-    assert "cuadricula-resaltado-cruzado" in eq_grid
-    assert "filter: blur" not in eq_grid
-    assert "style.background =" not in eq_grid
+    cuadricula_ecuaciones = leer_captura_cliente("captura_ecuaciones.js")
+    assert "cuadricula-resaltado-cruzado" in cuadricula_ecuaciones
+    assert "filter: blur" not in cuadricula_ecuaciones
+    assert "style.background =" not in cuadricula_ecuaciones
 
-    mat_cap = leer_captura_cliente("captura_matrices.js")
-    assert "cuadricula-resaltado-cruzado" in mat_cap
-    assert "style.background =" not in mat_cap
+    captura_matrices = leer_captura_cliente("captura_matrices.js")
+    assert "cuadricula-resaltado-cruzado" in captura_matrices
+    assert "style.background =" not in captura_matrices
 
-    vec_cap = leer_captura_cliente("captura_vectores.js")
-    assert "cuadricula-resaltado-cruzado" in vec_cap
-    assert "filter: blur" not in vec_cap
-    assert "style.background =" not in vec_cap
+    captura_vectores = leer_captura_cliente("captura_vectores.js")
+    assert "cuadricula-resaltado-cruzado" in captura_vectores
+    assert "filter: blur" not in captura_vectores
+    assert "style.background =" not in captura_vectores
 
-    sq_mat = Path("src/frontend/assets/js/square_matrix.js").read_text(encoding="utf-8")
-    assert "filter: blur" not in sq_mat
+    matriz_cuadrada = Path("src/frontend/recursos/js/matriz_cuadrada.js").read_text(encoding="utf-8")
+    assert "filter: blur" not in matriz_cuadrada
 
 
 def test_componentes_celdas_resistentes_y_animaciones():
     """Las cuadrículas usan clases de celdas con tamaño adaptable."""
-    mat_py = Path("src/frontend/componentes/matrix_capture.py").read_text(encoding="utf-8")
-    assert "filter: 'blur" not in mat_py
-    assert "grid-cell" in mat_py
-    assert "w-20" not in mat_py
+    python_matrices = Path("src/frontend/componentes/captura_matrices.py").read_text(encoding="utf-8")
+    assert "filter: 'blur" not in python_matrices
+    assert "cuadricula-celda" in python_matrices
+    assert "w-20" not in python_matrices
 
-    eq_py = Path("src/frontend/componentes/equation_grid.py").read_text(encoding="utf-8")
-    assert "grid-cell" in eq_py
-    assert "w-20" not in eq_py
+    python_ecuaciones = Path("src/frontend/componentes/cuadricula_ecuaciones.py").read_text(encoding="utf-8")
+    assert "cuadricula-celda" in python_ecuaciones
+    assert "w-20" not in python_ecuaciones
 
-    vec_py = Path("src/frontend/componentes/vector_capture.py").read_text(encoding="utf-8")
-    assert "grid-cell" in vec_py
-    assert "w-20" not in vec_py
+    python_vectores = Path("src/frontend/componentes/captura_vectores.py").read_text(encoding="utf-8")
+    assert "cuadricula-celda" in python_vectores
+    assert "w-20" not in python_vectores
 
-    sq_py = Path("src/frontend/componentes/square_matrix_panel.py").read_text(encoding="utf-8")
-    assert "CELL_PX" not in sq_py
-    assert "grid-cell" in sq_py
-    assert "grid-cell-compact" in sq_py
+    python_matriz_cuadrada = Path("src/frontend/componentes/panel_matriz_cuadrada.py").read_text(encoding="utf-8")
+    assert "CELL_PX" not in python_matriz_cuadrada
+    assert "cuadricula-celda" in python_matriz_cuadrada
+    assert "cuadricula-celda-compacta" in python_matriz_cuadrada
 
 
 def test_vistas_sanean_resultados_y_contienen_contenido_ancho():
     """Las vistas contienen fórmulas anchas y escapan texto del resultado."""
-    num_mixin = Path("src/frontend/vistas/numeric_systems/interaction_mixin.py").read_text(encoding="utf-8")
-    assert "animate-shake" not in num_mixin
+    mixin_numerico = Path("src/frontend/vistas/sistemas_numericos/mixin_interaccion.py").read_text(encoding="utf-8")
+    assert "movimiento-sacudida" not in mixin_numerico
 
-    lin_res = Path("src/frontend/vistas/linear_systems/results_mixin.py").read_text(encoding="utf-8")
-    assert "overflow-wrap: anywhere;" in lin_res
-    assert "min-w-0 max-w-full" in lin_res
+    resultados_lineales = Path("src/frontend/vistas/sistemas_lineales/mixin_resultados.py").read_text(encoding="utf-8")
+    css_sesion = Path('src/frontend/recursos/css/vistas_sesion_matricial.css').read_text(encoding='utf-8')
+    assert "overflow-wrap: anywhere;" in bloque_css(css_sesion, '.sesion-numero') and "sesion-numero" in resultados_lineales
+    assert "min-w-0 max-w-full" in resultados_lineales
 
-    vec_res = Path("src/frontend/vistas/operaciones_vectores/mixin_resultados.py").read_text(encoding="utf-8")
-    assert "math-scroll-container" in vec_res
-    assert "html.escape(coeficientes)" in vec_res
-    assert "html.escape(solucion)" in vec_res
+    resultados_vectoriales = Path("src/frontend/vistas/operaciones_vectores/mixin_resultados.py").read_text(encoding="utf-8")
+    assert "matematicas-desplazamiento" in resultados_vectoriales
+    assert "html.escape(coeficientes)" in resultados_vectoriales
+    assert "html.escape(solucion)" in resultados_vectoriales

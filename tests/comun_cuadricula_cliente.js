@@ -28,7 +28,7 @@ function crearCeldaCuadricula(control = crearControlAnimado()) {
     const contenedor = { classList: crearListaClases(), offsetWidth: 100, eventos: [] };
     contenedor.addEventListener = (nombre, manejador, opciones) => contenedor.eventos.push({ nombre, manejador, opciones });
     const entrada = crearEntradaSimulada("1");
-    entrada.closest = selector => selector === ".matrix-input" ? contenedor : control;
+    entrada.closest = selector => selector === ".matriz-entrada" ? contenedor : control;
     entrada.desplazamientos = [];
     entrada.scrollIntoView = opciones => entrada.desplazamientos.push(opciones);
     return { entrada, contenedor, control };

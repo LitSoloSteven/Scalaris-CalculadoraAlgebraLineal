@@ -7,7 +7,7 @@ from tests.comun import ARCHIVOS_CSS
 
 def _seleccionar_tema(selector, temas):
     for tema in ("marea", "medianoche", "papel"):
-        if f'data-theme="{tema}"' in selector:
+        if f'data-tema="{tema}"' in selector:
             return tema
     if selector.strip() == ":root" and not temas["papel"]:
         return "papel"
@@ -31,7 +31,7 @@ def extraer_clases_semanticas(contenido, patron):
     for coincidencia in re.findall(patron, contenido):
         for palabra in coincidencia.split():
             nombre = re.sub(r'[^a-zA-Z0-9_-]', '', palabra)
-            if any(nombre.startswith(prefijo) for prefijo in ('nav-', 'hub-', 'glosa-')):
+            if any(nombre.startswith(prefijo) for prefijo in ('navegacion-', 'inicio-', 'glosa-')):
                 clases.add(nombre)
     return clases
 
@@ -69,6 +69,7 @@ def hexadecimal_a_rgb(codigo, limpiar_espacios=True):
 def luminancia_relativa(rgb):
     """Calcula la luminancia relativa con la transferencia definida por WCAG."""
     def canal(valor):
+        """Procesa canal con los datos recibidos."""
         return valor / 12.92 if valor <= 0.04045 else ((valor + 0.055) / 1.055) ** 2.4
 
     rojo, verde, azul = [canal(valor) for valor in rgb]
@@ -82,11 +83,11 @@ def razon_contraste(primer_rgb, segundo_rgb):
     return (max(primera, segunda) + 0.05) / (min(primera, segunda) + 0.05)
 
 
-def leer_css_hub():
-    """Lee las hojas del Hub respetando el orden de la cascada de pruebas."""
+def leer_css_inicio():
+    """Lee las hojas del inicio respetando el orden de la cascada de pruebas."""
     return "\n".join(
         ruta.read_text(encoding="utf-8") for ruta in ARCHIVOS_CSS
-        if ruta.name.startswith("vistas_hub_")
+        if ruta.name.startswith("vistas_inicio_")
     )
 
 

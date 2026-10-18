@@ -1,29 +1,50 @@
 """Reglas de dominio y validaciones centralizadas del backend."""
 
-import re
 from typing import Any
+from src.backend.constantes import LONGITUD_MAXIMA_ENTRADA_BASES
 
-EXPRESIONES_REGULARES_BASES = {
-    10: re.compile(r"^-?\d+$"),
-    2: re.compile(r"^-?[01]+$"),
-    8: re.compile(r"^-?[0-7]+$"),
-    16: re.compile(r"^-?[0-9a-fA-F]+$"),
-}
+BASES_NUMERICAS = {"decimal": 10, "binario": 2, "octal": 8, "hexadecimal": 16}
 
 
-def validar_entrada_base(valor: str, base: int) -> tuple[bool, str]:
-    """Valida si una cadena de texto es válida para la base numérica especificada."""
-    cadena_limpia = valor.strip().replace(" ", "")
-    if not cadena_limpia:
-        return False, "El valor está vacío."
+def _capturar_magnitud_base(limpio: str, base: int) -> int:
+    magnitud = int(limpio, base)
+    for digito in limpio:
+        int(digito, base)
+    return magnitud
 
-    patron = EXPRESIONES_REGULARES_BASES.get(base)
-    if not patron:
-        return False, f"Base {base} no soportada."
 
-    if not patron.match(cadena_limpia):
-        return False, f"El valor '{valor}' contiene caracteres no válidos para la base {base}."
+def capturar_entrada_base(valor: Any, base: int) -> tuple[bool, str, int]:
+    """Normaliza signo/prefijo y devuelve texto y magnitud; lanza ValueError si falla."""
+    if base not in BASES_NUMERICAS.values():
+        raise ValueError(f"Base {base} no soportada.")
+    texto = str(valor)
+    if len(texto) > LONGITUD_MAXIMA_ENTRADA_BASES:
+        raise ValueError(
+            f"El valor supera {LONGITUD_MAXIMA_ENTRADA_BASES} caracteres. "
+            "Introduce un número más corto."
+        )
+    limpio = texto.strip().replace(" ", "").replace("_", "").upper()
+    es_negativo = limpio.startswith("-")
+    if es_negativo or limpio.startswith("+"):
+        limpio = limpio[1:]
+    prefijo = {2: "0B", 8: "0O", 16: "0X"}.get(base)
+    if prefijo and limpio.startswith(prefijo):
+        limpio = limpio[2:]
+    if not limpio:
+        raise ValueError("El valor ingresado está vacío.")
+    try:
+        magnitud = _capturar_magnitud_base(limpio, base)
+    except ValueError:
+        raise ValueError(f"Valor inválido para la base {base}.") from None
+    return es_negativo, limpio, magnitud
 
+
+def validar_entrada_base(valor: Any, base: int) -> tuple[bool, str]:
+    """Orienta con la misma captura del conversor y devuelve validez y mensaje."""
+    try:
+        capturar_entrada_base(valor, base)
+    except ValueError as error:
+        return False, str(error)
     return True, "Entrada válida."
 
 
@@ -62,8 +83,8 @@ def validar_datos_transferencia_vectores(
     if longitud_esperada == 0:
         return False, "Los vectores no pueden estar vacíos."
 
-    for v in vectores:
-        if not isinstance(v, list) or len(v) != longitud_esperada:
+    for vector in vectores:
+        if not isinstance(vector, list) or len(vector) != longitud_esperada:
             return False, "Todos los vectores deben tener la misma dimensión."
 
     return True, "Datos de vectores conformes."

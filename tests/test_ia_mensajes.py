@@ -4,9 +4,9 @@ from src.ai.mensajes import construir_mensajes, recortar_historial
 def test_recorte_historial():
     """El historial mantiene la cantidad y el orden de mensajes esperados."""
     historial = [
-        {"text": "1", "sent": True},
-        {"text": "2", "error": True},
-        {"text": "3", "sent": False}
+        {"texto": "1", "enviado": True},
+        {"texto": "2", "error": True},
+        {"texto": "3", "enviado": False}
     ]
     recortados = recortar_historial(historial)
     assert len(recortados) == 2
@@ -15,7 +15,7 @@ def test_recorte_historial():
 
 def test_construccion_mensajes():
     """Los mensajes conservan sus roles y la pregunta final."""
-    historial = [{"text": "hola", "sent": True}]
+    historial = [{"texto": "hola", "enviado": True}]
     mensajes = construir_mensajes(historial, "adios", "[CONTEXTO]123[/CONTEXTO]", respuesta_simple=True)
     
     assert len(mensajes) == 3

@@ -58,11 +58,11 @@ def calcular_rango_automatico(
     margen: float = 0.35,
 ) -> list[float]:
     """Calcula un rango simétrico [-ancho, ancho] con escala legible 1-2-5."""
-    finitos = [v for v in valores if v is not None and math.isfinite(v)]
+    finitos = [valor for valor in valores if valor is not None and math.isfinite(valor)]
     if not finitos:
         return [-minimo, minimo]
 
-    maximo_absoluto = max(abs(v) for v in finitos)
+    maximo_absoluto = max(abs(valor) for valor in finitos)
     semi_ancho = max(maximo_absoluto * (1.0 + margen), minimo)
     semi_ancho = min(semi_ancho, 1e6)
 

@@ -5,61 +5,61 @@ from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.trazado import TrazadorPasos
 
 
-class BaseResolutorVectores(TrazadorPasos):
+class _BaseResolutorVectores(TrazadorPasos):
     """Utilidades compartidas por los resolutores de vectores en R^n."""
 
     @staticmethod
-    def es_vector_columna(m: Matriz) -> bool:
+    def es_vector_columna(matriz: Matriz) -> bool:
         """Indica si la matriz es un vector columna (n×1)."""
-        return m.columnas == 1
+        return matriz.columnas == 1
 
     @staticmethod
-    def es_vector_fila(m: Matriz) -> bool:
+    def es_vector_fila(matriz: Matriz) -> bool:
         """Indica si la matriz es un vector fila (1×n)."""
-        return m.filas == 1
+        return matriz.filas == 1
 
     @classmethod
-    def es_vector(cls, m: Matriz) -> bool:
+    def es_vector(cls, matriz: Matriz) -> bool:
         """Indica si la matriz es un vector columna o fila."""
-        return cls.es_vector_columna(m) or cls.es_vector_fila(m)
+        return cls.es_vector_columna(matriz) or cls.es_vector_fila(matriz)
 
     @classmethod
-    def dimension_vector(cls, m: Matriz) -> int:
+    def dimension_vector(cls, matriz: Matriz) -> int:
         """Dimensión n del vector."""
-        return m.filas if cls.es_vector_columna(m) else m.columnas
+        return matriz.filas if cls.es_vector_columna(matriz) else matriz.columnas
 
     @classmethod
-    def validar_vector(cls, m: object, nombre: str) -> None:
+    def validar_vector(cls, matriz: object, nombre: str) -> None:
         """Exige que el objeto sea una Matriz con forma de vector."""
-        if not isinstance(m, Matriz):
+        if not isinstance(matriz, Matriz):
             raise ErrorVectorInvalido(
-                f"{nombre}: se esperaba una Matriz, recibido {type(m).__name__}."
+                f"{nombre}: se esperaba una Matriz, recibido {type(matriz).__name__}."
             )
-        if not cls.es_vector(m):
+        if not cls.es_vector(matriz):
             raise ErrorVectorInvalido(
-                f"{nombre}: se esperaba un vector (n×1 o 1×n), recibido {m.filas}×{m.columnas}."
+                f"{nombre}: se esperaba un vector (n×1 o 1×n), recibido {matriz.filas}×{matriz.columnas}."
             )
 
     @classmethod
-    def validar_vector_columna(cls, m: object, nombre: str) -> None:
+    def validar_vector_columna(cls, matriz: object, nombre: str) -> None:
         """Exige estrictamente que el objeto sea un vector columna n×1."""
-        if not isinstance(m, Matriz):
+        if not isinstance(matriz, Matriz):
             raise ErrorVectorInvalido(
-                f"{nombre}: se esperaba una Matriz, recibido {type(m).__name__}."
+                f"{nombre}: se esperaba una Matriz, recibido {type(matriz).__name__}."
             )
-        if not cls.es_vector_columna(m):
+        if not cls.es_vector_columna(matriz):
             raise ErrorVectorInvalido(
-                f"{nombre}: se esperaba vector columna n×1, recibido {m.filas}×{m.columnas}."
+                f"{nombre}: se esperaba vector columna n×1, recibido {matriz.filas}×{matriz.columnas}."
             )
 
     @staticmethod
-    def transponer(m: Matriz) -> Matriz:
+    def transponer(matriz: Matriz) -> Matriz:
         """Devuelve la matriz transpuesta."""
         nuevos_datos = [
-            [m.obtener(i, j) for i in range(m.filas)]
-            for j in range(m.columnas)
+            [matriz.obtener(i, j) for i in range(matriz.filas)]
+            for j in range(matriz.columnas)
         ]
-        return Matriz(m.columnas, m.filas, nuevos_datos)
+        return Matriz(matriz.columnas, matriz.filas, nuevos_datos)
 
     def armonizar_dimensiones(
         self,
@@ -88,8 +88,8 @@ class BaseResolutorVectores(TrazadorPasos):
 
         v2_t = self.transponer(v2)
         orient_orig = "fila" if self.es_vector_fila(v2) else "columna"
-        msg = (
+        mensaje_resultado = (
             f"Ajuste de orientación: {nombre2} era {orient_orig} "
             f"y se transpone a {v2_t.filas}×{v2_t.columnas} para coincidir con {nombre1}."
         )
-        return v1, v2_t, msg
+        return v1, v2_t, mensaje_resultado

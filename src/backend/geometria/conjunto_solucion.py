@@ -8,19 +8,11 @@ from typing import Any
 class TipoSolucionGeometria(str, Enum):
     """Tipos geométricos del conjunto solución de un sistema lineal."""
 
-    VACIA = "EMPTY"
-    VACIO = "EMPTY"
-    PUNTO = "POINT"
-    RECTA = "LINE"
-    PLANO = "PLANE"
-    ESPACIO_AFIN = "AFFINE_SUBSPACE"
-    SUBESPACIO_AFIN = "AFFINE_SUBSPACE"
-
-    EMPTY = "EMPTY"
-    POINT = "POINT"
-    LINE = "LINE"
-    PLANE = "PLANE"
-    AFFINE_SUBSPACE = "AFFINE_SUBSPACE"
+    VACIA = "VACIA"
+    PUNTO = "PUNTO"
+    RECTA = "RECTA"
+    PLANO = "PLANO"
+    ESPACIO_AFIN = "ESPACIO_AFIN"
 
 
 @dataclass(frozen=True)
@@ -31,27 +23,6 @@ class ConjuntoSolucion:
     dimension: int
     punto: tuple[Fraction, ...] | None
     direcciones: tuple[tuple[Fraction, ...], ...]
-
-    @property
-    def kind(self) -> TipoSolucionGeometria:
-        """Alias para compatibilidad interna."""
-        return self.tipo
-
-    @property
-    def point(self) -> tuple[Fraction, ...] | None:
-        """Alias para compatibilidad interna."""
-        return self.punto
-
-    @property
-    def directions(self) -> tuple[tuple[Fraction, ...], ...]:
-        """Alias para compatibilidad interna."""
-        return self.direcciones
-
-
-# Alias para pruebas existentes
-SolutionKind = TipoSolucionGeometria
-SolutionSet = ConjuntoSolucion
-
 
 def clasificar_conjunto_solucion(
     punto: tuple[Fraction, ...] | None,
@@ -70,26 +41,20 @@ def clasificar_conjunto_solucion(
     return TipoSolucionGeometria.ESPACIO_AFIN
 
 
-classify = clasificar_conjunto_solucion
-
-
 def tiene_parametros_solucion(resultado: dict[str, Any]) -> bool:
     """Verifica si el diccionario contiene parámetros de solución infinitas."""
-    return resultado.get("solution_param") is not None or resultado.get("parametros_solucion") is not None
-
-
-has_solution_param = tiene_parametros_solucion
+    return resultado.get("parametros_solucion") is not None
 
 
 def obtener_parametros_solucion(resultado: dict[str, Any]) -> dict | None:
     """Extrae y valida la estructura y tipos de los parámetros de solución."""
-    parametros = resultado.get("solution_param") or resultado.get("parametros_solucion")
+    parametros = resultado.get("parametros_solucion")
     if parametros is None:
         return None
     try:
         campos = (
-            parametros["num_vars"], parametros["particular"], parametros["directions"],
-            parametros["free_cols"], parametros["param_names"],
+            parametros["numero_variables"], parametros["particular"], parametros["direcciones"],
+            parametros["columnas_libres"], parametros["nombres_parametros"],
         )
         if not _dimensiones_parametros_coinciden(campos):
             return None
@@ -118,9 +83,6 @@ def _coeficientes_parametros_son_exactos(particular: list, direcciones: list) ->
     return True
 
 
-get_solution_param = obtener_parametros_solucion
-
-
 def construir_conjunto_desde_parametros(
     parametros: dict[str, Any] | None,
 ) -> ConjuntoSolucion | None:
@@ -128,7 +90,7 @@ def construir_conjunto_desde_parametros(
     if parametros is None:
         return None
     punto = tuple(parametros["particular"])
-    direcciones = tuple(tuple(d) for d in parametros["directions"])
+    direcciones = tuple(tuple(direccion) for direccion in parametros["direcciones"])
     tipo = clasificar_conjunto_solucion(punto, direcciones)
     return ConjuntoSolucion(
         tipo=tipo,
@@ -138,38 +100,32 @@ def construir_conjunto_desde_parametros(
     )
 
 
-from_solution_param = construir_conjunto_desde_parametros
-
-
 def construir_conjunto_desde_gauss(
     resultado: dict[str, Any],
 ) -> ConjuntoSolucion | None:
     """Construye el conjunto solución a partir del resultado del resolutor Gauss."""
-    estado = resultado.get("status") or resultado.get("estado")
-    if estado in ("NO_SOLUTION", "SIN_SOLUCION"):
+    estado = resultado.get("estado")
+    if estado == "SIN_SOLUCION":
         return ConjuntoSolucion(
             tipo=TipoSolucionGeometria.VACIA,
             dimension=0,
             punto=None,
             direcciones=(),
         )
-    if estado in ("UNIQUE_SOLUTION", "SOLUCION_UNICA"):
-        sol_exacta = resultado.get("solution_exact") or resultado.get("solucion_exacta") or []
-        punto = tuple(Fraction(x) for x in sol_exacta)
+    if estado == "SOLUCION_UNICA":
+        sol_exacta = resultado.get("solucion_exacta") or []
+        punto = tuple(Fraction(valor_solucion) for valor_solucion in sol_exacta)
         return ConjuntoSolucion(
             tipo=TipoSolucionGeometria.PUNTO,
             dimension=0,
             punto=punto,
             direcciones=(),
         )
-    if estado in ("INFINITE_SOLUTIONS", "SOLUCIONES_INFINITAS"):
+    if estado == "SOLUCIONES_INFINITAS":
         parametros = obtener_parametros_solucion(resultado)
         if parametros is not None:
             return construir_conjunto_desde_parametros(parametros)
     return None
-
-
-from_gauss_result = construir_conjunto_desde_gauss
 
 
 def validar_solucion_parametrica(
@@ -180,11 +136,11 @@ def validar_solucion_parametrica(
 ) -> bool:
     """Verifica defensivamente que A · p = b y A · d_k = 0 para toda dirección."""
     for fila, b_esperado in zip(filas_coef, terminos_indep):
-        valor_p = sum(c * p for c, p in zip(fila, particular))
+        valor_p = sum(coeficiente * valor_particular for coeficiente, valor_particular in zip(fila, particular))
         if valor_p != b_esperado:
             return False
-        for d in direcciones:
-            valor_d = sum(c * v for c, v in zip(fila, d))
+        for direccion in direcciones:
+            valor_d = sum(coeficiente * valor_direccion for coeficiente, valor_direccion in zip(fila, direccion))
             if valor_d != 0:
                 return False
     return True

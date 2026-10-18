@@ -15,21 +15,21 @@ from src.backend.resolutores.sistemas_lineales.analisis_rouche import (
 from src.backend.resolutores.sistemas_lineales.sustitucion import (
     ejecutar_sustitucion_hacia_atras,
 )
-from src.backend.utilidades.formateadores import formatear_fraccion_str
+from src.backend.utilidades.formateadores import formatear_fraccion_texto
 
 
 def verificar_estado_sistema(
-    matriz: Matriz, num_vars: int, rango: int, eps: float
+    matriz: Matriz, numero_variables: int, rango: int, eps: float
 ) -> tuple[str, str]:
     """Evalua si el sistema es inconsistente, indeterminado o determinado."""
-    m = matriz.filas
-    for r in range(m):
-        todos_ceros = all(abs(matriz.obtener(r, c)) < eps for c in range(num_vars))
-        termino_no_nulo = abs(matriz.obtener(r, num_vars)) >= eps
+    numero_filas = matriz.filas
+    for r in range(numero_filas):
+        todos_ceros = all(abs(matriz.obtener(r, c)) < eps for c in range(numero_variables))
+        termino_no_nulo = abs(matriz.obtener(r, numero_variables)) >= eps
         if todos_ceros and termino_no_nulo:
             return SIN_SOLUCION, "Sistema Inconsistente: Sin Solución."
 
-    if rango < num_vars:
+    if rango < numero_variables:
         return SOLUCIONES_INFINITAS, "Sistema Consistente Indeterminado: Presenta Infinitas Soluciones"
     return SOLUCION_UNICA, "Sistema Consistente Determinado: Presenta Solución Única."
 
@@ -37,21 +37,21 @@ def verificar_estado_sistema(
 def eliminar_fila_exacta(
     fila_pivote: list,
     fila_destino: list,
-    col_idx: int,
-    idx_destino: int,
-    idx_pivote: int,
+    columna_indice: int,
+    indice_destino: int,
+    indice_pivote: int,
 ) -> tuple[list, str]:
     """Aplica la operacion elemental exacta F_dest = F_dest - c * F_piv."""
-    piv_val = Fraction(fila_pivote[col_idx])
-    dest_val = Fraction(fila_destino[col_idx])
-    if dest_val == 0:
+    pivote_valor = Fraction(fila_pivote[columna_indice])
+    destino_valor = Fraction(fila_destino[columna_indice])
+    if destino_valor == 0:
         return fila_destino, ""
 
-    factor = dest_val / piv_val
+    factor = destino_valor / pivote_valor
     nueva_fila = [Fraction(tv) - factor * Fraction(pv) for tv, pv in zip(fila_destino, fila_pivote)]
     desc = (
-        f"Fila {idx_destino + 1} = Fila {idx_destino + 1} − "
-        f"({formatear_fraccion_str(factor)}) · Fila {idx_pivote + 1}"
+        f"Fila {indice_destino + 1} = Fila {indice_destino + 1} − "
+        f"({formatear_fraccion_texto(factor)}) · Fila {indice_pivote + 1}"
     )
     return nueva_fila, desc
 
@@ -66,47 +66,44 @@ class ResolutorGauss:
         matriz_aumentada: Matriz,
         eps: float = CERO_EPSILON,
         nombres_variables: list[str] | None = None,
-        num_terminos_independientes: int = 1,
-        variable_names: list[str] | None = None,
+        numero_terminos_independientes: int = 1,
     ) -> None:
         """Inicializa el resolutor con la matriz aumentada y parametros de control."""
-        if not isinstance(num_terminos_independientes, int) or num_terminos_independientes < 1:
-            raise ValueError("num_terminos_independientes debe ser un entero >= 1.")
-        if num_terminos_independientes >= matriz_aumentada.columnas:
+        if type(numero_terminos_independientes) is not int or numero_terminos_independientes < 1:
+            raise ValueError("numero_terminos_independientes debe ser un entero >= 1.")
+        if numero_terminos_independientes >= matriz_aumentada.columnas:
             raise ValueError(
-                "num_terminos_independientes debe ser menor que las columnas de la matriz."
+                "numero_terminos_independientes debe ser menor que las columnas de la matriz."
             )
         self.matriz_inicial = matriz_aumentada.clonar()
         self.matriz = matriz_aumentada.clonar()
         self.eps = eps
-        self.nombres_variables = nombres_variables if nombres_variables is not None else variable_names
-        self.num_terminos_independientes = num_terminos_independientes
+        self.nombres_variables = nombres_variables
+        self.numero_terminos_independientes = numero_terminos_independientes
         self.pasos: list[dict] = []
 
-    def _num_variables(self) -> int:
+    def _numero_variables(self) -> int:
         """Cantidad de columnas tratadas como variables del sistema."""
-        return self.matriz.columnas - self.num_terminos_independientes
+        return self.matriz.columnas - self.numero_terminos_independientes
 
     def _registrar_paso(self, descripcion: str) -> None:
         """Registra un paso intermedio con la copia de la matriz actual."""
         copia = self.matriz.clonar()
         self.pasos.append({
             "descripcion": descripcion,
-            "description": descripcion,
             "matriz": copia,
-            "matrix": copia,
         })
 
-    def _seleccionar_pivote(self, col: int, fila_pivote: int) -> int | None:
+    def _seleccionar_pivote(self, columna: int, fila_pivote: int) -> int | None:
         """Busca la fila con el maximo valor absoluto en la columna indicada."""
         max_fila = fila_pivote
-        max_val = abs(self.matriz.obtener(fila_pivote, col))
+        max_valor = abs(self.matriz.obtener(fila_pivote, columna))
         for r in range(fila_pivote + 1, self.matriz.filas):
-            val = abs(self.matriz.obtener(r, col))
-            if val > max_val:
-                max_val = val
+            valor = abs(self.matriz.obtener(r, columna))
+            if valor > max_valor:
+                max_valor = valor
                 max_fila = r
-        if max_val < self.eps:
+        if max_valor < self.eps:
             return None
         return max_fila
 
@@ -114,56 +111,56 @@ class ResolutorGauss:
         """Escala cada fila pivote para que su coeficiente principal sea 1."""
         prefijo = "Normalizar pivote a 1" if reduccion_completa else "Normalizar pivote"
         for r, c in enumerate(columnas_pivote):
-            val = self.matriz.obtener(r, c)
-            if abs(val) >= self.eps and abs(val - 1) > self.eps:
-                escala = Fraction(1) / Fraction(val)
-                nueva_fila = [self.matriz.obtener(r, col) * escala for col in range(self.matriz.columnas)]
-                for col_idx, elem in enumerate(nueva_fila):
-                    self.matriz.establecer(r, col_idx, elem)
+            valor = self.matriz.obtener(r, c)
+            if abs(valor) >= self.eps and abs(valor - 1) > self.eps:
+                escala = Fraction(1) / Fraction(valor)
+                nueva_fila = [self.matriz.obtener(r, columna) * escala for columna in range(self.matriz.columnas)]
+                for columna_indice, elem in enumerate(nueva_fila):
+                    self.matriz.establecer(r, columna_indice, elem)
                 self._registrar_paso(
-                    f"{prefijo}: Fila {r + 1} = Fila {r + 1} / {formatear_fraccion_str(val)}"
+                    f"{prefijo}: Fila {r + 1} = Fila {r + 1} / {formatear_fraccion_texto(valor)}"
                 )
 
     def _registrar_seleccion_pivote(
-        self, col: int, fila_pivote: int, reduccion_completa: bool
+        self, columna: int, fila_pivote: int, reduccion_completa: bool
     ) -> list[int]:
         """Registra el pivote seleccionado y devuelve las filas objetivo a eliminar."""
-        m = self.matriz.filas
+        numero_filas = self.matriz.filas
         if reduccion_completa:
-            self._registrar_paso(f"Pivote seleccionado en Fila {fila_pivote + 1}, Columna {col + 1}")
-            return [r for r in range(m) if r != fila_pivote]
-        val_str = formatear_fraccion_str(self.matriz.obtener(fila_pivote, col))
+            self._registrar_paso(f"Pivote seleccionado en Fila {fila_pivote + 1}, Columna {columna + 1}")
+            return [r for r in range(numero_filas) if r != fila_pivote]
+        valor_texto = formatear_fraccion_texto(self.matriz.obtener(fila_pivote, columna))
         self._registrar_paso(
-            f"Pivote seleccionado en Fila {fila_pivote + 1}, Columna {col + 1} (valor = {val_str})"
+            f"Pivote seleccionado en Fila {fila_pivote + 1}, Columna {columna + 1} (valor = {valor_texto})"
         )
-        return list(range(fila_pivote + 1, m))
+        return list(range(fila_pivote + 1, numero_filas))
 
     def _eliminar_filas_objetivo(
-        self, fila_pivote: int, col: int, filas_objetivo: list[int]
+        self, fila_pivote: int, columna: int, filas_objetivo: list[int]
     ) -> None:
         """Aplica la operacion de eliminacion exacta sobre cada fila objetivo."""
-        fila_piv_datos = [self.matriz.obtener(fila_pivote, c) for c in range(self.matriz.columnas)]
+        fila_pivote_datos = [self.matriz.obtener(fila_pivote, c) for c in range(self.matriz.columnas)]
         for r in filas_objetivo:
-            if abs(self.matriz.obtener(r, col)) > self.eps:
-                fila_dest_datos = [self.matriz.obtener(r, c) for c in range(self.matriz.columnas)]
+            if abs(self.matriz.obtener(r, columna)) > self.eps:
+                fila_destino_datos = [self.matriz.obtener(r, c) for c in range(self.matriz.columnas)]
                 nueva_f, desc = eliminar_fila_exacta(
-                    fila_piv_datos, fila_dest_datos, col, r, fila_pivote
+                    fila_pivote_datos, fila_destino_datos, columna, r, fila_pivote
                 )
-                for c_idx, elem in enumerate(nueva_f):
-                    self.matriz.establecer(r, c_idx, elem)
+                for c_indice, elem in enumerate(nueva_f):
+                    self.matriz.establecer(r, c_indice, elem)
                 self._registrar_paso(desc)
 
     def _eliminar(self, reduccion_completa: bool) -> tuple[int, list[int]]:
         """Ejecuta la eliminacion progresiva con aritmetica exacta de fracciones."""
-        m = self.matriz.filas
+        numero_filas = self.matriz.filas
         fila_pivote = 0
         columnas_pivote: list[int] = []
         self._registrar_paso("Matriz inicial aumentada [A|b]:")
 
-        for col in range(self._num_variables()):
-            if fila_pivote >= m:
+        for columna in range(self._numero_variables()):
+            if fila_pivote >= numero_filas:
                 break
-            max_fila = self._seleccionar_pivote(col, fila_pivote)
+            max_fila = self._seleccionar_pivote(columna, fila_pivote)
             if max_fila is None:
                 continue
 
@@ -171,9 +168,9 @@ class ResolutorGauss:
                 self.matriz.intercambiar_filas(fila_pivote, max_fila)
                 self._registrar_paso(f"Intercambio: Fila {fila_pivote + 1} ↔ Fila {max_fila + 1}")
 
-            filas_objetivo = self._registrar_seleccion_pivote(col, fila_pivote, reduccion_completa)
-            self._eliminar_filas_objetivo(fila_pivote, col, filas_objetivo)
-            columnas_pivote.append(col)
+            filas_objetivo = self._registrar_seleccion_pivote(columna, fila_pivote, reduccion_completa)
+            self._eliminar_filas_objetivo(fila_pivote, columna, filas_objetivo)
+            columnas_pivote.append(columna)
             fila_pivote += 1
 
         self._normalizar_pivotes(columnas_pivote, reduccion_completa)
@@ -191,23 +188,26 @@ class ResolutorGauss:
 
     def resolver(self) -> dict:
         """Resuelve el sistema Ax = b completo reportando clasificacion y pasos."""
-        if self.num_terminos_independientes != 1:
-            raise ValueError("resolver() requiere exactamente 1 termino independiente.")
+        if self.numero_terminos_independientes != 1:
+            raise ValueError(
+                f"resolver() requiere numero_terminos_independientes=1 (recibido {self.numero_terminos_independientes}). "
+                "Usa resolver_reduccion() para multiples terminos independientes."
+            )
 
         rango, columnas_pivote = self._eliminar(reduccion_completa=self.REDUCCION_COMPLETA)
-        num_vars = self._num_variables()
-        estado, mensaje = verificar_estado_sistema(self.matriz, num_vars, rango, self.eps)
+        numero_variables = self._numero_variables()
+        estado, mensaje = verificar_estado_sistema(self.matriz, numero_variables, rango, self.eps)
         es_homogeneo = all(
-            abs(self.matriz_inicial.obtener(r, num_vars)) < self.eps
+            abs(self.matriz_inicial.obtener(r, numero_variables)) < self.eps
             for r in range(self.matriz_inicial.filas)
         )
-        analisis = analizar_sistema_rouche(estado, rango, num_vars, es_homogeneo, columnas_pivote)
+        analisis = analizar_sistema_rouche(estado, rango, numero_variables, es_homogeneo, columnas_pivote)
 
         if estado == SIN_SOLUCION:
             return _empaquetar_respuesta_sin_solucion(self.matriz, estado, mensaje, analisis, self.pasos)
 
         sol_datos = ejecutar_sustitucion_hacia_atras(
-            self.matriz, columnas_pivote, num_vars, self.nombres_variables
+            self.matriz, columnas_pivote, numero_variables, self.nombres_variables
         )
         return _empaquetar_respuesta_con_solucion(
             (self.matriz, estado, mensaje), analisis, self.pasos, sol_datos
@@ -219,26 +219,17 @@ def _empaquetar_respuesta_sin_solucion(
 ) -> dict:
     """Construye el diccionario de salida cuando el sistema es inconsistente."""
     return {
-        "estado": estado,
-        "status": "NO_SOLUTION",
+        "estado": SIN_SOLUCION,
         "mensaje": mensaje,
-        "message": mensaje,
-        "classification": mensaje,
+        "clasificacion": mensaje,
         "matriz_escalonada": matriz,
-        "echelon_matrix": matriz,
         "solucion": None,
-        "solution": None,
         "solucion_exacta": None,
-        "solution_exact": None,
         "columnas_libres": [],
-        "free_cols": [],
         "parametros_solucion": None,
-        "solution_param": None,
         "analisis_sistema": analisis,
         "pasos": pasos,
-        "steps": pasos,
         "pasos_sustitucion_regresiva": [],
-        "back_substitution_steps": [],
     }
 
 
@@ -250,27 +241,18 @@ def _empaquetar_respuesta_con_solucion(
 ) -> dict:
     """Construye el diccionario de salida para soluciones únicas o infinitas."""
     matriz, estado, mensaje = info_sistema
-    sol, sol_exacta, pasos_sust, libres, params = sol_datos
-    status = "UNIQUE_SOLUTION" if estado == SOLUCION_UNICA else "INFINITE_SOLUTIONS"
+    sol, sol_exacta, pasos_sust, libres, parametros_solucion = sol_datos
+    estado_calculo = SOLUCION_UNICA if estado == SOLUCION_UNICA else SOLUCIONES_INFINITAS
     return {
-        "estado": estado,
-        "status": status,
+        "estado": estado_calculo,
         "mensaje": mensaje,
-        "message": mensaje,
-        "classification": mensaje,
+        "clasificacion": mensaje,
         "matriz_escalonada": matriz,
-        "echelon_matrix": matriz,
         "solucion": sol,
-        "solution": sol,
         "solucion_exacta": sol_exacta,
-        "solution_exact": sol_exacta,
         "columnas_libres": libres,
-        "free_cols": libres,
-        "parametros_solucion": params,
-        "solution_param": params,
+        "parametros_solucion": parametros_solucion,
         "analisis_sistema": analisis,
         "pasos": pasos,
-        "steps": pasos,
         "pasos_sustitucion_regresiva": pasos_sust,
-        "back_substitution_steps": pasos_sust,
     }

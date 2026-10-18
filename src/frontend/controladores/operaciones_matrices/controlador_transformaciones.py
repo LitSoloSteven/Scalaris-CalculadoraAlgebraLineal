@@ -1,64 +1,28 @@
-"""Controlador de transformaciones lineales para la capa de presentación."""
+"""Orquestación serializable del análisis de transformaciones lineales."""
 import json
-import logging
-
-from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices.transformaciones import (
-    ResolutorTransformacionesLineales,
+from src.backend.resolutores.operaciones_matrices.captura_modelos import (
+    parsear_matriz_modelo, validar_nombres,
 )
-from src.backend.utilidades.validadores import ValidadorMatriz
-
-logger = logging.getLogger(__name__)
-
-
-def _parsear_matriz_a(a_raw: list) -> Matriz:
-    """Valida y convierte la matriz representante de la transformación a fracciones exactas."""
-    m = len(a_raw)
-    if m == 0:
-        raise ValueError("La matriz A no puede estar vacía.")
-    n = len(a_raw[0])
-    datos_a = []
-    for i, fila in enumerate(a_raw):
-        if len(fila) != n:
-            raise ValueError(
-                f"Fila {i+1} de A tiene {len(fila)} columnas; se esperaban {n}."
-            )
-        fila_parseada = []
-        for j, raw in enumerate(fila):
-            texto = str(raw).strip() if raw is not None else "0"
-            ok, val, err = ValidadorMatriz.parsear_numero_exacto(texto)
-            if not ok:
-                raise ValueError(f"A[{i+1},{j+1}]: {err}")
-            fila_parseada.append(val)
-        datos_a.append(fila_parseada)
-    return Matriz(m, n, datos_a)
+from src.backend.resolutores.operaciones_matrices.transformaciones import ResolutorTransformacionesLineales
+from src.frontend.controladores.utilidades import parsear_carga_json
 
 
 class ControladorTransformaciones:
-    """Gestiona el análisis analítico de núcleo, imagen y dimensión de transformaciones."""
+    """Delega la captura y el análisis de núcleo e imagen al backend."""
 
     @staticmethod
-    def procesar(payload_json: str) -> str:
-        """Parsea el payload y ejecuta el análisis algebraico de la transformación."""
+    def procesar(carga_json: str) -> str:
+        """Recibe matriz y nombres de variables; devuelve análisis o error como JSON."""
+        datos, error = parsear_carga_json(carga_json)
+        if error:
+            return error
+        datos_matriz = datos.get("matriz_transformacion")
+        if not datos_matriz or not isinstance(datos_matriz, list):
+            return json.dumps({"estado": "ERROR", "mensaje": "Falta la matriz A."})
         try:
-            datos = json.loads(payload_json)
-        except json.JSONDecodeError as error:
-            return json.dumps({
-                "status": "ERROR",
-                "message": f"Payload JSON inválido: {error}",
-            })
-
-        a_raw = datos.get("A")
-        if not a_raw or not isinstance(a_raw, list):
-            return json.dumps({"status": "ERROR", "message": "Falta la matriz A."})
-
-        try:
-            matriz_a = _parsear_matriz_a(a_raw)
-        except (ValueError, Exception) as error:
-            return json.dumps({"status": "ERROR", "message": str(error)})
-
-        variables = datos.get("variables") or None
-        resolutor = ResolutorTransformacionesLineales()
-        resultado = resolutor.resolver(matriz_a, variables)
-
+            matriz = parsear_matriz_modelo(datos_matriz, "A")
+            nombres = validar_nombres(datos.get("nombres_variables"), "nombres_variables")
+            resultado = ResolutorTransformacionesLineales().resolver(matriz, nombres)
+        except ValueError as error:
+            resultado = {"estado": "ERROR", "mensaje": str(error)}
         return json.dumps(resultado, ensure_ascii=False, default=str)

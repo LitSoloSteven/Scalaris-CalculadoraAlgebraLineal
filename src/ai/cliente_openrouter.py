@@ -15,9 +15,10 @@ from src.ai.clasificador_respuestas import (
 from src.ai.constantes import (
     LIMITE_TIEMPO_TOTAL_SEGUNDOS, MODELO_PRIMARIO_DEFECTO,
     TIEMPO_ESPERA_REINTENTO_SEGUNDOS, TIEMPO_MINIMO_RESTANTE_SEGUNDOS,
-    TIMEOUT_CONEXION_MAXIMO_SEGUNDOS, TIMEOUT_LECTURA_MAXIMO_SEGUNDOS, URL_OPENROUTER,
+    TIEMPO_MAXIMO_CONEXION_SEGUNDOS, TIEMPO_MAXIMO_LECTURA_SEGUNDOS, URL_OPENROUTER,
 )
 from src.ai.mensajes import construir_mensajes
+from src.ai.presupuesto_mensajes import validar_longitud_mensaje
 from src.ai.respuestas import OpcionesConsulta, ResultadoIA, TipoErrorIA
 from src.ai.textos import CONSULTA_CANCELADA, ERROR_SERVICIO
 
@@ -55,8 +56,8 @@ class ClienteOpenRouter:
     def _ejecutar_llamada_red(
         self, modelo: str, mensajes: list, tiempo_restante: float
     ) -> requests.Response:
-        tiempo_conexion = min(TIMEOUT_CONEXION_MAXIMO_SEGUNDOS, tiempo_restante)
-        tiempo_lectura = min(TIMEOUT_LECTURA_MAXIMO_SEGUNDOS, tiempo_restante)
+        tiempo_conexion = min(TIEMPO_MAXIMO_CONEXION_SEGUNDOS, tiempo_restante)
+        tiempo_lectura = min(TIEMPO_MAXIMO_LECTURA_SEGUNDOS, tiempo_restante)
         cabeceras = {
             "Authorization": f"Bearer {self.clave_api}",
             "Content-Type": "application/json",
@@ -140,6 +141,10 @@ class ClienteOpenRouter:
         cancelar: threading.Event | None = None, opciones: OpcionesConsulta = OpcionesConsulta(),
     ) -> ResultadoIA:
         """Consulta Glosa con historial, contexto, cancelación y opciones de respuesta."""
+        try:
+            validar_longitud_mensaje(pregunta)
+        except ValueError as error:
+            return ResultadoIA(False, str(error), TipoErrorIA.ENTRADA_INVALIDA)
         resultado_validacion = self._validar_precondiciones(cancelar)
         if resultado_validacion:
             return resultado_validacion

@@ -1,97 +1,91 @@
-"""Pie de interacción, entrada textual, píldora de contexto y activadores del dock."""
+"""Entrada textual, contexto y activadores del panel lateral de Glosa."""
 from __future__ import annotations
 
 from typing import Any
 from nicegui import ui
-from src.frontend.componentes.icons import icon_svg
+from src.frontend.componentes.glosa_entrada import EstiloEntradaGlosa, construir_entrada_glosa
+from src.frontend.componentes.iconos import icono_svg
 
 
-def construir_pie_dock(instancia: Any) -> None:
-    """Ensambla el pie interactivo del dock con contexto, chips y área de captura."""
+def construir_pie_lateral(instancia: Any) -> None:
+    """Ensambla el pie del panel lateral con contexto, sugerencias y área de captura."""
     with ui.column().classes(
         "w-full p-4 border-t border-[var(--border-input)] bg-[var(--bg-elevated)] flex-shrink-0"
     ):
-        instancia.render_context_pill()
+        instancia.renderizar_pildora_contexto()
 
-        instancia.focus_chip_container = ui.row().classes("w-full mt-2 empty:hidden")
-        with instancia.focus_chip_container:
-            instancia.render_focus_chip_ui()
+        instancia.contenedor_foco = ui.row().classes("w-full mt-2 empty:hidden")
+        with instancia.contenedor_foco:
+            instancia.renderizar_capsula_foco_interfaz()
 
-        instancia.dock_chips_container = ui.column().classes("w-full mt-2")
-        instancia._last_chips_ids = ()
-        instancia._render_dock_chips()
+        instancia.contenedor_sugerencias = ui.column().classes("w-full mt-2")
+        instancia._identificadores_sugerencias = ()
+        instancia._renderizar_sugerencias_laterales()
 
-        _construir_barra_entrada(instancia)
-
-
-def _construir_barra_entrada(instancia: Any) -> None:
-    """Construye el campo de texto expandible y el botón accesible de envío."""
-    with ui.row().classes("w-full items-end gap-2 no-wrap mt-2"):
-        instancia.input_field = ui.textarea(
-            placeholder="Pregunta algo sobre tu ejercicio..."
-        ).classes("flex-1 glosa-input glosa-campo-entrada").props("borderless autogrow")
-        instancia.input_field.on("keydown.enter.prevent.exact", instancia.send_message_dock)
-
-        ui.button(icon="send", on_click=instancia.send_message_dock, color=None).classes(
-            "btn-primary w-10 h-10 p-0 mb-1 flex-shrink-0 glosa-boton-enviar"
-        ).props('ripple=false aria-label="Enviar"').tooltip("Enviar")
+        construir_entrada_glosa(instancia, EstiloEntradaGlosa(
+            clases_contenedor="w-full items-end gap-2 no-wrap mt-2",
+            clases_campo="flex-1 glosa-entrada glosa-campo-entrada",
+            clases_boton="boton-principal w-10 h-10 p-0 mb-1 flex-shrink-0 glosa-boton-enviar",
+            texto_ayuda="Pregunta algo sobre tu ejercicio...",
+            etiqueta_envio="Enviar",
+        ))
 
 
 def renderizar_pildora_contexto(instancia: Any) -> None:
     """Muestra el estado del contexto algebraico activo y su interruptor."""
-    enabled = instancia._storage.get("ai_ctx_enabled", True)
-    ctx_obj = None
-    if enabled and hasattr(instancia.active_ui, "obtener_contexto_ia"):
+    habilitado = instancia._almacen.get("ia_contexto_habilitado", True)
+    contexto = None
+    if habilitado and hasattr(instancia.interfaz_activa, "obtener_contexto_ia"):
         try:
-            ctx_obj = instancia.active_ui.obtener_contexto_ia()
+            contexto = instancia.interfaz_activa.obtener_contexto_ia()
         except Exception:
-            ctx_obj = None
+            contexto = None
 
-    if ctx_obj is None or getattr(ctx_obj, "vacio", False):
-        _renderizar_pildora_vacia(instancia, enabled)
+    if contexto is None or getattr(contexto, "vacio", False):
+        _renderizar_pildora_vacia(instancia, habilitado)
         return
 
-    _renderizar_pildora_activa(instancia, ctx_obj, enabled)
+    _renderizar_pildora_activa(instancia, contexto, habilitado)
 
 
-def _renderizar_pildora_vacia(instancia: Any, enabled: bool) -> None:
+def _renderizar_pildora_vacia(instancia: Any, habilitado: bool) -> None:
     """Indica la ausencia de contexto disponible."""
-    with ui.row().classes("w-full items-center justify-between px-2 py-1 glosa-ctx-panel"):
-        ui.label("Sin contexto del ejercicio").classes("text-xs text-sec")
-        ui.switch("Auto-adjuntar", value=enabled, on_change=instancia._toggle_ctx).classes(
+    with ui.row().classes("w-full items-center justify-between px-2 py-1 glosa-contexto-panel"):
+        ui.label("Sin contexto del ejercicio").classes("text-xs texto-secundario")
+        ui.switch("Auto-adjuntar", value=habilitado, on_change=instancia._alternar_contexto).classes(
             "text-xs"
         ).props("dense size=sm")
 
 
-def _renderizar_pildora_activa(instancia: Any, ctx_obj: Any, enabled: bool) -> None:
+def _renderizar_pildora_activa(instancia: Any, contexto: Any, habilitado: bool) -> None:
     """Construye la etiqueta con el nombre de la herramienta activa y su frescura."""
-    lbl = f"Viendo: {ctx_obj.etiqueta}"
-    if ctx_obj.desactualizado:
-        lbl = "Los datos cambiaron desde el último cálculo"
-    elif ctx_obj.nota_ventana:
-        lbl += f" ({ctx_obj.nota_ventana})"
+    etiqueta = f"Viendo: {contexto.etiqueta}"
+    if contexto.desactualizado:
+        etiqueta = "Los datos cambiaron desde el último cálculo"
+    elif contexto.nota_ventana:
+        etiqueta += f" ({contexto.nota_ventana})"
 
-    classes = "glosa-ctx row items-center gap-2 w-full justify-between px-3 py-2 glosa-ctx-panel glosa-ctx-borde"
-    if ctx_obj.desactualizado:
-        classes += " desactualizado"
+    clases = "glosa-contexto row items-center gap-2 w-full justify-between px-3 py-2 glosa-contexto-panel glosa-contexto-borde"
+    if contexto.desactualizado:
+        clases += " desactualizado"
 
-    with ui.row().classes(classes):
+    with ui.row().classes(clases):
         with ui.row().classes("items-center gap-2 min-w-0 flex-1"):
-            ui.icon("visibility", size="xs").classes("text-accent")
-            ui.label(lbl).classes("glosa-ctx-label truncate text-xs font-semibold").tooltip(lbl)
+            ui.icon("visibility", size="xs").classes("texto-acento")
+            ui.label(etiqueta).classes("glosa-contexto-etiqueta truncate text-xs font-semibold").tooltip(etiqueta)
 
         with ui.row().classes("items-center gap-3 flex-shrink-0"):
-            ui.switch(value=enabled, on_change=instancia._toggle_ctx).props(
+            ui.switch(value=habilitado, on_change=instancia._alternar_contexto).props(
                 'dense size=sm aria-label="Incluir el contexto del ejercicio"'
             ).tooltip("Activar/desactivar contexto")
 
 
-def construir_fab_y_scrim() -> None:
+def construir_boton_y_fondo() -> None:
     """Genera el botón flotante (FAB) y el fondo oscuro modal (scrim)."""
-    with ui.button(color=None).classes("glosa-fab").props(
-        'ripple=false data-glosa-toggle aria-controls="glosa-dock" aria-expanded="false" aria-label="Abrir Glosa"'
-    ) as fab:
-        ui.html(icon_svg("glosa")).classes("text-accent")
-    fab.tooltip("Abrir Glosa")
+    with ui.button(color=None).classes("glosa-boton-flotante").props(
+        'ripple=false data-glosa-alternar aria-controls="glosa-panel-lateral" aria-expanded="false" aria-label="Abrir Glosa"'
+    ) as boton_flotante:
+        ui.html(icono_svg("glosa")).classes("texto-acento")
+    boton_flotante.tooltip("Abrir Glosa")
 
-    ui.element("div").classes("glosa-scrim").props("data-glosa-close")
+    ui.element("div").classes("glosa-fondo-modal").props("data-glosa-cerrar")

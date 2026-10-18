@@ -1,0 +1,37 @@
+.numericos-entrada-base {
+  font-size: var(--fs-display) !important;
+  padding: 20px 76px 20px 20px;
+  min-width: 0;
+}
+.numericos-operando {
+  font-size: 1.5rem !important;
+  padding: 18px 20px;
+  text-transform: uppercase;
+  min-width: 0;
+}
+.numericos-error {
+  color: var(--error);
+  margin-left: 8px;
+  min-height: 20px;
+  overflow-wrap: anywhere;
+}
+.numericos-ejemplo {
+  background: var(--bg-panel);
+  border-color: var(--border-input);
+  box-shadow: var(--elev-2);
+}
+.numericos-resultado {
+  background: var(--bg-elevated);
+  box-shadow: var(--elev-inset);
+  color: var(--accent);
+  border-color: var(--border-input);
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+.numericos-tarjeta-conversion {
+  min-height: 120px;
+  opacity: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .numericos-tarjeta-conversion { transform: none; }
+}

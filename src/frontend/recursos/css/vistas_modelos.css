@@ -1,0 +1,27 @@
+.modelos-captura {
+  width: 100%;
+  overflow-x: auto;
+}
+.modelos-sectorial {
+  width: 100%;
+  overflow-x: auto;
+  font-variant-numeric: tabular-nums;
+}
+.modelos-sectorial .q-expansion-item__content { min-width: 640px; }
+.modelos-sectorial .q-expansion-item__content .q-item__label,
+.modelos-sectorial .q-expansion-item__content .q-label {
+  overflow-wrap: anywhere;
+}
+.modelos-aviso {
+  background: var(--bg-elevated);
+  border-left: 3px solid var(--accent);
+}
+.determinante-valor {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+@media (prefers-reduced-motion: reduce) {
+  .modelos-captura { transform: none; }
+}

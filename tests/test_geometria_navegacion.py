@@ -1,64 +1,64 @@
 """Integración del visualizador en el registro de navegación."""
-from src.frontend.navigation import (
-    nav_groups,
-    route_of,
-    breadcrumb,
-    tool_by_id,
-    visible_tools,
-    TOOLS,
-    NAV_FLAT_ORDER,
+from src.frontend.navegacion import (
+    grupos_navegacion,
+    ruta_de,
+    ruta_navegacion,
+    herramienta_por_identificador,
+    herramientas_visibles,
+    HERRAMIENTAS,
+    ORDEN_NAVEGACION_PLANA,
 )
-from src.frontend.vistas.hub._recent import normalize_recent
+from src.frontend.controladores.inicio._recientes import normalizar_recientes
 
 
 def test_visualizador_presente_en_grupos_navegacion():
     """El visualizador aparece entre los grupos de navegación."""
-    all_tool_ids = set()
-    for pillar, tools in nav_groups():
-        for tool in tools:
-            all_tool_ids.add(tool.id)
-    assert "visualizador" in all_tool_ids
+    identificadores_herramientas = set()
+    for pilar, herramientas in grupos_navegacion():
+        for herramienta in herramientas:
+            identificadores_herramientas.add(herramienta.identificador)
+    assert "visualizador" in identificadores_herramientas
 
 
 def test_ruta_visualizador():
     """El registro devuelve la ruta del visualizador."""
-    assert route_of("visualizador") == "/visualizador"
+    assert ruta_de("visualizador") == "/visualizador"
 
 
-def test_visualizador_breadcrumb():
+def test_visualizador_migas_navegacion():
     """La miga del visualizador conserva su nombre y área."""
-    bc = breadcrumb("/visualizador")
-    assert len(bc) == 2
-    assert bc[0][0] == "Visualizador geométrico"  # pillar name
-    assert bc[1][0] == "Rectas, planos y vectores"  # tool name
-    assert bc[1][1] == "/visualizador"
+    migas = ruta_navegacion("/visualizador")
+    assert len(migas) == 2
+    assert migas[0][0] == "Visualizador geométrico"
+    assert migas[1][0] == "Rectas, planos y vectores"
+    assert migas[1][1] == "/visualizador"
 
 
 def test_historial_reciente_admite_visualizador():
     """El normalizador acepta el identificador del visualizador."""
-    result = normalize_recent(["visualizador", "sistemas", "bases"])
-    tool_ids = [t.id for t in result]
-    assert "visualizador" in tool_ids
+    resultado = normalizar_recientes(["visualizador", "sistemas", "bases"])
+    identificadores_herramientas = [t.identificador for t in resultado]
+    assert "visualizador" in identificadores_herramientas
 
 
 def test_registro_conserva_rutas_unicas():
     """Las rutas del registro no se repiten."""
-    routes = [t.route for t in TOOLS]
-    assert len(routes) == len(set(routes))
+    rutas = [t.ruta for t in HERRAMIENTAS]
+    assert len(rutas) == len(set(rutas))
 
 
 def test_registro_conserva_identificadores_unicos():
     """Los identificadores del registro no se repiten."""
-    ids = [t.id for t in TOOLS]
-    assert len(ids) == len(set(ids))
+    identificadores = [t.identificador for t in HERRAMIENTAS]
+    assert len(identificadores) == len(set(identificadores))
 
 
 def test_orden_navegacion_incluye_visualizador():
     """El orden de navegación incluye el visualizador."""
-    assert "visualizador" in NAV_FLAT_ORDER
+    assert "visualizador" in ORDEN_NAVEGACION_PLANA
 
 
 def test_visualizador_habilitado():
     """La herramienta de visualización está habilitada."""
-    vis = tool_by_id("visualizador")
-    assert vis.enabled
+    vis = herramienta_por_identificador("visualizador")
+    assert vis.habilitada

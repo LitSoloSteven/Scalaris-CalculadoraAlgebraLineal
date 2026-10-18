@@ -1,0 +1,36 @@
+.sesion-dialogo {
+    width: min(100%, 24rem);
+    min-width: 0;
+}
+
+.sesion-limpiar {
+    color: var(--error);
+    background: var(--bg-elevated);
+}
+
+.sesion-historial {
+    border: 1px solid var(--border-input);
+    min-width: 0;
+}
+
+.sesion-numero {
+    overflow-wrap: anywhere;
+    font-variant-numeric: tabular-nums;
+}
+
+.sesion-subtitulo { letter-spacing: 0.08em; }
+.sesion-obsoleta { opacity: 0.45; }
+.sesion-error { color: var(--error); }
+
+.sesion-vista {
+    min-width: 0;
+    max-width: 100%;
+}
+
+@media (max-width: 400px) {
+    .sesion-vista { padding-inline: var(--space-3); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sesion-vista { transform: none; }
+}

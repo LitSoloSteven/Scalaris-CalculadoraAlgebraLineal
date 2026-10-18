@@ -5,6 +5,7 @@ import requests
 from src.ai.cliente_openrouter import ClienteOpenRouter
 from src.ai.respuestas import TipoErrorIA
 from tests.comun_openrouter import RespuestaSimulada, limpiar_estado_openrouter
+from tests.comun_openrouter import consultar_con_respuestas_simuladas
 
 
 def test_sin_clave_no_realiza_llamada_red(monkeypatch):
@@ -13,6 +14,7 @@ def test_sin_clave_no_realiza_llamada_red(monkeypatch):
     total_llamadas = 0
 
     def responder(*argumentos, **opciones):
+        """Devuelve la respuesta simulada para aislar la comunicación de red."""
         nonlocal total_llamadas
         total_llamadas += 1
         return RespuestaSimulada(200)
@@ -31,6 +33,7 @@ def test_respuesta_exitosa_con_contenido(monkeypatch):
     llamadas = []
 
     def responder(url, headers=None, json=None, timeout=None):
+        """Devuelve la respuesta simulada para aislar la comunicación de red."""
         llamadas.append((url, json))
         return RespuestaSimulada(200, {"choices": [{"message": {"content": "Una matriz es un arreglo bidimensional."}}]})
 
@@ -47,6 +50,7 @@ def test_respuesta_exitosa_sin_opciones(monkeypatch):
     monkeypatch.setenv("OPENROUTER_API_KEY", "test-key")
 
     def responder(url, headers=None, json=None, timeout=None):
+        """Devuelve la respuesta simulada para aislar la comunicación de red."""
         return RespuestaSimulada(200, {"choices": []})
 
     monkeypatch.setattr(ClienteOpenRouter, "_peticiones_post", staticmethod(responder))
@@ -62,8 +66,9 @@ def test_error_autenticacion_sin_reintento(monkeypatch):
     llamadas = []
 
     def responder(url, headers=None, json=None, timeout=None):
+        """Devuelve la respuesta simulada para aislar la comunicación de red."""
         llamadas.append(url)
-        return RespuestaSimulada(401, text="Unauthorized: invalid api key")
+        return RespuestaSimulada(401, texto="Unauthorized: invalid api key")
 
     monkeypatch.setattr(ClienteOpenRouter, "_peticiones_post", staticmethod(responder))
     cliente = ClienteOpenRouter()
@@ -79,19 +84,17 @@ def test_limite_peticiones_primario_espera_y_reintenta(monkeypatch):
     llamadas, esperas = [], []
 
     def responder(url, headers=None, json=None, timeout=None):
+        """Devuelve la respuesta simulada para aislar la comunicación de red."""
         llamadas.append(len(llamadas))
         if len(llamadas) == 1:
-            return RespuestaSimulada(429, text="Rate limited")
+            return RespuestaSimulada(429, texto="Rate limited")
         return RespuestaSimulada(200, {"choices": [{"message": {"content": "Respuesta tras reintento"}}]})
 
     def esperar(segundos):
+        """Coordina la espera del escenario asíncrono de la prueba."""
         esperas.append(segundos)
 
-    monkeypatch.setattr(ClienteOpenRouter, "_peticiones_post", staticmethod(responder))
-    monkeypatch.setattr(ClienteOpenRouter, "_tiempo_dormir", staticmethod(esperar))
-    cliente = ClienteOpenRouter()
-    resultado = cliente.preguntar("pregunta")
-    assert resultado.exito is True
+    resultado = consultar_con_respuestas_simuladas(monkeypatch, responder, esperar, True)
     assert resultado.texto == "Respuesta tras reintento"
     assert len(llamadas) == 2
     assert len(esperas) == 1
@@ -106,20 +109,18 @@ def test_limite_persistente_usa_segundo_modelo(monkeypatch):
     llamadas, esperas = [], []
 
     def responder(url, headers=None, json=None, timeout=None):
+        """Devuelve la respuesta simulada para aislar la comunicación de red."""
         modelo_consultado = json.get("model")
         llamadas.append(modelo_consultado)
         if modelo_consultado != nombre_reserva:
-            return RespuestaSimulada(429, text="Rate limit en modelo primario")
+            return RespuestaSimulada(429, texto="Rate limit en modelo primario")
         return RespuestaSimulada(200, {"choices": [{"message": {"content": "Respuesta desde fallback"}}]})
 
     def esperar(segundos):
+        """Coordina la espera del escenario asíncrono de la prueba."""
         esperas.append(segundos)
 
-    monkeypatch.setattr(ClienteOpenRouter, "_peticiones_post", staticmethod(responder))
-    monkeypatch.setattr(ClienteOpenRouter, "_tiempo_dormir", staticmethod(esperar))
-    cliente = ClienteOpenRouter()
-    resultado = cliente.preguntar("pregunta")
-    assert resultado.exito is True
+    resultado = consultar_con_respuestas_simuladas(monkeypatch, responder, esperar, True)
     assert resultado.texto == "Respuesta desde fallback"
     assert resultado.modelo == nombre_reserva
     assert llamadas.count(ClienteOpenRouter.MODELO_PRIMARIO) == 2
@@ -132,13 +133,10 @@ def test_limite_peticiones_sin_modelo_reserva(monkeypatch):
     monkeypatch.setattr(ClienteOpenRouter, "MODELOS_RESERVA", [])
 
     def responder(url, headers=None, json=None, timeout=None):
-        return RespuestaSimulada(429, text="Rate limit")
+        """Devuelve la respuesta simulada para aislar la comunicación de red."""
+        return RespuestaSimulada(429, texto="Rate limit")
 
-    monkeypatch.setattr(ClienteOpenRouter, "_peticiones_post", staticmethod(responder))
-    monkeypatch.setattr(ClienteOpenRouter, "_tiempo_dormir", staticmethod(lambda segundos: None))
-    cliente = ClienteOpenRouter()
-    resultado = cliente.preguntar("pregunta")
-    assert resultado.exito is False
+    resultado = consultar_con_respuestas_simuladas(monkeypatch, responder, lambda segundos: None, False)
     assert resultado.tipo_error == TipoErrorIA.LIMITE_PETICIONES
 
 
@@ -149,6 +147,7 @@ def test_tiempo_agotado_con_y_sin_modelo_reserva(monkeypatch):
     monkeypatch.setattr(ClienteOpenRouter, "MODELOS_RESERVA", [nombre_reserva])
 
     def responder_con_reserva(url, headers=None, json=None, timeout=None):
+        """Procesa responder con reserva con los datos recibidos."""
         if json.get("model") == ClienteOpenRouter.MODELO_PRIMARIO:
             raise requests.exceptions.Timeout("Timeout en primario")
         return RespuestaSimulada(200, {"choices": [{"message": {"content": "Respuesta exitosa en fallback"}}]})
@@ -161,6 +160,7 @@ def test_tiempo_agotado_con_y_sin_modelo_reserva(monkeypatch):
     monkeypatch.setattr(ClienteOpenRouter, "MODELOS_RESERVA", [])
 
     def agotar_tiempo(url, headers=None, json=None, timeout=None):
+        """Procesa agotar tiempo con los datos recibidos."""
         raise requests.exceptions.Timeout("Timeout total")
 
     monkeypatch.setattr(ClienteOpenRouter, "_peticiones_post", staticmethod(agotar_tiempo))
@@ -175,6 +175,7 @@ def test_error_conexion_informa_fallo_red(monkeypatch):
     monkeypatch.setenv("OPENROUTER_API_KEY", "test-key")
 
     def fallar_conexion(url, headers=None, json=None, timeout=None):
+        """Procesa fallar conexion con los datos recibidos."""
         raise requests.exceptions.ConnectionError("Error de socket")
 
     monkeypatch.setattr(ClienteOpenRouter, "_peticiones_post", staticmethod(fallar_conexion))
@@ -190,6 +191,7 @@ def test_cancelacion_previa_no_realiza_llamada(monkeypatch):
     total_llamadas = 0
 
     def responder(*argumentos, **opciones):
+        """Devuelve la respuesta simulada para aislar la comunicación de red."""
         nonlocal total_llamadas
         total_llamadas += 1
         return RespuestaSimulada(200)
@@ -210,20 +212,18 @@ def test_plazo_agotado_con_reloj_simulado(monkeypatch):
     tiempo_simulado = 100.0
 
     def consultar_reloj():
+        """Procesa consultar reloj con los datos recibidos."""
         return tiempo_simulado
 
     def responder(url, headers=None, json=None, timeout=None):
+        """Devuelve la respuesta simulada para aislar la comunicación de red."""
         nonlocal tiempo_simulado
         # La respuesta deja menos de dos segundos del plazo total.
         tiempo_simulado = 139.5
-        return RespuestaSimulada(500, text="Transient error")
+        return RespuestaSimulada(500, texto="Transient error")
 
     monkeypatch.setattr(ClienteOpenRouter, "_tiempo_monotonico", staticmethod(consultar_reloj))
-    monkeypatch.setattr(ClienteOpenRouter, "_peticiones_post", staticmethod(responder))
-    monkeypatch.setattr(ClienteOpenRouter, "_tiempo_dormir", staticmethod(lambda segundos: None))
-    cliente = ClienteOpenRouter()
-    resultado = cliente.preguntar("pregunta")
-    assert resultado.exito is False
+    resultado = consultar_con_respuestas_simuladas(monkeypatch, responder, lambda segundos: None, False)
     assert resultado.tipo_error == TipoErrorIA.SERVICIO
 
 

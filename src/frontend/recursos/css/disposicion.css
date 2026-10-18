@@ -1,0 +1,106 @@
+.vista-raiz { container-type: inline-size; }
+
+.vista-raiz::after {
+    content: "";
+    display: block;
+    height: var(--fab-reserve);
+    flex-shrink: 0;
+}
+
+.inicio-raiz::after {
+    content: none;
+}
+
+.disposicion-dividida {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-8);
+    width: 100%;
+}
+
+.disposicion-panel {
+    width: 100%;
+    min-width: 0;
+}
+
+@container (min-width: 944px) {
+    .disposicion-dividida {
+        flex-direction: row;
+    }
+
+    .disposicion-panel {
+        width: 50%;
+        flex: 1 1 0%;
+    }
+}
+
+.disposicion-cuadricula-dos {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4);
+    width: 100%;
+}
+
+@container (min-width: 704px) {
+    .disposicion-cuadricula-dos {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.disposicion-ajustada {
+    min-width: 0;
+    max-width: 100%;
+}
+
+@media (max-width: 280px) {
+    .vista-raiz,
+    .vista-raiz .panel-tarjeta {
+        padding-inline: var(--space-2) !important;
+    }
+
+    .vista-raiz .nicegui-column,
+    .vista-raiz .nicegui-row,
+    .vista-raiz .q-tabs,
+    .vista-raiz .q-field,
+    .vista-raiz .q-btn {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .vista-raiz .q-tabs {
+        overflow-x: auto;
+    }
+
+    .vista-raiz .texto-principal,
+    .vista-raiz .texto-secundario,
+    .vista-raiz .q-btn__content {
+        min-width: 0;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+    }
+}
+
+.ia-panel-superposicion {
+    position: fixed;
+    inset: 0;
+    background: var(--scrim);
+    z-index: calc(var(--z-dock) - 1);
+    transition: opacity 240ms var(--ease-std);
+    pointer-events: none;
+}
+
+.ia-panel-tarjeta {
+    position: fixed;
+    right: 16px;
+    top: 88px;
+    width: min(420px, calc(100vw - 32px));
+    height: calc(100dvh - 104px);
+    background: var(--bg-elevated);
+    z-index: var(--z-dock);
+    border: 1px solid var(--border-input);
+    border-radius: var(--radius-card);
+    box-shadow: var(--elev-3);
+    overflow: hidden;
+    transition: transform 240ms var(--ease-std), opacity 240ms var(--ease-std);
+}

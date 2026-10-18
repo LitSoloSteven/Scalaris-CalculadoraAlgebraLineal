@@ -16,22 +16,24 @@ def test_mensajes_error_no_revelan_detalles_internos(monkeypatch):
     cancelar = threading.Event()
     cancelar.set()
     cancelado = cliente.preguntar("hola", cancelar=cancelar)
-    monkeypatch.setattr(ClienteOpenRouter, "_peticiones_post", staticmethod(lambda *argumentos, **opciones: RespuestaSimulada(401, text="Auth err")))
+    monkeypatch.setattr(ClienteOpenRouter, "_peticiones_post", staticmethod(lambda *argumentos, **opciones: RespuestaSimulada(401, texto="Auth err")))
     autenticacion = cliente.preguntar("hola")
     monkeypatch.setattr(ClienteOpenRouter, "_peticiones_post", staticmethod(lambda *argumentos, **opciones: RespuestaSimulada(200, {"choices": []})))
     vacio = cliente.preguntar("hola")
-    monkeypatch.setattr(ClienteOpenRouter, "_peticiones_post", staticmethod(lambda *argumentos, **opciones: RespuestaSimulada(429, text="Rate limit")))
+    monkeypatch.setattr(ClienteOpenRouter, "_peticiones_post", staticmethod(lambda *argumentos, **opciones: RespuestaSimulada(429, texto="Rate limit")))
     monkeypatch.setattr(ClienteOpenRouter, "_tiempo_dormir", staticmethod(lambda segundos: None))
     limite = cliente.preguntar("hola")
     def agotar_tiempo(*argumentos, **opciones):
+        """Procesa agotar tiempo con los datos recibidos."""
         raise requests.exceptions.Timeout("timeout")
     monkeypatch.setattr(ClienteOpenRouter, "_peticiones_post", staticmethod(agotar_tiempo))
     tiempo_agotado = cliente.preguntar("hola")
     def fallar_conexion(*argumentos, **opciones):
+        """Procesa fallar conexion con los datos recibidos."""
         raise requests.exceptions.ConnectionError("conn")
     monkeypatch.setattr(ClienteOpenRouter, "_peticiones_post", staticmethod(fallar_conexion))
     red = cliente.preguntar("hola")
-    monkeypatch.setattr(ClienteOpenRouter, "_peticiones_post", staticmethod(lambda *argumentos, **opciones: RespuestaSimulada(500, text="error")))
+    monkeypatch.setattr(ClienteOpenRouter, "_peticiones_post", staticmethod(lambda *argumentos, **opciones: RespuestaSimulada(500, texto="error")))
     servicio = cliente.preguntar("hola")
     todos_los_resultados = [sin_clave, cancelado, autenticacion, vacio, limite, tiempo_agotado, red, servicio]
     for resultado in todos_los_resultados:

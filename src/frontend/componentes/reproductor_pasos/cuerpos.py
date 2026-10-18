@@ -6,7 +6,7 @@ import itertools
 import json
 from nicegui import ui
 
-_CONTADOR_ID = itertools.count()
+_CONTADOR_IDENTIFICADOR = itertools.count()
 
 
 class CuerpoLatex:
@@ -16,18 +16,18 @@ class CuerpoLatex:
         self.latex = latex
 
     def __call__(self) -> None:
-        render_latex(self.latex)
+        renderizar_latex(self.latex)
 
     def __str__(self) -> str:
         return self.latex
 
 
-def render_latex(latex: str) -> None:
+def renderizar_latex(latex: str) -> None:
     """Inserta un bloque LaTeX desplazable y solicita su composición MathJax."""
-    identificador = f"repro-math-{next(_CONTADOR_ID)}"
+    identificador = f"reproductor-matematicas-{next(_CONTADOR_IDENTIFICADOR)}"
     contenido = html.escape(latex)
     ui.html(
-        f'<div id="{identificador}" class="math-scroll-container math-label">$$ {contenido} $$</div>'
+        f'<div id="{identificador}" class="matematicas-desplazamiento matematicas-etiqueta">$$ {contenido} $$</div>'
     )
     ui.run_javascript(
         f"if(window.scalaris && window.scalaris.renderizarMathJax) "

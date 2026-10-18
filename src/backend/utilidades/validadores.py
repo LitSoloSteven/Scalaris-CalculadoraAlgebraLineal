@@ -7,8 +7,8 @@ from src.backend.constantes import (
     LIMITE_RECONSTRUCCION_ESTRICTA,
     LONGITUD_MAXIMA_CADENA_NUMERO,
     LONGITUD_MAXIMA_CELDA,
-    MSJ_NOTACION_CIENTIFICA_NO_SOPORTADA,
-    MSJ_NUMERO_DEMASIADO_LARGO,
+    MENSAJE_NOTACION_CIENTIFICA_NO_SOPORTADA,
+    MENSAJE_NUMERO_DEMASIADO_LARGO,
 )
 from src.backend.excepciones import ErrorDiscrepanciaDimension
 from src.backend.modelos.matriz import Matriz
@@ -21,9 +21,18 @@ class ValidadorMatriz:
     verificar_solucion = staticmethod(verificar_solucion)
 
     @staticmethod
-    def es_numero_exacto(val: Any) -> bool:
+    def es_numero_exacto(valor: Any) -> bool:
         """Determina si una entrada es representable como fracción numérica exacta."""
-        return ValidadorMatriz.parsear_numero_exacto(val)[0]
+        return ValidadorMatriz.parsear_numero_exacto(valor)[0]
+
+    @staticmethod
+    def primera_celda_invalida(celdas: Any) -> dict | None:
+        """Devuelve etiqueta y foco de la primera entrada escrita que no es numérica."""
+        for celda in celdas:
+            texto = str(celda[1]).strip() if celda[1] is not None else ""
+            if texto and not ValidadorMatriz.parsear_numero_exacto(texto)[0]:
+                return {"etiqueta": celda[0], "foco": celda[2] if len(celda) > 2 else None}
+        return None
 
     @staticmethod
     def validar_celda(celda: Any, longitud_maxima: int = LONGITUD_MAXIMA_CELDA) -> bool:
@@ -34,52 +43,52 @@ class ValidadorMatriz:
 
 
     @staticmethod
-    def _rechazar_cadena_no_soportada(val_limpio: str) -> str | None:
+    def _rechazar_cadena_no_soportada(valor_limpio: str) -> str | None:
         """Determina si la cadena contiene notación científica o longitud excesiva."""
-        if "e" in val_limpio or "E" in val_limpio:
-            return MSJ_NOTACION_CIENTIFICA_NO_SOPORTADA
-        if len(val_limpio) > LONGITUD_MAXIMA_CADENA_NUMERO:
-            return MSJ_NUMERO_DEMASIADO_LARGO
+        if "e" in valor_limpio or "E" in valor_limpio:
+            return MENSAJE_NOTACION_CIENTIFICA_NO_SOPORTADA
+        if len(valor_limpio) > LONGITUD_MAXIMA_CADENA_NUMERO:
+            return MENSAJE_NUMERO_DEMASIADO_LARGO
         return None
 
     @staticmethod
-    def parsear_numero_exacto(val: Any) -> tuple[bool, Fraction, str]:
+    def parsear_numero_exacto(valor: Any) -> tuple[bool, Fraction, str]:
         """Convierte una entrada numérica a fracción exacta con validaciones DoS."""
-        if isinstance(val, (int, Fraction)):
-            return True, Fraction(val), ""
+        if isinstance(valor, (int, Fraction)):
+            return True, Fraction(valor), ""
 
-        if isinstance(val, float):
+        if isinstance(valor, float):
             try:
-                return True, Fraction(val).limit_denominator(LIMITE_RECONSTRUCCION_ESTRICTA), ""
+                return True, Fraction(valor).limit_denominator(LIMITE_RECONSTRUCCION_ESTRICTA), ""
             except (ValueError, OverflowError):
                 try:
-                    return True, Fraction(str(val)), ""
+                    return True, Fraction(str(valor)), ""
                 except (ValueError, ZeroDivisionError):
                     return False, Fraction(0), "Valor flotante no convertible a fracción."
 
-        if isinstance(val, str):
-            val_limpio = val.strip()
-            if not val_limpio:
+        if isinstance(valor, str):
+            valor_limpio = valor.strip()
+            if not valor_limpio:
                 return False, Fraction(0), "El campo está vacío."
 
-            rechazo = ValidadorMatriz._rechazar_cadena_no_soportada(val_limpio)
+            rechazo = ValidadorMatriz._rechazar_cadena_no_soportada(valor_limpio)
             if rechazo is not None:
                 return False, Fraction(0), rechazo
 
             try:
-                return True, Fraction(val_limpio), ""
+                return True, Fraction(valor_limpio), ""
             except ZeroDivisionError:
                 return False, Fraction(0), "División por cero en la fracción ingresada."
             except ValueError:
                 return False, Fraction(0), "El valor ingresado no es un número o fracción válida."
 
-        return False, Fraction(0), f"Tipo no soportado: {type(val).__name__}"
+        return False, Fraction(0), f"Tipo no soportado: {type(valor).__name__}"
 
     @staticmethod
-    def parsear_numero(val: Any) -> tuple[bool, float, str]:
+    def parsear_numero(valor: Any) -> tuple[bool, float, str]:
         """Parsea una entrada numérica retornando un flotante serializable."""
-        ok, fraccion, mensaje = ValidadorMatriz.parsear_numero_exacto(val)
-        if not ok:
+        correcto, fraccion, mensaje = ValidadorMatriz.parsear_numero_exacto(valor)
+        if not correcto:
             return False, 0.0, mensaje
         return True, float(fraccion), ""
 
@@ -121,10 +130,10 @@ class ValidadorMatriz:
             if len(fila) != columnas_esperadas:
                 return False, [], f"La fila {indice_fila + 1} no tiene {columnas_esperadas} columnas."
             fila_analizada = []
-            for indice_col, item in enumerate(fila):
-                exito, valor_frac, mensaje_err = ValidadorMatriz.parsear_numero_exacto(item)
+            for indice_columna, elemento in enumerate(fila):
+                exito, valor_frac, mensaje_error = ValidadorMatriz.parsear_numero_exacto(elemento)
                 if not exito:
-                    return False, [], f"Error en celda [{indice_fila + 1}, {indice_col + 1}]: {mensaje_err}"
+                    return False, [], f"Error en celda [{indice_fila + 1}, {indice_columna + 1}]: {mensaje_error}"
                 fila_analizada.append(valor_frac)
             matriz_analizada.append(fila_analizada)
 
@@ -141,7 +150,7 @@ class ValidadorMatriz:
         for indice, (coeficientes, _) in enumerate(ecuaciones_analizadas, 1):
             variables_actuales = set(coeficientes.keys())
             otras_variables = set().union(
-                *[e[0].keys() for i, e in enumerate(ecuaciones_analizadas) if i != indice - 1]
+                *[ecuacion[0].keys() for i, ecuacion in enumerate(ecuaciones_analizadas) if i != indice - 1]
             )
             if not variables_actuales.intersection(otras_variables):
                 return False, (

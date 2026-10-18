@@ -1,31 +1,26 @@
-"""Pruebas automáticas de contraste WCAG para los tres temas.
-
-Verifica cumplimiento de contraste WCAG AA:
-- Texto normal: ratio >= 4.5:1
-- Elementos gráficos / indicadores / no-texto: ratio >= 3.0:1
-"""
+"""Pruebas automáticas de contraste WCAG para los tres temas."""
 from pathlib import Path
 import pytest
 from tests.comun_estilos import analizar_tokens, hexadecimal_a_rgb, razon_contraste
 
-CSS_PATH = Path(__file__).resolve().parent.parent / "src" / "frontend" / "assets" / "css" / "tokens.css"
+RUTA_CSS = Path(__file__).resolve().parent.parent / "src" / "frontend" / "recursos" / "css" / "tokens.css"
 
 
-THEMES = ["papel", "marea", "medianoche"]
+TEMAS = ["papel", "marea", "medianoche"]
 
 # Los umbrales distinguen texto normal e indicadores sin texto.
-CONTRAST_REQUIREMENTS = [
-    # text-main sobre bg-page, bg-panel, bg-elevated e input-bg (>= 4.5:1)
+REQUISITOS_CONTRASTE = [
+    # texto-principal sobre bg-page, bg-panel, fondo-elevado e input-bg (>= 4.5:1)
     ("text-main", "bg-page", 4.5),
     ("text-main", "bg-panel", 4.5),
     ("text-main", "bg-elevated", 4.5),
     ("text-main", "input-bg", 4.5),
-    # text-sec sobre bg-page, bg-panel, bg-elevated e input-bg (>= 4.5:1)
+    # texto-secundario sobre bg-page, bg-panel, fondo-elevado e input-bg (>= 4.5:1)
     ("text-sec", "bg-page", 4.5),
     ("text-sec", "bg-panel", 4.5),
     ("text-sec", "bg-elevated", 4.5),
     ("text-sec", "input-bg", 4.5),
-    # accent sobre bg-page, bg-panel y bg-elevated (>= 4.5:1)
+    # accent sobre bg-page, bg-panel y fondo-elevado (>= 4.5:1)
     ("accent", "bg-page", 4.5),
     ("accent", "bg-panel", 4.5),
     ("accent", "bg-elevated", 4.5),
@@ -33,9 +28,9 @@ CONTRAST_REQUIREMENTS = [
     ("accent", "accent-soft", 4.5),
     # btn-primary-text sobre btn-primary-bg (>= 4.5:1)
     ("btn-primary-text", "btn-primary-bg", 4.5),
-    # error sobre bg-panel (>= 4.5:1 para texto de error en .text-err)
+    # error sobre bg-panel (>= 4.5:1 para texto de error)
     ("error", "bg-panel", 4.5),
-    # badge-warn-text sobre bg-panel (>= 4.5:1 para texto en .text-warn)
+    # badge-warn-text sobre bg-panel (>= 4.5:1 para texto en .texto-advertencia)
     ("badge-warn-text", "bg-panel", 4.5),
     # cada par badge (texto/fondo) (>= 4.5:1)
     ("badge-err-text", "badge-err-bg", 4.5),
@@ -46,26 +41,26 @@ CONTRAST_REQUIREMENTS = [
 ]
 
 
-@pytest.mark.parametrize("theme_name", THEMES)
-@pytest.mark.parametrize("fg,bg,threshold", CONTRAST_REQUIREMENTS)
-def test_contraste_texto_en_superficies(theme_name: str, fg: str, bg: str, threshold: float):
+@pytest.mark.parametrize('nombre_tema', TEMAS)
+@pytest.mark.parametrize('frente,fondo,umbral', REQUISITOS_CONTRASTE)
+def test_contraste_texto_en_superficies(nombre_tema: str, frente: str, fondo: str, umbral: float):
     """Verifica que cada par especificado cumpla con el ratio de contraste WCAG AA exigido."""
-    themes = analizar_tokens(CSS_PATH)
-    t = themes[theme_name]
+    temas = analizar_tokens(RUTA_CSS)
+    t = temas[nombre_tema]
 
-    fg_hex = t.get(f"--{fg}")
-    bg_hex = t.get(f"--{bg}")
+    hexadecimal_frente = t.get(f"--{frente}")
+    hexadecimal_fondo = t.get(f"--{fondo}")
 
-    assert fg_hex is not None, f"Token --{fg} no encontrado en tema {theme_name}"
-    assert bg_hex is not None, f"Token --{bg} no encontrado en tema {theme_name}"
-    assert fg_hex.startswith("#"), f"Token --{fg} en {theme_name} no es un color hex: {fg_hex}"
-    assert bg_hex.startswith("#"), f"Token --{bg} en {theme_name} no es un color hex: {bg_hex}"
+    assert hexadecimal_frente is not None, f"Token --{frente} no encontrado en tema {nombre_tema}"
+    assert hexadecimal_fondo is not None, f"Token --{fondo} no encontrado en tema {nombre_tema}"
+    assert hexadecimal_frente.startswith("#"), f"Token --{frente} en {nombre_tema} no es un color hex: {hexadecimal_frente}"
+    assert hexadecimal_fondo.startswith("#"), f"Token --{fondo} en {nombre_tema} no es un color hex: {hexadecimal_fondo}"
 
-    rgb_fg = hexadecimal_a_rgb(fg_hex)
-    rgb_bg = hexadecimal_a_rgb(bg_hex)
-    ratio = razon_contraste(rgb_fg, rgb_bg)
+    rgb_frente = hexadecimal_a_rgb(hexadecimal_frente)
+    rgb_fondo = hexadecimal_a_rgb(hexadecimal_fondo)
+    proporcion = razon_contraste(rgb_frente, rgb_fondo)
 
-    assert ratio >= threshold, (
-        f"Contraste insuficiente en {theme_name}: --{fg} ({fg_hex}) sobre --{bg} ({bg_hex}) = "
-        f"{ratio:.2f}:1 (requerido >= {threshold:.1f}:1)"
+    assert proporcion >= umbral, (
+        f"Contraste insuficiente en {nombre_tema}: --{frente} ({hexadecimal_frente}) sobre --{fondo} ({hexadecimal_fondo}) = "
+        f"{proporcion:.2f}:1 (requerido >= {umbral:.1f}:1)"
     )

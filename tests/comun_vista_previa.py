@@ -1,7 +1,7 @@
 """Construcción de la vista previa usada por las pruebas de caracterización."""
 import html
 import re
-from src.backend.utils.validators import MatrixValidator
+from src.backend.utilidades.validadores import ValidadorMatriz
 
 
 def construir_vista_previa_latex(matriz_a, vector_b):
@@ -25,7 +25,7 @@ def construir_vista_previa_latex(matriz_a, vector_b):
 def _sanear_celda(valor):
     if not valor:
         return '0'
-    valido, _, _ = MatrixValidator.parse_number_exact(valor)
+    valido, _, _ = ValidadorMatriz.parsear_numero_exacto(valor)
     return valor if valido else r"\color{gray}{?}"
 
 
@@ -52,7 +52,7 @@ def _coeficientes_validos(matriz_a):
     for fila in matriz_a:
         for j in range(columnas):
             valor = fila[j]
-            if valor and not MatrixValidator.parse_number_exact(valor)[0]:
+            if valor and not ValidadorMatriz.parsear_numero_exacto(valor)[0]:
                 return False
     return True
 
@@ -60,7 +60,7 @@ def _coeficientes_validos(matriz_a):
 def _independientes_validos(vector_b, filas):
     for i in range(filas):
         valor = vector_b[i] if i < len(vector_b) else ''
-        if valor and not MatrixValidator.parse_number_exact(valor)[0]:
+        if valor and not ValidadorMatriz.parsear_numero_exacto(valor)[0]:
             return False
     return True
 
@@ -81,7 +81,7 @@ def _construir_ecuaciones(matriz_a, vector_b):
 def _terminos_ecuacion(fila):
     terminos = []
     for j, valor in enumerate(fila):
-        if not valor or valor == '0' or not MatrixValidator.parse_number_exact(valor)[0]:
+        if not valor or valor == '0' or not ValidadorMatriz.parsear_numero_exacto(valor)[0]:
             continue
         signo = "-" if valor.startswith("-") else "+"
         absoluto = valor.lstrip("+-").strip()

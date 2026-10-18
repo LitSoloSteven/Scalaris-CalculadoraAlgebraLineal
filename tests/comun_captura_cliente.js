@@ -1,7 +1,7 @@
 "use strict";
 
 const maquinaVirtual = require("node:vm");
-const catalogo = require("../src/frontend/assets/catalogo_captura.json");
+const catalogo = require("../src/frontend/recursos/catalogo_captura.json");
 const { cargarAssetCliente, crearEntradaSimulada } = require("./comun_cliente_javascript.js");
 const { crearListaClases } = require("./comun_cuadricula_cliente.js");
 

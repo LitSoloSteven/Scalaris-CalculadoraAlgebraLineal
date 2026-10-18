@@ -3,42 +3,42 @@ from __future__ import annotations
 
 from src.ai.contexto import ContextoIA, EstadoContexto, sanear_cadena_usuario
 from src.ai.huellas import esta_desactualizado
-from src.frontend.suggestions import Signals
+from src.frontend.sugerencias import Senales
 
 ESTADOS_SENALES = {
-    'UNIQUE_SOLUTION': 'unique', 'UNIQUE': 'unique',
-    'NO_SOLUTION': 'no_solution',
-    'INFINITE_SOLUTIONS': 'infinite', 'INFINITE': 'infinite',
+    'SOLUCION_UNICA': 'unica', 'UNICA': 'unica',
+    'SIN_SOLUCION': 'sin_solucion',
+    'SOLUCIONES_INFINITAS': 'infinita', 'INFINITA': 'infinita',
 }
 
 
 def _extraer_datos_entrada_ia(vista) -> dict:
     carga = vista._construir_carga() or {}
-    datos = {'scene': vista.escena}
+    datos = {'escena': vista.escena}
     if vista.escena == 'rectas-planos':
-        datos['matrix_A'] = [[sanear_cadena_usuario(str(valor), 32) for valor in fila]
-                             for fila in carga.get('matrix_A', [])]
+        datos['matriz_a'] = [[sanear_cadena_usuario(str(valor), 32) for valor in fila]
+                             for fila in carga.get('matriz_a', [])]
         datos['vector_b'] = [sanear_cadena_usuario(str(valor), 32) for valor in carga.get('vector_b', [])]
     else:
-        datos['vectors'] = [[sanear_cadena_usuario(str(valor), 32) for valor in vector.get('data', [])]
-                            for vector in carga.get('vectors', [])]
+        datos['vectores'] = [[sanear_cadena_usuario(str(valor), 32) for valor in vector.get('datos', [])]
+                            for vector in carga.get('vectores', [])]
         if vista.escena == 'combinacion':
-            datos['b'] = [sanear_cadena_usuario(str(valor), 32) for valor in carga.get('b', {}).get('data', [])]
+            datos['objetivo'] = [sanear_cadena_usuario(str(valor), 32) for valor in carga.get('objetivo', {}).get('datos', [])]
     return datos
 
 
 def _extraer_datos_resultado_ia(vista, resultado: dict) -> dict:
-    if resultado.get('status') != 'OK':
-        return {'status': 'ERROR', 'message': resultado.get('message', '')}
-    datos = {'solution_status': resultado.get('solution_status', '')}
+    if resultado.get('estado') != 'EXITO':
+        return {'estado': 'ERROR', 'mensaje': resultado.get('mensaje', '')}
+    datos = {'estado_solucion': resultado.get('estado_solucion', '')}
     if vista.escena == 'rectas-planos':
-        conjunto = resultado.get('set') or {}
-        datos['set_kind'] = conjunto.get('kind', '')
-        for clave in ('dimension', 'free_vars'):
+        conjunto = resultado.get('conjunto_solucion') or {}
+        datos['tipo_conjunto_solucion'] = conjunto.get('tipo', '')
+        for clave in ('dimension', 'variables_libres'):
             if clave in conjunto:
                 datos[clave] = conjunto[clave]
-        if resultado.get('pending_param'):
-            datos['pending'] = True
+        if resultado.get('parametro_pendiente'):
+            datos['pendiente'] = True
     return datos
 
 
@@ -49,17 +49,17 @@ def obtener_contexto_ia(vista) -> ContextoIA:
                          estado=EstadoContexto(vacio=vista.ultimo_resultado is None))
     if vista.ultimo_resultado is None:
         return contexto
-    entrada = {'scene': vista.escena, 'payload': vista._construir_carga()}
+    entrada = {'escena': vista.escena, 'carga': vista._construir_carga()}
     contexto.desactualizado = esta_desactualizado(entrada, vista._huella_resultado)
     contexto.resultado = None if contexto.desactualizado else _extraer_datos_resultado_ia(vista, vista.ultimo_resultado)
     return contexto
 
 
-def obtener_senales_ia(vista) -> Signals:
+def obtener_senales_ia(vista) -> Senales:
     """Devuelve sugerencias según el estado serializado del controlador."""
     resultado = vista.ultimo_resultado or {}
-    if resultado.get('status') != 'OK':
-        return Signals(tool='visualizador', state='none')
-    estado = 'result' if vista.escena == 'vectores' else ESTADOS_SENALES.get(resultado.get('solution_status'), 'none')
-    banderas = frozenset(resultado.get('flags', [])) if vista.escena == 'rectas-planos' else frozenset()
-    return Signals(tool='visualizador', state=estado, flags=banderas)
+    if resultado.get('estado') != 'EXITO':
+        return Senales(herramienta='visualizador', estado='sin_resultado')
+    estado = 'resultado' if vista.escena == 'vectores' else ESTADOS_SENALES.get(resultado.get('estado_solucion'), 'sin_resultado')
+    banderas = frozenset(resultado.get('banderas', [])) if vista.escena == 'rectas-planos' else frozenset()
+    return Senales(herramienta='visualizador', estado=estado, banderas=banderas)

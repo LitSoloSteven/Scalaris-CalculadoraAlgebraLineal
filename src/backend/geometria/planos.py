@@ -10,13 +10,13 @@ def calcular_geometria_plano(
     dir_1 = direcciones[0]
     dir_2 = direcciones[1]
 
-    norm_x = dir_1[1] * dir_2[2] - dir_1[2] * dir_2[1]
-    norm_y = dir_1[2] * dir_2[0] - dir_1[0] * dir_2[2]
-    norm_z = dir_1[0] * dir_2[1] - dir_1[1] * dir_2[0]
+    normal_x = dir_1[1] * dir_2[2] - dir_1[2] * dir_2[1]
+    normal_y = dir_1[2] * dir_2[0] - dir_1[0] * dir_2[2]
+    normal_z = dir_1[0] * dir_2[1] - dir_1[1] * dir_2[0]
 
     desplazamiento = (
-        norm_x * particular[0]
-        + norm_y * particular[1]
-        + norm_z * particular[2]
+        normal_x * particular[0]
+        + normal_y * particular[1]
+        + normal_z * particular[2]
     )
-    return (norm_x, norm_y, norm_z), desplazamiento
+    return (normal_x, normal_y, normal_z), desplazamiento

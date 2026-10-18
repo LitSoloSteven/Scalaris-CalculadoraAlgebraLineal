@@ -46,13 +46,13 @@ def superficie_plano(coeficientes: list, termino: float, rango: list, cantidad: 
 def _resolver_malla(coeficientes: list, termino: float, eje: int, horizontal: list, vertical: list) -> tuple:
     coeficiente_x, coeficiente_y, coeficiente_z = coeficientes
     if eje == 2:
-        resuelta = [[(termino - coeficiente_x * x - coeficiente_y * y) / coeficiente_z
-                     for x, y in zip(fila_x, fila_y)] for fila_x, fila_y in zip(horizontal, vertical)]
+        resuelta = [[(termino - coeficiente_x * coordenada_x - coeficiente_y * coordenada_y) / coeficiente_z
+                     for coordenada_x, coordenada_y in zip(fila_x, fila_y)] for fila_x, fila_y in zip(horizontal, vertical)]
         return horizontal, vertical, resuelta
     if eje == 1:
-        resuelta = [[(termino - coeficiente_x * x - coeficiente_z * z) / coeficiente_y
-                     for x, z in zip(fila_x, fila_z)] for fila_x, fila_z in zip(horizontal, vertical)]
+        resuelta = [[(termino - coeficiente_x * coordenada_x - coeficiente_z * coordenada_z) / coeficiente_y
+                     for coordenada_x, coordenada_z in zip(fila_x, fila_z)] for fila_x, fila_z in zip(horizontal, vertical)]
         return horizontal, resuelta, vertical
-    resuelta = [[(termino - coeficiente_y * y - coeficiente_z * z) / coeficiente_x
-                 for y, z in zip(fila_y, fila_z)] for fila_y, fila_z in zip(horizontal, vertical)]
+    resuelta = [[(termino - coeficiente_y * coordenada_y - coeficiente_z * coordenada_z) / coeficiente_x
+                 for coordenada_y, coordenada_z in zip(fila_y, fila_z)] for fila_y, fila_z in zip(horizontal, vertical)]
     return resuelta, horizontal, vertical

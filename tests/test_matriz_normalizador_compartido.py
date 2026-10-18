@@ -3,15 +3,15 @@ from fractions import Fraction
 import math
 import pytest
 
+from src.backend import modelos
 from src.backend.modelos.matriz import Matriz
-from src.backend.models.matrix import Matrix
 from src.backend.excepciones import ErrorDatosMatriz
 
 
 def test_modelos_utilizan_la_misma_funcion_sin_alias():
-    """Ambos modelos activos heredan el normalizador canónico sin nombre duplicado."""
-    assert Matrix._normalizar_valor is Matriz._normalizar_valor
-    assert not hasattr(Matrix, "_normalize_val")
+    """El modelo publicado utiliza el normalizador canónico sin nombre duplicado."""
+    assert modelos.Matriz._normalizar_valor is Matriz._normalizar_valor
+    assert not hasattr(Matriz, "_normalize_val")
 
 
 @pytest.mark.parametrize("valor,esperado", [
@@ -21,7 +21,7 @@ def test_modelos_utilizan_la_misma_funcion_sin_alias():
 ])
 def test_normalizador_compartido_conserva_valor_y_tipo(valor, esperado):
     """La función común mantiene la precisión y los tipos históricos de cada celda."""
-    actual = Matrix._normalizar_valor(valor)
+    actual = Matriz._normalizar_valor(valor)
     assert actual == esperado
     assert type(actual) is type(esperado)
 
@@ -29,7 +29,7 @@ def test_normalizador_compartido_conserva_valor_y_tipo(valor, esperado):
 @pytest.mark.parametrize("valor", [float("inf"), float("-inf"), float("nan")])
 def test_flotantes_no_finitos_conservan_retorno_original(valor):
     """La deduplicación no introduce una validación matemática nueva para flotantes."""
-    actual = Matrix._normalizar_valor(valor)
+    actual = Matriz._normalizar_valor(valor)
     assert actual is valor
     assert not math.isfinite(actual)
 
@@ -44,5 +44,5 @@ def test_flotantes_no_finitos_conservan_retorno_original(valor):
 def test_rechazos_del_normalizador_conservan_tipo_y_texto(valor, mensaje):
     """Las guardas y errores conservan la excepción de dominio y su mensaje exacto."""
     with pytest.raises(ErrorDatosMatriz) as error:
-        Matrix._normalizar_valor(valor)
+        Matriz._normalizar_valor(valor)
     assert str(error.value) == mensaje

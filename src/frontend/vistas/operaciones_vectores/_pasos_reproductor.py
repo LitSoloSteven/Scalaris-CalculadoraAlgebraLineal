@@ -7,10 +7,9 @@ from typing import Any
 
 from nicegui import ui
 
-from src.backend.modelos.matriz import Matriz
 from src.frontend.componentes.reproductor_pasos.cuerpos import CuerpoLatex
 from src.frontend.componentes.reproductor_pasos.textos import limpiar_latex_plano
-from src.frontend.componentes.reproductor_pasos.html_tablas import html_tabla_aumentada
+from src.frontend.controladores.operaciones_vectores.presentacion_pasos import construir_tabla_paso_vectorial
 from src.frontend.componentes.reproductor_pasos.modelo import GrupoReproductor, PasoReproductor
 
 
@@ -21,7 +20,7 @@ class _CuerpoTexto:
         self.texto = texto
 
     def __call__(self) -> None:
-        ui.label(self.texto).classes("text-sm font-medium text-main text-center")
+        ui.label(self.texto).classes("text-sm font-medium texto-principal text-center")
 
     def __str__(self) -> str:
         return self.texto
@@ -52,18 +51,18 @@ def construir_pasos_vector_basico(
     respuesta: dict,
 ) -> tuple[tuple[PasoReproductor, ...], tuple[GrupoReproductor, ...]]:
     """Construye los pasos del reproductor para operaciones básicas de vectores."""
-    pasos_crudos = respuesta.get("steps", [])
+    pasos_crudos = respuesta.get("pasos", [])
     if not pasos_crudos:
         return (), ()
 
     elementos: list[tuple[str, str, str, str, Any]] = []
     for paso in pasos_crudos:
-        descripcion = paso.get("description", "")
-        tipo, etiqueta, explicacion, cuerpo = _clasificar_paso_basico(descripcion, paso.get("detail_latex"))
+        descripcion = paso.get("descripcion", "")
+        tipo, etiqueta, explicacion, cuerpo = _clasificar_paso_basico(descripcion, paso.get("detalle_latex"))
         elementos.append((tipo, etiqueta, descripcion, explicacion, cuerpo))
 
-    latex_final = respuesta.get("result_vector_latex") or (
-        respuesta.get("latex_details", [""])[-1] if respuesta.get("latex_details") else ""
+    latex_final = respuesta.get("vector_resultado_latex") or (
+        respuesta.get("detalles_latex", [""])[-1] if respuesta.get("detalles_latex") else ""
     )
     if latex_final:
         elementos.append((
@@ -77,7 +76,7 @@ def construir_pasos_vector_basico(
         PasoReproductor(
             indice=indice, tipo=tipo, etiqueta_tipo=etiqueta, descripcion=descripcion, explicacion=explicacion,
             indice_grupo=0, cuerpo=cuerpo,
-            meta_explicar={"index": indice + 1, "total": total, "kind": tipo, "op": descripcion, "rows_before": {}, "rows_after": {}, "cols": None},
+            meta_explicar={"indice": indice + 1, "total": total, "tipo": tipo, "operacion": descripcion, "filas_antes": {}, "filas_despues": {}, "columnas": None},
         )
         for indice, (tipo, etiqueta, descripcion, explicacion, cuerpo) in enumerate(elementos)
     ]
@@ -101,13 +100,13 @@ def _construir_pasos_planteamiento(
     for paso in planteamiento:
         indice = len(pasos)
         indices.append(indice)
-        numero = paso.get("step_number", len(indices))
-        descripcion = paso.get("description", f"Planteamiento {numero}")
-        metadatos = {"index": indice + 1, "total": total, "kind": "planteamiento", "op": descripcion, "rows_before": {}, "rows_after": {}, "cols": None}
+        numero = paso.get("numero_paso", len(indices))
+        descripcion = paso.get("descripcion", f"Planteamiento {numero}")
+        metadatos = {"indice": indice + 1, "total": total, "tipo": "planteamiento", "operacion": descripcion, "filas_antes": {}, "filas_despues": {}, "columnas": None}
         pasos.append(PasoReproductor(
             indice=indice, tipo="planteamiento", etiqueta_tipo="Planteamiento",
             descripcion=descripcion, explicacion=explicaciones.get(numero, descripcion),
-            indice_grupo=indice_grupo, cuerpo=CuerpoLatex(paso.get("detail_latex", "")), meta_explicar=metadatos,
+            indice_grupo=indice_grupo, cuerpo=CuerpoLatex(paso.get("detalle_latex", "")), meta_explicar=metadatos,
         ))
     return indices
 
@@ -129,21 +128,14 @@ def _construir_pasos_gauss(pasos_vista: list[dict], metadatos: list[dict], const
     for paso in pasos_vista:
         indice = len(construccion.pasos)
         indices.append(indice)
-        tipo, descripcion, explicacion = paso.get("kind", "eliminacion"), paso.get("description", ""), paso.get("explanation", "")
-        datos_matriz = paso.get("matrix", {})
-        matriz = Matriz(datos_matriz["rows"], datos_matriz["cols"], datos_matriz["data"]) if isinstance(datos_matriz, dict) and "rows" in datos_matriz else datos_matriz
-        cuerpo = html_tabla_aumentada(
-            matriz, construccion.numero_variables, filas_cambiadas=tuple(paso.get("rows_changed") or ()),
-            pivote=tuple(paso["pivot"]) if paso.get("pivot") is not None else None,
-            filas_intercambio=tuple(paso["swap_rows"]) if paso.get("swap_rows") is not None else (),
-            bloque_resultado=False, etiquetas_izq=construccion.variables, etiquetas_der=["b"],
-        )
-        indice_original = paso.get("index", len(indices) - 1)
+        tipo, descripcion, explicacion = paso.get("tipo", "eliminacion"), paso.get("descripcion", ""), paso.get("explicacion", "")
+        cuerpo = construir_tabla_paso_vectorial(paso, construccion.numero_variables, construccion.variables)
+        indice_original = paso.get("indice", len(indices) - 1)
         referencia = dict(metadatos[indice_original]) if indice_original < len(metadatos) else {
-            "index": indice + 1, "total": construccion.total, "kind": tipo, "op": descripcion,
-            "pivot": paso.get("pivot"), "rows_before": {}, "rows_after": {}, "cols": None,
+            "indice": indice + 1, "total": construccion.total, "tipo": tipo, "operacion": descripcion,
+            "pivote": paso.get("pivote"), "filas_antes": {}, "filas_despues": {}, "columnas": None,
         }
-        referencia.update({"total": construccion.total, "index": indice + 1})
+        referencia.update({"total": construccion.total, "indice": indice + 1})
         construccion.pasos.append(PasoReproductor(
             indice=indice, tipo=tipo, etiqueta_tipo=tipo.capitalize(), descripcion=descripcion,
             explicacion=explicacion or descripcion, indice_grupo=len(construccion.grupos),
@@ -161,7 +153,7 @@ def _construir_pasos_sustitucion(
         indice = len(pasos)
         indices.append(indice)
         operacion = limpiar_latex_plano(linea)
-        metadatos = {"index": indice + 1, "total": total, "kind": "sustitucion", "op": operacion, "rows_before": {}, "rows_after": {}, "cols": None}
+        metadatos = {"indice": indice + 1, "total": total, "tipo": "sustitucion", "operacion": operacion, "filas_antes": {}, "filas_despues": {}, "columnas": None}
         pasos.append(PasoReproductor(
             indice=indice, tipo="sustitucion", etiqueta_tipo="Sustitución",
             descripcion=operacion, explicacion="Despejamos y sustituimos hacia atrás los valores conocidos.",
@@ -177,14 +169,14 @@ def _construir_pasos_verificacion(
     indices: list[int] = []
     bloques = (
         (verificacion.get("formula_latex", ""), "Definición simbólica del vector", "Planteamos la combinación lineal simbólica del vector y."),
-        (verificacion.get("substitution_latex", ""), "Sustitución de escalares y vectores", "Sustituimos los coeficientes y vectores en la combinación."),
-        (verificacion.get("evaluated_vector_latex", ""), "Evaluación numérica del vector", "Evaluamos numéricamente el vector resultante de la combinación."),
-        (verificacion.get("comparison_latex", ""), "Comparación con el vector objetivo b", "Comprobamos si el vector evaluado coincide con el vector b."),
+        (verificacion.get("sustitucion_latex", ""), "Sustitución de escalares y vectores", "Sustituimos los coeficientes y vectores en la combinación."),
+        (verificacion.get("vector_evaluado_latex", ""), "Evaluación numérica del vector", "Evaluamos numéricamente el vector resultante de la combinación."),
+        (verificacion.get("comparacion_latex", ""), "Comparación con el vector objetivo b", "Comprobamos si el vector evaluado coincide con el vector b."),
     )
     for latex, descripcion, explicacion in bloques:
         indice = len(pasos)
         indices.append(indice)
-        metadatos = {"index": indice + 1, "total": total, "kind": "verificacion", "op": descripcion, "rows_before": {}, "rows_after": {}, "cols": None}
+        metadatos = {"indice": indice + 1, "total": total, "tipo": "verificacion", "operacion": descripcion, "filas_antes": {}, "filas_despues": {}, "columnas": None}
         pasos.append(PasoReproductor(
             indice=indice, tipo="verificacion", etiqueta_tipo="Verificación",
             descripcion=descripcion, explicacion=explicacion,
@@ -195,7 +187,7 @@ def _construir_pasos_verificacion(
 
 def _agregar_fase_planteamiento_gauss(respuesta: dict, construccion: _ConstruccionPasos) -> None:
     """Incorpora fases de planteamiento algebraico y eliminación gaussiana."""
-    planteamiento = respuesta.get("setup_steps") or []
+    planteamiento = respuesta.get("pasos_planteamiento") or []
     if planteamiento:
         indices_planteamiento = _construir_pasos_planteamiento(planteamiento, construccion.total, construccion.pasos, len(construccion.grupos))
         resumen_planteamiento = "1 operación" if len(indices_planteamiento) == 1 else f"{len(indices_planteamiento)} operaciones"
@@ -204,9 +196,9 @@ def _agregar_fase_planteamiento_gauss(respuesta: dict, construccion: _Construcci
             tipo="planteamiento", indices_pasos=tuple(indices_planteamiento),
         ))
 
-    pasos_vista = respuesta.get("steps_view") or []
+    pasos_vista = respuesta.get("vista_pasos") or []
     if pasos_vista:
-        metadatos = respuesta.get("steps_meta") or []
+        metadatos = respuesta.get("metadatos_pasos") or []
         indices_gauss = _construir_pasos_gauss(pasos_vista, metadatos, construccion)
         resumen_gauss = "1 operación" if len(indices_gauss) == 1 else f"{len(indices_gauss)} operaciones"
         construccion.grupos.append(GrupoReproductor(
@@ -219,7 +211,7 @@ def _agregar_fase_sustitucion_verificacion(
     respuesta: dict, total: int, pasos: list[PasoReproductor], grupos: list[GrupoReproductor],
 ) -> None:
     """Incorpora fases de sustitución hacia atrás y comprobación."""
-    sustitucion = respuesta.get("back_substitution_steps") or []
+    sustitucion = respuesta.get("pasos_sustitucion_regresiva") or []
     if sustitucion:
         indices_sustitucion = _construir_pasos_sustitucion(sustitucion, total, pasos, len(grupos))
         resumen_sustitucion = "1 operación" if len(indices_sustitucion) == 1 else f"{len(indices_sustitucion)} operaciones"
@@ -228,7 +220,7 @@ def _agregar_fase_sustitucion_verificacion(
             tipo="sustitucion", indices_pasos=tuple(indices_sustitucion),
         ))
 
-    verificacion = respuesta.get("verification_step")
+    verificacion = respuesta.get("paso_verificacion")
     if verificacion:
         indices_verificacion = _construir_pasos_verificacion(verificacion, total, pasos, len(grupos))
         grupos.append(GrupoReproductor(
@@ -241,15 +233,15 @@ def construir_pasos_combinacion_lineal(
     respuesta: dict,
 ) -> tuple[tuple[PasoReproductor, ...], tuple[GrupoReproductor, ...]]:
     """Construye las tuplas de pasos y grupos para el reproductor de combinación lineal."""
-    if respuesta.get("status") == "ERROR":
+    if respuesta.get("estado") == "ERROR":
         return (), ()
 
-    planteamiento = respuesta.get("setup_steps") or []
-    pasos_vista = respuesta.get("steps_view") or []
-    sustitucion = respuesta.get("back_substitution_steps") or []
-    verificacion = respuesta.get("verification_step")
+    planteamiento = respuesta.get("pasos_planteamiento") or []
+    pasos_vista = respuesta.get("vista_pasos") or []
+    sustitucion = respuesta.get("pasos_sustitucion_regresiva") or []
+    verificacion = respuesta.get("paso_verificacion")
     variables = respuesta.get("variables") or []
-    numero_variables = respuesta.get("n_vars", len(variables))
+    numero_variables = respuesta.get("numero_variables", len(variables))
 
     cantidad_verificaciones = 4 if verificacion else 0
     total = len(planteamiento) + len(pasos_vista) + len(sustitucion) + cantidad_verificaciones

@@ -2,7 +2,7 @@
 import ast
 import os
 import re
-from src.frontend.navigation import TOOLS
+from src.frontend.navegacion import HERRAMIENTAS
 from tests.comun_recorrido_codigo import recorrer_archivos_codigo, pares_padre_hijo
 from tests.comun_textos import PATRONES_VOSEO
 
@@ -47,7 +47,7 @@ def _infracciones_cadenas(arbol, ruta, fragmentos, patrones):
 
 def _es_saludo_anterior(ruta, valor):
     # La migración del historial reconoce el saludo anterior del asistente.
-    return 'ai_panel.py' in ruta and ('—' in valor or 'Tutor IA' in valor)
+    return 'panel_ia.py' in ruta and ('—' in valor or 'Tutor IA' in valor)
 
 
 def _infracciones_literal(ruta, nodo, fragmentos, patrones):
@@ -83,7 +83,7 @@ def test_nombres_navegacion_alineados():
         "/utilidades/romanos": "Números romanos",
     }
 
-    herramientas_por_ruta = {herramienta.route: herramienta.name for herramienta in TOOLS}
+    herramientas_por_ruta = {herramienta.ruta: herramienta.nombre for herramienta in HERRAMIENTAS}
     for ruta, nombre_esperado in herramientas_esperadas.items():
         assert ruta in herramientas_por_ruta, f"Ruta {ruta} no encontrada en el catálogo"
         assert herramientas_por_ruta[ruta] == nombre_esperado, (

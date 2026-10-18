@@ -14,6 +14,7 @@ class TipoErrorIA(str, Enum):
     RED = "RED"
     SERVICIO = "SERVICIO"
     CANCELADO = "CANCELADO"
+    ENTRADA_INVALIDA = "ENTRADA_INVALIDA"
 
 
 @dataclass(frozen=True)

@@ -7,7 +7,7 @@ const { cargarAssetCliente } = require("./comun_cliente_javascript.js");
 function crearTemaSimulado(temaInicial = null, ancho = 1200) {
     const atributos = new Map();
     const eventos = new Map();
-    const almacen = new Map(temaInicial === null ? [] : [["theme", temaInicial]]);
+    const almacen = new Map(temaInicial === null ? [] : [["tema", temaInicial]]);
     const logotipo = { src: "original" };
     const temporizadores = [];
     const animaciones = [];

@@ -6,7 +6,7 @@ const maquinaVirtual = require("node:vm");
 
 /** Carga un asset del repositorio en el contexto simulado indicado. */
 function cargarAssetCliente(nombre, contexto) {
-    const ruta = rutas.join(__dirname, "../src/frontend/assets/js", nombre);
+    const ruta = rutas.join(__dirname, "../src/frontend/recursos/js", nombre);
     const codigo = sistemaArchivos.readFileSync(ruta, "utf8");
     maquinaVirtual.runInContext(codigo, contexto);
 }

@@ -128,9 +128,9 @@ def test_pildora_real_conserva_textos_y_prioridad_del_estado(estado, etiqueta):
     """NiceGUI presenta vacío, recorte y obsolescencia mediante los campos canónicos."""
     contexto = ContextoIA(etiqueta="Ejercicio", estado=estado)
     instancia = SimpleNamespace(
-        _storage={"ai_ctx_enabled": True},
-        active_ui=SimpleNamespace(obtener_contexto_ia=lambda: contexto),
-        _toggle_ctx=lambda evento: None,
+        _almacen={"ia_contexto_habilitado": True},
+        interfaz_activa=SimpleNamespace(obtener_contexto_ia=lambda: contexto),
+        _alternar_contexto=lambda evento: None,
     )
     contenedor = ui.row()
     try:

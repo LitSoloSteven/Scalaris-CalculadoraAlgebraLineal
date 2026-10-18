@@ -9,6 +9,7 @@ def test_opciones_de_tema_invocan_api_de_cliente(monkeypatch):
     crear_elemento = selector_tema.ui.menu_item
 
     def registrar_opcion(*argumentos, **opciones):
+        """Procesa registrar opcion con los datos recibidos."""
         manejadores.append(opciones["on_click"])
         return crear_elemento(*argumentos, **opciones)
 

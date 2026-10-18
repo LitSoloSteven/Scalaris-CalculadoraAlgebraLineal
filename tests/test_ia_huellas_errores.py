@@ -17,18 +17,18 @@ def test_clasificacion_error_romano():
 
         def __init__(self, codigo, mensaje=""):
             super().__init__(mensaje)
-            self.code = codigo
+            self.codigo = codigo
 
     estados_por_codigo = {
-        "ZERO_NOT_REPRESENTABLE": "err_sub_zero",
-        "NEGATIVE_NOT_REPRESENTABLE": "err_sub_neg",
-        "INVALID_SYNTAX": "err_syntax",
-        "NOT_CANONICAL": "err_syntax",
-        "EMPTY_INPUT": "err_syntax",
+        "CERO_NO_REPRESENTABLE": "error_resta_cero",
+        "NEGATIVO_NO_REPRESENTABLE": "error_resta_negativa",
+        "SINTAXIS_INVALIDA": "error_sintaxis",
+        "NO_CANONICO": "error_sintaxis",
+        "ENTRADA_VACIA": "error_sintaxis",
     }
     for codigo, esperado in estados_por_codigo.items():
         error = ErrorRomanoSimulado(codigo)
-        assert getattr(error, "code", None) == codigo
+        assert getattr(error, "codigo", None) == codigo
 
 def test_huella_bases_incluye_entrada_original():
     """El valor original distingue entradas del conversor."""

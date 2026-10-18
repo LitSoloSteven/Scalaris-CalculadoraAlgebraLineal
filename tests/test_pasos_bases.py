@@ -4,8 +4,8 @@ import re
 import time
 from pathlib import Path
 
-from src.backend.solvers.numeric_systems.conversor_bases import ConversorBases
-from src.frontend.vistas.numeric_systems._pasos_bases import construir_pasos_bases
+from src.backend.resolutores.sistemas_numericos.conversor_bases import ConversorBases
+from src.frontend.vistas.sistemas_numericos._pasos_bases import construir_pasos_bases
 
 
 def test_decimal_genera_grupos_y_pasos_esperados():
@@ -112,9 +112,9 @@ def test_valores_html_escapados():
 def test_textos_sin_raya_larga_ni_voseo():
     """Los módulos de conversión mantienen textos sobrios y tuteo."""
     archivos = [
-        Path("src/frontend/vistas/numeric_systems/_pasos_bases.py"),
-        Path("src/frontend/vistas/numeric_systems/procedure_mixin.py"),
-        Path("src/frontend/vistas/numeric_systems/rendering_mixin.py"),
+        Path("src/frontend/vistas/sistemas_numericos/_pasos_bases.py"),
+        Path("src/frontend/vistas/sistemas_numericos/mixin_procedimiento.py"),
+        Path("src/frontend/vistas/sistemas_numericos/mixin_renderizado.py"),
     ]
     patron_voseo = re.compile(
         r"\b(ingresá|añadí|escribí|presioná|pegá|sumá|calculá|mostrá|revisá)\b", re.IGNORECASE,

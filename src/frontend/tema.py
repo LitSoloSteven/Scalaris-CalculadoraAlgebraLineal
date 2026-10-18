@@ -1,10 +1,10 @@
-"""Configuración de temas, paletas y assets estáticos de Scalaris."""
+"""Configuración de temas, paletas y recursos estáticos de Scalaris."""
 import json
 from pathlib import Path
 from string import Template
 from nicegui import ui
 
-from src.frontend import flags
+from src.frontend import banderas
 
 # Paletas de color con ratio de contraste no textual >= 3.0:1 verificado en cada tema
 PALETAS_POR_TEMA: dict[str, list[str]] = {
@@ -37,7 +37,6 @@ COLOR_MARCADOR_BORDE = "#23262E"
 COLOR_CUADRICULA = "rgba(128,128,128,0.2)"
 COLOR_CERO = "rgba(128,128,128,0.5)"
 COLOR_TRANSPARENTE = "rgba(0,0,0,0)"
-COLORES_TEXTO = COLORES_TEXTO_GRAFICOS
 COLOR_SOLUCION = COLORES_SOLUCION_POR_TEMA["papel"]
 
 
@@ -51,7 +50,7 @@ def obtener_color_solucion(tema: str = "papel") -> str:
     return COLORES_SOLUCION_POR_TEMA.get(tema, COLORES_SOLUCION_POR_TEMA["papel"])
 
 
-_CONFIG_GRAFICOS_JSON = json.dumps(
+_CONFIGURACION_GRAFICOS_JSON = json.dumps(
     {
         "paletas": PALETAS_POR_TEMA,
         "solucion": COLORES_SOLUCION_POR_TEMA,
@@ -60,22 +59,22 @@ _CONFIG_GRAFICOS_JSON = json.dumps(
     }
 )
 
-def _etiquetas_scripts(nombre_catalogo: str) -> str:
-    catalogo = Path(__file__).parent / "assets" / nombre_catalogo
+def _etiquetas_recursos_cliente(nombre_catalogo: str) -> str:
+    catalogo = Path(__file__).parent / "recursos" / nombre_catalogo
     return "\n".join(f'<script src="/assets/js/{nombre}"></script>'
                      for nombre in json.loads(catalogo.read_text(encoding="utf-8")))
 
-_PLANTILLAS = Path(__file__).parent / "assets" / "plantillas"
+_PLANTILLAS = Path(__file__).parent / "recursos" / "plantillas"
 _CABECERA_HTML = Template((_PLANTILLAS / "cabecera.html").read_text(encoding="utf-8")).substitute(
-    configuracion_graficos=_CONFIG_GRAFICOS_JSON.replace("<", "\\u003c"),
-    etiquetas_interacciones=_etiquetas_scripts("catalogo_interacciones.json"),
-    etiquetas_captura=_etiquetas_scripts("catalogo_captura.json"),
+    configuracion_graficos=_CONFIGURACION_GRAFICOS_JSON.replace("<", "\\u003c"),
+    etiquetas_interacciones=_etiquetas_recursos_cliente("catalogo_interacciones.json"),
+    etiquetas_captura=_etiquetas_recursos_cliente("catalogo_captura.json"),
 )
 _CABECERA_GLOSA_HTML = (_PLANTILLAS / "cabecera_glosa.html").read_text(encoding="utf-8")
 
 
 def configurar_tema():
-    """Configura fuentes, hojas de estilo, MathJax y scripts globales de interfaz."""
+    """Configura fuentes, estilos, MathJax y recursos cliente de la interfaz."""
     ui.add_head_html(_CABECERA_HTML)
-    if flags.dock_enabled():
+    if banderas.panel_lateral_habilitado():
         ui.add_head_html(_CABECERA_GLOSA_HTML)

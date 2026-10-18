@@ -8,12 +8,13 @@ from nicegui import run
 
 from src.ai.huellas import calcular_huella
 from src.frontend.controladores.geometria import ControladorGeometria
+from src.frontend.controladores.sesion_matricial import actualizar_contexto
 from ._estados_geometria import aplicar_estado_carga
 
 registro = logging.getLogger(__name__)
 ERROR_RENDERIZADO = {
-    "code": "render_failed",
-    "message": "No pudimos dibujar la figura. Revisa los valores e inténtalo de nuevo.",
+    "codigo": "renderizado_fallido",
+    "mensaje": "No pudimos dibujar la figura. Revisa los valores e inténtalo de nuevo.",
 }
 
 
@@ -29,9 +30,8 @@ def limpiar_estado_figura(vista) -> None:
 def refrescar_contexto(vista, carga: dict | None = None) -> None:
     """Registra la entrada resuelta y notifica a Glosa del cambio de contexto."""
     if carga is not None:
-        vista._huella_resultado = calcular_huella({"scene": vista.escena, "payload": carga})
-    if vista.panel_ia:
-        vista.panel_ia.programar_actualizacion_contexto()
+        vista._huella_resultado = calcular_huella({"escena": vista.escena, "carga": carga})
+    actualizar_contexto(vista)
 
 
 async def ejecutar_controlador_geometria(vista, carga: dict) -> dict | None:
@@ -62,7 +62,7 @@ async def renderizar_figura_actualizada(vista, resultado: dict, clave: tuple) ->
 
 def finalizar_actualizacion_figura(vista, resultado: dict, carga: dict, hash_entrada: int, clave: tuple) -> None:
     """Confirma el resultado solo después de dibujar la figura satisfactoriamente."""
-    vista._ejecutar_js('window.scalaris?.geometria?.marcarInvalido(null);')
+    vista._ejecutar_javascript('window.scalaris?.geometria?.marcarInvalido(null);')
     vista._clave_figura = clave
     vista.ultimo_resultado = resultado
     vista.ultimo_hash_entrada = hash_entrada
@@ -86,12 +86,12 @@ async def _procesar_carga(vista, carga: dict, hash_entrada: int) -> None:
         vista._renderizar_error(ERROR_RENDERIZADO)
         refrescar_contexto(vista, carga)
         return
-    if resultado.get("status") == "ERROR":
+    if resultado.get("estado") == "ERROR":
         limpiar_estado_figura(vista)
         vista._renderizar_error(resultado)
         refrescar_contexto(vista, carga)
         return
-    clave = (vista.escena, resultado.get("n"))
+    clave = (vista.escena, resultado.get("numero_variables"))
     if not await renderizar_figura_actualizada(vista, resultado, clave):
         limpiar_estado_figura(vista)
         refrescar_contexto(vista)

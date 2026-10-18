@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from typing import Any
-from src.frontend.tema import PALETA_GRAFICOS, COLORES_TEXTO
+from src.frontend.tema import PALETA_GRAFICOS, COLORES_TEXTO_GRAFICOS
 from ._figuras_comunes import disposicion_2d, disposicion_3d
 
 
@@ -20,13 +20,13 @@ def _flecha_3d(figura, extremos: tuple, nombre: str, estilo: dict):
 
 
 def _extraer_datos_cuadro(resultado: dict, indice: int | None) -> tuple[list, list, str]:
-    estatico = resultado.get('static', {})
-    vector = estatico.get('u', [])
-    suma = estatico.get('u_plus_v', [])
-    cuadros = resultado.get('frames', [])
+    estatico = resultado.get('estatica', {})
+    vector = estatico.get('vector_u', [])
+    suma = estatico.get('u_mas_v', [])
+    cuadros = resultado.get('cuadros', [])
     if indice is not None and 0 <= indice < len(cuadros):
         cuadro = cuadros[indice]
-        return cuadro.get('ku', vector), cuadro.get('ku_plus_v', suma), cuadro.get('k_exact', 'k')
+        return cuadro.get('escalar_por_u', vector), cuadro.get('escalar_por_u_mas_v', suma), cuadro.get('escalar_exacto', 'k')
     return vector, suma, '1'
 
 
@@ -55,10 +55,10 @@ def construir_figura_vectores(resultado: dict, *, tema: str = 'papel', indice_cu
     """Representa vectores de un resultado o un cuadro ya calculado por el backend."""
     import plotly.graph_objects as graficos
     figura = graficos.Figure()
-    dimension = resultado.get('n', 2)
-    rango = resultado.get('range', [-5, 5])
-    fuente = COLORES_TEXTO.get(tema, COLORES_TEXTO['papel'])
-    segundo = resultado.get('static', {}).get('v', [])
+    dimension = resultado.get('numero_variables', 2)
+    rango = resultado.get('rango', [-5, 5])
+    fuente = COLORES_TEXTO_GRAFICOS.get(tema, COLORES_TEXTO_GRAFICOS['papel'])
+    segundo = resultado.get('estatica', {}).get('vector_v', [])
     vector, suma, etiqueta = _extraer_datos_cuadro(resultado, indice_cuadro)
     if dimension in (2, 3) and vector and segundo and suma:
         _trazar_vectores(figura, (vector, segundo, suma, etiqueta), dimension)

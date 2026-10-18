@@ -3,7 +3,7 @@
 from .analizadores import AnalizadorSistema
 from .formateadores import (
     formatear_expresion_parametrica,
-    formatear_fraccion_str,
+    formatear_fraccion_texto,
     formatear_variable_para_latex,
     numero_a_latex,
 )
@@ -24,7 +24,7 @@ __all__ = [
     "AnalizadorSistema",
     "ValidadorMatriz",
     "formatear_expresion_parametrica",
-    "formatear_fraccion_str",
+    "formatear_fraccion_texto",
     "formatear_variable_para_latex",
     "mcd",
     "mcd_lista",

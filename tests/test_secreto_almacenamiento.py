@@ -1,6 +1,6 @@
 """Configuración del secreto de almacenamiento por entorno de ejecución."""
 import pytest
-from src.frontend.app import resolver_secreto_almacenamiento
+from src.frontend.aplicacion import resolver_secreto_almacenamiento
 
 
 def test_secreto_almacenamiento_desarrollo():

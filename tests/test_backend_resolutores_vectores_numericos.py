@@ -7,8 +7,8 @@ from src.backend.constantes import (
     ERROR,
     EXITO,
     SIN_SOLUCION,
-    SOLUCION_UNICA,
-    SOLUCIONES_INFINITAS,
+    UNICA,
+    INFINITA,
 )
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_vectores.combinacion_lineal import (
@@ -61,7 +61,7 @@ def test_combinacion_lineal_solucion_unica():
     resolutor = ResolutorCombinacionLineal()
 
     res = resolutor.resolver(b, [v1, v2])
-    assert res["estado"] == SOLUCION_UNICA
+    assert res["estado"] == UNICA
     assert res["es_combinacion_lineal"] is True
     assert res["coeficientes"] == [Fraction(3), Fraction(5)]
     assert res["paso_verificacion"]["coincide"] is True
@@ -86,7 +86,7 @@ def test_combinacion_lineal_infinitas_soluciones():
     resolutor = ResolutorCombinacionLineal()
 
     res = resolutor.resolver(b, [v1, v2])
-    assert res["estado"] == SOLUCIONES_INFINITAS
+    assert res["estado"] == INFINITA
     assert res["es_combinacion_lineal"] is True
     assert len(res["parametros_libres"]) == 1
 

@@ -5,6 +5,12 @@ from src.ai.estrategias_recorte import construir_contexto_minimo, ejecutar_casca
 from src.ai.matrices_contexto import describir_matriz, extraer_filas, generar_nota_ventana
 from src.ai.texto_contexto import compactar_numero, recortar_texto, sanear_cadena_usuario
 
+__all__ = [
+    'CapturaPaso', 'ContextoIA', 'EstadoContexto', 'ReferenciaPaso',
+    'describir_matriz', 'extraer_filas', 'generar_nota_ventana',
+    'compactar_numero', 'recortar_texto', 'sanear_cadena_usuario', 'serializar_contexto',
+]
+
 
 def serializar_contexto(
     contexto: ContextoIA, *, maximo_caracteres: int = MAXIMO_CARACTERES_CONTEXTO,

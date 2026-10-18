@@ -19,9 +19,6 @@ class TrazadorPasos:
         """Registra un paso clonando defensivamente la matriz si esta presente."""
         self.pasos.append({
             "descripcion": descripcion,
-            "description": descripcion,
             "matriz": matriz_actual.clonar() if matriz_actual else None,
-            "matrix": matriz_actual.clonar() if matriz_actual else None,
             "detalle_latex": detalle_latex,
-            "detail_latex": detalle_latex,
         })

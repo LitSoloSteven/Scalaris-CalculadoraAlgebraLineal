@@ -1,0 +1,223 @@
+@keyframes entradaSuave {
+    0% {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.movimiento-entrada {
+    animation: entradaSuave var(--dur-med) var(--ease-std) forwards !important;
+}
+
+@keyframes reboteVertical {
+    0% {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.movimiento-rebote {
+    animation: reboteVertical var(--dur-med) var(--ease-std) forwards !important;
+}
+
+@keyframes sacudida {
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-4px);
+    }
+
+    75% {
+        transform: translateX(4px);
+    }
+}
+
+.movimiento-sacudida {
+    animation: sacudida 120ms linear 2;
+}
+
+@keyframes parpadeo {
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
+
+.escritura-cursor {
+    animation: parpadeo 1s step-end infinite;
+    color: var(--accent);
+    margin-left: 2px;
+}
+
+.pasos-expansion .q-expansion-item__content>* {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: entradaSuave var(--dur-fast) var(--ease-std) forwards;
+}
+
+.pasos-expansion .q-expansion-item__content>*:nth-child(1) {
+    animation-delay: 0ms;
+}
+
+.pasos-expansion .q-expansion-item__content>*:nth-child(2) {
+    animation-delay: 15ms;
+}
+
+.pasos-expansion .q-expansion-item__content>*:nth-child(3) {
+    animation-delay: 30ms;
+}
+
+.pasos-expansion .q-expansion-item__content>*:nth-child(4) {
+    animation-delay: 45ms;
+}
+
+.pasos-expansion .q-expansion-item__content>*:nth-child(5) {
+    animation-delay: 60ms;
+}
+
+.pasos-expansion .q-expansion-item__content>*:nth-child(6) {
+    animation-delay: 75ms;
+}
+
+.pasos-expansion .q-expansion-item__content>*:nth-child(7) {
+    animation-delay: 90ms;
+}
+
+.pasos-expansion .q-expansion-item__content>*:nth-child(8) {
+    animation-delay: 105ms;
+}
+
+.pasos-expansion .q-expansion-item__content>*:nth-child(9) {
+    animation-delay: 120ms;
+}
+
+.pasos-expansion .q-expansion-item__content>*:nth-child(n+10) {
+    animation-delay: 130ms;
+}
+
+@view-transition {
+    navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+    z-index: 1;
+}
+
+::view-transition-new(root) {
+    z-index: 2;
+}
+
+@keyframes entradaVista {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.q-page,
+.nicegui-content {
+    animation: entradaVista 180ms var(--ease-std) both;
+}
+
+@keyframes reboteCompresion {
+    0% {
+        transform: scale(1);
+    }
+
+    30% {
+        transform: scale(1.05, 0.95);
+    }
+
+    50% {
+        transform: scale(0.95, 1.05);
+    }
+
+    70% {
+        transform: scale(1.02, 0.98);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.movimiento-compresion {
+    animation: reboteCompresion var(--dur-med) var(--ease-std) forwards !important;
+}
+
+:focus-visible {
+    outline: 2px solid var(--focus-ring) !important;
+    outline-offset: 2px;
+}
+
+@layer quasar_importants {
+    html .q-btn:focus-visible,
+    html .q-item:focus-visible {
+        outline: 2px solid var(--focus-ring) !important;
+        outline-offset: 2px;
+    }
+}
+
+.matriz-entrada input:focus-visible {
+    outline: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 120ms !important;
+    }
+
+    .escritura-cursor,
+    .glosa-indicador-escritura span {
+        animation: none !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+    .movimiento-sacudida,
+    .movimiento-compresion,
+    .movimiento-entrada,
+    .movimiento-rebote {
+        animation: none !important;
+        transform: none !important;
+    }
+}
+
+html[data-entrada="teclado"] .movimiento-entrada,
+html[data-entrada="teclado"] .movimiento-rebote,
+html[data-entrada="teclado"] .movimiento-compresion,
+html[data-entrada="teclado"] .pasos-expansion .q-expansion-item__content>* {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+}

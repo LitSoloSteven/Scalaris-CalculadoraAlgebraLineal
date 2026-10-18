@@ -1,4 +1,5 @@
 """Adaptación de operaciones matriciales al reproductor de pasos."""
+from tests.comun_entradas import copiar_entrada_prueba
 
 import json
 from tests.comun_textos import PATRONES_VOSEO, comprobar_textos_sobrios
@@ -6,7 +7,7 @@ from tests.comun_textos import PATRONES_VOSEO, comprobar_textos_sobrios
 from src.frontend.controladores.operaciones_matrices import (
     ControladorOperacionesMatrices,
 )
-from src.frontend.vistas.matrix_ops._pasos_reproductor import construir_pasos_matrices
+from src.frontend.vistas.operaciones_matrices._pasos_reproductor import construir_pasos_matrices
 
 
 def _evaluar(expresion: str, matrices: dict) -> dict:
@@ -16,18 +17,13 @@ def _evaluar(expresion: str, matrices: dict) -> dict:
 
 def test_expresion_compleja_produce_pasos_con_etiquetas_y_grupo_por_suboperacion():
     """'2A - B(C - D^T)' produce pasos con tipo 'operacion', etiquetas correctas y un grupo por suboperación."""
-    matrices = {
-        "A": {"rows": 2, "cols": 2, "data": [["1", "2"], ["3", "4"]]},
-        "B": {"rows": 2, "cols": 2, "data": [["2", "0"], ["1", "3"]]},
-        "C": {"rows": 2, "cols": 2, "data": [["5", "1"], ["2", "4"]]},
-        "D": {"rows": 2, "cols": 2, "data": [["1", "-1"], ["0", "2"]]},
-    }
+    matrices = copiar_entrada_prueba('matrices_expresion')
     res = _evaluar("2A - B(C - D^T)", matrices)
-    assert res["status"] == "SUCCESS"
-    assert len(res.get("segment_steps", [])) > 1
+    assert res["estado"] == "EXITO"
+    assert len(res.get("pasos_segmento", [])) > 1
 
     pasos, grupos = construir_pasos_matrices(res)
-    assert len(pasos) == len(res["segment_steps"])
+    assert len(pasos) == len(res["pasos_segmento"])
     assert len(grupos) == len(pasos)
 
     etiquetas_validas = {"Suma", "Resta", "Multiplicación de Matrices",
@@ -38,10 +34,10 @@ def test_expresion_compleja_produce_pasos_con_etiquetas_y_grupo_por_suboperacion
         assert paso.indice == i
         assert paso.indice_grupo == i
         assert paso.meta_explicar is not None
-        assert paso.meta_explicar["index"] == i + 1
+        assert paso.meta_explicar["indice"] == i + 1
         assert paso.meta_explicar["total"] == len(pasos)
-        assert paso.meta_explicar["kind"] == "otro"
-        assert paso.cuerpo == res["segment_steps"][i]
+        assert paso.meta_explicar["tipo"] == "otro"
+        assert paso.cuerpo == res["pasos_segmento"][i]
 
     for i, grupo in enumerate(grupos):
         assert grupo.tipo == "operacion"
@@ -53,12 +49,12 @@ def test_expresion_compleja_produce_pasos_con_etiquetas_y_grupo_por_suboperacion
 def test_expresion_de_una_sola_operacion_produce_un_paso_y_un_grupo():
     """Una expresión con una sola suboperación genera un único paso y un único grupo."""
     matrices = {
-        "A": {"rows": 2, "cols": 2, "data": [["1", "0"], ["0", "1"]]},
-        "B": {"rows": 2, "cols": 2, "data": [["2", "3"], ["4", "5"]]},
+        "A": {"filas": 2, "columnas": 2, "datos": [["1", "0"], ["0", "1"]]},
+        "B": {"filas": 2, "columnas": 2, "datos": [["2", "3"], ["4", "5"]]},
     }
     res = _evaluar("A + B", matrices)
-    assert res["status"] == "SUCCESS"
-    assert len(res.get("segment_steps", [])) == 1
+    assert res["estado"] == "EXITO"
+    assert len(res.get("pasos_segmento", [])) == 1
 
     pasos, grupos = construir_pasos_matrices(res)
     assert len(pasos) == 1
@@ -80,29 +76,29 @@ def test_expresion_de_una_sola_operacion_produce_un_paso_y_un_grupo():
 def test_transposicion_sin_desglose_por_celdas():
     """La transposición no incluye desglose celda a celda."""
     matrices = {
-        "A": {"rows": 2, "cols": 3, "data": [["1", "2", "3"], ["4", "5", "6"]]},
+        "A": {"filas": 2, "columnas": 3, "datos": [["1", "2", "3"], ["4", "5", "6"]]},
     }
     res = _evaluar("A^T", matrices)
-    assert res["status"] == "SUCCESS"
+    assert res["estado"] == "EXITO"
 
     pasos, grupos = construir_pasos_matrices(res)
     assert len(pasos) == 1
     paso = pasos[0]
     assert paso.etiqueta_tipo == "Transposición"
     cuerpo = paso.cuerpo
-    assert not cuerpo.get("cell_by_cell_steps")
+    assert not cuerpo.get("pasos_celda_a_celda")
     assert "filas pasan a ser columnas" in paso.explicacion.lower()
 
 
 def test_error_de_dimensiones_no_genera_pasos():
     """Si la expresión falla por incompatibilidad de dimensiones, no se generan pasos."""
     matrices = {
-        "A": {"rows": 2, "cols": 2, "data": [["1", "2"], ["3", "4"]]},
-        "B": {"rows": 3, "cols": 3, "data": [["1", "0", "0"], ["0", "1", "0"], ["0", "0", "1"]]},
+        "A": {"filas": 2, "columnas": 2, "datos": [["1", "2"], ["3", "4"]]},
+        "B": {"filas": 3, "columnas": 3, "datos": [["1", "0", "0"], ["0", "1", "0"], ["0", "0", "1"]]},
     }
     res = _evaluar("A + B", matrices)
-    assert res["status"] == "ERROR"
-    assert "dimens" in res["message"].lower() or "tamaño" in res["message"].lower()
+    assert res["estado"] == "ERROR"
+    assert "dimens" in res["mensaje"].lower() or "tamaño" in res["mensaje"].lower()
 
     pasos, grupos = construir_pasos_matrices(res)
     assert pasos == ()
@@ -111,12 +107,7 @@ def test_error_de_dimensiones_no_genera_pasos():
 
 def test_textos_matriciales_sin_raya_larga_ni_voseo():
     """Las descripciones y explicaciones conservan un español directo."""
-    matrices = {
-        "A": {"rows": 2, "cols": 2, "data": [["1", "2"], ["3", "4"]]},
-        "B": {"rows": 2, "cols": 2, "data": [["2", "0"], ["1", "3"]]},
-        "C": {"rows": 2, "cols": 2, "data": [["5", "1"], ["2", "4"]]},
-        "D": {"rows": 2, "cols": 2, "data": [["1", "-1"], ["0", "2"]]},
-    }
+    matrices = copiar_entrada_prueba('matrices_expresion')
     expresiones = ["2A - B(C - D^T)", "A + B", "-A", "3 * A", "A * B", "A^T"]
     for expresion in expresiones:
         resultado = _evaluar(expresion, matrices)

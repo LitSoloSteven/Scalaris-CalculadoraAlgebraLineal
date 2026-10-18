@@ -92,11 +92,11 @@ prueba("el aviso de error enfoca la celda y limpia su marca temporal", () => {
     afirmar.equal(selector, 'input[data-matriz-identificador="A"][data-matriz-fila="1"][data-matriz-columna="2"]');
     afirmar.equal(celda.entrada.enfocada, true);
     afirmar.equal(celda.entrada.desplazamientos[0].behavior, "smooth");
-    afirmar.equal(celda.contenedor.classList.contains("animate-shake"), true);
+    afirmar.equal(celda.contenedor.classList.contains("movimiento-sacudida"), true);
     afirmar.equal(celda.control.classList.contains("cuadricula-error"), true);
     afirmar.equal(celda.contenedor.eventos[0].opciones.once, true);
     celda.contenedor.eventos[0].manejador();
-    afirmar.equal(celda.contenedor.classList.contains("animate-shake"), false);
+    afirmar.equal(celda.contenedor.classList.contains("movimiento-sacudida"), false);
     afirmar.equal(cliente.temporizadores[0].espera, 1800);
     cliente.temporizadores[0].manejador();
     afirmar.equal(celda.control.classList.contains("cuadricula-error"), false);
@@ -111,7 +111,7 @@ prueba("el aviso de error iniciado por teclado conserva foco y marca sin movimie
     afirmar.equal(celda.entrada.enfocada, true);
     afirmar.equal(celda.entrada.desplazamientos[0].behavior, "auto");
     afirmar.equal(celda.control.classList.contains("cuadricula-error"), true);
-    afirmar.equal(celda.contenedor.classList.contains("animate-shake"), false);
+    afirmar.equal(celda.contenedor.classList.contains("movimiento-sacudida"), false);
     afirmar.equal(celda.contenedor.eventos.length, 0);
 });
 

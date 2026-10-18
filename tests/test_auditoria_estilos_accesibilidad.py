@@ -8,9 +8,9 @@ CARPETA_INTERFAZ = 'src/frontend'
 EXTENSIONES_PRESENTACION = ('.py', '.js', '.css')
 
 
-def _archivos_presentacion_sin_splash():
+def _archivos_presentacion_sin_pantalla_inicial():
     return (ruta for ruta in recorrer_archivos_codigo([CARPETA_INTERFAZ], EXTENSIONES_PRESENTACION)
-            if ruta.name != 'splash.js')
+            if ruta.name != 'presentacion.js')
 
 
 def test_interfaz_sin_altura_estatica_pantalla():
@@ -24,12 +24,12 @@ def test_interfaz_sin_altura_estatica_pantalla():
 
 
 def test_interfaz_sin_filtros_de_desenfoque():
-    """La interfaz evita filtros de desenfoque fuera del splash."""
+    """La interfaz evita filtros de desenfoque fuera de la pantalla inicial."""
     infracciones = []
-    for ruta, numero, linea in recorrer_lineas_codigo(_archivos_presentacion_sin_splash()):
+    for ruta, numero, linea in recorrer_lineas_codigo(_archivos_presentacion_sin_pantalla_inicial()):
         if 'backdrop-filter' in linea or 'blur(' in linea:
             infracciones.append(f"{ruta}:{numero} -> {linea.strip()}")
-    assert not infracciones, "Se encontraron 'backdrop-filter' o 'blur(' fuera de splash.js:\n" + "\n".join(infracciones)
+    assert not infracciones, "Se encontraron 'backdrop-filter' o 'blur(' fuera de presentacion.js:\n" + "\n".join(infracciones)
 
 
 def test_css_sin_colores_literales_fuera_de_tokens():
@@ -54,7 +54,7 @@ def test_interfaz_sin_capas_numericas_elevadas():
     """Las capas locales no superan diez y la capa modal usa su token."""
     infracciones = []
     patron_profundidad = re.compile(r'z-index\s*:\s*([0-9]+)', re.IGNORECASE)
-    for ruta, numero, linea in recorrer_lineas_codigo(_archivos_presentacion_sin_splash()):
+    for ruta, numero, linea in recorrer_lineas_codigo(_archivos_presentacion_sin_pantalla_inicial()):
         coincidencia = patron_profundidad.search(linea)
         if coincidencia and int(coincidencia.group(1)) > 10:
             infracciones.append(f"{ruta}:{numero} -> z-index: {int(coincidencia.group(1))}")
@@ -71,7 +71,7 @@ def _infracciones_formulas(ruta, contenido):
     for numero, linea in enumerate(lineas, 1):
         if objetivo in linea:
             ventana = '\n'.join(lineas[max(0, numero - 10):min(len(lineas), numero + 10)])
-            if 'math-scroll-container' not in ventana:
+            if 'matematicas-desplazamiento' not in ventana:
                 infracciones.append(f"{ruta}:{numero} -> {linea.strip()}")
     return infracciones
 
@@ -84,7 +84,7 @@ def test_formulas_tienen_contenedor_desplazable():
         if 'vistas' not in carpeta and 'componentes' not in carpeta:
             continue
         infracciones.extend(_infracciones_formulas(ruta, ruta.read_text(encoding='utf-8')))
-    assert not infracciones, "Fórmulas $$ fuera de math-scroll-container:\n" + "\n".join(infracciones)
+    assert not infracciones, "Fórmulas $$ fuera de matematicas-desplazamiento:\n" + "\n".join(infracciones)
 
 
 def _es_boton_icono_sin_texto(nodo):
@@ -117,7 +117,7 @@ def _infracciones_botones(ruta, contenido):
 
 
 def test_botones_icono_tienen_nombre_accesible():
-    """Todo botón con icono y sin texto accesible tiene aria-label."""
+    """Los botones con icono y sin texto accesible tienen aria-label."""
     infracciones = []
     for ruta in recorrer_archivos_codigo([CARPETA_INTERFAZ], ('.py',)):
         infracciones.extend(_infracciones_botones(ruta, ruta.read_text(encoding='utf-8')))

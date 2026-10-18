@@ -1,16 +1,18 @@
 """Operaciones aritméticas con números romanos con trazabilidad paso a paso."""
 
+from src.backend.constantes import ERROR
+
 from dataclasses import dataclass, field
 import re
 
-ERROR_TIPO_INVALIDO = "INVALID_TYPE"
-ERROR_ENTRADA_VACIA = "EMPTY_INPUT"
-ERROR_SINTAXIS_INVALIDA = "INVALID_SYNTAX"
-ERROR_NO_CANONICO = "NOT_CANONICAL"
-ERROR_FUERA_DE_RANGO = "OUT_OF_RANGE"
-ERROR_CERO_NO_REPRESENTABLE = "ZERO_NOT_REPRESENTABLE"
-ERROR_NEGATIVO_NO_REPRESENTABLE = "NEGATIVE_NOT_REPRESENTABLE"
-ERROR_OPERANDO_NO_UN_DIGITO = "OPERAND_NOT_SINGLE_DIGIT"
+ERROR_TIPO_INVALIDO = "TIPO_INVALIDO"
+ERROR_ENTRADA_VACIA = "ENTRADA_VACIA"
+ERROR_SINTAXIS_INVALIDA = "SINTAXIS_INVALIDA"
+ERROR_NO_CANONICO = "NO_CANONICO"
+ERROR_FUERA_DE_RANGO = "FUERA_DE_RANGO"
+ERROR_CERO_NO_REPRESENTABLE = "CERO_NO_REPRESENTABLE"
+ERROR_NEGATIVO_NO_REPRESENTABLE = "NEGATIVO_NO_REPRESENTABLE"
+ERROR_OPERANDO_NO_UN_DIGITO = "OPERANDO_NO_UN_DIGITO"
 
 
 class ErrorNumeroRomano(ValueError):
@@ -20,22 +22,16 @@ class ErrorNumeroRomano(ValueError):
         super().__init__(mensaje)
         self.codigo = codigo
         self.token_invalido = token_invalido
-        self.code = codigo
-        self.invalid_token = token_invalido
 
     def a_diccionario(self) -> dict:
         """Serializa el error a un diccionario para respuestas de API."""
         return {
-            "estado": "ERROR",
-            "status": "ERROR",
+            "estado": ERROR,
             "codigo_error": self.codigo,
-            "error_code": self.codigo,
             "mensaje": str(self),
-            "message": str(self),
             "token": self.token_invalido,
         }
 
-    to_dict = a_diccionario
 
 
 PARES_DECIMAL_A_ROMANO: list[tuple[int, str]] = [
@@ -45,6 +41,19 @@ PARES_DECIMAL_A_ROMANO: list[tuple[int, str]] = [
 ]
 
 PATRON_ROMANO = re.compile(r"^M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$")
+
+
+def desglosar_pasos_canonicos(numero: int) -> list[dict]:
+    """Devuelve sustracciones canónicas para un entero positivo representable."""
+    entero_a_romano(numero)
+    pasos, restante = [], numero
+    for valor, simbolo in PARES_DECIMAL_A_ROMANO:
+        while restante >= valor:
+            anterior = restante
+            restante -= valor
+            pasos.append({"valor_restado": valor, "simbolo": simbolo,
+                          "anterior": anterior, "restante": restante})
+    return pasos
 
 
 @dataclass
@@ -78,10 +87,10 @@ def entero_a_romano(numero: int) -> str:
 
     resultado = []
     valor = numero
-    for val, sym in PARES_DECIMAL_A_ROMANO:
-        while valor >= val:
-            resultado.append(sym)
-            valor -= val
+    for valor_simbolo, simbolo in PARES_DECIMAL_A_ROMANO:
+        while valor >= valor_simbolo:
+            resultado.append(simbolo)
+            valor -= valor_simbolo
     return "".join(resultado)
 
 
@@ -112,11 +121,11 @@ def _validar_formato_romano(romano: str) -> str:
 def romano_a_entero(romano: str) -> int:
     """Convierte una cadena de número romano a entero con validación estricta canónica."""
     limpio = _validar_formato_romano(romano)
-    total, i, n = 0, 0, len(limpio)
+    total, i, longitud = 0, 0, len(limpio)
     valores_car = {"I": 1, "V": 5, "X": 10, "L": 50, "C": 100, "D": 500, "M": 1000}
-    while i < n:
+    while i < longitud:
         actual = valores_car[limpio[i]]
-        if i + 1 < n and actual < valores_car[limpio[i + 1]]:
+        if i + 1 < longitud and actual < valores_car[limpio[i + 1]]:
             total += valores_car[limpio[i + 1]] - actual
             i += 2
         else:
@@ -137,101 +146,101 @@ class CalculadoraRomana:
     """Calculadora de operaciones aritméticas en números romanos con paso a paso."""
 
     @staticmethod
-    def sumar(a: str, b: str) -> ResultadoOperacionRomana:
+    def sumar(operando_a: str, operando_b: str) -> ResultadoOperacionRomana:
         """Realiza la suma A + B en números romanos."""
-        val_a, val_b = romano_a_entero(a), romano_a_entero(b)
-        rom_a, rom_b = entero_a_romano(val_a), entero_a_romano(val_b)
-        total_dec = val_a + val_b
-        if total_dec > 3999:
+        valor_a, valor_b = romano_a_entero(operando_a), romano_a_entero(operando_b)
+        romano_a, romano_b = entero_a_romano(valor_a), entero_a_romano(valor_b)
+        total_decimal = valor_a + valor_b
+        if total_decimal > 3999:
             raise ErrorNumeroRomano(
-                f"El resultado de la suma ({total_dec}) excede el límite máximo romano de 3999 (MMMCMXCIX).",
+                f"El resultado de la suma ({total_decimal}) excede el límite máximo romano de 3999 (MMMCMXCIX).",
                 codigo=ERROR_FUERA_DE_RANGO,
-                token_invalido=str(total_dec),
+                token_invalido=str(total_decimal),
             )
 
-        total_rom = entero_a_romano(total_dec)
+        total_romano = entero_a_romano(total_decimal)
         pasos = [
-            f"1. Convertir operando A a decimal -> {rom_a} = {val_a}",
-            f"2. Convertir operando B a decimal -> {rom_b} = {val_b}",
-            f"3. Realizar la adición decimal -> {val_a} + {val_b} = {total_dec}",
-            f"4. Convertir el total a número romano -> {total_dec} = {total_rom}",
-            f"Resultado final: {rom_a} + {rom_b} = {total_rom} ({total_dec})",
+            f"Paso 1: Convertir operando A a decimal -> {romano_a} = {valor_a}",
+            f"Paso 2: Convertir operando B a decimal -> {romano_b} = {valor_b}",
+            f"Paso 3: Realizar la adición decimal -> {valor_a} + {valor_b} = {total_decimal}",
+            f"Paso 4: Convertir el total a número romano -> {total_decimal} = {total_romano}",
+            f"Resultado final: {romano_a} + {romano_b} = {total_romano} ({total_decimal})",
         ]
-        return ResultadoOperacionRomana("suma", rom_a, val_a, rom_b, val_b, total_rom, total_dec, pasos)
+        return ResultadoOperacionRomana("suma", romano_a, valor_a, romano_b, valor_b, total_romano, total_decimal, pasos)
 
     @staticmethod
-    def restar(a: str, b: str) -> ResultadoOperacionRomana:
+    def restar(operando_a: str, operando_b: str) -> ResultadoOperacionRomana:
         """Realiza la resta A - B en números romanos."""
-        val_a, val_b = romano_a_entero(a), romano_a_entero(b)
-        rom_a, rom_b = entero_a_romano(val_a), entero_a_romano(val_b)
-        if val_a == val_b:
+        valor_a, valor_b = romano_a_entero(operando_a), romano_a_entero(operando_b)
+        romano_a, romano_b = entero_a_romano(valor_a), entero_a_romano(valor_b)
+        if valor_a == valor_b:
             raise ErrorNumeroRomano(
-                f"Resta inválida ({rom_a} - {rom_b} = 0): En el sistema de numeración romana tradicional no existe el número cero.",
+                f"Resta inválida ({romano_a} - {romano_b} = 0): En el sistema de numeración romana tradicional no existe el número cero.",
                 codigo=ERROR_CERO_NO_REPRESENTABLE,
             )
-        if val_a < val_b:
+        if valor_a < valor_b:
             raise ErrorNumeroRomano(
-                f"Resta inválida ({rom_a} - {rom_b} = {val_a - val_b}): En el sistema de numeración romana tradicional no existen los números negativos.",
+                f"Resta inválida ({romano_a} - {romano_b} = {valor_a - valor_b}): En el sistema de numeración romana tradicional no existen los números negativos.",
                 codigo=ERROR_NEGATIVO_NO_REPRESENTABLE,
             )
 
-        total_dec = val_a - val_b
-        total_rom = entero_a_romano(total_dec)
+        total_decimal = valor_a - valor_b
+        total_romano = entero_a_romano(total_decimal)
         pasos = [
-            f"1. Convertir minuendo A a decimal -> {rom_a} = {val_a}",
-            f"2. Convertir sustraendo B a decimal -> {rom_b} = {val_b}",
-            f"3. Validar que A > B ({val_a} > {val_b}) para garantizar resultado positivo no nulo.",
-            f"4. Realizar la sustracción decimal -> {val_a} - {val_b} = {total_dec}",
-            f"5. Convertir la diferencia a número romano -> {total_dec} = {total_rom}",
-            f"Resultado final: {rom_a} - {rom_b} = {total_rom} ({total_dec})",
+            f"Paso 1: Convertir minuendo A a decimal -> {romano_a} = {valor_a}",
+            f"Paso 2: Convertir sustraendo B a decimal -> {romano_b} = {valor_b}",
+            f"Paso 3: Validar que A > B ({valor_a} > {valor_b}) para garantizar resultado positivo no nulo.",
+            f"Paso 4: Realizar la sustracción decimal -> {valor_a} - {valor_b} = {total_decimal}",
+            f"Paso 5: Convertir la diferencia a número romano -> {total_decimal} = {total_romano}",
+            f"Resultado final: {romano_a} - {romano_b} = {total_romano} ({total_decimal})",
         ]
-        return ResultadoOperacionRomana("resta", rom_a, val_a, rom_b, val_b, total_rom, total_dec, pasos)
+        return ResultadoOperacionRomana("resta", romano_a, valor_a, romano_b, valor_b, total_romano, total_decimal, pasos)
 
     @staticmethod
     def _calcular_sumas_multiplicacion(
-        val_a: int, val_b: int, rom_a: str, pasos: list[str]
+        valor_a: int, valor_b: int, romano_a: str, pasos: list[str]
     ) -> tuple[int, str]:
         """Ejecuta el bucle de sumas sucesivas para la multiplicación de 1 dígito."""
-        acumulador_dec = 0
+        acumulador_decimal = 0
         sumas_romanas = []
-        for i in range(1, val_b + 1):
-            acum_ant = acumulador_dec
-            acumulador_dec += val_a
-            sumas_romanas.append(rom_a)
-            acum_rom = entero_a_romano(acumulador_dec)
+        for i in range(1, valor_b + 1):
+            acumulado_anterior = acumulador_decimal
+            acumulador_decimal += valor_a
+            sumas_romanas.append(romano_a)
+            acumulado_romano = entero_a_romano(acumulador_decimal)
             if i == 1:
-                pasos.append(f"   - Suma 1: Base inicial = {rom_a} ({val_a})")
+                pasos.append(f"   - Suma 1: Base inicial = {romano_a} ({valor_a})")
             else:
-                acum_ant_rom = entero_a_romano(acum_ant)
+                acumulado_anterior_romano = entero_a_romano(acumulado_anterior)
                 pasos.append(
-                    f"   - Suma {i}: Acumulado anterior {acum_ant_rom} ({acum_ant}) + {rom_a} ({val_a}) = {acum_rom} ({acumulador_dec})"
+                    f"   - Suma {i}: Acumulado anterior {acumulado_anterior_romano} ({acumulado_anterior}) + {romano_a} ({valor_a}) = {acumulado_romano} ({acumulador_decimal})"
                 )
-        return acumulador_dec, " + ".join(sumas_romanas)
+        return acumulador_decimal, " + ".join(sumas_romanas)
 
     @classmethod
-    def multiplicar_un_digito(cls, a: str, b: str) -> ResultadoOperacionRomana:
+    def multiplicar_un_digito(cls, operando_a: str, operando_b: str) -> ResultadoOperacionRomana:
         """Realiza la multiplicación A * B mediante sumas sucesivas repetidas."""
-        val_a, val_b = romano_a_entero(a), romano_a_entero(b)
-        rom_a, rom_b = entero_a_romano(val_a), entero_a_romano(val_b)
-        if val_a < 1 or val_a > 9:
+        valor_a, valor_b = romano_a_entero(operando_a), romano_a_entero(operando_b)
+        romano_a, romano_b = entero_a_romano(valor_a), entero_a_romano(valor_b)
+        if valor_a < 1 or valor_a > 9:
             raise ErrorNumeroRomano(
-                f"El operando A '{rom_a}' ({val_a}) no es de 1 dígito. Debe estar entre I (1) y IX (9).",
-                codigo=ERROR_OPERANDO_NO_UN_DIGITO, token_invalido=a,
+                f"El operando A '{romano_a}' ({valor_a}) no es de 1 dígito. Debe estar entre I (1) y IX (9).",
+                codigo=ERROR_OPERANDO_NO_UN_DIGITO, token_invalido=operando_a,
             )
-        if val_b < 1 or val_b > 9:
+        if valor_b < 1 or valor_b > 9:
             raise ErrorNumeroRomano(
-                f"El operando B '{rom_b}' ({val_b}) no es de 1 dígito. Debe estar entre I (1) y IX (9).",
-                codigo=ERROR_OPERANDO_NO_UN_DIGITO, token_invalido=b,
+                f"El operando B '{romano_b}' ({valor_b}) no es de 1 dígito. Debe estar entre I (1) y IX (9).",
+                codigo=ERROR_OPERANDO_NO_UN_DIGITO, token_invalido=operando_b,
             )
 
         pasos = [
-            f"1. Convertir factores a decimal -> {rom_a} = {val_a}, {rom_b} = {val_b}",
-            f"2. Validar restricción de 1 dígito: {val_a} ∈ [1, 9] y {val_b} ∈ [1, 9] (Válido).",
-            f"3. Aplicar definición formal de multiplicación por sumas sucesivas:",
-            f"   {rom_a} × {rom_b} = sumar '{rom_a}' ({val_a}) un total de {val_b} veces.",
+            f"Paso 1: Convertir factores a decimal -> {romano_a} = {valor_a}, {romano_b} = {valor_b}",
+            f"Paso 2: Validar restricción de 1 dígito: {valor_a} ∈ [1, 9] y {valor_b} ∈ [1, 9] (Válido).",
+            f"Paso 3: Aplicar definición formal de multiplicación por sumas sucesivas:",
+            f"         {romano_a} × {romano_b} = sumar '{romano_a}' ({valor_a}) un total de {valor_b} veces.",
         ]
-        acumulador_dec, exp_sumas = cls._calcular_sumas_multiplicacion(val_a, val_b, rom_a, pasos)
-        total_rom = entero_a_romano(acumulador_dec)
-        pasos.append(f"4. Expresión expandida completa: {exp_sumas} = {total_rom} ({acumulador_dec})")
-        pasos.append(f"Resultado final: {rom_a} × {rom_b} = {total_rom} ({acumulador_dec})")
-        return ResultadoOperacionRomana("multiplicacion", rom_a, val_a, rom_b, val_b, total_rom, acumulador_dec, pasos)
+        acumulador_decimal, exp_sumas = cls._calcular_sumas_multiplicacion(valor_a, valor_b, romano_a, pasos)
+        total_romano = entero_a_romano(acumulador_decimal)
+        pasos.append(f"Paso 4: Expresión expandida completa: {exp_sumas} = {total_romano} ({acumulador_decimal})")
+        pasos.append(f"Resultado final: {romano_a} × {romano_b} = {total_romano} ({acumulador_decimal})")
+        return ResultadoOperacionRomana("multiplicacion", romano_a, valor_a, romano_b, valor_b, total_romano, acumulador_decimal, pasos)

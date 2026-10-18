@@ -8,6 +8,7 @@ from src.backend.resolutores.operaciones_matrices.evaluador import (
     EvaluadorExpresionesMatriciales,
 )
 from tests.comun_clientes import PanelIASimulado
+from tests.comun_foco_matriz import evaluar_foco_matriz, comprobar_ejemplo_foco
 from src.frontend.controladores.operaciones_matrices.controlador_operaciones_matrices import (
     ControladorOperacionesMatrices,
 )
@@ -15,78 +16,38 @@ from src.frontend.controladores.operaciones_matrices.controlador_operaciones_mat
 
 def test_foco_matriz_suma():
     """El foco de suma conserva operación y ejemplo breve de una celda."""
-    evaluador = EvaluadorExpresionesMatriciales()
     matriz_a = Matriz(2, 2, [[Fraction(1), Fraction(2)], [Fraction(3), Fraction(4)]])
     matriz_b = Matriz(2, 2, [[Fraction(5), Fraction(6)], [Fraction(7), Fraction(8)]])
-    resultado = evaluador.evaluar("A+B", {"A": matriz_a, "B": matriz_b})
-    assert resultado["status"] == "SUCCESS"
-    assert len(resultado["segment_steps"]) == 1
+    paso, foco = evaluar_foco_matriz("A+B", {"A": matriz_a, "B": matriz_b})
+    assert "Suma" in foco["operacion"]
+    assert "T1" in foco["operacion"]
+    assert "A" in foco["operacion"] and "B" in foco["operacion"]
+    assert r"\cdot" not in foco["operacion"]
+    assert "{" not in foco["operacion"] and "}" not in foco["operacion"]
 
-    paso = resultado["segment_steps"][0]
-    foco = ControladorOperacionesMatrices.construir_foco_paso(paso, 1, 1)
-
-    assert foco["index"] == 1
-    assert foco["total"] == 1
-    assert foco["kind"] == "otro"
-    assert "Suma" in foco["op"]
-    assert "T1" in foco["op"]
-    assert "A" in foco["op"] and "B" in foco["op"]
-    assert r"\cdot" not in foco["op"]
-    assert "{" not in foco["op"] and "}" not in foco["op"]
-
-    assert foco["detail"] is not None
-    assert foco["detail"]["forma"] == "2×2"
-    assert "ejemplo" in foco["detail"]
-    assert foco["detail"]["ejemplo"].startswith("Celda (1, 1)")
-    assert len(foco["detail"]["ejemplo"]) <= 120
-    assert foco["detail"]["ejemplo"] != paso["cell_by_cell_steps"][0]["description"]
+    comprobar_ejemplo_foco(foco, paso, "Celda (1, 1)")
 
 
 def test_foco_matriz_multiplicacion():
     """El foco de producto conserva forma y ejemplo de fila por columna."""
-    evaluador = EvaluadorExpresionesMatriciales()
     matriz_a = Matriz(2, 3, [[Fraction(1), Fraction(2), Fraction(0)], [Fraction(3), Fraction(4), Fraction(1)]])
     matriz_b = Matriz(3, 2, [[Fraction(2), Fraction(1)], [Fraction(0), Fraction(1)], [Fraction(1), Fraction(0)]])
-    resultado = evaluador.evaluar("AB", {"A": matriz_a, "B": matriz_b})
-    assert resultado["status"] == "SUCCESS"
-    assert len(resultado["segment_steps"]) == 1
+    paso, foco = evaluar_foco_matriz("AB", {"A": matriz_a, "B": matriz_b})
+    assert "Multiplicación" in foco["operacion"]
+    assert "T1" in foco["operacion"]
+    assert r"\cdot" not in foco["operacion"]
+    assert "{" not in foco["operacion"] and "}" not in foco["operacion"]
 
-    paso = resultado["segment_steps"][0]
-    foco = ControladorOperacionesMatrices.construir_foco_paso(paso, 1, 1)
-
-    assert foco["index"] == 1
-    assert foco["total"] == 1
-    assert foco["kind"] == "otro"
-    assert "Multiplicación" in foco["op"]
-    assert "T1" in foco["op"]
-    assert r"\cdot" not in foco["op"]
-    assert "{" not in foco["op"] and "}" not in foco["op"]
-
-    assert foco["detail"] is not None
-    assert foco["detail"]["forma"] == "2×2"
-    assert "ejemplo" in foco["detail"]
-    assert foco["detail"]["ejemplo"].startswith("Fila 1 de A")
-    assert len(foco["detail"]["ejemplo"]) <= 120
-    assert foco["detail"]["ejemplo"] != paso["cell_by_cell_steps"][0]["description"]
+    comprobar_ejemplo_foco(foco, paso, "Fila 1 de A")
 
 
 def test_foco_matriz_transpuesta():
     """El foco de transposición conserva forma y ausencia de ejemplo de celda."""
-    evaluador = EvaluadorExpresionesMatriciales()
     matriz_a = Matriz(2, 2, [[Fraction(1), Fraction(2)], [Fraction(3), Fraction(4)]])
-    resultado = evaluador.evaluar("A^T", {"A": matriz_a})
-    assert resultado["status"] == "SUCCESS"
-    assert len(resultado["segment_steps"]) == 1
-
-    paso = resultado["segment_steps"][0]
-    foco = ControladorOperacionesMatrices.construir_foco_paso(paso, 1, 1)
-
-    assert foco["index"] == 1
-    assert foco["total"] == 1
-    assert foco["kind"] == "otro"
-    assert foco["detail"] is not None
-    assert foco["detail"]["forma"] == "2×2"
-    assert "ejemplo" not in foco["detail"]
+    paso, foco = evaluar_foco_matriz("A^T", {"A": matriz_a})
+    assert foco["detalle"] is not None
+    assert foco["detalle"]["forma"] == "2×2"
+    assert "ejemplo" not in foco["detalle"]
 
 
 def test_panel_ia_recolectar_contexto_detalle_paso():
@@ -96,21 +57,21 @@ def test_panel_ia_recolectar_contexto_detalle_paso():
         def obtener_contexto_ia(self):
             """Devuelve las entradas del ejercicio para su explicación."""
             return ContextoIA(
-                herramienta="matrix_ops",
+                herramienta="operaciones_matrices",
                 vista="Matrices",
                 etiqueta="Matriz A y B",
                 entrada={"expresion": "AB"},
             )
 
-    panel = PanelIASimulado(InterfazSimulada(), {"ai_ctx_enabled": True})
+    panel = PanelIASimulado(InterfazSimulada(), {"ia_contexto_habilitado": True})
 
-    panel.explain_focus = {
-        "index": 1,
+    panel.foco_explicacion = {
+        "indice": 1,
         "total": 1,
-        "kind": "otro",
-        "op": "Multiplicación: T1 = A * B",
-        "detail": {"forma": "2×2", "ejemplo": "Celda (1, 1): 1*2 = 2"},
+        "tipo": "otro",
+        "operacion": "Multiplicación: T1 = A * B",
+        "detalle": {"forma": "2×2", "ejemplo": "Celda (1, 1): 1*2 = 2"},
     }
 
-    texto_contexto = panel._collect_context()
+    texto_contexto = panel._recopilar_contexto()
     assert "2×2" in texto_contexto or "Multiplicación" in texto_contexto

@@ -1,8 +1,4 @@
-"""Clasificador de respuestas y errores HTTP del servicio OpenRouter.
-
-Determina si una respuesta HTTP 200 contiene datos válidos y traduce códigos de
-error HTTP (401, 403, 429, 5xx) en decisiones de reintento, conmutación o finalización.
-"""
+"""Clasifica respuestas y fallos HTTP de OpenRouter para reintentar, usar reserva o terminar."""
 
 from dataclasses import dataclass
 import logging
@@ -14,7 +10,8 @@ from src.ai.constantes import (
 )
 
 from src.ai.respuestas import ResultadoIA, TipoErrorIA
-from src.ai.textos import ERROR_SERVICIO
+from src.ai.textos import ERROR_SERVICIO, RESPUESTA_DEMASIADO_EXTENSA
+from src.ai.presupuesto_mensajes import validar_longitud_mensaje
 
 registro = logging.getLogger(__name__)
 
@@ -31,7 +28,13 @@ def procesar_respuesta_exitosa(
             if opciones
             else None
         )
+        if contenido is not None and not isinstance(contenido, str):
+            return ResultadoIA(False, ERROR_SERVICIO, TipoErrorIA.SERVICIO)
         if contenido:
+            try:
+                validar_longitud_mensaje(contenido)
+            except ValueError:
+                return ResultadoIA(False, RESPUESTA_DEMASIADO_EXTENSA, TipoErrorIA.SERVICIO)
             return ResultadoIA(True, contenido, modelo=modelo)
         registro.error("Respuesta de IA vacía con estado 200. Modelo: %s", modelo)
         return ResultadoIA(
@@ -54,15 +57,19 @@ class ContextoIntento:
     total_modelos: int
 
 
+def _puede_reintentar(contexto: ContextoIntento) -> bool:
+    return (
+        contexto.intento == 0
+        and contexto.indice_modelo == 0
+        and contexto.tiempo_restante > TIEMPO_RESTANTE_MINIMO_PARA_REINTENTO
+    )
+
+
 def _manejar_limite_tasa(
     contexto: ContextoIntento,
 ) -> tuple[ResultadoIA | None, str]:
     """Determina si el límite permite reintentar, usar la reserva o terminar."""
-    if (
-        contexto.intento == 0
-        and contexto.indice_modelo == 0
-        and contexto.tiempo_restante > TIEMPO_RESTANTE_MINIMO_PARA_REINTENTO
-    ):
+    if _puede_reintentar(contexto):
         return None, "reintentar"
     if contexto.indice_modelo == 0 and contexto.total_modelos > 1:
         return None, "reserva"
@@ -93,11 +100,7 @@ def clasificar_error_http(
 
     if codigo in CODIGOS_ESTADO_TRANSITORIOS:
         registro.warning("Error transitorio de OpenRouter: estado %s", codigo)
-        if (
-            contexto.intento == 0
-            and contexto.indice_modelo == 0
-            and contexto.tiempo_restante > TIEMPO_RESTANTE_MINIMO_PARA_REINTENTO
-        ):
+        if _puede_reintentar(contexto):
             return None, "reintentar"
         return None, "reserva"
 

@@ -8,11 +8,12 @@ from src.backend.resolutores.operaciones_matrices.formateadores import matriz_a_
 from src.backend.resolutores.operaciones_vectores.combinacion_lineal import (
     ResolutorCombinacionLineal,
 )
-from src.backend.resolutores.operaciones_vectores.captura import construir_vector_desde_dict
+from src.backend.resolutores.operaciones_vectores.captura import (
+    construir_vector_desde_diccionario, parsear_escalar_capturado, validar_carga_vectorial,
+)
 from src.backend.resolutores.operaciones_vectores.operaciones import (
     ResolutorOperacionesVectores,
 )
-from src.backend.utilidades.validadores import ValidadorMatriz
 from src.frontend.controladores.agrupador_pasos import agrupar_pasos_eliminacion
 from src.frontend.controladores.operaciones_matrices.codificador import (
     CodificadorMatriz,
@@ -22,42 +23,42 @@ from src.frontend.controladores.sistemas_lineales.compartido import (
 )
 from src.frontend.controladores.utilidades import (
     construir_vista_pasos,
-    parsear_payload,
+    parsear_carga_json,
 )
 
-logger = logging.getLogger(__name__)
+registro = logging.getLogger(__name__)
 
 
 def _asegurar_latex_en_paso(paso: dict) -> None:
     """Garantiza la representacion LaTeX de una matriz en el paso si no existe."""
-    mat = paso.pop("matrix", None)
-    if mat is not None and not paso.get("detail_latex"):
-        paso["detail_latex"] = matriz_a_latex(mat)
+    matriz = paso.pop("matriz", None)
+    if matriz is not None and not paso.get("detalle_latex"):
+        paso["detalle_latex"] = matriz_a_latex(matriz)
 
 
-def _enriquecer_respuesta_combinacion(res: dict, vectores: list[Matriz]) -> None:
+def _enriquecer_respuesta_combinacion(resultado: dict, vectores: list[Matriz]) -> None:
     """Agrega metadatos pedagógicos y vistas de pasos a la combinación lineal."""
-    pasos_setup = res.get("setup_steps", [])
-    pasos_gauss = res.get("gauss_steps", [])
-    matriz_inicial = pasos_setup[-1].get("matrix") if pasos_setup else None
+    pasos_planteamiento = resultado.get("pasos_planteamiento", [])
+    pasos_gauss = resultado.get("pasos_gauss", [])
+    matriz_inicial = pasos_planteamiento[-1].get("matriz") if pasos_planteamiento else None
 
     if pasos_gauss:
-        res["steps_meta"] = construir_metadatos_pasos(pasos_gauss, matriz_inicial=matriz_inicial)
-    elif "steps" in res:
-        res["steps_meta"] = construir_metadatos_pasos(res["steps"])
+        resultado["metadatos_pasos"] = construir_metadatos_pasos(pasos_gauss, matriz_inicial=matriz_inicial)
+    elif "pasos" in resultado:
+        resultado["metadatos_pasos"] = construir_metadatos_pasos(resultado["pasos"])
 
-    n_vars = len(vectores)
-    res["n_vars"] = n_vars
-    res["variables"] = [f"c_{i+1}" for i in range(n_vars)]
+    numero_variables = len(vectores)
+    resultado["numero_variables"] = numero_variables
+    resultado["variables"] = [f"c_{i+1}" for i in range(numero_variables)]
 
-    pasos_clasificados, grupos, stats = agrupar_pasos_eliminacion(
-        pasos_gauss, n_vars, res.get("status"), contexto="sistema", metodo="gauss"
+    pasos_clasificados, grupos, estadisticas = agrupar_pasos_eliminacion(
+        pasos_gauss, numero_variables, resultado.get("estado"), contexto="sistema", metodo="gauss"
     )
-    res["steps_view"] = construir_vista_pasos(pasos_clasificados)
-    res["groups"] = grupos
-    res["stats"] = stats
+    resultado["vista_pasos"] = construir_vista_pasos(pasos_clasificados)
+    resultado["grupos"] = grupos
+    resultado["estadisticas"] = estadisticas
 
-    for lista_pasos in (pasos_setup, pasos_gauss, res.get("steps", [])):
+    for lista_pasos in (pasos_planteamiento, pasos_gauss, resultado.get("pasos", [])):
         for paso in lista_pasos:
             _asegurar_latex_en_paso(paso)
 
@@ -66,89 +67,86 @@ class ControladorOperacionesVectores:
     """Gestiona la ejecución de operaciones básicas entre vectores y combinaciones lineales."""
 
     @staticmethod
-    def procesar_suma_resta(payload_str: str) -> str:
+    def procesar_suma_resta(carga_texto: str) -> str:
         """Calcula la suma o resta entre dos vectores y devuelve los pasos."""
-        datos, err = parsear_payload(payload_str)
-        if err or datos is None:
-            return err or "{}"
+        datos, error = parsear_carga_json(carga_texto)
+        if error or datos is None:
+            return error or "{}"
 
         try:
-            op = datos.get("operation")
-            v1 = construir_vector_desde_dict(datos.get("v1", {}))
-            v2 = construir_vector_desde_dict(datos.get("v2", {}))
-            estricto = datos.get("strict", False)
+            validar_carga_vectorial(datos, "suma_resta")
+            operacion = datos.get("operacion")
+            v1 = construir_vector_desde_diccionario(datos.get("vector_1", {}))
+            v2 = construir_vector_desde_diccionario(datos.get("vector_2", {}))
+            estricto = datos.get("estricto", False)
 
             resolutor = ResolutorOperacionesVectores()
-            if op == "add":
-                res = resolutor.sumar(v1, v2, nombre1="v_1", nombre2="v_2", estricto=estricto)
+            if operacion == "suma":
+                resultado = resolutor.sumar(v1, v2, nombre1="v_1", nombre2="v_2", estricto=estricto)
             else:
-                res = resolutor.restar(v1, v2, nombre1="v_1", nombre2="v_2", estricto=estricto)
+                resultado = resolutor.restar(v1, v2, nombre1="v_1", nombre2="v_2", estricto=estricto)
 
-            for paso in res.get("steps", []):
-                paso.pop("matrix", None)
-            res.pop("result_matrix", None)
+            for paso in resultado.get("pasos", []):
+                paso.pop("matriz", None)
 
-            return json.dumps(res, cls=CodificadorMatriz)
-        except (AlgebraLinealError, ValueError) as e:
-            return json.dumps({"status": "ERROR", "message": str(e)})
+            return json.dumps(resultado, cls=CodificadorMatriz)
+        except (AlgebraLinealError, ValueError) as error_captura:
+            return json.dumps({"estado": "ERROR", "mensaje": str(error_captura)})
         except Exception:
-            logger.exception("Error inesperado en procesar_suma_resta")
+            registro.exception("Error inesperado en procesar_suma_resta")
             return json.dumps({
-                "status": "ERROR",
-                "message": "Ocurrió un error inesperado al procesar la operación. Inténtalo de nuevo.",
+                "estado": "ERROR",
+                "mensaje": "Ocurrió un error inesperado al procesar la operación. Inténtalo de nuevo.",
             })
 
     @staticmethod
-    def procesar_multiplicacion_escalar(payload_str: str) -> str:
+    def procesar_multiplicacion_escalar(carga_texto: str) -> str:
         """Calcula la multiplicación de un vector por un escalar exacto."""
-        datos, err = parsear_payload(payload_str)
-        if err or datos is None:
-            return err or "{}"
+        datos, error = parsear_carga_json(carga_texto)
+        if error or datos is None:
+            return error or "{}"
 
         try:
-            escalar_str = str(datos.get("scalar", "0"))
-            exito, k, msg = ValidadorMatriz.parsear_numero_exacto(escalar_str)
-            if not exito:
-                return json.dumps({"status": "ERROR", "message": f"Escalar inválido: {msg}"})
-
-            v = construir_vector_desde_dict(datos.get("v", {}))
+            validar_carga_vectorial(datos, "escalar")
+            escalar = parsear_escalar_capturado(datos.get("escalar", "0"))
+            vector = construir_vector_desde_diccionario(datos.get("vector", {}))
             resolutor = ResolutorOperacionesVectores()
-            res = resolutor.multiplicar_escalar(k, v, nombre="v", nombre_resultado="w")
+            resultado = resolutor.multiplicar_escalar(escalar, vector, nombre="v", nombre_resultado="w")
 
-            for paso in res.get("steps", []):
-                paso.pop("matrix", None)
-            res.pop("result_matrix", None)
+            for paso in resultado.get("pasos", []):
+                paso.pop("matriz", None)
 
-            return json.dumps(res, cls=CodificadorMatriz)
-        except (AlgebraLinealError, ValueError) as e:
-            return json.dumps({"status": "ERROR", "message": str(e)})
+            return json.dumps(resultado, cls=CodificadorMatriz)
+        except (AlgebraLinealError, ValueError) as error_captura:
+            return json.dumps({"estado": "ERROR", "mensaje": str(error_captura)})
         except Exception:
-            logger.exception("Error inesperado en procesar_multiplicacion_escalar")
+            registro.exception("Error inesperado en procesar_multiplicacion_escalar")
             return json.dumps({
-                "status": "ERROR",
-                "message": "Ocurrió un error inesperado al procesar la multiplicación por escalar. Inténtalo de nuevo.",
+                "estado": "ERROR",
+                "mensaje": "Ocurrió un error inesperado al procesar la multiplicación por escalar. Inténtalo de nuevo.",
             })
 
     @classmethod
-    def procesar_combinacion_lineal(cls, payload_str: str) -> str:
+    def procesar_combinacion_lineal(cls, carga_texto: str) -> str:
         """Determina los coeficientes que expresan a un vector b como combinación de otros."""
-        datos, err = parsear_payload(payload_str)
-        if err or datos is None:
-            return err or "{}"
+        datos, error = parsear_carga_json(carga_texto)
+        if error or datos is None:
+            return error or "{}"
 
         try:
-            b = construir_vector_desde_dict(datos.get("b", {}))
-            vectores = [construir_vector_desde_dict(v) for v in datos.get("vectors", [])]
+            validar_carga_vectorial(datos, "combinacion_lineal")
+            objetivo = construir_vector_desde_diccionario(datos.get("objetivo", {}))
+            vectores = [construir_vector_desde_diccionario(datos_vector) for datos_vector in datos.get("vectores", [])]
             resolutor = ResolutorCombinacionLineal()
-            res = resolutor.resolver(b, vectores)
-            _enriquecer_respuesta_combinacion(res, vectores)
+            resultado = resolutor.resolver(objetivo, vectores)
+            _enriquecer_respuesta_combinacion(resultado, vectores)
 
-            return json.dumps(res, cls=CodificadorMatriz)
-        except (AlgebraLinealError, ValueError) as e:
-            return json.dumps({"status": "ERROR", "message": str(e)})
+            return json.dumps(resultado, cls=CodificadorMatriz)
+        except (AlgebraLinealError, ValueError) as error_captura:
+            return json.dumps({"estado": "ERROR", "mensaje": str(error_captura)})
         except Exception:
-            logger.exception("Error inesperado en procesar_combinacion_lineal")
+            registro.exception("Error inesperado en procesar_combinacion_lineal")
             return json.dumps({
-                "status": "ERROR",
-                "message": "Ocurrió un error inesperado al resolver la combinación lineal. Inténtalo de nuevo.",
+                "estado": "ERROR",
+                "mensaje": "Ocurrió un error inesperado al resolver la combinación lineal. Inténtalo de nuevo.",
             })

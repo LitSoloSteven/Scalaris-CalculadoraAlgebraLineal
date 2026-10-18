@@ -1,0 +1,53 @@
+.numericos-tarjeta {
+    background: var(--bg-panel);
+    border-color: var(--border-input);
+    box-shadow: var(--elev-2);
+}
+
+.numericos-panel {
+    background: var(--bg-panel);
+    border-color: var(--border-input);
+}
+
+.numericos-acento { color: var(--accent); }
+.numericos-numero { overflow-wrap: anywhere; }
+.numericos-contenedor { min-width: 0; }
+.numericos-fila-activa { background-color: var(--accent-glow); }
+
+.numericos-valor {
+    background: var(--bg-elevated);
+    color: var(--accent);
+    border-color: var(--border-input);
+}
+
+.numericos-validacion {
+    background: var(--accent-glow);
+    color: var(--accent);
+}
+
+.numericos-desplazamiento {
+    overflow-x: auto;
+    width: 100%;
+    min-width: 0;
+    margin-block: 0.5rem;
+}
+
+.numericos-tabla { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.numericos-tabla th, .numericos-tabla td { padding: 0.5rem; text-align: center; }
+.numericos-tabla th { color: var(--text-sec); }
+.numericos-tabla td { border-bottom: 1px solid var(--border-input); }
+.numericos-tabla thead, .numericos-tabla tfoot { background: var(--bg-elevated); }
+.numericos-negrita { font-weight: 700; }
+.numericos-tabla .numericos-subtotal { text-align: right; color: var(--text-sec); }
+.numericos-residuo-activo {
+    display: block;
+    margin: 0.25rem;
+    border-radius: 0.375rem;
+    color: var(--btn-primary-text);
+    background: var(--accent);
+    font-weight: 700;
+}
+.numericos-lectura { display: flex; align-items: center; flex-wrap: wrap; gap: 1.5rem; margin-top: 1rem; }
+.numericos-lectura > .numericos-contenedor { flex: 1; }
+.numericos-direccion { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; color: var(--text-sec); }
+.numericos-direccion > span:last-child { max-width: 6rem; text-align: center; }

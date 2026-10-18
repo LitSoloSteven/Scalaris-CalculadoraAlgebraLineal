@@ -25,15 +25,15 @@ CATALOGO_TIPOS = {
     "resultado": {"etiqueta": "Resultado", "icono": "check_circle"},
 }
 VELOCIDADES_AUTOREPRODUCCION = {"Lenta": 1.2, "Normal": 0.6, "Rápida": 0.2}
-STACKED_FRAC_MAX_N = 6
+DIMENSION_MAXIMA_FRACCIONES_APILADAS = 6
 
 
-def html_chip_tipo(tipo: str, etiqueta: str | None = None) -> str:
+def html_sugerencia_tipo(tipo: str, etiqueta: str | None = None) -> str:
     """Genera el HTML del chip con etiqueta escapada e icono del catálogo."""
     meta = CATALOGO_TIPOS.get(tipo, CATALOGO_TIPOS["otro"])
     clase = html.escape(tipo, quote=True)
     texto = html.escape(etiqueta if etiqueta is not None else meta["etiqueta"])
     return (
-        f'<span class="chip-kind chip-{clase}">'
+        f'<span class="pasos-distintivo-tipo pasos-etiqueta-{clase}">'
         f'<span class="material-icons">{meta["icono"]}</span>{texto}</span>'
     )

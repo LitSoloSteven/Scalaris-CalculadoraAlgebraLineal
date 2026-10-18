@@ -1,13 +1,11 @@
-"""Plantillas de mensajes y formateo de preguntas para Glosa.
-
-Define el prompt del sistema pedagógico, la gestión del historial de chat
-y los generadores de preguntas contextuales para explicaciones paso a paso.
-"""
+"""Instrucciones pedagógicas, historial y preguntas contextuales para Glosa."""
 
 from typing import Any
 
-from src.ai.constantes import MAXIMO_HISTORIAL_MENSAJES
+from src.ai.constantes import MAXIMO_CARACTERES_MENSAJE, MAXIMO_HISTORIAL_MENSAJES
 from src.ai.contexto import sanear_cadena_usuario
+from src.ai.historial import es_contrato_historial
+from src.ai.presupuesto_mensajes import validar_longitud_mensaje
 
 INSTRUCCIONES_SISTEMA = """Eres Glosa, asistente experta en álgebra lineal y sistemas numéricos para estudiantes de ingeniería. Responde en español y tutea al estudiante. Sé directa y cálida.
 Usa los datos del bloque [CONTEXTO] como la verdad del ejercicio actual. No recalcules lo que ya está resuelto en el contexto; úsalo. NO uses LaTeX ni símbolos de dólar ($$). Usa texto plano limpio y corchetes para matrices (p. ej. `[1 2; 3 4]`). Usa `≈` para fracciones exactas aproximadas.
@@ -19,29 +17,27 @@ SUFIJO_MAS_SIMPLE = " Por favor, responde de forma aún más simple y corta (má
 
 
 def _mensaje_historial_valido(mensaje: dict[str, Any]) -> bool:
+    if not es_contrato_historial(mensaje):
+        return False
     if mensaje.get("error"):
         return False
-    texto = mensaje.get("text")
-    if texto is None and "content" in mensaje:
-        texto = mensaje.get("content")
+    texto = mensaje.get("texto")
+    if isinstance(texto, str) and len(texto) > MAXIMO_CARACTERES_MENSAJE:
+        return False
     return texto is not None and bool(str(texto).strip())
 
 
 def _normalizar_mensaje_historial(mensaje: dict[str, Any]) -> dict[str, str]:
-    if "role" in mensaje:
-        rol = mensaje["role"]
-    else:
-        rol = "user" if mensaje.get("sent") else "assistant"
-    contenido = (
-        mensaje.get("text") if mensaje.get("text") is not None else mensaje.get("content", "")
-    ).strip()
+    rol = "user" if mensaje.get("enviado") else "assistant"
+    contenido = mensaje["texto"].strip()
     return {"role": rol, "content": contenido}
 
 
 def recortar_historial(
     historial: list[dict[str, Any]], maximo_mensajes: int = MAXIMO_HISTORIAL_MENSAJES
 ) -> list[dict[str, str]]:
-    """Filtra y acota los mensajes del historial eliminando errores y vacíos."""
+    """Acota el historial canónico y devuelve mensajes del proveedor sin mutar la entrada.
+    Descarta errores y vacíos; un contenido no textual lanza AttributeError al quitar espacios."""
     mensajes_validos = [mensaje for mensaje in historial if _mensaje_historial_valido(mensaje)]
     return [_normalizar_mensaje_historial(mensaje) for mensaje in mensajes_validos[-maximo_mensajes:]]
 
@@ -53,7 +49,8 @@ def construir_mensajes(
     *,
     respuesta_simple: bool = False,
 ) -> list[dict[str, str]]:
-    """Construye el payload de mensajes listo para enviar a la API de chat."""
+    """Construye la carga de mensajes del proveedor con historial, pregunta y contexto."""
+    validar_longitud_mensaje(pregunta)
     mensajes = [{"role": "system", "content": INSTRUCCIONES_SISTEMA}]
     mensajes.extend(recortar_historial(historial))
 

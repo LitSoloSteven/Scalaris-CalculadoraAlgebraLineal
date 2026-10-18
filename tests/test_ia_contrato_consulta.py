@@ -18,12 +18,13 @@ from tests.comun_openrouter import RespuestaSimulada, limpiar_estado_openrouter
 
 @pytest.mark.parametrize("usar_cache", [False, True])
 @pytest.mark.parametrize("respuesta_simple", [False, True])
-def test_opciones_conservan_payload_y_reutilizacion(monkeypatch, usar_cache, respuesta_simple):
+def test_opciones_conservan_carga_y_reutilizacion(monkeypatch, usar_cache, respuesta_simple):
     """Las cuatro combinaciones conservan el mensaje efectivo y la política de caché."""
     monkeypatch.setenv("OPENROUTER_API_KEY", "clave-ficticia")
     peticiones = []
 
     def responder(url, headers=None, json=None, timeout=None):
+        """Devuelve la respuesta simulada para aislar la comunicación de red."""
         peticiones.append((headers, json, timeout))
         return RespuestaSimulada(200, {"choices": [{"message": {"content": "Respuesta"}}]})
 
@@ -73,6 +74,7 @@ def test_cancelacion_durante_http_no_guarda_respuesta(monkeypatch):
     llamadas = []
 
     def responder(url, headers=None, json=None, timeout=None):
+        """Devuelve la respuesta simulada para aislar la comunicación de red."""
         llamadas.append(json)
         cancelar.set()
         return RespuestaSimulada(200, {"choices": [{"message": {"content": "Descartada"}}]})
@@ -94,20 +96,22 @@ def test_panel_transmite_historial_contexto_y_opciones(monkeypatch, usar_cache, 
     """El puente transmite los datos al cliente real sin incluir la pregunta dos veces."""
     esperado = ResultadoIA(True, "Respuesta")
     peticiones = []
-    historial = [{"text": "Anterior", "sent": True}, {"text": "Pregunta", "sent": True}]
+    historial = [{"texto": "Anterior", "enviado": True}, {"texto": "Pregunta", "enviado": True}]
     cancelar = threading.Event()
 
     def preguntar(pregunta, historial=None, contexto=None, cancelar=None, opciones=None):
+        """Procesa preguntar con los datos recibidos."""
         peticiones.append((pregunta, historial, contexto, cancelar, opciones))
         return esperado
 
     async def ejecutar(funcion, *argumentos, **opciones):
+        """Procesa ejecutar con los datos recibidos."""
         return funcion(*argumentos, **opciones)
 
     monkeypatch.setattr(glosa_envio.run, "io_bound", ejecutar)
     panel = SimpleNamespace(
-        motor_ia=SimpleNamespace(preguntar=preguntar), chat_history=historial,
-        _collect_context=lambda: "Contexto",
+        motor_ia=SimpleNamespace(preguntar=preguntar), historial_chat=historial,
+        _recopilar_contexto=lambda: "Contexto",
     )
     obtenido = asyncio.run(glosa_envio.EnvioGlosaMixin._consultar_motor_ia(
         panel, "Pregunta", usar_cache, respuesta_simple, cancelar,
@@ -122,12 +126,13 @@ def test_panel_transmite_historial_contexto_y_opciones(monkeypatch, usar_cache, 
 def test_error_inesperado_del_puente_omite_detalles_privados(monkeypatch, caplog):
     """El fallo imprevisto devuelve un mensaje genérico sin registrar datos sensibles."""
     async def fallar(*argumentos, **opciones):
+        """Procesa fallar con los datos recibidos."""
         raise RuntimeError("secreto-ficticio\nregistro-inyectado")
 
     monkeypatch.setattr(glosa_envio.run, "io_bound", fallar)
     panel = SimpleNamespace(
         motor_ia=SimpleNamespace(preguntar=lambda pregunta: None),
-        chat_history=[], _collect_context=lambda: "",
+        historial_chat=[], _recopilar_contexto=lambda: "",
     )
     with caplog.at_level(logging.ERROR):
         resultado = asyncio.run(glosa_envio.EnvioGlosaMixin._consultar_motor_ia(
@@ -142,12 +147,13 @@ def test_error_inesperado_del_puente_omite_detalles_privados(monkeypatch, caplog
 def test_trabajador_cancelado_devuelve_resultado_cancelado(monkeypatch):
     """La ausencia de resultado por cancelación o apagado conserva un contrato válido."""
     async def terminar_sin_resultado(*argumentos, **opciones):
+        """Procesa terminar sin resultado con los datos recibidos."""
         return None
 
     monkeypatch.setattr(glosa_envio.run, "io_bound", terminar_sin_resultado)
     panel = SimpleNamespace(
         motor_ia=SimpleNamespace(preguntar=lambda pregunta: None),
-        chat_history=[], _collect_context=lambda: "",
+        historial_chat=[], _recopilar_contexto=lambda: "",
     )
     resultado = asyncio.run(glosa_envio.EnvioGlosaMixin._consultar_motor_ia(
         panel, "Pregunta", False, False, threading.Event(),

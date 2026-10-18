@@ -2,7 +2,8 @@
 from fractions import Fraction
 import pytest
 
-from src.frontend.helpers import a_flotante, formatear_paso_mathjax
+from src.backend.utilidades.conversion_numerica import a_flotante
+from src.frontend.ayudas import formatear_paso_mathjax
 
 
 def test_a_flotante():

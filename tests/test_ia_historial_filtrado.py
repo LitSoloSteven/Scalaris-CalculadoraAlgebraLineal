@@ -9,9 +9,9 @@ from src.ai.mensajes import recortar_historial
 def test_recorte_aplica_slice_despues_de_filtrar_sin_mutar(limite, esperados):
     """El límite se aplica a mensajes válidos conservando la semántica de cero y negativos."""
     historial = [
-        {"text": "1", "sent": True}, {"text": "", "sent": False},
-        {"text": "2", "sent": False}, {"text": "Error", "error": True},
-        {"text": "3", "sent": True}, {"content": "   "},
+        {"texto": "1", "enviado": True}, {"texto": "", "enviado": False},
+        {"texto": "2", "enviado": False}, {"texto": "Error", "error": True},
+        {"texto": "3", "enviado": True}, {"content": "   "},
     ]
     copia = deepcopy(historial)
     resultado = recortar_historial(historial, limite)
@@ -20,15 +20,15 @@ def test_recorte_aplica_slice_despues_de_filtrar_sin_mutar(limite, esperados):
 
 
 @pytest.mark.parametrize("mensaje,esperado", [
-    ({"text": " Principal ", "content": "Secundario", "sent": True}, {"role": "user", "content": "Principal"}),
-    ({"text": "", "content": "Secundario"}, None),
-    ({"text": None, "content": " Alternativo ", "role": "assistant"}, {"role": "assistant", "content": "Alternativo"}),
-    ({"content": "Texto", "sent": True, "role": None}, {"role": None, "content": "Texto"}),
-    ({"text": "Texto", "error": True}, None),
+    ({"texto": " Principal ", "content": "Secundario", "enviado": True}, None),
+    ({"texto": "", "content": "Secundario"}, None),
+    ({"texto": None, "content": " Alternativo ", "role": "assistant"}, None),
+    ({"content": "Texto", "enviado": True, "role": None}, None),
+    ({"texto": "Texto", "error": True}, None),
     ({}, None),
 ])
 def test_prioridad_de_texto_y_rol_se_conserva(mensaje, esperado):
-    """El rol explícito y la presencia de texto tienen la prioridad histórica."""
+    """Los formatos alternativos se rechazan sin sustituir el texto canónico."""
     assert recortar_historial([mensaje]) == ([] if esperado is None else [esperado])
 
 
@@ -36,4 +36,4 @@ def test_prioridad_de_texto_y_rol_se_conserva(mensaje, esperado):
 def test_contenido_no_textual_conserva_excepcion(contenido):
     """El contrato histórico exige cadenas y no transforma contenido de otros tipos."""
     with pytest.raises(AttributeError):
-        recortar_historial([{"text": contenido}])
+        recortar_historial([{"texto": contenido}])

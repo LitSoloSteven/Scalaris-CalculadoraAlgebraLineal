@@ -1,9 +1,4 @@
-"""Estrategias de recorte y formateo JSON para la serialización de contexto de IA.
-
-Implementa la cascada progresiva de reducción de tamaño para garantizar que
-el bloque [CONTEXTO] cumpla con los límites de longitud permitidos sin perder
-información esencial.
-"""
+"""Recortes progresivos del contexto de IA que priorizan la captura y el foco actuales."""
 
 import copy
 import dataclasses
@@ -11,7 +6,7 @@ import json
 from typing import Any
 
 from src.ai.constantes import (
-    LONGITUD_ETIQUETA_FALLBACK,
+    LONGITUD_ETIQUETA_RESERVA,
     LONGITUD_TEXTO_CORTO,
     MAXIMO_CARACTERES_CONTEXTO,
 )
@@ -22,8 +17,6 @@ def _valor_json_predeterminado(objeto: Any) -> Any:
     from fractions import Fraction
     if isinstance(objeto, Fraction):
         return str(objeto)
-    if hasattr(objeto, "rows") and hasattr(objeto, "cols"):
-        return {"filas": getattr(objeto, "rows"), "columnas": getattr(objeto, "cols")}
     return str(objeto)[:LONGITUD_TEXTO_CORTO]
 
 
@@ -31,8 +24,8 @@ def construir_contexto_minimo(
     herramienta: str, vista: str, maximo_caracteres: int
 ) -> str:
     """Acota el bloque completo; lanza ValueError si el límite no admite el esquema mínimo."""
-    nombre_herramienta = str(herramienta or "")[:LONGITUD_ETIQUETA_FALLBACK]
-    nombre_vista = str(vista or "")[:LONGITUD_ETIQUETA_FALLBACK]
+    nombre_herramienta = str(herramienta or "")[:LONGITUD_ETIQUETA_RESERVA]
+    nombre_vista = str(vista or "")[:LONGITUD_ETIQUETA_RESERVA]
     datos = {"version": 1, "herramienta": nombre_herramienta, "vista": nombre_vista,
              "metadatos": {"truncado": True}}
     base = dict(datos, herramienta="", vista="")
@@ -64,7 +57,7 @@ def _recorte_eliminar_detalle_foco(contexto: Any) -> None:
 def _recorte_eliminar_extras_resultado(contexto: Any) -> None:
     """Elimina pasos y matrices intermedias del resultado."""
     if contexto.resultado:
-        for clave in ("inverse", "steps", "segment_steps", "pasos"):
+        for clave in ("inversa", "pasos", "pasos_segmento"):
             contexto.resultado.pop(clave, None)
 
 
@@ -122,15 +115,15 @@ def _recorte_resultado_a_estado(contexto: Any) -> None:
     """Conserva únicamente el estado y mensaje esencial del resultado."""
     if not contexto.resultado:
         return
-    estado = contexto.resultado.get("status", "")
+    estado = contexto.resultado.get("estado", "")
     linea = (
-        contexto.resultado.get("message")
+        contexto.resultado.get("mensaje")
         or contexto.resultado.get("clasificacion")
         or ""
     )
-    contexto.resultado = {"status": estado}
+    contexto.resultado = {"estado": estado}
     if linea:
-        contexto.resultado["message"] = linea
+        contexto.resultado["mensaje"] = linea
 
 
 def _conservar_solo_primera_fila(filas: dict) -> None:

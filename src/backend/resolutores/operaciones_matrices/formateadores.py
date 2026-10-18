@@ -7,11 +7,11 @@ from src.backend.utilidades.formateadores import numero_a_latex
 
 def matriz_a_latex(matriz: Matriz, eps: float = TOLERANCIA_COINCIDENCIA_FRACCION) -> str:
     """Renderiza una matriz en formato LaTeX bmatrix."""
-    filas_str = []
+    filas_texto = []
     for r in range(matriz.filas):
         valores = [numero_a_latex(matriz.obtener(r, c)) for c in range(matriz.columnas)]
-        filas_str.append(" & ".join(valores))
-    cuerpo = " \\\\\n".join(filas_str)
+        filas_texto.append(" & ".join(valores))
+    cuerpo = " \\\\\n".join(filas_texto)
     return f"\\begin{{bmatrix}}\n{cuerpo}\n\\end{{bmatrix}}"
 
 
@@ -21,46 +21,46 @@ def sumar_restar_matriz_a_latex(
     operador: str = "+",
 ) -> str:
     """Renderiza la suma o resta elemento a elemento en formato LaTeX."""
-    filas_str = []
+    filas_texto = []
     for r in range(matriz_a.filas):
         valores = []
         for c in range(matriz_a.columnas):
-            a_str = numero_a_latex(matriz_a.obtener(r, c))
-            b_str = numero_a_latex(matriz_b.obtener(r, c))
-            a_fmt = f"({a_str})" if a_str.startswith("-") else a_str
-            b_fmt = f"({b_str})" if b_str.startswith("-") else b_str
-            valores.append(f"{a_fmt} {operador} {b_fmt}")
-        filas_str.append(" & ".join(valores))
-    cuerpo = " \\\\\n".join(filas_str)
+            operando_a_texto = numero_a_latex(matriz_a.obtener(r, c))
+            operando_b_texto = numero_a_latex(matriz_b.obtener(r, c))
+            operando_a_formateado = f"({operando_a_texto})" if operando_a_texto.startswith("-") else operando_a_texto
+            operando_b_formateado = f"({operando_b_texto})" if operando_b_texto.startswith("-") else operando_b_texto
+            valores.append(f"{operando_a_formateado} {operador} {operando_b_formateado}")
+        filas_texto.append(" & ".join(valores))
+    cuerpo = " \\\\\n".join(filas_texto)
     return f"\\begin{{bmatrix}}\n{cuerpo}\n\\end{{bmatrix}}"
 
 
 def multiplicar_matriz_a_latex(matriz_a: Matriz, matriz_b: Matriz) -> str:
     """Renderiza el producto matricial fila por columna en formato LaTeX."""
-    m, n, q = matriz_a.filas, matriz_a.columnas, matriz_b.columnas
-    filas_str = []
-    for r in range(m):
+    numero_filas, numero_intermedias, numero_columnas = matriz_a.filas, matriz_a.columnas, matriz_b.columnas
+    filas_texto = []
+    for r in range(numero_filas):
         valores = []
-        for c in range(q):
+        for c in range(numero_columnas):
             terminos = []
-            for k in range(n):
-                a_str = numero_a_latex(matriz_a.obtener(r, k))
-                b_str = numero_a_latex(matriz_b.obtener(k, c))
-                terminos.append(f"({a_str})({b_str})")
+            for k in range(numero_intermedias):
+                operando_a_texto = numero_a_latex(matriz_a.obtener(r, k))
+                operando_b_texto = numero_a_latex(matriz_b.obtener(k, c))
+                terminos.append(f"({operando_a_texto})({operando_b_texto})")
             valores.append(" + ".join(terminos))
-        filas_str.append(" & ".join(valores))
-    cuerpo = " \\\\\n".join(filas_str)
+        filas_texto.append(" & ".join(valores))
+    cuerpo = " \\\\\n".join(filas_texto)
     return f"\\begin{{bmatrix}}\n{cuerpo}\n\\end{{bmatrix}}"
 
 
-def matriz_particionada_a_latex(matriz: Matriz, num_columnas_izq: int) -> str:
+def matriz_particionada_a_latex(matriz: Matriz, numero_columnas_izquierda: int) -> str:
     """Renderiza una matriz aumentada particionada con linea vertical divisoria."""
     total = matriz.columnas
-    derecha = total - num_columnas_izq
-    if num_columnas_izq < 1 or derecha < 1:
+    derecha = total - numero_columnas_izquierda
+    if numero_columnas_izquierda < 1 or derecha < 1:
         return matriz_a_latex(matriz)
 
-    especificacion = ("c" * num_columnas_izq) + "|" + ("c" * derecha)
+    especificacion = ("c" * numero_columnas_izquierda) + "|" + ("c" * derecha)
     filas = []
     for i in range(matriz.filas):
         valores = [numero_a_latex(matriz.obtener(i, j)) for j in range(total)]

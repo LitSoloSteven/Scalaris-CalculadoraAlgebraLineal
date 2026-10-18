@@ -14,7 +14,6 @@ from src.backend.resolutores.operaciones_matrices.operaciones import (
 from src.backend.resolutores.sistemas_lineales.gauss_jordan import (
     ResolutorGaussJordan,
 )
-from src.backend.utilidades.formateadores import formatear_fraccion_str, numero_a_latex
 
 
 def _construir_identidad(dimension: int) -> Matriz:
@@ -28,40 +27,39 @@ class ResolutorInversa:
 
     def __init__(self) -> None:
         """Inicializa el resolutor con soporte de operaciones matriciales."""
-        self.resolutor_ops = ResolutorOperacionesMatrices()
+        self.resolutor_operaciones_matrices = ResolutorOperacionesMatrices()
 
-    def _construir_aumentada(self, matriz_a: Matriz, n: int) -> tuple[Matriz, str]:
+    def _construir_aumentada(self, matriz_a: Matriz, dimension: int) -> tuple[Matriz, str]:
         """Construye la matriz [A | I] de tamano n x 2n."""
         datos = []
-        for i in range(n):
-            fila = [matriz_a.obtener(i, j) for j in range(n)]
-            fila.extend(Fraction(1) if i == j else Fraction(0) for j in range(n))
+        for i in range(dimension):
+            fila = [matriz_a.obtener(i, j) for j in range(dimension)]
+            fila.extend(Fraction(1) if i == j else Fraction(0) for j in range(dimension))
             datos.append(fila)
-        aumentada = Matriz(n, 2 * n, datos)
-        return aumentada, matriz_particionada_a_latex(aumentada, n)
+        aumentada = Matriz(dimension, 2 * dimension, datos)
+        return aumentada, matriz_particionada_a_latex(aumentada, dimension)
 
-    def _extraer_inversa(self, reducida: Matriz, n: int) -> Matriz:
+    def _extraer_inversa(self, reducida: Matriz, dimension: int) -> Matriz:
         """Extrae el bloque derecho n x n de la matriz reducida [I | A^-1]."""
         datos = [
-            [reducida.obtener(i, n + j) for j in range(n)]
-            for i in range(n)
+            [reducida.obtener(i, dimension + j) for j in range(dimension)]
+            for i in range(dimension)
         ]
-        return Matriz(n, n, datos)
+        return Matriz(dimension, dimension, datos)
 
-    def _formatear_pasos(self, pasos: list[dict], n: int, construir_latex: bool) -> list[dict]:
+    def _formatear_pasos(self, pasos: list[dict], dimension: int, construir_latex: bool) -> list[dict]:
         """Formatea los pasos con matriz particionada en LaTeX si se solicita."""
         formateados = []
-        for p in pasos:
-            mat = p.get("matriz")
-            tex = matriz_particionada_a_latex(mat, n) if (mat and construir_latex) else None
-            desc = p.get("descripcion", p.get("description", ""))
+        for indice, paso in enumerate(pasos):
+            matriz = paso.get("matriz")
+            latex = matriz_particionada_a_latex(matriz, dimension) if (matriz and construir_latex) else None
+            desc = paso.get("descripcion", "")
+            if indice == 0:
+                desc = desc.replace("[A|b]", "[A|I]")
             formateados.append({
                 "descripcion": desc,
-                "description": desc,
-                "matriz": mat,
-                "matrix": mat,
-                "detalle_latex": tex,
-                "detail_latex": tex,
+                "matriz": matriz,
+                "detalle_latex": latex,
             })
         return formateados
 
@@ -69,57 +67,54 @@ class ResolutorInversa:
         self,
         matriz_a: Matriz,
         inversa: Matriz,
-        n: int,
+        dimension: int,
         inverso: bool,
     ) -> dict:
         """Verifica que el producto A · A^-1 o A^-1 · A coincida con la identidad."""
-        izq = inversa if inverso else matriz_a
-        der = matriz_a if inverso else inversa
-        res = self.resolutor_ops.multiplicar(izq, der)
-        prod = res.get("matriz_resultado")
-        identidad = _construir_identidad(n)
-        es_exacto = (prod == identidad) if prod else False
+        izquierda = inversa if inverso else matriz_a
+        derecha = matriz_a if inverso else inversa
+        resultado = self.resolutor_operaciones_matrices.multiplicar(izquierda, derecha)
+        producto = resultado.get("matriz_resultado")
+        identidad = _construir_identidad(dimension)
+        es_exacto = producto.datos == identidad.datos if producto else False
         etiq = "A^{-1} \\cdot A = I" if inverso else "A \\cdot A^{-1} = I"
-        status_word = "Correcto" if es_exacto else "Incorrecto"
-        izq_nom = "A^{-1}" if inverso else "A"
-        der_nom = "A" if inverso else "A^{-1}"
-        prod_tex = matriz_a_latex(prod) if prod else ""
-        detalle_latex = f"{izq_nom} \\cdot {der_nom} = {prod_tex} \\quad (\\text{{{status_word}}})"
+        palabra_estado = "Correcto" if es_exacto else "Incorrecto"
+        izquierda_nombre = "A^{-1}" if inverso else "A"
+        derecha_nombre = "A" if inverso else "A^{-1}"
+        producto_latex = matriz_a_latex(producto) if producto else ""
+        detalle_latex = f"{izquierda_nombre} \\cdot {derecha_nombre} = {producto_latex} \\quad (\\text{{{palabra_estado}}})"
         desc = f"Verificación {'A⁻¹·A' if inverso else 'A·A⁻¹'} = I."
         return {
             "propiedad": etiq,
-            "description": desc,
+            "nombre_izquierdo": izquierda_nombre,
+            "nombre_derecho": derecha_nombre,
             "descripcion": desc,
             "se_cumple": es_exacto,
             "coincide": es_exacto,
-            "matriz_producto_latex": prod_tex,
-            "product_latex": prod_tex,
+            "matriz_producto_latex": producto_latex,
             "detalle_latex": detalle_latex,
-            "detail_latex": detalle_latex,
         }
 
     def _verificar_propiedad_transpuesta(self, matriz_a: Matriz, inversa: Matriz) -> dict:
         """Verifica la identidad (A^T)^-1 = (A^-1)^T mediante (A^-1)^T · A^T = I."""
-        trans_a = self.resolutor_ops.transponer(matriz_a)
-        trans_inv = self.resolutor_ops.transponer(inversa)
-        n = matriz_a.filas
-        res_mul = self.resolutor_ops.multiplicar(trans_inv, trans_a)
-        prod = res_mul.get("matriz_resultado")
-        identidad = _construir_identidad(n)
-        es_exacto = (prod == identidad) if prod else False
-        status_word = "Coinciden" if es_exacto else "Difieren"
-        prod_tex = matriz_a_latex(prod) if prod else ""
-        detalle_latex = f"(A^{{-1}})^T \\cdot A^T = {prod_tex} \\quad (\\text{{{status_word}}})"
-        desc = "Verificación (Aᵀ)⁻¹ = (A⁻¹)ᵀ."
+        trans_a = self.resolutor_operaciones_matrices.transponer(matriz_a)
+        trans_inv = self.resolutor_operaciones_matrices.transponer(inversa)
+        dimension = matriz_a.filas
+        resultado_multiplicacion = self.resolutor_operaciones_matrices.multiplicar(trans_inv, trans_a)
+        producto = resultado_multiplicacion.get("matriz_resultado")
+        identidad = _construir_identidad(dimension)
+        es_exacto = producto.datos == identidad.datos if producto else False
+        palabra_estado = "Coinciden" if es_exacto else "Difieren"
+        producto_latex = matriz_a_latex(producto) if producto else ""
+        detalle_latex = f"(A^{{-1}})^T \\cdot A^T = {producto_latex} \\quad (\\text{{{palabra_estado}}})"
+        desc = "Verificación (Aᵀ)⁻¹ = (A⁻¹)ᵀ (PPT Inversa, pág. 11)."
         return {
             "propiedad": "(A^T)^{-1} = (A^{-1})^T",
-            "description": desc,
             "descripcion": desc,
             "se_cumple": es_exacto,
             "coincide": es_exacto,
             "inversa_transpuesta_latex": matriz_a_latex(trans_inv),
             "detalle_latex": detalle_latex,
-            "detail_latex": detalle_latex,
         }
 
     @staticmethod
@@ -128,7 +123,7 @@ class ResolutorInversa:
         if not isinstance(matriz_a, Matriz):
             return "Se esperaba una instancia de Matriz."
         if matriz_a.filas != matriz_a.columnas:
-            return f"La matriz debe ser cuadrada: recibido {matriz_a.filas}×{matriz_a.columnas}."
+            return f"La matriz debe ser cuadrada para tener inversa: recibido {matriz_a.filas}×{matriz_a.columnas}."
         return None
 
     def _construir_resultado_exito(
@@ -138,30 +133,22 @@ class ResolutorInversa:
         meta: tuple[Fraction, str, list[dict]],
     ) -> dict:
         """Construye el diccionario de resultado exitoso con verificaciones."""
-        det, aug_tex, pasos = meta
-        n = matriz_a.filas
-        v1 = self._verificar_producto(matriz_a, inversa, n, inverso=False)
-        v2 = self._verificar_producto(matriz_a, inversa, n, inverso=True)
+        determinante, aumentada_latex, pasos = meta
+        dimension = matriz_a.filas
+        v1 = self._verificar_producto(matriz_a, inversa, dimension, inverso=False)
+        v2 = self._verificar_producto(matriz_a, inversa, dimension, inverso=True)
         v3 = self._verificar_propiedad_transpuesta(matriz_a, inversa)
         return {
             "estado": EXITO,
-            "status": "SUCCESS",
-            "mensaje": f"Inversa calculada con éxito ({n}×{n}).",
-            "message": f"Inversa calculada con éxito ({n}×{n}).",
-            "determinante": det,
-            "determinant": det,
-            "matriz_aumentada_inicial_latex": aug_tex,
+            "mensaje": f"Inversa calculada con éxito ({dimension}×{dimension}).",
+            "determinante": determinante,
+            "matriz_aumentada_inicial_latex": aumentada_latex,
             "inversa": inversa,
-            "inverse": inversa,
             "inversa_latex": matriz_a_latex(inversa),
             "pasos": pasos,
-            "steps": pasos,
             "paso_verificacion": v1,
-            "verification_step": v1,
             "paso_verificacion_inverso": v2,
-            "verification_reverse_step": v2,
             "paso_propiedad_transpuesta": v3,
-            "transpose_property_step": v3,
         }
 
     def resolver(
@@ -169,52 +156,54 @@ class ResolutorInversa:
         matriz_a: Matriz,
         *,
         construir_detalle_latex: bool = True,
-        **opciones,
     ) -> dict:
         """Calcula A^-1 mediante Gauss-Jordan o reporta que la matriz es singular."""
-        if "build_step_latex" in opciones and opciones["build_step_latex"] is not None:
-            construir_detalle_latex = bool(opciones["build_step_latex"])
-        err = self._validar_cuadrada(matriz_a)
-        if err:
-            return {"estado": ERROR, "status": "ERROR", "mensaje": err, "message": err}
+        error = self._validar_cuadrada(matriz_a)
+        if error:
+            return _construir_respuesta_sin_inversa(ERROR, error)
 
-        n = matriz_a.filas
-        det = self.resolutor_ops.determinante(matriz_a)
-        if det == 0:
+        dimension = matriz_a.filas
+        determinante = self.resolutor_operaciones_matrices.determinante(matriz_a)
+        if determinante == 0:
             return _construir_respuesta_singular(
-                det, "La matriz es singular (det = 0). No tiene inversa."
+                determinante, "La matriz es singular (det = 0). No tiene inversa."
             )
 
-        aumentada, aug_tex = self._construir_aumentada(matriz_a, n)
-        reduccion = ResolutorGaussJordan(aumentada, num_terminos_independientes=n).resolver_reduccion()
+        aumentada, aumentada_latex = self._construir_aumentada(matriz_a, dimension)
+        reduccion = ResolutorGaussJordan(aumentada, numero_terminos_independientes=dimension).resolver_reduccion()
 
-        if reduccion["rango"] < n:
-            msg = f"La matriz es singular (rango {reduccion['rango']} < {n}). No tiene inversa."
-            pasos_fmt = self._formatear_pasos(reduccion["pasos"], n, construir_detalle_latex)
-            return _construir_respuesta_singular(det, msg, aug_tex, pasos_fmt)
+        if reduccion["rango"] < dimension:
+            mensaje_resultado = f"La matriz es singular (rango {reduccion['rango']} < {dimension}). No tiene inversa."
+            pasos_formateados = self._formatear_pasos(reduccion["pasos"], dimension, construir_detalle_latex)
+            return _construir_respuesta_singular(determinante, mensaje_resultado, aumentada_latex, pasos_formateados)
 
-        inversa = self._extraer_inversa(reduccion["matriz_reducida"], n)
-        pasos = self._formatear_pasos(reduccion["pasos"], n, construir_detalle_latex)
-        return self._construir_resultado_exito(matriz_a, inversa, (det, aug_tex, pasos))
+        inversa = self._extraer_inversa(reduccion["matriz_reducida"], dimension)
+        pasos = self._formatear_pasos(reduccion["pasos"], dimension, construir_detalle_latex)
+        return self._construir_resultado_exito(matriz_a, inversa, (determinante, aumentada_latex, pasos))
 
 
 def _construir_respuesta_singular(
-    det: Fraction,
+    determinante: Fraction,
     mensaje: str,
-    aug_tex: str | None = None,
+    aumentada_latex: str | None = None,
     pasos: list[dict] | None = None,
 ) -> dict:
     """Construye el diccionario de salida cuando la matriz no es invertible."""
-    res = {
-        "estado": SINGULAR,
-        "status": "SINGULAR",
-        "mensaje": mensaje,
-        "message": mensaje,
-        "determinante": det,
-        "determinant": det,
+    resultado = _construir_respuesta_sin_inversa(SINGULAR, mensaje)
+    resultado["determinante"] = determinante
+    resultado["matriz_aumentada_inicial_latex"] = aumentada_latex
+    resultado["pasos"] = pasos if pasos is not None else []
+    return resultado
+
+
+def _construir_respuesta_sin_inversa(estado: str, mensaje: str) -> dict:
+    """Devuelve el contrato completo cuando no se puede calcular una inversa."""
+    return {
+        "estado": estado, "mensaje": mensaje,
+        "determinante": None,
+        "matriz_aumentada_inicial_latex": None,
+        "inversa": None, "inversa_latex": None,
+        "pasos": [], "paso_verificacion": None,
+        "paso_verificacion_inverso": None,
+        "paso_propiedad_transpuesta": None,
     }
-    if pasos is not None:
-        res["matriz_aumentada_inicial_latex"] = aug_tex
-        res["pasos"] = pasos
-        res["steps"] = pasos
-    return res

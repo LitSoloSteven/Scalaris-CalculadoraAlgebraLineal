@@ -3,8 +3,9 @@ import asyncio
 
 import pytest
 
-from src.frontend.vistas.numeric_systems.view_numeric_systems import NumericSystemsUI
-from src.backend.solvers.numeric_systems.conversor_bases import ConversorBases
+from src.frontend.vistas.sistemas_numericos.vista_sistemas_numericos import VistaSistemasNumericos
+from src.backend.resolutores.sistemas_numericos.conversor_bases import ConversorBases
+from src.backend.utilidades.reglas_dominio import BASES_NUMERICAS
 
 
 class ElementoSimulado:
@@ -23,7 +24,7 @@ class ElementoSimulado:
         """Marca la limpieza del contenido del elemento."""
         self.limpiado = True
 
-    def classes(self, *args, **kwargs):
+    def classes(self, *argumentos, **opciones):
         """Acepta la configuración de clases usada por NiceGUI."""
         pass
 
@@ -48,20 +49,20 @@ class PestanasSimuladas:
 
 def test_estado_inicial_de_conversion():
     """La interfaz comienza en decimal, sin resultados y con todas las bases."""
-    interfaz = NumericSystemsUI()
+    interfaz = VistaSistemasNumericos()
     assert interfaz.base_activa == 'decimal'
     assert interfaz.base_destino == 'todas'
-    assert interfaz.btn_convertir is None
+    assert interfaz.boton_convertir is None
     assert interfaz.tiene_resultado is False
-    assert 'binario' in interfaz.regex_bases
-    assert 'octal' in interfaz.regex_bases
-    assert 'decimal' in interfaz.regex_bases
-    assert 'hexadecimal' in interfaz.regex_bases
+    assert 'binario' in BASES_NUMERICAS
+    assert 'octal' in BASES_NUMERICAS
+    assert 'decimal' in BASES_NUMERICAS
+    assert 'hexadecimal' in BASES_NUMERICAS
 
 
 def test_agrupacion_de_cifras():
     """Agrupa desde la derecha sin desplazar el signo negativo."""
-    interfaz = NumericSystemsUI()
+    interfaz = VistaSistemasNumericos()
     assert interfaz._agrupar("11111111", 4) == "1111 1111"
     assert interfaz._agrupar("101010", 4) == "10 1010"
     assert interfaz._agrupar("FF", 2) == "FF"
@@ -96,30 +97,30 @@ def test_pasos_desde_hexadecimal_hacia_todas_las_bases():
 
 def test_resultados_desincronizados_y_limpieza():
     """La desincronización atenúa los resultados y la limpieza los oculta."""
-    interfaz = NumericSystemsUI()
+    interfaz = VistaSistemasNumericos()
     interfaz.tiene_resultado = True
     tarjeta = ElementoSimulado()
-    interfaz.ui_cards = {'decimal': tarjeta}
-    interfaz.lbl_info_bits = ElementoSimulado()
-    interfaz.bits_container = ElementoSimulado()
-    interfaz.pasos_container = ElementoSimulado()
+    interfaz.tarjetas = {'decimal': tarjeta}
+    interfaz.etiqueta_bits = ElementoSimulado()
+    interfaz.contenedor_bits = ElementoSimulado()
+    interfaz.contenedor_pasos = ElementoSimulado()
     interfaz._marcar_resultado_desincronizado()
     assert 'opacity: 0.45;' in tarjeta.estilos
-    assert 'opacity: 0.45;' in interfaz.bits_container.estilos
+    assert 'opacity: 0.45;' in interfaz.contenedor_bits.estilos
     interfaz._limpiar_resultados()
     assert interfaz.tiene_resultado is False
     assert interfaz.resultados['decimal'] == '0'
-    assert 'opacity: 0; transform: translateY(16px);' in tarjeta.estilos
-    assert 'opacity: 0;' in interfaz.bits_container.estilos
+    assert 'opacity: 0;' in tarjeta.estilos
+    assert 'opacity: 0;' in interfaz.contenedor_bits.estilos
 
 
 @pytest.mark.anyio
 async def test_cambiar_base_destino_permite_decimal():
     """Elegir decimal conserva el valor de las pestañas sin forzar su cambio."""
-    interfaz = NumericSystemsUI()
+    interfaz = VistaSistemasNumericos()
     assert interfaz.base_activa == 'decimal'
-    interfaz.tabs_destino = PestanasSimuladas('todas')
+    interfaz.pestanas_destino = PestanasSimuladas('todas')
     interfaz._cambiar_base_destino(EventoSimulado('decimal'))
     assert interfaz.base_destino == 'decimal'
-    assert interfaz.tabs_destino.value == 'todas'
+    assert interfaz.pestanas_destino.value == 'todas'
     await asyncio.sleep(0.01)

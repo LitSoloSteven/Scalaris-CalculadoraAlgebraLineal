@@ -11,6 +11,6 @@ class ControladorGaussJordan:
     """Gestiona la validación y ejecución del método de Gauss-Jordan para sistemas lineales."""
 
     @staticmethod
-    def procesar_sistema(payload_json: str) -> str:
+    def procesar_sistema(carga_json: str) -> str:
         """Procesa el sistema con el método de Gauss-Jordan y genera pasos pedagógicos."""
-        return ejecutar_flujo_sistema(payload_json, ResolutorGaussJordan, "gauss-jordan")
+        return ejecutar_flujo_sistema(carga_json, ResolutorGaussJordan, "gauss-jordan")

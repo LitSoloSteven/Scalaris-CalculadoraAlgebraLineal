@@ -16,18 +16,18 @@ def test_calculo_completo_monta_resultado_y_contexto_vigente(vista_vectorial_mon
     """La captura real llega al controlador, al reproductor y al contexto sin fallos."""
     vista = vista_vectorial_montada
     vista.pestanas.set_value(operacion)
-    for vector in vista.panel_vectorial.vectors.values():
-        vector["cache"] = {0: "1/3", 1: "2", 2: "-3"}
+    for vector in vista.panel_vectorial.vectores.values():
+        vector["celdas"] = {0: "1/3", 1: "2", 2: "-3"}
     asyncio.run(ejecutar_calculo_en_panel(vista))
-    assert vista.resultado_actual["status"] != "ERROR"
+    assert vista.resultado_actual["estado"] != "ERROR"
     assert vista.reproductor_pasos is not None
     assert vista.boton_calcular.enabled
     assert "loading" not in vista.boton_calcular._props
     contexto = vista.obtener_contexto_ia()
     assert contexto.desactualizado is False
-    assert contexto.resultado["estado"] == vista.resultado_actual["status"]
-    siguiente = next(iter(vista.panel_vectorial.vectors.values()))
-    siguiente["cache"][0] = "9"
+    assert contexto.resultado["estado"] == vista.resultado_actual["estado"]
+    siguiente = next(iter(vista.panel_vectorial.vectores.values()))
+    siguiente["celdas"][0] = "9"
     contexto = vista.obtener_contexto_ia()
     assert contexto.desactualizado is True
     assert contexto.resultado is None
@@ -48,39 +48,39 @@ def test_presentacion_escapa_latex_y_coeficientes(vista_vectorial_montada):
     """El texto recibido nunca se interpreta como etiquetas HTML en el resumen."""
     vista = vista_vectorial_montada
     with vista.panel_resultados:
-        vista.renderizar_resultado_basico({"result_vector_latex": "<img src=x onerror=alert(1)>"})
-        vista.renderizar_resultado_combinacion({"status": "UNIQUE", "coeficientes_str": ["<script>x</script>"]})
+        vista.renderizar_resultado_basico({"vector_resultado_latex": "<img src=x onerror=alert(1)>"})
+        vista.renderizar_resultado_combinacion({"estado": "UNICA", "coeficientes_texto": ["<script>x</script>"]})
     contenidos = [elemento.content for elemento in vista.panel_resultados.descendants() if isinstance(elemento, ui.html)]
     assert any("&lt;img" in contenido for contenido in contenidos)
     assert any("&lt;script&gt;" in contenido for contenido in contenidos)
     assert all("<script>" not in contenido and "<img " not in contenido for contenido in contenidos)
 
 
-@pytest.mark.parametrize("dock", [False, True])
-def test_construccion_completa_monta_asistente_y_tres_paneles(monkeypatch, dock):
+@pytest.mark.parametrize('panel_lateral', [False, True])
+def test_construccion_completa_monta_asistente_y_tres_paneles(monkeypatch, panel_lateral):
     """El montaje usa componentes reales con almacén aislado para las dos modalidades."""
     from src.frontend.vistas.operaciones_vectores import vista_operaciones_vectores as modulo
-    monkeypatch.setattr(modulo, "AIPanel", PanelIASimulado)
+    monkeypatch.setattr(modulo, "PanelIA", PanelIASimulado)
     monkeypatch.setattr(ui, "run_javascript", Mock())
-    from src.frontend import flags
-    monkeypatch.setattr(flags, "dock_enabled", lambda: dock)
-    monkeypatch.setattr(flags, "nav_v2", lambda: False)
+    from src.frontend import banderas
+    monkeypatch.setattr(banderas, "panel_lateral_habilitado", lambda: panel_lateral)
+    monkeypatch.setattr(banderas, "navegacion_actualizada", lambda: False)
     vista = VistaOperacionesVectores()
     cliente = ui.context.client
     monkeypatch.setattr(cliente, "run_javascript", Mock())
     anteriores = set(cliente.elements)
     try:
         vista.construir()
-        assert vista.panel_ia.active_ui is vista
-        assert [len(panel.vectors) for panel in vista.paneles.values()] == [2, 1, 2]
+        assert vista.panel_ia.interfaz_activa is vista
+        assert [len(panel.vectores) for panel in vista.paneles.values()] == [2, 1, 2]
         assert vista.panel_resultados is not None
         assert vista.boton_calcular is not None
-        if not dock:
+        if not panel_lateral:
             boton = next(elemento for elemento in cliente.elements.values()
                          if isinstance(elemento, ui.button) and elemento._props.get("aria-label") == "Glosa")
             manejador = next(iter(boton._event_listeners.values())).handler
             manejador(SimpleNamespace(sender=boton))
-            assert vista.panel_ia.is_open is True
+            assert vista.panel_ia.esta_abierto is True
     finally:
         for elemento in list(cliente.elements.values()):
             if elemento.id not in anteriores and not elemento.is_deleted:

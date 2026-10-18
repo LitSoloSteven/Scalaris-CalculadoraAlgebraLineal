@@ -1,63 +1,56 @@
-"""Catálogo declarativo puro de sugerencias contextuales y follow-ups."""
+"""Catálogo declarativo puro de sugerencias contextuales y seguimientos."""
 from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
-class FollowUp:
+class Seguimiento:
     """Opción de profundización posterior en una respuesta de Glosa."""
 
-    id: str
-    label: str
-    question: str
-    simpler: bool = False
+    identificador: str
+    etiqueta: str
+    pregunta: str
+    mas_simple: bool = False
 
 
-FOLLOW_UPS: tuple[FollowUp, ...] = (
-    FollowUp("simpler", "Más simple", "Explícalo de forma más simple", True),
-    FollowUp("example", "Con un ejemplo numérico", "Dame un ejemplo numérico de eso"),
-    FollowUp("why", "¿Por qué funciona?", "¿Por qué funciona?"),
+SEGUIMIENTOS: tuple[Seguimiento, ...] = (
+    Seguimiento("mas_simple", "Más simple", "Explícalo de forma más simple", True),
+    Seguimiento("ejemplo", "Con un ejemplo numérico", "Dame un ejemplo numérico de eso"),
+    Seguimiento("por_que", "¿Por qué funciona?", "¿Por qué funciona?"),
 )
 
 CATALOGO_SUGERENCIAS: tuple[tuple[str, str, str, str, str], ...] = (
-    # Sistemas
-    ("sistemas", "none", "sistemas.none.metodo", "¿Qué método uso, Gauss o Gauss-Jordan?", "state"),
-    ("sistemas", "none", "sistemas.none.fracciones", "¿Cómo escribo fracciones y decimales?", "state"),
-    ("sistemas", "unique", "sistemas.unica.comprobar", "¿Cómo compruebo la solución?", "state"),
-    ("sistemas", "unique", "sistemas.unica.geometria", "¿Qué significa geométricamente?", "state"),
-    ("sistemas", "infinite", "sistemas.inf.porque", "¿Por qué tiene infinitas soluciones?", "state"),
-    ("sistemas", "infinite", "sistemas.inf.libre", "¿Qué es una variable libre?", "state"),
-    ("sistemas", "infinite", "sistemas.inf.parametrica", "¿Cómo leo la solución paramétrica?", "state"),
-    ("sistemas", "no_solution", "sistemas.nosol.porque", "¿Por qué no tiene solución?", "state"),
-    ("sistemas", "no_solution", "sistemas.nosol.matriz", "¿Cómo se ve una inconsistencia en la matriz?", "state"),
-    ("sistemas", "flag_swap", "sistemas.flag.swap", "¿Por qué se intercambiaron filas?", "flag"),
-    ("sistemas", "flag_m_gt_n", "sistemas.flag.mgtn", "¿Qué cambia si hay más ecuaciones que incógnitas?", "flag"),
-    # Inversa
-    ("inversa", "none", "inversa.none.existe", "¿Cuándo existe la inversa?", "state"),
-    ("inversa", "success", "inversa.ok.identidad", "¿Por qué la identidad queda a la izquierda?", "state"),
-    ("inversa", "success", "inversa.ok.verificar", "¿Cómo verifico A·A⁻¹ = I?", "state"),
-    ("inversa", "success", "inversa.ok.sistema", "¿Qué relación tiene con Ax = b?", "state"),
-    ("inversa", "singular", "inversa.sing.det", "¿Qué significa que el determinante sea cero?", "state"),
-    ("inversa", "singular", "inversa.sing.porque", "¿Por qué una matriz singular no tiene inversa?", "state"),
-    # Matrices
-    ("matrices", "empty", "matrices.empty.sintaxis", "¿Qué sintaxis acepto, por ejemplo 2A − B(C − Dᵀ)?", "state"),
-    ("matrices", "dim_error", "matrices.dim.porque", "¿Por qué no puedo operar estas dimensiones?", "state"),
-    ("matrices", "flag_has_product", "matrices.flag.ab", "¿Por qué AB no es igual a BA?", "flag"),
-    # Vectores
-    ("vectores", "flag_orient_mix", "vectores.flag.orient", "¿Qué pasa si uno es fila y el otro columna?", "flag"),
-    ("vectores", "flag_neg_scalar", "vectores.flag.neg", "¿Qué hace geométricamente un escalar negativo?", "flag"),
-    ("vectores", "unique", "vectores.lc.unica", "¿Cómo se relaciona con Ax = b?", "state"),
-    ("vectores", "infinite", "vectores.lc.inf", "¿Por qué hay infinitas combinaciones?", "state"),
-    ("vectores", "infinite", "vectores.lc.dep", "¿Qué es dependencia lineal?", "state"),
-    ("vectores", "no_solution", "vectores.lc.span", "¿Qué significa que b no esté en el span?", "state"),
-    # Bases
-    ("bases", "flag_division", "bases.div", "¿Por qué las divisiones se leen de abajo hacia arriba?", "state"),
-    ("bases", "flag_hex", "bases.hex", "¿Por qué hex agrupa bits de 4 en 4?", "state"),
-    # Romanos
-    ("romanos", "flag_err_sub_zero", "romanos.err.cero", "¿Por qué no existe el cero romano?", "state"),
-    ("romanos", "flag_err_sub_neg", "romanos.err.neg", "¿Por qué no hay números negativos en romano?", "state"),
-    ("romanos", "flag_err_syntax", "romanos.err.sintaxis", "¿Por qué IIII no es válido?", "state"),
-    ("romanos", "flag_op_mult", "romanos.mult", "¿Por qué solo multiplico de un dígito?", "state"),
-    # Visualizador
-    ("visualizador", "flag_parallel", "visualizador.parallel", "¿Qué significa que las rectas sean paralelas?", "flag"),
-    ("visualizador", "result", "visualizador.span", "¿Qué es el span de estos vectores?", "state"),
+    ("sistemas", "sin_resultado", "sistemas.sin_resultado.metodo", "¿Qué método uso, Gauss o Gauss-Jordan?", "estado"),
+    ("sistemas", "sin_resultado", "sistemas.sin_resultado.fracciones", "¿Cómo escribo fracciones y decimales?", "estado"),
+    ("sistemas", "unica", "sistemas.unica.comprobar", "¿Cómo compruebo la solución?", "estado"),
+    ("sistemas", "unica", "sistemas.unica.geometria", "¿Qué significa geométricamente?", "estado"),
+    ("sistemas", "infinita", "sistemas.infinita.porque", "¿Por qué tiene infinitas soluciones?", "estado"),
+    ("sistemas", "infinita", "sistemas.infinita.libre", "¿Qué es una variable libre?", "estado"),
+    ("sistemas", "infinita", "sistemas.infinita.parametrica", "¿Cómo leo la solución paramétrica?", "estado"),
+    ("sistemas", "sin_solucion", "sistemas.sin_solucion.porque", "¿Por qué no tiene solución?", "estado"),
+    ("sistemas", "sin_solucion", "sistemas.sin_solucion.matriz", "¿Cómo se ve una inconsistencia en la matriz?", "estado"),
+    ("sistemas", "bandera_intercambio", "sistemas.bandera.intercambio", "¿Por qué se intercambiaron filas?", "bandera"),
+    ("sistemas", "bandera_mas_ecuaciones_que_incognitas", "sistemas.bandera.mas_ecuaciones", "¿Qué cambia si hay más ecuaciones que incógnitas?", "bandera"),
+    ("inversa", "sin_resultado", "inversa.sin_resultado.existe", "¿Cuándo existe la inversa?", "estado"),
+    ("inversa", "exito", "inversa.exito.identidad", "¿Por qué la identidad queda a la izquierda?", "estado"),
+    ("inversa", "exito", "inversa.exito.verificar", "¿Cómo verifico A·A⁻¹ = I?", "estado"),
+    ("inversa", "exito", "inversa.exito.sistema", "¿Qué relación tiene con Ax = b?", "estado"),
+    ("inversa", "singular", "inversa.singular.determinante", "¿Qué significa que el determinante sea cero?", "estado"),
+    ("inversa", "singular", "inversa.singular.porque", "¿Por qué una matriz singular no tiene inversa?", "estado"),
+    ("matrices", "vacio", "matrices.vacio.sintaxis", "¿Qué sintaxis acepto, por ejemplo 2A − B(C − Dᵀ)?", "estado"),
+    ("matrices", "error_dimensiones", "matrices.dimensiones.porque", "¿Por qué no puedo operar estas dimensiones?", "estado"),
+    ("matrices", "bandera_contiene_producto", "matrices.bandera.producto", "¿Por qué AB no es igual a BA?", "bandera"),
+    ("vectores", "bandera_orientaciones_mixtas", "vectores.bandera.orientacion", "¿Qué pasa si uno es fila y el otro columna?", "bandera"),
+    ("vectores", "bandera_escalar_negativo", "vectores.bandera.negativo", "¿Qué hace geométricamente un escalar negativo?", "bandera"),
+    ("vectores", "unica", "vectores.combinacion_lineal.unica", "¿Cómo se relaciona con Ax = b?", "estado"),
+    ("vectores", "infinita", "vectores.combinacion_lineal.infinita", "¿Por qué hay infinitas combinaciones?", "estado"),
+    ("vectores", "infinita", "vectores.combinacion_lineal.dep", "¿Qué es dependencia lineal?", "estado"),
+    ("vectores", "sin_solucion", "vectores.combinacion_lineal.espacio_generado", "¿Qué significa que b no esté en el span?", "estado"),
+    ("bases", "bandera_division", "bases.division", "¿Por qué las divisiones se leen de abajo hacia arriba?", "estado"),
+    ("bases", "bandera_hexadecimal", "bases.hexadecimal", "¿Por qué hex agrupa bits de 4 en 4?", "estado"),
+    ("romanos", "bandera_error_resta_cero", "romanos.error.cero", "¿Por qué no existe el cero romano?", "estado"),
+    ("romanos", "bandera_error_resta_negativa", "romanos.error.negativo", "¿Por qué no hay números negativos en romano?", "estado"),
+    ("romanos", "bandera_error_sintaxis", "romanos.error.sintaxis", "¿Por qué IIII no es válido?", "estado"),
+    ("romanos", "bandera_operacion_multiplicacion", "romanos.multiplicacion", "¿Por qué solo multiplico de un dígito?", "estado"),
+    ("visualizador", "bandera_paralelas", "visualizador.paralelas", "¿Qué significa que las rectas sean paralelas?", "bandera"),
+    ("visualizador", "resultado", "visualizador.espacio_generado", "¿Qué es el span de estos vectores?", "estado"),
 )

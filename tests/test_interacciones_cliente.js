@@ -8,7 +8,7 @@ const maquinaVirtual = require("node:vm");
 const { cargarAssetCliente } = require("./comun_cliente_javascript.js");
 
 const ARCHIVOS_CLIENTE = JSON.parse(sistemaArchivos.readFileSync(
-    rutas.join(__dirname, "../src/frontend/assets/catalogo_interacciones.json"), "utf8",
+    rutas.join(__dirname, "../src/frontend/recursos/catalogo_interacciones.json"), "utf8",
 ));
 
 /** Ejecuta los assets reales en un documento simulado con eventos y temporizadores observables. */
@@ -120,7 +120,7 @@ prueba("el clic de salto impide que callbacks pendientes dupliquen el texto", ()
     const fragmento = { textContent: "" };
     const cursor = { style: {} };
     const elemento = {
-        querySelector: selector => selector === ".tw-text" ? fragmento : cursor,
+        querySelector: selector => selector === ".escritura-texto" ? fragmento : cursor,
         addEventListener: (nombre, manejador) => cliente.eventos.set("clic_escritura", manejador),
         removeEventListener: () => cliente.eventos.delete("clic_escritura"),
     };

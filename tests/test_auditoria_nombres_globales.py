@@ -1,7 +1,4 @@
-"""Test estructural para verificar que ningún archivo en src/frontend y src/ai
-
-utiliza nombres globales no definidos ni importados.
-"""
+"""Prueba estructural de nombres globales en src/frontend y src/ai."""
 from __future__ import annotations
 
 import ast
@@ -75,7 +72,7 @@ def buscar_nombres_sin_enlace(ruta: Path) -> list[tuple[str, int, str]]:
 
 
 def test_interfaz_y_asistente_sin_nombres_globales_sin_enlace():
-    """Recorre todos los módulos de src/frontend y src/ai asegurando que todo nombre esté enlazado."""
+    """Comprueba que los nombres utilizados por la interfaz e IA estén enlazados."""
     raiz = Path(__file__).resolve().parent.parent
     carpetas = [raiz / "src" / "frontend", raiz / "src" / "ai"]
     sin_enlace = []

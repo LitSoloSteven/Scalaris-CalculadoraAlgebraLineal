@@ -3,18 +3,18 @@ import json
 from fractions import Fraction
 import pytest
 
-from src.backend.models.matrix import Matrix
-from src.backend.solvers.matrix_ops.transformations import LinearTransformationSolver
+from src.backend.modelos.matriz import Matriz
+from src.backend.resolutores.operaciones_matrices.transformaciones import ResolutorTransformacionesLineales
 from src.frontend.controladores.operaciones_matrices.controlador_transformaciones import (
     ControladorTransformaciones,
 )
 
 
-def _matriz(datos: list[list]) -> Matrix:
+def _matriz(datos: list[list]) -> Matriz:
     """Construye una matriz desde listas de valores."""
     m = len(datos)
     n = len(datos[0])
-    return Matrix(m, n, [[Fraction(v) for v in fila] for fila in datos])
+    return Matriz(m, n, [[Fraction(v) for v in fila] for fila in datos])
 
 
 class TestTransformacionesIdentidad:
@@ -22,32 +22,41 @@ class TestTransformacionesIdentidad:
 
     @pytest.fixture
     def resultado(self):
-        solucionador = LinearTransformationSolver()
+        """Prepara el resultado del escenario para las pruebas."""
+        solucionador = ResolutorTransformacionesLineales()
         matriz_a = _matriz([[1, 0], [0, 1]])
         return solucionador.resolver(matriz_a)
 
     def test_estado_exitoso(self, resultado):
-        assert resultado["status"] == "SUCCESS"
+        """Verifica estado exitoso."""
+        assert resultado["estado"] == "EXITO"
 
     def test_rango_dos(self, resultado):
+        """Verifica rango dos."""
         assert resultado["rango"] == 2
 
     def test_nulidad_cero(self, resultado):
+        """Verifica nulidad cero."""
         assert resultado["nulidad"] == 0
 
     def test_inyectiva(self, resultado):
+        """Verifica inyectiva."""
         assert resultado["es_inyectiva"] is True
 
     def test_sobreyectiva(self, resultado):
+        """Verifica sobreyectiva."""
         assert resultado["es_sobreyectiva"] is True
 
     def test_nucleo_trivial(self, resultado):
+        """Verifica nucleo trivial."""
         assert resultado["base_nucleo"] == []
 
     def test_imagen_dos_vectores(self, resultado):
+        """Verifica imagen dos vectores."""
         assert len(resultado["base_imagen"]) == 2
 
     def test_teorema_dimension(self, resultado):
+        """Verifica teorema dimension."""
         assert "2 + 0 = 2" in resultado["teorema_dimension"]
 
 
@@ -56,26 +65,33 @@ class TestTransformacionesProyeccion:
 
     @pytest.fixture
     def resultado(self):
-        solucionador = LinearTransformationSolver()
+        """Prepara el resultado del escenario para las pruebas."""
+        solucionador = ResolutorTransformacionesLineales()
         matriz_a = _matriz([[1, 0], [0, 0]])
         return solucionador.resolver(matriz_a)
 
     def test_rango_uno(self, resultado):
+        """Verifica rango uno."""
         assert resultado["rango"] == 1
 
     def test_nulidad_uno(self, resultado):
+        """Verifica nulidad uno."""
         assert resultado["nulidad"] == 1
 
     def test_no_inyectiva(self, resultado):
+        """Verifica no inyectiva."""
         assert resultado["es_inyectiva"] is False
 
     def test_nucleo_dimension_uno(self, resultado):
+        """Verifica nucleo dimension uno."""
         assert len(resultado["base_nucleo"]) == 1
 
     def test_teorema_dimension(self, resultado):
+        """Verifica teorema dimension."""
         assert "1 + 1 = 2" in resultado["teorema_dimension"]
 
     def test_nucleo_vector_correcto(self, resultado):
+        """Verifica nucleo vector correcto."""
         vector = resultado["base_nucleo"][0]["vector"]
         assert vector[0] == "0"
         assert vector[1] == "1"
@@ -86,27 +102,34 @@ class TestTransformacionesInclusion:
 
     @pytest.fixture
     def resultado(self):
-        solucionador = LinearTransformationSolver()
+        """Prepara el resultado del escenario para las pruebas."""
+        solucionador = ResolutorTransformacionesLineales()
         matriz_a = _matriz([[1, 0], [0, 1], [0, 0]])
         return solucionador.resolver(matriz_a)
 
     def test_rango_dos(self, resultado):
+        """Verifica rango dos."""
         assert resultado["rango"] == 2
 
     def test_nulidad_cero(self, resultado):
+        """Verifica nulidad cero."""
         assert resultado["nulidad"] == 0
 
     def test_inyectiva(self, resultado):
+        """Verifica inyectiva."""
         assert resultado["es_inyectiva"] is True
 
     def test_no_sobreyectiva(self, resultado):
+        """Verifica no sobreyectiva."""
         assert resultado["es_sobreyectiva"] is False
 
     def test_dimensiones(self, resultado):
-        assert resultado["m"] == 3
-        assert resultado["n"] == 2
+        """Verifica dimensiones."""
+        assert resultado["dimension_codominio"] == 3
+        assert resultado["dimension_dominio"] == 2
 
     def test_teorema_dimension(self, resultado):
+        """Verifica teorema dimension."""
         assert "2 + 0 = 2" in resultado["teorema_dimension"]
 
 
@@ -115,26 +138,33 @@ class TestTransformacionesProyeccionEspacio:
 
     @pytest.fixture
     def resultado(self):
-        solucionador = LinearTransformationSolver()
+        """Prepara el resultado del escenario para las pruebas."""
+        solucionador = ResolutorTransformacionesLineales()
         matriz_a = _matriz([[1, 0, 0], [0, 1, 0]])
         return solucionador.resolver(matriz_a)
 
     def test_rango_dos(self, resultado):
+        """Verifica rango dos."""
         assert resultado["rango"] == 2
 
     def test_nulidad_uno(self, resultado):
+        """Verifica nulidad uno."""
         assert resultado["nulidad"] == 1
 
     def test_no_inyectiva(self, resultado):
+        """Verifica no inyectiva."""
         assert resultado["es_inyectiva"] is False
 
     def test_sobreyectiva(self, resultado):
+        """Verifica sobreyectiva."""
         assert resultado["es_sobreyectiva"] is True
 
     def test_teorema_dimension(self, resultado):
+        """Verifica teorema dimension."""
         assert "2 + 1 = 3" in resultado["teorema_dimension"]
 
     def test_nucleo_vector_canonica(self, resultado):
+        """Verifica nucleo vector canonica."""
         vector = resultado["base_nucleo"][0]["vector"]
         assert vector[0] == "0"
         assert vector[1] == "0"
@@ -145,75 +175,86 @@ class TestTransformacionesCasosEspeciales:
     """Casos especiales como matriz nula y rotación."""
 
     def test_transformacion_nula(self):
-        solucionador = LinearTransformationSolver()
+        """Verifica transformacion nula."""
+        solucionador = ResolutorTransformacionesLineales()
         matriz_a = _matriz([[0, 0], [0, 0]])
         resultado = solucionador.resolver(matriz_a)
-        assert resultado["status"] == "SUCCESS"
+        assert resultado["estado"] == "EXITO"
         assert resultado["rango"] == 0
         assert resultado["nulidad"] == 2
         assert resultado["es_inyectiva"] is False
         assert resultado["es_sobreyectiva"] is False
 
     def test_aviso_convencion_presente(self):
-        solucionador = LinearTransformationSolver()
+        """Verifica aviso convencion presente."""
+        solucionador = ResolutorTransformacionesLineales()
         matriz_a = _matriz([[1, 0], [0, 1]])
         resultado = solucionador.resolver(matriz_a)
-        assert "callout_convencion" in resultado
-        assert len(resultado["callout_convencion"]) > 20
+        assert "aviso_convencion" in resultado
+        assert len(resultado["aviso_convencion"]) > 20
 
 
 class TestControladorTransformaciones:
     """Pruebas del controlador de transformaciones lineales."""
 
     def test_identidad_dos_por_dos(self):
-        carga = json.dumps({"A": [["1", "0"], ["0", "1"]]})
+        """Verifica identidad dos por dos."""
+        carga = json.dumps({"matriz_transformacion": [["1", "0"], ["0", "1"]]})
         respuesta = json.loads(ControladorTransformaciones.procesar(carga))
-        assert respuesta["status"] == "SUCCESS"
+        assert respuesta["estado"] == "EXITO"
         assert respuesta["rango"] == 2
         assert respuesta["nulidad"] == 0
 
     def test_proyeccion(self):
-        carga = json.dumps({"A": [["1", "0"], ["0", "0"]]})
+        """Verifica proyeccion."""
+        carga = json.dumps({"matriz_transformacion": [["1", "0"], ["0", "0"]]})
         respuesta = json.loads(ControladorTransformaciones.procesar(carga))
-        assert respuesta["status"] == "SUCCESS"
+        assert respuesta["estado"] == "EXITO"
         assert respuesta["rango"] == 1
         assert respuesta["nulidad"] == 1
 
-    def test_payload_sin_matriz(self):
+    def test_carga_sin_matriz(self):
+        """Verifica carga sin matriz."""
         respuesta = json.loads(ControladorTransformaciones.procesar(json.dumps({})))
-        assert respuesta["status"] == "ERROR"
+        assert respuesta["estado"] == "ERROR"
 
     def test_json_invalido(self):
+        """Verifica json invalido."""
         respuesta = json.loads(ControladorTransformaciones.procesar("{bad"))
-        assert respuesta["status"] == "ERROR"
+        assert respuesta["estado"] == "ERROR"
 
     def test_celda_invalida(self):
-        carga = json.dumps({"A": [["xyz", "0"], ["0", "1"]]})
+        """Verifica celda invalida."""
+        carga = json.dumps({"matriz_transformacion": [["xyz", "0"], ["0", "1"]]})
         respuesta = json.loads(ControladorTransformaciones.procesar(carga))
-        assert respuesta["status"] == "ERROR"
+        assert respuesta["estado"] == "ERROR"
 
     def test_nombres_variables_propagados(self):
+        """Verifica nombres variables propagados."""
         carga = json.dumps({
-            "A": [["1", "0"], ["0", "1"]],
-            "variables": ["u", "v"],
+            "matriz_transformacion": [["1", "0"], ["0", "1"]],
+            "nombres_variables": ["u", "v"],
         })
         respuesta = json.loads(ControladorTransformaciones.procesar(carga))
-        assert respuesta["status"] == "SUCCESS"
+        assert respuesta["estado"] == "EXITO"
 
     def test_dimensiones_rectangulares(self):
-        carga = json.dumps({"A": [["1", "0"], ["0", "1"], ["0", "0"]]})
+        """Verifica dimensiones rectangulares."""
+        carga = json.dumps({"matriz_transformacion": [["1", "0"], ["0", "1"], ["0", "0"]]})
         respuesta = json.loads(ControladorTransformaciones.procesar(carga))
-        assert respuesta["status"] == "SUCCESS"
-        assert respuesta["m"] == 3
-        assert respuesta["n"] == 2
+        assert respuesta["estado"] == "EXITO"
+        assert respuesta["dimension_codominio"] == 3
+        assert respuesta["dimension_dominio"] == 2
 
     def test_aviso_en_respuesta(self):
-        carga = json.dumps({"A": [["1", "0"], ["0", "1"]]})
+        """Verifica aviso en respuesta."""
+        carga = json.dumps({"matriz_transformacion": [["1", "0"], ["0", "1"]]})
         respuesta = json.loads(ControladorTransformaciones.procesar(carga))
-        assert "callout_convencion" in respuesta
+        assert "aviso_convencion" in respuesta
 
     def test_conclusiones_biyectividad(self):
-        carga = json.dumps({"A": [["1", "0"], ["0", "1"]]})
+        """Verifica conclusiones biyectividad."""
+        carga = json.dumps({"matriz_transformacion": [["1", "0"], ["0", "1"]]})
         respuesta = json.loads(ControladorTransformaciones.procesar(carga))
         conclusiones = respuesta.get("conclusiones", {})
         assert "biyectividad" in conclusiones
@@ -221,7 +262,8 @@ class TestControladorTransformaciones:
         assert "BIYECTIVA" in conclusiones["biyectividad"]
 
     def test_base_nucleo_correcto(self):
-        carga = json.dumps({"A": [["1", "0"], ["0", "0"]]})
+        """Verifica base nucleo correcto."""
+        carga = json.dumps({"matriz_transformacion": [["1", "0"], ["0", "0"]]})
         respuesta = json.loads(ControladorTransformaciones.procesar(carga))
         nucleo = respuesta.get("base_nucleo", [])
         assert len(nucleo) == 1
@@ -230,9 +272,10 @@ class TestControladorTransformaciones:
         assert vector[1] == "1"
 
     def test_rotacion_noventa_grados(self):
-        carga = json.dumps({"A": [["0", "-1"], ["1", "0"]]})
+        """Verifica rotacion noventa grados."""
+        carga = json.dumps({"matriz_transformacion": [["0", "-1"], ["1", "0"]]})
         respuesta = json.loads(ControladorTransformaciones.procesar(carga))
-        assert respuesta["status"] == "SUCCESS"
+        assert respuesta["estado"] == "EXITO"
         assert respuesta["rango"] == 2
         assert respuesta["nulidad"] == 0
         assert respuesta["es_inyectiva"] is True

@@ -7,13 +7,13 @@ from src.backend.geometria.conjunto_solucion import obtener_parametros_solucion
 
 def _crear_parametros_validos():
     return {
-        "num_vars": 2, "particular": [Fraction(1, 3), Fraction(0)],
-        "directions": [[Fraction(-2, 5), Fraction(1)]],
-        "free_cols": [1], "param_names": ["t"],
+        "numero_variables": 2, "particular": [Fraction(1, 3), Fraction(0)],
+        "direcciones": [[Fraction(-2, 5), Fraction(1)]],
+        "columnas_libres": [1], "nombres_parametros": ["t"],
     }
 
 
-@pytest.mark.parametrize("clave", ["solution_param", "parametros_solucion"])
+@pytest.mark.parametrize("clave", ["parametros_solucion", "parametros_solucion"])
 def test_parametros_validos_conservan_objeto_y_fracciones(clave):
     """La validación no transforma el diccionario ni sus coeficientes exactos."""
     parametros = _crear_parametros_validos()
@@ -22,30 +22,30 @@ def test_parametros_validos_conservan_objeto_y_fracciones(clave):
 
 
 @pytest.mark.parametrize("campo,valor", [
-    ("num_vars", 3), ("particular", [Fraction(1)]), ("free_cols", []),
-    ("param_names", []), ("particular", [0.5, Fraction(0)]),
-    ("directions", [[Fraction(1), 1.0]]), ("directions", [None]),
+    ("numero_variables", 3), ("particular", [Fraction(1)]), ("columnas_libres", []),
+    ("nombres_parametros", []), ("particular", [0.5, Fraction(0)]),
+    ("direcciones", [[Fraction(1), 1.0]]), ("direcciones", [None]),
 ])
 def test_parametros_malformados_o_aproximados_se_rechazan(campo, valor):
     """Un desajuste estructural o coeficiente aproximado conserva el rechazo histórico."""
     parametros = _crear_parametros_validos()
     parametros[campo] = valor
-    assert obtener_parametros_solucion({"solution_param": parametros}) is None
+    assert obtener_parametros_solucion({"parametros_solucion": parametros}) is None
 
 
-@pytest.mark.parametrize("campo", ["num_vars", "particular", "directions", "free_cols", "param_names"])
+@pytest.mark.parametrize("campo", ["numero_variables", "particular", "direcciones", "columnas_libres", "nombres_parametros"])
 def test_campos_ausentes_conservan_resultado_nulo(campo):
     """Los cinco campos obligatorios se validan antes de aceptar la solución."""
     parametros = _crear_parametros_validos()
     del parametros[campo]
-    assert obtener_parametros_solucion({"solution_param": parametros}) is None
+    assert obtener_parametros_solucion({"parametros_solucion": parametros}) is None
 
 
 def test_prioridad_y_alternativa_vacia_se_conservan():
     """La primera estructura no vacía conserva su prioridad frente a la alternativa."""
     primero, segundo = _crear_parametros_validos(), _crear_parametros_validos()
-    assert obtener_parametros_solucion({"solution_param": primero, "parametros_solucion": segundo}) is primero
-    assert obtener_parametros_solucion({"solution_param": {}, "parametros_solucion": segundo}) is segundo
+    assert obtener_parametros_solucion({"parametros_solucion": primero, "solution_param": segundo}) is primero
+    assert obtener_parametros_solucion({"parametros_solucion": segundo, "solution_param": {}}) is segundo
     assert obtener_parametros_solucion({}) is None
 
 
@@ -60,5 +60,5 @@ def test_campos_se_leen_una_vez_y_en_orden_original():
 
     lecturas = []
     parametros = DiccionarioInstrumentado(_crear_parametros_validos())
-    assert obtener_parametros_solucion({"solution_param": parametros}) is parametros
-    assert lecturas == ["num_vars", "particular", "directions", "free_cols", "param_names"]
+    assert obtener_parametros_solucion({"parametros_solucion": parametros}) is parametros
+    assert lecturas == ["numero_variables", "particular", "direcciones", "columnas_libres", "nombres_parametros"]

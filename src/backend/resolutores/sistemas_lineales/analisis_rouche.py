@@ -10,7 +10,7 @@ def _generar_explicacion_rouche(
     estado: str,
     rango_a: int,
     rango_aumentada: int,
-    num_vars: int,
+    numero_variables: int,
     es_homogeneo: bool,
 ) -> tuple[str, str]:
     """Genera la clasificacion y explicacion textual de Rouche-Frobenius."""
@@ -23,25 +23,25 @@ def _generar_explicacion_rouche(
     if estado == SOLUCION_UNICA:
         if es_homogeneo:
             exp = (
-                f"Sistema Homogéneo con rg(A) = {rango_a} = n ({num_vars} incógnitas). "
+                f"Sistema Homogéneo con rg(A) = {rango_a} = n ({numero_variables} incógnitas). "
                 "Presenta únicamente la solución trivial única (x = 0)."
             )
         else:
             exp = (
-                f"rg(A) = rg(A|b) = {rango_a} = n ({num_vars} incógnitas). "
+                f"rg(A) = rg(A|b) = {rango_a} = n ({numero_variables} incógnitas). "
                 "Por el Teorema de Rouché-Frobenius, el sistema presenta solución única (compatible determinado)."
             )
         return "Sistema Compatible Determinado", exp
 
-    grados = num_vars - rango_a
+    grados = numero_variables - rango_a
     if es_homogeneo:
         exp = (
-            f"Sistema Homogéneo con rg(A) = {rango_a} < n ({num_vars} incógnitas). "
+            f"Sistema Homogéneo con rg(A) = {rango_a} < n ({numero_variables} incógnitas). "
             f"Presenta infinitas soluciones no triviales (dimensión del espacio nulo = {grados})."
         )
     else:
         exp = (
-            f"rg(A) = rg(A|b) = {rango_a} < n ({num_vars} incógnitas). "
+            f"rg(A) = rg(A|b) = {rango_a} < n ({numero_variables} incógnitas). "
             f"Por el Teorema de Rouché-Frobenius, presenta infinitas soluciones con {grados} variable(s) libre(s)."
         )
     return "Sistema Compatible Indeterminado", exp
@@ -50,30 +50,30 @@ def _generar_explicacion_rouche(
 def analizar_sistema_rouche(
     estado: str,
     rango_a: int,
-    num_vars: int,
+    numero_variables: int,
     es_homogeneo: bool,
     pivotes: list[int],
 ) -> dict:
     """Construye el analisis de consistencia, Rouche y dependencia lineal."""
     rango_aumentada = rango_a + 1 if estado == SIN_SOLUCION else rango_a
     clasificacion, explicacion = _generar_explicacion_rouche(
-        estado, rango_a, rango_aumentada, num_vars, es_homogeneo
+        estado, rango_a, rango_aumentada, numero_variables, es_homogeneo
     )
-    columnas_indep = (rango_a == num_vars)
+    columnas_indep = (rango_a == numero_variables)
     if columnas_indep:
         conclusion_dep = (
-            f"Las columnas de la matriz de coeficientes son LINEALMENTE INDEPENDIENTES (rango = {rango_a} = {num_vars} variables)."
+            f"Las columnas de la matriz de coeficientes son LINEALMENTE INDEPENDIENTES (rango = {rango_a} = {numero_variables} variables)."
         )
     else:
         conclusion_dep = (
-            f"Las columnas de la matriz de coeficientes son LINEALMENTE DEPENDIENTES (rango = {rango_a} < {num_vars} variables)."
+            f"Las columnas de la matriz de coeficientes son LINEALMENTE DEPENDIENTES (rango = {rango_a} < {numero_variables} variables)."
         )
 
     return {
         "es_homogeneo": es_homogeneo,
         "rango_a": rango_a,
         "rango_aumentada": rango_aumentada,
-        "num_incognitas": num_vars,
+        "num_incognitas": numero_variables,
         "clasificacion_rouche": clasificacion,
         "explicacion_rouche": explicacion,
         "dependencia_lineal": {

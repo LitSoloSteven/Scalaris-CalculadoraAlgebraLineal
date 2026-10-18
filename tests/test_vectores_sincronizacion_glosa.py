@@ -21,7 +21,7 @@ def test_alternar_orientacion_notifica_y_omitir_vector_no_notifica(vista_vectori
     panel = _adjuntar_panel(vista)
     vista.panel_suma_resta.alternar_orientacion("u")
     panel.programar_actualizacion_contexto.assert_called_once_with()
-    assert "orient_mix" in vista.obtener_senales_ia().flags
+    assert "orientaciones_mixtas" in vista.obtener_senales_ia().banderas
     panel.programar_actualizacion_contexto.reset_mock()
     vista.panel_suma_resta.alternar_orientacion("ausente")
     panel.programar_actualizacion_contexto.assert_not_called()
@@ -32,15 +32,15 @@ def test_procedimiento_retirado_no_conserva_foco_de_glosa(vista_vectorial_montad
     """Limpiar, cambiar pestaña y recalcular retiran el paso del ejercicio anterior."""
     vista = vista_vectorial_montada
     panel = _adjuntar_panel(vista)
-    panel.explain_focus = {"index": 1, "total": 4, "kind": "componente", "op": "paso del ejercicio anterior"}
+    panel.foco_explicacion = {"indice": 1, "total": 4, "tipo": "componente", "operacion": "paso del ejercicio anterior"}
     if accion == "limpiar":
         vista.limpiar()
     elif accion == "pestana":
         vista.pestanas.set_value("escalar")
     else:
         asyncio.run(ejecutar_calculo_en_panel(vista))
-    assert panel.explain_focus is None
-    assert "paso del ejercicio anterior" not in panel._collect_context()
+    assert panel.foco_explicacion is None
+    assert "paso del ejercicio anterior" not in panel._recopilar_contexto()
 
 
 def test_contexto_incluye_escalar_y_opciones_de_resta(vista_vectorial_montada):
