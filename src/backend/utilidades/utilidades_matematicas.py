@@ -34,4 +34,4 @@ def simplificar_fila(fila: List[int]) -> List[int]:
     factor = mcd_lista(fila)
     if factor <= 1:
         return fila
-    return [elem // factor for elem in fila]
+    return [elemento // factor for elemento in fila]

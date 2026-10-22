@@ -108,7 +108,7 @@ class AnalizadorSistema:
         variables_estrictas: bool = False,
     ) -> tuple[bool, Matriz | None, list[str], str]:
         """Procesa el texto ingresado construyendo una matriz aumentada."""
-        lineas = [lin.strip() for lin in texto_crudo.strip().splitlines() if lin.strip()]
+        lineas = [linea.strip() for linea in texto_crudo.strip().splitlines() if linea.strip()]
         if not lineas:
             return False, None, [], "El texto ingresado está vacío."
 

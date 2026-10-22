@@ -6,11 +6,12 @@ from typing import Union
 from src.backend.constantes import (
     CERO_EPSILON,
     LIMITE_RECONSTRUCCION_FRACCION,
-    LONGITUD_MAXIMA_CADENA_NUMERO,
-    MENSAJE_NOTACION_CIENTIFICA_NO_SOPORTADA,
-    MENSAJE_NUMERO_DEMASIADO_LARGO,
 )
 from src.backend.excepciones import ErrorDatosMatriz
+from src.backend.modelos.operaciones_filas import sumar_fila_multiplicada
+from src.backend.modelos.aritmetica import numeros_iguales
+from src.backend.modelos.entrada_numerica import motivo_cadena_no_soportada
+from src.backend.modelos.copia_normalizada import copiar_datos_normalizados
 
 Numerico = Union[float, Fraction, int]
 NumericoSimilar = Union[Numerico, str]
@@ -25,13 +26,16 @@ class Matriz:
         columnas: int,
         datos: list[list[Numerico]] | None = None,
     ):
-        """Inicializa la matriz verificando dimensiones y normalizando datos."""
+        """Crea filas por columnas desde datos o ceros; lanza ErrorDatosMatriz ante forma o valores invalidos."""
         self._validar_dimensiones_modelo(filas, columnas)
         self.filas = filas
         self.columnas = columnas
         if datos is not None:
             self._validar_forma_datos(datos, filas, columnas)
-            self.datos = [[self._normalizar_valor(valor) for valor in fila] for fila in datos]
+            copia = (copiar_datos_normalizados(datos)
+                     if type(self) is Matriz and self._normalizar_valor is _NORMALIZADOR_CANONICO else None)
+            self.datos = (copia if copia is not None
+                          else [[self._normalizar_valor(valor) for valor in fila] for fila in datos])
         else:
             self.datos = [[Fraction(0) for _ in range(columnas)] for _ in range(filas)]
 
@@ -60,14 +64,13 @@ class Matriz:
 
     @staticmethod
     def _normalizar_cadena(valor: str) -> Numerico:
-        """Convierte una cadena a fracción aplicando guardas DoS."""
+        """Convierte una cadena a fraccion aplicando los limites de entrada comunes."""
         valor_limpio = valor.strip()
         if not valor_limpio:
             return Fraction(0)
-        if "e" in valor_limpio or "E" in valor_limpio:
-            raise ErrorDatosMatriz(MENSAJE_NOTACION_CIENTIFICA_NO_SOPORTADA)
-        if len(valor_limpio) > LONGITUD_MAXIMA_CADENA_NUMERO:
-            raise ErrorDatosMatriz(MENSAJE_NUMERO_DEMASIADO_LARGO)
+        rechazo = motivo_cadena_no_soportada(valor_limpio)
+        if rechazo is not None:
+            raise ErrorDatosMatriz(rechazo)
         try:
             return Fraction(valor_limpio)
         except (ValueError, ZeroDivisionError):
@@ -82,9 +85,9 @@ class Matriz:
             return Matriz._normalizar_cadena(valor)
         if isinstance(valor, float):
             try:
-                frac = Fraction(valor).limit_denominator(LIMITE_RECONSTRUCCION_FRACCION)
-                if abs(float(frac) - valor) < CERO_EPSILON:
-                    return frac
+                fraccion = Fraction(valor).limit_denominator(LIMITE_RECONSTRUCCION_FRACCION)
+                if abs(float(fraccion) - valor) < CERO_EPSILON:
+                    return fraccion
             except (ValueError, OverflowError):
                 pass
             return valor
@@ -98,12 +101,12 @@ class Matriz:
             )
 
     def obtener(self, fila: int, columna: int) -> Numerico:
-        """Devuelve el valor numérico en la coordenada indicada."""
+        """Devuelve el numero en fila y columna; lanza IndexError si la coordenada no pertenece a la matriz."""
         self._verificar_limites(fila, columna)
         return self.datos[fila][columna]
 
     def establecer(self, fila: int, columna: int, valor: Numerico) -> None:
-        """Asigna un valor numérico normalizado en la coordenada indicada."""
+        """Asigna valor en fila y columna; lanza IndexError por coordenadas y ErrorDatosMatriz por valores invalidos."""
         self._verificar_limites(fila, columna)
         self.datos[fila][columna] = self._normalizar_valor(valor)
 
@@ -113,7 +116,7 @@ class Matriz:
         return Matriz(self.filas, self.columnas, nuevos_datos)
 
     def intercambiar_filas(self, fila1: int, fila2: int) -> None:
-        """Intercambia dos filas dentro de la matriz."""
+        """Intercambia fila1 y fila2 sin retorno; lanza IndexError si alguna fila no pertenece a la matriz."""
         self._verificar_limites(fila1, 0)
         self._verificar_limites(fila2, 0)
         if fila1 != fila2:
@@ -125,25 +128,21 @@ class Matriz:
         fila_origen: int,
         escalar: Numerico,
     ) -> None:
-        """Suma a la fila destino el múltiplo escalar de la fila origen."""
+        """Suma escalar por fila_origen a fila_destino; lanza IndexError por filas y ErrorDatosMatriz por escalar invalido."""
         self._verificar_limites(fila_destino, 0)
         self._verificar_limites(fila_origen, 0)
-        escalar_norm = self._normalizar_valor(escalar)
-        for c in range(self.columnas):
-            actual = self.datos[fila_destino][c]
-            origen = self.datos[fila_origen][c]
-            self.datos[fila_destino][c] = self._normalizar_valor(
-                actual + escalar_norm * origen
-            )
+        escalar_normalizado = self._normalizar_valor(escalar)
+        nueva_fila = sumar_fila_multiplicada(self.datos[fila_destino], self.datos[fila_origen], escalar_normalizado)
+        self.datos[fila_destino] = [self._normalizar_valor(valor) for valor in nueva_fila]
 
     def __eq__(self, otro: object) -> bool:
-        """Compara la igualdad numérica exacta de dos matrices."""
+        """Compara otro por dimensiones y valores exactos; aplica tolerancia solo si intervienen flotantes."""
         if not isinstance(otro, Matriz):
             return NotImplemented
         if self.filas != otro.filas or self.columnas != otro.columnas:
             return False
         return all(
-            abs(float(self.datos[r][c]) - float(otro.datos[r][c])) < CERO_EPSILON
+            numeros_iguales(self.datos[r][c], otro.datos[r][c])
             for r in range(self.filas)
             for c in range(self.columnas)
         )
@@ -157,3 +156,6 @@ class Matriz:
             fila_formateada = [f"{formatear_fraccion_texto(valor):>8}" for valor in fila]
             filas_texto.append("[ " + " ".join(fila_formateada) + " ]")
         return "\n".join(filas_texto)
+
+
+_NORMALIZADOR_CANONICO = Matriz._normalizar_valor

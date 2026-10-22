@@ -1,4 +1,5 @@
 """Reglas de presencia y dimensiones de la captura matricial."""
+from src.backend.modelos.construcciones import identidad
 from src.backend.constantes import (
     DIMENSION_MAXIMA_SISTEMAS, DIMENSION_MAXIMA_LATEX_INVERSA, DIMENSION_CONFIRMACION_INVERSA,
 )
@@ -29,7 +30,7 @@ def celdas_matriz(dimension: int = 3) -> tuple[tuple[str, ...], ...]:
     """Devuelve la identidad textual; lanza ValueError si la dimension es menor a uno."""
     if dimension < 1:
         raise ValueError(f'La dimension de la matriz debe ser mayor o igual a 1, recibido: {dimension}')
-    return tuple(tuple('1' if fila == columna else '0' for columna in range(dimension)) for fila in range(dimension))
+    return tuple(tuple(str(valor) for valor in fila) for fila in identidad(dimension).datos)
 
 
 def opciones_dimension_inversa(dimension: int) -> dict:

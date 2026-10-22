@@ -36,11 +36,11 @@ def formatear_fraccion_texto(valor: float | Fraction | int) -> str:
     if isinstance(valor, float):
         if abs(valor) < CERO_EPSILON:
             return "0"
-        frac = Fraction(valor).limit_denominator(LIMITE_VISUALIZACION_FRACCION)
-        if abs(float(frac) - valor) < TOLERANCIA_FRACCION_VISUALIZACION:
-            if frac.denominator == 1:
-                return str(frac.numerator)
-            return f"{frac.numerator}/{frac.denominator}"
+        fraccion = Fraction(valor).limit_denominator(LIMITE_VISUALIZACION_FRACCION)
+        if abs(float(fraccion) - valor) < TOLERANCIA_FRACCION_VISUALIZACION:
+            if fraccion.denominator == 1:
+                return str(fraccion.numerator)
+            return f"{fraccion.numerator}/{fraccion.denominator}"
         return f"{valor:.{DECIMALES_VISUALIZACION}f}".rstrip("0").rstrip(".")
 
     return str(valor)
@@ -52,25 +52,25 @@ def numero_a_latex(valor: float | Fraction | int) -> str:
         fraccion = Fraction(valor)
         if fraccion == 0:
             return "0"
-        numero, den = fraccion.numerator, fraccion.denominator
-        if den == 1:
-            return str(numero)
-        signo = "-" if numero < 0 else ""
-        return f"{signo}\\frac{{{abs(numero)}}}{{{den}}}"
+        return _fraccion_a_latex(fraccion)
 
     if isinstance(valor, float):
         if abs(valor) < TOLERANCIA_COINCIDENCIA_FRACCION:
             return "0"
-        frac = Fraction(valor).limit_denominator(LIMITE_DENOMINADOR_LATEX)
-        if abs(float(frac) - valor) < TOLERANCIA_FRACCION_VISUALIZACION:
-            numero, den = frac.numerator, frac.denominator
-            if den == 1:
-                return str(numero)
-            signo = "-" if numero < 0 else ""
-            return f"{signo}\\frac{{{abs(numero)}}}{{{den}}}"
+        fraccion = Fraction(valor).limit_denominator(LIMITE_DENOMINADOR_LATEX)
+        if abs(float(fraccion) - valor) < TOLERANCIA_FRACCION_VISUALIZACION:
+            return _fraccion_a_latex(fraccion)
         return f"{valor:.{DECIMALES_VISUALIZACION}f}".rstrip("0").rstrip(".")
 
     return str(valor)
+
+
+def _fraccion_a_latex(fraccion: Fraction) -> str:
+    numero, denominador = fraccion.numerator, fraccion.denominator
+    if denominador == 1:
+        return str(numero)
+    signo = "-" if numero < 0 else ""
+    return f"{signo}\\frac{{{abs(numero)}}}{{{denominador}}}"
 
 
 def formatear_expresion_parametrica(

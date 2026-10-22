@@ -3,13 +3,8 @@
 from fractions import Fraction
 from typing import Any
 
-from src.backend.constantes import (
-    LIMITE_RECONSTRUCCION_ESTRICTA,
-    LONGITUD_MAXIMA_CADENA_NUMERO,
-    LONGITUD_MAXIMA_CELDA,
-    MENSAJE_NOTACION_CIENTIFICA_NO_SOPORTADA,
-    MENSAJE_NUMERO_DEMASIADO_LARGO,
-)
+from src.backend.constantes import LONGITUD_MAXIMA_CELDA
+from src.backend.modelos.entrada_numerica import convertir_numero_exacto
 from src.backend.excepciones import ErrorDiscrepanciaDimension
 from src.backend.modelos.matriz import Matriz
 from src.backend.utilidades.verificacion import verificar_solucion
@@ -43,46 +38,9 @@ class ValidadorMatriz:
 
 
     @staticmethod
-    def _rechazar_cadena_no_soportada(valor_limpio: str) -> str | None:
-        """Determina si la cadena contiene notación científica o longitud excesiva."""
-        if "e" in valor_limpio or "E" in valor_limpio:
-            return MENSAJE_NOTACION_CIENTIFICA_NO_SOPORTADA
-        if len(valor_limpio) > LONGITUD_MAXIMA_CADENA_NUMERO:
-            return MENSAJE_NUMERO_DEMASIADO_LARGO
-        return None
-
-    @staticmethod
     def parsear_numero_exacto(valor: Any) -> tuple[bool, Fraction, str]:
-        """Convierte una entrada numérica a fracción exacta con validaciones DoS."""
-        if isinstance(valor, (int, Fraction)):
-            return True, Fraction(valor), ""
-
-        if isinstance(valor, float):
-            try:
-                return True, Fraction(valor).limit_denominator(LIMITE_RECONSTRUCCION_ESTRICTA), ""
-            except (ValueError, OverflowError):
-                try:
-                    return True, Fraction(str(valor)), ""
-                except (ValueError, ZeroDivisionError):
-                    return False, Fraction(0), "Valor flotante no convertible a fracción."
-
-        if isinstance(valor, str):
-            valor_limpio = valor.strip()
-            if not valor_limpio:
-                return False, Fraction(0), "El campo está vacío."
-
-            rechazo = ValidadorMatriz._rechazar_cadena_no_soportada(valor_limpio)
-            if rechazo is not None:
-                return False, Fraction(0), rechazo
-
-            try:
-                return True, Fraction(valor_limpio), ""
-            except ZeroDivisionError:
-                return False, Fraction(0), "División por cero en la fracción ingresada."
-            except ValueError:
-                return False, Fraction(0), "El valor ingresado no es un número o fracción válida."
-
-        return False, Fraction(0), f"Tipo no soportado: {type(valor).__name__}"
+        """Devuelve validez, fraccion y mensaje delegando la conversion escalar comun."""
+        return convertir_numero_exacto(valor)
 
     @staticmethod
     def parsear_numero(valor: Any) -> tuple[bool, float, str]:
@@ -131,10 +89,10 @@ class ValidadorMatriz:
                 return False, [], f"La fila {indice_fila + 1} no tiene {columnas_esperadas} columnas."
             fila_analizada = []
             for indice_columna, elemento in enumerate(fila):
-                exito, valor_frac, mensaje_error = ValidadorMatriz.parsear_numero_exacto(elemento)
+                exito, fraccion, mensaje_error = ValidadorMatriz.parsear_numero_exacto(elemento)
                 if not exito:
                     return False, [], f"Error en celda [{indice_fila + 1}, {indice_columna + 1}]: {mensaje_error}"
-                fila_analizada.append(valor_frac)
+                fila_analizada.append(fraccion)
             matriz_analizada.append(fila_analizada)
 
         return True, matriz_analizada, "Matriz parseada correctamente."

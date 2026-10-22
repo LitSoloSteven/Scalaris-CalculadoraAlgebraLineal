@@ -2,18 +2,12 @@
 
 from fractions import Fraction
 from typing import Any
+from src.backend.modelos.entrada_numerica import convertir_numero_exacto
 
 from src.backend.utilidades.formateadores import (
     formatear_fraccion_texto,
     numero_a_latex,
 )
-
-
-def _a_fraccion_estricta(valor: Any) -> tuple[bool, Fraction, str]:
-    """Convierte a fracción exacta reutilizando la validación centralizada."""
-    from src.backend.utilidades.validadores import ValidadorMatriz
-
-    return ValidadorMatriz.parsear_numero_exacto(valor)
 
 
 def _preparsear_entradas_verificacion(
@@ -22,31 +16,31 @@ def _preparsear_entradas_verificacion(
     vector_independientes: list[Any],
 ) -> tuple[bool, list[list[Fraction]], list[Fraction], list[Fraction], list[str]]:
     """Convierte matrices y vectores a fracciones exactas previo al cálculo."""
-    A_frac: list[list[Fraction]] = []
+    coeficientes_exactos: list[list[Fraction]] = []
     for i, fila in enumerate(matriz_coeficientes):
-        fila_frac: list[Fraction] = []
+        fila_exacta: list[Fraction] = []
         for j, celda in enumerate(fila):
-            correcto, frac, error = _a_fraccion_estricta(celda)
+            correcto, fraccion, error = convertir_numero_exacto(celda)
             if not correcto:
                 return False, [], [], [], [f"Error en A[{i + 1},{j + 1}]: {error}"]
-            fila_frac.append(frac)
-        A_frac.append(fila_frac)
+            fila_exacta.append(fraccion)
+        coeficientes_exactos.append(fila_exacta)
 
-    x_frac: list[Fraction] = []
+    solucion_exacta: list[Fraction] = []
     for j, celda in enumerate(vector_solucion):
-        correcto, frac, error = _a_fraccion_estricta(celda)
+        correcto, fraccion, error = convertir_numero_exacto(celda)
         if not correcto:
             return False, [], [], [], [f"Error en x[{j + 1}]: {error}"]
-        x_frac.append(frac)
+        solucion_exacta.append(fraccion)
 
-    b_frac: list[Fraction] = []
+    independientes_exactos: list[Fraction] = []
     for i, celda in enumerate(vector_independientes):
-        correcto, frac, error = _a_fraccion_estricta(celda)
+        correcto, fraccion, error = convertir_numero_exacto(celda)
         if not correcto:
             return False, [], [], [], [f"Error en b[{i + 1}]: {error}"]
-        b_frac.append(frac)
+        independientes_exactos.append(fraccion)
 
-    return True, A_frac, x_frac, b_frac, []
+    return True, coeficientes_exactos, solucion_exacta, independientes_exactos, []
 
 
 def _formatear_renglon_verificacion(
@@ -79,33 +73,33 @@ def verificar_solucion(
     como_latex: bool = False,
 ) -> tuple[bool, list[str]]:
     """Verifica si el vector x satisface el sistema Ax = b con precisión exacta."""
-    correcto, A_frac, x_frac, b_frac, reporte_error = _preparsear_entradas_verificacion(matriz_coeficientes, vector_solucion, vector_independientes)
+    correcto, coeficientes, solucion, independientes, reporte_error = _preparsear_entradas_verificacion(matriz_coeficientes, vector_solucion, vector_independientes)
     if not correcto:
         return False, reporte_error
 
     es_valida_total = True
     reporte = []
 
-    for i in range(len(A_frac)):
+    for i in range(len(coeficientes)):
         lado_izquierdo = Fraction(0)
         terminos = []
-        for j in range(len(x_frac)):
-            coef = A_frac[i][j]
-            variable = x_frac[j]
-            lado_izquierdo += coef * variable
+        for j in range(len(solucion)):
+            coeficiente = coeficientes[i][j]
+            variable = solucion[j]
+            lado_izquierdo += coeficiente * variable
             if como_latex:
                 terminos.append(
-                    rf"\left({numero_a_latex(coef)}\right) \cdot \left({numero_a_latex(variable)}\right)"
+                    rf"\left({numero_a_latex(coeficiente)}\right) \cdot \left({numero_a_latex(variable)}\right)"
                 )
             else:
-                terminos.append(f"({formatear_fraccion_texto(coef)})·({formatear_fraccion_texto(variable)})")
+                terminos.append(f"({formatear_fraccion_texto(coeficiente)})·({formatear_fraccion_texto(variable)})")
 
-        lado_derecho = b_frac[i]
-        eq_correcta = (lado_izquierdo == lado_derecho)
+        lado_derecho = independientes[i]
+        igualdad_correcta = (lado_izquierdo == lado_derecho)
         reporte.append(
             _formatear_renglon_verificacion(i, terminos, lado_izquierdo, lado_derecho, como_latex)
         )
-        if not eq_correcta:
+        if not igualdad_correcta:
             es_valida_total = False
 
     return es_valida_total, reporte
