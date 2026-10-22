@@ -213,6 +213,7 @@ html[data-vista-revelada] .nicegui-content {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 120ms !important;
+        transition-property: opacity !important;
     }
 
     .escritura-cursor,

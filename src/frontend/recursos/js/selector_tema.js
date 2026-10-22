@@ -18,7 +18,11 @@
         });
     }
 
-    const observador = new MutationObserver(sincronizarSelectorTema);
+    const observador = new MutationObserver(mutaciones => {
+        if (window.scalaris.observacion &&
+            !window.scalaris.observacion.contiene(mutaciones, '[data-tema-opcion]')) return;
+        sincronizarSelectorTema();
+    });
     observador.observe(document.documentElement, {
         childList: true, subtree: true, attributes: true, attributeFilter: ['data-tema']
     });

@@ -5,6 +5,8 @@ from string import Template
 from nicegui import ui
 
 from src.frontend import banderas
+from src.frontend.recursos_vistas import seleccionar_recursos
+from src.frontend.versionado_recursos import versionar_html
 
 # Paletas de color con ratio de contraste no textual >= 3.0:1 verificado en cada tema
 PALETAS_POR_TEMA: dict[str, list[str]] = {
@@ -26,9 +28,9 @@ COLORES_TEXTO_GRAFICOS: dict[str, str] = {
 }
 
 COLORES_CUADRICULA_GRAFICOS: dict[str, str] = {
-    "papel": "rgba(128,128,128,0.2)",
-    "marea": "rgba(11,31,51,0.1)",
-    "medianoche": "rgba(255,255,255,0.06)",
+    "papel": "#5A6070",
+    "marea": "#1F3A52",
+    "medianoche": "#B1D4F0",
 }
 
 PALETA_GRAFICOS = PALETAS_POR_TEMA["papel"]
@@ -38,6 +40,7 @@ COLOR_CUADRICULA = "rgba(128,128,128,0.2)"
 COLOR_CERO = "rgba(128,128,128,0.5)"
 COLOR_TRANSPARENTE = "rgba(0,0,0,0)"
 COLOR_SOLUCION = COLORES_SOLUCION_POR_TEMA["papel"]
+OPACIDAD_PLANOS = 0.85
 
 
 def obtener_paleta_tema(tema: str = "papel") -> list[str]:
@@ -74,8 +77,13 @@ _CABECERA_HTML = Template((_PLANTILLAS / "cabecera.html").read_text(encoding="ut
 _CABECERA_GLOSA_HTML = (_PLANTILLAS / "cabecera_glosa.html").read_text(encoding="utf-8")
 
 
-def configurar_tema():
+def configurar_tema(vista: str = "") -> None:
     """Configura fuentes, estilos, MathJax y recursos cliente de la interfaz."""
-    ui.add_head_html(_CABECERA_HTML)
+    def agregar(cabecera: str) -> None:
+        """Prepara la cabecera antes de que la conexión pueda enviar el HTML inicial."""
+        seleccion = seleccionar_recursos(cabecera, vista)
+        ui.add_head_html(versionar_html(seleccion) if vista else seleccion)
+
+    agregar(_CABECERA_HTML)
     if banderas.panel_lateral_habilitado():
-        ui.add_head_html(_CABECERA_GLOSA_HTML)
+        agregar(_CABECERA_GLOSA_HTML)

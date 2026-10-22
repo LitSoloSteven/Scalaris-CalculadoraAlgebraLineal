@@ -44,7 +44,11 @@
     }
 
     document.addEventListener('focusin', evento => mostrarEnlace(evento.target.closest?.('.navegacion-elemento')));
-    const observador = new MutationObserver(prepararListas);
+    const observador = new MutationObserver(mutaciones => {
+        if (window.scalaris.observacion &&
+            !window.scalaris.observacion.contiene(mutaciones, '.navegacion-elementos')) return;
+        prepararListas();
+    });
     observador.observe(document.documentElement, { childList: true, subtree: true });
     window.scalaris.navegacion = { centrarActivo };
     prepararListas();

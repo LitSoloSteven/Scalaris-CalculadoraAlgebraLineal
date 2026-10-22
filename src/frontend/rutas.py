@@ -44,7 +44,7 @@ def _registrar_paginas_algebra() -> None:
         metodo = method if method in ("gauss", "gauss-jordan") else "gauss"
         from src.frontend.vistas.sistemas_lineales.vista_sistemas_lineales import VistaSistemasLineales
 
-        configurar_tema()
+        configurar_tema("sistemas")
         VistaSistemasLineales(metodo_inicial=metodo).construir(token_transferencia=handoff)
 
     @ui.page(ruta_de("vectores"), title=herramienta_por_identificador("vectores").titulo_pagina)
@@ -52,7 +52,7 @@ def _registrar_paginas_algebra() -> None:
         """Construye la página de vectores con sus controles y contexto."""
         from src.frontend.vistas.operaciones_vectores.vista_operaciones_vectores import VistaOperacionesVectores
 
-        configurar_tema()
+        configurar_tema("vectores")
         VistaOperacionesVectores().construir()
 
     @ui.page(ruta_de("matrices"), title=herramienta_por_identificador("matrices").titulo_pagina)
@@ -60,7 +60,7 @@ def _registrar_paginas_algebra() -> None:
         """Construye la página de matrices con sus controles y contexto."""
         from src.frontend.vistas.operaciones_matrices.vista_operaciones_matrices import VistaOperacionesMatrices
 
-        configurar_tema()
+        configurar_tema("determinantes" if operacion == OPERACION_DETERMINANTE else "matrices")
         if operacion == OPERACION_DETERMINANTE:
             from src.frontend.vistas.operaciones_matrices.vista_determinante import VistaDeterminante
             VistaDeterminante().construir()
@@ -72,7 +72,7 @@ def _registrar_paginas_algebra() -> None:
         """Construye la página de inversa con sus controles y contexto."""
         from src.frontend.vistas.operaciones_inversas.vista_operaciones_inversas import VistaOperacionesInversas
 
-        configurar_tema()
+        configurar_tema("inversa")
         VistaOperacionesInversas().construir(token_transferencia=handoff)
 
 
@@ -84,7 +84,7 @@ def _registrar_paginas_avanzadas() -> None:
         """Construye la captura pública de determinantes mediante triangulación LU."""
         from src.frontend.vistas.operaciones_matrices.vista_determinante import VistaDeterminante
 
-        configurar_tema()
+        configurar_tema("determinantes")
         VistaDeterminante().construir()
 
     @ui.page(ruta_de("visualizador"), title=herramienta_por_identificador("visualizador").titulo_pagina)
@@ -92,7 +92,7 @@ def _registrar_paginas_avanzadas() -> None:
         """Construye la página de geometria con sus controles y contexto."""
         from src.frontend.vistas.geometria.vista_geometria import VistaGeometria
 
-        configurar_tema()
+        configurar_tema("visualizador")
         VistaGeometria().construir(escena=escena, token_transferencia=handoff)
 
     @ui.page(ruta_de("leontief"), title=herramienta_por_identificador("leontief").titulo_pagina)
@@ -100,7 +100,7 @@ def _registrar_paginas_avanzadas() -> None:
         """Construye la página de leontief con sus controles y contexto."""
         from src.frontend.vistas.operaciones_matrices.vista_leontief import VistaLeontief
 
-        configurar_tema()
+        configurar_tema("leontief")
         VistaLeontief().construir()
 
     @ui.page(ruta_de("transformaciones"), title=herramienta_por_identificador("transformaciones").titulo_pagina)
@@ -108,7 +108,7 @@ def _registrar_paginas_avanzadas() -> None:
         """Construye la página de transformaciones con sus controles y contexto."""
         from src.frontend.vistas.operaciones_matrices.vista_transformaciones import VistaTransformaciones
 
-        configurar_tema()
+        configurar_tema("transformaciones")
         VistaTransformaciones().construir()
 
 
@@ -120,7 +120,7 @@ def _registrar_paginas_utilidades() -> None:
         """Construye la página de bases con sus controles y contexto."""
         from src.frontend.vistas.sistemas_numericos.vista_sistemas_numericos import VistaSistemasNumericos
 
-        configurar_tema()
+        configurar_tema("bases")
         VistaSistemasNumericos().construir()
 
     @ui.page(ruta_de("romanos"), title=herramienta_por_identificador("romanos").titulo_pagina)
@@ -128,7 +128,7 @@ def _registrar_paginas_utilidades() -> None:
         """Construye la página de romanos con sus controles y contexto."""
         from src.frontend.vistas.sistemas_numericos.vista_calculadora_romana import VistaCalculadoraRomana
 
-        configurar_tema()
+        configurar_tema("romanos")
         VistaCalculadoraRomana().construir()
 
 
@@ -142,7 +142,7 @@ def _registrar_pagina_inicio() -> None:
         """Construye la página de inicio con sus controles y contexto."""
         from src.frontend.vistas.inicio.vista_inicio import VistaInicio
 
-        configurar_tema()
+        configurar_tema("inicio")
         await VistaInicio(glosa_abierta=(glosa == "1")).construir(client)
 
 

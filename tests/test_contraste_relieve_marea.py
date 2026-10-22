@@ -131,8 +131,8 @@ def test_tokens_papel_y_medianoche_conservados():
         "--btn-primary-text": "#F7F5F1",
         "--focus-ring": "#1F6B64",
         "--error": "#B23A31",
-        "--success": "#1F7A4D",
-        "--warning": "#A6710B",
+        "--success": "#1B7046",
+        "--warning": "#855A09",
     }
     _comprobar_tokens_papel(papel, papel_esperado)
 

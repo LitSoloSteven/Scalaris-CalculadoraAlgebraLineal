@@ -1,7 +1,7 @@
 """Lógica de selección y emisión de sugerencias contextuales proactivas para Glosa."""
 from dataclasses import dataclass, field
 import os
-from typing import Any, Protocol
+from typing import Any
 
 from src.backend.utilidades.validadores import ValidadorMatriz
 from src.frontend import banderas
@@ -131,11 +131,3 @@ def sugerir(
     if not incluir_especificas:
         candidatas = [candidata for candidata in candidatas if candidata.rol != "especifica"]
     return seleccionar_sugerencias(candidatas, limite)
-
-
-class ProveedorSugerencias(Protocol):
-    """Protocolo para vistas capaces de proveer señales dinámicas para Glosa."""
-
-    def obtener_senales_ia(self) -> Senales | None:
-        """Devuelve las señales contextuales de la vista actual."""
-        ...

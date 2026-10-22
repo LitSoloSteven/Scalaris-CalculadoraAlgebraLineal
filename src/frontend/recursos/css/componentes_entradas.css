@@ -231,7 +231,7 @@
 .glosa-icono-vacio {
     width: 48px;
     height: 48px;
-    opacity: 0.5;
+    opacity: 1;
 }
 
 .glosa-burbuja-error {
@@ -270,6 +270,6 @@
 }
 
 .glosa-sugerencias-deshabilitado {
-    opacity: 0.6;
+    opacity: 1;
     pointer-events: none;
 }

@@ -2,6 +2,73 @@ html {
     background-color: var(--bg-page);
 }
 
+html .q-skeleton {
+    background: var(--input-bg);
+}
+
+html .q-focus-helper::before {
+    background: var(--text-main);
+}
+
+html .q-focus-helper::after {
+    background: var(--bg-elevated);
+}
+
+html .q-checkbox__inner--falsy,
+html .q-toggle__inner--falsy,
+html .q-field:not(.q-field--highlighted) .q-field__label,
+html .q-field__marginal {
+    color: var(--text-sec);
+}
+
+html .q-checkbox__svg,
+html .q-toggle__inner--truthy .q-toggle__thumb .q-icon {
+    color: var(--btn-primary-text);
+}
+
+html .q-toggle__inner--falsy .q-toggle__thumb::after {
+    background: var(--bg-elevated);
+    box-shadow: var(--elev-1);
+}
+
+html .q-toggle__inner--truthy .q-toggle__thumb::after {
+    box-shadow: var(--elev-1);
+}
+
+html .q-field__native,
+html .q-field__input {
+    color: var(--input-text);
+}
+
+html .q-field:not(.q-field--labeled) .q-field__native::placeholder,
+html .q-field:not(.q-field--labeled) .q-field__input::placeholder,
+html .q-field--float .q-field__native::placeholder,
+html .q-field--float .q-field__input::placeholder {
+    color: var(--text-placeholder) !important;
+    -webkit-text-fill-color: var(--text-placeholder) !important;
+    opacity: 1 !important;
+}
+
+@layer quasar_importants {
+    html .q-btn.bg-primary {
+        color: var(--btn-primary-text) !important;
+    }
+
+    html .glosa-sugerencia[disabled],
+    html .glosa-seguimiento[disabled],
+    html .glosa-boton-explicacion.disabled {
+        opacity: 1 !important;
+    }
+}
+
+html .q-slider__track {
+    background: color-mix(in srgb, var(--text-sec) 10%, transparent);
+}
+
+html .q-linear-progress__track {
+    background: var(--text-sec);
+}
+
 body {
     background-color: var(--bg-page);
     color: var(--text-main);
@@ -37,8 +104,10 @@ html .texto-acento {
     color: var(--warning) !important;
 }
 
-.fondo-elevado {
-    background-color: var(--bg-elevated) !important;
+.sesion-obsoleta {
+    opacity: 1;
+    outline: 1px dashed var(--warning);
+    outline-offset: 2px;
 }
 
 .matematicas-desplazamiento {
@@ -52,6 +121,7 @@ html .texto-acento {
 
 .row>div:has(> .matematicas-desplazamiento),
 .nicegui-row>div:has(> .matematicas-desplazamiento),
+.nicegui-column>div:has(> .matematicas-desplazamiento),
 .row>.matematicas-desplazamiento,
 .nicegui-row>.matematicas-desplazamiento {
     min-width: 0;
@@ -62,28 +132,6 @@ html .texto-acento {
     .matematicas-etiqueta {
         font-size: clamp(0.75rem, 3vw, 1.25rem) !important;
     }
-}
-
-.fuente-destacada {
-    font-size: var(--fs-display);
-    font-weight: var(--fw-display);
-    letter-spacing: var(--ls-display);
-}
-
-.fuente-titulo-principal {
-    font-size: var(--fs-h1);
-    font-weight: var(--fw-h1);
-    letter-spacing: var(--ls-h1);
-}
-
-.fuente-titulo-secundario {
-    font-size: var(--fs-h2);
-    font-weight: var(--fw-h2);
-}
-
-.fuente-cuerpo {
-    font-size: var(--fs-body);
-    font-weight: var(--fw-body);
 }
 
 .fuente-pequena {
