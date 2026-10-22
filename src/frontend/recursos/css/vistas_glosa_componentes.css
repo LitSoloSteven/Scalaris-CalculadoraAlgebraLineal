@@ -54,7 +54,8 @@
 }
 
 .glosa-sugerencia[disabled] {
-    opacity: 0.6;
+    opacity: 1;
+    border-style: dashed;
     cursor: not-allowed;
 }
 
@@ -105,7 +106,8 @@
 }
 
 .glosa-seguimiento[disabled] {
-    opacity: 0.6;
+    opacity: 1;
+    text-decoration: line-through;
     cursor: not-allowed;
 }
 
@@ -161,7 +163,7 @@
 }
 
 .glosa-boton-explicacion.esta-cargando {
-    opacity: 0.5;
+    opacity: 1;
     pointer-events: none;
 }
 

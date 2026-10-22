@@ -12,7 +12,8 @@ from src.ai.presupuesto_mensajes import validar_longitud_mensaje
 from src.frontend.componentes.glosa_preguntas import PreguntasGlosaMixin
 from src.frontend.componentes.glosa_espera import iniciar_temporizador_cancelar, finalizar_envio
 from src.frontend import banderas
-from src.frontend.constantes import ANTI_REBOTE_GLOSA_SEGUNDOS, MAXIMO_HISTORIAL
+from src.frontend.constantes import ANTI_REBOTE_GLOSA_SEGUNDOS
+from src.frontend.componentes.historial_glosa import incorporar_mensaje
 from src.frontend.textos import MENSAJE_ANTI_REBOTE_GLOSA
 
 registro = logging.getLogger(__name__)
@@ -96,9 +97,8 @@ class EnvioGlosaMixin(PreguntasGlosaMixin):
             self.campo_entrada.disable()
 
         if not es_reintento:
-            self.historial_chat.append({"texto": texto, "enviado": True, "almacenable_en_cache": almacenable_en_cache, "mas_simple": mas_simple})
-            if len(self.historial_chat) > MAXIMO_HISTORIAL:
-                self.historial_chat = self.historial_chat[-MAXIMO_HISTORIAL:]
+            mensaje = {"texto": texto, "enviado": True, "almacenable_en_cache": almacenable_en_cache, "mas_simple": mas_simple}
+            self.historial_chat = incorporar_mensaje(self.historial_chat, mensaje)
 
         self._esta_enviando = True
         self._ultimo_envio = time.monotonic()
@@ -163,9 +163,7 @@ class EnvioGlosaMixin(PreguntasGlosaMixin):
         else:
             mensaje = {"texto": resultado.texto, "enviado": False, "error": False}
 
-        self.historial_chat.append(mensaje)
-        if len(self.historial_chat) > MAXIMO_HISTORIAL:
-            self.historial_chat = self.historial_chat[-MAXIMO_HISTORIAL:]
+        self.historial_chat = incorporar_mensaje(self.historial_chat, mensaje)
 
         with self.area_chat:
             if banderas.panel_lateral_habilitado():

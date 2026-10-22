@@ -89,7 +89,7 @@ def renderizar_seguimientos(seguimientos: Any, al_elegir: Callable, *, deshabili
     return contenedor, botones
 
 
-def renderizar_boton_explicacion(indice_paso: int, total_pasos: int, operacion: str, al_pulsar: Callable, *, esta_cargando: bool = False) -> ui.button | None:
+def renderizar_boton_explicacion(indice_paso: int, al_pulsar: Callable, *, esta_cargando: bool = False) -> ui.button | None:
     """Renderiza el botón accesible 'Explicar paso' para un paso algebraico concreto."""
     from src.frontend import banderas
     from src.frontend.sugerencias import glosa_configurada

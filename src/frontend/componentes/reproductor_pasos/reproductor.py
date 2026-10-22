@@ -126,8 +126,6 @@ class ReproductorPasos:
         with self.contenedor_glosa:
             renderizar_boton_explicacion(
                 self.indice_actual + 1,
-                len(self.pasos),
-                paso.descripcion,
                 lambda indice: self.al_explicar(paso),
                 esta_cargando=self.esta_ocupado(),
             )
