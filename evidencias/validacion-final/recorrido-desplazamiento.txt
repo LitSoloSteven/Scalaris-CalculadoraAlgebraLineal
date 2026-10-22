@@ -1,1 +1,0 @@
-TACTIL Y TRACKPAD correctos {"tactil":287,"trackpad":503,"recientes":true,"errores":[]}

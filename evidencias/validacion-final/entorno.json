@@ -1,9 +1,0 @@
-{
-  "navegador": "156.0.8078.4",
-  "node": "v24.20.0",
-  "plataforma": "win32",
-  "servidor": "http://127.0.0.1:8080",
-  "esperaDeterminanteMs": 800,
-  "python": "3.14.7",
-  "nicegui": "3.16.0"
-}

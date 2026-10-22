@@ -468,11 +468,6 @@ pytest tests/test_gauss_precision.py -v
 
 ## 🛡️ Manejo de errores y validación
 
-La validación de las etapas visuales, sus capturas, pruebas temporales de animación,
-comandos y limitaciones del entorno están en
-`evidencias/validacion-final/INFORME.md`. Incluye recorridos con zoom real del
-200 %, teclado, movimiento reducido y desplazamiento táctil emulado.
-
 El proyecto trata los errores de entrada del usuario como **datos esperables**, no como excepciones a atrapar por accidente:
 
 - Una jerarquía de excepciones propia (`AlgebraLinealError` y sus subclases: `DimensionMismatchError`, `MatrixDataError`, `InvalidNumberError`, `SingularSystemError`, `InvalidVectorError`) hereda deliberadamente de `ValueError`, para que código existente que hace `except ValueError` siga funcionando sin cambios.

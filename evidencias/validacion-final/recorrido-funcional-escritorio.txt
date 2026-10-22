@@ -1,6 +1,0 @@
-DETERMINANTE uno-por-uno 7/11
-DETERMINANTE identidad 1
-DETERMINANTE singular 0
-DETERMINANTE intercambio-filas -1
-DETERMINANTE fracciones 17/210
-FUNCIONALIDAD correcta
