@@ -4,6 +4,7 @@ from __future__ import annotations
 from typing import Any
 from src.frontend.tema import PALETA_GRAFICOS, COLORES_TEXTO_GRAFICOS
 from ._figuras_comunes import disposicion_2d, disposicion_3d
+from ._colores_figuras import aplicar_colores_figura
 
 
 def _flecha_3d(figura, extremos: tuple, nombre: str, estilo: dict):
@@ -66,4 +67,5 @@ def construir_figura_vectores(resultado: dict, *, tema: str = 'papel', indice_cu
         disposicion_2d(figura, rango_ejes=rango, color_fuente=fuente, revision='vectores')
     elif dimension == 3:
         disposicion_3d(figura, rango_ejes=rango, color_fuente=fuente, revision='vectores')
+    aplicar_colores_figura(figura, tema)
     return figura

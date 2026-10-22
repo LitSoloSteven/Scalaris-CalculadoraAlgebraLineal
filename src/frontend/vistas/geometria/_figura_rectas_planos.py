@@ -4,9 +4,10 @@ from __future__ import annotations
 from typing import Any
 from src.backend.geometria.muestreo import extremos_recta, superficie_plano
 from src.frontend.tema import (
-    PALETA_GRAFICOS, COLOR_MARCADOR_CLARO, COLOR_MARCADOR_BORDE, COLORES_TEXTO_GRAFICOS, COLOR_SOLUCION,
+    PALETA_GRAFICOS, COLOR_MARCADOR_CLARO, COLOR_MARCADOR_BORDE, COLORES_TEXTO_GRAFICOS, COLOR_SOLUCION, OPACIDAD_PLANOS,
 )
 from ._figuras_comunes import disposicion_2d, disposicion_3d
+from ._colores_figuras import aplicar_colores_figura
 
 
 def _trazar_solucion_2d(figura, conjunto: dict | None, color: str):
@@ -105,7 +106,7 @@ def _figura_planos_3d(figura, resultado: dict, rango: list, fuente: str):
         indice = ecuacion['indice']
         plano = {'coeficientes': ecuacion['coeficientes'], 'termino': ecuacion['objetivo']}
         estilo = {'color': PALETA_GRAFICOS[indice % len(PALETA_GRAFICOS)],
-                  'nombre': f'Ecuación {indice + 1}', 'opacidad': 0.7}
+                  'nombre': f'Ecuación {indice + 1}', 'opacidad': OPACIDAD_PLANOS}
         _trazar_superficie(figura, plano, rango, estilo)
     _trazar_punto(figura, conjunto, 3)
     disposicion_3d(figura, rango_ejes=rango, color_fuente=fuente, revision='planos')
@@ -122,4 +123,5 @@ def construir_figura_rectas_planos(resultado: dict, *, tema: str = 'papel') -> A
         _figura_rectas_2d(figura, resultado, rango, fuente)
     elif dimension == 3:
         _figura_planos_3d(figura, resultado, rango, fuente)
+    aplicar_colores_figura(figura, tema)
     return figura

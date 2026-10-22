@@ -1,7 +1,7 @@
 """Muestreo numérico de rectas y planos para su representación gráfica."""
 from __future__ import annotations
 
-TOLERANCIA_CERO_GRAFICO = 1e-12
+from src.backend.constantes import TOLERANCIA_CERO_GRAFICO
 MUESTRAS_PLANO = 12
 
 

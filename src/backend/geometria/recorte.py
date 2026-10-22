@@ -1,5 +1,6 @@
 """Algoritmos geométricos de recorte a caja visual y cálculo de escala automática."""
 import math
+from src.backend.constantes import TOLERANCIA_CERO_GRAFICO
 
 
 def recortar_recta_a_caja(
@@ -10,10 +11,9 @@ def recortar_recta_a_caja(
     """Calcula el intervalo del parámetro t donde la recta intersecta la caja."""
     limite_inferior = -float("inf")
     limite_superior = float("inf")
-    tolerancia_cero = 1e-12
 
     for componente_p, componente_d in zip(punto, direccion):
-        if abs(componente_d) < tolerancia_cero:
+        if abs(componente_d) < TOLERANCIA_CERO_GRAFICO:
             if componente_p < -semi_ancho or componente_p > semi_ancho:
                 return None
             continue

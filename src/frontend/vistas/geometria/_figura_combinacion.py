@@ -4,6 +4,7 @@ from __future__ import annotations
 from typing import Any
 from src.frontend.tema import PALETA_GRAFICOS, COLOR_MARCADOR_CLARO, COLOR_MARCADOR_BORDE, COLORES_TEXTO_GRAFICOS
 from ._figuras_comunes import disposicion_2d, disposicion_3d
+from ._colores_figuras import aplicar_colores_figura
 
 
 def _datos_segmento(inicio: list, fin: list, dimension: int) -> dict:
@@ -68,4 +69,5 @@ def construir_figura_combinacion(resultado: dict, *, tema: str = 'papel') -> Any
     disposicion = disposicion_2d if dimension == 2 else disposicion_3d
     disposicion(figura, rango_ejes=resultado.get('rango', [-5, 5]),
                 color_fuente=COLORES_TEXTO_GRAFICOS.get(tema, COLORES_TEXTO_GRAFICOS['papel']), revision='combinacion')
+    aplicar_colores_figura(figura, tema)
     return figura

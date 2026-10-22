@@ -54,6 +54,7 @@ class MixinEscenasGeometria:
         with ui.element('div').classes('geometria-figura w-full').props('role=img') as contenedor:
             contenedor.props.update({'id': f'geometria-figura-{id(self)}', 'aria-label': descripcion})
             self._elemento_plotly = ui.plotly(figura).classes('w-full h-full')
+            self._elemento_plotly.on('plotly_afterplot', js_handler='() => window.scalaris.sincronizarTemaPlotly()')
 
     async def _construir_figura(self, resultado: dict, escena: str) -> bool:
         from ._actualizacion_geometria import ERROR_RENDERIZADO

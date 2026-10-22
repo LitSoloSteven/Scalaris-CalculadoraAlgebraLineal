@@ -58,6 +58,8 @@
     }
 
     const observadorMutaciones = new MutationObserver((mutaciones) => {
+        if (window.scalaris.observacion &&
+            !window.scalaris.observacion.contiene(mutaciones, '.js-plotly-plot')) return;
         let nodosNuevos = false;
         for (let mutacion of mutaciones) {
             if (mutacion.addedNodes.length > 0) {

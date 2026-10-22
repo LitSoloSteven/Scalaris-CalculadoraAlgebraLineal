@@ -12,6 +12,7 @@ from src.frontend.constantes import ANTIRREBOTE_GEOMETRIA_SEGUNDOS
 from src.frontend.navegacion import ruta_de
 from src.frontend.controladores.sesion_matricial import actualizar_contexto
 from .mixin_controles import MixinControlesGeometria
+from .limpieza_geometria import MixinLimpiezaGeometria
 from .mixin_escenas import MixinEscenasGeometria
 from ._actualizacion_geometria import actualizar_figura
 from ._contexto_ia_geometria import obtener_contexto_ia, obtener_senales_ia
@@ -22,7 +23,7 @@ registro = logging.getLogger(__name__)
 ESCENAS_VALIDAS = ('rectas-planos', 'vectores', 'combinacion')
 
 
-class VistaGeometria(MixinControlesGeometria, MixinEscenasGeometria):
+class VistaGeometria(MixinLimpiezaGeometria, MixinControlesGeometria, MixinEscenasGeometria):
     """Orquesta la visualización y el contexto de IA sin resolver matemáticas."""
 
     def __init__(self):

@@ -18,7 +18,7 @@ def validar_transferencia_escena(escena: str, escena_recibida: str, vectores: li
 
 
 def _obtener_familia_escena(operacion: str, vectores: dict) -> tuple[list, str]:
-    if operacion == "suma_resta":
+    if operacion in ("suma_resta", "independencia"):
         datos = [vector["datos"] for vector in vectores.values()]
         escena = "vectores"
     elif operacion == "combinacion_lineal" and "b" in vectores:
