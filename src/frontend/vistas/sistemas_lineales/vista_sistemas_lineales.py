@@ -15,6 +15,7 @@ from src.frontend.controladores.sistemas_lineales.contexto import (
     obtener_contexto_sistema, obtener_senales_sistema,
 )
 from src.frontend.controladores.sistemas_lineales.estado_captura import cambiar_modo
+from .modo_homogeneo import cambiar_modo_homogeneo
 
 
 class VistaSistemasLineales(
@@ -83,7 +84,7 @@ class VistaSistemasLineales(
                 ui.tab('gauss', label='Gauss')
                 ui.tab('gauss-jordan', label='Gauss-Jordan')
             self.pestanas_metodo.value = self.metodo_inicial
-            self.pestanas_metodo.on_value_change(self.activar_animacion_dimension)
+            self.pestanas_metodo.on_value_change(self.cambiar_metodo)
 
             self.pestanas_modo.on_value_change(lambda evento: cambiar_modo(self, evento.value))
 
@@ -94,6 +95,8 @@ class VistaSistemasLineales(
                 'w-full p-0 overflow-hidden panel-tarjeta sistemas-panel-captura'
             ):
                 with ui.tab_panel('Matriz').classes('p-6'):
+                    self.casilla_homogeneo = ui.checkbox("Sistema homogéneo Ax = 0", value=False,
+                                                       on_change=lambda evento: cambiar_modo_homogeneo(self, evento.value))
                     self._crear_sincronizacion_ecuaciones()
                     self.cuadricula.construir_contenedor_cuadricula()
 
@@ -101,10 +104,7 @@ class VistaSistemasLineales(
                     self._renderizar_panel_ecuaciones()
 
             with ui.row().classes('w-full mt-6 gap-4'):
-                with ui.button(
-                    icon='delete', on_click=self.confirmar_limpieza, color=None
-                ).classes('boton-discreto flex-1 py-3').props('ripple=false id="boton-limpiar-principal" aria-label="Limpiar"'):
-                    ui.tooltip('Limpiar').props('target="#boton-limpiar-principal"')
+                self._construir_boton_limpieza()
                 ui.button(
                     'Resolver', on_click=lambda evento: self.resolver_sistema(evento.sender), color=None
                 ).classes('boton-principal flex-[2] py-3').props('ripple=false')
@@ -128,10 +128,10 @@ class VistaSistemasLineales(
             ).classes('boton-discreto text-xs py-1 px-3').props('ripple=false')
 
             with ui.row().classes('gap-2 ml-auto'):
-                ui.button(icon='remove', on_click=self.eliminar_ecuacion, color=None).classes(
+                self.boton_quitar_ecuacion = ui.button(icon='remove', on_click=lambda: self._cambiar_ecuaciones_animadas(-1), color=None).classes(
                     'boton-icono w-8 h-8 p-0'
                 ).props('ripple=false aria-label="Quitar ecuación"').tooltip('Quitar ecuación')
-                ui.button(icon='add', on_click=self.agregar_ecuacion, color=None).classes(
+                self.boton_agregar_ecuacion = ui.button(icon='add', on_click=lambda: self._cambiar_ecuaciones_animadas(1), color=None).classes(
                     'boton-icono w-8 h-8 p-0'
                 ).props('ripple=false aria-label="Añadir ecuación"').tooltip('Añadir ecuación')
 

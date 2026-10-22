@@ -4,6 +4,10 @@ from typing import Any
 
 from src.backend.resolutores.operaciones_matrices.formateadores import matriz_a_latex
 from src.backend.utilidades.validadores import ValidadorMatriz
+from src.backend.modelos.matriz import Matriz
+from src.frontend.controladores.operaciones_matrices.codificador import CodificadorMatriz
+from src.backend.resolutores.sistemas_lineales.homogeneos import analizar_resultado_homogeneo
+from src.backend.resolutores.sistemas_lineales.comprobacion_sistemas import comprobar_familia
 from src.frontend.controladores.agrupador_pasos import agrupar_pasos_eliminacion
 from src.backend.resolutores.sistemas_lineales.captura import validar_y_construir_aumentada
 from src.frontend.controladores.sistemas_lineales.compartido import (
@@ -16,14 +20,17 @@ from src.frontend.controladores.utilidades import (
 
 
 def _verificar_solucion_si_aplica(
-    resultado: dict, a_fracciones: list, b_fracciones: list
+    resultado: dict, a_fracciones: list, b_fracciones: list, variables: list | None = None
 ) -> tuple[Any, list]:
-    """Genera pasos de comprobación en LaTeX si el sistema tiene solución única."""
+    """Presenta la sustitucion exacta de la solucion o familia en las ecuaciones originales."""
     solucion = resultado.get("solucion")
     estado = resultado.get("estado")
+    if resultado.get("parametros_solucion") and estado == "SOLUCIONES_INFINITAS":
+        comprobacion = comprobar_familia(a_fracciones, b_fracciones, resultado["parametros_solucion"], variables)
+        return solucion, comprobacion["pasos_latex"]
     if solucion and estado == "SOLUCION_UNICA":
         _, pasos_verificacion = ValidadorMatriz.verificar_solucion(
-            a_fracciones, solucion, b_fracciones, como_latex=True
+            a_fracciones, resultado["solucion_exacta"], b_fracciones, como_latex=True
         )
         return solucion, pasos_verificacion
     return solucion, []
@@ -94,7 +101,7 @@ def ejecutar_flujo_sistema(
         for paso in pasos_crudos
     ]
 
-    _sol, comprobacion = _verificar_solucion_si_aplica(resultado, a_fracs, b_fracs)
+    _sol, comprobacion = _verificar_solucion_si_aplica(resultado, a_fracs, b_fracs, variables)
 
     pasos, grupos, estadisticas = agrupar_pasos_eliminacion(
         pasos_crudos, numero_variables, resultado.get("estado"), contexto="sistema", metodo=metodo
@@ -103,5 +110,12 @@ def ejecutar_flujo_sistema(
 
     detalles = (pasos_latex, metadatos_pasos, comprobacion, vista_pasos, (grupos, estadisticas))
     respuesta = _construir_respuesta_carga(resultado, metodo, numero_variables, variables, detalles)
+    _adjuntar_analisis_homogeneo(respuesta, resultado, a_fracs, datos)
 
-    return json.dumps(respuesta, ensure_ascii=False, default=str)
+    return json.dumps(respuesta, ensure_ascii=False, cls=CodificadorMatriz)
+
+
+def _adjuntar_analisis_homogeneo(respuesta: dict, resultado: dict, coeficientes: list, datos: dict) -> None:
+    if datos.get("homogeneo") is True:
+        matriz = Matriz(len(coeficientes), len(coeficientes[0]), coeficientes)
+        respuesta["homogeneo"] = analizar_resultado_homogeneo(matriz, resultado)

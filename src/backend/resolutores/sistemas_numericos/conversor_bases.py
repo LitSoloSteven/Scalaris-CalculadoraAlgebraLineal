@@ -44,12 +44,12 @@ class ConversorBases:
     def _formatear_salida(numero: int) -> dict:
         """Devuelve las cadenas formateadas en decimal, binario, octal y hexadecimal."""
         signo = "-" if numero < 0 else ""
-        mag = abs(numero)
+        magnitud = abs(numero)
         return {
-            "decimal": f"{signo}{mag}",
-            "binario": f"{signo}{format(mag, 'b')}",
-            "octal": f"{signo}{format(mag, 'o')}",
-            "hexadecimal": f"{signo}{format(mag, 'X')}",
+            "decimal": f"{signo}{magnitud}",
+            "binario": f"{signo}{format(magnitud, 'b')}",
+            "octal": f"{signo}{format(magnitud, 'o')}",
+            "hexadecimal": f"{signo}{format(magnitud, 'X')}",
         }
 
     def _generar_pasos(

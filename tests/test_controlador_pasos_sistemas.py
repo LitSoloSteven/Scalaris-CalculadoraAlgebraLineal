@@ -232,7 +232,7 @@ def _comprobar_grupos_soluciones_no_unicas():
     pasos_inf, grupos_inf = construir_pasos_reproductor(res_inf, metodo="gauss")
     titulos_inf = [g.titulo for g in grupos_inf]
     assert "Sustitución hacia atrás" in titulos_inf
-    assert "Comprobación Ax = b" not in titulos_inf
+    assert "Comprobación Ax = b" in titulos_inf
 
     carga_sin_solucion = copiar_entrada_prueba('sistema_paralelo')
     res_no = _resolver_gauss(carga_sin_solucion)

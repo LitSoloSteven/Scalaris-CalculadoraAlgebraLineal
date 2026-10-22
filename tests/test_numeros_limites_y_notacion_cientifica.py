@@ -8,7 +8,7 @@ from src.backend.constantes import LONGITUD_MAXIMA_CADENA_NUMERO
 from src.backend.excepciones import ErrorDatosMatriz
 from src.backend.modelos.matriz import Matriz
 from src.backend.utilidades.validadores import ValidadorMatriz
-from src.backend.utilidades.verificacion import _a_fraccion_estricta
+from src.backend.modelos.entrada_numerica import convertir_numero_exacto
 
 
 MENSAJE_NOTACION = "Notación científica no soportada. Escribe el número con decimales o fracción."
@@ -114,7 +114,7 @@ class TestConversionEstricta:
     def test_notacion_cientifica_rechazada_rapidamente(self):
         """El exponente enorme se rechaza en menos de cincuenta milisegundos."""
         inicio = time.perf_counter()
-        valido, valor, mensaje = _a_fraccion_estricta("1e999999999")
+        valido, valor, mensaje = convertir_numero_exacto("1e999999999")
         milisegundos = (time.perf_counter() - inicio) * 1000
         assert valido is False
         assert valor == Fraction(0)
@@ -124,7 +124,7 @@ class TestConversionEstricta:
     def test_entrada_larga_rechazada_rapidamente(self):
         """La longitud excesiva se rechaza en menos de diez milisegundos."""
         inicio = time.perf_counter()
-        valido, valor, mensaje = _a_fraccion_estricta("1" * 300)
+        valido, valor, mensaje = convertir_numero_exacto("1" * 300)
         milisegundos = (time.perf_counter() - inicio) * 1000
         assert valido is False
         assert valor == Fraction(0)
@@ -133,7 +133,7 @@ class TestConversionEstricta:
 
     def test_notacion_cientifica_tiene_prioridad(self):
         """La notación científica se informa antes que el exceso de longitud."""
-        valido, _, mensaje = _a_fraccion_estricta("1" * 300 + "e1")
+        valido, _, mensaje = convertir_numero_exacto("1" * 300 + "e1")
         assert valido is False
         assert mensaje == MENSAJE_NOTACION
 
@@ -142,14 +142,14 @@ class TestConversionEstricta:
         for entrada, esperado in [
             ("1/3", Fraction(1, 3)), ("0.25", Fraction(1, 4)), ("-3", Fraction(-3, 1)),
         ]:
-            valido, valor, mensaje = _a_fraccion_estricta(entrada)
+            valido, valor, mensaje = convertir_numero_exacto(entrada)
             assert valido is True
             assert valor == esperado
             assert mensaje == ""
 
     def test_entrada_vacia_informa_campo_vacio(self):
         """La conversión estricta conserva el mensaje de campo vacío."""
-        valido, _, mensaje = _a_fraccion_estricta("")
+        valido, _, mensaje = convertir_numero_exacto("")
         assert valido is False
         assert mensaje == "El campo está vacío."
 

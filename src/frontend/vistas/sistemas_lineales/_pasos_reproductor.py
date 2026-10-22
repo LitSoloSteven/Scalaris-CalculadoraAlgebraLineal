@@ -8,6 +8,7 @@ from src.frontend.componentes.reproductor_pasos.textos import limpiar_latex_plan
 from src.frontend.componentes.reproductor_pasos.html_tablas import html_tabla_aumentada
 from src.frontend.componentes.reproductor_pasos.modelo import GrupoReproductor, PasoReproductor
 from src.frontend.ayudas import formatear_paso_mathjax
+from src.frontend.componentes.presentacion_analisis import anexar_analisis
 
 
 def _crear_paso_eliminacion(
@@ -134,4 +135,4 @@ def construir_pasos_reproductor(
         pasos.extend(pasos_verificacion_construidos)
         grupos.append(grupo_verificacion)
 
-    return tuple(pasos), tuple(grupos)
+    return anexar_analisis(pasos, grupos, respuesta)

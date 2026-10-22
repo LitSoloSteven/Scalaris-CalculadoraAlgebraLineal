@@ -7,6 +7,8 @@ import asyncio
 from typing import Any
 
 from nicegui import ui
+from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
+from .limpieza_numerica import MixinLimpiezaRomanos
 
 from src.ai.huellas import calcular_huella
 from src.backend.resolutores.sistemas_numericos.calculadora_romana import (
@@ -25,7 +27,7 @@ from .presentacion_romana import PresentacionRomana
 registro = logging.getLogger(__name__)
 
 
-class VistaCalculadoraRomana(MixinResultadoRomano, MixinContextoRomano, MixinCapturaRomanos):
+class VistaCalculadoraRomana(MixinLimpiezaRomanos, MixinResultadoRomano, MixinContextoRomano, MixinCapturaRomanos):
     """Controlador de vista modular para operaciones con números romanos."""
 
     def __init__(self) -> None:
@@ -65,9 +67,11 @@ class VistaCalculadoraRomana(MixinResultadoRomano, MixinContextoRomano, MixinCap
                 self._construir_campos_entrada()
 
                 self.contenedor_sugerencias = ui.column().classes("w-full mt-2")
-                self.boton_calcular = ui.button(
-                    "Calcular", on_click=self._operar_desde_control, color=None
-                ).classes("boton-principal w-full py-3 text-lg mt-2 font-bold")
+                with ui.row().classes('w-full gap-4 mt-2'):
+                    crear_boton_limpieza(self, lambda: not self.boton_calcular.is_deleted)
+                    self.boton_calcular = ui.button(
+                        "Calcular", on_click=self._operar_desde_control, color=None
+                    ).classes("boton-principal flex-[2] py-3 text-lg font-bold")
 
             self.contenedor_resultado = ui.column().classes("w-full gap-6 mt-6")
             with self.contenedor_resultado:
@@ -115,10 +119,12 @@ class VistaCalculadoraRomana(MixinResultadoRomano, MixinContextoRomano, MixinCap
         if self._calculando:
             return
         self._calculando = True
+        revision = getattr(self, '_revision_captura', 0)
         self.boton_calcular.props("loading")
         try:
             await asyncio.sleep(0)
-            self.operar_romanos()
+            if revision == getattr(self, '_revision_captura', 0):
+                self.operar_romanos()
         finally:
             self._calculando = False
             self.boton_calcular.props(remove="loading")

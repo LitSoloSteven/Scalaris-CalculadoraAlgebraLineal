@@ -15,6 +15,7 @@ class ElementoSimulado:
         self.estilos = []
         self.limpiado = False
         self.text = ""
+        self.clases = set()
 
     def style(self, estilo):
         """Registra el estilo aplicado por el consumidor."""
@@ -25,8 +26,9 @@ class ElementoSimulado:
         self.limpiado = True
 
     def classes(self, *argumentos, **opciones):
-        """Acepta la configuración de clases usada por NiceGUI."""
-        pass
+        """Registra las clases añadidas y retiradas por NiceGUI."""
+        self.clases.update(opciones.get('add', '').split())
+        self.clases.difference_update(opciones.get('remove', '').split())
 
 
 class EventoSimulado:
@@ -96,7 +98,7 @@ def test_pasos_desde_hexadecimal_hacia_todas_las_bases():
 
 
 def test_resultados_desincronizados_y_limpieza():
-    """La desincronización atenúa los resultados y la limpieza los oculta."""
+    """La desincronización señala los resultados y la limpieza los oculta."""
     interfaz = VistaSistemasNumericos()
     interfaz.tiene_resultado = True
     tarjeta = ElementoSimulado()
@@ -104,9 +106,12 @@ def test_resultados_desincronizados_y_limpieza():
     interfaz.etiqueta_bits = ElementoSimulado()
     interfaz.contenedor_bits = ElementoSimulado()
     interfaz.contenedor_pasos = ElementoSimulado()
+    interfaz.etiqueta_estado = ElementoSimulado()
     interfaz._marcar_resultado_desincronizado()
-    assert 'opacity: 0.45;' in tarjeta.estilos
-    assert 'opacity: 0.45;' in interfaz.contenedor_bits.estilos
+    assert 'sesion-obsoleta' in tarjeta.clases
+    assert 'sesion-obsoleta' in interfaz.contenedor_bits.clases
+    assert 'Resultado anterior' in interfaz.etiqueta_estado.text
+    assert tarjeta.estilos == [] and interfaz.contenedor_bits.estilos == []
     interfaz._limpiar_resultados()
     assert interfaz.tiene_resultado is False
     assert interfaz.resultados['decimal'] == '0'

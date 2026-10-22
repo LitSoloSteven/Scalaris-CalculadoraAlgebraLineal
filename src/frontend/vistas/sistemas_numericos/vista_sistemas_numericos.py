@@ -1,5 +1,7 @@
 """Vista principal del Conversor de Sistemas Numéricos en Scalaris."""
 from nicegui import ui
+from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
+from .limpieza_numerica import MixinLimpiezaBases
 from src.backend.resolutores.sistemas_numericos.conversor_bases import ConversorBases
 from src.backend.utilidades.reglas_dominio import BASES_NUMERICAS, validar_entrada_base
 from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
@@ -10,7 +12,7 @@ from .mixin_interaccion import MixinInteraccionSistemasNumericos
 from .mixin_renderizado import MixinRenderizadoSistemasNumericos
 
 
-class VistaSistemasNumericos(MixinInteraccionSistemasNumericos, MixinRenderizadoSistemasNumericos):
+class VistaSistemasNumericos(MixinLimpiezaBases, MixinInteraccionSistemasNumericos, MixinRenderizadoSistemasNumericos):
     """Controlador de vista modular para conversión de bases numéricas."""
 
     def __init__(self):
@@ -75,9 +77,11 @@ class VistaSistemasNumericos(MixinInteraccionSistemasNumericos, MixinRenderizado
                 self.etiqueta_bits = ui.label('').classes('text-sm font-mono texto-secundario font-bold')
                 self.contenedor_bits = ui.row().classes('gap-1 items-center flex-wrap')
 
-            self.boton_convertir = ui.button(
-                'Convertir', on_click=self._convertir_boton, color=None
-            ).classes('boton-principal w-full py-3 text-lg mt-2 font-bold')
+            with ui.row().classes('w-full gap-4 mt-2'):
+                crear_boton_limpieza(self, lambda: not self.boton_convertir.is_deleted)
+                self.boton_convertir = ui.button(
+                    'Convertir', on_click=self._convertir_boton, color=None
+                ).classes('boton-principal flex-[2] py-3 text-lg font-bold')
 
             self.contenedor_sugerencias = ui.column().classes('w-full mt-2')
 

@@ -5,6 +5,8 @@ from src.frontend.controladores.sistemas_lineales.presentacion_solucion import f
 from src.frontend.controladores.sesion_matricial import invalidar_resultado, actualizar_contexto, calculo_sigue_vigente
 
 from src.frontend.controladores.sistemas_lineales.captura import preparar_captura_ecuaciones
+from src.frontend.controladores.sistemas_lineales.estado_captura import modo_homogeneo_activo
+from src.frontend.componentes.presentacion_analisis import mostrar_resumen_analisis
 from .mixin_resolucion import MixinResolucionSistemas
 
 
@@ -24,6 +26,8 @@ class MixinResultadosSistemasLineales(MixinResolucionSistemas):
     def restablecer_resultados(self):
         """Limpia el resultado anterior y presenta el estado inicial de la herramienta."""
         invalidar_resultado(self)
+        if getattr(self, "panel_ia", None):
+            self.panel_ia.limpiar_foco_explicacion()
         self.contenedor_resultados.clear()
         self.contenedor_resultados.classes(remove='items-start justify-start', add='items-center justify-center')
         with self.contenedor_resultados:
@@ -69,6 +73,8 @@ class MixinResultadosSistemasLineales(MixinResolucionSistemas):
             valores_coeficientes, valores_independientes, variables = datos_ecuaciones
 
         carga = {"matriz_a": valores_coeficientes, "vector_b": valores_independientes, "variables": variables}
+        if modo_homogeneo_activo(self):
+            carga["homogeneo"] = True
         return carga, valores_coeficientes, valores_independientes, variables
 
     def _extraer_ecuaciones_carga(self):
@@ -100,6 +106,8 @@ class MixinResultadosSistemasLineales(MixinResolucionSistemas):
     def _renderizar_encabezado_y_solucion(self, respuesta: dict, variables: list | None):
         """Renderiza las insignias de estado y las fichas de solución."""
         estado = respuesta.get("estado")
+        if respuesta.get("homogeneo"):
+            mostrar_resumen_analisis(respuesta["homogeneo"])
         mensaje_clasificacion = respuesta.get("clasificacion") or respuesta.get("mensaje", "")
 
         if str(estado).upper() == "ERROR":
@@ -130,6 +138,8 @@ class MixinResultadosSistemasLineales(MixinResolucionSistemas):
         if getattr(self, 'panel_ia', None):
             self.panel_ia.renderizar_sugerencias_en_linea()
 
-    def activar_animacion_dimension(self, evento=None) -> None:
-        """Actualiza el contexto tras elegir el metodo de resolucion."""
+    def cambiar_metodo(self, evento=None) -> None:
+        """Invalida el resultado del metodo anterior sin alterar la captura activa."""
+        self.restablecer_resultados()
         actualizar_contexto(self)
+        ui.run_javascript('window.scalaris.animarCambioMetodo();')

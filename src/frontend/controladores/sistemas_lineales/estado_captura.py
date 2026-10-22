@@ -10,6 +10,11 @@ def valores_ecuaciones(vista) -> list[str]:
     return [entrada.value or '' for entrada in vista.entradas_ecuaciones]
 
 
+def modo_homogeneo_activo(vista) -> bool:
+    """Indica si la captura matricial fija los terminos independientes a cero."""
+    return vista.pestanas_modo.value == "Matriz" and getattr(vista.cuadricula, "modo_homogeneo", False)
+
+
 def matriz_vacia(vista) -> bool:
     """Delega la presencia de datos matriciales a la regla comun de captura."""
     coeficientes, independientes = vista.cuadricula.obtener_datos_matriz()

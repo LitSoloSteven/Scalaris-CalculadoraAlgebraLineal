@@ -48,6 +48,7 @@ class MixinRenderizadoSistemasNumericos(MixinProcedimientoSistemasNumericos):
 
         self._renderizar_bits(resultado['binario'].replace('-', ''))
         self._aplicar_opacidad_tarjetas(revelar=revelar_tarjetas)
+        self._restaurar_vigencia_resultados()
         self._mostrar_procedimiento()
 
         from src.ai.huellas import calcular_huella
@@ -61,9 +62,12 @@ class MixinRenderizadoSistemasNumericos(MixinProcedimientoSistemasNumericos):
                 self.panel_ia.renderizar_sugerencias_en_linea()
 
     async def _ejecutar_conversion(self, valor, inmediato=False, revelar_tarjetas=True):
+        revision = getattr(self, '_revision_captura', 0)
         try:
             if not inmediato:
                 await asyncio.sleep(0.15)
+            if revision != getattr(self, '_revision_captura', 0):
+                return False
             if not valor.strip():
                 self._limpiar_resultados()
                 return False

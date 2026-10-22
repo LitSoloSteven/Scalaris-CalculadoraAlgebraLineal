@@ -115,38 +115,37 @@ class MixinInteraccionSistemasNumericos:
         actualizar_contexto(self)
 
     def _marcar_resultado_desincronizado(self):
-        """Atenúa los resultados visibles al cambiar el entrada hasta volver a convertir."""
+        """Señala resultados anteriores con un borde y un aviso, conservando su legibilidad."""
         for tarjeta in self.tarjetas.values():
-            tarjeta.style('opacity: 0.45;')
+            tarjeta.classes(add='sesion-obsoleta')
         if self.contenedor_bits:
-            self.contenedor_bits.style('opacity: 0.45;')
+            self.contenedor_bits.classes(add='sesion-obsoleta')
+        self._publicar_estado('Resultado anterior. Los datos cambiaron; pulsa Convertir para actualizarlo.')
+
+    def _restaurar_vigencia_resultados(self):
+        """Retira la señal de obsolescencia tras cualquier conversión exitosa."""
+        for elemento in [*self.tarjetas.values(), self.contenedor_bits]:
+            if elemento is not None:
+                elemento.classes(remove='sesion-obsoleta')
+        self._publicar_estado('Conversión lista.')
 
     def _aplicar_opacidad_tarjetas(self, revelar=True):
         for base, tarjeta in self.tarjetas.items():
             if revelar:
                 tarjeta.style('opacity: 1;')
 
-            if self.base_destino == 'todas':
-                opacidad = "0.45" if base == self.base_activa else "1"
-            else:
-                opacidad = "1" if base == self.base_destino else "0.45"
-
             if base in self.etiquetas_valores:
-                self.etiquetas_valores[base].style(f'opacity: {opacidad};')
+                self.etiquetas_valores[base].style('opacity: 1;')
         if self.contenedor_bits:
             self.contenedor_bits.style('opacity: 1;')
 
     async def _convertir_boton(self, evento=None):
         if getattr(self, "_calculando", False):
             return
+        revision = getattr(self, '_revision_captura', 0)
         boton = self.boton_convertir
         valor = self.entrada_valor.value or ''
-        valido, mensaje = validar_entrada_base(valor, BASES_NUMERICAS[self.base_activa])
-        if not valido:
-            self.etiqueta_error.text = mensaje
-            if self.tiene_resultado:
-                self._limpiar_resultados()
-            ui.notify(mensaje, type='warning')
+        if not self._validar_conversion(valor):
             return
         self._calculando = True
         self._publicar_estado("Convirtiendo…")
@@ -154,16 +153,31 @@ class MixinInteraccionSistemasNumericos:
             boton.props("loading")
         try:
             await asyncio.sleep(0)
+            if revision != getattr(self, '_revision_captura', 0):
+                return
             if await self._ejecutar_conversion(valor, inmediato=True, revelar_tarjetas=False):
                 self._aplicar_opacidad_tarjetas(revelar=True)
         except Exception:
             self._limpiar_resultados()
             self.etiqueta_error.text = "No se pudo convertir. Revisa el número e inténtalo de nuevo."
         finally:
-            self._calculando = False
+            self._finalizar_conversion(boton, revision)
+
+    def _finalizar_conversion(self, boton, revision: int) -> None:
+        self._calculando = False
+        if revision == getattr(self, '_revision_captura', 0):
             self._publicar_estado("Conversión lista." if self.tiene_resultado else "Revisa el número y vuelve a convertir.")
-            if boton:
-                boton.props(remove="loading")
+        if boton:
+            boton.props(remove="loading")
+
+    def _validar_conversion(self, valor: str) -> bool:
+        valido, mensaje = validar_entrada_base(valor, BASES_NUMERICAS[self.base_activa])
+        if not valido:
+            self.etiqueta_error.text = mensaje
+            if self.tiene_resultado:
+                self._limpiar_resultados()
+            ui.notify(mensaje, type='warning')
+        return valido
 
     def _publicar_estado(self, mensaje: str) -> None:
         etiqueta = getattr(self, "etiqueta_estado", None)

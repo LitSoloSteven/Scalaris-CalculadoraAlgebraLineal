@@ -4,6 +4,7 @@ from src.ai.contexto import (
 )
 from src.ai.huellas import esta_desactualizado
 from src.frontend.sugerencias import Senales, primera_celda_invalida
+from .estado_captura import modo_homogeneo_activo
 
 
 def _contiene_coeficientes(matriz: list) -> bool:
@@ -15,6 +16,8 @@ def construir_datos_entrada(vista) -> tuple:
     vacio, etiqueta, datos = True, "Sistema Lineal", {}
     metodo = getattr(vista.pestanas_metodo, 'value', 'gauss')
     entrada = {"modo": vista.pestanas_modo.value, "metodo": metodo}
+    if modo_homogeneo_activo(vista):
+        entrada["homogeneo"] = True
     if vista.pestanas_modo.value == 'Ecuaciones':
         lineas = [sanear_cadena_usuario(campo.value, 120) for campo in vista.entradas_ecuaciones if campo.value]
         entrada["ecuaciones"] = [campo.value for campo in vista.entradas_ecuaciones]
@@ -51,6 +54,9 @@ def obtener_contexto_sistema(vista):
         mensaje = resultado.get("clasificacion") or resultado.get("mensaje")
         if mensaje:
             contexto.resultado["mensaje"] = mensaje
+        if resultado.get("homogeneo"):
+            analisis = resultado["homogeneo"]
+            contexto.resultado.update({clave: analisis[clave] for clave in ("rango", "nulidad", "solo_trivial", "formula_familia")})
     return contexto
 
 

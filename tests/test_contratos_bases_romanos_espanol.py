@@ -5,6 +5,7 @@ from copy import deepcopy
 from dataclasses import replace
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import Mock
 
 import pytest
 
@@ -159,17 +160,20 @@ def test_vistas_sin_regex_de_dominio_y_renderizadores_sin_html_largo():
 
 @pytest.mark.anyio
 async def test_entrada_invalida_actualiza_mensaje_y_desincroniza_resultado():
-    """Un error de dominio orienta con el mensaje de backend y atenúa el resultado previo."""
+    """Un error de dominio orienta y marca el resultado previo sin atenuarlo."""
     vista = VistaSistemasNumericos()
     vista.base_activa = "binario"
     vista.entrada_valor = SimpleNamespace(value="102")
     vista.etiqueta_error = SimpleNamespace(text="")
     vista.tiene_resultado = True
-    estilos = []
-    vista.tarjetas = {"decimal": SimpleNamespace(style=estilos.append)}
+    tarjeta = SimpleNamespace(classes=Mock(), style=Mock())
+    vista.tarjetas = {"decimal": tarjeta}
+    vista.etiqueta_estado = SimpleNamespace(text="")
     await vista._al_cambiar_entrada(None)
     assert vista.etiqueta_error.text == validar_entrada_base("102", 2)[1]
-    assert estilos == ["opacity: 0.45;"]
+    tarjeta.classes.assert_called_once_with(add="sesion-obsoleta")
+    tarjeta.style.assert_not_called()
+    assert "Resultado anterior" in vista.etiqueta_estado.text
 
 
 def test_operando_romano_vacio_limpia_resultado_y_muestra_error_del_backend():
