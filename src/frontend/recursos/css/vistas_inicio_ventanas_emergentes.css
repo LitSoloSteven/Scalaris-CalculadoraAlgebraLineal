@@ -1,0 +1,280 @@
+.inicio-fila:focus-visible,
+.inicio-dialogo-cerrar:focus-visible {
+    outline: 2px solid var(--focus-ring) !important;
+    outline-offset: 3px;
+}
+
+.inicio-dialogo {
+    position: fixed;
+    inset: 0;
+    width: fit-content;
+    height: fit-content;
+    max-width: none;
+    max-height: none;
+    margin: auto;
+    padding: 0;
+    overflow: visible;
+    border: 0;
+    background: transparent;
+    color: var(--text-main);
+}
+
+.inicio-dialogo::backdrop {
+    background: var(--scrim);
+    opacity: 0;
+    transition: opacity 180ms var(--ease-std);
+}
+
+.inicio-dialogo[open][data-abierto]::backdrop {
+    opacity: 1;
+    transition-duration: 250ms;
+}
+
+.inicio-dialogo-tarjeta {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    width: min(92vw, 42rem);
+    max-height: min(82dvh, 44rem);
+    min-height: 0;
+    padding: var(--space-6);
+    border-radius: var(--radius-card);
+    background-color: var(--bg-elevated);
+    box-shadow: var(--elev-3);
+    color: var(--text-main);
+    overflow: hidden;
+    opacity: 0;
+    transform: scale(0.95);
+    transform-origin: 50% 50%;
+    transition: opacity 180ms linear, transform 200ms var(--ease-std);
+}
+
+.inicio-dialogo[open][data-abierto] .inicio-dialogo-tarjeta {
+    opacity: 1;
+    transform: scale(1);
+    transition-duration: 250ms;
+}
+
+@starting-style {
+    .inicio-dialogo[open][data-abierto] .inicio-dialogo-tarjeta {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    .inicio-dialogo[open][data-abierto]::backdrop {
+        opacity: 0;
+    }
+}
+
+.inicio-dialogo-cabecera {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: var(--space-3);
+    min-width: 0;
+    flex: 0 0 auto;
+}
+
+.inicio-dialogo-icono {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: var(--hub-icon-size, clamp(2.5rem, 6cqi, 4rem));
+    height: var(--hub-icon-size, clamp(2.5rem, 6cqi, 4rem));
+    border-radius: var(--radius-badge);
+    background-color: var(--bg-panel);
+    color: var(--accent);
+}
+
+.inicio-dialogo-titulo {
+    min-width: 0;
+    margin: 0;
+    font-size: clamp(1.35rem, 2.8cqi, 1.9rem);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text-main);
+    overflow-wrap: anywhere;
+}
+
+.inicio-dialogo-conteo {
+    min-width: 0;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--accent);
+    text-align: end;
+    overflow-wrap: anywhere;
+}
+
+.inicio-dialogo-cerrar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 3rem;
+    height: 3rem;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-badge);
+    background-color: var(--bg-panel);
+    box-shadow: var(--elev-2);
+    color: var(--text-main);
+    cursor: pointer;
+    transition: transform 0ms;
+}
+
+.inicio-dialogo-cerrar:active {
+    transform: scale(0.98);
+}
+
+.inicio-dialogo-icono-cerrar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.inicio-lista-herramientas {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+    padding: var(--space-1);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    list-style: none;
+}
+
+.inicio-lista-herramientas > li {
+    --i: 0;
+    display: flex;
+    min-width: 0;
+    flex: 0 0 auto;
+}
+
+.inicio-area-vacia {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 5.5rem;
+    padding: var(--space-8);
+    border-radius: var(--radius-card);
+    background-color: var(--bg-panel);
+    box-shadow: var(--elev-1);
+    color: var(--text-sec);
+    text-align: center;
+}
+
+.inicio-mensaje-vacio {
+    margin: 0;
+    font-size: 1.0625rem;
+    color: var(--text-sec);
+    overflow-wrap: anywhere;
+}
+
+.inicio-tarjeta {
+    position: relative;
+    flex: 1 1 auto;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+        "icono nombre marca"
+        "icono descripcion marca";
+    align-items: start;
+    column-gap: var(--space-3);
+    row-gap: var(--space-1);
+    min-width: 0;
+    padding: var(--space-4) var(--space-5);
+    border-radius: var(--radius-card);
+    background-color: var(--bg-panel);
+    box-shadow: var(--elev-2);
+    color: var(--text-main);
+    text-decoration: none;
+    opacity: 0;
+    transform: scale(0.95) translateY(8px);
+    transition: opacity 120ms var(--ease-std), transform 120ms var(--ease-std);
+    transition-delay: 0ms;
+}
+
+.inicio-dialogo[data-abierto] .inicio-tarjeta {
+    opacity: 1;
+    transform: translateY(0);
+    transition-duration: 120ms;
+    transition-delay: calc(var(--i, 0) * 40ms);
+}
+
+.inicio-tarjeta::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: var(--elev-3);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 120ms var(--ease-std);
+}
+
+.inicio-tarjeta:active {
+    transform: scale(0.98);
+    transition: transform 0ms;
+}
+
+.inicio-tarjeta.esta-destacada::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--accent);
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+.inicio-tarjeta-icono {
+    grid-area: icono;
+    display: inline-flex;
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: var(--accent);
+}
+
+.inicio-tarjeta-icono svg {
+    width: 1.6rem !important;
+    height: 1.6rem !important;
+}
+
+.inicio-tarjeta-nombre {
+    grid-area: nombre;
+    min-width: 0;
+    font-size: 1.1875rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--text-main);
+    overflow-wrap: anywhere;
+}
+
+.inicio-tarjeta-descripcion {
+    grid-area: descripcion;
+    min-width: 0;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    line-height: 1.35;
+    color: var(--text-sec);
+    overflow-wrap: anywhere;
+}
+
+.inicio-tarjeta-marca {
+    grid-area: marca;
+    justify-self: end;
+    align-self: start;
+    min-width: 10ch;
+    min-height: 1.2em;
+    font-size: 0.875rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: right;
+    color: var(--accent);
+    overflow-wrap: anywhere;
+}

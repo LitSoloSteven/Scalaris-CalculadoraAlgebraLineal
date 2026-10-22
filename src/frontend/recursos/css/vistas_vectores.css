@@ -1,0 +1,91 @@
+.vectores-marco {
+    container: vista-vectores / inline-size;
+    min-width: 0;
+}
+
+.vectores-vista .vectores-seccion {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    min-width: 0;
+}
+
+@container vista-vectores (max-width: 20rem) {
+    .vectores-vista { padding-inline: var(--space-2) !important; }
+}
+
+.vectores-vista .vectores-paneles,
+.vectores-vista .vectores-formula,
+.vectores-vista .vectores-captura-tarjeta,
+.vectores-vista .vectores-captura-desplazamiento {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.vectores-vista .vectores-captura-lista {
+    flex-direction: column;
+    align-items: stretch;
+    min-width: 0;
+}
+
+.vectores-vista .vectores-captura-tarjeta {
+    align-items: stretch;
+    gap: var(--space-4);
+}
+
+.vectores-vista .vectores-captura-cabecera {
+    gap: var(--space-2);
+    flex-wrap: wrap;
+    margin-bottom: 0;
+}
+
+.vectores-vista .vectores-captura-desplazamiento {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+    align-items: center;
+}
+
+.vectores-vista .vectores-captura-celdas {
+    flex-wrap: nowrap;
+    flex: none;
+}
+
+.vectores-vista .vectores-captura-columna { flex-direction: column; }
+.vectores-vista .vectores-captura-fila { align-self: flex-start; }
+
+.vectores-vista .vectores-captura-celdas .cuadricula-celda {
+    flex: none;
+    min-width: var(--cell-w);
+}
+
+.vectores-vista .vectores-captura-acciones { flex-shrink: 0; }
+
+.vectores-vista .vectores-captura-acciones .q-btn,
+.vectores-vista .vectores-captura-dimension .q-btn {
+    min-width: var(--space-12);
+    min-height: var(--space-12);
+}
+
+.vectores-vista .vectores-captura-dimension {
+    min-width: 0;
+    gap: var(--space-4);
+}
+
+.vectores-vista .vectores-operacion,
+.vectores-vista .vectores-operacion-selector {
+    min-width: 0;
+    max-width: 100%;
+    gap: var(--space-4);
+}
+
+.vectores-vista .vectores-operacion-campo {
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 0;
+    max-width: 100%;
+}
+@container (max-width: 40rem) {
+    .vectores-panel-captura { padding: 0; }
+}

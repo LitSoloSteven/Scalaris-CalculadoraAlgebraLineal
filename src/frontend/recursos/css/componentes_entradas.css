@@ -1,0 +1,275 @@
+.panel-tarjeta {
+    background-color: var(--bg-panel) !important;
+    border-radius: var(--radius-card) !important;
+    box-shadow: var(--elev-3) !important;
+}
+
+.matriz-entrada .q-field__control {
+    background: var(--input-bg);
+    border: none !important;
+    border-radius: var(--radius-input) !important;
+    box-shadow: var(--elev-inset) !important;
+    padding: var(--space-2) !important;
+    min-width: 0;
+}
+
+.cuadricula-celda {
+    width: var(--cell-w);
+    min-width: 0;
+    font-variant-numeric: tabular-nums;
+}
+
+.cuadricula-celda-compacta {
+    width: calc(8ch + 2 * var(--space-2));
+    font-size: 0.8125rem;
+}
+
+.cuadricula-resaltado-cruzado {
+    background: color-mix(in srgb, var(--accent) 12%, var(--input-bg)) !important;
+    transition: none !important;
+}
+
+.matriz-entrada .q-field__control:before,
+.matriz-entrada .q-field__control:after {
+    display: none !important;
+}
+
+.matriz-entrada .q-field--focused .q-field__control {
+    outline: 2px solid var(--focus-ring) !important;
+    outline-offset: 2px;
+}
+
+.matriz-entrada input:-webkit-autofill,
+.matriz-entrada input:-webkit-autofill:hover,
+.matriz-entrada input:-webkit-autofill:focus,
+.matriz-entrada input:-webkit-autofill:active {
+    -webkit-text-fill-color: var(--input-text) !important;
+    box-shadow: 0 0 0px 1000px var(--input-bg) inset !important;
+    -webkit-box-shadow: 0 0 0px 1000px var(--input-bg) inset !important;
+    transition: background-color 5000s linear 0s;
+}
+
+.matriz-entrada {
+    font-size: var(--fs-mono-math);
+    text-align: center;
+}
+
+.matriz-entrada .q-field__native,
+.matriz-entrada .q-field__input {
+    font-family: 'Space Grotesk', 'Cambria Math', serif !important;
+    font-size: inherit;
+    font-variant-numeric: tabular-nums;
+    color: var(--input-text) !important;
+    -webkit-text-fill-color: var(--input-text) !important;
+    text-align: center !important;
+}
+
+.matriz-entrada input::placeholder,
+.matriz-entrada textarea::placeholder {
+    color: var(--text-sec) !important;
+    -webkit-text-fill-color: var(--text-sec) !important;
+    opacity: 1 !important;
+    text-align: center !important;
+}
+
+.geometria-celda-error {
+    box-shadow: var(--elev-inset), 0 0 0 2px var(--error) !important;
+}
+
+.cuadricula-error {
+    outline: 2px solid var(--error);
+}
+
+.matematicas-etiqueta {
+    font-family: 'Space Grotesk', sans-serif !important;
+    color: var(--text-main) !important;
+    font-weight: 500;
+}
+
+.matematicas-etiqueta i {
+    font-style: italic;
+    font-family: 'Cambria Math', serif;
+}
+
+.matematicas-etiqueta sub {
+    vertical-align: baseline;
+    position: relative;
+    top: 0.2em;
+    font-size: 0.8em;
+    font-weight: 700;
+}
+
+.q-menu,
+.q-tooltip,
+.q-select,
+.q-notification {
+    background: var(--bg-elevated) !important;
+    color: var(--text-main) !important;
+    border-radius: var(--radius-input) !important;
+    box-shadow: var(--elev-2) !important;
+    font-family: 'Space Grotesk', sans-serif !important;
+}
+
+.selector-controles .q-field__control {
+    background: var(--input-bg) !important;
+    border: none !important;
+    border-radius: var(--radius-input) !important;
+    box-shadow: var(--elev-inset) !important;
+    min-height: 44px;
+}
+
+.selector-controles .q-field__control:before,
+.selector-controles .q-field__control:after {
+    display: none !important;
+}
+
+.selector-controles .q-field__native,
+.selector-controles .q-field__input {
+    color: var(--text-main) !important;
+    font-weight: 600;
+    font-family: 'Space Grotesk', sans-serif !important;
+    justify-content: center;
+    text-align: center;
+}
+
+.selector-controles .q-field__marginal .q-icon {
+    color: var(--text-sec) !important;
+}
+
+.selector-controles.q-field--focused .q-field__control {
+    outline: 2px solid var(--focus-ring) !important;
+    outline-offset: 2px;
+}
+
+.selector-menu.q-menu {
+    background: var(--bg-elevated) !important;
+    box-shadow: var(--elev-2) !important;
+    padding: var(--space-1) !important;
+}
+
+.selector-menu .q-item {
+    color: var(--text-main) !important;
+    border-radius: var(--radius-input) !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .selector-menu .q-item:hover {
+        background: var(--accent-soft) !important;
+    }
+}
+
+.selector-menu .q-item.q-manual-focusable--focused {
+    background: var(--accent-soft) !important;
+}
+
+.selector-menu .q-item--active {
+    color: var(--accent) !important;
+    font-weight: 700;
+}
+
+.casilla-controles .q-checkbox__label {
+    color: var(--text-main) !important;
+    font-family: 'Space Grotesk', sans-serif !important;
+    font-weight: 500;
+}
+
+.casilla-controles .q-checkbox__bg {
+    border: 2px solid var(--text-sec) !important;
+    border-radius: var(--radius-badge) !important;
+}
+
+.casilla-controles.q-checkbox--checked .q-checkbox__bg {
+    background: var(--accent) !important;
+    border-color: var(--accent) !important;
+}
+
+.casilla-controles.q-checkbox--checked .q-checkbox__icon {
+    color: var(--btn-primary-text) !important;
+}
+
+.cuadricula-desplazamiento {
+    max-height: 60dvh;
+}
+
+.cuadricula-contenido {
+    min-width: max-content;
+}
+
+.cuadricula-cabecera-fija {
+    position: sticky;
+    top: 0;
+    min-width: max-content;
+}
+
+.cuadricula-fila-sin-ajuste {
+    flex-wrap: nowrap;
+}
+
+.glosa-area-chat {
+    min-height: 0;
+    overscroll-behavior: contain;
+}
+
+.glosa-campo-entrada {
+    max-height: 120px;
+    min-width: 0;
+}
+
+.glosa-boton-enviar {
+    border-radius: 12px !important;
+}
+
+.glosa-contexto-panel {
+    background: var(--bg-panel);
+    border-radius: 8px;
+}
+
+.glosa-contexto-borde {
+    border: 1px solid var(--border-input);
+}
+
+.glosa-icono-vacio {
+    width: 48px;
+    height: 48px;
+    opacity: 1;
+}
+
+.glosa-burbuja-error {
+    background: var(--badge-err-bg);
+    color: var(--badge-err-text);
+    border-radius: 16px 16px 16px 4px;
+    box-shadow: none !important;
+    max-width: 85%;
+}
+
+.glosa-burbuja-usuario {
+    background: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+    border-radius: 16px 16px 4px 16px;
+    box-shadow: none !important;
+    max-width: 85%;
+    min-width: 0;
+}
+
+.glosa-burbuja-asistente {
+    background: var(--bg-panel);
+    color: var(--text-main);
+    border-radius: 16px 16px 16px 4px;
+    box-shadow: none !important;
+    max-width: 85%;
+    min-width: 0;
+}
+
+.glosa-texto-bloque {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.glosa-sugerencia-texto {
+    pointer-events: none;
+}
+
+.glosa-sugerencias-deshabilitado {
+    opacity: 1;
+    pointer-events: none;
+}

@@ -1,0 +1,69 @@
+/* La figura conserva su espacio y cada fórmula desplaza su propio contenido. */
+.geometria-raiz,
+.geometria-panel,
+.geometria-contenedor {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.geometria-contenedor {
+    width: 100%;
+}
+
+.geometria-figura {
+    min-width: 0;
+    width: 100%;
+    height: 400px;
+    overflow-x: auto;
+}
+
+.geometria-vacio {
+    width: 100%;
+    min-width: 0;
+}
+
+.geometria-formula {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: auto;
+    font-variant-numeric: tabular-nums;
+}
+
+.geometria-resumen,
+.geometria-aviso,
+.geometria-deslizador-valor {
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    font-variant-numeric: tabular-nums;
+}
+
+.geometria-accion {
+    flex-shrink: 0;
+}
+
+.geometria-deslizador-entrada {
+    min-width: 0;
+    flex: 1 1 0;
+    accent-color: var(--accent);
+}
+
+.geometria-deslizador-entrada:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.geometria-deslizador-entrada:active {
+    transform: scale(0.98);
+}
+
+html[data-entrada="teclado"] .geometria-deslizador-entrada:active {
+    transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .geometria-deslizador-entrada:active {
+        transform: none;
+    }
+}

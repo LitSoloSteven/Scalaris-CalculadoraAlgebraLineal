@@ -1,0 +1,43 @@
+"""Restricciones de escena para familias de vectores transferidas."""
+from __future__ import annotations
+from src.backend.constantes import MENSAJE_TRANSFERENCIA_DATOS_INVALIDOS
+
+LIMITES_VECTORES_ESCENA = {'vectores': (2, 2), 'combinacion': (2, 5)}
+
+
+def validar_transferencia_escena(escena: str, escena_recibida: str, vectores: list) -> str | None:
+    """Devuelve el motivo de rechazo por escena o cantidad, o None si cumple."""
+    if escena_recibida != escena:
+        return MENSAJE_TRANSFERENCIA_DATOS_INVALIDOS
+    minimo, maximo = LIMITES_VECTORES_ESCENA[escena]
+    if minimo <= len(vectores) <= maximo:
+        return None
+    if escena == 'vectores':
+        return 'La escena de Vectores requiere exactamente 2 vectores.'
+    return 'La escena de Combinación lineal requiere entre 2 y 5 vectores (b + v1...v4).'
+
+
+def _obtener_familia_escena(operacion: str, vectores: dict) -> tuple[list, str]:
+    if operacion in ("suma_resta", "independencia"):
+        datos = [vector["datos"] for vector in vectores.values()]
+        escena = "vectores"
+    elif operacion == "combinacion_lineal" and "b" in vectores:
+        datos = [vectores["b"]["datos"]] + [vector["datos"] for nombre, vector in vectores.items() if nombre != "b"]
+        escena = "combinacion"
+    else:
+        return [], ""
+    return datos, escena
+
+
+def preparar_vectores_visualizador(operacion: str, vectores: dict) -> tuple[list, str]:
+    """Devuelve una familia compatible con las dimensiones y cantidades de la escena."""
+    datos, escena = _obtener_familia_escena(operacion, vectores)
+    if not escena:
+        return [], ""
+    minimo, maximo = LIMITES_VECTORES_ESCENA[escena]
+    if not minimo <= len(datos) <= maximo:
+        return [], ""
+    dimension = len(datos[0])
+    if dimension in (2, 3) and all(len(vector) == dimension for vector in datos):
+        return datos, escena
+    return [], ""

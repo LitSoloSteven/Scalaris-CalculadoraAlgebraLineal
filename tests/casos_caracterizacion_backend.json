@@ -1,0 +1,1698 @@
+[
+  {
+    "nombre": "gauss_unica",
+    "familia": "gauss",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            2,
+            1,
+            5
+          ],
+          [
+            1,
+            -1,
+            1
+          ]
+        ]
+      }
+    ],
+    "metodo": "resolver"
+  },
+  {
+    "nombre": "gauss_inconsistente",
+    "familia": "gauss",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            1,
+            1,
+            2
+          ],
+          [
+            1,
+            1,
+            3
+          ]
+        ]
+      }
+    ],
+    "metodo": "resolver"
+  },
+  {
+    "nombre": "gauss_infinitas",
+    "familia": "gauss",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            1,
+            2,
+            3
+          ],
+          [
+            2,
+            4,
+            6
+          ]
+        ]
+      }
+    ],
+    "metodo": "resolver"
+  },
+  {
+    "nombre": "gauss_fracciones_largas",
+    "familia": "gauss",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            "123456789012345678901234567890/234567890123456789012345678901",
+            1,
+            "123456789012345678901234567890/234567890123456789012345678901"
+          ],
+          [
+            0,
+            1,
+            0
+          ]
+        ]
+      }
+    ],
+    "metodo": "resolver"
+  },
+  {
+    "nombre": "gauss_uno",
+    "familia": "gauss",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            2,
+            3
+          ]
+        ]
+      }
+    ],
+    "metodo": "resolver"
+  },
+  {
+    "nombre": "gauss_intercambio",
+    "familia": "gauss",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            1,
+            0,
+            3
+          ]
+        ]
+      }
+    ],
+    "metodo": "resolver"
+  },
+  {
+    "nombre": "gauss_bloque_independientes",
+    "familia": "gauss",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            2,
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            3,
+            0,
+            1
+          ]
+        ]
+      }
+    ],
+    "metodo": "resolver_reduccion",
+    "opciones": {
+      "numero_terminos_independientes": 2
+    }
+  },
+  {
+    "nombre": "gauss_jordan_unica",
+    "familia": "gauss_jordan",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            2,
+            1,
+            5
+          ],
+          [
+            1,
+            -1,
+            1
+          ]
+        ]
+      }
+    ],
+    "metodo": "resolver"
+  },
+  {
+    "nombre": "gauss_jordan_inconsistente",
+    "familia": "gauss_jordan",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            1,
+            1,
+            2
+          ],
+          [
+            1,
+            1,
+            3
+          ]
+        ]
+      }
+    ],
+    "metodo": "resolver"
+  },
+  {
+    "nombre": "gauss_jordan_infinitas",
+    "familia": "gauss_jordan",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            1,
+            2,
+            3
+          ],
+          [
+            2,
+            4,
+            6
+          ]
+        ]
+      }
+    ],
+    "metodo": "resolver"
+  },
+  {
+    "nombre": "gauss_jordan_fracciones_largas",
+    "familia": "gauss_jordan",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            "123456789012345678901234567890/234567890123456789012345678901",
+            1,
+            "123456789012345678901234567890/234567890123456789012345678901"
+          ],
+          [
+            0,
+            1,
+            0
+          ]
+        ]
+      }
+    ],
+    "metodo": "resolver"
+  },
+  {
+    "nombre": "gauss_jordan_uno",
+    "familia": "gauss_jordan",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            2,
+            3
+          ]
+        ]
+      }
+    ],
+    "metodo": "resolver"
+  },
+  {
+    "nombre": "gauss_jordan_intercambio",
+    "familia": "gauss_jordan",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            1,
+            0,
+            3
+          ]
+        ]
+      }
+    ],
+    "metodo": "resolver"
+  },
+  {
+    "nombre": "gauss_jordan_bloque_independientes",
+    "familia": "gauss_jordan",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            2,
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            3,
+            0,
+            1
+          ]
+        ]
+      }
+    ],
+    "metodo": "resolver_reduccion",
+    "opciones": {
+      "numero_terminos_independientes": 2
+    }
+  },
+  {
+    "nombre": "operaciones_sumar",
+    "familia": "operaciones",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ]
+        ]
+      },
+      {
+        "matriz": [
+          [
+            5,
+            6
+          ],
+          [
+            7,
+            8
+          ]
+        ]
+      }
+    ],
+    "metodo": "sumar"
+  },
+  {
+    "nombre": "operaciones_sumar_fraccion",
+    "familia": "operaciones",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            "123456789012345678901234567890/234567890123456789012345678901"
+          ]
+        ]
+      },
+      {
+        "matriz": [
+          [
+            "1/3"
+          ]
+        ]
+      }
+    ],
+    "metodo": "sumar"
+  },
+  {
+    "nombre": "operaciones_sumar_incompatible",
+    "familia": "operaciones",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            1,
+            2
+          ]
+        ]
+      },
+      {
+        "matriz": [
+          [
+            1
+          ]
+        ]
+      }
+    ],
+    "metodo": "sumar"
+  },
+  {
+    "nombre": "operaciones_restar",
+    "familia": "operaciones",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ]
+        ]
+      },
+      {
+        "matriz": [
+          [
+            5,
+            6
+          ],
+          [
+            7,
+            8
+          ]
+        ]
+      }
+    ],
+    "metodo": "restar"
+  },
+  {
+    "nombre": "operaciones_restar_fraccion",
+    "familia": "operaciones",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            "123456789012345678901234567890/234567890123456789012345678901"
+          ]
+        ]
+      },
+      {
+        "matriz": [
+          [
+            "1/3"
+          ]
+        ]
+      }
+    ],
+    "metodo": "restar"
+  },
+  {
+    "nombre": "operaciones_restar_incompatible",
+    "familia": "operaciones",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            1,
+            2
+          ]
+        ]
+      },
+      {
+        "matriz": [
+          [
+            1
+          ]
+        ]
+      }
+    ],
+    "metodo": "restar"
+  },
+  {
+    "nombre": "operaciones_multiplicar",
+    "familia": "operaciones",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ]
+        ]
+      },
+      {
+        "matriz": [
+          [
+            5,
+            6
+          ],
+          [
+            7,
+            8
+          ]
+        ]
+      }
+    ],
+    "metodo": "multiplicar"
+  },
+  {
+    "nombre": "operaciones_multiplicar_fraccion",
+    "familia": "operaciones",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            "123456789012345678901234567890/234567890123456789012345678901"
+          ]
+        ]
+      },
+      {
+        "matriz": [
+          [
+            "1/3"
+          ]
+        ]
+      }
+    ],
+    "metodo": "multiplicar"
+  },
+  {
+    "nombre": "operaciones_multiplicar_incompatible",
+    "familia": "operaciones",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            1,
+            2
+          ]
+        ]
+      },
+      {
+        "matriz": [
+          [
+            1
+          ]
+        ]
+      }
+    ],
+    "metodo": "multiplicar"
+  },
+  {
+    "nombre": "operaciones_escalar",
+    "familia": "operaciones",
+    "argumentos": [
+      "1/3",
+      {
+        "matriz": [
+          [
+            "123456789012345678901234567890/234567890123456789012345678901"
+          ]
+        ]
+      }
+    ],
+    "metodo": "multiplicar_escalar"
+  },
+  {
+    "nombre": "operaciones_escalar_invalido",
+    "familia": "operaciones",
+    "argumentos": [
+      "1/0",
+      {
+        "matriz": [
+          [
+            1
+          ]
+        ]
+      }
+    ],
+    "metodo": "multiplicar_escalar"
+  },
+  {
+    "nombre": "operaciones_transpuesta",
+    "familia": "operaciones",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            1,
+            2,
+            3
+          ]
+        ]
+      }
+    ],
+    "metodo": "transponer"
+  },
+  {
+    "nombre": "determinante_resolver_lu_regular",
+    "familia": "determinante",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            1,
+            2,
+            3
+          ],
+          [
+            0,
+            4,
+            5
+          ],
+          [
+            1,
+            0,
+            6
+          ]
+        ]
+      }
+    ],
+    "metodo": "resolver_lu"
+  },
+  {
+    "nombre": "determinante_resolver_lu_singular_intercambio",
+    "familia": "determinante",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            0
+          ]
+        ]
+      }
+    ],
+    "metodo": "resolver_lu"
+  },
+  {
+    "nombre": "determinante_resolver_lu_uno",
+    "familia": "determinante",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            "123456789012345678901234567890/234567890123456789012345678901"
+          ]
+        ]
+      }
+    ],
+    "metodo": "resolver_lu"
+  },
+  {
+    "nombre": "determinante_resolver_lu_rectangular",
+    "familia": "determinante",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            1,
+            2
+          ]
+        ]
+      }
+    ],
+    "metodo": "resolver_lu"
+  },
+  {
+    "nombre": "determinante_resolver_laplace_regular",
+    "familia": "determinante",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            1,
+            2,
+            3
+          ],
+          [
+            0,
+            4,
+            5
+          ],
+          [
+            1,
+            0,
+            6
+          ]
+        ]
+      }
+    ],
+    "metodo": "resolver_laplace"
+  },
+  {
+    "nombre": "determinante_resolver_laplace_singular_intercambio",
+    "familia": "determinante",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            0
+          ]
+        ]
+      }
+    ],
+    "metodo": "resolver_laplace"
+  },
+  {
+    "nombre": "determinante_resolver_laplace_uno",
+    "familia": "determinante",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            "123456789012345678901234567890/234567890123456789012345678901"
+          ]
+        ]
+      }
+    ],
+    "metodo": "resolver_laplace"
+  },
+  {
+    "nombre": "determinante_resolver_laplace_rectangular",
+    "familia": "determinante",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            1,
+            2
+          ]
+        ]
+      }
+    ],
+    "metodo": "resolver_laplace"
+  },
+  {
+    "nombre": "inversa_regular",
+    "familia": "inversa",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            4,
+            7
+          ],
+          [
+            2,
+            6
+          ]
+        ]
+      }
+    ],
+    "metodo": "resolver"
+  },
+  {
+    "nombre": "inversa_singular",
+    "familia": "inversa",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            4
+          ]
+        ]
+      }
+    ],
+    "metodo": "resolver"
+  },
+  {
+    "nombre": "inversa_uno",
+    "familia": "inversa",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            3
+          ]
+        ]
+      }
+    ],
+    "metodo": "resolver"
+  },
+  {
+    "nombre": "inversa_fraccion",
+    "familia": "inversa",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            "123456789012345678901234567890/234567890123456789012345678901"
+          ]
+        ]
+      }
+    ],
+    "metodo": "resolver"
+  },
+  {
+    "nombre": "inversa_rectangular",
+    "familia": "inversa",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            1,
+            2
+          ]
+        ]
+      }
+    ],
+    "metodo": "resolver"
+  },
+  {
+    "nombre": "inversa_identidad_cincuenta",
+    "familia": "inversa",
+    "argumentos": [
+      {
+        "identidad": 50
+      }
+    ],
+    "metodo": "resolver",
+    "opciones": {
+      "construir_detalle_latex": false
+    }
+  },
+  {
+    "nombre": "evaluador_A+A",
+    "familia": "evaluador",
+    "argumentos": [
+      "A+A",
+      {
+        "A": {
+          "matriz": [
+            [
+              "123456789012345678901234567890/234567890123456789012345678901"
+            ]
+          ]
+        },
+        "B": {
+          "matriz": [
+            [
+              2
+            ]
+          ]
+        }
+      }
+    ],
+    "metodo": "evaluar"
+  },
+  {
+    "nombre": "evaluador_2A - Bᵀ",
+    "familia": "evaluador",
+    "argumentos": [
+      "2A - Bᵀ",
+      {
+        "A": {
+          "matriz": [
+            [
+              "123456789012345678901234567890/234567890123456789012345678901"
+            ]
+          ]
+        },
+        "B": {
+          "matriz": [
+            [
+              2
+            ]
+          ]
+        }
+      }
+    ],
+    "metodo": "evaluar"
+  },
+  {
+    "nombre": "evaluador_-(A+B)",
+    "familia": "evaluador",
+    "argumentos": [
+      "-(A+B)",
+      {
+        "A": {
+          "matriz": [
+            [
+              "123456789012345678901234567890/234567890123456789012345678901"
+            ]
+          ]
+        },
+        "B": {
+          "matriz": [
+            [
+              2
+            ]
+          ]
+        }
+      }
+    ],
+    "metodo": "evaluar"
+  },
+  {
+    "nombre": "evaluador_1/3A",
+    "familia": "evaluador",
+    "argumentos": [
+      "1/3A",
+      {
+        "A": {
+          "matriz": [
+            [
+              "123456789012345678901234567890/234567890123456789012345678901"
+            ]
+          ]
+        },
+        "B": {
+          "matriz": [
+            [
+              2
+            ]
+          ]
+        }
+      }
+    ],
+    "metodo": "evaluar"
+  },
+  {
+    "nombre": "evaluador_C+A",
+    "familia": "evaluador",
+    "argumentos": [
+      "C+A",
+      {
+        "A": {
+          "matriz": [
+            [
+              "123456789012345678901234567890/234567890123456789012345678901"
+            ]
+          ]
+        },
+        "B": {
+          "matriz": [
+            [
+              2
+            ]
+          ]
+        }
+      }
+    ],
+    "metodo": "evaluar"
+  },
+  {
+    "nombre": "evaluador_A+1",
+    "familia": "evaluador",
+    "argumentos": [
+      "A+1",
+      {
+        "A": {
+          "matriz": [
+            [
+              "123456789012345678901234567890/234567890123456789012345678901"
+            ]
+          ]
+        },
+        "B": {
+          "matriz": [
+            [
+              2
+            ]
+          ]
+        }
+      }
+    ],
+    "metodo": "evaluar"
+  },
+  {
+    "nombre": "evaluador_A(",
+    "familia": "evaluador",
+    "argumentos": [
+      "A(",
+      {
+        "A": {
+          "matriz": [
+            [
+              "123456789012345678901234567890/234567890123456789012345678901"
+            ]
+          ]
+        },
+        "B": {
+          "matriz": [
+            [
+              2
+            ]
+          ]
+        }
+      }
+    ],
+    "metodo": "evaluar"
+  },
+  {
+    "nombre": "evaluador_0.12345678901234567890123456789A",
+    "familia": "evaluador",
+    "argumentos": [
+      "0.12345678901234567890123456789A",
+      {
+        "A": {
+          "matriz": [
+            [
+              "123456789012345678901234567890/234567890123456789012345678901"
+            ]
+          ]
+        },
+        "B": {
+          "matriz": [
+            [
+              2
+            ]
+          ]
+        }
+      }
+    ],
+    "metodo": "evaluar"
+  },
+  {
+    "nombre": "leontief_viable",
+    "familia": "leontief",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      [
+        "1/3",
+        "2/3"
+      ]
+    ],
+    "metodo": "resolver"
+  },
+  {
+    "nombre": "leontief_singular",
+    "familia": "leontief",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ]
+      },
+      [
+        1,
+        2
+      ]
+    ],
+    "metodo": "resolver"
+  },
+  {
+    "nombre": "leontief_incompatible",
+    "familia": "leontief",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      [
+        1
+      ]
+    ],
+    "metodo": "resolver"
+  },
+  {
+    "nombre": "leontief_fraccion",
+    "familia": "leontief",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            "123456789012345678901234567890/234567890123456789012345678901"
+          ]
+        ]
+      },
+      [
+        3
+      ]
+    ],
+    "metodo": "resolver"
+  },
+  {
+    "nombre": "leontief_demanda_negativa",
+    "familia": "leontief",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      [
+        -1,
+        0
+      ]
+    ],
+    "metodo": "resolver"
+  },
+  {
+    "nombre": "transformaciones_identidad",
+    "familia": "transformaciones",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ]
+      }
+    ],
+    "metodo": "resolver"
+  },
+  {
+    "nombre": "transformaciones_nucleo",
+    "familia": "transformaciones",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            4
+          ]
+        ]
+      }
+    ],
+    "metodo": "resolver"
+  },
+  {
+    "nombre": "transformaciones_rectangular",
+    "familia": "transformaciones",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            1,
+            2,
+            3
+          ]
+        ]
+      }
+    ],
+    "metodo": "resolver"
+  },
+  {
+    "nombre": "transformaciones_fraccion",
+    "familia": "transformaciones",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            "123456789012345678901234567890/234567890123456789012345678901"
+          ]
+        ]
+      }
+    ],
+    "metodo": "resolver"
+  },
+  {
+    "nombre": "vectores_sumar",
+    "familia": "vectores",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ]
+      },
+      {
+        "matriz": [
+          [
+            3
+          ],
+          [
+            4
+          ]
+        ]
+      }
+    ],
+    "metodo": "sumar"
+  },
+  {
+    "nombre": "vectores_sumar_orientacion",
+    "familia": "vectores",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ]
+      },
+      {
+        "matriz": [
+          [
+            3,
+            4
+          ]
+        ]
+      }
+    ],
+    "metodo": "sumar"
+  },
+  {
+    "nombre": "vectores_sumar_incompatible",
+    "familia": "vectores",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ]
+      },
+      {
+        "matriz": [
+          [
+            3
+          ]
+        ]
+      }
+    ],
+    "metodo": "sumar"
+  },
+  {
+    "nombre": "vectores_sumar_estricto",
+    "familia": "vectores",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ]
+      },
+      {
+        "matriz": [
+          [
+            3,
+            4
+          ]
+        ]
+      }
+    ],
+    "metodo": "sumar",
+    "opciones": {
+      "estricto": true
+    }
+  },
+  {
+    "nombre": "vectores_restar",
+    "familia": "vectores",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ]
+      },
+      {
+        "matriz": [
+          [
+            3
+          ],
+          [
+            4
+          ]
+        ]
+      }
+    ],
+    "metodo": "restar"
+  },
+  {
+    "nombre": "vectores_restar_orientacion",
+    "familia": "vectores",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ]
+      },
+      {
+        "matriz": [
+          [
+            3,
+            4
+          ]
+        ]
+      }
+    ],
+    "metodo": "restar"
+  },
+  {
+    "nombre": "vectores_restar_incompatible",
+    "familia": "vectores",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ]
+      },
+      {
+        "matriz": [
+          [
+            3
+          ]
+        ]
+      }
+    ],
+    "metodo": "restar"
+  },
+  {
+    "nombre": "vectores_restar_estricto",
+    "familia": "vectores",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ]
+      },
+      {
+        "matriz": [
+          [
+            3,
+            4
+          ]
+        ]
+      }
+    ],
+    "metodo": "restar",
+    "opciones": {
+      "estricto": true
+    }
+  },
+  {
+    "nombre": "vectores_escalar",
+    "familia": "vectores",
+    "argumentos": [
+      "1/3",
+      {
+        "matriz": [
+          [
+            "123456789012345678901234567890/234567890123456789012345678901"
+          ]
+        ]
+      }
+    ],
+    "metodo": "multiplicar_escalar"
+  },
+  {
+    "nombre": "combinacion_unica",
+    "familia": "combinacion",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            3
+          ],
+          [
+            5
+          ]
+        ]
+      },
+      [
+        {
+          "matriz": [
+            [
+              1
+            ],
+            [
+              0
+            ]
+          ]
+        },
+        {
+          "matriz": [
+            [
+              0
+            ],
+            [
+              1
+            ]
+          ]
+        }
+      ]
+    ],
+    "metodo": "resolver"
+  },
+  {
+    "nombre": "combinacion_infinitas",
+    "familia": "combinacion",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            3
+          ],
+          [
+            6
+          ]
+        ]
+      },
+      [
+        {
+          "matriz": [
+            [
+              1
+            ],
+            [
+              2
+            ]
+          ]
+        },
+        {
+          "matriz": [
+            [
+              2
+            ],
+            [
+              4
+            ]
+          ]
+        }
+      ]
+    ],
+    "metodo": "resolver"
+  },
+  {
+    "nombre": "combinacion_inconsistente",
+    "familia": "combinacion",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ]
+      },
+      [
+        {
+          "matriz": [
+            [
+              1
+            ],
+            [
+              1
+            ]
+          ]
+        }
+      ]
+    ],
+    "metodo": "resolver"
+  },
+  {
+    "nombre": "combinacion_sin_vectores",
+    "familia": "combinacion",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            1
+          ]
+        ]
+      },
+      []
+    ],
+    "metodo": "resolver"
+  },
+  {
+    "nombre": "combinacion_fraccion",
+    "familia": "combinacion",
+    "argumentos": [
+      {
+        "matriz": [
+          [
+            "123456789012345678901234567890/234567890123456789012345678901"
+          ]
+        ]
+      },
+      [
+        {
+          "matriz": [
+            [
+              1
+            ]
+          ]
+        }
+      ]
+    ],
+    "metodo": "resolver"
+  },
+  {
+    "nombre": "romanos_sumar_XIV_VI",
+    "familia": "romanos",
+    "argumentos": [
+      "XIV",
+      "VI"
+    ],
+    "metodo": "sumar"
+  },
+  {
+    "nombre": "romanos_restar_X_IV",
+    "familia": "romanos",
+    "argumentos": [
+      "X",
+      "IV"
+    ],
+    "metodo": "restar"
+  },
+  {
+    "nombre": "romanos_multiplicar_un_digito_III_IV",
+    "familia": "romanos",
+    "argumentos": [
+      "III",
+      "IV"
+    ],
+    "metodo": "multiplicar_un_digito"
+  },
+  {
+    "nombre": "romanos_restar_V_V",
+    "familia": "romanos",
+    "argumentos": [
+      "V",
+      "V"
+    ],
+    "metodo": "restar"
+  },
+  {
+    "nombre": "romanos_restar_I_V",
+    "familia": "romanos",
+    "argumentos": [
+      "I",
+      "V"
+    ],
+    "metodo": "restar"
+  },
+  {
+    "nombre": "romanos_sumar_IIII_I",
+    "familia": "romanos",
+    "argumentos": [
+      "IIII",
+      "I"
+    ],
+    "metodo": "sumar"
+  },
+  {
+    "nombre": "romanos_sumar_MMMCMXCIX_I",
+    "familia": "romanos",
+    "argumentos": [
+      "MMMCMXCIX",
+      "I"
+    ],
+    "metodo": "sumar"
+  },
+  {
+    "nombre": "romanos_multiplicar_un_digito_X_I",
+    "familia": "romanos",
+    "argumentos": [
+      "X",
+      "I"
+    ],
+    "metodo": "multiplicar_un_digito"
+  },
+  {
+    "nombre": "bases_decimal_a_todo_79",
+    "familia": "bases",
+    "argumentos": [
+      "255"
+    ],
+    "metodo": "decimal_a_todo"
+  },
+  {
+    "nombre": "bases_decimal_a_todo_80",
+    "familia": "bases",
+    "argumentos": [
+      "-42"
+    ],
+    "metodo": "decimal_a_todo"
+  },
+  {
+    "nombre": "bases_decimal_a_todo_81",
+    "familia": "bases",
+    "argumentos": [
+      "0"
+    ],
+    "metodo": "decimal_a_todo"
+  },
+  {
+    "nombre": "bases_decimal_a_todo_82",
+    "familia": "bases",
+    "argumentos": [
+      "9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+    ],
+    "metodo": "decimal_a_todo"
+  },
+  {
+    "nombre": "bases_decimal_a_todo_83",
+    "familia": "bases",
+    "argumentos": [
+      "1e9"
+    ],
+    "metodo": "decimal_a_todo"
+  },
+  {
+    "nombre": "bases_binario_a_todo_84",
+    "familia": "bases",
+    "argumentos": [
+      "102"
+    ],
+    "metodo": "binario_a_todo"
+  },
+  {
+    "nombre": "bases_hexadecimal_a_todo_85",
+    "familia": "bases",
+    "argumentos": [
+      "FF"
+    ],
+    "metodo": "hexadecimal_a_todo"
+  },
+  {
+    "nombre": "bases_octal_a_todo_86",
+    "familia": "bases",
+    "argumentos": [
+      "377"
+    ],
+    "metodo": "octal_a_todo"
+  },
+  {
+    "nombre": "bases_decimal_a_todo_87",
+    "familia": "bases",
+    "argumentos": [
+      ""
+    ],
+    "metodo": "decimal_a_todo"
+  }
+]
