@@ -14,7 +14,7 @@ from tests.comun_vista_vectorial import vista_vectorial_montada
 def test_vista_vectorial_monta_tres_paneles_con_minimos(vista_vectorial_montada):
     """Las tres pestañas empiezan con suficientes vectores para calcular."""
     vista = vista_vectorial_montada
-    assert [len(panel.vectores) for panel in vista.paneles.values()] == [2, 1, 2]
+    assert [len(panel.vectores) for panel in vista.paneles.values()] == [2, 1, 2, 1]
     assert list(vista.panel_combinacion.vectores) == ["b", "v_1"]
 
 

@@ -6,6 +6,7 @@ from nicegui import ui
 from src.frontend.controladores.operaciones_vectores.captura import preparar_transferencia
 from ._pasos_reproductor import construir_pasos_combinacion_lineal, construir_pasos_vector_basico
 from .mixin_pasos import MixinPasosVectores, OpcionesReproductorVectores
+from src.frontend.componentes.presentacion_analisis import montar_analisis
 
 
 class MixinResultadosVectores(MixinPasosVectores):
@@ -21,7 +22,7 @@ class MixinResultadosVectores(MixinPasosVectores):
         self.panel_resultados.clear()
         with (
             self.panel_resultados,
-            ui.column().classes("w-full h-full justify-center items-center text-center opacity-50"),
+            ui.column().classes("w-full h-full justify-center items-center text-center texto-secundario"),
         ):
             ui.icon("functions", size="4rem").classes("mb-4")
             ui.label("Ingresa los vectores y presiona Calcular").classes("text-lg")
@@ -40,7 +41,9 @@ class MixinResultadosVectores(MixinPasosVectores):
                 self.panel_ia.renderizar_sugerencias_en_linea()
             if estado == "ERROR":
                 return
-            if self.operacion_activa in ("suma_resta", "escalar"):
+            if self.operacion_activa == "independencia":
+                self.reproductor_pasos = montar_analisis(resultado, self.panel_ia, "independencia")
+            elif self.operacion_activa in ("suma_resta", "escalar"):
                 self.renderizar_resultado_basico(resultado)
             else:
                 self.renderizar_resultado_combinacion(resultado)
@@ -65,7 +68,7 @@ class MixinResultadosVectores(MixinPasosVectores):
         if latex_final:
             ui.label("Resultado").classes("text-xl font-bold mb-4 texto-principal")
             with ui.card().classes("panel-tarjeta w-full p-6 mb-6 items-center justify-center"):
-                ui.html(f'<div class="matematicas-desplazamiento matematicas-etiqueta p-4 text-lg text-center">$$ {html.escape(latex_final)} $$</div>')
+                ui.html(f'<div class="matematicas-desplazamiento matematicas-etiqueta p-4 text-lg text-center">$$ {html.escape(latex_final)} $$</div>').classes("vectores-formula")
         pasos, grupos = construir_pasos_vector_basico(resultado)
         if len(pasos) > 1:
             self._renderizar_reproductor(pasos, grupos, OpcionesReproductorVectores(

@@ -10,9 +10,9 @@ def test_pestanas_vectoriales_independientes_conservan_operacion_y_capturas(monk
     """Los cambios reales de pestaña mantienen las celdas de cada operación."""
     async def comprobar(vista, cliente):
         """Recorre los paneles sin reconstruir el selector de métodos de sistemas."""
-        assert "pestanas-vectores" in vista.pestanas.classes
-        assert "pestanas-metodo" not in vista.pestanas.classes
-        assert vista.pestanas._props["outside-arrows"]
+        assert "selector-opciones" in vista.pestanas.classes
+        assert "pestanas-metodo" in vista.pestanas.classes
+        assert "outside-arrows" not in vista.pestanas._props
         assert vista.pestanas._props["aria-label"] == "Operaciones con vectores"
         vista.panel_suma_resta.vectores["u"]["celdas"][0] = "1/1001"
         vista.pestanas.set_value("escalar")
@@ -51,5 +51,5 @@ def test_estilos_no_heredan_marcas_activas_de_papel():
     assert "--show-" not in tokens + controles
     assert '[data-tema-opcion][aria-checked="true"] .tema-marca-activa' in controles
     assert "visibility: hidden;" in controles
-    assert ".pestanas-vectores.q-tabs--scrollable .q-tabs__content" in vectores
-    assert "width: calc(100% - 72px)" in vectores
+    assert ".pestanas-vectores.q-tabs--scrollable .q-tabs__content" not in vectores
+    assert "width: calc(100% - 72px)" not in vectores

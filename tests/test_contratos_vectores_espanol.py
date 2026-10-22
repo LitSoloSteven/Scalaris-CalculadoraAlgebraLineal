@@ -23,7 +23,7 @@ CLAVES_COMBINACION = {
 }
 CLAVES_VERIFICACION = {
     "descripcion", "formula_latex", "sustitucion_latex", "vector_evaluado_latex",
-    "comparacion_latex", "detalle_latex", "coincide",
+    "comparacion_latex", "detalle_latex", "coincide", "traza",
 }
 
 
@@ -79,7 +79,7 @@ def test_combinacion_contrato_y_clasificacion(objetivo, generadores, estado):
     matriz_objetivo = Matriz(2, 1, [[valor] for valor in objetivo])
     matrices = [Matriz(2, 1, [[valor] for valor in vector]) for vector in generadores]
     resultado = ResolutorCombinacionLineal().resolver(matriz_objetivo, matrices)
-    assert set(resultado) == CLAVES_COMBINACION
+    assert set(resultado) == CLAVES_COMBINACION | ({"traza_comprobacion"} if estado == "INFINITA" else set())
     assert resultado["estado"] == estado
     if estado == "ERROR":
         assert resultado["pasos_planteamiento"] == resultado["pasos_gauss"] == []

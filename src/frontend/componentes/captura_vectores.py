@@ -6,15 +6,13 @@ import html
 from typing import Any, Callable
 from nicegui import ui
 from .opciones_captura_vectores import OpcionesCapturaVectores
+from .transicion_vectores import MixinTransicionVectores
 from src.backend.constantes import DIMENSION_MAXIMA_VECTORES
 
 from src.frontend.componentes.cuadricula_base import (
     DIMENSION_MINIMA,
-    deshabilitar_botones_dimension,
     actualizar_estados_botones_dimension,
-    animar_salida_cuadricula,
     propiedades_vector_accesible,
-    purgar_cache_unidimensional,
 )
 
 
@@ -28,14 +26,14 @@ def _formatear_nombre_vector(nombre: str) -> str:
 
 def _construir_acciones_vector(instancia: PanelCapturaVectores, nombre: str) -> None:
     """Construye los botones de alternar orientacion y eliminar vector."""
-    with ui.row().classes("items-center gap-1"):
+    with ui.row().classes("vectores-captura-acciones items-center gap-1"):
         if instancia.permitir_alternar_orientacion:
-            ui.button(
+            instancia.vectores[nombre]["boton_orientacion"] = ui.button(
                 icon="swap_horiz", on_click=partial(instancia.alternar_orientacion, nombre), color=None
             ).classes("boton-icono w-8 h-8 p-0 flex-shrink-0").props('ripple=false aria-label="Cambiar orientacion"').tooltip("Cambiar orientacion")
-        if nombre != instancia.etiqueta_fija_primer_vector:
-            ui.button(
-                icon="delete", on_click=partial(instancia.eliminar_vector, nombre), color=None
+        if instancia.permite_variar_cantidad and nombre != instancia.etiqueta_fija_primer_vector:
+            instancia._botones_eliminar_vectores[nombre] = ui.button(
+                icon="delete", on_click=partial(instancia._eliminar_vector_animado, nombre), color=None
             ).classes("boton-discreto w-8 h-8 p-0 ml-2 boton-eliminar-elemento").props('ripple=false aria-label="Eliminar Vector"').tooltip("Eliminar Vector")
 
 
@@ -43,14 +41,14 @@ def _construir_tarjeta_vector(instancia: PanelCapturaVectores, nombre: str) -> N
     """Construye la tarjeta contenedora y cabecera de un vector individual."""
     vector = instancia.vectores[nombre]
     nombre_html = _formatear_nombre_vector(nombre)
-    with ui.column().classes("panel-tarjeta p-4 min-w-[140px] items-center"):
-        with ui.row().classes("w-full justify-between items-center mb-2 no-wrap"):
+    with ui.column().classes("panel-tarjeta p-4 min-w-[140px] items-center vectores-captura-tarjeta"):
+        with ui.row().classes("w-full justify-between items-center mb-2 no-wrap vectores-captura-cabecera"):
             vector["etiqueta_dimension"] = ui.html(
                 f'{nombre_html} <span class="separador-punto">·</span> {instancia.dimension}&times;1'
             ).classes("fuente-pequena texto-secundario uppercase etiqueta-dimensiones")
             _construir_acciones_vector(instancia, nombre)
 
-        vector["contenedor"] = ui.column().classes("items-center")
+        vector["contenedor"] = ui.column().classes("items-center vectores-captura-desplazamiento")
         instancia.renderizar_cuadricula_vector(nombre)
 
 
@@ -77,7 +75,7 @@ def _cargar_datos_vectores(
         instancia.al_cambiar_datos()
 
 
-class PanelCapturaVectores:
+class PanelCapturaVectores(MixinTransicionVectores):
     """Panel de captura de vectores en dimension n compartida con orientacion fila/columna."""
 
     def __init__(self, identificador_panel: str, opciones: OpcionesCapturaVectores | None = None) -> None:
@@ -93,6 +91,7 @@ class PanelCapturaVectores:
         self.permitir_alternar_orientacion = permitir_alternar_orientacion
         self.etiqueta_fija_primer_vector = etiqueta_fija_primer_vector
         self.vectores: dict[str, dict[str, Any]] = {}
+        self._botones_eliminar_vectores: dict[str, Any] = {}
         self.dimension = 3
         self.contenedor: ui.column | None = None
         self.contenedor_cabecera: ui.row | None = None
@@ -102,11 +101,15 @@ class PanelCapturaVectores:
         self.boton_aumentar_dimension: ui.button | None = None
         self.etiqueta_dimension: ui.label | None = None
 
+    @property
+    def permite_variar_cantidad(self) -> bool:
+        """Indica si los limites permiten anadir o eliminar vectores de la familia."""
+        return self.maximo_vectores > self.minimo_vectores
+
     @staticmethod
     def inyectar_recursos_cliente() -> None:
         """Inyecta los scripts para animaciones vectoriales."""
         ui.add_head_html('<script src="/assets/js/captura_vectores.js"></script>')
-        ui.add_head_html('<script src="/assets/js/matriz_cuadrada.js"></script>')
 
     def obtener_siguiente_nombre_disponible(self) -> str:
         """Determina la siguiente etiqueta alfabetica o subindicada para un vector."""
@@ -152,36 +155,6 @@ class PanelCapturaVectores:
             if self.al_cambiar_datos:
                 self.al_cambiar_datos()
 
-    async def ajustar_dimension(self, delta: int = 0) -> None:
-        """Modifica la dimension compartida 'dimension' de todos los vectores registrados."""
-        nueva_dim = self.dimension + delta
-        if not (DIMENSION_MINIMA <= nueva_dim <= DIMENSION_MAXIMA_VECTORES):
-            return
-
-        deshabilitar_botones_dimension((
-            self.boton_reducir_dimension, self.boton_aumentar_dimension,
-        ))
-
-        if delta < 0 and self.contenedor is not None:
-            await animar_salida_cuadricula(
-                f"#{self.contenedor.html_id} input[data-geometria-indice='{self.dimension - 1}']"
-            )
-
-        self.dimension = nueva_dim
-        for vector in self.vectores.values():
-            vector["celdas"] = purgar_cache_unidimensional(vector["celdas"], self.dimension)
-
-        if self.etiqueta_dimension:
-            self.etiqueta_dimension.set_text(str(self.dimension))
-        actualizar_estados_botones_dimension(
-            self.boton_reducir_dimension, self.boton_aumentar_dimension, self.dimension, DIMENSION_MINIMA, DIMENSION_MAXIMA_VECTORES
-        )
-
-        for nombre in self.vectores:
-            self.renderizar_cuadricula_vector(nombre)
-        if self.al_cambiar_datos:
-            self.al_cambiar_datos()
-
     def alternar_orientacion(self, nombre: str) -> None:
         """Alterna entre disposicion vertical (columna) y horizontal (fila)."""
         if not self.permitir_alternar_orientacion or nombre not in self.vectores:
@@ -204,8 +177,8 @@ class PanelCapturaVectores:
             vector["etiqueta_dimension"].content = f'{nombre_html} <span class="separador-punto">·</span> {texto_dimension}'
 
         with vector["contenedor"]:
-            clase_fila = "cuadricula-fila-sin-ajuste" if vector["orientacion"] == "fila" else ""
-            with ui.row().classes(f"items-center gap-2 p-2 {clase_fila}"):
+            clase_fila = "cuadricula-fila-sin-ajuste vectores-captura-fila" if vector["orientacion"] == "fila" else "vectores-captura-columna"
+            with ui.row().classes(f"items-center gap-2 p-2 vectores-captura-celdas {clase_fila}"):
                 for i in range(self.dimension):
                     valor = vector["celdas"].get(i, "")
                     propiedades = propiedades_vector_accesible(
@@ -228,27 +201,30 @@ class PanelCapturaVectores:
         if not self.contenedor:
             return
         self.contenedor.clear()
+        self._botones_eliminar_vectores.clear()
         with (
             self.contenedor,
-            ui.row().classes("w-full flex-wrap gap-4 items-start"),
+            ui.row().classes("w-full flex-wrap gap-4 items-start vectores-captura-lista"),
         ):
             for nombre in sorted(self.vectores.keys()):
                 _construir_tarjeta_vector(self, nombre)
+        self._actualizar_botones_vectores()
 
     def construir(self, contenedor: ui.column) -> None:
         """Ensambla el panel completo incluyendo la cabecera de dimension."""
-        self.contenedor = contenedor
-        with ui.row().classes("w-full justify-between items-center mb-4 px-2"):
-            ui.label("Familia de Vectores").classes("text-lg font-bold texto-principal")
-            with ui.row().classes("items-center gap-3"):
-                self.boton_reducir_dimension = ui.button(
-                    icon="remove", on_click=partial(self.ajustar_dimension, delta=-1), color=None
-                ).classes("boton-icono w-8 h-8 p-0 flex-shrink-0").props('ripple=false aria-label="Reducir dimension"').tooltip("Reducir dimension")
-                self.etiqueta_dimension = ui.label(str(self.dimension)).classes("font-bold w-6 text-center texto-principal")
-                self.boton_aumentar_dimension = ui.button(
-                    icon="add", on_click=partial(self.ajustar_dimension, delta=1), color=None
-                ).classes("boton-icono w-8 h-8 p-0 flex-shrink-0").props('ripple=false aria-label="Aumentar dimension"').tooltip("Aumentar dimension")
-                ui.button("Añadir Vector", icon="add", on_click=self.agregar_vector, color=None).classes("boton-discreto").props("ripple=false")
+        with contenedor:
+            with ui.row().classes("w-full justify-between items-center px-2 vectores-captura-dimension") as self.contenedor_cabecera:
+                ui.label("Familia de Vectores").classes("text-lg font-bold texto-principal")
+                with ui.row().classes("items-center gap-3"):
+                    self.boton_reducir_dimension = ui.button(
+                        icon="remove", on_click=partial(self.ajustar_dimension, delta=-1), color=None
+                    ).classes("boton-icono w-8 h-8 p-0 flex-shrink-0").props('ripple=false aria-label="Reducir dimension"').tooltip("Reducir dimension")
+                    self.etiqueta_dimension = ui.label(str(self.dimension)).classes("font-bold w-6 text-center texto-principal")
+                    self.boton_aumentar_dimension = ui.button(
+                        icon="add", on_click=partial(self.ajustar_dimension, delta=1), color=None
+                    ).classes("boton-icono w-8 h-8 p-0 flex-shrink-0").props('ripple=false aria-label="Aumentar dimension"').tooltip("Aumentar dimension")
+                    self._construir_boton_agregar_vector()
+            self.contenedor = ui.column().classes("w-full")
 
         actualizar_estados_botones_dimension(
             self.boton_reducir_dimension, self.boton_aumentar_dimension, self.dimension, DIMENSION_MINIMA, DIMENSION_MAXIMA_VECTORES
@@ -257,6 +233,11 @@ class PanelCapturaVectores:
             self.agregar_vector()
         else:
             self.renderizar_todos_vectores()
+
+    def _construir_boton_agregar_vector(self) -> None:
+        """Ofrece ampliar la familia solo cuando su cantidad puede variar."""
+        if self.permite_variar_cantidad:
+            self.boton_agregar_vector = ui.button("Añadir Vector", icon="add", on_click=self._agregar_vector_animado, color=None).classes("boton-discreto").props("ripple=false")
 
     def cargar_datos(self, datos_vectores: dict[str, list[str]], orientacion: str = "columna") -> None:
         """Carga vectores desde un diccionario reemplazando las entradas activas."""

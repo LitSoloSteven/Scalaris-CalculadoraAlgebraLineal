@@ -3,6 +3,7 @@ import json
 
 from src.backend.geometria.transferencia import preparar_vectores_visualizador
 from .controlador_operaciones_vectores import ControladorOperacionesVectores
+from .controlador_independencia import procesar_independencia
 
 
 def capturar_vectores(vectores: dict, dimension: int) -> dict:
@@ -17,6 +18,8 @@ def capturar_vectores(vectores: dict, dimension: int) -> dict:
 def resolver_captura(operacion: str, opciones: dict, vectores: dict) -> str:
     """Delega una operación capturada y devuelve su JSON sin modificar las entradas."""
     valores = list(vectores.values())
+    if operacion == "independencia":
+        return procesar_independencia(vectores)
     if operacion == "suma_resta" and len(valores) == 2:
         carga = {"operacion": opciones["operacion"],
                  "vector_1": valores[0], "vector_2": valores[1], "estricto": opciones["estricto"]}

@@ -12,6 +12,9 @@ from src.backend.constantes import (
 )
 from src.backend.excepciones import ErrorVectorInvalido
 from src.backend.modelos.matriz import Matriz
+from src.backend.modelos.construcciones import matriz_de_columnas
+from src.backend.resolutores.sistemas_lineales.comprobacion_sistemas import comprobar_familia
+from src.backend.resolutores.operaciones_matrices.comprobacion_productos import crear_paso_analisis
 from src.backend.resolutores.operaciones_vectores.base import (
     _BaseResolutorVectores,
 )
@@ -65,12 +68,7 @@ def _construir_error_combinacion_lineal(mensaje: str) -> dict:
 
 def _construir_aumentada(objetivo: Matriz, vectores: list[Matriz]) -> Matriz:
     """Construye la matriz aumentada [v_1 | ... | v_k | b]."""
-    dimension, numero_vectores = objetivo.filas, len(vectores)
-    datos = [
-        [vectores[j].obtener(i, 0) for j in range(numero_vectores)] + [objetivo.obtener(i, 0)]
-        for i in range(dimension)
-    ]
-    return Matriz(dimension, numero_vectores + 1, datos)
+    return matriz_de_columnas(vectores + [objetivo])
 
 
 def _validar_listas_nombres(
@@ -126,7 +124,7 @@ def _empaquetar_infinitas(
     """Empaqueta el resultado cuando hay infinitas combinaciones lineales."""
     variables_efectivas, sujeto = configuracion
     planteamiento, gauss_limpios, combinados = pasos_agrupados
-    sol = list(resultado_gauss.get("solucion", []))
+    solucion = list(resultado_gauss.get("solucion", []))
     columnas_libres = resultado_gauss.get("columnas_libres") or []
     libres = [variables_efectivas[c] for c in columnas_libres]
     mensaje_resultado = f"b es combinación lineal {sujeto}. Existen infinitas representaciones; se muestra la paramétrica."
@@ -135,7 +133,7 @@ def _empaquetar_infinitas(
         "es_combinacion_lineal": True,
         "coeficientes": None,
         "coeficientes_texto": None,
-        "solucion_parametrica": sol,
+        "solucion_parametrica": solucion,
         "parametros_libres": libres,
         "mensaje": mensaje_resultado,
         "pasos_planteamiento": planteamiento,
@@ -177,6 +175,14 @@ def _combinar_pasos_vectoriales(planteamiento: list[dict], gauss: list[dict]) ->
         s_copia["numero_paso"] = indice
         combinados.append(s_copia)
     return combinados
+
+
+def _comprobar_familia_vectorial(respuesta: dict, vectores: list, objetivo: Matriz, resultado: dict) -> dict:
+    comprobacion = comprobar_familia(matriz_de_columnas(vectores).datos, [fila[0] for fila in objetivo.datos], resultado["parametros_solucion"])
+    respuesta["traza_comprobacion"] = [crear_paso_analisis(f"Componente {indice+1}: Ac=b", detalle,
+                                                         "Agrupamos la constante y los parametros para comprobar la igualdad para toda la familia.", "verificacion")
+                                        for indice, detalle in enumerate(comprobacion["pasos_latex"])]
+    return respuesta
 
 
 class ResolutorCombinacionLineal(_BaseResolutorVectores):
@@ -241,6 +247,7 @@ class ResolutorCombinacionLineal(_BaseResolutorVectores):
         if estado_g == SOLUCION_UNICA:
             return _empaquetar_unica(objetivo, vectores, (variables_efectivas, nombres_vectores_efectivos, sujeto), resultado_gauss, agrupados)
         if estado_g == SOLUCIONES_INFINITAS:
-            return _empaquetar_infinitas((variables_efectivas, sujeto), resultado_gauss, agrupados)
+            respuesta = _empaquetar_infinitas((variables_efectivas, sujeto), resultado_gauss, agrupados)
+            return _comprobar_familia_vectorial(respuesta, vectores, objetivo, resultado_gauss)
         return _empaquetar_sin_solucion(sujeto, agrupados)
 

@@ -3,6 +3,8 @@
 from fractions import Fraction
 
 from src.backend.modelos.matriz import Matriz
+from src.backend.modelos.construcciones import matriz_de_columnas
+from src.backend.resolutores.operaciones_matrices.comprobacion_productos import comprobar_producto
 from src.backend.resolutores.operaciones_vectores.formateadores import (
     formatear_combinacion_lineal_vector,
     formatear_componente_escalar,
@@ -81,21 +83,9 @@ def construir_pasos_planteamiento(
     )
 
 
-def _evaluar_vector_y(
-    objetivo: Matriz,
-    vectores: list[Matriz],
-    coeficientes: list[Fraction],
-) -> tuple[list[Fraction], str, str]:
-    """Evalúa numéricamente el vector y y genera su representación LaTeX."""
-    dimension = objetivo.filas
-    y_valores = []
-    for i in range(dimension):
-        comp = Fraction(0)
-        for j, vector in enumerate(vectores):
-            comp += coeficientes[j] * Fraction(vector.obtener(i, 0))
-        y_valores.append(comp)
-
-    y_matriz = Matriz(dimension, 1, [[comp] for comp in y_valores])
+def _evaluar_vector_y(y_matriz: Matriz) -> tuple[list[Fraction], str, str]:
+    """Presenta las componentes exactas del producto ya calculado."""
+    y_valores = [fila[0] for fila in y_matriz.datos]
     y_columna_latex = vector_a_latex(y_matriz)
     evaluado_latex = rf"\mathbf{{y}} = {y_columna_latex}"
     return y_valores, y_columna_latex, evaluado_latex
@@ -116,7 +106,8 @@ def _construir_detalle_latex_comprobacion(
     componentes_resultado = " \\\\ ".join(numero_a_latex(valor_resultado) for valor_resultado in y_valores)
     componentes_objetivo = " \\\\ ".join(numero_a_latex(objetivo.obtener(i, 0)) for i in range(objetivo.filas))
     anotacion_matrices = rf"% {', '.join(nombres_variables)} \begin{{pmatrix}} {componentes_resultado} \end{{pmatrix}} \begin{{pmatrix}} {componentes_objetivo} \end{{pmatrix}}"
-    detalle_completo_latex = rf"\mathbf{{y}} = {combinacion_simbolica} = {sustitucion_izquierda_latex} {simbolo_igualdad} {y_columna_latex} = \mathbf{{b}} \quad {texto_estado} {anotacion_matrices}"
+    comparacion_final = r"= \mathbf{b}" if coincide else rf"{simbolo_igualdad} {b_columna_latex} = \mathbf{{b}}"
+    detalle_completo_latex = rf"\mathbf{{y}} = {combinacion_simbolica} = {sustitucion_izquierda_latex} = {y_columna_latex} {comparacion_final} \quad {texto_estado} {anotacion_matrices}"
     return comparacion_latex, detalle_completo_latex
 
 
@@ -166,22 +157,24 @@ def construir_paso_comprobacion(
     sub_izquierda_latex = _construir_terminos_sustitucion(coeficientes, vectores)
     sustitucion_latex = rf"\mathbf{{y}} = {sub_izquierda_latex}"
 
-    valores_y, y_columna_latex, vector_evaluado_latex = _evaluar_vector_y(objetivo, vectores, coeficientes)
-    coincide = all(valores_y[i] == Fraction(objetivo.obtener(i, 0)) for i in range(dimension))
+    desarrollo = comprobar_producto(matriz_de_columnas(vectores), Matriz(numero_vectores, 1, [[valor] for valor in coeficientes]), objetivo, "Ac=b")
+    valores_y, y_columna_latex, vector_evaluado_latex = _evaluar_vector_y(desarrollo["producto"])
+    coincide = desarrollo["coincide"]
 
-    comb_simb = formatear_combinacion_lineal_vector(coeficientes, nombres_vector)
-    comp_latex, detalle_completo_latex = _construir_detalle_latex_comprobacion(
-        comb_simb, sub_izquierda_latex, y_columna_latex, (coincide, valores_y, objetivo, nombres_variables)
+    combinacion_simbolica = formatear_combinacion_lineal_vector(coeficientes, nombres_vector)
+    comparacion_latex, detalle_completo_latex = _construir_detalle_latex_comprobacion(
+        combinacion_simbolica, sub_izquierda_latex, y_columna_latex, (coincide, valores_y, objetivo, nombres_variables)
     )
-    desc = _construir_descripcion_comprobacion(coeficientes, nombres_vector, valores_y, objetivo, coincide)
+    descripcion = _construir_descripcion_comprobacion(coeficientes, nombres_vector, valores_y, objetivo, coincide)
 
     return {
-        "descripcion": desc,
+        "descripcion": descripcion,
         "formula_latex": formula_latex,
         "sustitucion_latex": sustitucion_latex,
         "vector_evaluado_latex": vector_evaluado_latex,
-        "comparacion_latex": comp_latex,
+        "comparacion_latex": comparacion_latex,
         "detalle_latex": detalle_completo_latex,
         "coincide": coincide,
+        "traza": desarrollo["traza"],
     }
 

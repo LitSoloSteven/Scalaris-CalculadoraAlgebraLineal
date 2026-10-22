@@ -101,13 +101,14 @@ def _comprobar_grupos_combinacion_infinita():
     res_i = json.loads(ControladorOperacionesVectores.procesar_combinacion_lineal(carga_infinita))
     assert res_i["estado"] == "INFINITA"
     pasos_i, grupos_i = construir_pasos_combinacion_lineal(res_i)
-    assert len(grupos_i) == 3
+    assert len(grupos_i) == 4
     assert [g.titulo for g in grupos_i] == [
         "Planteamiento algebraico",
         "Eliminación gaussiana",
         "Sustitución hacia atrás",
+        "Comprobación",
     ]
-    assert not any(g.tipo == "verificacion" for g in grupos_i)
+    assert any(g.tipo == "verificacion" for g in grupos_i)
     assert res_i.get("paso_verificacion") is None
 
 

@@ -72,7 +72,7 @@ def test_construccion_completa_monta_asistente_y_tres_paneles(monkeypatch, panel
     try:
         vista.construir()
         assert vista.panel_ia.interfaz_activa is vista
-        assert [len(panel.vectores) for panel in vista.paneles.values()] == [2, 1, 2]
+        assert [len(panel.vectores) for panel in vista.paneles.values()] == [2, 1, 2, 1]
         assert vista.panel_resultados is not None
         assert vista.boton_calcular is not None
         if not panel_lateral:

@@ -28,6 +28,8 @@ def _describir_resultado(resultado):
         datos["vector_resultado"] = resultado["matriz_resultado"]
     if resultado.get("es_combinacion_lineal") is not None:
         datos["es_combinacion_lineal"] = resultado["es_combinacion_lineal"]
+    if resultado.get("operacion") == "independencia":
+        datos.update({clave: resultado[clave] for clave in ("es_independiente", "rango", "nulidad", "relaciones", "etiquetas")})
     return datos
 
 
@@ -45,6 +47,8 @@ def obtener_contexto(vista):
 
 
 def _opciones_contexto(vista):
+    if vista.operacion_activa == "independencia":
+        return {"operacion": "independencia"}
     if vista.operacion_activa == "escalar":
         return {"escalar": sanear_cadena_usuario(vista.valor_escalar, 32)}
     if vista.operacion_activa == "suma_resta":

@@ -5,6 +5,7 @@ from typing import Any
 from src.backend.constantes import ERROR, EXITO
 from src.backend.excepciones import ErrorVectorInvalido
 from src.backend.modelos.matriz import Matriz, Numerico
+from src.backend.modelos.calculo_matricial import operar_celda
 from src.backend.resolutores.operaciones_vectores.base import (
     _BaseResolutorVectores,
 )
@@ -44,18 +45,18 @@ def _formatear_latex_escalar(
     escalar_info: tuple[Numerico, str, str, str],
 ) -> tuple[str, str]:
     """Genera el formateo LaTeX para el resultado de multiplicación escalar."""
-    k_frac, k_latex, nombre, nombre_resultado = escalar_info
+    escalar_exacto, escalar_latex, nombre, nombre_resultado = escalar_info
     resultado_latex = vector_a_latex(resultado)
     v_latex = vector_a_latex(vector)
     v_nombre = formatear_vector_latex(nombre)
     resultado_nombre = formatear_vector_latex(nombre_resultado)
-    denominador = getattr(k_frac, "denominator", 1)
-    k_paren = rf"\left({k_latex}\right)" if denominador != 1 else f"({k_latex})"
+    denominador = getattr(escalar_exacto, "denominator", 1)
+    escalar_agrupado = rf"\left({escalar_latex}\right)" if denominador != 1 else f"({escalar_latex})"
     valores = vector.datos if vector.columnas == 1 else [vector.datos[0]]
-    productos = [f"({k_latex}) \\cdot ({numero_a_latex(valor)})" for fila in valores for valor in fila]
+    productos = [f"({escalar_latex}) \\cdot ({numero_a_latex(valor)})" for fila in valores for valor in fila]
     separador = r" \\ " if vector.columnas == 1 else r" & "
     producto_latex = r"\begin{bmatrix} " + separador.join(productos) + r" \end{bmatrix}"
-    vector_final_latex = rf"{resultado_nombre} = {k_latex} \cdot {v_nombre} = {k_paren} {v_latex} = {producto_latex} = {resultado_latex}"
+    vector_final_latex = rf"{resultado_nombre} = {escalar_latex} \cdot {v_nombre} = {escalar_agrupado} {v_latex} = {producto_latex} = {resultado_latex}"
     return resultado_latex, vector_final_latex
 
 
@@ -103,7 +104,7 @@ class ResolutorOperacionesVectores(_BaseResolutorVectores):
         i, operacion_simbolo, latex_simbolo = posicion_operacion
         valor_izquierdo = v1.obtener(i, 0) if self.es_vector_columna(v1) else v1.obtener(0, i)
         valor_derecho = v2.obtener(i, 0) if self.es_vector_columna(v2) else v2.obtener(0, i)
-        valor_resultado = valor_izquierdo + valor_derecho if operacion_simbolo == "+" else valor_izquierdo - valor_derecho
+        valor_resultado = operar_celda(valor_izquierdo, valor_derecho, operacion_simbolo)
 
         if self.es_vector_columna(resultado):
             resultado.establecer(i, 0, valor_resultado)
@@ -138,21 +139,21 @@ class ResolutorOperacionesVectores(_BaseResolutorVectores):
         except ErrorVectorInvalido as error:
             return _empaquetar_error_vector(str(error))
 
-        dim = self.dimension_vector(v1)
+        dimension = self.dimension_vector(v1)
         resultado = Matriz(v1.filas, v1.columnas)
-        self._registrar_paso(f"Iniciando {operacion_palabra} de vectores (dim {dim})")
+        self._registrar_paso(f"Iniciando {operacion_palabra} de vectores (dim {dimension})")
         if mensaje_ajuste:
             self._registrar_paso(mensaje_ajuste)
 
         detalles_latex = [
             self._calcular_celda_binaria(v1, v2, resultado, (i, operacion_simbolo, latex_simbolo))
-            for i in range(dim)
+            for i in range(dimension)
         ]
         resultado_latex, vector_final_latex = _formatear_latex_binario(
             resultado, v1, v2, (nombre1, nombre2, latex_simbolo)
         )
         detalles_latex.append(vector_final_latex)
-        mensaje = f"{operacion_palabra.capitalize()} de vectores completada (dim {dim})."
+        mensaje = f"{operacion_palabra.capitalize()} de vectores completada (dim {dimension})."
         return _empaquetar_exito_vector(
             mensaje, (resultado, resultado_latex, vector_final_latex), self.pasos, detalles_latex
         )
@@ -189,12 +190,12 @@ class ResolutorOperacionesVectores(_BaseResolutorVectores):
         self,
         vector: Matriz,
         resultado: Matriz,
-        posicion_k: tuple[int, Any, str, str],
+        posicion_escalar: tuple[int, Any, str, str],
     ) -> str:
         """Calcula el producto de una componente por el escalar y registra el paso."""
-        i, k_frac, k_latex, nombre_resultado = posicion_k
+        i, escalar_exacto, escalar_latex, nombre_resultado = posicion_escalar
         valor = vector.obtener(i, 0) if self.es_vector_columna(vector) else vector.obtener(0, i)
-        producto = k_frac * valor
+        producto = escalar_exacto * valor
         if self.es_vector_columna(resultado):
             resultado.establecer(i, 0, producto)
         else:
@@ -202,9 +203,9 @@ class ResolutorOperacionesVectores(_BaseResolutorVectores):
 
         valor_latex = numero_a_latex(valor)
         producto_latex = numero_a_latex(producto)
-        detalle_latex = f"{nombre_resultado}_{{{i + 1}}} = ({k_latex}) \\cdot ({valor_latex}) = {producto_latex}"
+        detalle_latex = f"{nombre_resultado}_{{{i + 1}}} = ({escalar_latex}) \\cdot ({valor_latex}) = {producto_latex}"
         self._registrar_paso(
-            f"Componente {i + 1}: {formatear_fraccion_texto(k_frac)} · {formatear_fraccion_texto(valor)} = {formatear_fraccion_texto(producto)}",
+            f"Componente {i + 1}: {formatear_fraccion_texto(escalar_exacto)} · {formatear_fraccion_texto(valor)} = {formatear_fraccion_texto(producto)}",
             matriz_actual=resultado,
             detalle_latex=detalle_latex,
         )
@@ -218,10 +219,10 @@ class ResolutorOperacionesVectores(_BaseResolutorVectores):
             self.validar_vector(vector, nombre)
         except ErrorVectorInvalido as error_vector:
             return None, str(error_vector)
-        correcto, k_frac, error = ValidadorMatriz.parsear_numero_exacto(escalar)
+        correcto, escalar_exacto, error = ValidadorMatriz.parsear_numero_exacto(escalar)
         if not correcto:
             return None, f"Escalar inválido: {error}"
-        return k_frac, None
+        return escalar_exacto, None
 
     def multiplicar_escalar(
         self,
@@ -233,26 +234,26 @@ class ResolutorOperacionesVectores(_BaseResolutorVectores):
     ) -> dict:
         """Multiplicación de un escalar por un vector en R^n."""
         self.pasos = []
-        k_frac, error = self._validar_y_parsear_escalar(vector, nombre, escalar)
+        escalar_exacto, error = self._validar_y_parsear_escalar(vector, nombre, escalar)
         if error:
             return _empaquetar_error_vector(error)
 
-        dim = self.dimension_vector(vector)
+        dimension = self.dimension_vector(vector)
         resultado = Matriz(vector.filas, vector.columnas)
-        k_latex = numero_a_latex(k_frac)
+        escalar_latex = numero_a_latex(escalar_exacto)
         self._registrar_paso(
-            f"Iniciando multiplicación escalar: {formatear_fraccion_texto(k_frac)} · {nombre} (dim {dim})"
+            f"Iniciando multiplicación escalar: {formatear_fraccion_texto(escalar_exacto)} · {nombre} (dim {dimension})"
         )
 
         detalles_latex = [
-            self._calcular_celda_escalar(vector, resultado, (i, k_frac, k_latex, nombre_resultado))
-            for i in range(dim)
+            self._calcular_celda_escalar(vector, resultado, (i, escalar_exacto, escalar_latex, nombre_resultado))
+            for i in range(dimension)
         ]
         resultado_latex, vector_final_latex = _formatear_latex_escalar(
-            resultado, vector, (k_frac, k_latex, nombre, nombre_resultado)
+            resultado, vector, (escalar_exacto, escalar_latex, nombre, nombre_resultado)
         )
         detalles_latex.append(vector_final_latex)
-        mensaje = f"Multiplicación escalar completada (dim {dim})."
+        mensaje = f"Multiplicación escalar completada (dim {dimension})."
         return _empaquetar_exito_vector(
             mensaje, (resultado, resultado_latex, vector_final_latex), self.pasos, detalles_latex
         )

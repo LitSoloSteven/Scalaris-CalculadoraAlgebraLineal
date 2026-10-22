@@ -2,6 +2,7 @@
 
 from src.backend.excepciones import ErrorVectorInvalido
 from src.backend.modelos.matriz import Matriz
+from src.backend.modelos.construcciones import transpuesta
 from src.backend.resolutores.trazado import TrazadorPasos
 
 
@@ -52,15 +53,6 @@ class _BaseResolutorVectores(TrazadorPasos):
                 f"{nombre}: se esperaba vector columna n×1, recibido {matriz.filas}×{matriz.columnas}."
             )
 
-    @staticmethod
-    def transponer(matriz: Matriz) -> Matriz:
-        """Devuelve la matriz transpuesta."""
-        nuevos_datos = [
-            [matriz.obtener(i, j) for i in range(matriz.filas)]
-            for j in range(matriz.columnas)
-        ]
-        return Matriz(matriz.columnas, matriz.filas, nuevos_datos)
-
     def armonizar_dimensiones(
         self,
         v1: Matriz,
@@ -73,11 +65,11 @@ class _BaseResolutorVectores(TrazadorPasos):
         if v1.filas == v2.filas and v1.columnas == v2.columnas:
             return v1, v2, None
 
-        dim1 = self.dimension_vector(v1)
-        dim2 = self.dimension_vector(v2)
-        if dim1 != dim2:
+        dimension_izquierda = self.dimension_vector(v1)
+        dimension_derecha = self.dimension_vector(v2)
+        if dimension_izquierda != dimension_derecha:
             raise ErrorVectorInvalido(
-                f"Dimensiones incompatibles: {nombre1} tiene dim {dim1}, {nombre2} tiene dim {dim2}."
+                f"Dimensiones incompatibles: {nombre1} tiene dim {dimension_izquierda}, {nombre2} tiene dim {dimension_derecha}."
             )
 
         if estricto:
@@ -86,10 +78,10 @@ class _BaseResolutorVectores(TrazadorPasos):
                 f"recibido {v2.filas}×{v2.columnas} (estricto=True)."
             )
 
-        v2_t = self.transponer(v2)
-        orient_orig = "fila" if self.es_vector_fila(v2) else "columna"
+        vector_transpuesto = transpuesta(v2)
+        orientacion_original = "fila" if self.es_vector_fila(v2) else "columna"
         mensaje_resultado = (
-            f"Ajuste de orientación: {nombre2} era {orient_orig} "
-            f"y se transpone a {v2_t.filas}×{v2_t.columnas} para coincidir con {nombre1}."
+            f"Ajuste de orientación: {nombre2} era {orientacion_original} "
+            f"y se transpone a {vector_transpuesto.filas}×{vector_transpuesto.columnas} para coincidir con {nombre1}."
         )
-        return v1, v2_t, mensaje_resultado
+        return v1, vector_transpuesto, mensaje_resultado

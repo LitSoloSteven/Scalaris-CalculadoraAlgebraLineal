@@ -1,6 +1,7 @@
 """Construcción de pasos y grupos didácticos para operaciones con vectores."""
 
 from __future__ import annotations
+from src.frontend.componentes.presentacion_analisis import adaptar_analisis
 
 from dataclasses import dataclass
 from typing import Any
@@ -243,7 +244,7 @@ def construir_pasos_combinacion_lineal(
     variables = respuesta.get("variables") or []
     numero_variables = respuesta.get("numero_variables", len(variables))
 
-    cantidad_verificaciones = 4 if verificacion else 0
+    cantidad_verificaciones = (4 if verificacion else 0) + len(_traza_comprobacion(respuesta))
     total = len(planteamiento) + len(pasos_vista) + len(sustitucion) + cantidad_verificaciones
     if total == 0:
         return (), ()
@@ -252,5 +253,21 @@ def construir_pasos_combinacion_lineal(
     grupos: list[GrupoReproductor] = []
     _agregar_fase_planteamiento_gauss(respuesta, _ConstruccionPasos(total, variables, numero_variables, pasos, grupos))
     _agregar_fase_sustitucion_verificacion(respuesta, total, pasos, grupos)
-
+    _anexar_comprobacion(respuesta, pasos, grupos)
     return tuple(pasos), tuple(grupos)
+
+
+def _anexar_comprobacion(respuesta: dict, pasos: list, grupos: list) -> None:
+    traza = _traza_comprobacion(respuesta)
+    if not traza:
+        return
+    anterior = grupos.pop() if grupos[-1].tipo == "verificacion" else None
+    adicionales, _ = adaptar_analisis({"traza": traza}, (len(pasos), len(grupos)))
+    indices = (anterior.indices_pasos if anterior else ()) + tuple(paso.indice for paso in adicionales)
+    pasos.extend(adicionales)
+    grupos.append(GrupoReproductor("Comprobación", f"{len(indices)} operaciones", "verificacion", indices))
+
+
+def _traza_comprobacion(respuesta: dict) -> list:
+    verificacion = respuesta.get("paso_verificacion") or {}
+    return respuesta.get("traza_comprobacion") or verificacion.get("traza", [])
