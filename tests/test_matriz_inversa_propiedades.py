@@ -203,7 +203,7 @@ def test_contrato_inversa_erronea_conserva_claves_exactas(resolutor):
 def test_contrato_inversa_singular_conserva_claves_exactas(resolutor):
     """La singularidad conserva exactamente las claves del contrato."""
     resultado = resolutor.resolver(Matriz(2, 2, [[1, 2], [1, 2]]))
-    assert set(resultado.keys()) == _CLAVES_ESPERADAS
+    assert set(resultado.keys()) == _CLAVES_ESPERADAS | {"traza_determinante"}
 
 
 def test_inversa_exitosa_incluye_latex_matricial(resolutor):

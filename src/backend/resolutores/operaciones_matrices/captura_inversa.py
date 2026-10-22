@@ -72,9 +72,9 @@ def validar_y_parsear_matriz_cuadrada(datos_crudos: dict) -> tuple[Matriz | None
     """Valida dimensión, estructura y contenido numérico de la matriz cuadrada."""
     dimension = datos_crudos.get("dimension")
     if not isinstance(dimension, int) or isinstance(dimension, bool) or dimension < 1 or dimension > DIMENSION_MAXIMA_INVERSA:
-        dim = dimension if (isinstance(dimension, int) and not isinstance(dimension, bool)) else 0
+        dimension_error = dimension if (isinstance(dimension, int) and not isinstance(dimension, bool)) else 0
         mensaje = f"La dimensión n debe ser un entero entre 1 y {DIMENSION_MAXIMA_INVERSA}."
-        return None, dim, construir_resultado_vacio("ERROR", mensaje, opciones={'dimension': dim})
+        return None, dimension_error, construir_resultado_vacio("ERROR", mensaje, opciones={'dimension': dimension_error})
 
     datos = datos_crudos.get("datos")
     if not isinstance(datos, list) or len(datos) != dimension:
@@ -106,4 +106,7 @@ def extraer_comprobaciones_inversa(resultado: dict, dimension: int) -> list[dict
         latex_trans = paso_trans.get("detalle_latex") if dimension <= DIMENSION_MAXIMA_LATEX_INVERSA else None
         verificaciones.append({"clave": "transpuesta", "titulo": "(Aᵀ)⁻¹ = (A⁻¹)ᵀ", "coincide": bool(paso_trans.get("coincide")), "detalle_latex": latex_trans})
 
+    pasos = (paso_derecha, paso_izquierda, paso_trans)
+    for verificacion, paso in zip(verificaciones, [paso for paso in pasos if paso]):
+        verificacion["traza"] = paso.get("traza", [])
     return verificaciones

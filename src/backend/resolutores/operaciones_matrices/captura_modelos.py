@@ -1,6 +1,7 @@
 """Conversión exacta de entradas de Leontief y transformaciones lineales."""
 from fractions import Fraction
 from src.backend.modelos.matriz import Matriz
+from src.backend.constantes import DIMENSION_MAXIMA_MODELOS, LONGITUD_MAXIMA_NOMBRE_MODELO
 from .celdas_exactas import parsear_celda_exacta
 
 
@@ -12,6 +13,8 @@ def parsear_matriz_modelo(datos_crudos: list, simbolo: str, cuadrada: bool = Fal
     if not isinstance(datos_crudos[0], list):
         raise ValueError(f"Fila 1 de {simbolo} no es una lista.")
     columnas = filas if cuadrada else len(datos_crudos[0])
+    if filas > DIMENSION_MAXIMA_MODELOS or columnas > DIMENSION_MAXIMA_MODELOS:
+        raise ValueError(f"La matriz {simbolo} admite hasta {DIMENSION_MAXIMA_MODELOS} filas y columnas.")
     datos_exactos = []
     for indice_fila, fila in enumerate(datos_crudos):
         if not isinstance(fila, list):
@@ -30,6 +33,8 @@ def _parsear_fila(fila: list, simbolo: str, indice_fila: int) -> list[Fraction]:
 
 def parsear_vector_demanda(datos_crudos: list) -> list[Fraction]:
     """Convierte demanda cruda en fracciones; lanza ValueError con el índice inválido."""
+    if len(datos_crudos) > DIMENSION_MAXIMA_MODELOS:
+        raise ValueError(f"La demanda admite hasta {DIMENSION_MAXIMA_MODELOS} componentes.")
     return [parsear_celda_exacta(celda, f"d[{indice+1}]")
             for indice, celda in enumerate(datos_crudos)]
 
@@ -40,4 +45,8 @@ def validar_nombres(nombres: object, etiqueta: str) -> list[str] | None:
         return None
     if not isinstance(nombres, list) or any(not isinstance(nombre, str) for nombre in nombres):
         raise ValueError(f"{etiqueta} debe ser una lista de textos.")
+    if len(nombres) > DIMENSION_MAXIMA_MODELOS:
+        raise ValueError(f"{etiqueta} admite hasta {DIMENSION_MAXIMA_MODELOS} nombres.")
+    if any(len(nombre) > LONGITUD_MAXIMA_NOMBRE_MODELO for nombre in nombres):
+        raise ValueError(f"Cada nombre de {etiqueta} admite hasta {LONGITUD_MAXIMA_NOMBRE_MODELO} caracteres.")
     return nombres

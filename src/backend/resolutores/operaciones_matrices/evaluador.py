@@ -162,9 +162,9 @@ class EvaluadorExpresionesMatriciales:
         self, izquierda_nombre: str, izquierda_valor: Any, derecha_nombre: str, derecha_valor: Any
     ) -> tuple[Matriz, list, str, str]:
         """Calcula el producto entre un escalar y una matriz."""
-        esc = izquierda_valor if _es_escalar(izquierda_valor) else derecha_valor
+        escalar = izquierda_valor if _es_escalar(izquierda_valor) else derecha_valor
         matriz = derecha_valor if _es_escalar(izquierda_valor) else izquierda_valor
-        resultado_operacion = self.resolutor_operaciones_matrices.multiplicar_escalar(esc, matriz)
+        resultado_operacion = self.resolutor_operaciones_matrices.multiplicar_escalar(escalar, matriz)
         return (
             resultado_operacion["matriz_resultado"],
             [],

@@ -32,7 +32,8 @@ def test_verificacion_producto_conserva_orden_y_diccionario_completo(direccion, 
     estado = "Correcto" if cumple else "Incorrecto"
     detalle = f"{nombre_izquierda} \\cdot {nombre_derecha} = {latex} \\quad (\\text{{{estado}}})"
     descripcion = f"Verificación {descripcion_operacion} = I."
-    assert resultado == {
+    assert resultado["traza"]
+    assert {clave: valor for clave, valor in resultado.items() if clave != "traza"} == {
         "propiedad": f"{nombre_izquierda} \\cdot {nombre_derecha} = I",
         "nombre_izquierdo": nombre_izquierda, "nombre_derecho": nombre_derecha,
         "descripcion": descripcion,

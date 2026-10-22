@@ -6,6 +6,9 @@ from typing import Any
 from src.backend.constantes import ERROR, EXITO
 from src.backend.excepciones import ErrorDiscrepanciaDimension
 from src.backend.modelos.matriz import Matriz
+from src.backend.modelos.construcciones import transpuesta
+from src.backend.modelos.calculo_matricial import operar_celda, producto_celda
+from src.backend.resolutores.operaciones_matrices.presentacion_producto import describir_producto_celda
 from src.backend.resolutores.operaciones_matrices.determinante import (
     ResolutorDeterminante,
 )
@@ -35,7 +38,7 @@ class ResolutorOperacionesMatrices(TrazadorPasos):
         r, c, simbolo_operacion = posicion_operacion
         valor_a = matriz_a.obtener(r, c)
         valor_b = matriz_b.obtener(r, c)
-        resultado_valor = valor_a + valor_b if simbolo_operacion == "+" else valor_a - valor_b
+        resultado_valor = operar_celda(valor_a, valor_b, simbolo_operacion)
         resultado.establecer(r, c, resultado_valor)
         a_latex, b_latex, resultado_latex = numero_a_latex(valor_a), numero_a_latex(valor_b), numero_a_latex(resultado_valor)
         detalle = (
@@ -130,28 +133,6 @@ class ResolutorOperacionesMatrices(TrazadorPasos):
             "detalles_latex": detalles_latex,
         }
 
-    def _calcular_celda_producto(
-        self,
-        matriz_a: Matriz,
-        matriz_b: Matriz,
-        r: int,
-        c: int,
-        numero_columnas: int,
-    ) -> tuple[Fraction, str, str]:
-        """Calcula el producto punto de una fila y una columna."""
-        suma_celda = Fraction(0)
-        terminos_texto, terminos_latex = [], []
-        for k in range(numero_columnas):
-            valor_a = matriz_a.obtener(r, k)
-            valor_b = matriz_b.obtener(k, c)
-            suma_celda += valor_a * valor_b
-            terminos_texto.append(f"({formatear_fraccion_texto(valor_a)})·({formatear_fraccion_texto(valor_b)})")
-            terminos_latex.append(f"({numero_a_latex(valor_a)})({numero_a_latex(valor_b)})")
-
-        exp_texto = f"{' + '.join(terminos_texto)} = {formatear_fraccion_texto(suma_celda)}"
-        exp_latex = f"C_{{{r+1},{c+1}}} = {' + '.join(terminos_latex)} = {numero_a_latex(suma_celda)}"
-        return suma_celda, exp_texto, exp_latex
-
     def multiplicar(self, matriz_a: Matriz, matriz_b: Matriz) -> dict:
         """Multiplicacion matricial C = A * B con desglose algebraico celda a celda."""
         self.pasos = []
@@ -169,13 +150,14 @@ class ResolutorOperacionesMatrices(TrazadorPasos):
         detalles_latex = []
         for r in range(numero_filas):
             for c in range(numero_columnas):
-                suma_valor, exp_t, exp_l = self._calcular_celda_producto(matriz_a, matriz_b, r, c, numero_intermedias)
+                suma_valor = producto_celda(matriz_a, matriz_b, r, c)
+                expresion_texto, expresion_latex = describir_producto_celda(matriz_a, matriz_b, r, c, suma_valor)
                 resultado.establecer(r, c, suma_valor)
-                detalles_latex.append(exp_l)
+                detalles_latex.append(expresion_latex)
                 self._registrar_paso(
-                    f"Fila {r+1} de A × Columna {c+1} de B: {exp_t}",
+                    f"Fila {r+1} de A × Columna {c+1} de B: {expresion_texto}",
                     matriz_actual=resultado,
-                    detalle_latex=exp_l,
+                    detalle_latex=expresion_latex,
                 )
 
         return {
@@ -188,11 +170,7 @@ class ResolutorOperacionesMatrices(TrazadorPasos):
 
     def transponer(self, matriz_a: Matriz) -> Matriz:
         """Devuelve la matriz transpuesta (Aᵀ)_{i,j} = A_{j,i} sin registrar pasos."""
-        nuevos_datos = [
-            [matriz_a.obtener(i, j) for i in range(matriz_a.filas)]
-            for j in range(matriz_a.columnas)
-        ]
-        return Matriz(matriz_a.columnas, matriz_a.filas, nuevos_datos)
+        return transpuesta(matriz_a)
 
     def determinante(self, matriz_a: Matriz) -> Fraction:
         """Calcula el determinante de una matriz cuadrada delegando en el resolutor LU."""

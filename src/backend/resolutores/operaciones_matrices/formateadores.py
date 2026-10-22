@@ -1,12 +1,11 @@
 """Formateadores especificos de LaTeX para operaciones con matrices."""
 
-from src.backend.constantes import TOLERANCIA_COINCIDENCIA_FRACCION
 from src.backend.modelos.matriz import Matriz
 from src.backend.utilidades.formateadores import numero_a_latex
 
 
-def matriz_a_latex(matriz: Matriz, eps: float = TOLERANCIA_COINCIDENCIA_FRACCION) -> str:
-    """Renderiza una matriz en formato LaTeX bmatrix."""
+def matriz_a_latex(matriz: Matriz) -> str:
+    """Devuelve el LaTeX bmatrix de matriz usando el formateador numerico comun."""
     filas_texto = []
     for r in range(matriz.filas):
         valores = [numero_a_latex(matriz.obtener(r, c)) for c in range(matriz.columnas)]
