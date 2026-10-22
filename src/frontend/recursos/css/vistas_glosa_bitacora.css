@@ -1,0 +1,40 @@
+.glosa-pre {
+    font-family: monospace;
+    overflow-x: auto;
+    background: transparent;
+    padding: var(--space-2);
+    border-radius: var(--radius-input);
+    margin: var(--space-2) 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.glosa-indicador-escritura {
+    display: flex;
+    gap: 2px;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+@keyframes glosaPulsoEscritura {
+    0%,
+    100% {
+        opacity: 0.3;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+.glosa-indicador-escritura span {
+    animation: glosaPulsoEscritura 1.4s infinite linear both;
+}
+
+.glosa-indicador-escritura span:nth-child(1) {
+    animation-delay: -0.32s;
+}
+
+.glosa-indicador-escritura span:nth-child(2) {
+    animation-delay: -0.16s;
+}

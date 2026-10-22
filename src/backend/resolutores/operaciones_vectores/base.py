@@ -1,0 +1,87 @@
+"""Clase base compartida para los resolutores vectoriales."""
+
+from src.backend.excepciones import ErrorVectorInvalido
+from src.backend.modelos.matriz import Matriz
+from src.backend.modelos.construcciones import transpuesta
+from src.backend.resolutores.trazado import TrazadorPasos
+
+
+class _BaseResolutorVectores(TrazadorPasos):
+    """Utilidades compartidas por los resolutores de vectores en R^n."""
+
+    @staticmethod
+    def es_vector_columna(matriz: Matriz) -> bool:
+        """Indica si la matriz es un vector columna (n×1)."""
+        return matriz.columnas == 1
+
+    @staticmethod
+    def es_vector_fila(matriz: Matriz) -> bool:
+        """Indica si la matriz es un vector fila (1×n)."""
+        return matriz.filas == 1
+
+    @classmethod
+    def es_vector(cls, matriz: Matriz) -> bool:
+        """Indica si la matriz es un vector columna o fila."""
+        return cls.es_vector_columna(matriz) or cls.es_vector_fila(matriz)
+
+    @classmethod
+    def dimension_vector(cls, matriz: Matriz) -> int:
+        """Dimensión n del vector."""
+        return matriz.filas if cls.es_vector_columna(matriz) else matriz.columnas
+
+    @classmethod
+    def validar_vector(cls, matriz: object, nombre: str) -> None:
+        """Exige que el objeto sea una Matriz con forma de vector."""
+        if not isinstance(matriz, Matriz):
+            raise ErrorVectorInvalido(
+                f"{nombre}: se esperaba una Matriz, recibido {type(matriz).__name__}."
+            )
+        if not cls.es_vector(matriz):
+            raise ErrorVectorInvalido(
+                f"{nombre}: se esperaba un vector (n×1 o 1×n), recibido {matriz.filas}×{matriz.columnas}."
+            )
+
+    @classmethod
+    def validar_vector_columna(cls, matriz: object, nombre: str) -> None:
+        """Exige estrictamente que el objeto sea un vector columna n×1."""
+        if not isinstance(matriz, Matriz):
+            raise ErrorVectorInvalido(
+                f"{nombre}: se esperaba una Matriz, recibido {type(matriz).__name__}."
+            )
+        if not cls.es_vector_columna(matriz):
+            raise ErrorVectorInvalido(
+                f"{nombre}: se esperaba vector columna n×1, recibido {matriz.filas}×{matriz.columnas}."
+            )
+
+    def armonizar_dimensiones(
+        self,
+        v1: Matriz,
+        v2: Matriz,
+        nombre1: str,
+        nombre2: str,
+        estricto: bool,
+    ) -> tuple[Matriz, Matriz, str | None]:
+        """Alinea las orientaciones de dos vectores para operaciones binarias."""
+        if v1.filas == v2.filas and v1.columnas == v2.columnas:
+            return v1, v2, None
+
+        dimension_izquierda = self.dimension_vector(v1)
+        dimension_derecha = self.dimension_vector(v2)
+        if dimension_izquierda != dimension_derecha:
+            raise ErrorVectorInvalido(
+                f"Dimensiones incompatibles: {nombre1} tiene dim {dimension_izquierda}, {nombre2} tiene dim {dimension_derecha}."
+            )
+
+        if estricto:
+            raise ErrorVectorInvalido(
+                f"{nombre2}: se esperaba forma {v1.filas}×{v1.columnas} para coincidir con {nombre1}; "
+                f"recibido {v2.filas}×{v2.columnas} (estricto=True)."
+            )
+
+        vector_transpuesto = transpuesta(v2)
+        orientacion_original = "fila" if self.es_vector_fila(v2) else "columna"
+        mensaje_resultado = (
+            f"Ajuste de orientación: {nombre2} era {orientacion_original} "
+            f"y se transpone a {vector_transpuesto.filas}×{vector_transpuesto.columnas} para coincidir con {nombre1}."
+        )
+        return v1, vector_transpuesto, mensaje_resultado

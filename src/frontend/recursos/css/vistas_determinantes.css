@@ -1,0 +1,22 @@
+.determinantes-marco { container: vista-determinantes / inline-size; min-width: 0; }
+
+.determinantes-recomendacion,
+.determinantes-titulo,
+.determinantes-recomendacion .q-btn__content,
+.determinantes-vista .determinante-valor {
+    overflow-wrap: anywhere;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.determinantes-usar-metodo { min-height: 44px; max-width: 100%; }
+.determinantes-vista .calculadora-boton { min-width: 0; }
+.determinantes-vista .sesion-panel-herramientas,
+.determinantes-vista .q-tab-panel,
+.determinantes-vista .q-tab-panels { min-width: 0; max-width: 100%; }
+
+@container vista-determinantes (max-width: 20rem) {
+    .determinantes-vista { padding-inline: var(--space-2) !important; }
+    .determinantes-vista .sesion-panel-herramientas .panel-tarjeta { padding: var(--space-2); }
+    .determinantes-vista .sesion-panel-herramientas .grid { gap: var(--space-2); }
+}

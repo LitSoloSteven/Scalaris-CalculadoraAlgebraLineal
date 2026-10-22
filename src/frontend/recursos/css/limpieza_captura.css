@@ -1,0 +1,10 @@
+.limpieza-acciones {
+    flex-wrap: nowrap;
+    align-items: stretch;
+    min-width: 0;
+}
+
+.limpieza-acciones > .boton-principal {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}

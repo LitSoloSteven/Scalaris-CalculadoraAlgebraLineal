@@ -1,0 +1,113 @@
+.selector-opciones-contenedor {
+    container: selector-opciones / inline-size;
+    width: 100%;
+    min-width: 0;
+}
+
+.pestanas-controles.pestanas-metodo.selector-opciones {
+    display: grid;
+    grid-template-columns: repeat(var(--selector-cantidad), minmax(0, 1fr));
+    grid-auto-rows: 1fr;
+    --selector-destino-x: var(--selector-indice);
+    --selector-destino-y: 0;
+    --selector-origen-x: var(--selector-indice-anterior);
+    --selector-origen-y: 0;
+    position: relative;
+    isolation: isolate;
+    max-width: none !important;
+}
+
+.selector-opciones-indicador {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: calc(100% / var(--selector-cantidad));
+    background: var(--btn-primary-bg);
+    box-shadow: var(--sombra-tab-activa);
+    transform: translate(calc(var(--selector-destino-x) * 100%), calc(var(--selector-destino-y) * 100%));
+    pointer-events: none;
+}
+
+.selector-opciones-cambiando .selector-opciones-indicador {
+    animation: selector-opciones-deslizar var(--dur-med) var(--ease-std);
+}
+
+@keyframes selector-opciones-deslizar {
+    from { transform: var(--selector-origen-transformacion, translate(calc(var(--selector-origen-x) * 100%), calc(var(--selector-origen-y) * 100%))); }
+    to { transform: translate(calc(var(--selector-destino-x) * 100%), calc(var(--selector-destino-y) * 100%)); }
+}
+
+.selector-opciones .selector-opciones-opcion {
+    min-width: 0;
+    min-height: 44px;
+    padding: var(--space-2);
+    border-radius: 0;
+    color: var(--text-sec) !important;
+    background: transparent !important;
+    font-weight: 600;
+    z-index: 1;
+    transition: transform var(--dur-fast) var(--ease-std);
+}
+
+.selector-opciones-opcion .q-btn__content {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    font-size: var(--fs-body);
+    line-height: 1.4;
+}
+
+.selector-opciones-opcion .q-focus-helper { display: none; }
+
+.selector-opciones .selector-opciones-opcion[aria-checked="true"] {
+    color: var(--btn-primary-text) !important;
+}
+
+@layer quasar_importants {
+    html .selector-opciones-opcion:focus-visible {
+        outline: 2px solid var(--focus-ring) !important;
+        outline-offset: -3px !important;
+    }
+
+    html .selector-opciones-opcion[aria-checked="true"]:focus-visible {
+        outline-color: var(--btn-primary-text) !important;
+    }
+}
+
+.selector-opciones-opcion:active {
+    transform: scale(0.97);
+    transition-duration: 0ms;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .selector-opciones-opcion:hover { text-decoration: underline; }
+}
+
+@container selector-opciones (max-width: 39rem) {
+    .pestanas-controles.pestanas-metodo.selector-opciones {
+        grid-template-columns: var(--selector-cuadricula-compacta, repeat(2, minmax(0, 1fr)));
+        --selector-destino-x: var(--selector-columna-compacta);
+        --selector-destino-y: var(--selector-fila-compacta);
+        --selector-origen-x: var(--selector-columna-anterior);
+        --selector-origen-y: var(--selector-fila-anterior);
+        border-radius: var(--radius-input) !important;
+    }
+
+    .selector-opciones-indicador {
+        inset: 0 auto auto 0;
+        width: calc(100% / var(--selector-columnas-compactas));
+        height: calc(100% / var(--selector-filas-compactas));
+    }
+}
+
+html[data-entrada="teclado"] .selector-opciones-indicador,
+html[data-entrada="teclado"] .selector-opciones-opcion {
+    transition: none !important;
+    animation: none !important;
+}
+
+html[data-entrada="teclado"] .selector-opciones-opcion:active { transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+    .selector-opciones-indicador,
+    .selector-opciones-opcion { transition: none !important; animation: none !important; }
+    .selector-opciones-opcion:active { transform: none; }
+}

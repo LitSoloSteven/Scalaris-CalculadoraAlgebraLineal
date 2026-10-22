@@ -1,0 +1,11 @@
+[
+    "foco_modal.js",
+    "interacciones_globales.js",
+    "observacion_dom.js",
+    "sistemas_metodo.js",
+    "navegacion_herramientas.js",
+    "selector_tema.js",
+    "renderizado_mathjax.js",
+    "escritura_progresiva.js",
+    "tema_graficos.js"
+]
