@@ -32,6 +32,7 @@
     clon.style.color = estiloEntrada.color;
     clon.style.transition = 'transform 160ms cubic-bezier(0.32, 0.72, 0, 1), opacity 160ms cubic-bezier(0.32, 0.72, 0, 1)';
     clon.style.pointerEvents = 'none';
+    clon.style.overflow = 'hidden';
     return clon;
   }
 
@@ -92,7 +93,7 @@
   function animarRecoleccionBasura() {
     return new Promise(function (resolver) {
       var permitido = window.scalaris.movimiento && window.scalaris.movimiento.permitido ?
-        window.scalaris.movimiento.permitido() : true;
+        window.scalaris.movimiento.permitido() : false;
       if (!permitido) {
         resolver();
         return;

@@ -1,3 +1,18 @@
+.pasos-distintivo-tipo {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: var(--radius-badge);
+    font-size: var(--fs-small);
+    font-weight: 700;
+    box-shadow: var(--elev-1);
+}
+
+.pasos-distintivo-tipo .material-icons {
+    font-size: 16px;
+}
+
 .pasos-etiqueta-inicial,
 .pasos-etiqueta-eliminacion,
 .pasos-etiqueta-otro,

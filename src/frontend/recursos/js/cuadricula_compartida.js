@@ -12,30 +12,51 @@
     { opacity: 0, transform: 'scale(0.95) translateY(-4px)' }
   ];
   const avisosActivos = new WeakMap();
+  const animacionesActivas = new WeakMap();
 
   /** Consulta la política compartida de teclado y movimiento reducido. */
   function movimientoActivo() {
     return window.scalaris.movimiento.permitido();
   }
 
-  function animarCeldas(elementos, fotogramas, duracion) {
-    return new Promise(function completarAnimaciones(terminar) {
-      if (!movimientoActivo()) {
-        terminar();
-        return;
-      }
-      const animaciones = [];
-      elementos.forEach(function animarControl(entrada) {
-        const control = entrada.closest('.q-field__control');
-        if (control) {
-          animaciones.push(control.animate(fotogramas, {
-            duration: duracion, easing: 'cubic-bezier(0.32, 0.72, 0, 1)', fill: 'forwards'
-          }).finished);
-        }
-      });
-      if (animaciones.length > 0) Promise.all(animaciones).then(terminar).catch(terminar);
-      else terminar();
+  /** Retira únicamente animaciones de captura para devolver las celdas a su estado visible. */
+  function restaurarCeldas(elementos) {
+    Array.from(elementos).forEach(entrada => {
+      const control = entrada.closest('.q-field__control');
+      animacionesActivas.get(control)?.cancel?.();
+      animacionesActivas.delete(control);
     });
+  }
+
+  function retirarAnimacionesPropias(animaciones) {
+    animaciones.forEach((animacion, control) => {
+      if (animacionesActivas.get(control) !== animacion) return;
+      animacion.cancel?.();
+      animacionesActivas.delete(control);
+    });
+  }
+
+  async function animarCeldas(elementos, fotogramas, duracion) {
+    restaurarCeldas(elementos);
+    if (!movimientoActivo()) return;
+    const controles = [...new Set(Array.from(elementos).map(entrada => entrada.closest('.q-field__control')).filter(Boolean))];
+    const animaciones = new Map();
+    const paso = Math.min(15, 120 / Math.max(controles.length, 1));
+    try {
+      controles.forEach((control, indice) => {
+        const animacion = control.animate(fotogramas, {
+          duration: duracion, delay: indice * paso,
+          easing: 'cubic-bezier(0.32, 0.72, 0, 1)', fill: 'forwards'
+        });
+        animacionesActivas.set(control, animacion);
+        animacion.finished.catch(() => {});
+        animaciones.set(control, animacion);
+      });
+      await Promise.all([...animaciones.values()].map(animacion => animacion.finished));
+      if (fotogramas === FOTOGRAMAS_ENTRADA) retirarAnimacionesPropias(animaciones);
+    } catch (_) {
+      retirarAnimacionesPropias(animaciones);
+    }
   }
 
   /** Espera la entrada de todas las celdas que tienen un control visual. */
@@ -118,6 +139,6 @@
   window.scalaris.cuadricula = {
     movimientoActivo, animarEntradaCeldas, animarSalidaCeldas,
     animarSalidaMatriz, animarEntradaMatriz, animarSalidaVector, animarEntradaVector,
-    sacudirCelda, enfocarElemento
+    sacudirCelda, enfocarElemento, restaurarCeldas
   };
 }

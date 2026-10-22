@@ -1,9 +1,9 @@
 """Núcleo compartido para gestión de caché, límites y animación en cuadrículas de matriz."""
 from __future__ import annotations
 
-import asyncio
 import json
-from typing import Any
+from dataclasses import dataclass
+from typing import Any, Callable, Awaitable
 from nicegui import ui
 
 from src.backend.constantes import DIMENSION_MAXIMA_MATRICES, DIMENSION_MINIMA
@@ -104,8 +104,7 @@ async def animar_salida_cuadricula(
 async def animar_entrada_cuadricula(
     selector_destino: str, *, nombre_matriz: str | None = None
 ) -> None:
-    """Aplica una pausa breve y dispara la animación de entrada para celdas agregadas."""
-    await asyncio.sleep(0.05)
+    """Espera el montaje del cliente y anima las celdas agregadas."""
     await _animar_cuadricula("Entrada", selector_destino, nombre_matriz)
 
 
@@ -116,11 +115,87 @@ async def _animar_cuadricula(accion: str, selector_destino: str, nombre_matriz: 
     else:
         argumentos = f"Array.from(document.querySelectorAll({json.dumps(selector_destino)}))"
         tipo_destino = "Celdas"
-    codigo = f"return window.scalaris?.cuadricula?.animar{accion}{tipo_destino}({argumentos}) || Promise.resolve();"
+    expresion = f"window.scalaris?.cuadricula?.animar{accion}{tipo_destino}({argumentos}) || Promise.resolve()"
+    codigo = f"return {expresion};"
+    if accion == "Entrada":
+        codigo = f"return Promise.resolve(window.Vue?.nextTick?.()).then(() => {expresion});"
     try:
         await ui.run_javascript(codigo)
     except Exception:
         pass
+
+
+async def _animar_transicion(accion: str, selector: str) -> None:
+    await _animar_cuadricula(accion, selector, None)
+
+
+@dataclass(frozen=True)
+class CambioCuadricula:
+    """Agrupa selectores y un adaptador opcional para las animaciones de captura."""
+
+    selectores: tuple[str, str]
+    animar: Callable[[str, str], Awaitable[None]] = _animar_transicion
+
+
+def _botones_presentes(botones: tuple[Any, ...]) -> tuple[Any, ...]:
+    return tuple(boton for boton in botones if boton and not boton.is_deleted)
+
+
+def _restaurar_botones_transicion(anteriores: list) -> None:
+    for boton, habilitado in anteriores:
+        if not boton.is_deleted:
+            boton.set_enabled(habilitado)
+
+
+async def ejecutar_transicion_cuadricula(
+    estado: dict, selectores: tuple[str, str] | CambioCuadricula, aplicar: Callable[[], None],
+    botones: tuple[Any, ...], restaurar: Callable[[], None],
+) -> None:
+    """Bloquea acciones repetidas, anima el cambio y restaura controles incluso ante fallos.
+    Recibe estado, selectores de salida/entrada y callbacks síncronos; propaga errores de reconstrucción.
+    """
+    if estado.get("_transicion_activa"):
+        return
+    cambio = selectores if isinstance(selectores, CambioCuadricula) else CambioCuadricula(selectores)
+    estado["_transicion_activa"] = True
+    anteriores = [(boton, boton.enabled) for boton in _botones_presentes(botones)]
+    deshabilitar_botones_dimension(_botones_presentes(botones))
+    try:
+        if cambio.selectores[0]:
+            await cambio.animar("Salida", cambio.selectores[0])
+        aplicar()
+        deshabilitar_botones_dimension(_botones_presentes(botones))
+        if cambio.selectores[1]:
+            await cambio.animar("Entrada", cambio.selectores[1])
+    except BaseException:
+        await _restaurar_celdas_transicion(",".join(selector for selector in cambio.selectores if selector))
+        raise
+    finally:
+        estado["_transicion_activa"] = False
+        _restaurar_botones_transicion(anteriores)
+        restaurar()
+
+
+async def _restaurar_celdas_transicion(selector: str) -> None:
+    try:
+        await ui.run_javascript(f"window.scalaris?.cuadricula?.restaurarCeldas(document.querySelectorAll({json.dumps(selector)}));")
+    except Exception:
+        pass
+
+
+def selectores_cambio_dimension(selectores: str, incremento: int) -> tuple[str, str]:
+    """Devuelve el selector de salida o entrada según el sentido del incremento."""
+    return (selectores, "") if incremento < 0 else ("", selectores)
+
+
+def selector_dimension_matriz(identificador: str, indice: int, ejes: tuple[str, ...]) -> str:
+    """Selecciona la unión de una fila y/o columna mediante los atributos de captura."""
+    return ",".join(f"input[data-matriz-identificador='{identificador}'][data-matriz-{eje}='{indice}']" for eje in ejes)
+
+
+def indice_cambio_dimension(actual: int, nuevo: int) -> int:
+    """Devuelve el último índice afectado al aumentar o reducir una dimensión."""
+    return max(actual, nuevo) - 1
 
 
 def ubicar_celda_matriz(identificador: str, fila: int, columna: int) -> None:
@@ -131,19 +206,21 @@ def ubicar_celda_matriz(identificador: str, fila: int, columna: int) -> None:
 
 def crear_entradas_matriz(contenedor: Any, dimensiones: tuple[int, int], identificador: str) -> list[list[Any]]:
     """Crea una matriz de controles con coordenadas accesibles para captura y pegado."""
+    valores = {(int(entrada._props["data-matriz-fila"]), int(entrada._props["data-matriz-columna"])): entrada.value
+               for entrada in contenedor.descendants() if isinstance(entrada, ui.input)}
     entradas = []
     contenedor.clear()
     with contenedor:
         for fila in range(dimensiones[0]):
-            entradas.append(_crear_entradas_fila(fila, dimensiones[1], identificador))
+            entradas.append(_crear_entradas_fila(fila, dimensiones[1], identificador, valores))
     return entradas
 
 
-def _crear_entradas_fila(fila: int, columnas: int, identificador: str) -> list[Any]:
+def _crear_entradas_fila(fila: int, columnas: int, identificador: str, valores: dict) -> list[Any]:
     entradas = []
     with ui.row().classes("gap-1 flex-nowrap"):
         for columna in range(columnas):
-            entrada = ui.input(placeholder="0").classes("matriz-entrada w-16 text-center shrink-0")
+            entrada = ui.input(value=valores.get((fila, columna), ""), placeholder="0").classes("matriz-entrada w-16 text-center shrink-0")
             entrada.props(propiedades_celda_accesible(fila, columna, identificador_matriz=identificador))
             entradas.append(entrada)
     return entradas

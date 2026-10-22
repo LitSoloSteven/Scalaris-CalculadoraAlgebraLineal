@@ -9,28 +9,11 @@
         document.documentElement.setAttribute('data-entrada', 'puntero');
     }, { capture: true, passive: true });
     window.scalaris.movimiento = {
-        rapido: 120, medio: 240, lento: 250,
+        medio: 240,
         permitido: function () {
             if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
             return document.documentElement.getAttribute('data-entrada') !== 'teclado';
         }
-    };
-})();
-
-/** Reproduce una animación de resultado y retira su listener al terminar. */
-(function registrarAnimacionResultado() {
-    window.scalaris.reproducirAnimacionResultado = function (identificadorElemento) {
-        var elemento = document.getElementById(identificadorElemento);
-        if (!elemento) return;
-        elemento.classList.remove('movimiento-entrada');
-        void elemento.offsetWidth;
-        elemento.classList.add('movimiento-entrada');
-        var alFinalizar = function (evento) {
-            if (evento.target !== elemento) return;
-            elemento.classList.remove('movimiento-entrada');
-            elemento.removeEventListener('animationend', alFinalizar);
-        };
-        elemento.addEventListener('animationend', alFinalizar);
     };
 })();
 

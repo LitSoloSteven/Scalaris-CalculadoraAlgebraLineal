@@ -1,8 +1,9 @@
 """Captura de matrices cuadradas con caché de celdas y controles de dimensión."""
 from __future__ import annotations
 
-import asyncio
 import logging
+import json
+from functools import partial
 from typing import Callable
 
 from nicegui import ui
@@ -13,7 +14,11 @@ from src.frontend.componentes.cuadricula_base import (
     cache_matriz_desde_datos,
     propiedades_celda_accesible,
     purgar_cache_bidimensional,
+    ejecutar_transicion_cuadricula, selectores_cambio_dimension, selector_dimension_matriz,
+    CambioCuadricula, indice_cambio_dimension,
 )
+from .redimension_matriz_cuadrada import redimensionar_celdas, actualizar_etiqueta_dimension, DIMENSION_MAXIMA_CELDA_NORMAL
+from .tareas import lanzar_tarea
 from src.backend.constantes import DIMENSION_MAXIMA_INVERSA
 
 registro = logging.getLogger(__name__)
@@ -114,7 +119,7 @@ class PanelMatrizCuadrada:
     def _crear_celda_ui(self, r: int, c: int) -> ui.input:
         """Construye una celda de entrada individual con propiedades accesibles."""
         valor = self.cache.get((r, c), "")
-        clase_tam = "cuadricula-celda-compacta" if self.dimension > 8 else "cuadricula-celda"
+        clase_tam = "cuadricula-celda-compacta" if self.dimension > DIMENSION_MAXIMA_CELDA_NORMAL else "cuadricula-celda"
         propiedades = propiedades_celda_accesible(r, c, identificador_matriz=IDENTIFICADOR_MATRIZ, nombre_campo=f"{IDENTIFICADOR_MATRIZ}_r{r}c{c}")
         return ui.input(
             value=valor,
@@ -137,27 +142,34 @@ class PanelMatrizCuadrada:
         """Dispara el redimensionamiento asíncrono con paso de delta."""
         if self._redimensionando:
             return
-        asyncio.create_task(self._redimensionar_asincrono(delta))
+        self._redimensionando = True
+        try:
+            lanzar_tarea(ui.context.client, self._redimensionar_asincrono(delta))
+        except Exception:
+            self._redimensionando = False
+            raise
 
     async def _redimensionar_asincrono(self, delta: int) -> None:
         """Aplica la modificación de tamaño con animación DOM."""
         nuevo_n = min(max(self.dimension + delta, DIMENSION_MINIMA), DIMENSION_MAXIMA_INVERSA)
-        if nuevo_n == self.dimension:
-            return
-        self._redimensionando = True
         try:
-            self.dimension = nuevo_n
-            self.cache = purgar_cache_bidimensional(self.cache, self.dimension, self.dimension)
-            self._publicar_matriz()
+            if nuevo_n == self.dimension:
+                return
+            indice = indice_cambio_dimension(self.dimension, nuevo_n)
+            selector = selector_dimension_matriz(IDENTIFICADOR_MATRIZ, indice, ("fila", "columna"))
+            await ejecutar_transicion_cuadricula(
+                vars(self), CambioCuadricula(selectores_cambio_dimension(selector, delta), _animar_redimension_cuadrada),
+                partial(self._aplicar_dimension, nuevo_n), (self.boton_reducir, self.boton_aumentar), self._actualizar_botones,
+            )
         finally:
             self._redimensionando = False
 
-    def _actualizar_etiqueta(self) -> None:
-        """Actualiza el distintivo de dimensiones y su contador."""
-        if self.etiqueta_dimension:
-            self.etiqueta_dimension.set_text(str(self.dimension))
-        if self.etiqueta_dimension_matriz:
-            self.etiqueta_dimension_matriz.content = f'{IDENTIFICADOR_MATRIZ} <span class="separador-punto">·</span> {self.dimension} &times; {self.dimension}'
+    def _aplicar_dimension(self, dimension: int) -> None:
+        anterior = self.dimension
+        self.dimension = dimension
+        self.cache = purgar_cache_bidimensional(self.cache, dimension, dimension)
+        redimensionar_celdas(self, anterior)
+        self._publicar_matriz(reconstruir=False)
 
     def _actualizar_botones(self) -> None:
         """Actualiza la disponibilidad de los botones de incremento y decremento."""
@@ -181,10 +193,11 @@ class PanelMatrizCuadrada:
         self.dimension = nuevo_n
         self._publicar_matriz()
 
-    def _publicar_matriz(self) -> None:
-        self._actualizar_etiqueta()
+    def _publicar_matriz(self, reconstruir: bool = True) -> None:
+        actualizar_etiqueta_dimension(self, IDENTIFICADOR_MATRIZ)
         self._actualizar_botones()
-        self._renderizar_completa()
+        if reconstruir:
+            self._renderizar_completa()
         if self.al_cambiar_datos:
             self.al_cambiar_datos()
 
@@ -212,6 +225,13 @@ class PanelMatrizCuadrada:
         self._renderizar_completa()
         if self.al_cambiar_datos:
             self.al_cambiar_datos()
+
+
+async def _animar_redimension_cuadrada(accion: str, selector: str) -> None:
+    try:
+        await ui.run_javascript(f"return window.scalaris?.cuadricula?.animarRedimensionCuadrada({json.dumps(selector)}, {json.dumps(accion)});")
+    except Exception:
+        pass
 
 
 def _parsear_texto_portapapeles(texto: str) -> list[list[str]]:

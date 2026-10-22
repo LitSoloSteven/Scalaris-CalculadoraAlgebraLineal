@@ -3,6 +3,7 @@ import logging
 
 from nicegui import ui
 from src.frontend.componentes.avisos_resultado import mostrar_error_inesperado
+from src.frontend.componentes.limpieza_captura import LimpiezaCaptura
 
 from src.frontend.controladores.sesion_matricial import (
     actualizar_contexto, cancelar_vista_previa, describir_registro,
@@ -50,6 +51,9 @@ class MixinSesionMatricial:
         """Cancela recursos de esta vista al desmontar su cliente."""
         cancelar_vista_previa(self)
         invalidar_resultado(self)
+        recomendacion = getattr(self, 'recomendacion', None)
+        if recomendacion is not None:
+            recomendacion.cancelar()
 
     def _activar_carga(self, emisor, solicitud: int) -> None:
         """Asocia la carga del boton con la solicitud que la inicio."""
@@ -66,27 +70,20 @@ class MixinSesionMatricial:
             emisor.props('loading=false')
 
     async def confirmar_limpieza(self) -> None:
-        """Abre la confirmacion solo cuando la captura contiene texto."""
-        if self.esta_completamente_vacio():
-            ui.notify('El sistema ya está vacío', type='warning', position='top')
-            return
-        with ui.dialog().props('transition-duration=120') as dialogo, ui.card().classes('panel-tarjeta sesion-dialogo p-6'):
-            ui.label('¿Vaciar datos?').classes('text-xl font-bold mb-4')
-            ui.label('Se eliminarán los datos.').classes('text-sm texto-secundario mb-6')
-            with ui.row().classes('w-full justify-end gap-3'):
-                ui.button('Cancelar', on_click=dialogo.close, color=None).classes('boton-discreto px-4').props('ripple=false')
-                ui.button('Limpiar', on_click=lambda: self.ejecutar_animacion_limpieza(dialogo), color=None).classes('boton-principal sesion-limpiar px-4').props('ripple=false')
-        dialogo.open()
+        """Delega la confirmación en el control común de captura."""
+        await self._obtener_limpieza().confirmar()
 
     async def ejecutar_animacion_limpieza(self, dialogo) -> None:
-        """Cierra el dialogo y vacia la captura aun si el transporte cliente falla."""
-        dialogo.close()
-        try:
-            await ui.run_javascript('return window.scalaris && window.scalaris.animarRecoleccionBasura ? window.scalaris.animarRecoleccionBasura() : Promise.resolve()', timeout=2.0)
-        except Exception:
-            registro.warning('No se pudo completar el movimiento de limpieza')
-        if not self.contenedor_resultados.is_deleted:
-            self.limpiar_todo()
+        """Delega el vaciado tolerante a fallos de JavaScript."""
+        await self._obtener_limpieza().ejecutar(dialogo)
+
+    def _obtener_limpieza(self) -> LimpiezaCaptura:
+        if not hasattr(self, 'control_limpieza'):
+            self.control_limpieza = LimpiezaCaptura(self, lambda: not self.contenedor_resultados.is_deleted)
+        return self.control_limpieza
+
+    def _construir_boton_limpieza(self) -> None:
+        self._obtener_limpieza().construir()
 
     def _mostrar_error_inesperado(self, error: Exception) -> None:
         """Presenta un error orientativo sin publicar detalles internos ni entradas."""

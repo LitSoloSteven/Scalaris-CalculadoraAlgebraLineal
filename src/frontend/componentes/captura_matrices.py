@@ -8,15 +8,16 @@ from nicegui import ui
 
 from src.frontend.componentes.cuadricula_base import (
     DIMENSION_MINIMA,
-    cache_matriz_desde_datos,
-    deshabilitar_botones_dimension,
     actualizar_estados_botones_dimension,
-    animar_entrada_cuadricula,
-    animar_salida_cuadricula,
-    propiedades_celda_accesible,
+    ejecutar_transicion_cuadricula, selectores_cambio_dimension, selector_dimension_matriz, indice_cambio_dimension,
     purgar_cache_bidimensional,
 )
 from src.backend.constantes import DIMENSION_MAXIMA_MATRICES
+from .estado_captura_matrices import (
+    MATRICES_PERMANENTES, crear_registro_matriz, asegurar_matrices_permanentes,
+)
+from .redimension_rectangular import actualizar_rectangulo
+from .redimension_captura_matrices import crear_celda_matriz, crear_fila_matriz
 
 
 def _validar_deltas(matriz: dict[str, Any], incremento_filas: int, incremento_columnas: int) -> tuple[int, int] | None:
@@ -48,9 +49,10 @@ def _construir_acciones_tarjeta(panel: PanelCapturaMatrices, nombre: str) -> Non
             ).props(f'ripple=false aria-label="Abrir matriz {nombre} en Matriz inversa"').tooltip(
                 f"Envía una copia de la matriz {nombre} a Matriz inversa para calcular su inversa."
             )
-        ui.button(icon="delete", on_click=partial(panel.eliminar_matriz, nombre), color=None).classes(
+        boton = ui.button(icon="delete", on_click=partial(panel.eliminar_matriz, nombre), color=None).classes(
             "boton-discreto captura-matriz-accion boton-eliminar-elemento"
         ).props(f'ripple=false aria-label="Eliminar matriz {nombre}"').tooltip(f"Eliminar matriz {nombre}")
+        boton.set_enabled(nombre not in MATRICES_PERMANENTES)
 
 
 def _construir_controles_dimension_interfaz(panel: Any, nombre: str, matriz: dict[str, Any]) -> None:
@@ -81,8 +83,11 @@ def _construir_controles_dimension_interfaz(panel: Any, nombre: str, matriz: dic
 class PanelCapturaMatrices:
     """Panel dinamico de captura para colecciones de matrices con soporte para redimensionado."""
 
+    clases_celda = 'matriz-entrada cuadricula-celda'
+
     def __init__(self) -> None:
         self.matrices: dict[str, dict[str, Any]] = {}
+        asegurar_matrices_permanentes(self.matrices)
         self.contenedor: ui.column | None = None
         self.al_invertir: Callable[[str], None] | None = None
         self.al_cambiar_datos: Callable[[], None] | None = None
@@ -106,17 +111,15 @@ class PanelCapturaMatrices:
             ui.notify("Limite de matrices alcanzado (Z)", type="warning")
             return
 
-        self.matrices[nombre] = {
-            "filas": 3, "columnas": 3, "entradas": [], "cache": {}, "contenedor": None,
-            "etiqueta_filas": None, "etiqueta_dimension": None, "etiqueta_dimension_matriz": None,
-            "boton_quitar_fila": None, "boton_agregar_fila": None, "boton_quitar_columna": None, "boton_agregar_columna": None,
-        }
+        self.matrices[nombre] = crear_registro_matriz()
         self.renderizar_todas()
         if self.al_cambiar_datos:
             self.al_cambiar_datos()
 
     def eliminar_matriz(self, nombre: str) -> None:
-        """Elimina una matriz identificada por su nombre literal."""
+        """Elimina una matriz adicional; los nombres A y B son permanentes."""
+        if nombre in MATRICES_PERMANENTES:
+            return
         if nombre in self.matrices:
             del self.matrices[nombre]
             self.renderizar_todas()
@@ -134,20 +137,29 @@ class PanelCapturaMatrices:
             return
         nuevo_m, nuevo_n = dimensiones
 
-        self._deshabilitar_botones_matriz(matriz)
-        if incremento_filas < 0 or incremento_columnas < 0:
-            selector_destino = f"[data-matriz-fila='{matriz['filas'] - 1}']" if incremento_filas < 0 else f"[data-matriz-columna='{matriz['columnas'] - 1}']"
-            await animar_salida_cuadricula(selector_destino, nombre_matriz=nombre)
+        incremento = incremento_filas or incremento_columnas
+        atributo = "fila" if incremento_filas else "columna"
+        indice = indice_cambio_dimension(matriz["filas"], nuevo_m) if incremento_filas else indice_cambio_dimension(matriz["columnas"], nuevo_n)
+        selector = selector_dimension_matriz(nombre, indice, (atributo,))
+        botones = tuple(matriz.get(clave) for clave in ("boton_quitar_fila", "boton_agregar_fila", "boton_quitar_columna", "boton_agregar_columna"))
+        await ejecutar_transicion_cuadricula(
+            matriz, selectores_cambio_dimension(selector, incremento),
+            partial(self._aplicar_tamano, nombre, dimensiones), botones, partial(self._actualizar_botones_matriz, matriz),
+        )
 
+    def _aplicar_tamano(self, nombre: str, dimensiones: tuple[int, int]) -> None:
+        matriz = self.matrices[nombre]
+        anterior = matriz['filas'], matriz['columnas']
+        nuevo_m, nuevo_n = dimensiones
         matriz["filas"] = nuevo_m
         matriz["columnas"] = nuevo_n
         matriz["cache"] = purgar_cache_bidimensional(matriz["cache"], matriz["filas"], matriz["columnas"])
         self._actualizar_etiquetas_matriz(nombre, matriz)
-        self.renderizar_cuadricula(nombre)
-
-        if incremento_filas > 0 or incremento_columnas > 0:
-            selector_destino = f"[data-matriz-fila='{matriz['filas'] - 1}']" if incremento_filas > 0 else f"[data-matriz-columna='{matriz['columnas'] - 1}']"
-            await animar_entrada_cuadricula(selector_destino, nombre_matriz=nombre)
+        if not actualizar_rectangulo(matriz, anterior, dimensiones,
+                                    partial(crear_fila_matriz, self, nombre),
+                                    lambda fila, columna: crear_celda_matriz(self, nombre, (fila, columna))):
+            self.renderizar_cuadricula(nombre)
+        self._actualizar_botones_matriz(matriz)
 
         if self.al_cambiar_datos:
             self.al_cambiar_datos()
@@ -159,11 +171,9 @@ class PanelCapturaMatrices:
             for r, fila in enumerate(matriz["entradas"]) for c, celda in enumerate(fila)
         })
 
-    def _deshabilitar_botones_matriz(self, matriz: dict[str, Any]) -> None:
-        """Deshabilita temporalmente los botones de dimension de la matriz."""
-        claves = ("boton_quitar_fila", "boton_agregar_fila",
-                  "boton_quitar_columna", "boton_agregar_columna")
-        deshabilitar_botones_dimension(tuple(matriz.get(clave) for clave in claves))
+    def _actualizar_botones_matriz(self, matriz: dict[str, Any]) -> None:
+        actualizar_estados_botones_dimension(matriz["boton_quitar_fila"], matriz["boton_agregar_fila"], matriz["filas"], DIMENSION_MINIMA, DIMENSION_MAXIMA_MATRICES)
+        actualizar_estados_botones_dimension(matriz["boton_quitar_columna"], matriz["boton_agregar_columna"], matriz["columnas"], DIMENSION_MINIMA, DIMENSION_MAXIMA_MATRICES)
 
     def _actualizar_etiquetas_matriz(self, nombre: str, matriz: dict[str, Any]) -> None:
         """Actualiza el conteo y el distintivo de dimensiones de la matriz indicada."""
@@ -181,31 +191,18 @@ class PanelCapturaMatrices:
             return
         matriz["contenedor"].clear()
         matriz["entradas"].clear()
+        matriz['filas_interfaz'] = []
 
-        actualizar_estados_botones_dimension(matriz["boton_quitar_fila"], matriz["boton_agregar_fila"], matriz["filas"], DIMENSION_MINIMA, DIMENSION_MAXIMA_MATRICES)
-        actualizar_estados_botones_dimension(matriz["boton_quitar_columna"], matriz["boton_agregar_columna"], matriz["columnas"], DIMENSION_MINIMA, DIMENSION_MAXIMA_MATRICES)
+        self._actualizar_botones_matriz(matriz)
 
-        with (
-            matriz["contenedor"],
-            ui.column().classes("cuadricula-contenido"),
-        ):
+        with matriz['contenedor'], ui.column().classes('cuadricula-contenido') as contenido:
+            matriz['contenido'] = contenido
             for i in range(matriz["filas"]):
                 self._renderizar_fila_matriz(nombre, matriz, i)
 
     def _renderizar_fila_matriz(self, nombre: str, matriz: dict[str, Any], i: int) -> None:
         """Construye una fila de entradas para la matriz indicada."""
-        with ui.row().classes("items-center gap-2 mb-2 no-wrap").props(f'data-cuadricula-fila="{nombre}_{i}"'):
-            fila_ui = []
-            for j in range(matriz["columnas"]):
-                valor = matriz["cache"].get((i, j), "")
-                propiedades = propiedades_celda_accesible(i, j, identificador_matriz=nombre, nombre_campo=f"{nombre}_r{i}c{j}")
-                celda = ui.input(
-                    value=valor,
-                    placeholder="",
-                    on_change=lambda evento, r=i, c=j, nombre_matriz=nombre: self._al_cambiar_celda(nombre_matriz, r, c, evento.value),
-                ).classes("matriz-entrada cuadricula-celda").props(propiedades)
-                fila_ui.append(celda)
-            matriz["entradas"].append(fila_ui)
+        crear_fila_matriz(self, nombre, i)
 
     def _al_cambiar_celda(self, nombre: str, r: int, c: int, valor: str) -> None:
         """Guarda el valor en cache y notifica a observadores."""
@@ -215,6 +212,7 @@ class PanelCapturaMatrices:
 
     def renderizar_todas(self) -> None:
         """Reconstruye todos los paneles de matriz registrados."""
+        asegurar_matrices_permanentes(self.matrices)
         if not self.contenedor:
             return
         for matriz in self.matrices.values():
@@ -242,10 +240,7 @@ class PanelCapturaMatrices:
     def construir(self, contenedor: ui.column) -> None:
         """Asigna el contenedor padre y renderiza la coleccion."""
         self.contenedor = contenedor
-        if not self.matrices:
-            self.agregar_matriz()
-        else:
-            self.renderizar_todas()
+        self.renderizar_todas()
 
     def obtener_datos_crudos(self) -> dict[str, dict]:
         """Recoge texto de las celdas y dimensiones, preservando los nombres de matrices."""
@@ -258,16 +253,22 @@ class PanelCapturaMatrices:
         }
 
     def cargar_datos(self, diccionario_matrices: dict[str, list[list[str]]]) -> None:
-        """Carga un conjunto de matrices reemplazando el contenido existente."""
+        """Reemplaza la captura y completa A y B sin renombrar las matrices cargadas."""
         self.matrices.clear()
         for nombre, datos in diccionario_matrices.items():
-            numero_filas = len(datos)
-            numero_columnas = len(datos[0]) if numero_filas > 0 else 3
-            self.matrices[nombre] = {
-                "filas": numero_filas, "columnas": numero_columnas, "entradas": [], "cache": cache_matriz_desde_datos(datos), "contenedor": None,
-                "etiqueta_filas": None, "etiqueta_dimension": None, "etiqueta_dimension_matriz": None,
-                "boton_quitar_fila": None, "boton_agregar_fila": None, "boton_quitar_columna": None, "boton_agregar_columna": None,
-            }
+            self.matrices[nombre] = crear_registro_matriz(datos)
+        self.renderizar_todas()
+        if self.al_cambiar_datos:
+            self.al_cambiar_datos()
+
+    def limpiar(self) -> None:
+        """Vacia todas las celdas conservando nombres, dimensiones y matrices permanentes."""
+        asegurar_matrices_permanentes(self.matrices)
+        for matriz in self.matrices.values():
+            matriz["cache"].clear()
+            for fila in matriz["entradas"]:
+                for celda in fila:
+                    celda.value = ""
         self.renderizar_todas()
         if self.al_cambiar_datos:
             self.al_cambiar_datos()

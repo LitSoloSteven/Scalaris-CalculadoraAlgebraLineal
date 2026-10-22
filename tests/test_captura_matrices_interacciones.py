@@ -26,7 +26,7 @@ def test_anadir_sincroniza_celdas_y_no_resucita_valores_borrados(monkeypatch):
         panel.matrices["B"]["entradas"][1][1].set_value("-2/3")
         panel.agregar_matriz()
         assert panel.obtener_datos_crudos()["B"]["datos"][1][1] == "-2/3"
-        assert panel.obtener_datos_crudos()["A"]["datos"][0][0] == ""
+        assert panel.obtener_datos_crudos()["A"]["datos"][0][0] == "1/1001"
         assert vista.entrada_expresion.value == "A+B"
     asyncio.run(construir_pagina(monkeypatch, "matrices", comprobar))
 

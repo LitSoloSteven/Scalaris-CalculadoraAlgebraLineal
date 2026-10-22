@@ -1,5 +1,6 @@
 """Cuadricula interactiva de captura para sistemas de ecuaciones lineales."""
 from __future__ import annotations
+from src.backend.utilidades.estado_captura import captura_vacia
 
 from functools import partial
 from typing import Any, Callable
@@ -8,28 +9,27 @@ from nicegui import ui
 from src.frontend.componentes.cuadricula_base import (
     DIMENSION_MINIMA,
     cache_matriz_desde_datos,
-    deshabilitar_botones_dimension,
     sincronizar_cache_celdas,
     actualizar_estados_botones_dimension,
-    animar_entrada_cuadricula,
-    animar_salida_cuadricula,
-    propiedades_celda_accesible,
+    ejecutar_transicion_cuadricula, selectores_cambio_dimension, indice_cambio_dimension,
     purgar_cache_bidimensional,
     purgar_cache_unidimensional,
 )
 from src.backend.resolutores.sistemas_lineales.exportacion_ecuaciones import exportar_ecuaciones_desde_datos
 from src.backend.constantes import DIMENSION_MAXIMA_SISTEMAS
+from .redimension_ecuaciones import crear_fila_ecuaciones, redimensionar_ecuaciones, actualizar_presentacion
 
 
-def _renderizar_cabecera_columnas(numero_columnas: int) -> None:
+def _renderizar_cabecera_columnas(numero_columnas: int) -> ui.row:
     """Renderiza la cabecera fija de variables xj y termino b."""
     with ui.row().classes(
         "items-center gap-2 mb-2 no-wrap w-full z-10 bg-[var(--bg-panel)] cuadricula-cabecera-fija"
-    ):
+    ) as cabecera:
         for j in range(numero_columnas):
             ui.html(f"x<sub>{j+1}</sub>").classes("cuadricula-celda text-center matematicas-etiqueta")
         ui.label("=").classes("w-8 text-center text-transparent flex-shrink-0")
         ui.label("b").classes("cuadricula-celda text-center matematicas-etiqueta")
+    return cabecera
 
 
 def _construir_botones_tamanos(cuadricula: Any) -> None:
@@ -56,38 +56,19 @@ def _construir_botones_variables(cuadricula: Any) -> None:
 
 def _renderizar_fila_entradas(cuadricula: CuadriculaEcuaciones, i: int) -> None:
     """Renderiza una fila con entradas de coeficientes y celda de resultado b."""
-    with ui.row().classes("items-center gap-2 mb-2 no-wrap").props(f'data-cuadricula-fila="{i}"'):
-        fila_coeficientes = []
-        for j in range(cuadricula.columnas):
-            valor = cuadricula._cache_coeficientes.get((i, j), "")
-            propiedades = propiedades_celda_accesible(i, j, nombre_campo=f"r{i}c{j}")
-            celda = ui.input(
-                value=valor,
-                placeholder="",
-                on_change=lambda evento, r=i, c=j: cuadricula._actualizar_celda(False, r, c, evento.value),
-            ).classes("matriz-entrada cuadricula-celda").props(propiedades)
-            fila_coeficientes.append(celda)
-        cuadricula.entradas_coeficientes.append(fila_coeficientes)
-
-        ui.label("=").classes("w-8 text-center matematicas-etiqueta text-xl flex-shrink-0")
-        valor_independiente = cuadricula._cache_independientes.get(i, "")
-        propiedades_independiente = propiedades_celda_accesible(i, cuadricula.columnas, nombre_campo=f"r{i}cb")
-        celda_b = ui.input(
-            value=valor_independiente,
-            placeholder="",
-            on_change=lambda evento, r=i: cuadricula._actualizar_celda(True, r, 0, evento.value),
-        ).classes("matriz-entrada cuadricula-celda").props(propiedades_independiente)
-        cuadricula.entradas_independientes.append(celda_b)
+    crear_fila_ecuaciones(cuadricula, i)
 
 
 class CuadriculaEcuaciones:
     """Cuadricula de captura de matriz de coeficientes y terminos independientes."""
 
     def __init__(self, filas_iniciales: int = 3, columnas_iniciales: int = 3) -> None:
+        self.filas_interfaz: list[ui.row] = []
         self.entradas_coeficientes: list[list[ui.input]] = []
         self.entradas_independientes: list[ui.input] = []
         self.filas: int = filas_iniciales
         self.columnas: int = columnas_iniciales
+        self.modo_homogeneo = False
         self.contenedor_matriz: ui.column | None = None
         self.etiqueta_forma: ui.html | None = None
         self._cache_coeficientes: dict[tuple[int, int], str] = {}
@@ -112,30 +93,41 @@ class CuadriculaEcuaciones:
         ):
             return
 
-        self._deshabilitar_botones_redimension()
-        if incremento_filas < 0 or incremento_columnas < 0:
-            selector_destino = f"[data-ecuaciones-fila='{self.filas - 1}']" if incremento_filas < 0 else f"[data-ecuaciones-columna='{self.columnas - 1}']"
-            await animar_salida_cuadricula(selector_destino)
+        incremento = incremento_filas or incremento_columnas
+        indice = indice_cambio_dimension(self.filas, nuevo_m) if incremento_filas else indice_cambio_dimension(self.columnas, nuevo_n)
+        atributo = "fila" if incremento_filas else "columna"
+        selector = f"#{self.contenedor_matriz.html_id} input[data-ecuaciones-{atributo}='{indice}']" if self.contenedor_matriz else ""
+        botones = (self.boton_quitar_fila, self.boton_agregar_fila, self.boton_quitar_columna, self.boton_agregar_columna)
+        await ejecutar_transicion_cuadricula(
+            vars(self), selectores_cambio_dimension(selector, incremento),
+            partial(self._aplicar_tamano, nuevo_m, nuevo_n), botones, self._actualizar_botones_dimension,
+        )
 
+    def _aplicar_tamano(self, nuevo_m: int, nuevo_n: int) -> None:
+        self._sincronizar_cache_desde_entradas()
+        anterior = self.filas, self.columnas
         self.filas = nuevo_m
         self.columnas = nuevo_n
         self._cache_coeficientes = purgar_cache_bidimensional(self._cache_coeficientes, self.filas, self.columnas)
         self._cache_independientes = purgar_cache_unidimensional(self._cache_independientes, self.filas)
 
-        self.generar_cuadricula()
+        if not redimensionar_ecuaciones(self, anterior):
+            self.entradas_coeficientes.clear()
+            self.entradas_independientes.clear()
+            self.generar_cuadricula()
+        else:
+            actualizar_presentacion(self)
+            if anterior[1] != self.columnas:
+                self.cabecera_columnas.delete()
+                with self.contenedor_matriz:
+                    self.cabecera_columnas = _renderizar_cabecera_columnas(self.columnas)
+                self.cabecera_columnas.move(target_index=0)
         if self.al_cambiar_datos:
             self.al_cambiar_datos()
 
-        if incremento_filas > 0 or incremento_columnas > 0:
-            selector_destino = f"[data-ecuaciones-fila='{self.filas - 1}']" if incremento_filas > 0 else f"[data-ecuaciones-columna='{self.columnas - 1}']"
-            await animar_entrada_cuadricula(selector_destino)
-
-    def _deshabilitar_botones_redimension(self) -> None:
-        """Deshabilita temporalmente los botones de tamano durante la animacion."""
-        deshabilitar_botones_dimension((
-            self.boton_quitar_fila, self.boton_agregar_fila,
-            self.boton_quitar_columna, self.boton_agregar_columna,
-        ))
+    def _actualizar_botones_dimension(self) -> None:
+        actualizar_estados_botones_dimension(self.boton_quitar_fila, self.boton_agregar_fila, self.filas, DIMENSION_MINIMA, DIMENSION_MAXIMA_SISTEMAS)
+        actualizar_estados_botones_dimension(self.boton_quitar_columna, self.boton_agregar_columna, self.columnas, DIMENSION_MINIMA, DIMENSION_MAXIMA_SISTEMAS)
 
     def construir_contenedor_cuadricula(self) -> None:
         """Construye el contenedor principal con indicadores y controles de redimensionado."""
@@ -158,16 +150,9 @@ class CuadriculaEcuaciones:
             self.contenedor_matriz.clear()
         self.entradas_coeficientes.clear()
         self.entradas_independientes.clear()
+        self.filas_interfaz.clear()
 
-        texto_forma = "Sistema Cuadrado" if self.filas == self.columnas else "Sistema Rectangular"
-        if self.etiqueta_forma:
-            self.etiqueta_forma.content = (
-                f'{texto_forma} <span class="separador-punto">·</span> {self.filas} &times; {self.columnas}'
-            )
-
-        actualizar_estados_botones_dimension(self.boton_quitar_fila, self.boton_agregar_fila, self.filas, DIMENSION_MINIMA, DIMENSION_MAXIMA_SISTEMAS)
-        actualizar_estados_botones_dimension(self.boton_quitar_columna, self.boton_agregar_columna, self.columnas, DIMENSION_MINIMA, DIMENSION_MAXIMA_SISTEMAS)
-
+        actualizar_presentacion(self)
         if self.contenedor_matriz:
             with self.contenedor_matriz:
                 self._renderizar_filas_cuadricula()
@@ -175,19 +160,24 @@ class CuadriculaEcuaciones:
     def _sincronizar_cache_desde_entradas(self) -> None:
         """Copia valores no vacios desde las celdas UI al diccionario de cache."""
         sincronizar_cache_celdas(self.entradas_coeficientes, self._cache_coeficientes)
+        if self.modo_homogeneo:
+            return
         for i, celda in enumerate(self.entradas_independientes):
             if celda.value:
                 self._cache_independientes[i] = celda.value
 
     def _renderizar_filas_cuadricula(self) -> None:
         """Renderiza la cabecera fija y las filas de coeficientes y termino independiente."""
-        _renderizar_cabecera_columnas(self.columnas)
-        with ui.column().classes("cuadricula-contenido"):
+        self.cabecera_columnas = _renderizar_cabecera_columnas(self.columnas)
+        with ui.column().classes("cuadricula-contenido") as contenido:
+            self.contenido_celdas = contenido
             for i in range(self.filas):
                 _renderizar_fila_entradas(self, i)
 
     def _actualizar_celda(self, es_b: bool, r: int, c: int, valor: str) -> None:
         """Actualiza el cache de coeficientes o vector b y notifica el cambio."""
+        if es_b and self.modo_homogeneo:
+            return
         if es_b:
             self._cache_independientes[r] = valor
         else:
@@ -204,18 +194,13 @@ class CuadriculaEcuaciones:
         independientes = [
             (celda.value.strip() if celda.value else "0") for celda in self.entradas_independientes
         ]
-        return coeficientes, independientes
+        return coeficientes, ["0"] * self.filas if self.modo_homogeneo else independientes
 
     def esta_completamente_vacio(self) -> bool:
         """Determina si la totalidad de celdas de la cuadricula estan sin llenar."""
-        for fila in self.entradas_coeficientes:
-            for celda in fila:
-                if celda.value and str(celda.value).strip() != "":
-                    return False
-        for celda in self.entradas_independientes:
-            if celda.value and str(celda.value).strip() != "":
-                return False
-        return True
+        entradas = [celda for fila in self.entradas_coeficientes for celda in fila]
+        entradas.extend(self.entradas_independientes)
+        return captura_vacia((celda.value for celda in entradas), considerar_cero=False)
 
     def limpiar(self) -> None:
         """Limpia el contenido de todas las celdas y purga el cache."""
@@ -225,7 +210,18 @@ class CuadriculaEcuaciones:
             for celda in fila:
                 celda.value = ""
         for celda in self.entradas_independientes:
-            celda.value = ""
+            celda.value = "0" if self.modo_homogeneo else ""
+        if self.al_cambiar_datos:
+            self.al_cambiar_datos()
+
+    def establecer_modo_homogeneo(self, activo: bool) -> None:
+        """Fija b=0 conservando el cache general y notifica el cambio; no interpreta numeros."""
+        if self.modo_homogeneo == activo:
+            return
+        self._sincronizar_cache_desde_entradas()
+        self.entradas_independientes.clear()
+        self.modo_homogeneo = activo
+        self.generar_cuadricula()
         if self.al_cambiar_datos:
             self.al_cambiar_datos()
 
@@ -240,28 +236,17 @@ class CuadriculaEcuaciones:
             ui.notify(f"El sistema excede el limite permitido ({DIMENSION_MAXIMA_SISTEMAS}x{DIMENSION_MAXIMA_SISTEMAS}).", type="warning")
             return
 
-        self.filas = matriz_importada.filas
-        self.columnas = matriz_importada.columnas - 1
-        self._cache_coeficientes.clear()
-        self._cache_independientes.clear()
-
-        for i in range(self.filas):
-            for j in range(self.columnas):
-                valor_texto = str(matriz_importada.datos[i][j])
-                if valor_texto != "0":
-                    self._cache_coeficientes[(i, j)] = valor_texto
-            valor_independiente = str(matriz_importada.datos[i][-1])
-            if valor_independiente != "0":
-                self._cache_independientes[i] = valor_independiente
-
-        self.generar_cuadricula()
-        if self.al_cambiar_datos:
-            self.al_cambiar_datos()
+        coeficientes = [[str(valor) for valor in fila[:-1]] for fila in matriz_importada.datos]
+        independientes = [str(fila[-1]) for fila in matriz_importada.datos]
+        self.cargar_datos(coeficientes, independientes)
 
     def cargar_datos(self, coeficientes: list[list[str]], vector_b: list[str]) -> None:
         """Carga datos directamente actualizando dimensiones y cuadricula."""
         self.filas = len(coeficientes)
         self.columnas = len(coeficientes[0]) if self.filas > 0 else 3
+        self.modo_homogeneo = False
+        self.entradas_coeficientes.clear()
+        self.entradas_independientes.clear()
         self._cache_coeficientes.clear()
         self._cache_independientes.clear()
         self._cache_coeficientes.update(cache_matriz_desde_datos(coeficientes))

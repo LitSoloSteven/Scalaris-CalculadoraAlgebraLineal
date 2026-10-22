@@ -1,10 +1,11 @@
 """Estado de sesion y actualizacion cancelable de las herramientas matriciales."""
-import asyncio
 import copy
 import time
 
 from src.frontend.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
 from src.ai.huellas import calcular_huella
+from src.frontend.controladores.actualizacion_cancelable import cancelar_actualizacion, programar_actualizacion
+from src.frontend.textos import HISTORIAL_DETERMINANTE_CALCULADO, HISTORIAL_DETERMINANTE_DETALLE, OPCIONES_METODOS_DETERMINANTES
 
 MAXIMO_CALCULOS_RECIENTES = 5
 
@@ -14,6 +15,8 @@ _ESTADOS_HISTORIAL = {
     'SIN_SOLUCION': ('Sin Solución', 'sesion-error'),
     'EXITO': ('Invertible', 'texto-acento'),
     'SINGULAR': ('Singular', 'sesion-error'),
+    'DETERMINANTE_CALCULADO': (HISTORIAL_DETERMINANTE_CALCULADO, 'texto-acento'),
+    'DETERMINANTE_SINGULAR': ('Singular', 'sesion-error'),
 }
 
 
@@ -29,7 +32,11 @@ def describir_registro(datos: dict) -> dict:
     columnas = datos.get('columnas', filas)
     texto, clase = _ESTADOS_HISTORIAL.get(datos['estado'], ('Error', 'sesion-error'))
     detalle = ''
-    if 'metodo' in datos:
+    if datos['estado'] in ('DETERMINANTE_CALCULADO', 'DETERMINANTE_SINGULAR'):
+        nombres = {valor: etiqueta for valor, etiqueta, _ in OPCIONES_METODOS_DETERMINANTES}
+        detalle = HISTORIAL_DETERMINANTE_DETALLE.format(
+            determinante=datos.get('determinante', ''), metodo=nombres.get(datos.get('metodo'), ''))
+    elif 'metodo' in datos:
         detalle = f"Método: {datos['metodo'].replace('-', ' ').title()}"
     elif datos.get('determinante') is not None:
         detalle = f"det = {datos['determinante']}"
@@ -38,26 +45,21 @@ def describir_registro(datos: dict) -> dict:
 
 def cancelar_vista_previa(vista) -> None:
     """Cancela la tarea pendiente de la vista sin afectar otros clientes."""
-    tarea = getattr(vista, 'tarea_vista_previa', None)
-    if tarea is not None and not tarea.done():
-        tarea.cancel()
+    cancelar_actualizacion(getattr(vista, 'tarea_vista_previa', None))
     vista.tarea_vista_previa = None
 
 
 def programar_vista_previa(vista) -> None:
     """Reemplaza la espera anterior si el contenedor de la vista sigue montado."""
-    cancelar_vista_previa(vista)
     contenedor = getattr(vista, 'contenedor_vista_previa', None)
     if contenedor is None or contenedor.is_deleted:
+        cancelar_vista_previa(vista)
         return
-    vista.tarea_vista_previa = asyncio.create_task(_esperar_actualizacion(vista, contenedor))
-
-
-async def _esperar_actualizacion(vista, contenedor) -> None:
-    await asyncio.sleep(ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS)
-    if contenedor.is_deleted or contenedor is not vista.contenedor_vista_previa:
-        return
-    await vista._actualizar_vista_previa()
+    vista.tarea_vista_previa = programar_actualizacion(
+        getattr(vista, 'tarea_vista_previa', None), vista._actualizar_vista_previa,
+        lambda: not contenedor.is_deleted and contenedor is vista.contenedor_vista_previa,
+        ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS,
+    )
 
 
 def invalidar_resultado(vista) -> None:
