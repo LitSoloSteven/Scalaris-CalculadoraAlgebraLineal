@@ -22,29 +22,29 @@ def _generar_explicacion_rouche(
         )
     if estado == SOLUCION_UNICA:
         if es_homogeneo:
-            exp = (
+            explicacion = (
                 f"Sistema Homogéneo con rg(A) = {rango_a} = n ({numero_variables} incógnitas). "
                 "Presenta únicamente la solución trivial única (x = 0)."
             )
         else:
-            exp = (
+            explicacion = (
                 f"rg(A) = rg(A|b) = {rango_a} = n ({numero_variables} incógnitas). "
                 "Por el Teorema de Rouché-Frobenius, el sistema presenta solución única (compatible determinado)."
             )
-        return "Sistema Compatible Determinado", exp
+        return "Sistema Compatible Determinado", explicacion
 
-    grados = numero_variables - rango_a
+    grados_libertad = numero_variables - rango_a
     if es_homogeneo:
-        exp = (
+        explicacion = (
             f"Sistema Homogéneo con rg(A) = {rango_a} < n ({numero_variables} incógnitas). "
-            f"Presenta infinitas soluciones no triviales (dimensión del espacio nulo = {grados})."
+            f"Presenta infinitas soluciones no triviales (dimensión del espacio nulo = {grados_libertad})."
         )
     else:
-        exp = (
+        explicacion = (
             f"rg(A) = rg(A|b) = {rango_a} < n ({numero_variables} incógnitas). "
-            f"Por el Teorema de Rouché-Frobenius, presenta infinitas soluciones con {grados} variable(s) libre(s)."
+            f"Por el Teorema de Rouché-Frobenius, presenta infinitas soluciones con {grados_libertad} variable(s) libre(s)."
         )
-    return "Sistema Compatible Indeterminado", exp
+    return "Sistema Compatible Indeterminado", explicacion
 
 
 def analizar_sistema_rouche(
@@ -59,13 +59,13 @@ def analizar_sistema_rouche(
     clasificacion, explicacion = _generar_explicacion_rouche(
         estado, rango_a, rango_aumentada, numero_variables, es_homogeneo
     )
-    columnas_indep = (rango_a == numero_variables)
-    if columnas_indep:
-        conclusion_dep = (
+    columnas_independientes = (rango_a == numero_variables)
+    if columnas_independientes:
+        conclusion_dependencia = (
             f"Las columnas de la matriz de coeficientes son LINEALMENTE INDEPENDIENTES (rango = {rango_a} = {numero_variables} variables)."
         )
     else:
-        conclusion_dep = (
+        conclusion_dependencia = (
             f"Las columnas de la matriz de coeficientes son LINEALMENTE DEPENDIENTES (rango = {rango_a} < {numero_variables} variables)."
         )
 
@@ -77,8 +77,8 @@ def analizar_sistema_rouche(
         "clasificacion_rouche": clasificacion,
         "explicacion_rouche": explicacion,
         "dependencia_lineal": {
-            "son_linealmente_independientes": columnas_indep,
-            "conclusion": conclusion_dep,
+            "son_linealmente_independientes": columnas_independientes,
+            "conclusion": conclusion_dependencia,
         },
         "pivotes": pivotes,
     }

@@ -77,6 +77,8 @@ def validar_y_construir_aumentada(
     a_fracciones, b_fracciones, error_parse = _parsear_celdas_a_fracciones(matriz_a_cruda, vector_b_crudo)
     if error_parse is not None or a_fracciones is None or b_fracciones is None:
         return None, None, None, 0, 0, error_parse
+    if datos.get("homogeneo") is True and any(b_fracciones):
+        return None, None, None, 0, 0, json.dumps({"estado": "ERROR", "mensaje": "El modo homogéneo requiere b=0. Revisa los términos independientes."})
 
     try:
         datos_aumentados = [a_fracciones[i] + [b_fracciones[i]] for i in range(numero_filas)]
