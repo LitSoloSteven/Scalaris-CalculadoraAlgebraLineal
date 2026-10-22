@@ -23,6 +23,14 @@ from src.frontend.controladores.utilidades import parsear_carga_json
 registro = logging.getLogger(__name__)
 
 
+def _completar_resultado_sin_inversa(resultado: dict, opciones: dict) -> dict:
+    respuesta = construir_resultado_vacio(resultado["estado"], resultado.get("mensaje", "Error al resolver."), opciones=opciones)
+    if resultado.get("traza_determinante"):
+        respuesta["comprobaciones"] = [{"clave": "determinante", "titulo": "det(A) = 0",
+                                       "coincide": resultado["determinante"] == 0, "traza": resultado["traza_determinante"]}]
+    return respuesta
+
+
 def _ejecutar_resolutor(matriz_a: Matriz) -> tuple[dict | None, float, str | None]:
     """Ejecuta el resolutor de inversa cronometrando el tiempo de cálculo."""
     t0 = time.perf_counter()
@@ -94,7 +102,7 @@ class ControladorOperacionesInversas:
         estado_calculo = resultado.get("estado", "ERROR")
         if estado_calculo in ("ERROR", "SINGULAR"):
             determinante = resultado.get("determinante")
-            return construir_resultado_vacio(estado_calculo, resultado.get("mensaje", "Error al resolver."), opciones={'dimension': dimension, 'tiempo_s': tiempo_s, 'determinante': determinante, 'matriz_a': matriz_a})
+            return _completar_resultado_sin_inversa(resultado, {'dimension': dimension, 'tiempo_s': tiempo_s, 'determinante': determinante, 'matriz_a': matriz_a})
 
         return _ensamblar_resultado_inversa(resultado, matriz_a, dimension, tiempo_s)
 

@@ -48,6 +48,12 @@ class MixinResultadosOperacionesInversas:
         self._programar_vista_previa()
         if self.ultimo_resultado is not None and self.contenedor_resultados:
             self.contenedor_resultados.classes(add='sesion-obsoleta')
+            aviso = getattr(self, '_aviso_resultado_obsoleto', None)
+            if aviso is None or aviso.is_deleted:
+                with self.contenedor_resultados:
+                    self._aviso_resultado_obsoleto = ui.label(
+                        'Resultado anterior. Los datos cambiaron; pulsa Calcular inversa para actualizarlo.'
+                    ).classes('texto-advertencia text-sm').props('role="status"')
         actualizar_contexto(self)
 
     def limpiar_todo(self) -> None:
@@ -55,6 +61,8 @@ class MixinResultadosOperacionesInversas:
         invalidar_resultado(self)
         self.panel_matriz_cuadrada.limpiar()
         self.restablecer_resultados()
+        if getattr(self, 'panel_ia', None):
+            self.panel_ia.limpiar_foco_explicacion()
         actualizar_contexto(self)
 
     def _mostrar_aviso_matriz_vacia(self) -> None:

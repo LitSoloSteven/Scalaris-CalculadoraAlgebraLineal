@@ -19,8 +19,8 @@ def test_determinantes_tiene_estado_activo_exclusivo(monkeypatch):
         assert actuales[0]._props["href"] == ruta_de("determinantes")
         textos = [str(getattr(elemento, "text", "")) for elemento in cliente.elements.values()]
         assert not any("Más álgebra" in texto for texto in textos)
-        assert not any("Cofactores" in texto for texto in textos)
-        assert "Triangulación LU con aritmética exacta." in textos
+        assert any("Cofactores" in texto for texto in textos)
+        assert "Cofactores o eliminación con pivoteo, con aritmética exacta." in textos
     asyncio.run(construir_pagina(monkeypatch, "determinantes", comprobar))
 
 

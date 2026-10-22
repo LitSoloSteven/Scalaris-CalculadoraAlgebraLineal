@@ -8,6 +8,7 @@ from nicegui import Client, core, run, ui
 
 from src.frontend.vistas.operaciones_matrices.vista_determinante import VistaDeterminante
 from tests.comun_construccion_vistas import preparar_transporte
+from tests.comun_calculo_determinante import retener_calculo
 
 
 @pytest.mark.parametrize("desmontar", [False, True])
@@ -18,13 +19,6 @@ def test_respuesta_tardia_no_publica_en_captura_invalida(monkeypatch, desmontar)
         monkeypatch.setattr(core, "script_mode", False)
         cliente = Client(ui.page("/determinante_espera"))
         preparar_transporte(monkeypatch, cliente)
-        preparado, terminar = asyncio.Event(), asyncio.Event()
-        async def trabajador(funcion, captura):
-            """Retiene el resultado hasta después de la edición o el desmontaje."""
-            preparado.set()
-            await terminar.wait()
-            return {"estado": "EXITO", "determinante": 1, "pasos": []}
-        monkeypatch.setattr(run, "io_bound", trabajador)
         with cliente:
             vista = VistaDeterminante()
             vista.construir()
@@ -32,14 +26,13 @@ def test_respuesta_tardia_no_publica_en_captura_invalida(monkeypatch, desmontar)
             monkeypatch.setattr(vista, "_mostrar_resultado", mostrar)
             boton = next(elemento for elemento in cliente.elements.values()
                          if isinstance(elemento, ui.button) and elemento.text == "Calcular determinante")
-            tarea = asyncio.create_task(vista.calcular(SimpleNamespace(sender=boton)))
-            await preparado.wait()
-            cliente.delete() if desmontar else vista._invalidar_resultado()
-            terminar.set()
-            await tarea
+            revision = vista._revision_captura
+            async with retener_calculo(monkeypatch, vista, boton):
+                cliente.delete() if desmontar else vista._invalidar_resultado()
             mostrar.assert_not_called()
             assert vista.ultimo_resultado is None
-            assert vista._montada is (not desmontar)
+            assert vista._revision_captura > revision
+            assert vista.contenedor_resultados.is_deleted is desmontar
         if not desmontar:
             cliente.delete()
     asyncio.run(comprobar())
@@ -64,7 +57,8 @@ def test_recalculo_fallido_retira_exito_anterior(monkeypatch):
                          if isinstance(elemento, ui.button) and elemento.text == "Calcular determinante")
             await vista.calcular(SimpleNamespace(sender=boton))
             assert vista.ultimo_resultado is None
-            assert not vista._calculando
+            assert boton._props['loading'] == 'false'
+            assert vista.obtener_contexto_ia().resultado is None
             assert any(isinstance(elemento, ui.label) and "No pudimos calcular" in elemento.text
                        for elemento in cliente.elements.values())
         cliente.delete()

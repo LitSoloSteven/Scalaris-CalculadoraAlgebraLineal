@@ -8,6 +8,7 @@ from src.backend.constantes import DIMENSION_MAXIMA_SISTEMAS
 from src.frontend.controladores.operaciones_inversas.presentacion import preparar_opciones_inversa
 from src.backend.utilidades.formateadores import formatear_fraccion_texto
 from src.frontend.componentes.reproductor_pasos.html_tablas import html_tabla_matriz
+from src.frontend.componentes.desarrollo_comprobacion import mostrar_desarrollo
 
 
 def renderizar_resultado_error(vista, resultado: dict) -> None:
@@ -47,6 +48,7 @@ def renderizar_resultado_singular(vista, resultado: dict, dimension: int) -> Non
 
     if resultado.get('pasos'):
         vista._renderizar_seccion_pasos(resultado)
+    _renderizar_comprobaciones(resultado, dimension)
 
 
 def renderizar_resultado_exitoso(vista, resultado: dict, dimension: int) -> None:
@@ -160,6 +162,7 @@ def _renderizar_comprobaciones(resultado: dict, dimension: int) -> None:
                 ui.badge(texto_distintivo, color=None).classes(clase_distintivo)
             if comprobacion.get('detalle_latex'):
                 ui.html(f'<div class="matematicas-desplazamiento matematicas-etiqueta text-sm my-1">$$ {comprobacion["detalle_latex"]} $$</div>')
+            mostrar_desarrollo(comprobacion.get('traza', []))
         if not preparar_opciones_inversa(dimension)['mostrar_latex']:
             ui.label('Verificado con aritmética exacta (fracciones).').classes(
                 'texto-secundario fuente-pequena italic mt-2'

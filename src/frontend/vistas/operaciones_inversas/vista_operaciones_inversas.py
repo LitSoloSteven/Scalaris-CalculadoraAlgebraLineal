@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from nicegui import ui
+from src.backend.utilidades.estado_captura import captura_vacia
 from src.frontend.controladores.operaciones_inversas.contexto import obtener_contexto_inversa, obtener_senales_inversa
 
 from src.frontend.componentes.panel_ia import PanelIA
@@ -73,14 +74,7 @@ class VistaOperacionesInversas(MixinResultadosOperacionesInversas, MixinPasosOpe
         with ui.column().classes('disposicion-panel'):
             self.panel_matriz_cuadrada.construir_contenedor()
             with ui.row().classes('w-full mt-6 gap-4'):
-                with ui.button(
-                    icon='delete',
-                    on_click=self.confirmar_limpieza,
-                    color=None,
-                ).classes('boton-discreto flex-1 py-3').props(
-                    'ripple=false id="boton-limpiar-principal" aria-label="Limpiar"'
-                ):
-                    ui.tooltip('Limpiar').props('target="#boton-limpiar-principal"')
+                self._construir_boton_limpieza()
 
                 ui.button(
                     'Calcular inversa',
@@ -116,4 +110,4 @@ class VistaOperacionesInversas(MixinResultadosOperacionesInversas, MixinPasosOpe
 
     def esta_completamente_vacio(self) -> bool:
         """Consulta la presencia de texto en el panel matricial."""
-        return self.panel_matriz_cuadrada.esta_vacio()
+        return captura_vacia(self.panel_matriz_cuadrada.cache.values(), considerar_cero=False)

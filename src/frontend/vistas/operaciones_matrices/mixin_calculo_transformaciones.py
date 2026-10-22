@@ -3,6 +3,8 @@ import json
 from nicegui import ui
 from ._estados_modelos import mostrar_estado
 from src.frontend.controladores.operaciones_matrices import ControladorTransformaciones
+from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
+from src.frontend.controladores.operaciones_matrices.capturas_modelos import capturar_transformaciones
 from ._renderizado_transformaciones import renderizar_resultado_transformaciones
 
 from ._estados_modelos import ejecutar_modelo
@@ -15,16 +17,13 @@ class MixinCalculoTransformaciones:
         await ejecutar_modelo(self, boton, self._analizar_nucleo)
 
     async def _analizar_nucleo(self):
-        coeficientes_crudos = []
-        for i in range(self.filas):
-            fila = [self.entradas_coeficientes[i][j].value or "0" for j in range(self.columnas)]
-            coeficientes_crudos.append(fila)
-
-        variables_crudas = [entrada.value.strip() for entrada in self.entradas_variables]
-        variables = [variable if variable else f"x{j+1}" for j, variable in enumerate(variables_crudas)]
-
-        carga = json.dumps({"matriz_transformacion": coeficientes_crudos, "nombres_variables": variables})
-        respuesta_json = ControladorTransformaciones.procesar(carga)
+        calculo = await ejecutar_calculo_vigente(
+            self, lambda: capturar_transformaciones(self),
+            lambda captura: ControladorTransformaciones.procesar(json.dumps(captura)),
+        )
+        if calculo is None:
+            return
+        respuesta_json, self._huella_resultado = calculo
         respuesta = json.loads(respuesta_json)
         self.ultimo_resultado = respuesta
 

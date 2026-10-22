@@ -4,6 +4,7 @@ from __future__ import annotations
 import html
 from nicegui import ui
 from src.frontend.componentes.avisos_resultado import CLASES_AVISO_ERROR, renderizar_aviso_resultado
+from src.frontend.componentes.desarrollo_comprobacion import mostrar_desarrollo
 
 
 def renderizar_resultado_leontief(resultado: dict) -> None:
@@ -14,13 +15,14 @@ def renderizar_resultado_leontief(resultado: dict) -> None:
         renderizar_aviso_resultado(resultado.get("mensaje", "Error"), "close", CLASES_AVISO_ERROR)
         return
 
-    if estado == "SINGULAR":
+    if estado in {"SINGULAR", "SIN_SOLUCION", "SOLUCIONES_INFINITAS"}:
         with ui.row().classes("items-center gap-2 px-4 py-2 distintivo-error mb-4 w-fit"):
             ui.icon("warning_amber", size="sm")
             ui.label(resultado.get("mensaje")).classes("font-bold")
         condicion = resultado.get("hawkins_simon", {})
         if condicion:
             renderizar_hawkins_simon(condicion)
+        mostrar_desarrollo(resultado.get("traza_comprobacion", []))
         return
 
     with ui.row().classes("items-center gap-2 px-4 py-2 distintivo-exito mb-4 w-fit"):
@@ -41,6 +43,7 @@ def renderizar_resultado_leontief(resultado: dict) -> None:
 
     _renderizar_vector_produccion(resultado)
     _renderizar_analisis_sectorial(resultado)
+    mostrar_desarrollo(resultado.get("traza_comprobacion", []))
 
 
 def _renderizar_vector_produccion(resultado: dict) -> None:
@@ -111,6 +114,8 @@ def renderizar_hawkins_simon(condicion: dict) -> None:
         with ui.row().classes(f"items-center gap-2 px-4 py-2 {distintivo} mb-3 w-fit"):
             ui.icon(icono, size="sm")
             texto = "Condición de Hawkins-Simon: SATISFECHA ✓" if viable else "Condición de Hawkins-Simon: NO satisfecha ✗"
+            if condicion.get("criterio_aplicable") is False:
+                texto = "Condición de Hawkins-Simon: NO APLICABLE"
             ui.label(texto).classes("font-bold")
         ui.label(condicion.get("conclusion", "")).classes("text-sm texto-secundario mb-2")
         menores = condicion.get("menores_principales", [])

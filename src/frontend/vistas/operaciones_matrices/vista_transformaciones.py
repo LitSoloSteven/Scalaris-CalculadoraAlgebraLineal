@@ -1,6 +1,8 @@
 """Vista para capturar matrices y analizar transformaciones lineales."""
 
 from nicegui import ui
+from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
+from .limpieza_modelos import MixinLimpiezaModelos
 
 from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.navegacion import ruta_de
@@ -14,7 +16,7 @@ from .mixin_captura_transformaciones import MixinCapturaTransformaciones
 from .mixin_ejemplos_transformaciones import MixinEjemplosTransformaciones
 
 
-class VistaTransformaciones(MixinCalculoTransformaciones, MixinCapturaTransformaciones, MixinEjemplosTransformaciones):
+class VistaTransformaciones(MixinLimpiezaModelos, MixinCalculoTransformaciones, MixinCapturaTransformaciones, MixinEjemplosTransformaciones):
     """Vista completa de Transformaciones Lineales."""
 
     def __init__(self):
@@ -59,11 +61,15 @@ class VistaTransformaciones(MixinCalculoTransformaciones, MixinCapturaTransforma
     def _crear_accion_principal(self):
         """Construye crear accion principal conservando el orden de los elementos."""
         with ui.row().classes("w-full mt-6 gap-4"):
+            crear_boton_limpieza(self, lambda: not self.contenedor_resultados.is_deleted)
             ui.button(
                 "Analizar", icon="analytics",
                 on_click=lambda evento: self._analizar(evento.sender),
                 color=None,
             ).classes("boton-principal flex-[2] py-3").props("ripple=false")
+
+    def _campos_captura(self):
+        return [entrada for fila in self.entradas_coeficientes for entrada in fila] + self.entradas_variables
 
 
     def obtener_contexto_ia(self):

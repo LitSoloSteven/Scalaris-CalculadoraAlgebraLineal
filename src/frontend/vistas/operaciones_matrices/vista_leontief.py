@@ -1,6 +1,8 @@
 """Captura y composición de la vista del modelo insumo-producto de Leontief."""
 
 from nicegui import ui
+from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
+from .limpieza_modelos import MixinLimpiezaModelos
 from ._estados_modelos import mostrar_estado
 
 from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
@@ -14,7 +16,7 @@ from .mixin_captura_leontief import MixinCapturaLeontief
 from .mixin_ejemplos_leontief import MixinEjemplosLeontief
 
 
-class VistaLeontief(MixinCalculoLeontief, MixinCapturaLeontief, MixinEjemplosLeontief):
+class VistaLeontief(MixinLimpiezaModelos, MixinCalculoLeontief, MixinCapturaLeontief, MixinEjemplosLeontief):
     """Vista completa del Modelo de Leontief."""
 
     def __init__(self):
@@ -57,11 +59,15 @@ class VistaLeontief(MixinCalculoLeontief, MixinCapturaLeontief, MixinEjemplosLeo
     def _crear_accion_principal(self):
         """Construye crear accion principal conservando el orden de los elementos."""
         with ui.row().classes("w-full mt-6 gap-4"):
+            crear_boton_limpieza(self, lambda: not self.contenedor_resultados.is_deleted)
             ui.button(
                 "Calcular", icon="calculate",
                 on_click=lambda evento: self._calcular(evento.sender),
                 color=None
             ).classes("boton-principal flex-[2] py-3").props("ripple=false")
+
+    def _campos_captura(self):
+        return [entrada for fila in self.entradas_coeficientes for entrada in fila] + self.entradas_demanda + self.entradas_sectores
 
     def _restablecer_resultados(self):
         self.ultimo_resultado = None

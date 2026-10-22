@@ -2,7 +2,11 @@
 from nicegui import ui
 from src.backend.constantes import DIMENSION_MAXIMA_MODELOS, DIMENSION_MINIMA_LEONTIEF
 from functools import partial
-from src.frontend.componentes.cuadricula_base import crear_entradas_matriz
+from src.frontend.componentes.cuadricula_base import (
+    crear_entradas_matriz, ejecutar_transicion_cuadricula, selectores_cambio_dimension,
+    selector_dimension_matriz, actualizar_estados_botones_dimension,
+    indice_cambio_dimension,
+)
 from src.frontend.componentes.captura_modelos import crear_entradas_vector, crear_entradas_nombres
 
 
@@ -12,8 +16,9 @@ class MixinCapturaLeontief:
     def _construir_selector_tamano(self):
         with ui.row().classes("w-full items-center gap-3 mb-2"):
             ui.label("Tamaño n×n:").classes("text-sm font-bold texto-secundario")
-            ui.button(icon="remove", on_click=partial(self._ajustar_tamano, -1), color=None).classes("boton-icono w-7 h-7 p-0").props('ripple=false aria-label="Reducir dimension"')
-            ui.button(icon="add", on_click=partial(self._ajustar_tamano, 1), color=None).classes("boton-icono w-7 h-7 p-0").props('ripple=false aria-label="Aumentar dimension"')
+            self.boton_reducir = ui.button(icon="remove", on_click=partial(self._ajustar_tamano, -1), color=None).classes("boton-icono w-7 h-7 p-0").props('ripple=false aria-label="Reducir dimension"')
+            self.boton_aumentar = ui.button(icon="add", on_click=partial(self._ajustar_tamano, 1), color=None).classes("boton-icono w-7 h-7 p-0").props('ripple=false aria-label="Aumentar dimension"')
+        self._actualizar_botones_tamano()
 
     def _construir_panel_c(self):
         with ui.column().classes("w-full panel-tarjeta p-4 mb-4"):
@@ -37,11 +42,25 @@ class MixinCapturaLeontief:
             self.contenedor_sectores = ui.column().classes("w-full")
             self._generar_entradas_sectores()
 
-    def _ajustar_tamano(self, delta: int):
+    async def _ajustar_tamano(self, delta: int):
         nuevo_tamano = self.numero_sectores + delta
         if not (DIMENSION_MINIMA_LEONTIEF <= nuevo_tamano <= DIMENSION_MAXIMA_MODELOS):
             return
-        self.numero_sectores = nuevo_tamano
+        indice = indice_cambio_dimension(self.numero_sectores, nuevo_tamano)
+        selector = ",".join((selector_dimension_matriz("C", indice, ("fila", "columna")),
+                             selector_dimension_matriz("d", indice, ("columna",)),
+                             selector_dimension_matriz("Sector", indice, ("columna",))))
+        await ejecutar_transicion_cuadricula(
+            vars(self), selectores_cambio_dimension(selector, delta), partial(self._aplicar_tamano, nuevo_tamano),
+            (self.boton_reducir, self.boton_aumentar), self._actualizar_botones_tamano,
+        )
+
+    def _actualizar_botones_tamano(self):
+        actualizar_estados_botones_dimension(self.boton_reducir, self.boton_aumentar, self.numero_sectores,
+                                            DIMENSION_MINIMA_LEONTIEF, DIMENSION_MAXIMA_MODELOS)
+
+    def _aplicar_tamano(self, numero: int):
+        self.numero_sectores = numero
         self._generar_cuadricula()
         self._generar_entradas_demanda()
         self._generar_entradas_sectores()
@@ -49,6 +68,7 @@ class MixinCapturaLeontief:
 
     def _generar_cuadricula(self):
         self.entradas_coeficientes = crear_entradas_matriz(self.contenedor_coeficientes, (self.numero_sectores, self.numero_sectores), "C")
+        self._actualizar_botones_tamano()
 
     def _generar_entradas_demanda(self):
         self.entradas_demanda = crear_entradas_vector(self.contenedor_demanda, self.numero_sectores, "d")

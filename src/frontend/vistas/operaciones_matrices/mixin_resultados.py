@@ -14,6 +14,7 @@ from src.frontend.componentes.avisos_resultado import mostrar_error_inesperado
 from src.frontend.componentes.glosa_foco import crear_accion_explicacion
 from src.frontend.controladores.sesion_matricial import actualizar_contexto
 from src.frontend.controladores.captura_contexto import capturar_matrices
+from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
 
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos
 from src.frontend.controladores.operaciones_matrices import (
@@ -38,6 +39,7 @@ class MixinResultadosOperacionesMatrices:
         if getattr(self, "_calculando", False):
             return
         self._calculando = True
+        version = self._version_solicitud
         self.ultimo_resultado = None
         boton.props("loading")
         self.contenedor_resultados.clear()
@@ -46,38 +48,40 @@ class MixinResultadosOperacionesMatrices:
         try:
             await self._evaluar_nucleo(boton, expresion)
         except asyncio.CancelledError:
-            self.restablecer_resultados()
+            if not self.contenedor_resultados.is_deleted and version == self._version_solicitud:
+                self.restablecer_resultados()
             raise
         except Exception as error:
             self._mostrar_error_inesperado(error)
         finally:
             self._calculando = False
-            boton.props(remove="loading")
+            if not boton.is_deleted:
+                boton.props(remove="loading")
 
     def _mostrar_error_inesperado(self, error):
         """Muestra un mensaje accesible ante excepciones imprevistas."""
         registro.error("Error inesperado al evaluar la expresión: %s", type(error).__name__)
         mostrar_error_inesperado(self.contenedor_resultados)
 
-    def _obtener_matrices_json(self) -> str | None:
-        """Extrae el diccionario de matrices del panel de captura como JSON."""
-        return json.dumps(self.panel_captura_matrices.obtener_datos_crudos())
-
     async def _evaluar_nucleo(self, boton, expresion):
         """Ejecuta el cálculo en el controlador y dibuja la interfaz de resultados."""
         version = self._version_solicitud
         await asyncio.sleep(0.1)
+        if self.contenedor_resultados.is_deleted:
+            return
         if version != self._version_solicitud or self.entrada_expresion.value != expresion:
             self.restablecer_resultados()
             return
 
-        matrices_json = self._obtener_matrices_json()
-        if matrices_json is None:
-            return
-
-        respuesta_json = ControladorOperacionesMatrices.procesar_expresion(
-            expresion, matrices_json
+        calculo = await ejecutar_calculo_vigente(
+            self, lambda: {'expresion': self.entrada_expresion.value,
+                           'matrices': self.panel_captura_matrices.obtener_datos_crudos()},
+            lambda captura: ControladorOperacionesMatrices.procesar_expresion(
+                captura['expresion'], json.dumps(captura['matrices'])),
         )
+        if calculo is None:
+            return
+        respuesta_json, _ = calculo
         respuesta = json.loads(respuesta_json)
         self.ultimo_resultado = respuesta
 

@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 from nicegui import ui
+from src.backend.utilidades.estado_captura import captura_vacia
+from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
 
 from src.frontend.componentes.panel_ia import PanelIA
 from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
@@ -25,9 +27,19 @@ class VistaOperacionesMatrices(MixinResultadosOperacionesMatrices, MixinContexto
         self.reproductor_pasos = None
         self._version_solicitud = 0
 
+    def _al_borrar_cliente(self) -> None:
+        """Invalida evaluaciones pendientes y retira el temporizador del reproductor."""
+        self._version_solicitud += 1
+        if self.reproductor_pasos is not None:
+            self.reproductor_pasos.detener()
+            self.reproductor_pasos = None
+
     def restablecer_resultados(self):
         """Limpia los resultados y detiene cualquier reproducción activa."""
         self.ultimo_resultado = None
+        self._huella_resultado = None
+        if getattr(self, "panel_ia", None):
+            self.panel_ia.limpiar_foco_explicacion()
         self._version_solicitud += 1
         if getattr(self, 'reproductor_pasos', None) is not None:
             self.reproductor_pasos.detener()
@@ -43,7 +55,22 @@ class VistaOperacionesMatrices(MixinResultadosOperacionesMatrices, MixinContexto
 
     def _al_cambiar_matriz(self):
         """Notifica al panel de Glosa cuando cambian los datos de las matrices."""
+        if self.contenedor_resultados is not None and not self.contenedor_resultados.is_deleted:
+            self.restablecer_resultados()
         actualizar_contexto(self)
+
+    def limpiar_todo(self) -> None:
+        """Vacia matrices y expresion, retirando el resultado y su contexto."""
+        self.panel_captura_matrices.limpiar()
+        self.entrada_expresion.set_value("")
+        self.restablecer_resultados()
+        actualizar_contexto(self)
+
+    def esta_completamente_vacio(self) -> bool:
+        """Consulta el texto de todas las matrices y de la expresión."""
+        valores = (valor for matriz in self.panel_captura_matrices.matrices.values()
+                   for valor in matriz['cache'].values())
+        return captura_vacia(valores, False) and captura_vacia([self.entrada_expresion.value], False)
 
     def _navegar_a_inversa(self, nombre: str) -> None:
         """Valida y redirige a la vista de matriz inversa mediante handoff."""
@@ -71,15 +98,16 @@ class VistaOperacionesMatrices(MixinResultadosOperacionesMatrices, MixinContexto
             )
             self.entrada_expresion.on_value_change(lambda _: self._al_cambiar_matriz())
 
-            ui.button(
-                'Evaluar',
-                icon='calculate',
-                on_click=lambda evento: self.evaluar_expresion(evento.sender),
-                color=None,
-            ).classes('boton-principal w-full py-3').props('ripple=false')
+            with ui.row().classes('w-full gap-4'):
+                crear_boton_limpieza(self, lambda: not self.contenedor_resultados.is_deleted)
+                ui.button(
+                    'Evaluar', icon='calculate',
+                    on_click=lambda evento: self.evaluar_expresion(evento.sender), color=None,
+                ).classes('boton-principal flex-[2] py-3').props('ripple=false')
 
     def construir(self):
         """Construye los paneles de captura, expresión y resultados."""
+        ui.context.client.on_delete(self._al_borrar_cliente)
         self.panel_ia = PanelIA(self)
         crear_estructura_aplicacion(self, ruta_activa=ruta_de('matrices'))
         self.panel_captura_matrices.inyectar_recursos_cliente()

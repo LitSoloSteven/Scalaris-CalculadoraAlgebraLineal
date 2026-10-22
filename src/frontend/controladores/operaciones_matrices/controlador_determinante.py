@@ -19,6 +19,8 @@ class ControladorDeterminante:
     @staticmethod
     def procesar(datos_matriz: list[list[Any]], metodo: str = "auto") -> dict[str, Any]:
         """Calcula el determinante usando el algoritmo especificado o recomendado."""
+        if metodo not in ("auto", "laplace", "lu"):
+            raise ValueError("Metodo no reconocido. Elige cofactores o eliminacion con pivoteo.")
         dimension = len(datos_matriz)
         matriz = Matriz(dimension, dimension, datos_matriz)
         recomendacion = ResolutorDeterminante.recomendar_metodo(datos_matriz)
@@ -36,10 +38,21 @@ class ControladorDeterminante:
         return resultado
 
     @staticmethod
-    def procesar_captura(datos_crudos: dict) -> dict[str, Any]:
-        """Valida captura cuadrada y calcula por LU sin expansión recursiva de cofactores."""
+    def recomendar_captura(datos_crudos: dict) -> dict[str, Any]:
+        """Valida la captura y recomienda sin ejecutar ni cambiar el metodo de calculo."""
         matriz, _, error = validar_y_parsear_matriz_cuadrada(datos_crudos)
         if error:
             return error
-        resultado = ControladorDeterminante.procesar(matriz.datos, metodo="lu")
+        return {"estado": "EXITO", **ControladorDeterminante.obtener_recomendacion(matriz.datos)}
+
+    @staticmethod
+    def procesar_captura(datos_crudos: dict) -> dict[str, Any]:
+        """Valida captura y respeta el metodo elegido; devuelve errores sin sustituirlo."""
+        matriz, _, error = validar_y_parsear_matriz_cuadrada(datos_crudos)
+        if error:
+            return error
+        try:
+            resultado = ControladorDeterminante.procesar(matriz.datos, metodo=datos_crudos.get("metodo", "lu"))
+        except ValueError as error:
+            return {"estado": "ERROR", "mensaje": str(error), "pasos": []}
         return {"estado": "EXITO", **resultado}

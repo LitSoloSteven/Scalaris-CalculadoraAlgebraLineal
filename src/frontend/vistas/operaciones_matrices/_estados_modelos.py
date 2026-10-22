@@ -22,18 +22,29 @@ async def ejecutar_modelo(vista: Any, boton: Any, calcular: Callable[[], Awaitab
     if getattr(vista, "_calculando", False):
         return
     vista._calculando = True
+    revision = getattr(vista, '_revision_captura', 0)
     vista.ultimo_resultado = None
     boton.props("loading")
     mostrar_estado(vista.contenedor_resultados, "Calculando…", "CARGA")
     try:
         await asyncio.sleep(0)
-        await calcular()
+        if revision == getattr(vista, '_revision_captura', 0):
+            await calcular()
+        if vista.ultimo_resultado is None and not vista.contenedor_resultados.is_deleted:
+            vista._restablecer_resultados()
     except asyncio.CancelledError:
-        mostrar_estado(vista.contenedor_resultados, "Cálculo cancelado. Vuelve a calcular.")
+        if _puede_publicar(vista, revision):
+            mostrar_estado(vista.contenedor_resultados, "Cálculo cancelado. Vuelve a calcular.")
         raise
     except Exception:
         _REGISTRO.exception("No se pudo presentar el cálculo matricial")
-        mostrar_estado(vista.contenedor_resultados, "Error inesperado. Revisa los datos e inténtalo de nuevo.", "ERROR")
+        if _puede_publicar(vista, revision):
+            mostrar_estado(vista.contenedor_resultados, "Error inesperado. Revisa los datos e inténtalo de nuevo.", "ERROR")
     finally:
         vista._calculando = False
-        boton.props(remove="loading")
+        if not boton.is_deleted:
+            boton.props(remove="loading")
+
+
+def _puede_publicar(vista: Any, revision: int) -> bool:
+    return not vista.contenedor_resultados.is_deleted and revision == getattr(vista, '_revision_captura', 0)

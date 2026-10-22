@@ -1,11 +1,12 @@
 """Preparacion del contexto y senales de la captura de matriz inversa."""
+from copy import deepcopy
 from src.ai.contexto import (
-    ContextoIA, EstadoContexto, describir_matriz, generar_nota_ventana, sanear_cadena_usuario,
+    ContextoIA, EstadoContexto, describir_matriz, generar_nota_ventana,
 )
-from src.ai.huellas import esta_desactualizado
+from .captura_contexto import describir_captura, localizar_invalida
 from src.backend.constantes import DIMENSION_MAXIMA_CONTEXTO_INVERSA
 from src.backend.utilidades.formateadores import formatear_fraccion_texto
-from src.frontend.sugerencias import Senales, primera_celda_invalida
+from src.frontend.sugerencias import Senales
 
 
 def preparar_resultado_contexto(resultado: dict | None, dimension: int) -> dict | None:
@@ -32,11 +33,12 @@ def obtener_contexto_inversa(vista) -> ContextoIA:
     panel = vista.panel_matriz_cuadrada
     if panel.esta_vacio():
         return ContextoIA(herramienta='inversa', vista='Matriz inversa', etiqueta='Matriz A', entrada={}, estado=EstadoContexto(vacio=True))
-    datos = panel.obtener_datos_matriz()
-    descripcion = describir_matriz([[sanear_cadena_usuario(valor or '', 32) for valor in fila] for fila in datos])
+    descripcion, huella = describir_captura(vista)
+    descripcion = deepcopy(descripcion)
     contexto = ContextoIA(herramienta='inversa', vista='Matriz inversa', etiqueta=f'A ({panel.dimension}×{panel.dimension})', entrada={'A': descripcion})
     contexto.nota_ventana = generar_nota_ventana(descripcion)
-    contexto.desactualizado = esta_desactualizado({'datos': datos}, getattr(vista, '_huella_resultado', None))
+    huella_resultado = getattr(vista, '_huella_resultado', None)
+    contexto.desactualizado = huella_resultado is not None and huella != huella_resultado
     if not contexto.desactualizado:
         contexto.resultado = preparar_resultado_contexto(vista.ultimo_resultado, panel.dimension)
     return contexto
@@ -44,10 +46,7 @@ def obtener_contexto_inversa(vista) -> ContextoIA:
 
 def obtener_senales_inversa(vista) -> Senales:
     """Devuelve coordenadas invalidas y el estado del resultado que sigue vigente."""
-    datos = vista.panel_matriz_cuadrada.obtener_datos_matriz()
-    elementos = [(f'A[{fila+1},{columna+1}]', valor, (fila, columna))
-                 for fila, valores in enumerate(datos) for columna, valor in enumerate(valores)]
-    invalida = primera_celda_invalida(elementos)
+    invalida = deepcopy(localizar_invalida(vista))
     resultado = getattr(vista, 'ultimo_resultado', None)
     estado = 'sin_resultado'
     if resultado and not obtener_contexto_inversa(vista).desactualizado:

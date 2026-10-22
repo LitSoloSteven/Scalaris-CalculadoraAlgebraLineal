@@ -4,6 +4,7 @@ from __future__ import annotations
 import html
 from nicegui import ui
 from src.frontend.componentes.avisos_resultado import CLASES_AVISO_ERROR, renderizar_aviso_resultado
+from src.frontend.componentes.desarrollo_comprobacion import mostrar_desarrollo
 
 
 def renderizar_resultado_transformaciones(resultado: dict) -> None:
@@ -32,6 +33,7 @@ def renderizar_resultado_transformaciones(resultado: dict) -> None:
     _renderizar_nucleo(resultado, nulidad)
     _renderizar_imagen(resultado, rango)
     _renderizar_pasos(resultado)
+    mostrar_desarrollo(resultado.get("traza_comprobacion", []))
 
 
 def _renderizar_metricas_dimension(resultado: dict, filas: int, columnas: int, rango: int, nulidad: int) -> None:
