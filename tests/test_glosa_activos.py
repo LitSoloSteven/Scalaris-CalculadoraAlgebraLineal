@@ -51,7 +51,7 @@ def test_contrato_css_panel_lateral_y_disposicion():
     panel = Path('src/frontend/recursos/css/vistas_glosa_panel_lateral.css').read_text(encoding='utf-8')
     transicion_panel = panel.split('.glosa-panel-lateral {', 1)[1].split('}', 1)[0]
     assert "transform var(--dur-view-exit) var(--ease-std)" in transicion_panel
-    assert "visibility 0s var(--ease-std) var(--dur-view-exit)" in transicion_panel
+    assert "visibility var(--tiempo-instantaneo) var(--ease-std) var(--dur-view-exit)" in transicion_panel
 
     assert "100vh" not in contenido
     assert contenido.count("container-type: inline-size") == 4

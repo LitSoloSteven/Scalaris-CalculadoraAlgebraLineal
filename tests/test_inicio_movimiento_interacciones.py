@@ -43,13 +43,13 @@ def test_teclado_y_movimiento_reducido_desactivan_transformaciones():
     movimiento_reducido = bloque_css(css, "@media (prefers-reduced-motion: reduce)")
 
     assert "transition: none !important" in teclado
-    assert "transition-delay: 0ms !important" in teclado
+    assert "transition-delay: var(--tiempo-instantaneo) !important" in teclado
     assert ".inicio-dialogo-tarjeta" in teclado
     assert ".inicio-tarjeta" in teclado
     assert "inicio-capa-destacada" in teclado
     assert "transition: opacity var(--dur-reduced) var(--ease-std)" in movimiento_reducido
     assert "transform: none !important" in movimiento_reducido
-    assert "transition-delay: 0ms !important" in movimiento_reducido
+    assert "transition-delay: var(--tiempo-instantaneo) !important" in movimiento_reducido
     assert ".inicio-fila" in movimiento_reducido
     assert ".inicio-dialogo-tarjeta" in movimiento_reducido
     assert ".inicio-tarjeta" in movimiento_reducido

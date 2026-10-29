@@ -5,7 +5,7 @@ from tests.comun import RAIZ
 from tests.comun_javascript import leer_interacciones_cliente
 
 
-def test_cabecera_carga_catalogo_entre_tema_y_consumidores(monkeypatch):
+def test_cabecera_carga_catalogo_antes_de_tema_y_consumidores(monkeypatch):
     """La carga conserva el orden y registra una vez cada recurso del catálogo."""
     cabeceras = []
     monkeypatch.setattr(tema.ui, "add_head_html", cabeceras.append)
@@ -15,7 +15,7 @@ def test_cabecera_carga_catalogo_entre_tema_y_consumidores(monkeypatch):
     nombres = json.loads((RAIZ / "src/frontend/recursos/catalogo_interacciones.json").read_text(encoding="utf-8"))
     posiciones = [cabeceras[0].index(f'/assets/js/{nombre}') for nombre in nombres]
     assert posiciones == sorted(posiciones)
-    assert cabeceras[0].index('/assets/js/tema.js') < posiciones[0]
+    assert posiciones[-1] < cabeceras[0].index('/assets/js/tema.js')
     assert posiciones[-1] < cabeceras[0].index('/assets/js/cuadricula_compartida.js')
     assert all(cabeceras[0].count(f'/assets/js/{nombre}') == 1 for nombre in nombres)
 
