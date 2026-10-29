@@ -13,14 +13,14 @@ function recorrer(nodo, visitar) {
 
 function analizarTiempos(texto) {
   const arbol = acorn.parse(texto, { ecmaVersion: 'latest', sourceType: 'module' });
-  const literales = new Set(), errores = [];
+  const declaraciones = new Map(), errores = [];
   recorrer(arbol, nodo => {
-    if (nodo.type === 'VariableDeclarator' && nodo.id.type === 'Identifier' && esNumero(nodo.init)) {
-      literales.add(nodo.id.name);
+    if (nodo.type === 'VariableDeclarator' && nodo.id.type === 'Identifier') {
+      declaraciones.set(nodo.id.name, nodo.init);
     }
   });
   function esDuracion(nodo) {
-    return esNumero(nodo) || (nodo?.type === 'Identifier' && literales.has(nodo.name));
+    return esNumero(nodo, declaraciones, new Set());
   }
   recorrer(arbol, nodo => comprobarNodo(nodo, esDuracion, errores));
   return errores;
@@ -29,16 +29,27 @@ function analizarTiempos(texto) {
 function comprobarNodo(nodo, esDuracion, errores) {
   if (nodo.type === 'Property' && ['duration', 'delay'].includes(nodo.key.name || nodo.key.value) && esDuracion(nodo.value)) errores.push('duración literal');
   if (esLlamadaAnimate(nodo) && esDuracion(nodo.arguments[1])) errores.push('animate con duración literal');
-  if (nodo.type === 'Literal' && typeof nodo.value === 'string' && /cubic-bezier\s*\(/i.test(nodo.value)) errores.push('curva literal');
+  if (esCurvaLiteral(nodo)) errores.push('curva literal');
 }
 
 function esLlamadaAnimate(nodo) {
-  return nodo.type === 'CallExpression' && nodo.callee.type === 'MemberExpression' && nodo.callee.property.name === 'animate';
+  return nodo.type === 'CallExpression' && nodo.callee.type === 'MemberExpression' &&
+    (nodo.callee.property.name || nodo.callee.property.value) === 'animate';
 }
 
-function esNumero(nodo) {
-  return nodo?.type === 'Literal' && typeof nodo.value === 'number' ||
-    nodo?.type === 'UnaryExpression' && ['+', '-'].includes(nodo.operator) && esNumero(nodo.argument);
+function esCurvaLiteral(nodo) {
+  if (nodo.type === 'Literal' && typeof nodo.value === 'string') return /cubic-bezier\s*\(/i.test(nodo.value);
+  return nodo.type === 'TemplateLiteral' && nodo.quasis.some(parte => /cubic-bezier\s*\(/i.test(parte.value.raw));
+}
+
+function esNumero(nodo, declaraciones, vistos) {
+  if (!nodo) return false;
+  if (nodo.type === 'Literal') return typeof nodo.value === 'number';
+  if (nodo.type === 'UnaryExpression') return esNumero(nodo.argument, declaraciones, vistos);
+  if (nodo.type === 'BinaryExpression') return esNumero(nodo.left, declaraciones, new Set(vistos)) && esNumero(nodo.right, declaraciones, new Set(vistos));
+  if (nodo.type !== 'Identifier' || vistos.has(nodo.name)) return false;
+  vistos.add(nodo.name);
+  return esNumero(declaraciones.get(nodo.name), declaraciones, vistos);
 }
 
 if (require.main === module) {
