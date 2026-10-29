@@ -22,6 +22,7 @@
     });
     estado.boton.classList.remove('movimiento-compresion');
     if (estado.icono) estado.icono.textContent = 'delete';
+    estado.socket?.off('disconnect', estado.alDesconectar);
     if (recoleccionActiva === estado) recoleccionActiva = null;
     estado.resolver();
   }
@@ -77,7 +78,9 @@
 
   function filtrar_entradas_visibles(identificadores) {
     var entradasCompletas = identificadores.flatMap(function (identificador) {
-      var elemento = document.getElementById(identificador);
+      var referencia = window.getElement?.(identificador);
+      var idHtml = typeof identificador === 'number' ? 'c' + identificador : identificador;
+      var elemento = referencia?.$refs?.qRef?.$el || referencia?.$el || document.getElementById(idHtml);
       if (!elemento) return [];
       return elemento.matches?.('input') ? [elemento] : Array.from(elemento.querySelectorAll('input'));
     });
@@ -86,6 +89,19 @@
       return i.value && i.value.trim() !== '' &&
         r.bottom > 0 && r.top < window.innerHeight && r.right > 0 && r.left < window.innerWidth;
     });
+  }
+
+  function comprimirBoton(estado, vuelo) {
+    estado.boton.classList.add('movimiento-compresion');
+    programar(estado, function () {
+      estado.boton.classList.remove('movimiento-compresion');
+      if (estado.icono) estado.icono.textContent = 'delete';
+      estado.resolver();
+    }, vuelo);
+  }
+
+  function movimientoPermitido() {
+    return Boolean(window.scalaris.movimiento?.permitido?.());
   }
 
   function ejecutarRecoleccion(boton, elementoIcono, entradas, resolver, rechazar) {
@@ -99,6 +115,9 @@
       visibilidades: entradas.map(entrada => ({ valor: entrada.style.getPropertyValue('visibility'),
         prioridad: entrada.style.getPropertyPriority('visibility') })) };
     recoleccionActiva = estado;
+    estado.socket = window.socket;
+    estado.alDesconectar = () => restaurarRecoleccion(estado);
+    estado.socket?.on('disconnect', estado.alDesconectar);
 
     try {
       destinos.forEach(function (entrada, indice) {
@@ -116,24 +135,12 @@
     }
 
     var ultimoRetraso = Math.min((destinos.length - 1) * paso, limite);
-    programar(estado, function () {
-      boton.classList.add('movimiento-compresion');
-      programar(estado, function () {
-        boton.classList.remove('movimiento-compresion');
-        if (elementoIcono) {
-          elementoIcono.textContent = 'delete';
-        }
-        resolver();
-        programar(estado, () => restaurarRecoleccion(estado), vuelo);
-      }, vuelo);
-    }, ultimoRetraso + vuelo);
+    programar(estado, () => comprimirBoton(estado, vuelo), ultimoRetraso + vuelo);
   }
 
   function animarRecoleccionBasura(identificadores) {
     return new Promise(function (resolver, rechazar) {
-      var permitido = window.scalaris.movimiento && window.scalaris.movimiento.permitido ?
-        window.scalaris.movimiento.permitido() : false;
-      if (!permitido) {
+      if (!movimientoPermitido()) {
         resolver();
         return;
       }
@@ -162,4 +169,5 @@
 
   window.scalaris.animarRecoleccionBasura = animarRecoleccionBasura;
   window.scalaris.terminarRecoleccionBasura = function () { restaurarRecoleccion(recoleccionActiva); };
+  window.addEventListener?.('pagehide', window.scalaris.terminarRecoleccionBasura);
 }
