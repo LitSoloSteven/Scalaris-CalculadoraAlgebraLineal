@@ -1,7 +1,7 @@
 /** Escritura progresiva con texto seguro y finalización por clic. */
 {
     'use strict';
-    window.scalaris.efectoMaquinaEscribir = function (identificadorElemento, texto, velocidad) {
+    function escribirProgresivamente(identificadorElemento, texto, velocidad) {
         if (!window.scalaris.movimiento.permitido()) {
             var destino = document.getElementById(identificadorElemento);
             if (destino) destino.textContent = texto;
@@ -40,5 +40,10 @@
             elemento.removeEventListener('click', saltar);
         }
         escribir();
-    };
+    }
+
+    function registrarEscrituraProgresiva() {
+        window.scalaris.efectoMaquinaEscribir = escribirProgresivamente;
+    }
+    registrarEscrituraProgresiva();
 }
