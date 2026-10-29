@@ -48,8 +48,8 @@ def test_contrato_css_panel_lateral_y_disposicion():
     css_boton_flotante_abierto = contenido.split('html[data-glosa="abierto"] .glosa-boton-flotante')[1].split("}")[0]
     assert "visibility: hidden" in css_boton_flotante_abierto
 
-    assert contenido.count("transform 200ms") >= 3
-    assert contenido.count("visibility 0s linear 200ms") >= 3
+    assert "transform var(--dur-view-exit) var(--ease-std)" in contenido
+    assert "visibility 0s var(--ease-std) var(--dur-view-exit)" in contenido
 
     assert "100vh" not in contenido
     assert contenido.count("container-type: inline-size") == 4
