@@ -78,7 +78,7 @@
     font-size: var(--fs-body);
     font-weight: 600;
     box-shadow: var(--elev-1);
-    transition: transform var(--dur-fast) var(--ease-std);
+    transition: transform var(--dur-release) var(--ease-std);
 }
 
 .navegacion-accion::after {
@@ -89,7 +89,7 @@
     box-shadow: var(--elev-3);
     opacity: 0;
     pointer-events: none;
-    transition: opacity var(--dur-fast) var(--ease-std);
+    transition: opacity var(--dur-state) var(--ease-std);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -100,6 +100,12 @@
 
 .navegacion-accion:active {
     transform: scale(0.97);
+    transition-duration: var(--dur-press);
+}
+
+html[data-entrada="teclado"] .navegacion-accion,
+html[data-entrada="teclado"] .navegacion-accion::after {
+    transition: none !important;
 }
 
 .navegacion-activa {
