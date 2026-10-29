@@ -40,6 +40,20 @@ CAPTURA_RECTANGULAR_PEGAR = "Pegar"
 CAPTURA_RECTANGULAR_TOOLTIP = "Pegar matriz desde el portapapeles"
 CAPTURA_RECTANGULAR_EJES = (("filas", "Filas"), ("columnas", "Columnas"))
 CAPTURA_RECTANGULAR_ACCIONES = ((-1, "remove", "Quitar"), (1, "add", "Añadir"))
+LU_TITULO = "Factorización LU"
+LU_DESCRIPCION = "Descompón una matriz mediante pivoteo parcial."
+LU_CONVENCION = "P registra los intercambios de filas, L guarda los multiplicadores con 1 en la diagonal y U es escalonada. La singularidad no impide factorizar."
+LU_ORIENTACION = "Ingresa una matriz y pulsa Calcular factorización."
+LU_VACIA = "Ingresa al menos un valor antes de calcular."
+LU_CALCULAR = "Calcular factorización"
+LU_EJEMPLOS = "Ejemplos precargados"
+LU_DATOS = "Dimensiones: {filas} × {columnas} · Rango: {rango} · Convención: {convencion}"
+LU_VEREDICTO = "LU = PA: {veredicto}"
+LU_CORRECTO = "Correcto"
+LU_INCORRECTO = "Incorrecto"
+LU_LECTURAS = ("P registra los intercambios de filas.", "L contiene los multiplicadores de eliminación.", "U contiene la matriz escalonada.")
+LU_AYUDA = ("Cómo leer esta factorización: sigue los pivotes y compara los factores con PA.",)
+LU_FASES = ("Convención", "Eliminación con pivoteo parcial", "Factores", "Desarrollo de PA y comprobación")
 VISTA_PREVIA_LIMITE = "Vista previa disponible hasta {dimension}×{dimension}."
 VISTA_PREVIA_ERROR = "No se pudo generar la vista previa. Revisa la matriz."
 
