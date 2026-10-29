@@ -99,7 +99,8 @@ class VistaOperacionesMatrices(MixinResultadosOperacionesMatrices, MixinContexto
             self.entrada_expresion.on_value_change(lambda _: self._al_cambiar_matriz())
 
             with ui.row().classes('w-full gap-4'):
-                crear_boton_limpieza(self, lambda: not self.contenedor_resultados.is_deleted)
+                crear_boton_limpieza(self, lambda: not self.contenedor_resultados.is_deleted,
+                                      lambda: [self.panel_captura_matrices.contenedor, self.entrada_expresion])
                 ui.button(
                     'Evaluar', icon='calculate',
                     on_click=lambda evento: self.evaluar_expresion(evento.sender), color=None,
