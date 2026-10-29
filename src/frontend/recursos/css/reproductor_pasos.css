@@ -70,7 +70,7 @@
 @media (prefers-reduced-motion: reduce) {
     .repro-cuerpo {
         scroll-behavior: auto !important;
-        transition-duration: 0ms !important;
+        transition: none !important;
         animation: none !important;
     }
 }
