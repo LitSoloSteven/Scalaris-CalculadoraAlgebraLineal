@@ -5,6 +5,7 @@ from src.frontend.controladores.operaciones_matrices.codificador import (
 from src.frontend.controladores.operaciones_matrices.controlador_determinante import (
     ControladorDeterminante,
 )
+from src.frontend.controladores.operaciones_matrices.controlador_factorizacion_lu import ControladorFactorizacionLU
 from src.frontend.controladores.operaciones_matrices.controlador_leontief import (
     ControladorLeontief,
 )
@@ -18,6 +19,7 @@ from src.frontend.controladores.operaciones_matrices.controlador_transformacione
 __all__ = [
     "CodificadorMatriz",
     "ControladorDeterminante",
+    "ControladorFactorizacionLU",
     "ControladorLeontief",
     "ControladorOperacionesMatrices",
     "ControladorTransformaciones",

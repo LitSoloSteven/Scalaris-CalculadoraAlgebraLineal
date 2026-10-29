@@ -12,6 +12,7 @@ from src.frontend.controladores.operaciones_inversas import (
 from src.frontend.controladores.operaciones_matrices import (
     CodificadorMatriz,
     ControladorDeterminante,
+    ControladorFactorizacionLU,
     ControladorLeontief,
     ControladorOperacionesMatrices,
     ControladorTransformaciones,
@@ -33,6 +34,7 @@ from src.frontend.controladores.utilidades import (
 __all__ = [
     "CodificadorMatriz",
     "ControladorDeterminante",
+    "ControladorFactorizacionLU",
     "ControladorGauss",
     "ControladorGaussJordan",
     "ControladorGeometria",
