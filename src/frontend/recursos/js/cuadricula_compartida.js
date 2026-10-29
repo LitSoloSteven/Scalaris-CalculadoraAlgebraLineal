@@ -41,14 +41,14 @@
 
   function seleccionarCapas(entradas) {
     if (!entradas.length) return [];
-    const fila = entradas[0].closest('[data-cuadricula-fila], .q-row[data-matriz-fila]');
-    if (fila?.contains && fila.querySelectorAll && entradas.every(entrada => fila.contains(entrada)) &&
-        Array.from(fila.querySelectorAll('input')).every(entrada => entradas.includes(entrada))) return [fila];
-    const controles = [...new Set(entradas.map(entrada => entrada.closest('.q-field__control')).filter(Boolean))];
-    if (controles.length <= 10) return controles;
-    let contenedor = entradas[0].parentElement;
-    while (contenedor && !entradas.every(entrada => contenedor.contains(entrada))) contenedor = contenedor.parentElement;
-    return contenedor ? [contenedor] : [];
+    const seleccionadas = new Set(entradas);
+    const filas = new Set(entradas.map(entrada => entrada.closest('[data-cuadricula-fila], .q-row[data-matriz-fila]')));
+    const filasCompletas = [...filas].filter(fila => fila?.querySelectorAll &&
+      Array.from(fila.querySelectorAll('input')).every(entrada => seleccionadas.has(entrada)));
+    if (filasCompletas.length > 10) return [];
+    const controles = entradas.filter(entrada => !filasCompletas.some(fila => fila.contains(entrada)))
+      .map(entrada => entrada.closest('.q-field__control')).filter(Boolean);
+    return [...filasCompletas, ...new Set(controles)].slice(0, 10);
   }
 
   async function animarCeldas(elementos, fotogramas, tokenDuracion) {

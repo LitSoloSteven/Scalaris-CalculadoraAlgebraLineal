@@ -10,7 +10,9 @@
         var elemento = document.getElementById(identificadorElemento);
         if (!elemento) return;
         var duracionMaxima = window.scalaris.movimiento.duracion('--dur-didactic');
-        velocidad = Math.min(velocidad || duracionMaxima / 50, duracionMaxima / Math.max(texto.length, 1));
+        var duracionTotal = velocidad > 0 ? Math.min(velocidad * texto.length, duracionMaxima) : duracionMaxima;
+        var intervalo = window.scalaris.movimiento.duracion('--stagger-step');
+        var inicio = Date.now();
         elemento.innerHTML = '<span class="escritura-texto"></span><span class="escritura-cursor">▌</span>';
         var fragmentoTexto = elemento.querySelector('.escritura-texto');
         var cursor = elemento.querySelector('.escritura-cursor');
@@ -24,13 +26,12 @@
         };
         elemento.addEventListener('click', saltar);
         function escribir() {
+            var transcurrido = Date.now() - inicio;
+            indice = duracionTotal > 0 ? Math.max(1, Math.ceil(texto.length * transcurrido / duracionTotal)) : texto.length;
+            fragmentoTexto.textContent = texto.slice(0, indice);
             if (indice < texto.length) {
-                fragmentoTexto.textContent += texto.charAt(indice);
-                indice++;
-                if (indice < texto.length) {
-                    temporizador = setTimeout(escribir, velocidad);
-                    return;
-                }
+                temporizador = setTimeout(escribir, Math.min(intervalo, duracionTotal - transcurrido));
+                return;
             }
             cursor.style.display = 'none';
             elemento.removeEventListener('click', saltar);

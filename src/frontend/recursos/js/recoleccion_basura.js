@@ -38,12 +38,10 @@
     return clon;
   }
 
-  function animarTrayectoria(clon, entrada, rectangulo, rectanguloBoton, retraso) {
-    entrada.style.color = 'transparent';
+  function animarTrayectoria(clon, rectangulo, rectanguloBoton, retraso) {
     document.body.appendChild(clon);
 
     setTimeout(function () {
-      entrada.value = '';
       var destinoHorizontal = rectanguloBoton.left + rectanguloBoton.width / 2 - rectangulo.width / 2;
       var destinoVertical = rectanguloBoton.top + rectanguloBoton.height / 2 - rectangulo.height / 2;
       clon.style.transform = 'translate(' + (destinoHorizontal - rectangulo.left) + 'px, ' + (destinoVertical - rectangulo.top) + 'px) scale(0.1)';
@@ -71,13 +69,10 @@
     var limite = movimiento.duracion('--stagger-max');
     var vuelo = movimiento.duracion('--dur-panel');
 
-    document.querySelectorAll('.matriz-entrada input').forEach(function (entrada) {
-      if (!destinos.includes(entrada)) entrada.value = '';
-    });
     destinos.forEach(function (entrada, indice) {
       var rectangulo = entrada.getBoundingClientRect();
       var clon = crearClon(entrada, rectangulo);
-      animarTrayectoria(clon, entrada, rectangulo, rectanguloBoton, Math.min(indice * paso, limite));
+      animarTrayectoria(clon, rectangulo, rectanguloBoton, Math.min(indice * paso, limite));
     });
 
     var ultimoRetraso = Math.min((destinos.length - 1) * paso, limite);
@@ -88,9 +83,6 @@
         if (elementoIcono) {
           elementoIcono.textContent = 'delete';
         }
-        document.querySelectorAll('.matriz-entrada input').forEach(function (i) {
-          i.style.color = '';
-        });
         resolver();
       }, vuelo);
     }, ultimoRetraso + vuelo);
