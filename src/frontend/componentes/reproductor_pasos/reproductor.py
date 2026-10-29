@@ -147,7 +147,7 @@ class ReproductorPasos:
             self._pausar_reproduccion()
             return
         if self.indice_actual == len(self.pasos) - 1:
-            self.ir_a(0)
+            self.ir_a(0, autoreproduccion=True)
         self.temporizador.active = True
         self.boton_reproducir.props('icon=pause')
 
