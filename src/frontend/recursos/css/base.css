@@ -142,6 +142,7 @@ html .texto-acento {
 [class*="q-transition--"][class*="-enter-active"],
 [class*="q-transition--"][class*="-leave-active"] {
     --q-transition-easing: var(--ease-std);
+    transition-timing-function: var(--ease-std) !important;
 }
 
 .q-dialog__inner[class*="-leave-active"],
@@ -173,6 +174,15 @@ html[data-entrada="teclado"] .q-expansion-item__content {
     animation: none !important;
 }
 
+html[data-entrada="teclado"] .q-expansion-item__content {
+    height: auto !important;
+    overflow: visible !important;
+}
+
+html[data-entrada="teclado"] .q-expansion-item--collapsed .q-expansion-item__content {
+    display: none !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
     .q-notification,
     [class*="q-transition--"] {
@@ -181,5 +191,10 @@ html[data-entrada="teclado"] .q-expansion-item__content {
     }
     .q-expansion-item__content {
         transition: none !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+    .q-expansion-item--collapsed .q-expansion-item__content {
+        display: none !important;
     }
 }
