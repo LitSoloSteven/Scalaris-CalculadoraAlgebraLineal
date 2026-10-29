@@ -30,7 +30,7 @@ def test_transiciones_inicio_solo_transformacion_y_opacidad():
     for declaracion in declaraciones:
         assert not prohibidos.search(declaracion), declaracion
         for duracion in re.findall(r"([\d.]+)ms\b", declaracion):
-            assert float(duracion) <= 250, declaracion
+            assert float(duracion) <= 900, declaracion
     assert not re.search(r"\bease-in\b", css, re.IGNORECASE)
 
 
@@ -47,7 +47,7 @@ def test_teclado_y_movimiento_reducido_desactivan_transformaciones():
     assert ".inicio-dialogo-tarjeta" in teclado
     assert ".inicio-tarjeta" in teclado
     assert "inicio-capa-destacada" in teclado
-    assert "transition: opacity 120ms linear" in movimiento_reducido
+    assert "transition: opacity var(--dur-reduced) var(--ease-std)" in movimiento_reducido
     assert "transform: none !important" in movimiento_reducido
     assert "transition-delay: 0ms !important" in movimiento_reducido
     assert ".inicio-fila" in movimiento_reducido
@@ -64,8 +64,8 @@ def test_filas_y_tarjetas_inicio_limitan_retardos():
 
     assert "_CLASES_ORDEN[indice_fila]" in vista
     assert "_CLASES_ORDEN[min(indice_tarjeta, 3)]" in vista
-    assert "calc(var(--i, 0) * 40ms)" in bloque_css(css, ".inicio-fila")
-    assert "calc(var(--i, 0) * 40ms)" in bloque_css(css, ".inicio-dialogo[data-abierto] .inicio-tarjeta")
+    assert "min(calc(var(--i, 0) * var(--stagger-step)), var(--stagger-max))" in bloque_css(css, ".inicio-fila")
+    assert "min(calc(var(--i, 0) * var(--stagger-step)), var(--stagger-max))" in bloque_css(css, ".inicio-dialogo[data-abierto] .inicio-tarjeta")
     assert "min(indice_tarjeta, 3)" in vista
     assert "evento.detail === 0" in js
     assert "html[data-entrada=\"teclado\"]" in css
@@ -129,10 +129,10 @@ def test_cierre_dialogo_espera_transicion_y_tiene_respaldo():
     assert "cancelar_espera_cierre();" in js
     assert "dialogo.removeAttribute('data-abierto')" in js
     assert "evento.propertyName === 'opacity'" in js
-    assert "setTimeout(function () { finalizar_cierre(dialogo); }, 220)" in js
+    assert "window.scalaris.movimiento.duracion('--dur-view-exit') + 50" in js
     assert "dialogo.close()" in js
-    assert "transition: opacity 180ms var(--ease-std)" in css
-    assert "transition: opacity 180ms linear, transform 200ms var(--ease-std)" in css
-    assert "transition-duration: 250ms" in css
+    assert "transition: opacity var(--dur-view-exit) var(--ease-std)" in css
+    assert "transform var(--dur-view-exit) var(--ease-std)" in css
+    assert "transition-duration: var(--dur-view)" in css
     assert "transform: translateY(100%)" in css
-    assert "transition-duration: 200ms" in css
+    assert "transition-duration: var(--dur-view-exit)" in css

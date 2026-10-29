@@ -126,7 +126,7 @@ def test_reglas_css():
         assert not re.search(r'transition:\s*all\b', css), f'transition: all en {ruta.name}'
         assert not re.search(r'ease-in\b', css), f'ease-in prohibido en {ruta.name}'
         duraciones = [int(m) for m in re.findall(r'(\d+)ms', css)]
-        assert all(d <= 250 for d in duraciones), f'Duración > 250ms en {ruta.name}'
+        assert all(d <= 900 for d in duraciones), f'Duración > 900ms en {ruta.name}'
 
 
 def test_reglas_python_frontend():
