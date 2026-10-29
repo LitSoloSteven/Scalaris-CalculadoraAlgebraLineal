@@ -211,6 +211,8 @@
     if (window.__scalarisInicioDelegado) return;
     window.__scalarisInicioDelegado = true;
     document.addEventListener('pointerdown', function (evento) {
+      let fila = evento.target.closest('.inicio-fila');
+      if (fila) fila.setAttribute('data-interaccion', '');
       let tarjeta = evento.target.closest('.inicio-dialogo[data-abierto] .inicio-tarjeta');
       if (tarjeta) tarjeta.closest('.inicio-dialogo').setAttribute('data-interaccion', '');
     }, true);

@@ -4,15 +4,16 @@
 {
   window.scalaris = window.scalaris || {};
   const FOTOGRAMAS_ENTRADA = [
-    { opacity: 0, transform: 'scale(0.95) translateY(4px)' },
+    { opacity: 0, transform: 'scale(0.95) translateY(16px)' },
     { opacity: 1, transform: 'scale(1) translateY(0)' }
   ];
   const FOTOGRAMAS_SALIDA = [
     { opacity: 1, transform: 'scale(1) translateY(0)' },
-    { opacity: 0, transform: 'scale(0.95) translateY(-4px)' }
+    { opacity: 0, transform: 'scale(0.95) translateY(16px)' }
   ];
   const avisosActivos = new WeakMap();
   const animacionesActivas = new WeakMap();
+  const capasPorEntrada = new WeakMap();
 
   /** Consulta la política compartida de teclado y movimiento reducido. */
   function movimientoActivo() {
@@ -22,9 +23,11 @@
   /** Retira únicamente animaciones de captura para devolver las celdas a su estado visible. */
   function restaurarCeldas(elementos) {
     Array.from(elementos).forEach(entrada => {
-      const control = entrada.closest('.q-field__control');
+      const control = capasPorEntrada.get(entrada) || entrada.closest('.q-field__control');
+      if (!control) return;
       animacionesActivas.get(control)?.cancel?.();
       animacionesActivas.delete(control);
+      capasPorEntrada.delete(entrada);
     });
   }
 
@@ -36,19 +39,32 @@
     });
   }
 
-  async function animarCeldas(elementos, fotogramas, duracion) {
+  function seleccionarCapas(entradas) {
+    if (!entradas.length) return [];
+    const fila = entradas[0].closest('[data-cuadricula-fila], .q-row[data-matriz-fila]');
+    if (fila?.contains && fila.querySelectorAll && entradas.every(entrada => fila.contains(entrada)) &&
+        Array.from(fila.querySelectorAll('input')).every(entrada => entradas.includes(entrada))) return [fila];
+    const controles = [...new Set(entradas.map(entrada => entrada.closest('.q-field__control')).filter(Boolean))];
+    if (controles.length <= 10) return controles;
+    let contenedor = entradas[0].parentElement;
+    while (contenedor && !entradas.every(entrada => contenedor.contains(entrada))) contenedor = contenedor.parentElement;
+    return contenedor ? [contenedor] : [];
+  }
+
+  async function animarCeldas(elementos, fotogramas, tokenDuracion) {
     restaurarCeldas(elementos);
     if (!movimientoActivo()) return;
-    const controles = [...new Set(Array.from(elementos).map(entrada => entrada.closest('.q-field__control')).filter(Boolean))];
+    const entradas = Array.from(elementos);
+    const controles = seleccionarCapas(entradas);
     const animaciones = new Map();
-    const paso = Math.min(15, 120 / Math.max(controles.length, 1));
+    const movimiento = window.scalaris.movimiento;
     try {
-      controles.forEach((control, indice) => {
+      controles.forEach(control => {
         const animacion = control.animate(fotogramas, {
-          duration: duracion, delay: indice * paso,
-          easing: 'cubic-bezier(0.32, 0.72, 0, 1)', fill: 'forwards'
+          duration: movimiento.duracion(tokenDuracion), easing: movimiento.curva(), fill: 'forwards'
         });
         animacionesActivas.set(control, animacion);
+        entradas.forEach(entrada => { if (control === entrada.closest('.q-field__control') || control.contains?.(entrada)) capasPorEntrada.set(entrada, control); });
         animacion.finished.catch(() => {});
         animaciones.set(control, animacion);
       });
@@ -61,12 +77,12 @@
 
   /** Espera la entrada de todas las celdas que tienen un control visual. */
   function animarEntradaCeldas(elementos) {
-    return animarCeldas(elementos, FOTOGRAMAS_ENTRADA, 180);
+    return animarCeldas(elementos, FOTOGRAMAS_ENTRADA, '--dur-panel');
   }
 
   /** Espera la salida de las celdas con una duración menor que la entrada. */
   function animarSalidaCeldas(elementos) {
-    return animarCeldas(elementos, FOTOGRAMAS_SALIDA, 140);
+    return animarCeldas(elementos, FOTOGRAMAS_SALIDA, '--dur-panel-exit');
   }
 
   function animarAvisoCelda(contenedor) {

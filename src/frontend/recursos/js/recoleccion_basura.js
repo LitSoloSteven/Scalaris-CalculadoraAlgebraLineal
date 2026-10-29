@@ -30,7 +30,9 @@
     clon.style.fontFamily = estiloEntrada.fontFamily;
     clon.style.fontSize = estiloEntrada.fontSize;
     clon.style.color = estiloEntrada.color;
-    clon.style.transition = 'transform 160ms cubic-bezier(0.32, 0.72, 0, 1), opacity 160ms cubic-bezier(0.32, 0.72, 0, 1)';
+    var movimiento = window.scalaris.movimiento;
+    var transicion = movimiento.duracion('--dur-panel') + 'ms ' + movimiento.curva();
+    clon.style.transition = 'transform ' + transicion + ', opacity ' + transicion;
     clon.style.pointerEvents = 'none';
     clon.style.overflow = 'hidden';
     return clon;
@@ -50,7 +52,7 @@
 
     setTimeout(function () {
       clon.remove();
-    }, retraso + 160);
+    }, retraso + window.scalaris.movimiento.duracion('--dur-panel'));
   }
 
   function filtrar_entradas_visibles() {
@@ -59,22 +61,26 @@
       var r = i.getBoundingClientRect();
       return i.value && i.value !== '0' && i.value.trim() !== '' &&
         r.bottom > 0 && r.top < window.innerHeight && r.right > 0 && r.left < window.innerWidth;
-    }).slice(0, 40);
+    }).slice(0, 8);
   }
 
   function ejecutarRecoleccion(boton, elementoIcono, destinos, resolver) {
     var rectanguloBoton = boton.getBoundingClientRect();
-    var paso = Math.max(1, Math.floor(90 / destinos.length));
-    var retrasoAcumulado = 0;
+    var movimiento = window.scalaris.movimiento;
+    var paso = movimiento.duracion('--stagger-step');
+    var limite = movimiento.duracion('--stagger-max');
+    var vuelo = movimiento.duracion('--dur-panel');
 
-    destinos.forEach(function (entrada) {
+    document.querySelectorAll('.matriz-entrada input').forEach(function (entrada) {
+      if (!destinos.includes(entrada)) entrada.value = '';
+    });
+    destinos.forEach(function (entrada, indice) {
       var rectangulo = entrada.getBoundingClientRect();
       var clon = crearClon(entrada, rectangulo);
-      animarTrayectoria(clon, entrada, rectangulo, rectanguloBoton, retrasoAcumulado);
-      retrasoAcumulado += paso;
+      animarTrayectoria(clon, entrada, rectangulo, rectanguloBoton, Math.min(indice * paso, limite));
     });
 
-    var duracionMedia = (window.scalaris.movimiento && window.scalaris.movimiento.medio) || 240;
+    var ultimoRetraso = Math.min((destinos.length - 1) * paso, limite);
     setTimeout(function () {
       boton.classList.add('movimiento-compresion');
       setTimeout(function () {
@@ -86,8 +92,8 @@
           i.style.color = '';
         });
         resolver();
-      }, duracionMedia);
-    }, retrasoAcumulado + 160);
+      }, vuelo);
+    }, ultimoRetraso + vuelo);
   }
 
   function animarRecoleccionBasura() {
