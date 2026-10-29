@@ -6,6 +6,7 @@ const sistemaArchivos = require("node:fs");
 const rutas = require("node:path");
 const maquinaVirtual = require("node:vm");
 const { cargarAssetCliente } = require("./comun_cliente_javascript.js");
+const { estilosMovimiento } = require("./comun_tokens_movimiento.js");
 
 const ARCHIVOS_CLIENTE = JSON.parse(sistemaArchivos.readFileSync(
     rutas.join(__dirname, "../src/frontend/recursos/catalogo_interacciones.json"), "utf8",
@@ -33,6 +34,7 @@ function crearClienteSimulado() {
     const ventana = { innerWidth: 800, innerHeight: 600, matchMedia: () => ({ matches: false }) };
     const contexto = maquinaVirtual.createContext({
         window: ventana, document: documento, Date,
+        getComputedStyle: estilosMovimiento,
         MutationObserver: class { observe() {} },
         setTimeout: (manejador, espera) => temporizadores.push({ manejador, espera }),
         clearTimeout: identificador => { if (identificador) temporizadores[identificador - 1].cancelado = true; },

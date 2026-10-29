@@ -2,6 +2,7 @@
 
 const maquinaVirtual = require("node:vm");
 const { cargarAssetCliente } = require("./comun_cliente_javascript.js");
+const { estilosMovimiento } = require("./comun_tokens_movimiento.js");
 
 /** Observa el estado visual y la limpieza de las animaciones de tema. */
 function crearRaizTema(atributos, animaciones) {
@@ -45,6 +46,7 @@ function crearTemaSimulado(temaInicial = null, ancho = 1200) {
     };
     const contexto = maquinaVirtual.createContext({
         window: ventana, document: documento, localStorage: almacenamiento,
+        getComputedStyle: estilosMovimiento,
         setTimeout: (manejador, espera) => temporizadores.push({ manejador, espera }),
     });
     return {
