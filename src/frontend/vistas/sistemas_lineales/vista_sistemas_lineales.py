@@ -142,6 +142,9 @@ class VistaSistemasLineales(
         """Aplica la matriz del token de handoff entrante si existe."""
         procesar_transferencia_matriz(self, token_transferencia)
 
+    def _campos_visuales_limpieza(self) -> list:
+        return [self.cuadricula.contenedor_matriz, *self.entradas_ecuaciones]
+
     def obtener_contexto_ia(self):
         """Devuelve el contexto pedagógico del sistema y su resultado vigente."""
         return obtener_contexto_sistema(self)

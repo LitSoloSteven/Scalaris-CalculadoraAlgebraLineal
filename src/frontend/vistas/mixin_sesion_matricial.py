@@ -79,7 +79,9 @@ class MixinSesionMatricial:
 
     def _obtener_limpieza(self) -> LimpiezaCaptura:
         if not hasattr(self, 'control_limpieza'):
-            self.control_limpieza = LimpiezaCaptura(self, lambda: not self.contenedor_resultados.is_deleted)
+            self.control_limpieza = LimpiezaCaptura(
+                self, lambda: not self.contenedor_resultados.is_deleted, getattr(self, '_campos_visuales_limpieza', None),
+            )
         return self.control_limpieza
 
     def _construir_boton_limpieza(self) -> None:
