@@ -1,5 +1,5 @@
 /** Escritura progresiva con texto seguro y finalización por clic. */
-(function registrarEscrituraProgresiva() {
+{
     'use strict';
     window.scalaris.efectoMaquinaEscribir = function (identificadorElemento, texto, velocidad) {
         if (!window.scalaris.movimiento.permitido()) {
@@ -41,4 +41,4 @@
         }
         escribir();
     };
-})();
+}

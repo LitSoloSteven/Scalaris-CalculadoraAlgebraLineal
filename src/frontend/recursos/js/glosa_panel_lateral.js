@@ -100,7 +100,7 @@
         }
 
         const anchoDespues = medirAnchoVista(raizVista);
-        const tokenDuracion = nuevoEstado === 'abierto' ? '--dur-view' : '--dur-view-exit';
+        const tokenDuracion = { abierto: '--dur-view', cerrado: '--dur-view-exit' }[nuevoEstado];
         animarDesplazamiento(objetosDesplazables, mapaAntes, instantaneo, modo, [anchoAntes, anchoDespues, tokenDuracion]);
         actualizarAtributosPanel(nuevoEstado, modo);
         gestionarTrampasFoco(nuevoEstado, modo, opciones);
