@@ -124,12 +124,12 @@
         padding: var(--space-5);
         padding-block-end: calc(var(--space-5) + env(safe-area-inset-bottom));
         transform: translateY(100%);
-        transition-duration: 200ms;
+        transition-duration: var(--dur-view-exit);
     }
 
     .inicio-dialogo[open][data-abierto] .inicio-dialogo-tarjeta {
         transform: translateY(0);
-        transition-duration: 250ms;
+        transition-duration: var(--dur-view);
     }
 
     @starting-style {
@@ -272,7 +272,7 @@ html[data-entrada="teclado"] .inicio-capa-destacada {
     .inicio-tarjeta,
     .inicio-tarjeta::after {
         transform: none !important;
-        transition: opacity 120ms linear;
+        transition: opacity var(--dur-reduced) var(--ease-std);
         transition-delay: 0ms !important;
     }
 

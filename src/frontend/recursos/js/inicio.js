@@ -144,7 +144,7 @@
       if (evento.target === tarjeta && evento.propertyName === 'opacity') finalizar_cierre(dialogo);
     };
     tarjeta.addEventListener('transitionend', manejar_transicion_cierre);
-    temporizadorCierre = setTimeout(function () { finalizar_cierre(dialogo); }, 220);
+    temporizadorCierre = setTimeout(function () { finalizar_cierre(dialogo); }, window.scalaris.movimiento.duracion('--dur-view-exit') + 50);
   }
 
   function esta_halo_deshabilitado(evento) {
