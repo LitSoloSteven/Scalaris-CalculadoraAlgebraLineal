@@ -10,9 +10,9 @@
     };
 
     function animarDesplazamiento(objetos, antes, instantaneo, modo, anchos) {
-        const [anchoAntes, anchoDespues] = anchos;
-        if (!instantaneo && anchoAntes === anchoDespues && modo === 'desplazar') {
-            const duracion = window.scalaris.movimiento.duracion('--dur-view');
+        const [anchoAntes, anchoDespues, tokenDuracion] = anchos;
+        if (!instantaneo && anchoAntes === anchoDespues && modo === 'desplazar' && window.scalaris.movimiento) {
+            const duracion = window.scalaris.movimiento.duracion(tokenDuracion);
             const curva = window.scalaris.movimiento.curva();
             objetos.forEach(elemento => {
                 const previo = antes.get(elemento);
@@ -100,7 +100,8 @@
         }
 
         const anchoDespues = medirAnchoVista(raizVista);
-        animarDesplazamiento(objetosDesplazables, mapaAntes, instantaneo, modo, [anchoAntes, anchoDespues]);
+        const tokenDuracion = nuevoEstado === 'abierto' ? '--dur-view' : '--dur-view-exit';
+        animarDesplazamiento(objetosDesplazables, mapaAntes, instantaneo, modo, [anchoAntes, anchoDespues, tokenDuracion]);
         actualizarAtributosPanel(nuevoEstado, modo);
         gestionarTrampasFoco(nuevoEstado, modo, opciones);
 
