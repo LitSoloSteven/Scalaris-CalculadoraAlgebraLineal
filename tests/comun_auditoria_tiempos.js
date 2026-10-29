@@ -30,6 +30,14 @@ function comprobarNodo(nodo, esDuracion, errores) {
   if (nodo.type === 'Property' && ['duration', 'delay'].includes(nodo.key.name || nodo.key.value) && esDuracion(nodo.value)) errores.push('duración literal');
   if (esLlamadaAnimate(nodo) && esDuracion(nodo.arguments[1])) errores.push('animate con duración literal');
   if (esCurvaLiteral(nodo)) errores.push('curva literal');
+  if (esTemporizadorAnimado(nodo, esDuracion)) errores.push('retardo literal de animación');
+}
+
+function esTemporizadorAnimado(nodo, esDuracion) {
+  if (nodo.type !== 'CallExpression' || nodo.callee.name !== 'setTimeout' || !esDuracion(nodo.arguments[1])) return false;
+  let anima = false;
+  recorrer(nodo.arguments[0], hijo => { if (esLlamadaAnimate(hijo)) anima = true; });
+  return anima;
 }
 
 function esLlamadaAnimate(nodo) {

@@ -11,6 +11,7 @@ prueba('detecta duraciones literales aun con fotogramas anidados y constantes', 
     'const a = 180; const b = a; elemento.animate(f, {duration:b})',
     'elemento.animate(f, {duration:100 + 80})',
     "elemento['animate'](f, 180)",
+    'setTimeout(() => elemento.animate(f, opciones), 180)',
     "elemento.animate(f, {easing:'cubic-bezier(0,0,0,1)'})",
     'elemento.animate(f, {easing:`cubic-bezier(0,0,0,1)`})',
   ]) afirmar.notEqual(analizarTiempos(codigo).length, 0, codigo);
