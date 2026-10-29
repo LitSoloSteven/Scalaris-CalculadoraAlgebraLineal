@@ -1,6 +1,7 @@
 """Extracción estática de código cliente emitido por Python y publicado en recursos."""
 import ast
 import json
+import re
 import subprocess
 
 from tests.comun import RAIZ
@@ -50,10 +51,15 @@ def _fragmentos_arbol(arbol, resolutor, padres, contexto, solo_emisiones=False):
     for nodo in ast.walk(arbol):
         if isinstance(padres.get(nodo), (ast.JoinedStr, ast.BinOp)): continue
         if isinstance(nodo, ast.Name) and nodo not in argumentos: continue
-        encontrados.extend((nombre_archivo, nodo.lineno, cadena)
+        encontrados.extend((nombre_archivo, nodo.lineno, _expresion_propiedad(cadena))
                            for cadena in resolutor.variantes(nodo)
                            if nodo in argumentos or (not solo_emisiones and "window." in cadena))
     return encontrados
+
+
+def _expresion_propiedad(cadena):
+    coincidencia = re.fullmatch(r':[^=]+="([^"]*)"', cadena)
+    return coincidencia.group(1) if coincidencia else cadena
 
 
 def analizar_cliente(fragmentos: list[str], recursos: list[str]) -> dict:

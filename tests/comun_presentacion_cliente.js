@@ -1,6 +1,7 @@
 "use strict";
 const maquinaVirtual = require("node:vm");
 const { cargarAssetCliente } = require("./comun_cliente_javascript.js");
+const { estilosMovimiento } = require("./comun_tokens_movimiento.js");
 
 /** Reloj determinista que espera las promesas producidas por cada tarea. */
 function crearReloj() {
@@ -12,16 +13,14 @@ function crearReloj() {
         return identificador;
     }
     async function avanzar(destino) {
-        await Promise.resolve();
-        await Promise.resolve();
+        for (let indice = 0; indice < 8; indice++) await Promise.resolve();
         let pendiente;
         while ((pendiente = [...tareas].filter(([, tarea]) => tarea.instante <= destino)
             .sort((a, b) => a[1].instante - b[1].instante)[0])) {
             tiempo = pendiente[1].instante;
             tareas.delete(pendiente[0]);
             pendiente[1].accion();
-            await Promise.resolve();
-            await Promise.resolve();
+            for (let indice = 0; indice < 8; indice++) await Promise.resolve();
         }
         tiempo = destino;
     }
@@ -48,6 +47,7 @@ function crearEventos() {
 /** Modelo del DOM limitado a los elementos y animaciones de la presentación. */
 function crearDocumento(reloj, opciones) {
     const animaciones = [], atributos = new Map(), observadores = [];
+    if (opciones.teclado) atributos.set('data-entrada', 'teclado');
     let montado = false, contenido = opciones.contenido !== false;
     const fondo = { toggleAttribute() {}, remove: () => { montado = false; } };
     function animar(fotogramas, tiempos) {
@@ -88,7 +88,7 @@ function crearPresentacion(opciones = {}) {
             getItem: nombre => { if (opciones.almacenBloqueado) throw new Error("Almacenamiento"); return almacen.get(nombre); },
             setItem: (nombre, valor) => almacen.set(nombre, valor),
         },
-        getComputedStyle: () => ({ getPropertyValue: () => "cubic-bezier(0.32, 0.72, 0, 1)" }),
+        getComputedStyle: estilosMovimiento,
         setTimeout: reloj.programar, clearTimeout: reloj.cancelar,
         requestAnimationFrame: accion => reloj.programar(accion, 16), cancelAnimationFrame: reloj.cancelar,
         MutationObserver: class {
@@ -98,6 +98,7 @@ function crearPresentacion(opciones = {}) {
         },
     });
     function cargar(nombre) { cargarAssetCliente(nombre, contexto); }
+    cargar("interacciones_globales.js");
     if (!opciones.sinPresentacion) cargar("presentacion.js");
     if (!opciones.sinEntrada) cargar("inicio_entrada.js");
     return { ...dom, reloj, almacen, preferencia, ventana, contexto, cargar };

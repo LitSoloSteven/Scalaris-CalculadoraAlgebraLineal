@@ -86,7 +86,7 @@
     inset: 0;
     background: var(--scrim);
     z-index: calc(var(--z-dock) - 1);
-    transition: opacity 240ms var(--ease-std);
+    transition: opacity var(--dur-view-exit) var(--ease-std);
     pointer-events: none;
 }
 
@@ -102,5 +102,26 @@
     border-radius: var(--radius-card);
     box-shadow: var(--elev-3);
     overflow: hidden;
-    transition: transform 240ms var(--ease-std), opacity 240ms var(--ease-std);
+    transition: transform var(--dur-view-exit) var(--ease-std), opacity var(--dur-view-exit) var(--ease-std), visibility var(--tiempo-instantaneo) var(--ease-std) var(--dur-view-exit);
+}
+
+.ia-panel-superposicion.opacity-100 {
+    transition-duration: var(--dur-view);
+}
+
+.ia-panel-tarjeta.visible {
+    transition: transform var(--dur-view) var(--ease-std), opacity var(--dur-view) var(--ease-std), visibility var(--tiempo-instantaneo) var(--ease-std);
+}
+
+html[data-entrada="teclado"] .ia-panel-superposicion,
+html[data-entrada="teclado"] .ia-panel-tarjeta {
+    transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ia-panel-superposicion,
+    .ia-panel-tarjeta {
+        transition: opacity var(--dur-reduced) var(--ease-std) !important;
+        transform: none !important;
+    }
 }

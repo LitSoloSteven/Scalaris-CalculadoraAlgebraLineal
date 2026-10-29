@@ -46,7 +46,6 @@
     -webkit-text-fill-color: var(--input-text) !important;
     box-shadow: 0 0 0px 1000px var(--input-bg) inset !important;
     -webkit-box-shadow: 0 0 0px 1000px var(--input-bg) inset !important;
-    transition: background-color 5000s linear 0s;
 }
 
 .matriz-entrada {

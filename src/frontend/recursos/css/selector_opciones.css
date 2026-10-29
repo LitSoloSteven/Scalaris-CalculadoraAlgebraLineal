@@ -28,7 +28,7 @@
 }
 
 .selector-opciones-cambiando .selector-opciones-indicador {
-    animation: selector-opciones-deslizar var(--dur-med) var(--ease-std);
+    animation: selector-opciones-deslizar var(--dur-state) var(--ease-std);
 }
 
 @keyframes selector-opciones-deslizar {
@@ -45,7 +45,7 @@
     background: transparent !important;
     font-weight: 600;
     z-index: 1;
-    transition: transform var(--dur-fast) var(--ease-std);
+    transition: transform var(--dur-release) var(--ease-std);
 }
 
 .selector-opciones-opcion .q-btn__content {
@@ -74,7 +74,7 @@
 
 .selector-opciones-opcion:active {
     transform: scale(0.97);
-    transition-duration: 0ms;
+    transition-duration: var(--dur-press);
 }
 
 @media (hover: hover) and (pointer: fine) {

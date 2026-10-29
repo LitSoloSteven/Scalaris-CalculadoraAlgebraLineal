@@ -4,6 +4,7 @@ const afirmar = require('node:assert/strict');
 const prueba = require('node:test');
 const vm = require('node:vm');
 const { cargarAssetCliente } = require('./comun_cliente_javascript.js');
+const { estilosMovimiento } = require('./comun_tokens_movimiento.js');
 const DESTINO = 'https://scalaris.test/vectores';
 const CLAVE = 'scalaris:origen-navegacion';
 
@@ -23,6 +24,7 @@ function crearTransicion() {
 function crearRaiz(atributos, animaciones) {
     return {
         setAttribute: (nombre, valor) => atributos.set(nombre, valor),
+        getAttribute: nombre => atributos.get(nombre),
         removeAttribute: nombre => atributos.delete(nombre),
         animate: (fotogramas, opciones) => {
             const animacion = {
@@ -55,6 +57,7 @@ function crearCliente(almacen = new Map(), url = DESTINO) {
     };
     const contexto = vm.createContext({
         window: ventana, document: documento, URL, Date, Number, Math,
+        getComputedStyle: estilosMovimiento,
         performance: { getEntriesByType: () => [{ type: 'navigate' }] },
         sessionStorage: {
             getItem: clave => almacen.get(clave) || null,
@@ -69,6 +72,7 @@ function crearCliente(almacen = new Map(), url = DESTINO) {
         requestAnimationFrame: funcion => { cuadros.set(++secuencia, funcion); return secuencia; },
         cancelAnimationFrame: id => cuadros.delete(id),
     });
+    cargarAssetCliente('interacciones_globales.js', contexto);
     cargarAssetCliente('navegacion_circular.js', contexto);
     return { eventos, clics, atributos, animaciones, cuadros, temporizadores, observadores,
         preferencia, ventana, documento, contexto, raiz, almacen };
@@ -120,16 +124,29 @@ prueba('el enlace se conserva nativo y su origen se consume una sola vez', async
     afirmar.equal(animacion.opciones.pseudoElement, '::view-transition-new(root)');
 });
 
-prueba('el teclado usa el centro del enlace y limita el origen a la ventana', async () => {
+prueba('el teclado omite la transición y el puntero limita el origen a la ventana', async () => {
     const almacen = new Map();
-    salir(crearCliente(almacen, 'https://scalaris.test/matrices'), crearClic({ detail: 0 }));
-    const entrada = crearCliente(almacen);
-    await revelar(entrada);
-    afirmar.equal(entrada.animaciones[0].fotogramas.clipPath[0], 'circle(0px at 160px 40px)');
+    const teclado = crearCliente(almacen, 'https://scalaris.test/matrices');
+    salir(teclado, crearClic({ detail: 0 }));
+    afirmar.equal(almacen.has(CLAVE), false);
+    const llegada = crearCliente(almacen);
+    afirmar.equal(llegada.atributos.get('data-entrada'), 'teclado');
+    const transicion = await revelar(llegada);
+    afirmar.equal(transicion.transicion.omitida, true);
+    afirmar.equal(llegada.animaciones.length, 0);
     salir(crearCliente(almacen, 'https://scalaris.test/matrices'), crearClic({ clientX: -5, clientY: 900 }));
     const limitada = crearCliente(almacen);
     await revelar(limitada);
     afirmar.equal(limitada.animaciones[0].fotogramas.clipPath[0], 'circle(0px at 0px 600px)');
+});
+
+prueba('un clic de teclado cancelado no afecta una navegación posterior con puntero', () => {
+    const almacen = new Map();
+    const salida = crearCliente(almacen, 'https://scalaris.test/matrices');
+    salida.clics.get('click')(crearClic({ detail: 0 }));
+    salida.clics.get('click')(crearClic());
+    const entrada = crearCliente(almacen);
+    afirmar.notEqual(entrada.atributos.get('data-entrada'), 'teclado');
 });
 
 prueba('no registra enlaces externos, descargas, fragmentos ni activaciones modificadas', () => {

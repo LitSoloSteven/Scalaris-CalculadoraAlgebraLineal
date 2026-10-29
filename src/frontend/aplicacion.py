@@ -17,6 +17,19 @@ _INICIALIZADO: bool = False
 DIRECTORIO_RECURSOS = Path(__file__).resolve().parent / "recursos"
 
 
+def configurar_movimiento_componentes() -> None:
+    """Vincula las duraciones de componentes Quasar a los tokens del cliente."""
+    componentes = (
+        (ui.dialog, "transition-duration", "--dur-view"),
+        (ui.tab_panels, "transition-duration", "--dur-state"),
+        (ui.expansion, "duration", "--dur-panel"),
+        (ui.menu, "transition-duration", "--dur-panel"),
+        (ui.tooltip, "transition-duration", "--dur-state"),
+    )
+    for componente, propiedad, token in componentes:
+        componente.default_props(f':{propiedad}="window.scalaris.movimiento.duracion(\'{token}\')"')
+
+
 def resolver_secreto_almacenamiento(variables_entorno: Mapping[str, str]) -> str:
     """Devuelve la clave de sesión de NiceGUI según las variables recibidas.
     En producción lanza SystemExit cuando falta STORAGE_SECRET."""
@@ -44,6 +57,7 @@ def inicializar_aplicacion() -> None:
     entorno = os.environ.get("SCALARIS_ENV", "").strip().lower()
     max_edad_cache = 3600 if entorno == "production" else 0
     app.add_static_files("/assets", str(DIRECTORIO_RECURSOS), max_cache_age=max_edad_cache)
+    configurar_movimiento_componentes()
     registrar_rutas()
     _INICIALIZADO = True
 

@@ -101,6 +101,7 @@
     prepararOrigenDialogo(dialogo, fila, inmediato);
     if (!dialogo.open) dialogo.showModal();
 
+    dialogo.removeAttribute('data-interaccion');
     dialogo.setAttribute('data-abierto', '');
     fila.setAttribute('aria-expanded', 'true');
     dialogoActivo = dialogo;
@@ -144,7 +145,7 @@
       if (evento.target === tarjeta && evento.propertyName === 'opacity') finalizar_cierre(dialogo);
     };
     tarjeta.addEventListener('transitionend', manejar_transicion_cierre);
-    temporizadorCierre = setTimeout(function () { finalizar_cierre(dialogo); }, 220);
+    temporizadorCierre = setTimeout(function () { finalizar_cierre(dialogo); }, window.scalaris.movimiento.duracion('--dur-view-exit') + 50);
   }
 
   function esta_halo_deshabilitado(evento) {
@@ -209,6 +210,12 @@
   function registrar_manejadores_delegados() {
     if (window.__scalarisInicioDelegado) return;
     window.__scalarisInicioDelegado = true;
+    document.addEventListener('pointerdown', function (evento) {
+      let fila = evento.target.closest('.inicio-fila');
+      if (fila) fila.setAttribute('data-interaccion', '');
+      let tarjeta = evento.target.closest('.inicio-dialogo[data-abierto] .inicio-tarjeta');
+      if (tarjeta) tarjeta.closest('.inicio-dialogo').setAttribute('data-interaccion', '');
+    }, true);
     document.addEventListener('click', manejar_clic_delegado);
     document.addEventListener('cancel', function (evento) {
       let dialogo = evento.target;

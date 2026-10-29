@@ -31,6 +31,11 @@
     border-radius: var(--radius-card);
     box-shadow: var(--elev-3);
     view-transition-name: glosa-panel-lateral;
+    transition: transform var(--dur-view-exit) var(--ease-std), opacity var(--dur-view-exit) var(--ease-std), visibility var(--tiempo-instantaneo) var(--ease-std) var(--dur-view-exit);
+}
+
+html[data-glosa="abierto"] .glosa-panel-lateral {
+    transition: transform var(--dur-view) var(--ease-std), opacity var(--dur-view) var(--ease-std);
 }
 
 .glosa-boton-flotante {
@@ -51,9 +56,7 @@
     border: none;
     view-transition-name: glosa-boton-flotante;
     visibility: visible;
-    transition: transform var(--dur-med) var(--ease-std),
-        opacity 120ms var(--ease-std),
-        visibility 0s linear 0s;
+    transition: transform var(--dur-view) var(--ease-std), opacity var(--dur-view) var(--ease-std), visibility var(--tiempo-instantaneo) var(--ease-std);
 }
 
 @media (max-width: 767px) {
@@ -70,7 +73,7 @@
     border-radius: inherit;
     box-shadow: var(--elev-3);
     opacity: 0;
-    transition: opacity var(--dur-med) var(--ease-std);
+    transition: opacity var(--dur-state) var(--ease-std);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -81,7 +84,7 @@
 
 .glosa-boton-flotante:active {
     transform: scale(0.97);
-    transition: transform 0s;
+    transition: transform var(--dur-press) var(--ease-std);
 }
 
 html[data-glosa="abierto"] .glosa-boton-flotante {
@@ -89,9 +92,7 @@ html[data-glosa="abierto"] .glosa-boton-flotante {
     transform: scale(0.95);
     pointer-events: none;
     visibility: hidden;
-    transition: transform var(--dur-med) var(--ease-std),
-        opacity 120ms var(--ease-std),
-        visibility 0s linear 120ms;
+    transition: transform var(--dur-view-exit) var(--ease-std), opacity var(--dur-view-exit) var(--ease-std), visibility var(--tiempo-instantaneo) var(--ease-std) var(--dur-view-exit);
 }
 
 .inicio-pagina:not(.inicio-glosa-disponible) .glosa-boton-flotante {
@@ -107,14 +108,12 @@ html[data-glosa="abierto"] .glosa-boton-flotante {
         transform: translateX(calc(100% + 32px));
         opacity: 0;
         visibility: hidden;
-        transition: transform 200ms var(--ease-std), opacity 200ms var(--ease-std), visibility 0s linear 200ms;
     }
 
     html[data-glosa="abierto"] .glosa-panel-lateral {
         transform: translateX(0);
         opacity: 1;
         visibility: visible;
-        transition: transform 240ms var(--ease-std), opacity 240ms var(--ease-std);
     }
 }
 
@@ -127,14 +126,12 @@ html[data-glosa="abierto"] .glosa-boton-flotante {
         transform: translateX(calc(100% + 32px));
         opacity: 0;
         visibility: hidden;
-        transition: transform 200ms var(--ease-std), opacity 200ms var(--ease-std), visibility 0s linear 200ms;
     }
 
     html[data-glosa="abierto"] .glosa-panel-lateral {
         transform: translateX(0);
         opacity: 1;
         visibility: visible;
-        transition: transform 240ms var(--ease-std), opacity 240ms var(--ease-std);
     }
 }
 
@@ -148,14 +145,12 @@ html[data-glosa="abierto"] .glosa-boton-flotante {
         transform: translateY(100%);
         opacity: 0;
         visibility: hidden;
-        transition: transform 200ms var(--ease-std), opacity 200ms var(--ease-std), visibility 0s linear 200ms;
     }
 
     html[data-glosa="abierto"] .glosa-panel-lateral {
         transform: translateY(0);
         opacity: 1;
         visibility: visible;
-        transition: transform 240ms var(--ease-std), opacity 240ms var(--ease-std);
     }
 }
 
@@ -166,7 +161,7 @@ html[data-glosa="abierto"] .glosa-boton-flotante {
     z-index: calc(var(--z-dock) - 1);
     opacity: 0;
     visibility: hidden;
-    transition: opacity 200ms var(--ease-std), visibility 0s linear 200ms;
+    transition: opacity var(--dur-view-exit) var(--ease-std), visibility var(--tiempo-instantaneo) var(--ease-std) var(--dur-view-exit);
     pointer-events: none;
 }
 
@@ -175,7 +170,7 @@ html[data-glosa="abierto"] .glosa-boton-flotante {
         opacity: 1;
         visibility: visible;
         pointer-events: auto;
-        transition: opacity 240ms var(--ease-std);
+        transition: opacity var(--dur-view) var(--ease-std);
     }
 }
 
@@ -236,7 +231,6 @@ html[data-glosa="abierto"]:not([data-glosa-listo])::after {
 .glosa-entrada textarea:-webkit-autofill:active {
     -webkit-text-fill-color: var(--input-text) !important;
     box-shadow: 0 0 0px 1000px var(--input-bg) inset !important;
-    transition: background-color 5000s linear 0s;
 }
 
 .glosa-entrada .q-field__native,
@@ -257,8 +251,7 @@ html[data-glosa="abierto"]:not([data-glosa-listo])::after {
     .glosa-panel-lateral,
     .glosa-boton-flotante,
     .glosa-fondo-modal {
-        transition-duration: 120ms !important;
-        transition-timing-function: linear !important;
+        transition: opacity var(--dur-reduced) var(--ease-std) !important;
         transform: none !important;
     }
 }

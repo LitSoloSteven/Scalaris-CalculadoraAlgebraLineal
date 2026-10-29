@@ -37,9 +37,20 @@
     --fw-small: 500;
     --fs-mono-math: 1.0625rem;
 
-    --dur-fast: 120ms;
-    --dur-med: 240ms;
-    --dur-slow: 250ms;
+    --dur-press: 200ms;
+    --dur-release: 320ms;
+    --dur-state: 350ms;
+    --dur-state-exit: 260ms;
+    --dur-panel: 450ms;
+    --dur-panel-exit: 340ms;
+    --dur-view: 600ms;
+    --dur-view-exit: 450ms;
+    --dur-didactic: 900ms;
+    --dur-didactic-exit: 675ms;
+    --dur-reduced: 120ms;
+    --stagger-step: 75ms;
+    --stagger-max: 600ms;
+    --tiempo-instantaneo: 0ms;
     --ease-std: cubic-bezier(0.32, 0.72, 0, 1);
 
     --z-nav: 2000;

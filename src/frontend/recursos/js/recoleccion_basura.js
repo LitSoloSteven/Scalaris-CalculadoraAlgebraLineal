@@ -3,6 +3,29 @@
 {
 
   window.scalaris = window.scalaris || {};
+  var recoleccionActiva = null;
+
+  function programar(estado, tarea, espera) {
+    var temporizador = setTimeout(tarea, espera);
+    estado.temporizadores.push(temporizador);
+  }
+
+  function restaurarRecoleccion(estado) {
+    if (!estado || estado.restaurada) return;
+    estado.restaurada = true;
+    estado.temporizadores.forEach(temporizador => clearTimeout(temporizador));
+    estado.clones.forEach(clon => clon.remove());
+    estado.entradas.forEach((entrada, indice) => {
+      var anterior = estado.visibilidades[indice];
+      if (anterior.valor) entrada.style.setProperty('visibility', anterior.valor, anterior.prioridad);
+      else entrada.style.removeProperty('visibility');
+    });
+    estado.boton.classList.remove('movimiento-compresion');
+    if (estado.icono) estado.icono.textContent = 'delete';
+    estado.socket?.off('disconnect', estado.alDesconectar);
+    if (recoleccionActiva === estado) recoleccionActiva = null;
+    estado.resolver();
+  }
 
   function crearClon(entrada, rectangulo) {
     var clon = document.createElement('div');
@@ -30,76 +53,100 @@
     clon.style.fontFamily = estiloEntrada.fontFamily;
     clon.style.fontSize = estiloEntrada.fontSize;
     clon.style.color = estiloEntrada.color;
-    clon.style.transition = 'transform 160ms cubic-bezier(0.32, 0.72, 0, 1), opacity 160ms cubic-bezier(0.32, 0.72, 0, 1)';
+    var movimiento = window.scalaris.movimiento;
+    var transicion = movimiento.duracion('--dur-panel') + 'ms ' + movimiento.curva();
+    clon.style.transition = 'transform ' + transicion + ', opacity ' + transicion;
     clon.style.pointerEvents = 'none';
     clon.style.overflow = 'hidden';
     return clon;
   }
 
-  function animarTrayectoria(clon, entrada, rectangulo, rectanguloBoton, retraso) {
-    entrada.style.color = 'transparent';
+  function animarTrayectoria(estado, clon, rectangulo, rectanguloBoton, retraso) {
     document.body.appendChild(clon);
 
-    setTimeout(function () {
-      entrada.value = '';
+    programar(estado, function () {
       var destinoHorizontal = rectanguloBoton.left + rectanguloBoton.width / 2 - rectangulo.width / 2;
       var destinoVertical = rectanguloBoton.top + rectanguloBoton.height / 2 - rectangulo.height / 2;
       clon.style.transform = 'translate(' + (destinoHorizontal - rectangulo.left) + 'px, ' + (destinoVertical - rectangulo.top) + 'px) scale(0.1)';
       clon.style.opacity = '0';
     }, retraso);
 
-    setTimeout(function () {
+    programar(estado, function () {
       clon.remove();
-    }, retraso + 160);
+    }, retraso + window.scalaris.movimiento.duracion('--dur-panel'));
   }
 
-  function filtrar_entradas_visibles() {
-    var entradasCompletas = document.querySelectorAll('.matriz-entrada input');
-    return Array.from(entradasCompletas).filter(function (i) {
-      var r = i.getBoundingClientRect();
-      return i.value && i.value !== '0' && i.value.trim() !== '' &&
-        r.bottom > 0 && r.top < window.innerHeight && r.right > 0 && r.left < window.innerWidth;
-    }).slice(0, 40);
-  }
-
-  function ejecutarRecoleccion(boton, elementoIcono, destinos, resolver) {
-    var rectanguloBoton = boton.getBoundingClientRect();
-    var paso = Math.max(1, Math.floor(90 / destinos.length));
-    var retrasoAcumulado = 0;
-
-    destinos.forEach(function (entrada) {
-      var rectangulo = entrada.getBoundingClientRect();
-      var clon = crearClon(entrada, rectangulo);
-      animarTrayectoria(clon, entrada, rectangulo, rectanguloBoton, retrasoAcumulado);
-      retrasoAcumulado += paso;
+  function filtrar_entradas_visibles(identificadores) {
+    var entradasCompletas = identificadores.flatMap(function (identificador) {
+      var referencia = window.getElement?.(identificador);
+      var idHtml = typeof identificador === 'number' ? 'c' + identificador : identificador;
+      var elemento = referencia?.$refs?.qRef?.$el || referencia?.$el || document.getElementById(idHtml);
+      if (!elemento) return [];
+      return elemento.matches?.('input') ? [elemento] : Array.from(elemento.querySelectorAll('input'));
     });
-
-    var duracionMedia = (window.scalaris.movimiento && window.scalaris.movimiento.medio) || 240;
-    setTimeout(function () {
-      boton.classList.add('movimiento-compresion');
-      setTimeout(function () {
-        boton.classList.remove('movimiento-compresion');
-        if (elementoIcono) {
-          elementoIcono.textContent = 'delete';
-        }
-        document.querySelectorAll('.matriz-entrada input').forEach(function (i) {
-          i.style.color = '';
-        });
-        resolver();
-      }, duracionMedia);
-    }, retrasoAcumulado + 160);
+    return Array.from(new Set(entradasCompletas)).filter(function (i) {
+      var r = i.getBoundingClientRect();
+      return i.value && i.value.trim() !== '' &&
+        r.bottom > 0 && r.top < window.innerHeight && r.right > 0 && r.left < window.innerWidth;
+    });
   }
 
-  function animarRecoleccionBasura() {
-    return new Promise(function (resolver) {
-      var permitido = window.scalaris.movimiento && window.scalaris.movimiento.permitido ?
-        window.scalaris.movimiento.permitido() : false;
-      if (!permitido) {
+  function comprimirBoton(estado, vuelo) {
+    estado.boton.classList.add('movimiento-compresion');
+    programar(estado, function () {
+      estado.boton.classList.remove('movimiento-compresion');
+      if (estado.icono) estado.icono.textContent = 'delete';
+      estado.resolver();
+    }, vuelo);
+  }
+
+  function movimientoPermitido() {
+    return Boolean(window.scalaris.movimiento?.permitido?.());
+  }
+
+  function ejecutarRecoleccion(boton, elementoIcono, entradas, resolver, rechazar) {
+    var rectanguloBoton = boton.getBoundingClientRect();
+    var movimiento = window.scalaris.movimiento;
+    var paso = movimiento.duracion('--stagger-step');
+    var limite = movimiento.duracion('--stagger-max');
+    var vuelo = movimiento.duracion('--dur-panel');
+    var destinos = entradas.slice(0, 8);
+    var estado = { boton, icono: elementoIcono, entradas, resolver, temporizadores: [], clones: [],
+      visibilidades: entradas.map(entrada => ({ valor: entrada.style.getPropertyValue('visibility'),
+        prioridad: entrada.style.getPropertyPriority('visibility') })) };
+    recoleccionActiva = estado;
+    estado.socket = window.socket;
+    estado.alDesconectar = () => restaurarRecoleccion(estado);
+    estado.socket?.on('disconnect', estado.alDesconectar);
+
+    try {
+      destinos.forEach(function (entrada, indice) {
+        var rectangulo = entrada.getBoundingClientRect();
+        var clon = crearClon(entrada, rectangulo);
+        estado.clones.push(clon);
+        animarTrayectoria(estado, clon, rectangulo, rectanguloBoton, Math.min(indice * paso, limite));
+      });
+      entradas.forEach(entrada => { entrada.style.setProperty('visibility', 'hidden'); });
+    } catch (error) {
+      estado.resolver = function () {};
+      restaurarRecoleccion(estado);
+      rechazar(error);
+      return;
+    }
+
+    var ultimoRetraso = Math.min((destinos.length - 1) * paso, limite);
+    programar(estado, () => comprimirBoton(estado, vuelo), ultimoRetraso + vuelo);
+  }
+
+  function animarRecoleccionBasura(identificadores) {
+    return new Promise(function (resolver, rechazar) {
+      if (!movimientoPermitido()) {
         resolver();
         return;
       }
+      if (recoleccionActiva) restaurarRecoleccion(recoleccionActiva);
       var boton = document.getElementById('boton-limpiar-principal');
-      if (!boton) {
+      if (!boton || !Array.isArray(identificadores) || !identificadores.length) {
         resolver();
         return;
       }
@@ -107,7 +154,7 @@
       if (elementoIcono) {
         elementoIcono.textContent = 'delete_sweep';
       }
-      var destinos = filtrar_entradas_visibles();
+      var destinos = filtrar_entradas_visibles(identificadores);
       if (destinos.length === 0) {
         if (elementoIcono) {
           elementoIcono.textContent = 'delete';
@@ -115,10 +162,12 @@
         resolver();
         return;
       }
-      ejecutarRecoleccion(boton, elementoIcono, destinos, resolver);
+      ejecutarRecoleccion(boton, elementoIcono, destinos, resolver, rechazar);
     });
   }
 
 
   window.scalaris.animarRecoleccionBasura = animarRecoleccionBasura;
+  window.scalaris.terminarRecoleccionBasura = function () { restaurarRecoleccion(recoleccionActiva); };
+  window.addEventListener?.('pagehide', window.scalaris.terminarRecoleccionBasura);
 }

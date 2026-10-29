@@ -8,8 +8,8 @@ from tests.comun_animaciones_cliente import observar_invocaciones_cliente
 
 
 @pytest.mark.parametrize("metodo, duracion", [
-    (cuadricula_base.animar_entrada_cuadricula, 180),
-    (cuadricula_base.animar_salida_cuadricula, 140),
+    (cuadricula_base.animar_entrada_cuadricula, 450),
+    (cuadricula_base.animar_salida_cuadricula, 340),
 ])
 @pytest.mark.parametrize("nombre_matriz", ["A", None])
 @pytest.mark.parametrize("selector", [

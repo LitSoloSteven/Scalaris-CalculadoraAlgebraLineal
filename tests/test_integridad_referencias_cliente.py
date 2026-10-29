@@ -23,6 +23,15 @@ def test_funcion_privada_no_se_confunde_con_global_exportada():
     assert any("funcionPrivada" in error for error in errores)
 
 
+def test_propiedad_dinamica_analiza_su_expresion(tmp_path):
+    """Analiza la expresión de una propiedad dinámica y detecta referencias ausentes."""
+    ruta = tmp_path / "ejemplo.py"
+    ruta.write_text('def configurar():\n    ui.dialog.default_props(\':valor="window.scalaris.ausente()"\')\n', encoding="utf-8")
+    fragmentos = fragmentos_python([ruta])
+    assert fragmentos[0][2] == 'window.scalaris.ausente()'
+    assert any("window.scalaris.ausente" in error for error in errores_referencias(fragmentos, ["window.scalaris = {};"]))
+
+
 def test_propiedad_opcional_y_objeto_publicado_se_resuelven():
     """Objetos anidados reales satisfacen rutas completas con optional chaining."""
     fragmentos = [("ejemplo.py", 1, "window.scalaris?.geometria?.registrar?.();")]

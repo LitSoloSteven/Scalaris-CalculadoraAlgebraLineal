@@ -61,7 +61,7 @@ prueba("la transición nativa conserva fotogramas duración y curva", async () =
     afirmar.equal(cliente.animaciones.length, 1);
     afirmar.equal(cliente.animaciones[0].fotogramas.clipPath[0], 'circle(0px at 1100px 50px)');
     afirmar.equal(cliente.animaciones[0].fotogramas.clipPath[1], `circle(${Math.hypot(1100, 750)}px at 1100px 50px)`);
-    afirmar.equal(cliente.animaciones[0].opciones.duration, 500);
+    afirmar.equal(cliente.animaciones[0].opciones.duration, 600);
     afirmar.equal(cliente.animaciones[0].opciones.easing, "cubic-bezier(0.32, 0.72, 0, 1)");
     afirmar.equal(cliente.animaciones[0].opciones.pseudoElement, "::view-transition-new(root)");
 });
@@ -95,7 +95,7 @@ prueba("el fallo de almacenamiento de Glosa conserva el atributo anterior", () =
     afirmar.equal(cliente.atributos.get("data-glosa"), "abierto");
 });
 
-prueba("la activación por teclado conserva la transición sin movimiento reducido", async () => {
+prueba("la activación por teclado aplica el tema sin transición", async () => {
     const cliente = crearTemaSimulado();
     cargarTemaCompleto(cliente);
     cargarAssetCliente("interacciones_globales.js", cliente.contexto);
@@ -104,7 +104,7 @@ prueba("la activación por teclado conserva la transición sin movimiento reduci
     afirmar.doesNotThrow(() => cliente.ventana.scalaris.tema.establecer("marea"));
     afirmar.equal(cliente.atributos.get("data-tema"), "marea");
     await Promise.resolve();
-    afirmar.equal(cliente.animaciones.length, 1);
+    afirmar.equal(cliente.animaciones.length, 0);
 });
 
 prueba("la preferencia de movimiento reducido aplica el tema sin transición", () => {

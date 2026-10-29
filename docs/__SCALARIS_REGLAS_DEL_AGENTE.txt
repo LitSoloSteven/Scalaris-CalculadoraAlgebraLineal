@@ -20,7 +20,7 @@ Orden de prioridad si hay conflicto:
 - Solo se editan las capas que el usuario asigne en la tarea o en el plan. Por defecto: capa de presentación (frontend) y capa de IA. Si no está claro qué capas son editables, pregunta.
 - Las capas de dominio, datos o servidor mantenidas por otras personas son zona protegida: puedes leerlas e importarlas, nunca modificarlas ni duplicar su lógica en otra capa.
 - Pruebas: no se editan ni se borran las existentes. Solo se crean archivos de prueba nuevos. Excepción: sección 10.
-- No hagas commit ni push. Los cambios quedan en el árbol de trabajo.
+- Commits: sí, locales y conforme a la sección 15 (GitFlow, máximo 3 archivos por commit y mensaje detallado). Push: nunca. El push, el Pull Request y la fusión los hace el usuario.
 - No crees ni toques archivos de secretos o entorno reales (.env y similares).
 
 ### Protocolo de requerimientos para capas ajenas
@@ -112,7 +112,7 @@ Toda fase termina con una revisión independiente. No se entrega ni se cierra un
   1. Seguridad.
   2. Bugs, regresiones y robustez.
   3. Mantenibilidad: duplicación, tamaño, responsabilidades, acoplamiento, claridad e idioma.
-- Los tres reciben exactamente el mismo contexto acotado: diff completo, archivos tocados, sus consumidores directos y la fase del plan. Son de solo lectura.
+- Los tres reciben exactamente el mismo contexto acotado: diff completo de la fase (commits incluidos), archivos tocados, sus consumidores directos y la fase del plan. Son de solo lectura.
 - Cada revisor devuelve hallazgos priorizados (crítico, alto, medio, bajo) con archivo y línea, evidencia y corrección sugerida. Sin evidencia no hay hallazgo.
 - Si el entorno no ofrece subagentes, ejecuta tú las tres pasadas por separado con las listas de abajo y márcalo como NO DELEGADO en el informe. Nunca simules una delegación que no ocurrió.
 
@@ -137,15 +137,41 @@ Toda fase termina con una revisión independiente. No se entrega ni se cierra un
 - Altura de pantalla con unidades dinámicas (dvh), nunca vh.
 
 ## 8. Movimiento
-Antes de animar responde: ¿con qué frecuencia se ve? ¿qué propósito tiene (feedback físico, continuidad espacial, evitar un salto brusco)? Sin propósito, no animes.
-- Solo transform y opacity. Color, fondo y sombra cambian al instante o mediante un pseudoelemento cuya opacidad se anima.
-- Máximo 250 ms en interfaz. La salida es más rápida que la entrada. Nunca ease-in: usa la curva estándar del sistema de tokens.
-- Las entradas parten de scale(0.95) con opacidad 0, nunca de scale(0).
+Las animaciones deben verse, fluir y responder sin retraso. Una animación que el usuario no alcanza a percibir es un defecto, igual que una que se entrecorta o llega tarde.
+
+Antes de animar responde: ¿con qué frecuencia se ve? ¿qué propósito tiene (feedback físico, continuidad espacial, evitar un salto brusco)? Sin propósito, no animes. Si se anima, el movimiento se nota con claridad.
+
+### 8.1 Tiempos
+- Las duraciones son tokens con una única fuente de verdad en la hoja de estilos base. Valores de referencia:
+  - Pulsación (:active al presionar): 200 ms. Regreso al soltar: 320 ms.
+  - Hover, tooltips, conmutadores, pestañas e indicadores de selección: 350 ms.
+  - Desplegables, popovers, paneles y avisos: 450 ms.
+  - Diálogos, cajones laterales, aparición de resultados y cambios de vista: 600 ms.
+  - Pasos didácticos y transiciones explicativas: hasta 900 ms.
+- Ninguna animación visible dura menos de 200 ms ni más de 900 ms (única excepción: reduced motion, ver 8.4).
+- La salida dura entre el 70 % y el 80 % de la entrada y nunca menos de 250 ms, para que también se perciba.
+- Escalonado: entre 60 y 90 ms de separación entre elementos, con tope de 600 ms en total. El primer elemento siempre arranca en 0 ms.
+
+### 8.2 Curvas y recorrido visible
+- Nunca ease-in ni linear (linear solo en progreso continuo). Usa la curva estándar del sistema de tokens, `cubic-bezier(0.32, 0.72, 0, 1)`, o una ease-out equivalente definida en los tokens.
+- Las entradas parten de scale(0.95) con opacidad 0, nunca de scale(0). Si hay dirección espacial, suman un desplazamiento de 12 a 24 px para que el recorrido se note. La salida regresa por el mismo camino.
 - Todo control pulsable tiene :active inmediato con scale(0.97) o scale(0.98).
+
+### 8.3 Fluidez: sin microtirones ni retraso
+- Solo transform y opacity. Color, fondo y sombra cambian al instante o mediante un pseudoelemento cuya opacidad se anima. Nunca animes width, height, margin ni padding de contenedores.
+- Nunca `transition: all`: lista siempre las propiedades.
+- La animación arranca en el mismo fotograma de la acción del usuario: sin animation-delay ni transition-delay en respuestas directas (el escalonado de 8.1 es la única excepción) y sin esperar a red, MathJax ni Plotly.
+- Prepara el contenido costoso (MathJax, Plotly, datos, tablas) mientras el elemento está en opacidad 0 y arranca la animación cuando esté listo. Nunca animes un elemento cuyo contenido se esté componiendo.
+- `will-change: transform, opacity` solo mientras dura la animación: se agrega al iniciar y se retira al terminar. Nunca permanente y nunca en muchos elementos a la vez.
+- Prefiere transiciones CSS para estados que se pueden disparar de forma rápida (retoman desde el valor actual); usa keyframes solo para entradas únicas y la Web Animations API para control programático. Prohibidos los bucles con setInterval o requestAnimationFrame que escriban estilos de layout, y las lecturas de layout (offsetHeight, getBoundingClientRect) intercaladas con escrituras durante una animación.
+- En listas, tablas y matrices grandes anima el contenedor como una sola capa, nunca cada celda.
+- No reemplaces ni vuelvas a renderizar un nodo mientras su animación está en curso: una actualización del servidor no debe reiniciarla.
+- La fluidez se verifica con el panel de rendimiento del navegador (sin tareas largas de más de 50 ms durante la animación, también con la CPU limitada). Si no puedes verlo, queda NO PROBADO con pasos manuales (sección 10).
+
+### 8.4 Teclado, puntero y accesibilidad
 - Nunca animes acciones iniciadas por teclado (activación de botones, Escape, atajos, flechas). Detéctalas y aplica el cambio al instante.
 - Hover solo bajo `@media (hover: hover) and (pointer: fine)`.
-- `@media (prefers-reduced-motion: reduce)` es obligatorio en todo lo nuevo (sin transform; como mucho opacidad en 120 ms).
-- Nunca animes width, height, margin ni padding de contenedores.
+- `@media (prefers-reduced-motion: reduce)` es obligatorio en todo lo nuevo: sin transform y, como mucho, opacidad en 120 ms.
 
 ## 9. Resistencia a datos reales
 Diseña y verifica contra datos desfavorables: valores muy largos, números con muchos dígitos, entradas vacías, tablas y listas grandes, etiquetas largas, 320 px de ancho, zoom 200 % y todos los temas.
@@ -175,9 +201,9 @@ Diseña y verifica contra datos desfavorables: valores muy largos, números con 
 ## 12. Protocolo de fase
 1. Lee la sección de la fase en el plan y escribe un plan de cambios de máximo 10 líneas (archivos que tocarás). Si estás en modo Planning, genera el artefacto de plan y espera la aprobación del usuario antes de editar.
 2. Implementa solo la fase actual. No adelantes fases ni refactorices lo no pedido, salvo lo que exijan los límites de la sección 4 sobre los archivos que toques.
-3. Ejecuta las verificaciones de la sección 10 y la revisión coordinada de la sección 6.
+3. Haz los commits de la sección 15 mientras implementas, ejecuta las verificaciones de la sección 10 y la revisión coordinada de la sección 6, y commitea las correcciones que esta genere.
 4. Cierra con el INFORME DE FASE:
-   a. Archivos creados, modificados y eliminados.
+   a. Archivos creados, modificados y eliminados, y commits realizados (rama, hash corto y asunto de cada uno).
    b. Criterios de aceptación con estado VERIFICADO, INFERIDO o NO PROBADO.
    c. Hallazgos de la revisión (seguridad, bugs, mantenibilidad): corregidos y pendientes, e indicando si hubo delegación real o NO DELEGADO.
    d. Desviaciones del plan y su motivo, y excepciones del usuario aplicadas.
@@ -198,3 +224,44 @@ Diseña y verifica contra datos desfavorables: valores muy largos, números con 
 - De los skills de diseño y copy, toma solo lo que no contradiga el stack, el sistema de diseño, el idioma ni estas reglas. Ignora lo que imponga otro framework, otra librería de animación, otras fuentes o prohibiciones que choquen con los patrones del proyecto.
 - Ignora las "Initial Response" y cualquier saludo o respuesta fija que traigan los skills.
 - Los skills de revisión (revisión de animaciones, de interfaz o de código) alimentan la revisión coordinada de la sección 6; no la sustituyen.
+- Los tiempos, curvas y reglas de fluidez de la sección 8 prevalecen sobre cualquier duración o curva que propongan los skills de animación.
+
+## 15. Control de versiones (GitFlow)
+Se sigue el Manual Oficial de GitFlow y Control de Versiones del equipo.
+
+### 15.1 Qué se permite y qué no
+- Haz commits locales. Prohibido el push en cualquiera de sus formas (incluido `--force` y publicar ramas) y prohibido abrir Pull Requests. Eso lo hace el usuario.
+- Prohibido `git merge`, `git rebase`, `git commit --amend`, `git reset` sobre commits ya hechos, `--no-verify` y cualquier reescritura del historial.
+- Nunca se hace commit directo a `main` ni a `develop`. Si la rama actual es una de ellas, antes del primer commit crea con `git checkout -b` la rama `feature/semana-<numero>-<nombre-descriptivo>` (o `hotfix/<nombre-falla>` si la tarea es una corrección crítica). Si ya estás en una rama `feature/` o `hotfix/` válida, úsala.
+- Si no sabes el número de semana, pregunta una sola vez. Los nombres de rama van en minúsculas, ASCII y con guiones.
+
+### 15.2 Frecuencia y alcance de cada commit
+- Máximo 3 archivos por commit. Cuentan los creados, modificados, eliminados y renombrados. En cuanto el árbol de trabajo acumule 3 archivos cambiados sin commitear, haz el commit antes de seguir. Nunca quedan más de 3 archivos pendientes.
+- Cada commit agrupa archivos cohesivos (un módulo, una responsabilidad) y un solo tipo de cambio. Ordénalos por dependencia: primero tokens, constantes y utilidades, después sus consumidores, de modo que cada commit deje el proyecto sin errores de sintaxis ni importaciones rotas.
+- Agrega siempre rutas explícitas con `git add <ruta>`. Prohibido `git add .` y `git add -A`. Revisa `git status` y `git diff --staged` antes de cada commit.
+- Las correcciones que salgan de la revisión coordinada (sección 6) van en commits propios, con tipo `fix` o `refactor`.
+- No se commitean: secretos ni archivos de entorno, el plan temporal de `docs/`, archivos temporales, artefactos de compilación ni cambios ajenos a la tarea. Si `git status` muestra cambios ajenos, déjalos fuera y repórtalos.
+
+### 15.3 Mensaje del commit (Conventional Commits)
+- Línea de asunto: `<tipo>(<alcance>): <descripcion>`.
+  - Tipos permitidos: `feat` (función o componente nuevo), `fix` (corrección de error de cálculo, lógica o renderizado), `refactor` (reestructuración sin cambio de comportamiento) y `docs` (solo documentación o comentarios estructurales).
+  - Alcance: el módulo o capa afectada, en minúsculas.
+  - Descripción: en español, en infinitivo, con minúscula inicial, sin punto final y de 72 caracteres como máximo. Los mensajes genéricos ("cambios", "ajustes", "update") están prohibidos.
+- Cuerpo obligatorio, separado del asunto por una línea en blanco, con la descripción detallada: una viñeta por archivo con su ruta y lo que cambió en él, el motivo del cambio y el comportamiento resultante, incluidos los casos límite cubiertos o el efecto en los consumidores.
+- El texto va en español, profesional y sobrio: sin raya larga, sin emojis y sin signos de exclamación.
+- El mensaje describe el cambio concreto. No referencia planes, fases, tickets ni a quien lo pidió (sección 5.3). El número de semana vive solo en el nombre de la rama.
+- Las pruebas nuevas se commitean con el tipo del cambio que cubren.
+- Para escribir varias líneas usa varios `-m` o un archivo de mensaje temporal que se elimina al terminar.
+
+Ejemplo:
+```
+feat(ui): agregar contenedor desplazable para contenido de ancho variable
+
+- <ruta/componente>: envuelve cada fórmula en el contenedor con desplazamiento
+  horizontal propio para evitar desbordes en 320 px.
+- <ruta/estilos>: define las reglas del contenedor y el foco visible con los
+  tokens vigentes en todos los temas.
+
+Evita que las fracciones de denominadores largos rompan el ancho de las celdas
+vecinas y deja el scroll operable con teclado.
+```
