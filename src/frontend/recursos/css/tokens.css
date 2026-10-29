@@ -50,6 +50,7 @@
     --dur-reduced: 120ms;
     --stagger-step: 75ms;
     --stagger-max: 600ms;
+    --tiempo-instantaneo: 0ms;
     --ease-std: cubic-bezier(0.32, 0.72, 0, 1);
 
     --z-nav: 2000;

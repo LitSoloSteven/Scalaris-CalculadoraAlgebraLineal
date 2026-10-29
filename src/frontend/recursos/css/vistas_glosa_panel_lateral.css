@@ -31,7 +31,7 @@
     border-radius: var(--radius-card);
     box-shadow: var(--elev-3);
     view-transition-name: glosa-panel-lateral;
-    transition: transform var(--dur-view-exit) var(--ease-std), opacity var(--dur-view-exit) var(--ease-std), visibility 0s var(--ease-std) var(--dur-view-exit);
+    transition: transform var(--dur-view-exit) var(--ease-std), opacity var(--dur-view-exit) var(--ease-std), visibility var(--tiempo-instantaneo) var(--ease-std) var(--dur-view-exit);
 }
 
 html[data-glosa="abierto"] .glosa-panel-lateral {
@@ -56,7 +56,7 @@ html[data-glosa="abierto"] .glosa-panel-lateral {
     border: none;
     view-transition-name: glosa-boton-flotante;
     visibility: visible;
-    transition: transform var(--dur-view) var(--ease-std), opacity var(--dur-view) var(--ease-std), visibility 0s var(--ease-std);
+    transition: transform var(--dur-view) var(--ease-std), opacity var(--dur-view) var(--ease-std), visibility var(--tiempo-instantaneo) var(--ease-std);
 }
 
 @media (max-width: 767px) {
@@ -92,7 +92,7 @@ html[data-glosa="abierto"] .glosa-boton-flotante {
     transform: scale(0.95);
     pointer-events: none;
     visibility: hidden;
-    transition: transform var(--dur-view-exit) var(--ease-std), opacity var(--dur-view-exit) var(--ease-std), visibility 0s var(--ease-std) var(--dur-view-exit);
+    transition: transform var(--dur-view-exit) var(--ease-std), opacity var(--dur-view-exit) var(--ease-std), visibility var(--tiempo-instantaneo) var(--ease-std) var(--dur-view-exit);
 }
 
 .inicio-pagina:not(.inicio-glosa-disponible) .glosa-boton-flotante {
@@ -161,7 +161,7 @@ html[data-glosa="abierto"] .glosa-boton-flotante {
     z-index: calc(var(--z-dock) - 1);
     opacity: 0;
     visibility: hidden;
-    transition: opacity var(--dur-view-exit) var(--ease-std), visibility 0s var(--ease-std) var(--dur-view-exit);
+    transition: opacity var(--dur-view-exit) var(--ease-std), visibility var(--tiempo-instantaneo) var(--ease-std) var(--dur-view-exit);
     pointer-events: none;
 }
 
