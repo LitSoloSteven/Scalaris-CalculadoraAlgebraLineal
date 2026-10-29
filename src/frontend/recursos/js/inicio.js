@@ -101,6 +101,7 @@
     prepararOrigenDialogo(dialogo, fila, inmediato);
     if (!dialogo.open) dialogo.showModal();
 
+    dialogo.removeAttribute('data-interaccion');
     dialogo.setAttribute('data-abierto', '');
     fila.setAttribute('aria-expanded', 'true');
     dialogoActivo = dialogo;
@@ -209,6 +210,10 @@
   function registrar_manejadores_delegados() {
     if (window.__scalarisInicioDelegado) return;
     window.__scalarisInicioDelegado = true;
+    document.addEventListener('pointerdown', function (evento) {
+      let tarjeta = evento.target.closest('.inicio-dialogo[data-abierto] .inicio-tarjeta');
+      if (tarjeta) tarjeta.closest('.inicio-dialogo').setAttribute('data-interaccion', '');
+    }, true);
     document.addEventListener('click', manejar_clic_delegado);
     document.addEventListener('cancel', function (evento) {
       let dialogo = evento.target;

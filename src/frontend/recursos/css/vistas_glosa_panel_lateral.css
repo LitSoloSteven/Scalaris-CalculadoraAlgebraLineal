@@ -31,6 +31,11 @@
     border-radius: var(--radius-card);
     box-shadow: var(--elev-3);
     view-transition-name: glosa-panel-lateral;
+    transition: transform var(--dur-view-exit) var(--ease-std), opacity var(--dur-view-exit) var(--ease-std), visibility 0s var(--ease-std) var(--dur-view-exit);
+}
+
+html[data-glosa="abierto"] .glosa-panel-lateral {
+    transition: transform var(--dur-view) var(--ease-std), opacity var(--dur-view) var(--ease-std);
 }
 
 .glosa-boton-flotante {
@@ -103,14 +108,12 @@ html[data-glosa="abierto"] .glosa-boton-flotante {
         transform: translateX(calc(100% + 32px));
         opacity: 0;
         visibility: hidden;
-        transition: transform var(--dur-view-exit) var(--ease-std), opacity var(--dur-view-exit) var(--ease-std), visibility 0s var(--ease-std) var(--dur-view-exit);
     }
 
     html[data-glosa="abierto"] .glosa-panel-lateral {
         transform: translateX(0);
         opacity: 1;
         visibility: visible;
-        transition: transform var(--dur-view) var(--ease-std), opacity var(--dur-view) var(--ease-std);
     }
 }
 
@@ -123,14 +126,12 @@ html[data-glosa="abierto"] .glosa-boton-flotante {
         transform: translateX(calc(100% + 32px));
         opacity: 0;
         visibility: hidden;
-        transition: transform var(--dur-view-exit) var(--ease-std), opacity var(--dur-view-exit) var(--ease-std), visibility 0s var(--ease-std) var(--dur-view-exit);
     }
 
     html[data-glosa="abierto"] .glosa-panel-lateral {
         transform: translateX(0);
         opacity: 1;
         visibility: visible;
-        transition: transform var(--dur-view) var(--ease-std), opacity var(--dur-view) var(--ease-std);
     }
 }
 
@@ -144,14 +145,12 @@ html[data-glosa="abierto"] .glosa-boton-flotante {
         transform: translateY(100%);
         opacity: 0;
         visibility: hidden;
-        transition: transform var(--dur-view-exit) var(--ease-std), opacity var(--dur-view-exit) var(--ease-std), visibility 0s var(--ease-std) var(--dur-view-exit);
     }
 
     html[data-glosa="abierto"] .glosa-panel-lateral {
         transform: translateY(0);
         opacity: 1;
         visibility: visible;
-        transition: transform var(--dur-view) var(--ease-std), opacity var(--dur-view) var(--ease-std);
     }
 }
 

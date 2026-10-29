@@ -208,6 +208,11 @@
     transition-delay: min(calc(var(--i, 0) * var(--stagger-step)), var(--stagger-max));
 }
 
+.inicio-dialogo[data-abierto][data-interaccion] .inicio-tarjeta {
+    transition-duration: var(--dur-view), var(--dur-release);
+    transition-delay: 0s;
+}
+
 .inicio-tarjeta::after {
     content: "";
     position: absolute;
