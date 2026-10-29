@@ -6,6 +6,7 @@ from src.frontend.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
 from src.ai.huellas import calcular_huella
 from src.frontend.controladores.actualizacion_cancelable import cancelar_actualizacion, programar_actualizacion
 from src.frontend.textos import HISTORIAL_DETERMINANTE_CALCULADO, HISTORIAL_DETERMINANTE_DETALLE, OPCIONES_METODOS_DETERMINANTES
+from src.frontend.textos import HISTORIAL_FACTORIZACION_LU_CALCULADA, HISTORIAL_FACTORIZACION_LU_DETALLE
 
 MAXIMO_CALCULOS_RECIENTES = 5
 
@@ -17,6 +18,7 @@ _ESTADOS_HISTORIAL = {
     'SINGULAR': ('Singular', 'sesion-error'),
     'DETERMINANTE_CALCULADO': (HISTORIAL_DETERMINANTE_CALCULADO, 'texto-acento'),
     'DETERMINANTE_SINGULAR': ('Singular', 'sesion-error'),
+    'FACTORIZACION_LU_CALCULADA': (HISTORIAL_FACTORIZACION_LU_CALCULADA, 'texto-acento'),
 }
 
 
@@ -36,6 +38,8 @@ def describir_registro(datos: dict) -> dict:
         nombres = {valor: etiqueta for valor, etiqueta, _ in OPCIONES_METODOS_DETERMINANTES}
         detalle = HISTORIAL_DETERMINANTE_DETALLE.format(
             determinante=datos.get('determinante', ''), metodo=nombres.get(datos.get('metodo'), ''))
+    elif datos['estado'] == 'FACTORIZACION_LU_CALCULADA':
+        detalle = HISTORIAL_FACTORIZACION_LU_DETALLE.format(rango=datos.get('rango', ''))
     elif 'metodo' in datos:
         detalle = f"Método: {datos['metodo'].replace('-', ' ').title()}"
     elif datos.get('determinante') is not None:

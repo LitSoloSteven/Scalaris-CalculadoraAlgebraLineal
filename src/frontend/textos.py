@@ -30,6 +30,16 @@ DETERMINANTES_VALOR = "Determinante: {valor}"
 DETERMINANTES_SINGULAR = "La matriz es singular."
 HISTORIAL_DETERMINANTE_CALCULADO = "Calculado"
 HISTORIAL_DETERMINANTE_DETALLE = "det = {determinante}. Método: {metodo}"
+HISTORIAL_FACTORIZACION_LU_CALCULADA = "Factorización calculada"
+HISTORIAL_FACTORIZACION_LU_DETALLE = "rango {rango}"
+CAPTURA_RECTANGULAR_AYUDA = "Pega desde Excel o un bloc de notas (tabuladores o comas). Máx. {limite}×{limite}."
+CAPTURA_RECTANGULAR_RECORTADA = "La matriz supera el límite; se conservaron las primeras {limite} filas y columnas."
+CAPTURA_PORTAPAPELES_ERROR = "No se pudo acceder al portapapeles. Comprueba los permisos y vuelve a intentarlo."
+CAPTURA_RECTANGULAR_MATRIZ = "Matriz A"
+CAPTURA_RECTANGULAR_PEGAR = "Pegar"
+CAPTURA_RECTANGULAR_TOOLTIP = "Pegar matriz desde el portapapeles"
+CAPTURA_RECTANGULAR_EJES = (("filas", "Filas"), ("columnas", "Columnas"))
+CAPTURA_RECTANGULAR_ACCIONES = ((-1, "remove", "Quitar"), (1, "add", "Añadir"))
 VISTA_PREVIA_LIMITE = "Vista previa disponible hasta {dimension}×{dimension}."
 VISTA_PREVIA_ERROR = "No se pudo generar la vista previa. Revisa la matriz."
 
