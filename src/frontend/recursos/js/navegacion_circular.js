@@ -19,9 +19,11 @@
     }
 
     function registrarTeclado(evento, destino) {
-        if (evento.detail !== 0) return;
         try {
-            sessionStorage.setItem(claveTeclado, JSON.stringify({ destino: destino.href, instante: Date.now() }));
+            sessionStorage.removeItem(claveTeclado);
+            if (evento.detail === 0) {
+                sessionStorage.setItem(claveTeclado, JSON.stringify({ destino: destino.href, instante: Date.now() }));
+            }
         } catch (_) { /* La navegación no depende del almacenamiento. */ }
     }
 

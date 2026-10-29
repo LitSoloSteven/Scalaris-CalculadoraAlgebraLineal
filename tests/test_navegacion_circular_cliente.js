@@ -140,6 +140,15 @@ prueba('el teclado omite la transición y el puntero limita el origen a la venta
     afirmar.equal(limitada.animaciones[0].fotogramas.clipPath[0], 'circle(0px at 0px 600px)');
 });
 
+prueba('un clic de teclado cancelado no afecta una navegación posterior con puntero', () => {
+    const almacen = new Map();
+    const salida = crearCliente(almacen, 'https://scalaris.test/matrices');
+    salida.clics.get('click')(crearClic({ detail: 0 }));
+    salida.clics.get('click')(crearClic());
+    const entrada = crearCliente(almacen);
+    afirmar.notEqual(entrada.atributos.get('data-entrada'), 'teclado');
+});
+
 prueba('no registra enlaces externos, descargas, fragmentos ni activaciones modificadas', () => {
     const excluidos = [
         crearClic({ button: 1 }), ...['ctrlKey', 'metaKey', 'shiftKey', 'altKey'].map(tecla => crearClic({ [tecla]: true })),
