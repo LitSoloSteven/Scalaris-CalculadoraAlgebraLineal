@@ -3,9 +3,29 @@
     'use strict';
     const raiz = document.documentElement;
     const clave = 'scalaris:origen-navegacion';
+    const claveTeclado = 'scalaris:navegacion-teclado';
     const preferencia = window.matchMedia('(prefers-reduced-motion: reduce)');
     let intencion = null;
     let activa = null;
+
+    function recuperarTeclado() {
+        try {
+            const registro = JSON.parse(sessionStorage.getItem(claveTeclado));
+            sessionStorage.removeItem(claveTeclado);
+            if (registro?.destino === window.location.href && Date.now() - registro.instante < 8000) {
+                raiz.setAttribute('data-entrada', 'teclado');
+            }
+        } catch (_) { /* La navegación no depende del almacenamiento. */ }
+    }
+
+    function registrarTeclado(evento, destino) {
+        try {
+            sessionStorage.removeItem(claveTeclado);
+            if (evento.detail === 0) {
+                sessionStorage.setItem(claveTeclado, JSON.stringify({ destino: destino.href, instante: Date.now() }));
+            }
+        } catch (_) { /* La navegación no depende del almacenamiento. */ }
+    }
 
     function consumirOrigen() {
         try {
@@ -41,6 +61,7 @@
         intencion = null;
         const destino = destinoInterno(evento);
         if (!destino) return;
+        registrarTeclado(evento, destino.url);
         const caja = destino.enlace.getBoundingClientRect();
         intencion = {
             evento, destino: destino.url.href, instante: Date.now(),
@@ -55,7 +76,7 @@
         const elegida = intencion;
         intencion = null;
         if (!evento.viewTransition) return;
-        if (preferencia.matches) {
+        if (omitirMovimiento(elegida)) {
             evento.viewTransition.skipTransition();
             return;
         }
@@ -70,6 +91,10 @@
                 instante: elegida.instante, x: elegida.x, y: elegida.y,
             }));
         } catch (_) { /* Sin almacenamiento se utiliza el centro de la ventana. */ }
+    }
+
+    function omitirMovimiento(elegida) {
+        return preferencia.matches || elegida?.evento.detail === 0 || !window.scalaris.movimiento.permitido();
     }
 
     function limpiar(transicion) {
@@ -119,7 +144,7 @@
         const centro = `at ${origen.x}px ${origen.y}px`;
         estado.animacion = raiz.animate(
             { clipPath: [`circle(0px ${centro})`, `circle(${radio}px ${centro})`] },
-            { duration: 500, fill: 'both', easing: 'cubic-bezier(0.32, 0.72, 0, 1)', pseudoElement: '::view-transition-new(root)' },
+            { duration: window.scalaris.movimiento.duracion('--dur-view'), fill: 'both', easing: window.scalaris.movimiento.curva(), pseudoElement: '::view-transition-new(root)' },
         );
         estado.animacion.pause();
         estado.animacion.finished.catch(() => {});
@@ -159,7 +184,7 @@
             limpiar(activa);
         }
         if (!evento.viewTransition) return;
-        if (preferencia.matches || typeof raiz.animate !== 'function') {
+        if (!window.scalaris.movimiento.permitido() || typeof raiz.animate !== 'function') {
             evento.viewTransition.skipTransition();
             return;
         }
@@ -172,6 +197,7 @@
         });
     }
 
+    recuperarTeclado();
     document.addEventListener('click', registrarEnlace);
     window.addEventListener('pageswap', guardarSalida);
     window.addEventListener('pagereveal', revelarPagina);

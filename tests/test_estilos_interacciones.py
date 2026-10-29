@@ -31,7 +31,7 @@ def _comprobar_contenedores_y_celdas(contenido):
 
 
 def _comprobar_curvas_y_entradas(contenido):
-    assert "transition: transform var(--dur-med) var(--ease-std), opacity var(--dur-med) var(--ease-std) !important;" in contenido
+    assert "transition: transform var(--dur-state) var(--ease-std), opacity var(--dur-state) var(--ease-std) !important;" in contenido
     assert "var(--ease-elastic)" not in contenido.split(".pestanas-controles .q-tab__indicator")[1].split("}")[0]
 
     css_boton_icono = contenido.split(".boton-icono {")[1].split("}")[0]
@@ -47,15 +47,15 @@ def _comprobar_curvas_y_entradas(contenido):
     assert "var(--ease-std)" in css_logo
 
     css_deslizamiento_vertical = contenido.split(".movimiento-entrada {")[1].split("}")[0]
-    assert "var(--dur-med)" in css_deslizamiento_vertical
+    assert "var(--dur-panel)" in css_deslizamiento_vertical
     assert "var(--ease-std)" in css_deslizamiento_vertical
 
     css_rebote = contenido.split(".movimiento-rebote {")[1].split("}")[0]
-    assert "var(--dur-med)" in css_rebote
+    assert "var(--dur-panel)" in css_rebote
     assert "var(--ease-std)" in css_rebote
 
     css_compresion = contenido.split(".movimiento-compresion {")[1].split("}")[0]
-    assert "var(--dur-med)" in css_compresion
+    assert "var(--dur-panel)" in css_compresion
     assert "var(--ease-std)" in css_compresion
 
 
@@ -73,7 +73,7 @@ def _comprobar_movimiento_reducido_y_sugerencias(contenido, raiz):
     assert ".movimiento-compresion" in parte_movimiento_reducido
     assert ".movimiento-entrada" in parte_movimiento_reducido
     assert "animation: none !important;" in parte_movimiento_reducido
-    assert "transition-duration: 120ms !important;" in parte_movimiento_reducido
+    assert "transition-duration: var(--dur-reduced) !important;" in parte_movimiento_reducido
 
     assert ".glosa-sugerencias {" in contenido
     assert ".glosa-sugerencias-en-linea {" in contenido
@@ -90,7 +90,8 @@ def test_cliente_delega_ayuda_y_no_anima_teclado():
     assert "key-pulse" not in javascript_aplicacion
     assert "scrollWidth > objetivo.clientWidth" in javascript_aplicacion
     assert "objetivo.title = objetivo.value" in javascript_aplicacion
-    assert "transform 160ms cubic-bezier(0.32, 0.72, 0, 1), opacity 160ms cubic-bezier(0.32, 0.72, 0, 1)" in recoleccion_js
+    assert "movimiento.duracion('--dur-panel')" in recoleccion_js
+    assert "movimiento.curva()" in recoleccion_js
 
 
 def test_cliente_resaltado_cruzado_sin_desenfoque():

@@ -132,7 +132,7 @@ def test_recursos_compartidos_se_enlazan_y_destello_deja_el_script_anterior():
 def test_velocidades_y_renderizado_latex_conservan_contrato(monkeypatch):
     """Comprueba los intervalos fijos y la composición segura de bloques MathJax."""
     html_renderizado, llamadas_javascript = capturar_renderizado_latex(monkeypatch, "x < 1")
-    assert VELOCIDADES_AUTOREPRODUCCION == {"Lenta": 1.2, "Normal": 0.6, "Rápida": 0.2}
+    assert VELOCIDADES_AUTOREPRODUCCION == {"Lenta": 2.0, "Normal": 1.2, "Rápida": 0.7}
     assert len(html_renderizado) == 1
     assert 'class="matematicas-desplazamiento matematicas-etiqueta"' in html_renderizado[0]
     assert "$$ x &lt; 1 $$" in html_renderizado[0]

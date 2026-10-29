@@ -22,12 +22,12 @@
 .inicio-dialogo::backdrop {
     background: var(--scrim);
     opacity: 0;
-    transition: opacity 180ms var(--ease-std);
+    transition: opacity var(--dur-view-exit) var(--ease-std);
 }
 
 .inicio-dialogo[open][data-abierto]::backdrop {
     opacity: 1;
-    transition-duration: 250ms;
+    transition-duration: var(--dur-view);
 }
 
 .inicio-dialogo-tarjeta {
@@ -47,13 +47,13 @@
     opacity: 0;
     transform: scale(0.95);
     transform-origin: 50% 50%;
-    transition: opacity 180ms linear, transform 200ms var(--ease-std);
+    transition: opacity var(--dur-view-exit) var(--ease-std), transform var(--dur-view-exit) var(--ease-std);
 }
 
 .inicio-dialogo[open][data-abierto] .inicio-dialogo-tarjeta {
     opacity: 1;
     transform: scale(1);
-    transition-duration: 250ms;
+    transition-duration: var(--dur-view);
 }
 
 @starting-style {
@@ -122,11 +122,12 @@
     box-shadow: var(--elev-2);
     color: var(--text-main);
     cursor: pointer;
-    transition: transform 0ms;
+    transition: transform var(--dur-release) var(--ease-std);
 }
 
 .inicio-dialogo-cerrar:active {
     transform: scale(0.98);
+    transition-duration: var(--dur-press);
 }
 
 .inicio-dialogo-icono-cerrar {
@@ -195,16 +196,21 @@
     color: var(--text-main);
     text-decoration: none;
     opacity: 0;
-    transform: scale(0.95) translateY(8px);
-    transition: opacity 120ms var(--ease-std), transform 120ms var(--ease-std);
-    transition-delay: 0ms;
+    transform: scale(0.95) translateY(16px);
+    transition: opacity var(--dur-view-exit) var(--ease-std), transform var(--dur-view-exit) var(--ease-std);
+    transition-delay: var(--tiempo-instantaneo);
 }
 
 .inicio-dialogo[data-abierto] .inicio-tarjeta {
     opacity: 1;
     transform: translateY(0);
-    transition-duration: 120ms;
-    transition-delay: calc(var(--i, 0) * 40ms);
+    transition-duration: var(--dur-view);
+    transition-delay: min(calc(var(--i, 0) * var(--stagger-step)), var(--stagger-max));
+}
+
+.inicio-dialogo[data-abierto][data-interaccion] .inicio-tarjeta {
+    transition-duration: var(--dur-view), var(--dur-release);
+    transition-delay: var(--tiempo-instantaneo);
 }
 
 .inicio-tarjeta::after {
@@ -215,12 +221,12 @@
     box-shadow: var(--elev-3);
     opacity: 0;
     pointer-events: none;
-    transition: opacity 120ms var(--ease-std);
+    transition: opacity var(--dur-state) var(--ease-std);
 }
 
-.inicio-tarjeta:active {
+.inicio-dialogo[data-abierto] .inicio-tarjeta:active {
     transform: scale(0.98);
-    transition: transform 0ms;
+    transition: transform var(--dur-press) var(--ease-std);
 }
 
 .inicio-tarjeta.esta-destacada::before {

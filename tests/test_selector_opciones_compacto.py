@@ -62,7 +62,7 @@ def test_indicador_compacto_se_mueve_sin_transiciones_de_redimensionado():
     assert 'height: calc(100% / var(--selector-filas-compactas))' in estilos
     assert 'width: calc(100% / var(--selector-columnas-compactas))' in estilos
     assert '.selector-opciones-indicador { display: none; }' not in estilos
-    assert 'animation: selector-opciones-deslizar var(--dur-med) var(--ease-std)' in estilos
+    assert 'animation: selector-opciones-deslizar var(--dur-state) var(--ease-std)' in estilos
     assert 'transition: transform var(--dur-med)' not in estilos
     assert 'html[data-entrada="teclado"] .selector-opciones-indicador' in estilos
     assert 'animation: none !important' in estilos

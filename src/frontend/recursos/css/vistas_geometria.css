@@ -47,6 +47,7 @@
     min-width: 0;
     flex: 1 1 0;
     accent-color: var(--accent);
+    transition: transform var(--dur-release) var(--ease-std);
 }
 
 .geometria-deslizador-entrada:focus-visible {
@@ -56,6 +57,11 @@
 
 .geometria-deslizador-entrada:active {
     transform: scale(0.98);
+    transition-duration: var(--dur-press);
+}
+
+html[data-entrada="teclado"] .geometria-deslizador-entrada {
+    transition: none;
 }
 
 html[data-entrada="teclado"] .geometria-deslizador-entrada:active {
@@ -63,6 +69,9 @@ html[data-entrada="teclado"] .geometria-deslizador-entrada:active {
 }
 
 @media (prefers-reduced-motion: reduce) {
+    .geometria-deslizador-entrada {
+        transition: none;
+    }
     .geometria-deslizador-entrada:active {
         transform: none;
     }

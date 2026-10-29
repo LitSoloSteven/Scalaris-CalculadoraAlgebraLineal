@@ -9,7 +9,12 @@
         document.documentElement.setAttribute('data-entrada', 'puntero');
     }, { capture: true, passive: true });
     window.scalaris.movimiento = {
-        medio: 240,
+        duracion: function (token) {
+            return parseFloat(getComputedStyle(document.documentElement).getPropertyValue(token));
+        },
+        curva: function () {
+            return getComputedStyle(document.documentElement).getPropertyValue('--ease-std').trim();
+        },
         permitido: function () {
             if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
             return document.documentElement.getAttribute('data-entrada') !== 'teclado';

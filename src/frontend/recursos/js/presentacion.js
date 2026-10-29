@@ -40,6 +40,7 @@
     function alReducir(evento) { if (evento.matches) finalizar(); }
 
     function debeReproducirse() {
+      if (raiz.getAttribute('data-entrada') === 'teclado') return false;
       try {
         const mostrada = sessionStorage.getItem('presentacion-mostrada');
         sessionStorage.setItem('presentacion-mostrada', '1');
@@ -54,35 +55,44 @@
       return animacion;
     }
 
-    function reproducirSecuencia() {
-      const curva = getComputedStyle(raiz).getPropertyValue('--ease-std').trim();
-      animar(fondo.querySelector('#presentacion-logotipo'),
-        [{ opacity: 0, transform: 'scale(0.88)' }, { opacity: 1, transform: 'scale(1)' }],
-        { duration: 600, easing: curva });
-      animar(fondo.querySelector('#presentacion-anillo circle'),
-        [{ strokeDashoffset: 365 }, { strokeDashoffset: 0 }], { duration: 1200, delay: 600, easing: curva });
-      animar(fondo.querySelector('#presentacion-nombre'),
-        [{ clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)' }],
-        { duration: 500, delay: 800, easing: curva });
-      animar(fondo.querySelector('#presentacion-organizacion'),
-        [{ opacity: 0, transform: 'translateY(3px)' }, { opacity: 1, transform: 'translateY(0)' }],
-        { duration: 400, delay: 1200, easing: curva });
-      animar(fondo.querySelector('#presentacion-anillo'),
-        [{ transform: 'rotate(-90deg) scale(1)' }, { transform: 'rotate(-90deg) scale(1.03)', offset: 0.5 },
-          { transform: 'rotate(-90deg) scale(1)' }], { duration: 800, delay: 1800, easing: curva });
-      animar(fondo.querySelector('#presentacion-barra'),
-        [{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], { duration: 600, delay: 1800, easing: curva });
-      animar(fondo, [{ opacity: 1, transform: 'scale(1)' }, { opacity: 0, transform: 'scale(1.04)' }],
-        { duration: 400, delay: 2600, easing: curva }).finished.then(finalizar, finalizar);
+    function opciones(token) {
+      return { duration: window.scalaris.movimiento.duracion(token), easing: window.scalaris.movimiento.curva() };
+    }
+
+    async function reproducirSecuencia() {
+      const entrada = [
+        animar(fondo.querySelector('#presentacion-logotipo'),
+          [{ opacity: 0, transform: 'scale(0.95)' }, { opacity: 1, transform: 'scale(1)' }], opciones('--dur-view')),
+        animar(fondo.querySelector('#presentacion-anillo circle'),
+          [{ strokeDashoffset: 365 }, { strokeDashoffset: 0 }], opciones('--dur-didactic')),
+        animar(fondo.querySelector('#presentacion-nombre'),
+          [{ clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)' }], opciones('--dur-view')),
+        animar(fondo.querySelector('#presentacion-organizacion'),
+          [{ opacity: 0, transform: 'scale(0.95) translateY(16px)' }, { opacity: 1, transform: 'scale(1) translateY(0)' }], opciones('--dur-panel')),
+      ];
+      await Promise.all(entrada.map(animacion => animacion.finished));
+      if (completada) return;
+      const cierre = [
+        animar(fondo.querySelector('#presentacion-anillo'),
+          [{ transform: 'rotate(-90deg) scale(1)' }, { transform: 'rotate(-90deg) scale(1.03)', offset: 0.5 },
+            { transform: 'rotate(-90deg) scale(1)' }], opciones('--dur-view')),
+        animar(fondo.querySelector('#presentacion-barra'),
+          [{ opacity: 0, transform: 'scaleX(0.95)' }, { opacity: 1, transform: 'scaleX(1)' }], opciones('--dur-view')),
+      ];
+      await Promise.all(cierre.map(animacion => animacion.finished));
+      if (completada) return;
+      await animar(fondo, [{ opacity: 1, transform: 'scale(1)' }, { opacity: 0, transform: 'scale(1.04)' }],
+        opciones('--dur-view-exit')).finished;
+      finalizar();
     }
 
     function reproducir() {
       if (completada) return;
       try {
         if (preferencia.matches) {
-          animar(fondo, [{ opacity: 1 }, { opacity: 0 }], { duration: 120, delay: 280 })
+          animar(fondo, [{ opacity: 1 }, { opacity: 0 }], opciones('--dur-reduced'))
             .finished.then(finalizar, finalizar);
-        } else reproducirSecuencia();
+        } else reproducirSecuencia().catch(finalizar);
       } catch (_) { finalizar(); }
     }
 
@@ -100,7 +110,10 @@
       document.addEventListener('pointerdown', finalizar, true);
       document.addEventListener('visibilitychange', alOcultar);
       preferencia.addEventListener('change', alReducir);
-      programar(finalizar, preferencia.matches ? 800 : 3800);
+      const duracion = window.scalaris.movimiento.duracion;
+      const limite = preferencia.matches ? duracion('--dur-reduced') :
+        duracion('--dur-didactic') + duracion('--dur-view') + duracion('--dur-view-exit');
+      programar(finalizar, limite + duracion('--dur-view'));
       imagen.decode().then(reproducir, finalizar);
     }
 

@@ -78,7 +78,8 @@ class VistaSistemasNumericos(MixinLimpiezaBases, MixinInteraccionSistemasNumeric
                 self.contenedor_bits = ui.row().classes('gap-1 items-center flex-wrap')
 
             with ui.row().classes('w-full gap-4 mt-2'):
-                crear_boton_limpieza(self, lambda: not self.boton_convertir.is_deleted)
+                crear_boton_limpieza(self, lambda: not self.boton_convertir.is_deleted,
+                                      lambda: [self.entrada_valor])
                 self.boton_convertir = ui.button(
                     'Convertir', on_click=self._convertir_boton, color=None
                 ).classes('boton-principal flex-[2] py-3 text-lg font-bold')

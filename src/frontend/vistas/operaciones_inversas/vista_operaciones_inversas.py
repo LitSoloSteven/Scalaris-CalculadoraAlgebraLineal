@@ -111,3 +111,6 @@ class VistaOperacionesInversas(MixinResultadosOperacionesInversas, MixinPasosOpe
     def esta_completamente_vacio(self) -> bool:
         """Consulta la presencia de texto en el panel matricial."""
         return captura_vacia(self.panel_matriz_cuadrada.cache.values(), considerar_cero=False)
+
+    def _campos_visuales_limpieza(self) -> list:
+        return [self.panel_matriz_cuadrada.contenedor_cuadricula]

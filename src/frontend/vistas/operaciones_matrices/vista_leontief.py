@@ -59,7 +59,7 @@ class VistaLeontief(MixinLimpiezaModelos, MixinCalculoLeontief, MixinCapturaLeon
     def _crear_accion_principal(self):
         """Construye crear accion principal conservando el orden de los elementos."""
         with ui.row().classes("w-full mt-6 gap-4"):
-            crear_boton_limpieza(self, lambda: not self.contenedor_resultados.is_deleted)
+            crear_boton_limpieza(self, lambda: not self.contenedor_resultados.is_deleted, self._campos_captura)
             ui.button(
                 "Calcular", icon="calculate",
                 on_click=lambda evento: self._calcular(evento.sender),

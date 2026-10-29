@@ -138,3 +138,63 @@ html .texto-acento {
     font-size: var(--fs-small);
     font-weight: var(--fw-small);
 }
+
+[class*="q-transition--"][class*="-enter-active"],
+[class*="q-transition--"][class*="-leave-active"] {
+    --q-transition-easing: var(--ease-std);
+    transition-timing-function: var(--ease-std) !important;
+}
+
+.q-dialog__inner[class*="-leave-active"],
+.q-dialog__backdrop[class*="-leave-active"] {
+    transition-duration: var(--dur-view-exit) !important;
+}
+
+.q-menu[class*="-leave-active"] {
+    transition-duration: var(--dur-panel-exit) !important;
+}
+
+.q-tooltip[class*="-leave-active"],
+.q-tab-panels .q-panel[class*="-leave-active"] {
+    transition-duration: var(--dur-state-exit) !important;
+}
+
+.q-notification {
+    transition: transform var(--dur-panel) var(--ease-std), opacity var(--dur-panel) var(--ease-std);
+}
+
+.q-notification[class*="-leave-active"] {
+    transition-duration: var(--dur-panel-exit);
+}
+
+html[data-entrada="teclado"] .q-notification,
+html[data-entrada="teclado"] [class*="q-transition--"],
+html[data-entrada="teclado"] .q-expansion-item__content {
+    transition: none !important;
+    animation: none !important;
+}
+
+html[data-entrada="teclado"] .q-expansion-item__content {
+    height: auto !important;
+    overflow: visible !important;
+}
+
+html[data-entrada="teclado"] .q-expansion-item--collapsed .q-expansion-item__content {
+    display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .q-notification,
+    [class*="q-transition--"] {
+        transition: opacity var(--dur-reduced) var(--ease-std) !important;
+        transform: none !important;
+    }
+    .q-expansion-item__content {
+        transition: none !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+    .q-expansion-item--collapsed .q-expansion-item__content {
+        display: none !important;
+    }
+}

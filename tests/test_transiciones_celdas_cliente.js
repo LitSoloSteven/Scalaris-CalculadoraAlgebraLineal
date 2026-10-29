@@ -40,18 +40,12 @@ prueba('repetir sobre una celda cancela la animación anterior y deduplica contr
     afirmar.equal(control.animaciones[1].cancelada, true);
 });
 
-prueba('2500 celdas conservan stagger menor de 120 ms y solo transform y opacity', async () => {
+prueba('2500 controles dispersos sin contenedor común no se animan por celda', async () => {
     const cliente = crearCuadriculaSimulada();
     const controles = Array.from({ length: 2500 }, () => crearControl());
     await cliente.ventana.scalaris.cuadricula.animarEntradaCeldas(controles.map(control => ({ closest: () => control })));
-    const opciones = controles.at(-1).animaciones[0].opciones;
-    afirmar.ok(opciones.delay <= 120);
-    afirmar.equal(opciones.duration, 180);
-    for (const control of controles) {
-        for (const fotograma of control.animaciones[0].fotogramas) {
-            afirmar.deepEqual(Object.keys(fotograma).sort(), ['opacity', 'transform']);
-        }
-    }
+    const animados = controles.filter(control => control.animaciones.length);
+    afirmar.equal(animados.length, 0);
 });
 
 prueba('teclado y movimiento reducido no crean animaciones ni efectos persistentes', async () => {

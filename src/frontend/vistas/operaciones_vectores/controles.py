@@ -68,7 +68,9 @@ def construir_panel_izquierdo(vista):
         _construir_pestanas(vista)
         _construir_capturas(vista)
         with ui.row().classes("w-full justify-between mt-8 pt-4 border-t border-[var(--border-input)] items-center"):
-            crear_boton_limpieza(vista, lambda: vista._montada)
+            crear_boton_limpieza(vista, lambda: vista._montada,
+                                  lambda: [vista.panel_vectorial.contenedor] +
+                                  ([vista.entrada_escalar] if vista.operacion_activa == 'escalar' else []))
             vista.boton_calcular = ui.button(
                 "Calcular", icon="calculate", on_click=vista.calcular, color=None,
             ).classes("boton-principal flex-[2] py-3 font-bold")
