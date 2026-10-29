@@ -3,9 +3,27 @@
     'use strict';
     const raiz = document.documentElement;
     const clave = 'scalaris:origen-navegacion';
+    const claveTeclado = 'scalaris:navegacion-teclado';
     const preferencia = window.matchMedia('(prefers-reduced-motion: reduce)');
     let intencion = null;
     let activa = null;
+
+    function recuperarTeclado() {
+        try {
+            const registro = JSON.parse(sessionStorage.getItem(claveTeclado));
+            sessionStorage.removeItem(claveTeclado);
+            if (registro?.destino === window.location.href && Date.now() - registro.instante < 8000) {
+                raiz.setAttribute('data-entrada', 'teclado');
+            }
+        } catch (_) { /* La navegación no depende del almacenamiento. */ }
+    }
+
+    function registrarTeclado(evento, destino) {
+        if (evento.detail !== 0) return;
+        try {
+            sessionStorage.setItem(claveTeclado, JSON.stringify({ destino: destino.href, instante: Date.now() }));
+        } catch (_) { /* La navegación no depende del almacenamiento. */ }
+    }
 
     function consumirOrigen() {
         try {
@@ -41,6 +59,7 @@
         intencion = null;
         const destino = destinoInterno(evento);
         if (!destino) return;
+        registrarTeclado(evento, destino.url);
         const caja = destino.enlace.getBoundingClientRect();
         intencion = {
             evento, destino: destino.url.href, instante: Date.now(),
@@ -55,7 +74,7 @@
         const elegida = intencion;
         intencion = null;
         if (!evento.viewTransition) return;
-        if (preferencia.matches || elegida?.evento.detail === 0 || !window.scalaris.movimiento.permitido()) {
+        if (omitirMovimiento(elegida)) {
             evento.viewTransition.skipTransition();
             return;
         }
@@ -70,6 +89,10 @@
                 instante: elegida.instante, x: elegida.x, y: elegida.y,
             }));
         } catch (_) { /* Sin almacenamiento se utiliza el centro de la ventana. */ }
+    }
+
+    function omitirMovimiento(elegida) {
+        return preferencia.matches || elegida?.evento.detail === 0 || !window.scalaris.movimiento.permitido();
     }
 
     function limpiar(transicion) {
@@ -172,6 +195,7 @@
         });
     }
 
+    recuperarTeclado();
     document.addEventListener('click', registrarEnlace);
     window.addEventListener('pageswap', guardarSalida);
     window.addEventListener('pagereveal', revelarPagina);

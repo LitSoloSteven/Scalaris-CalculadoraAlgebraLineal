@@ -235,6 +235,8 @@ html[data-vista-revelada] .nicegui-content {
 }
 
 html[data-entrada="teclado"] .movimiento-entrada,
+html[data-entrada="teclado"] .q-page,
+html[data-entrada="teclado"] .nicegui-content,
 html[data-entrada="teclado"] .movimiento-rebote,
 html[data-entrada="teclado"] .movimiento-compresion,
 html[data-entrada="teclado"] .pasos-expansion .q-expansion-item__content>* {

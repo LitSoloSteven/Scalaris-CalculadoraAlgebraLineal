@@ -129,6 +129,11 @@ prueba('el teclado omite la transición y el puntero limita el origen a la venta
     const teclado = crearCliente(almacen, 'https://scalaris.test/matrices');
     salir(teclado, crearClic({ detail: 0 }));
     afirmar.equal(almacen.has(CLAVE), false);
+    const llegada = crearCliente(almacen);
+    afirmar.equal(llegada.atributos.get('data-entrada'), 'teclado');
+    const transicion = await revelar(llegada);
+    afirmar.equal(transicion.transicion.omitida, true);
+    afirmar.equal(llegada.animaciones.length, 0);
     salir(crearCliente(almacen, 'https://scalaris.test/matrices'), crearClic({ clientX: -5, clientY: 900 }));
     const limitada = crearCliente(almacen);
     await revelar(limitada);
