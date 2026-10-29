@@ -113,13 +113,13 @@ En Linux o macOS:
 source venv/bin/activate
 ```
 
-Instala las dependencias del entorno de referencia:
+Instala las dependencias del entorno de referencia, incluidas las necesarias para ejecutar las pruebas:
 
 ```bash
-python -m pip install nicegui==3.16.0 plotly==7.0.0 requests==2.34.2 python-dotenv==1.2.3 pytest==9.1.1
+python -m pip install -r requirements.txt
 ```
 
-**Estado de `requirements.txt`:** el archivo conserva el rango `nicegui>=1.4.0, <2.0.0` y no declara `requests` ni `python-dotenv`, aunque el código las importa. Por eso `pip install -r requirements.txt` por sí solo no reproduce el entorno de referencia. La instalación anterior enumera las versiones comprobadas, sin modificar ese archivo.
+El archivo fija las versiones directas del entorno de referencia. Las dependencias transitivas se resuelven durante la instalación.
 
 ### Configurar el entorno
 
@@ -194,7 +194,7 @@ src/
   ai/                      Cliente de OpenRouter, contexto y respuestas
 tests/                     Pruebas Python y JavaScript
 pytest.ini                 Configuración de descubrimiento de pruebas
-requirements.txt           Declaración de dependencias con la salvedad indicada
+requirements.txt           Dependencias directas del entorno de referencia
 .env.example               Plantilla de configuración sin credenciales
 ```
 
