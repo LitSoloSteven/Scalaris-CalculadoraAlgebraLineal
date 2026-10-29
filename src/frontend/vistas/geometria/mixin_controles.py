@@ -27,7 +27,8 @@ class MixinControlesGeometria:
             with self.contenedor_controles:
                 constructor()
                 with ui.row().classes('w-full gap-4 mt-6'):
-                    crear_boton_limpieza(self, lambda: not self.contenedor_controles.is_deleted)
+                    crear_boton_limpieza(self, lambda: not self.contenedor_controles.is_deleted,
+                                          lambda: [self.contenedor_controles])
                     ui.button(LIMPIEZA_VISUALIZAR, on_click=self._visualizar_captura, color=None).classes(
                         'boton-principal flex-[2] py-3'
                     ).props('ripple=false')
