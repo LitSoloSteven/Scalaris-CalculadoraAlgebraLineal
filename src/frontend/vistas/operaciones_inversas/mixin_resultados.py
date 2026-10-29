@@ -81,7 +81,7 @@ class MixinResultadosOperacionesInversas:
 
     async def _confirmar_calculo_grande(self, dimension: int) -> bool:
         """Muestra diálogo de confirmación si la dimensión es grande."""
-        with ui.dialog().props(':transition-duration="window.scalaris.movimiento.duracion(\'--dur-view\')"') as dialogo, ui.card().classes('panel-tarjeta no-shadow p-6 sesion-dialogo'):
+        with ui.dialog() as dialogo, ui.card().classes('panel-tarjeta no-shadow p-6 sesion-dialogo'):
             ui.label('Confirmar cálculo').classes('text-xl font-bold mb-3')
             ui.label(
                 f'Una dimensión n={dimension} ({dimension}×{dimension}) puede tardar unos segundos y consumir bastante memoria. '

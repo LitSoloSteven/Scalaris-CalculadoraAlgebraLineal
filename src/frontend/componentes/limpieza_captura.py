@@ -44,7 +44,7 @@ class LimpiezaCaptura:
             f'ripple=false id="boton-limpiar-principal" aria-label="{LIMPIAR}"'
         )
         with self.boton:
-            ui.tooltip(LIMPIAR).props('target="#boton-limpiar-principal" :transition-duration="window.scalaris.movimiento.duracion(\'--dur-state\')"')
+            ui.tooltip(LIMPIAR).props('target="#boton-limpiar-principal"')
 
     async def confirmar(self) -> None:
         """Abre una única confirmación modal o avisa de una captura vacía."""
@@ -59,7 +59,7 @@ class LimpiezaCaptura:
 
     def _construir_dialogo(self) -> None:
         # QDialog conserva su trampa de foco y devuelve el foco al activador al cerrar.
-        with ui.dialog().props(':transition-duration="window.scalaris.movimiento.duracion(\'--dur-view\')"') as self.dialogo:
+        with ui.dialog() as self.dialogo:
             with ui.card().classes('panel-tarjeta p-6'):
                 ui.label(LIMPIEZA_TITULO).classes('text-xl font-bold mb-4')
                 ui.label(LIMPIEZA_DESCRIPCION).classes('text-sm texto-secundario mb-6')
