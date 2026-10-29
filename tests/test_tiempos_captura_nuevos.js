@@ -27,6 +27,31 @@ prueba('una fila completa se anima como capa sin ocultar su contenedor', async (
   afirmar.equal(animaciones[0].easing, 'curva');
 });
 
+prueba('la salida de una fila se restaura sin animar su vecina', async () => {
+  let cancelada = false, animacionesVecina = 0;
+  const fila = { entradas: [], querySelectorAll() { return this.entradas; },
+    contains: entrada => fila.entradas.includes(entrada),
+    animate: (_, opciones) => {
+      afirmar.equal(opciones.duration, 340);
+      return { finished: Promise.resolve(), cancel() { cancelada = true; } };
+    } };
+  fila.entradas = Array.from({ length: 3 }, () => ({ closest: selector => selector.startsWith('[data-') ? fila : null }));
+  const vecina = { animate() { animacionesVecina++; } };
+  const contenedor = { children: [fila, vecina] };
+  fila.parentElement = contenedor;
+  vecina.parentElement = contenedor;
+  const ventana = { scalaris: { movimiento: movimiento() } };
+  const contexto = vm.createContext({ window: ventana, document: {} });
+  cargarAssetCliente('cuadricula_compartida.js', contexto);
+  const cuadricula = ventana.scalaris.cuadricula;
+  await cuadricula.animarSalidaCeldas(fila.entradas);
+  afirmar.equal(cancelada, false);
+  cuadricula.restaurarCeldas(fila.entradas);
+  afirmar.equal(cancelada, true);
+  afirmar.equal(animacionesVecina, 0);
+  afirmar.equal(contenedor.children[1], vecina);
+});
+
 prueba('texto largo termina con un número acotado de temporizadores', () => {
   let ahora = 0, cantidad = 0;
   const pendientes = [];
