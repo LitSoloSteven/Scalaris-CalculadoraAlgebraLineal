@@ -26,7 +26,7 @@
 .presentacion-textos { display: flex; flex-direction: column; align-items: center; gap: var(--space-1); margin-top: var(--space-5); }
 #presentacion-nombre { font-size: 1.75rem; font-weight: var(--fw-display); letter-spacing: var(--ls-display); clip-path: inset(0 100% 0 0); }
 #presentacion-organizacion { font-size: 0.6875rem; font-weight: var(--fw-display); letter-spacing: 0.25em; color: var(--accent); opacity: 0; }
-#presentacion-barra { width: 120px; height: 2px; margin-top: var(--space-3); border-radius: 2px; background: var(--accent); transform: scaleX(0); }
+#presentacion-barra { width: 120px; height: 2px; margin-top: var(--space-3); border-radius: 2px; background: var(--accent); opacity: 0; transform: scaleX(0.95); }
 
 [data-movimiento-reducido] #presentacion-logotipo,
 [data-movimiento-reducido] #presentacion-organizacion { opacity: 1; }
