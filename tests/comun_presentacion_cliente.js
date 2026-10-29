@@ -13,16 +13,14 @@ function crearReloj() {
         return identificador;
     }
     async function avanzar(destino) {
-        await Promise.resolve();
-        await Promise.resolve();
+        for (let indice = 0; indice < 8; indice++) await Promise.resolve();
         let pendiente;
         while ((pendiente = [...tareas].filter(([, tarea]) => tarea.instante <= destino)
             .sort((a, b) => a[1].instante - b[1].instante)[0])) {
             tiempo = pendiente[1].instante;
             tareas.delete(pendiente[0]);
             pendiente[1].accion();
-            await Promise.resolve();
-            await Promise.resolve();
+            for (let indice = 0; indice < 8; indice++) await Promise.resolve();
         }
         tiempo = destino;
     }
