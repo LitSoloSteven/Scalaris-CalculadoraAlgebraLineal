@@ -68,7 +68,8 @@ class VistaCalculadoraRomana(MixinLimpiezaRomanos, MixinResultadoRomano, MixinCo
 
                 self.contenedor_sugerencias = ui.column().classes("w-full mt-2")
                 with ui.row().classes('w-full gap-4 mt-2'):
-                    crear_boton_limpieza(self, lambda: not self.boton_calcular.is_deleted)
+                    crear_boton_limpieza(self, lambda: not self.boton_calcular.is_deleted,
+                                          lambda: [self.entrada_a, self.entrada_b])
                     self.boton_calcular = ui.button(
                         "Calcular", on_click=self._operar_desde_control, color=None
                     ).classes("boton-principal flex-[2] py-3 text-lg font-bold")

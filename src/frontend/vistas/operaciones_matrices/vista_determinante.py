@@ -67,7 +67,8 @@ class VistaDeterminante(ResultadosDeterminante, MixinSesionMatricial):
                 textos.NOMBRE_SELECTOR_DETERMINANTES)
             self.panel_matriz.construir_contenedor()
             with ui.row().classes('w-full gap-4'):
-                crear_boton_limpieza(self, lambda: not self.contenedor_resultados.is_deleted)
+                crear_boton_limpieza(self, lambda: not self.contenedor_resultados.is_deleted,
+                                      lambda: [self.panel_matriz.contenedor_cuadricula])
                 ui.button(textos.DETERMINANTES_CALCULAR, on_click=self.calcular, color=None).classes(
                     'boton-principal flex-[2] py-3').props('ripple=false')
 
