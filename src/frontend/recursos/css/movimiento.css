@@ -160,7 +160,7 @@ html[data-vista-revelada] .nicegui-content {
 
 .q-page,
 .nicegui-content {
-    animation: entradaVista 180ms var(--ease-std) both;
+    animation: entradaVista var(--dur-view) var(--ease-std) both;
 }
 
 @keyframes reboteCompresion {

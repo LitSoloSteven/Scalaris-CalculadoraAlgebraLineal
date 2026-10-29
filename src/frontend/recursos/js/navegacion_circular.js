@@ -55,7 +55,7 @@
         const elegida = intencion;
         intencion = null;
         if (!evento.viewTransition) return;
-        if (preferencia.matches) {
+        if (preferencia.matches || elegida?.evento.detail === 0 || !window.scalaris.movimiento.permitido()) {
             evento.viewTransition.skipTransition();
             return;
         }
@@ -119,7 +119,7 @@
         const centro = `at ${origen.x}px ${origen.y}px`;
         estado.animacion = raiz.animate(
             { clipPath: [`circle(0px ${centro})`, `circle(${radio}px ${centro})`] },
-            { duration: 500, fill: 'both', easing: 'cubic-bezier(0.32, 0.72, 0, 1)', pseudoElement: '::view-transition-new(root)' },
+            { duration: window.scalaris.movimiento.duracion('--dur-view'), fill: 'both', easing: window.scalaris.movimiento.curva(), pseudoElement: '::view-transition-new(root)' },
         );
         estado.animacion.pause();
         estado.animacion.finished.catch(() => {});
@@ -159,7 +159,7 @@
             limpiar(activa);
         }
         if (!evento.viewTransition) return;
-        if (preferencia.matches || typeof raiz.animate !== 'function') {
+        if (!window.scalaris.movimiento.permitido() || typeof raiz.animate !== 'function') {
             evento.viewTransition.skipTransition();
             return;
         }

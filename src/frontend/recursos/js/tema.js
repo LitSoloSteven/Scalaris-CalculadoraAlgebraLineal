@@ -54,7 +54,7 @@
 
   function movimientoDisponible() {
     if (!document.startViewTransition || typeof raiz.animate !== 'function') return false;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+    if (!window.scalaris.movimiento.permitido()) return false;
     if (window.scalaris.presentacion?.activa) return false;
     return !raiz.hasAttribute('data-navegacion-circular');
   }
@@ -65,7 +65,7 @@
     const centro = `at ${origen.x}px ${origen.y}px`;
     seleccion.animacion = raiz.animate(
       { clipPath: [`circle(0px ${centro})`, `circle(${radio}px ${centro})`] },
-      { duration: 500, easing: 'cubic-bezier(0.32, 0.72, 0, 1)', pseudoElement: '::view-transition-new(root)' },
+      { duration: window.scalaris.movimiento.duracion('--dur-view'), easing: window.scalaris.movimiento.curva(), pseudoElement: '::view-transition-new(root)' },
     );
     seleccion.animacion.finished.catch(() => {});
   }
