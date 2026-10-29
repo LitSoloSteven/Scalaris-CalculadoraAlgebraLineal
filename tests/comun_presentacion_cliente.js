@@ -47,6 +47,7 @@ function crearEventos() {
 /** Modelo del DOM limitado a los elementos y animaciones de la presentación. */
 function crearDocumento(reloj, opciones) {
     const animaciones = [], atributos = new Map(), observadores = [];
+    if (opciones.teclado) atributos.set('data-entrada', 'teclado');
     let montado = false, contenido = opciones.contenido !== false;
     const fondo = { toggleAttribute() {}, remove: () => { montado = false; } };
     function animar(fotogramas, tiempos) {

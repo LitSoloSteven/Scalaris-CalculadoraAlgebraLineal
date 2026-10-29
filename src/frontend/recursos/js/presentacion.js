@@ -40,6 +40,7 @@
     function alReducir(evento) { if (evento.matches) finalizar(); }
 
     function debeReproducirse() {
+      if (raiz.getAttribute('data-entrada') === 'teclado') return false;
       try {
         const mostrada = sessionStorage.getItem('presentacion-mostrada');
         sessionStorage.setItem('presentacion-mostrada', '1');

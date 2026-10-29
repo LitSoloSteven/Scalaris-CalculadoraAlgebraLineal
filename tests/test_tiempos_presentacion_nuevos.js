@@ -21,3 +21,10 @@ prueba('movimiento reducido usa únicamente opacidad, sin retardo', async () => 
   afirmar.equal(animacion.tiempos.easing, cliente.ventana.scalaris.movimiento.curva());
   afirmar(animacion.fotogramas.every(fotograma => Object.keys(fotograma).join() === 'opacity'));
 });
+
+prueba('una llegada por teclado no reproduce la presentación', async () => {
+  const cliente = crearPresentacion({ teclado: true });
+  await cliente.reloj.avanzar(32);
+  afirmar.equal(cliente.animaciones.length, 0);
+  afirmar.equal(cliente.montado(), false);
+});
