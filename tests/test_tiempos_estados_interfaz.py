@@ -30,6 +30,6 @@ def test_selector_geometria_y_regreso_inicio():
     assert "var(--dur-press)" in bloque_css(selector, ".selector-opciones-opcion:active")
     assert "var(--dur-release)" in bloque_css(geometria, ".geometria-deslizador-entrada")
     assert "var(--dur-press)" in bloque_css(geometria, ".geometria-deslizador-entrada:active")
-    fila = bloque_css(inicio, ".inicio-fila")
+    fila = bloque_css(inicio, ".inicio-fila[data-interaccion]")
     assert "var(--dur-release)" in fila
     assert "var(--dur-press)" in bloque_css(inicio, ".inicio-fila:active")
