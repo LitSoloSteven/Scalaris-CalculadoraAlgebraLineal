@@ -1,11 +1,11 @@
 """Auditoría de las declaraciones de movimiento de los recursos propios."""
 import re
+import json
+import subprocess
 from pathlib import Path
 
 RECURSOS = Path(__file__).resolve().parents[1] / 'src/frontend/recursos'
 PATRON_TIEMPO = re.compile(r'(?<![\w.])[+-]?\d+(?:\.\d+)?(?:ms|s)\b')
-PATRON_LITERAL_JS = re.compile(r'''["']?(?:duration|delay)["']?\s*[:=]\s*[+-]?\d|cubic-bezier\s*\(''', re.I)
-PATRON_ANIMATE = re.compile(r'\.animate\(\s*[^,()]+,\s*[+-]?\d')
 TOKENS = {'press': 200, 'release': 320, 'state': 350, 'state-exit': 260, 'panel': 450,
           'panel-exit': 340, 'view': 600, 'view-exit': 450, 'didactic': 900,
           'didactic-exit': 675, 'reduced': 120}
@@ -25,7 +25,11 @@ def _infraccion_declaracion(selector, propiedad, valor, es_tokens):
         return f'{selector}: curva prohibida'
     if propiedad == 'transition' and re.search(r'\ball\b', valor):
         return f'{selector}: transition all'
-    if propiedad == 'will-change' and '[data-destacada-activa]' not in selector:
+    return _infraccion_will_change(selector, propiedad)
+
+
+def _infraccion_will_change(selector, propiedad):
+    if propiedad == 'will-change' and any('[data-destacada-activa]' not in parte for parte in selector.split(',')):
         return f'{selector}: will-change permanente'
     return None
 
@@ -41,12 +45,6 @@ def _infracciones_css(texto, es_tokens=False):
             if error:
                 errores.append(error)
     return errores
-
-
-def _literal_indirecto_js(texto):
-    nombres = re.findall(r'\b(?:const|let|var)\s+(\w+)\s*=\s*[+-]?\d+(?:\.\d+)?\s*;', texto)
-    return any(re.search(r'\b(?:duration|delay)\s*:\s*' + re.escape(nombre) + r'\b', texto)
-               for nombre in nombres)
 
 
 def test_css_solo_declaraciones_de_tiempo_en_tokens():
@@ -65,22 +63,22 @@ def test_tokens_de_duracion_en_banda():
         valor = declaracion.strip()[:-2]
         assert int(valor) == TOKENS[nombre.removeprefix('--dur-')], nombre
         assert (0 < float(valor) <= 120) if nombre == '--dur-reduced' else (200 <= float(valor) <= 900), nombre
+    for nombre, valor in {'stagger-step': 75, 'stagger-max': 600}.items():
+        assert re.search(rf'--{nombre}\s*:\s*{valor}ms\s*;', texto)
 
 
 def test_javascript_sin_duraciones_o_curvas_literales_en_animaciones():
     """Rechaza duraciones directas y curvas literales en JavaScript."""
-    for ruta in (RECURSOS / 'js').glob('*.js'):
-        texto = ruta.read_text(encoding='utf-8')
-        assert not PATRON_LITERAL_JS.search(texto) and not PATRON_ANIMATE.search(texto), ruta
-        assert not _literal_indirecto_js(texto), ruta
+    rutas = [str(ruta) for ruta in (RECURSOS / 'js').glob('*.js')]
+    analizador = Path(__file__).with_name('comun_auditoria_tiempos.js')
+    salida = subprocess.run(['node', '--expose-internals', str(analizador)], input=json.dumps(rutas),
+                            text=True, capture_output=True, check=True, encoding='utf-8')
+    assert not json.loads(salida.stdout)
 
 
 def test_auditoria_detecta_regresiones():
     """Comprueba que las reglas detectan casos representativos prohibidos."""
     for css in ('a{transition: all 1s linear}', 'a{will-change: transform}', 'a{animation: x ease-in}'):
         assert _infracciones_css(css)
-    for javascript in ('{duration: 180}', '{delay: 20}', "easing: 'cubic-bezier(0,0,0,1)'"):
-        assert PATRON_LITERAL_JS.search(javascript)
-    assert PATRON_ANIMATE.search('elemento.animate(fotogramas, 180)')
-    assert _literal_indirecto_js('const tiempo = 180; elemento.animate(f, {duration: tiempo})')
     assert _infracciones_css('a{animation-delay: -15ms}')
+    assert _infracciones_css('a, [data-destacada-activa] b {will-change: transform}')
