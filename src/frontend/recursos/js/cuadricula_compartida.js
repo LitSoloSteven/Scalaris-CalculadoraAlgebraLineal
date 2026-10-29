@@ -14,6 +14,7 @@
   const avisosActivos = new WeakMap();
   const animacionesActivas = new WeakMap();
   const capasPorEntrada = new WeakMap();
+  const observadores = new WeakMap();
 
   /** Consulta la política compartida de teclado y movimiento reducido. */
   function movimientoActivo() {
@@ -25,18 +26,31 @@
     Array.from(elementos).forEach(entrada => {
       const control = capasPorEntrada.get(entrada) || entrada.closest('.q-field__control');
       if (!control) return;
-      animacionesActivas.get(control)?.cancel?.();
-      animacionesActivas.delete(control);
+      cancelarAnimacion(control, animacionesActivas.get(control));
       capasPorEntrada.delete(entrada);
     });
   }
 
+  function cancelarAnimacion(control, animacion) {
+    if (!animacion || animacionesActivas.get(control) !== animacion) return;
+    observadores.get(animacion)?.disconnect();
+    observadores.delete(animacion);
+    animacion.cancel?.();
+    animacionesActivas.delete(control);
+  }
+
   function retirarAnimacionesPropias(animaciones) {
     animaciones.forEach((animacion, control) => {
-      if (animacionesActivas.get(control) !== animacion) return;
-      animacion.cancel?.();
-      animacionesActivas.delete(control);
+      cancelarAnimacion(control, animacion);
     });
+  }
+
+  function contenedorCompleto(entradas, seleccionadas) {
+    const contenedor = entradas[0].closest('.cuadricula-contenido');
+    if (!contenedor?.querySelectorAll) return null;
+    const celdas = Array.from(contenedor.querySelectorAll('input'));
+    return celdas.length && celdas.every(entrada => seleccionadas.has(entrada)) &&
+      entradas.every(entrada => contenedor.contains(entrada)) ? contenedor : null;
   }
 
   function seleccionarCapas(entradas) {
@@ -45,10 +59,26 @@
     const filas = new Set(entradas.map(entrada => entrada.closest('[data-cuadricula-fila], .q-row[data-matriz-fila]')));
     const filasCompletas = [...filas].filter(fila => fila?.querySelectorAll &&
       Array.from(fila.querySelectorAll('input')).every(entrada => seleccionadas.has(entrada)));
-    if (filasCompletas.length > 10) return [];
     const controles = entradas.filter(entrada => !filasCompletas.some(fila => fila.contains(entrada)))
       .map(entrada => entrada.closest('.q-field__control')).filter(Boolean);
-    return [...filasCompletas, ...new Set(controles)].slice(0, 10);
+    const capas = [...filasCompletas, ...new Set(controles)];
+    if (entradas.length > 10 && filasCompletas.length !== 1) {
+      const contenedor = contenedorCompleto(entradas, seleccionadas);
+      if (contenedor) return [contenedor];
+    }
+    if (capas.length <= 10) return capas;
+    return [];
+  }
+
+  function vigilarSalida(control, animacion, entradas) {
+    if (!control.matches?.('.cuadricula-contenido') || typeof MutationObserver === 'undefined') return;
+    const observador = new MutationObserver(() => {
+      if (control.isConnected === false || entradas.some(entrada => !control.contains(entrada))) {
+        cancelarAnimacion(control, animacion);
+      }
+    });
+    observadores.set(animacion, observador);
+    observador.observe(control.parentElement || control, { childList: true, subtree: true });
   }
 
   async function animarCeldas(elementos, fotogramas, tokenDuracion) {
@@ -64,9 +94,10 @@
           duration: movimiento.duracion(tokenDuracion), easing: movimiento.curva(), fill: 'forwards'
         });
         animacionesActivas.set(control, animacion);
-        entradas.forEach(entrada => { if (control === entrada.closest('.q-field__control') || control.contains?.(entrada)) capasPorEntrada.set(entrada, control); });
-        animacion.finished.catch(() => {});
         animaciones.set(control, animacion);
+        animacion.finished.catch(() => {});
+        if (fotogramas === FOTOGRAMAS_SALIDA) vigilarSalida(control, animacion, entradas);
+        entradas.forEach(entrada => { if (control === entrada.closest('.q-field__control') || control.contains?.(entrada)) capasPorEntrada.set(entrada, control); });
       });
       await Promise.all([...animaciones.values()].map(animacion => animacion.finished));
       if (fotogramas === FOTOGRAMAS_ENTRADA) retirarAnimacionesPropias(animaciones);
