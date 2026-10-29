@@ -1,4 +1,5 @@
 """Botón y confirmación de vaciado con movimiento opcional del cliente."""
+import json
 import logging
 from collections.abc import Callable
 from typing import Protocol
@@ -25,13 +26,15 @@ class CapturaLimpiable(Protocol):
 class LimpiezaCaptura:
     """Coordina una captura y su vigencia sin depender de contenedores concretos."""
 
-    def __init__(self, captura: CapturaLimpiable, sigue_montada: Callable[[], bool]):
+    def __init__(self, captura: CapturaLimpiable, sigue_montada: Callable[[], bool],
+                 campos_visuales: Callable[[], list] | None = None):
         self.captura = captura
         self.sigue_montada = sigue_montada
         self.dialogo = None
         self.boton = None
         self._limpiando = False
         self._contenedor_captura = None
+        self._campos_visuales = campos_visuales
 
     def construir(self) -> None:
         """Monta la acción accesible, con espacio estable en filas estrechas."""
@@ -86,10 +89,12 @@ class LimpiezaCaptura:
         if dialogo is not None or self.dialogo is not None:
             (dialogo or self.dialogo).close()
         try:
+            campos = self._campos_visuales() if self._campos_visuales else []
+            identificadores = [campo.html_id for campo in campos if campo is not None and not campo.is_deleted]
             await ui.run_javascript(
                 'return window.scalaris?.movimiento?.permitido() && '
                 'window.scalaris?.animarRecoleccionBasura ? '
-                'window.scalaris.animarRecoleccionBasura() : Promise.resolve()', timeout=2.0,
+                f'window.scalaris.animarRecoleccionBasura({json.dumps(identificadores)}) : Promise.resolve()', timeout=2.0,
             )
         except Exception:
             registro.warning('No se pudo completar el movimiento de limpieza')
@@ -98,6 +103,10 @@ class LimpiezaCaptura:
                 if self.sigue_montada():
                     self.captura.limpiar_todo()
             finally:
+                try:
+                    await ui.run_javascript('window.scalaris?.terminarRecoleccionBasura?.()', timeout=2.0)
+                except Exception:
+                    registro.warning('No se pudo finalizar el movimiento de limpieza')
                 self._limpiando = False
                 self._liberar_captura()
 
@@ -108,8 +117,9 @@ class LimpiezaCaptura:
             self._devolver_foco()
 
 
-def crear_boton_limpieza(captura: CapturaLimpiable, sigue_montada: Callable[[], bool]) -> LimpiezaCaptura:
+def crear_boton_limpieza(captura: CapturaLimpiable, sigue_montada: Callable[[], bool],
+                         campos_visuales: Callable[[], list] | None = None) -> LimpiezaCaptura:
     """Construye y devuelve el control común para una captura aún montada."""
-    control = LimpiezaCaptura(captura, sigue_montada)
+    control = LimpiezaCaptura(captura, sigue_montada, campos_visuales)
     control.construir()
     return control
