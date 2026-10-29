@@ -15,9 +15,6 @@
         curva: function () {
             return getComputedStyle(document.documentElement).getPropertyValue('--ease-std').trim();
         },
-        get medio() {
-            return this.duracion('--dur-med');
-        },
         permitido: function () {
             if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
             return document.documentElement.getAttribute('data-entrada') !== 'teclado';
