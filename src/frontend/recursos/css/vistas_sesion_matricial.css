@@ -27,7 +27,7 @@
 }
 
 .sistemas-cambio-metodo {
-    animation: sistemasCambioMetodo var(--dur-med) var(--ease-std);
+    animation: sistemasCambioMetodo var(--dur-panel) var(--ease-std);
 }
 
 html[data-entrada="teclado"] .sistemas-cambio-metodo {
