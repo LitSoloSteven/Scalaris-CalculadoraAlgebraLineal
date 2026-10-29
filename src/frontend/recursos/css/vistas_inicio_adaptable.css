@@ -246,7 +246,7 @@ html[data-entrada="teclado"] .inicio-dialogo-tarjeta,
 html[data-entrada="teclado"] .inicio-tarjeta,
 html[data-entrada="teclado"] .inicio-tarjeta::after {
     transition: none !important;
-    transition-delay: 0ms !important;
+    transition-delay: var(--tiempo-instantaneo) !important;
 }
 
 html[data-entrada="teclado"] .inicio-capa-destacada {
@@ -273,7 +273,7 @@ html[data-entrada="teclado"] .inicio-capa-destacada {
     .inicio-tarjeta::after {
         transform: none !important;
         transition: opacity var(--dur-reduced) var(--ease-std);
-        transition-delay: 0ms !important;
+        transition-delay: var(--tiempo-instantaneo) !important;
     }
 
     .inicio-capa-destacada {

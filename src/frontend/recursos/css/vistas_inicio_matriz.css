@@ -68,12 +68,12 @@ html[data-inicio-pendiente] .inicio-matriz::after {
 html[data-inicio-pendiente] .inicio-fila {
     opacity: 0;
     transform: scale(0.95) translateY(16px);
-    transition-delay: 0ms;
+    transition-delay: var(--tiempo-instantaneo);
 }
 
 .inicio-fila[data-interaccion] {
     transition-duration: var(--dur-view), var(--dur-release);
-    transition-delay: 0s;
+    transition-delay: var(--tiempo-instantaneo);
 }
 
 .inicio-fila:active {

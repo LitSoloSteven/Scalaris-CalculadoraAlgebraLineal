@@ -198,7 +198,7 @@
     opacity: 0;
     transform: scale(0.95) translateY(16px);
     transition: opacity var(--dur-view-exit) var(--ease-std), transform var(--dur-view-exit) var(--ease-std);
-    transition-delay: 0ms;
+    transition-delay: var(--tiempo-instantaneo);
 }
 
 .inicio-dialogo[data-abierto] .inicio-tarjeta {
@@ -210,7 +210,7 @@
 
 .inicio-dialogo[data-abierto][data-interaccion] .inicio-tarjeta {
     transition-duration: var(--dur-view), var(--dur-release);
-    transition-delay: 0s;
+    transition-delay: var(--tiempo-instantaneo);
 }
 
 .inicio-tarjeta::after {
