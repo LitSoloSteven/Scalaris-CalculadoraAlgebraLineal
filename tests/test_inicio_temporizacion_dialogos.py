@@ -9,7 +9,7 @@ RUTA_JS_INICIO = Path("src/frontend/recursos/js/inicio.js")
 
 
 def duracion_milisegundos(bloque: str, nombre_propiedad: str) -> int:
-    """Extrae la duración explícita de una propiedad del bloque CSS."""
+    """Resuelve la duración literal o el token de una propiedad del bloque CSS."""
     coincidencia = re.search(rf"\b{re.escape(nombre_propiedad)}\s*:\s*([^;]+)", bloque)
     assert coincidencia is not None, f"Falta {nombre_propiedad} en el bloque"
     declaracion = coincidencia.group(1)
@@ -46,6 +46,14 @@ def _comprobar_duraciones_permitidas(css):
     ]
     assert declaraciones_transicion
     assert max(duraciones, default=0) <= 900
+    tokens = Path("src/frontend/recursos/css/tokens.css").read_text(encoding="utf-8")
+    nombres = set(re.findall(r"var\((--dur-[a-z-]+)\)", " ".join(declaraciones_transicion)))
+    assert nombres
+    for nombre in nombres:
+        coincidencia = re.search(rf"{re.escape(nombre)}:\s*(\d+)ms\b", tokens)
+        assert coincidencia, nombre
+        duracion = int(coincidencia.group(1))
+        assert duracion == 120 if nombre == '--dur-reduced' else 200 <= duracion <= 900
     assert not re.search(r"(?<![\w-])ease-in(?![\w-])", css, re.IGNORECASE)
 
 

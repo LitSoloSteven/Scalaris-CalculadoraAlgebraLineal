@@ -40,7 +40,7 @@ prueba('repetir sobre una celda cancela la animación anterior y deduplica contr
     afirmar.equal(control.animaciones[1].cancelada, true);
 });
 
-prueba('2500 celdas limitan las capas animadas y usan solo transform y opacity', async () => {
+prueba('2500 controles dispersos limitan las capas y usan solo transform y opacity', async () => {
     const cliente = crearCuadriculaSimulada();
     const controles = Array.from({ length: 2500 }, () => crearControl());
     await cliente.ventana.scalaris.cuadricula.animarEntradaCeldas(controles.map(control => ({ closest: () => control })));
