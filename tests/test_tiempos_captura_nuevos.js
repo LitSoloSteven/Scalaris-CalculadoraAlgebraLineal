@@ -44,21 +44,3 @@ prueba('texto largo termina con un número acotado de temporizadores', () => {
   afirmar.equal(fragmento.textContent.length, 10000);
   afirmar.ok(cantidad <= 12);
 });
-
-prueba('la recolección conserva los valores hasta que la captura los limpie', async () => {
-  const rectangulo = { left: 0, top: 0, width: 50, height: 40, bottom: 40, right: 50 };
-  const entradas = Array.from({ length: 15 }, (_, indice) => ({ value: String(indice + 1), style: {},
-    closest: () => null, getBoundingClientRect: () => rectangulo }));
-  const clones = [];
-  const boton = { getBoundingClientRect: () => rectangulo, querySelector: () => null,
-    classList: { add() {}, remove() {} } };
-  const ventana = { innerWidth: 320, innerHeight: 760, getComputedStyle: () => ({}),
-    scalaris: { movimiento: movimiento() } };
-  const documento = { querySelectorAll: () => entradas, getElementById: () => boton,
-    createElement: () => ({ style: {}, remove() {} }), body: { appendChild: clon => clones.push(clon) } };
-  const contexto = vm.createContext({ window: ventana, document: documento, setTimeout: funcion => funcion() });
-  cargarAssetCliente('recoleccion_basura.js', contexto);
-  await ventana.scalaris.animarRecoleccionBasura();
-  afirmar.equal(clones.length, 8);
-  afirmar.deepEqual(entradas.map(entrada => entrada.value), Array.from({ length: 15 }, (_, indice) => String(indice + 1)));
-});

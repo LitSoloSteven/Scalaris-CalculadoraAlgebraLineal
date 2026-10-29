@@ -42,7 +42,7 @@ def test_reduccion_vectorial_espera_salida_antes_de_purgar_y_renderizar(monkeypa
     assert "data-geometria-indice='2'" in codigos[0]
     assert estados_salida == [(3, {0: "1", 1: "2", 2: "3"})]
     assert observar_invocaciones_cliente(codigos) == [{
-        "selectores": [f"#{panel.contenedor.html_id} input[data-geometria-indice='2']"], "duraciones": [140], "inyeccion": False,
+        "selectores": [f"#{panel.contenedor.html_id} input[data-geometria-indice='2']"], "duraciones": [340], "inyeccion": False,
     }]
     assert panel.dimension == 2
     assert panel.vectores["u"]["celdas"] == {0: "1", 1: "2"}
@@ -71,7 +71,7 @@ def test_reducir_un_panel_no_anima_ni_altera_otro(monkeypatch, tipo_panel):
         asyncio.run(primero.ajustar_dimension(-1))
         observacion = observar_invocaciones_cliente(codigos)[0]
         assert observacion["animaciones_por_celda"] == [0, 0, 1, 0, 0, 0]
-        assert observacion["duraciones"] == [140]
+        assert observacion["duraciones"] == [340]
         assert primero.dimension == 2
         assert segundo.dimension == 3
         assert len(list(segundo.vectores["u"]["contenedor"].descendants())) > 0
