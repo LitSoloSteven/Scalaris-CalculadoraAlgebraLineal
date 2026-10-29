@@ -62,7 +62,7 @@ html[data-inicio-pendiente] .inicio-matriz::after {
     opacity: 1;
     transform: translateY(0);
     transition: opacity 120ms var(--ease-std), transform var(--dur-release) var(--ease-std);
-    transition-delay: calc(var(--i, 0) * 40ms);
+    transition-delay: calc(var(--i, 0) * 40ms), 0s;
 }
 
 html[data-inicio-pendiente] .inicio-fila {
