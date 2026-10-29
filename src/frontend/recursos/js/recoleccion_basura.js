@@ -53,8 +53,11 @@
     }, retraso + window.scalaris.movimiento.duracion('--dur-panel'));
   }
 
-  function filtrar_entradas_visibles() {
-    var entradasCompletas = document.querySelectorAll('.matriz-entrada input');
+  function filtrar_entradas_visibles(boton) {
+    var ambito = boton.parentElement || document;
+    while (ambito && !ambito.querySelectorAll('.matriz-entrada input').length) ambito = ambito.parentElement;
+    if (!ambito) return [];
+    var entradasCompletas = ambito.querySelectorAll('.matriz-entrada input');
     return Array.from(entradasCompletas).filter(function (i) {
       var r = i.getBoundingClientRect();
       return i.value && i.value !== '0' && i.value.trim() !== '' &&
@@ -105,7 +108,7 @@
       if (elementoIcono) {
         elementoIcono.textContent = 'delete_sweep';
       }
-      var destinos = filtrar_entradas_visibles();
+      var destinos = filtrar_entradas_visibles(boton);
       if (destinos.length === 0) {
         if (elementoIcono) {
           elementoIcono.textContent = 'delete';

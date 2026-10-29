@@ -16,8 +16,9 @@
         elemento.innerHTML = '<span class="escritura-texto"></span><span class="escritura-cursor">▌</span>';
         var fragmentoTexto = elemento.querySelector('.escritura-texto');
         var cursor = elemento.querySelector('.escritura-cursor');
-        var indice = 0, temporizador = null;
+        var indice = 0, temporizador = null, finalizada = false;
         var saltar = function () {
+            finalizada = true;
             indice = texto.length;
             clearTimeout(temporizador);
             fragmentoTexto.textContent = texto;
@@ -26,6 +27,7 @@
         };
         elemento.addEventListener('click', saltar);
         function escribir() {
+            if (finalizada) return;
             var transcurrido = Date.now() - inicio;
             indice = duracionTotal > 0 ? Math.max(1, Math.ceil(texto.length * transcurrido / duracionTotal)) : texto.length;
             fragmentoTexto.textContent = texto.slice(0, indice);
@@ -33,6 +35,7 @@
                 temporizador = setTimeout(escribir, Math.min(intervalo, duracionTotal - transcurrido));
                 return;
             }
+            finalizada = true;
             cursor.style.display = 'none';
             elemento.removeEventListener('click', saltar);
         }
