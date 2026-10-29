@@ -1,33 +1,33 @@
 @keyframes entradaSuave {
     0% {
         opacity: 0;
-        transform: translateY(8px);
+        transform: scale(0.95) translateY(16px);
     }
 
     100% {
         opacity: 1;
-        transform: translateY(0);
+        transform: scale(1) translateY(0);
     }
 }
 
 .movimiento-entrada {
-    animation: entradaSuave var(--dur-med) var(--ease-std) forwards !important;
+    animation: entradaSuave var(--dur-panel) var(--ease-std) forwards !important;
 }
 
 @keyframes reboteVertical {
     0% {
         opacity: 0;
-        transform: translateY(-8px);
+        transform: scale(0.95) translateY(-16px);
     }
 
     100% {
         opacity: 1;
-        transform: translateY(0);
+        transform: scale(1) translateY(0);
     }
 }
 
 .movimiento-rebote {
-    animation: reboteVertical var(--dur-med) var(--ease-std) forwards !important;
+    animation: reboteVertical var(--dur-panel) var(--ease-std) forwards !important;
 }
 
 @keyframes sacudida {
@@ -36,17 +36,17 @@
         transform: translateX(0);
     }
 
-    25% {
+    12.5%, 62.5% {
         transform: translateX(-4px);
     }
 
-    75% {
+    37.5%, 87.5% {
         transform: translateX(4px);
     }
 }
 
 .movimiento-sacudida {
-    animation: sacudida 120ms linear 2;
+    animation: sacudida var(--dur-panel) var(--ease-std);
 }
 
 @keyframes parpadeo {
@@ -61,55 +61,55 @@
 }
 
 .escritura-cursor {
-    animation: parpadeo 1s step-end infinite;
+    animation: parpadeo var(--dur-didactic) var(--ease-std) infinite;
     color: var(--accent);
     margin-left: 2px;
 }
 
 .pasos-expansion .q-expansion-item__content>* {
     opacity: 0;
-    transform: translateY(10px);
-    animation: entradaSuave var(--dur-fast) var(--ease-std) forwards;
+    transform: scale(0.95) translateY(16px);
+    animation: entradaSuave var(--dur-panel) var(--ease-std) forwards;
 }
 
 .pasos-expansion .q-expansion-item__content>*:nth-child(1) {
-    animation-delay: 0ms;
+    animation-delay: calc(0 * var(--stagger-step));
 }
 
 .pasos-expansion .q-expansion-item__content>*:nth-child(2) {
-    animation-delay: 15ms;
+    animation-delay: var(--stagger-step);
 }
 
 .pasos-expansion .q-expansion-item__content>*:nth-child(3) {
-    animation-delay: 30ms;
+    animation-delay: calc(2 * var(--stagger-step));
 }
 
 .pasos-expansion .q-expansion-item__content>*:nth-child(4) {
-    animation-delay: 45ms;
+    animation-delay: calc(3 * var(--stagger-step));
 }
 
 .pasos-expansion .q-expansion-item__content>*:nth-child(5) {
-    animation-delay: 60ms;
+    animation-delay: calc(4 * var(--stagger-step));
 }
 
 .pasos-expansion .q-expansion-item__content>*:nth-child(6) {
-    animation-delay: 75ms;
+    animation-delay: calc(5 * var(--stagger-step));
 }
 
 .pasos-expansion .q-expansion-item__content>*:nth-child(7) {
-    animation-delay: 90ms;
+    animation-delay: calc(6 * var(--stagger-step));
 }
 
 .pasos-expansion .q-expansion-item__content>*:nth-child(8) {
-    animation-delay: 105ms;
+    animation-delay: calc(7 * var(--stagger-step));
 }
 
 .pasos-expansion .q-expansion-item__content>*:nth-child(9) {
-    animation-delay: 120ms;
+    animation-delay: var(--stagger-max);
 }
 
 .pasos-expansion .q-expansion-item__content>*:nth-child(n+10) {
-    animation-delay: 130ms;
+    animation-delay: var(--stagger-max);
 }
 
 @view-transition {
@@ -186,7 +186,7 @@ html[data-vista-revelada] .nicegui-content {
 }
 
 .movimiento-compresion {
-    animation: reboteCompresion var(--dur-med) var(--ease-std) forwards !important;
+    animation: reboteCompresion var(--dur-panel) var(--ease-std) forwards !important;
 }
 
 :focus-visible {
@@ -210,9 +210,9 @@ html[data-vista-revelada] .nicegui-content {
     *,
     *::before,
     *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 120ms !important;
+        animation: none !important;
+        transition-duration: var(--dur-reduced) !important;
+        transition-timing-function: var(--ease-std) !important;
         transition-property: opacity !important;
     }
 
@@ -226,9 +226,11 @@ html[data-vista-revelada] .nicegui-content {
     .movimiento-sacudida,
     .movimiento-compresion,
     .movimiento-entrada,
-    .movimiento-rebote {
+    .movimiento-rebote,
+    .pasos-expansion .q-expansion-item__content>* {
         animation: none !important;
         transform: none !important;
+        opacity: 1 !important;
     }
 }
 
