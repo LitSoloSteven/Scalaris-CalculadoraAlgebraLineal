@@ -24,7 +24,7 @@ CATALOGO_TIPOS = {
     "construccion": {"etiqueta": "Construcción", "icono": "build"},
     "resultado": {"etiqueta": "Resultado", "icono": "check_circle"},
 }
-VELOCIDADES_AUTOREPRODUCCION = {"Lenta": 1.2, "Normal": 0.6, "Rápida": 0.2}
+VELOCIDADES_AUTOREPRODUCCION = {"Lenta": 2.0, "Normal": 1.2, "Rápida": 0.7}
 DIMENSION_MAXIMA_FRACCIONES_APILADAS = 6
 
 
