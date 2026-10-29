@@ -13,15 +13,15 @@ prueba("la entrada y la salida conservan fotogramas duración curva y espera", a
     const animaciones = celda.control.animaciones;
     afirmar.equal(animaciones.length, 2);
     afirmar.deepEqual(JSON.parse(JSON.stringify(animaciones[0].fotogramas)), [
-        { opacity: 0, transform: "scale(0.95) translateY(4px)" },
+        { opacity: 0, transform: "scale(0.95) translateY(16px)" },
         { opacity: 1, transform: "scale(1) translateY(0)" },
     ]);
     afirmar.deepEqual(JSON.parse(JSON.stringify(animaciones[1].fotogramas)), [
         { opacity: 1, transform: "scale(1) translateY(0)" },
-        { opacity: 0, transform: "scale(0.95) translateY(-4px)" },
+        { opacity: 0, transform: "scale(0.95) translateY(16px)" },
     ]);
-    afirmar.equal(animaciones[0].opciones.duration, 180);
-    afirmar.equal(animaciones[1].opciones.duration, 140);
+    afirmar.equal(animaciones[0].opciones.duration, 450);
+    afirmar.equal(animaciones[1].opciones.duration, 340);
     afirmar.equal(animaciones[0].opciones.easing, "cubic-bezier(0.32, 0.72, 0, 1)");
     afirmar.equal(animaciones[1].opciones.easing, animaciones[0].opciones.easing);
     afirmar.equal(animaciones[0].opciones.fill, "forwards");
@@ -80,7 +80,7 @@ prueba("los adaptadores de matriz y vector mantienen los selectores y las duraci
         "input[data-matriz-identificador='B'][data-target='derecha']",
         "input[data-geometria-indice='3']", "input[data-geometria-indice='4']",
     ]);
-    afirmar.deepEqual(celda.control.animaciones.map(animacion => animacion.opciones.duration), [180, 140, 180, 140]);
+    afirmar.deepEqual(celda.control.animaciones.map(animacion => animacion.opciones.duration), [450, 340, 450, 340]);
 });
 
 prueba("el aviso de error enfoca la celda y limpia su marca temporal", () => {

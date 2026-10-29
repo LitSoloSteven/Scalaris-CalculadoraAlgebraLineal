@@ -40,14 +40,15 @@ prueba('repetir sobre una celda cancela la animación anterior y deduplica contr
     afirmar.equal(control.animaciones[1].cancelada, true);
 });
 
-prueba('2500 celdas conservan stagger menor de 120 ms y solo transform y opacity', async () => {
+prueba('2500 celdas limitan las capas animadas y usan solo transform y opacity', async () => {
     const cliente = crearCuadriculaSimulada();
     const controles = Array.from({ length: 2500 }, () => crearControl());
     await cliente.ventana.scalaris.cuadricula.animarEntradaCeldas(controles.map(control => ({ closest: () => control })));
-    const opciones = controles.at(-1).animaciones[0].opciones;
-    afirmar.ok(opciones.delay <= 120);
-    afirmar.equal(opciones.duration, 180);
-    for (const control of controles) {
+    const animados = controles.filter(control => control.animaciones.length);
+    afirmar.equal(animados.length, 10);
+    afirmar.equal(animados[0].animaciones[0].opciones.duration, 450);
+    afirmar.equal(animados[0].animaciones[0].opciones.delay, undefined);
+    for (const control of animados) {
         for (const fotograma of control.animaciones[0].fotogramas) {
             afirmar.deepEqual(Object.keys(fotograma).sort(), ['opacity', 'transform']);
         }
