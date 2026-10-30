@@ -18,6 +18,7 @@ from src.frontend.componentes.cuadricula_base import (
 from src.backend.resolutores.sistemas_lineales.exportacion_ecuaciones import exportar_ecuaciones_desde_datos
 from src.backend.constantes import DIMENSION_MAXIMA_SISTEMAS
 from .redimension_ecuaciones import crear_fila_ecuaciones, redimensionar_ecuaciones, actualizar_presentacion
+from .carga_numerica import preparar_matriz_numerica
 
 
 def _renderizar_cabecera_columnas(numero_columnas: int) -> ui.row:
@@ -242,6 +243,8 @@ class CuadriculaEcuaciones:
 
     def cargar_datos(self, coeficientes: list[list[str]], vector_b: list[str]) -> None:
         """Carga datos directamente actualizando dimensiones y cuadricula."""
+        coeficientes = preparar_matriz_numerica(coeficientes)
+        vector_b = preparar_matriz_numerica([vector_b])[0]
         self.filas = len(coeficientes)
         self.columnas = len(coeficientes[0]) if self.filas > 0 else 3
         self.modo_homogeneo = False

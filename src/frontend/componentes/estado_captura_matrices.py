@@ -2,6 +2,7 @@
 from typing import Any
 
 from src.frontend.componentes.cuadricula_base import cache_matriz_desde_datos
+from src.frontend.componentes.carga_numerica import preparar_matriz_numerica
 
 MATRICES_PERMANENTES = ("A", "B")
 DIMENSION_INICIAL = 3
@@ -11,6 +12,8 @@ def crear_registro_matriz(datos: list[list[str]] | None = None) -> dict[str, Any
     """Crea un registro de captura vacio o cargado, sin interpretar sus valores."""
     filas = DIMENSION_INICIAL if datos is None else len(datos)
     columnas = len(datos[0]) if datos else DIMENSION_INICIAL
+    if datos is not None:
+        datos = preparar_matriz_numerica(datos)
     return {
         "filas": filas, "columnas": columnas, "entradas": [],
         "cache": cache_matriz_desde_datos(datos) if datos is not None else {}, "contenedor": None,
