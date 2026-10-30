@@ -161,7 +161,7 @@ class EnvioGlosaMixin(PreguntasGlosaMixin):
             puede_reintentar = resultado.tipo_error not in (TipoErrorIA.SIN_CLAVE, TipoErrorIA.AUTENTICACION)
             mensaje = {"texto": resultado.texto, "enviado": False, "error": True, "reintentar": puede_reintentar}
         else:
-            mensaje = {"texto": resultado.texto, "enviado": False, "error": False}
+            mensaje = {"texto": resultado.texto, "enviado": False, "error": False, "animar": True}
 
         self.historial_chat = incorporar_mensaje(self.historial_chat, mensaje)
 
