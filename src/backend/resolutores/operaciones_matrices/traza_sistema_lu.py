@@ -10,10 +10,8 @@ from .sustitucion_lu import DatosFilaSustitucion
 
 def crear_traza_sistema_lu(permutada: Matriz, filas_inferiores: list[DatosFilaSustitucion],
                            filas_superiores: list[DatosFilaSustitucion], solucion: list[Fraction]) -> list[dict]:
-    """Construye pasos desde Pb, operaciones por fila y solucion sin recalcularlas.
-
-    Recibe el vector permutado como matriz columna y devuelve la traza de resolucion.
-    """
+    """Devuelve la traza desde permutada, filas inferiores y superiores y solucion.
+    Recibe el vector permutado como matriz columna y no recalcula las operaciones."""
     traza = [crear_paso_analisis("Planteamiento del sistema", r"PA=LU,\quad LUx=Pb,\quad Ly=Pb,\quad Ux=y",
                                  "Permutamos los terminos y resolvemos los dos sistemas triangulares.", "planteamiento"),
              crear_paso_analisis("Terminos permutados", f"Pb={matriz_a_latex(permutada)}", tipo="operacion")]

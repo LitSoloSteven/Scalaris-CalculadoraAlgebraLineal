@@ -104,11 +104,8 @@ def _validar_sistema_lu(matriz: Matriz, terminos: list[Fraction]) -> None:
 
 
 def resolver_sistema_lu(matriz: Matriz, terminos: list[Fraction]) -> dict[str, Any]:
-    """Resuelve Ax=b mediante PA=LU y devuelve factores, vectores y traza.
-
-    Recibe una matriz cuadrada y una lista de enteros o fracciones, sin modificarlas.
-    Lanza ValueError si las entradas son invalidas, exceden el limite o la matriz es singular.
-    """
+    """Resuelve matriz por terminos sin mutarlos; devuelve factores, vectores y traza.
+    Lanza ValueError ante entradas invalidas, fuera de limites o matriz singular."""
     _validar_sistema_lu(matriz, terminos)
     factores = factorizar_lu(matriz)
     if factores["rango"] < matriz.filas:

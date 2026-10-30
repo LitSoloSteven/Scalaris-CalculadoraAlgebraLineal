@@ -17,10 +17,8 @@ class DatosFilaSustitucion(TypedDict):
 
 
 def sustituir_adelante(inferior: Matriz, terminos: list[Fraction]) -> tuple[list[Fraction], list[DatosFilaSustitucion]]:
-    """Resuelve Ly=terminos para L unitaria y devuelve valores y operaciones por fila.
-
-    Recibe la matriz inferior y el vector de terminos; presupone dimensiones compatibles.
-    """
+    """Resuelve Ly=terminos con inferior unitaria y devuelve valores y operaciones por fila.
+    Recibe dimensiones compatibles en inferior y terminos."""
     valores: list[Fraction] = []
     filas: list[DatosFilaSustitucion] = []
     for fila in range(inferior.filas):
@@ -34,11 +32,8 @@ def sustituir_adelante(inferior: Matriz, terminos: list[Fraction]) -> tuple[list
 
 
 def sustituir_atras(superior: Matriz, terminos: list[Fraction]) -> tuple[list[Fraction], list[DatosFilaSustitucion]]:
-    """Resuelve Ux=terminos y devuelve valores y operaciones por fila descendente.
-
-    Recibe la matriz superior y el vector de terminos; presupone dimensiones compatibles.
-    Lanza ZeroDivisionError si una entrada diagonal es cero.
-    """
+    """Resuelve Ux=terminos con superior y devuelve valores y operaciones por fila descendente.
+    Presupone dimensiones compatibles; lanza ZeroDivisionError si una entrada diagonal es cero."""
     valores = [Fraction(0) for _ in terminos]
     filas: list[DatosFilaSustitucion] = []
     for fila in range(superior.filas - 1, -1, -1):
