@@ -1,6 +1,7 @@
 /** Aviso accesible y animación reiniciable para caracteres rechazados. */
 'use strict';
 {
+    window.scalaris = window.scalaris || {};
     const animaciones = new WeakMap();
     const identificadorAviso = 'captura-aviso-numerico';
 

@@ -1,6 +1,7 @@
 /** Filtro de caracteres de captura compartidos con Python mediante JSON. */
 'use strict';
 {
+    window.scalaris = window.scalaris || {};
     const configuracion = leerConfiguracion();
     const caracteres = new Set(configuracion?.caracteres || '');
     const composiciones = new WeakSet();
