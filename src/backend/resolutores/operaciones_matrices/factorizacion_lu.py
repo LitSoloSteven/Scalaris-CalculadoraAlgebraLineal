@@ -29,6 +29,7 @@ class _RegistroFactorizacion:
         elif tipo == "eliminacion":
             self.inferior.datos[datos["fila"]][datos["fila_pivote"]] = datos["factor"]
         self.registro.registrar(tipo, matriz, datos)
+        self.registro.traza[-1].update(permutacion=self.permutacion.clonar(), inferior=self.inferior.clonar())
 
 
 def factorizar_lu(matriz: Matriz) -> dict:
@@ -48,6 +49,8 @@ def factorizar_lu(matriz: Matriz) -> dict:
         paso.update(tipo="operacion", explicacion="Desarrollamos el producto PA ya calculado. Esta es la evaluacion del lado izquierdo, no una verificacion independiente.")
     desarrollo_permutacion[-1]["descripcion"] = "Producto PA calculado"
     traza = _presentar_factores(registro, superior)
+    for paso in desarrollo_permutacion + comprobacion["traza"]:
+        _agregar_instantaneas(paso, registro.permutacion, registro.inferior)
     return {"estado": "EXITO", "mensaje": "Factorizacion PA = LU con pivoteo parcial.",
             "operacion": "factorizacion_lu", "convencion": "PA=LU", "rango": reduccion["rango"],
             "permutacion": registro.permutacion, "inferior": registro.inferior, "superior": superior,
@@ -62,9 +65,17 @@ def _presentar_factores(registro: _RegistroFactorizacion, superior: Matriz) -> l
         "P registra los intercambios; L es triangular inferior con diagonal 1; U es escalonada. "
         "La singularidad no impide esta factorizacion. Al intercambiar filas tambien permutamos los multiplicadores previos de L.",
         "planteamiento")]
-    traza.extend(crear_paso_analisis(paso["descripcion"], matriz_a_latex(paso["matriz"]),
-                                   f"{paso['descripcion']}. Conservamos los multiplicadores de eliminacion en L.", paso["tipo"])
-                 for paso in registro.registro.traza)
+    _agregar_instantaneas(traza[0], identidad(superior.filas), identidad(superior.filas))
+    for paso in registro.registro.traza:
+        presentado = crear_paso_analisis(paso["descripcion"], matriz_a_latex(paso["matriz"]),
+                                        f"{paso['descripcion']}. Conservamos los multiplicadores de eliminacion en L.", paso["tipo"])
+        _agregar_instantaneas(presentado, paso["permutacion"], paso["inferior"])
+        traza.append(presentado)
     for nombre, matriz in (("P", registro.permutacion), ("L", registro.inferior), ("U", superior)):
         traza.append(crear_paso_analisis(f"Factor {nombre}", f"{nombre}={matriz_a_latex(matriz)}", tipo="resultado"))
+        _agregar_instantaneas(traza[-1], registro.permutacion, registro.inferior)
     return traza
+
+
+def _agregar_instantaneas(paso: dict, permutacion: Matriz, inferior: Matriz) -> None:
+    paso.update(permutacion=permutacion.clonar(), inferior=inferior.clonar())
