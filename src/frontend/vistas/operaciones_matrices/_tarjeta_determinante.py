@@ -16,14 +16,14 @@ def mostrar_tarjeta_determinante(resultado: dict) -> None:
                  textos.DETERMINANTES_INVERTIBLE).classes("font-bold").props('role="status"')
     _mostrar_metricas(resultado)
     ui.label(textos.DETERMINANTES_VALOR.format(valor=formatear_fraccion_texto(
-        resultado["determinante"])))).classes("determinante-valor texto-principal")
+        resultado["determinante"]))).classes("determinante-valor texto-principal")
     renderizar_latex(r"\det(A) = " + numero_a_latex(resultado["determinante"]))
     if singular:
         ui.label(textos.DETERMINANTES_AVISO_SINGULAR).classes("texto-secundario").props('role="status"')
 
 
 def _mostrar_metricas(resultado: dict) -> None:
-    dimension = resultado.get("dimension", resultado["traza"][0].get("matriz").filas)
+    dimension = resultado.get("dimension") or resultado["traza"][0]["matriz"].filas
     nombres = {clave: nombre for clave, nombre, _ in textos.OPCIONES_METODOS_DETERMINANTES}
     with ui.row().classes("panel-tarjeta px-4 py-2 fuente-pequena items-center gap-4 flex-wrap mb-6 w-full"):
         ui.label(f"{dimension} × {dimension}").classes("font-bold texto-principal")
