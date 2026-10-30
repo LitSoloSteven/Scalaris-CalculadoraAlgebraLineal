@@ -1,4 +1,6 @@
 [
+  "rechazo_entrada_numerica.js",
+  "entrada_numerica.js",
   "captura_celdas.js",
   "navegacion_captura.js",
   "pegado_captura.js",
