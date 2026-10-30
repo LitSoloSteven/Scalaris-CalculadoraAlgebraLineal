@@ -66,6 +66,17 @@ TRANSFORMACIONES_INTERPRETACION = "Los pivotes determinan el rango y la base de 
 RESULTADO_COPIAR = "Copiar resultado"
 RESULTADO_COPIADO = "Resultado copiado al portapapeles"
 RESULTADO_COPIAR_ERROR = "No se pudo copiar el resultado. Revisa los permisos del portapapeles y vuelve a intentarlo."
+RESULTADO_CAMPOS_COPIABLES = (
+    ("determinante", "Determinante"), ("permutacion", "P"), ("inferior", "L"), ("superior", "U"),
+    ("solucion", "Solución"), ("matriz_resultado", "Resultado"), ("vector_resultado", "Vector"),
+    ("coeficientes_texto", "Coeficientes"), ("solucion_parametrica", "Solución paramétrica"),
+    ("vector_produccion", "Producción"), ("rango", "Rango"), ("nulidad", "Nulidad"),
+    ("base_nucleo", "Base del núcleo"), ("base_imagen", "Base de la imagen"),
+)
+MODELOS_VISTA_PREVIA = "Vista previa de la captura"
+MODELOS_HISTORIAL = "Últimos cálculos de esta sesión"
+MODELOS_HISTORIAL_VACIO = "Aún no has calculado este modelo."
+MODELOS_RESTAURAR = "Restaurar captura"
 HISTORIAL_DETERMINANTE_CALCULADO = "Calculado"
 HISTORIAL_DETERMINANTE_DETALLE = "det = {determinante}. Método: {metodo}"
 HISTORIAL_FACTORIZACION_LU_CALCULADA = "Factorización calculada"
