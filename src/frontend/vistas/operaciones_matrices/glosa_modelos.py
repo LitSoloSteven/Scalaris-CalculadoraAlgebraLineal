@@ -4,20 +4,27 @@ from nicegui import ui
 from src.frontend.componentes.panel_ia import PanelIA
 from src.frontend.componentes.cuadricula_base import ubicar_celda_matriz
 from src.frontend.controladores.limpieza_captura import retirar_estado_calculado
-from src.frontend.controladores.sesion_matricial import invalidar_resultado, actualizar_contexto
+from src.frontend.controladores.sesion_matricial import invalidar_resultado, actualizar_contexto, programar_vista_previa, cancelar_vista_previa
 from src.frontend.controladores.operaciones_matrices.contexto_modelos import obtener_contexto_modelo, obtener_senales_modelo
 from ._presentacion_modelos import montar_pasos_modelo
+from .herramientas_modelos import MixinHerramientasModelos
+from src.frontend.componentes.copia_resultado import renderizar_copia_resultado
 
 
-class MixinGlosaModelos:
+class MixinGlosaModelos(MixinHerramientasModelos):
     """Comparte contexto, señales e invalidación de modelos sin conservar cálculos obsoletos."""
 
     def _conectar_modelo(self) -> None:
         self.reproductor_pasos = None
         self.panel_ia = PanelIA(self)
         self.panel_ia.construir()
-        ui.context.client.on_delete(lambda: invalidar_resultado(self))
+        self._construir_herramientas_modelo()
+        ui.context.client.on_delete(self._desmontar_modelo)
         self._sincronizar_captura_modelo()
+
+    def _desmontar_modelo(self) -> None:
+        cancelar_vista_previa(self)
+        invalidar_resultado(self)
 
     def _sincronizar_captura_modelo(self) -> None:
         retirar_estado_calculado(self)
@@ -25,6 +32,8 @@ class MixinGlosaModelos:
             if not getattr(campo, "_vigila_modelo", False):
                 campo.on_value_change(self._restablecer_resultados)
                 campo._vigila_modelo = True
+        if getattr(self, "contenedor_vista_previa", None):
+            programar_vista_previa(self)
 
     def obtener_contexto_ia(self):
         """Devuelve la captura y el resultado vigente para Glosa."""
@@ -32,7 +41,9 @@ class MixinGlosaModelos:
 
     def _completar_resultado_modelo(self) -> None:
         self.panel_ia.renderizar_sugerencias_en_linea()
+        renderizar_copia_resultado(self.ultimo_resultado)
         self.reproductor_pasos = montar_pasos_modelo(self)
+        self._registrar_modelo()
         actualizar_contexto(self)
 
     def obtener_senales_ia(self):
