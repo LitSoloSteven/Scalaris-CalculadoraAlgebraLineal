@@ -1,4 +1,5 @@
 """Cálculo exacto de la aplicación lineal T(v) = Av para transformaciones."""
+import math
 from fractions import Fraction
 
 from src.backend.excepciones import ErrorDiscrepanciaDimension
@@ -70,3 +71,63 @@ def _latex_fila(matriz: Matriz, vector: Matriz, resultado: Matriz, fila: int) ->
     suma_latex = " + ".join(terminos)
     valor_final = numero_a_latex(resultado.obtener(fila, 0))
     return f"y_{{{fila + 1}}} = {suma_latex} = {valor_final}"
+
+def matriz_rotacion(grados: Fraction | int | str) -> tuple[Matriz, bool]:
+    """Devuelve la matriz de rotación en R2 y si es exacta (múltiplos de 90°)."""
+    angulo = Fraction(grados)
+    if angulo % 90 == 0:
+        return _rotacion_exacta(angulo), True
+    return _rotacion_aproximada(float(angulo)), False
+
+
+def _rotacion_exacta(angulo: Fraction) -> Matriz:
+    """Construye la matriz exacta para múltiplos de 90 grados."""
+    grados_efectivos = int(angulo % 360)
+    uno, cero, menos_uno = Fraction(1), Fraction(0), Fraction(-1)
+    if grados_efectivos == 0:
+        return Matriz(2, 2, [[uno, cero], [cero, uno]])
+    if grados_efectivos == 90:
+        return Matriz(2, 2, [[cero, menos_uno], [uno, cero]])
+    if grados_efectivos == 180:
+        return Matriz(2, 2, [[menos_uno, cero], [cero, menos_uno]])
+    return Matriz(2, 2, [[cero, uno], [menos_uno, cero]])
+
+
+def _rotacion_aproximada(grados_float: float) -> Matriz:
+    """Construye la matriz de rotación aproximada usando trigonometría."""
+    radianes = math.radians(grados_float)
+    c = math.cos(radianes)
+    s = math.sin(radianes)
+    return Matriz(2, 2, [[c, -s], [s, c]])
+
+
+def matriz_reflexion(eje: str = "x") -> Matriz:
+    """Devuelve la matriz de reflexión exacta respecto al eje indicado."""
+    matrices = {
+        "x": [[1, 0], [0, -1]],
+        "y": [[-1, 0], [0, 1]],
+        "y=x": [[0, 1], [1, 0]],
+        "y = x": [[0, 1], [1, 0]],
+        "y=-x": [[0, -1], [-1, 0]],
+        "y = -x": [[0, -1], [-1, 0]],
+        "origen": [[-1, 0], [0, -1]],
+    }
+    if eje not in matrices:
+        raise ValueError("Eje no válido. Usa 'x', 'y', 'y=x', 'y=-x' u 'origen'.")
+    return Matriz(2, 2, matrices[eje])
+
+
+def matriz_escala(kx: Fraction | int, ky: Fraction | int) -> Matriz:
+    """Devuelve la matriz de escala exacta por los factores dados."""
+    return Matriz(2, 2, [[Fraction(kx), 0], [0, Fraction(ky)]])
+
+
+def matriz_cizalladura(k: Fraction | int, eje: str = "x") -> Matriz:
+    """Devuelve la matriz de cizalladura exacta."""
+    k_frac = Fraction(k)
+    if eje == "x":
+        return Matriz(2, 2, [[1, k_frac], [0, 1]])
+    elif eje == "y":
+        return Matriz(2, 2, [[1, 0], [k_frac, 1]])
+    else:
+        raise ValueError("Eje de cizalladura debe ser 'x' o 'y'.")
