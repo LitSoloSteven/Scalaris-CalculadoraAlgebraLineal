@@ -10,7 +10,8 @@
     }, { capture: true, passive: true });
     window.scalaris.movimiento = {
         duracion: function (token) {
-            return parseFloat(getComputedStyle(document.documentElement).getPropertyValue(token));
+            const valor = getComputedStyle(document.documentElement).getPropertyValue(token).trim();
+            return parseFloat(valor) * (valor.endsWith('s') && !valor.endsWith('ms') ? 1000 : 1);
         },
         curva: function () {
             return getComputedStyle(document.documentElement).getPropertyValue('--ease-std').trim();

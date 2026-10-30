@@ -19,7 +19,7 @@
     z-index: -1;
     transform: none;
     opacity: 0;
-    animation: escrituraPulso var(--dur-escritura) var(--ease-std);
+    animation: escrituraPulso var(--escritura-pulso) var(--ease-std);
 }
 
 @keyframes escrituraPulso {
