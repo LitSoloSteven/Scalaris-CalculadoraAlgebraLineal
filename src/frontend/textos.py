@@ -1,6 +1,7 @@
 """Catálogo centralizado de textos y mensajes de interfaz de Scalaris."""
 
 MENSAJE_ANTI_REBOTE_GLOSA = "Espera un momento antes de enviar otra pregunta."
+MENSAJE_ENTRADA_NUMERICA = "Solo se admiten números, fracciones y decimales."
 
 NOMBRE_SELECTOR_VECTORES = "Operaciones con vectores"
 OPCIONES_OPERACIONES_VECTORES = (

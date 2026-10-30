@@ -1,6 +1,18 @@
 """Lectura compartida de texto tabular del portapapeles."""
 from io import StringIO
 
+from src.frontend.constantes import CARACTERES_ENTRADA_NUMERICA
+
+
+def filtrar_entrada_numerica(texto: str) -> str:
+    """Devuelve solo los caracteres ASCII de captura sin validar su sintaxis numérica."""
+    return "".join(caracter for caracter in texto if caracter in CARACTERES_ENTRADA_NUMERICA)
+
+
+def filtrar_matriz_numerica(datos: list[list[str]]) -> list[list[str]]:
+    """Sanea cada celda conservando filas, columnas y huecos sin modificar la entrada."""
+    return [[filtrar_entrada_numerica(str(valor)) for valor in fila] for fila in datos]
+
 
 def parsear_texto_portapapeles(texto: str) -> list[list[str]]:
     """Convierte texto separado por filas y tabuladores, comas o espacios en celdas."""
