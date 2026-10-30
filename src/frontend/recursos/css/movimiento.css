@@ -49,6 +49,18 @@
     animation: sacudida var(--dur-panel) var(--ease-std);
 }
 
+@keyframes rechazoNumericoOpacidad {
+    0%, 100% { opacity: 1; }
+    50% { opacity: var(--escritura-opacidad); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .captura-rechazo-reducido {
+        animation: rechazoNumericoOpacidad var(--dur-reduced) var(--ease-std) !important;
+        transform: none !important;
+    }
+}
+
 @keyframes parpadeo {
     0%,
     100% {

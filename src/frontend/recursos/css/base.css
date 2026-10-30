@@ -144,6 +144,25 @@ html .texto-acento {
     font-weight: var(--fw-small);
 }
 
+.captura-aviso-numerico {
+    position: fixed;
+    inset-inline: var(--space-4);
+    bottom: var(--space-4);
+    z-index: var(--z-modal);
+    width: fit-content;
+    max-width: calc(100% - 2 * var(--space-4));
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-input);
+    background: var(--badge-warn-bg);
+    color: var(--badge-warn-text);
+    overflow-wrap: anywhere;
+    pointer-events: none;
+}
+
+.captura-aviso-numerico:empty {
+    padding: 0;
+}
+
 [class*="q-transition--"][class*="-enter-active"],
 [class*="q-transition--"][class*="-leave-active"] {
     --q-transition-easing: var(--ease-std);
