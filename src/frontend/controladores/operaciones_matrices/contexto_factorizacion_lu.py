@@ -2,14 +2,8 @@
 from src.ai.contexto import ContextoIA, EstadoContexto, describir_matriz, generar_nota_ventana, sanear_cadena_usuario
 from src.ai.huellas import calcular_huella
 from src.backend.utilidades.formateadores import formatear_fraccion_texto
-from src.frontend.sugerencias import Senales, primera_celda_invalida
-
-
-def localizar_invalida(datos: list[list[str]]):
-    """Devuelve la primera celda inválida de los datos, o None si no existe."""
-    elementos = [(f"A[{fila + 1},{columna + 1}]", valor, (fila, columna))
-                 for fila, valores in enumerate(datos) for columna, valor in enumerate(valores)]
-    return primera_celda_invalida(elementos)
+from src.frontend.sugerencias import Senales
+from .captura_factorizacion_lu import localizar_invalida
 
 
 def _resultado_vigente(vista, datos: list[list[str]]) -> dict | None:

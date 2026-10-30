@@ -6,7 +6,7 @@ from src.frontend.componentes.cuadricula_base import ubicar_celda_matriz
 from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
 from src.frontend.controladores.operaciones_matrices import ControladorFactorizacionLU
 from src.frontend.controladores.sesion_matricial import actualizar_contexto, invalidar_resultado
-from src.frontend.controladores.operaciones_matrices.contexto_factorizacion_lu import localizar_invalida
+from src.frontend.controladores.operaciones_matrices.captura_factorizacion_lu import localizar_invalida
 from ._estados_modelos import ejecutar_modelo, mostrar_estado
 from ._factores_factorizacion_lu import mostrar_factores_lu
 from ._presentacion_factorizacion_lu import montar_reproductor_lu
