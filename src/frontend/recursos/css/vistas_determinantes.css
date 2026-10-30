@@ -10,11 +10,6 @@
 }
 
 .determinantes-usar-metodo { min-height: 44px; max-width: 100%; }
-.determinantes-vista .calculadora-boton { min-width: 0; }
-.determinantes-vista .sesion-panel-herramientas,
-.determinantes-vista .q-tab-panel,
-.determinantes-vista .q-tab-panels { min-width: 0; max-width: 100%; }
-
 @container vista-determinantes (max-width: 20rem) {
     .determinantes-vista { padding-inline: var(--space-2) !important; }
     .determinantes-vista .sesion-panel-herramientas .panel-tarjeta { padding: var(--space-2); }
