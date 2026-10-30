@@ -49,6 +49,8 @@ RESULTADO_CUENTA_PASOS = "{cantidad} pasos"
 RESULTADO_INTERCAMBIOS = "{cantidad} intercambios"
 RESULTADO_TIEMPO = "calculado en {segundos:.2f} s"
 RESULTADO_INTERPRETACION = "¿Cómo interpretar este resultado?"
+PASOS_AYUDA_TITULO = "¿Cómo leer los pasos?"
+PASOS_INDICE_TITULO = "Índice de pasos por fases"
 DETERMINANTES_INTERPRETACION = (
     "El determinante mide el factor de escala orientado. Si vale cero, A es singular; "
     "si es distinto de cero, A tiene inversa. Cofactores y eliminación obtienen el mismo valor exacto."
