@@ -15,11 +15,10 @@ from src.frontend.navegacion import ruta_de
 from src.frontend.vistas.mixin_sesion_matricial import MixinSesionMatricial
 from src.frontend.vistas.vista_previa_matricial import actualizar_vista_previa
 from ._estados_modelos import mostrar_estado
-from .mixin_ejemplos_factorizacion_lu import MixinEjemplosFactorizacionLU
 from .resultados_factorizacion_lu import ResultadosFactorizacionLU
 
 
-class VistaFactorizacionLU(ResultadosFactorizacionLU, MixinEjemplosFactorizacionLU, MixinSesionMatricial):
+class VistaFactorizacionLU(ResultadosFactorizacionLU, MixinSesionMatricial):
     """Compone una sesión matricial independiente para factorización PA = LU."""
 
     def __init__(self) -> None:
@@ -53,7 +52,6 @@ class VistaFactorizacionLU(ResultadosFactorizacionLU, MixinEjemplosFactorizacion
 
     def _construir_captura(self) -> None:
         with ui.column().classes('disposicion-panel min-w-0'):
-            self._construir_ejemplos()
             ui.label(textos.LU_CONVENCION).classes('texto-secundario factorizacion-lu-convencion')
             self.panel_matriz.construir_contenedor()
             with ui.row().classes('w-full gap-4'):
