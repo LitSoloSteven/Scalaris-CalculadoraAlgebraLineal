@@ -1,6 +1,5 @@
 """Extractos acotados de las matrices y menores del paso seleccionado."""
 from src.ai.contexto import describir_matriz, extraer_filas
-from src.frontend.componentes.reproductor_pasos.textos import limpiar_latex_plano
 
 
 def construir_meta_determinante(traza: list[dict], indice: int) -> dict:
@@ -22,7 +21,7 @@ def construir_meta_determinante(traza: list[dict], indice: int) -> dict:
     detalle = {"formula": paso.get("detalle_latex", ""), "explicacion": paso["explicacion"]}
     if menor:
         detalle.update(_detalle_menor(menor))
-    return {"tipo": paso["tipo"], "operacion": limpiar_latex_plano(paso["descripcion"]),
+    return {"tipo": paso["tipo"], "operacion": paso["descripcion"],
             "filas_antes": antes, "filas_despues": despues, "columnas": columnas, "detalle": detalle}
 
 
