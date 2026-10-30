@@ -96,9 +96,9 @@ def _rotacion_exacta(angulo: Fraction) -> Matriz:
 def _rotacion_aproximada(grados_float: float) -> Matriz:
     """Construye la matriz de rotación aproximada usando trigonometría."""
     radianes = math.radians(grados_float)
-    c = math.cos(radianes)
-    s = math.sin(radianes)
-    return Matriz(2, 2, [[c, -s], [s, c]])
+    coseno = math.cos(radianes)
+    seno = math.sin(radianes)
+    return Matriz(2, 2, [[coseno, -seno], [seno, coseno]])
 
 
 def matriz_reflexion(eje: str = "x") -> Matriz:
