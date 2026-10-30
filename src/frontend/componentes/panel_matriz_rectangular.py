@@ -6,6 +6,7 @@ from nicegui import ui
 from src.backend.constantes import DIMENSION_MAXIMA_MATRICES, DIMENSION_MINIMA
 from src.frontend.componentes.cuadricula_base import propiedades_celda_accesible
 from src.frontend.componentes.panel_matriz_rectangular_acciones import AccionesMatrizRectangular
+from src.frontend.componentes.carga_numerica import preparar_matriz_numerica
 from src.frontend.textos import (CAPTURA_RECTANGULAR_AYUDA, CAPTURA_RECTANGULAR_MATRIZ,
     CAPTURA_RECTANGULAR_PEGAR, CAPTURA_RECTANGULAR_TOOLTIP, CAPTURA_RECTANGULAR_EJES,
     CAPTURA_RECTANGULAR_ACCIONES)
@@ -109,6 +110,7 @@ class PanelMatrizRectangular(AccionesMatrizRectangular):
         self.filas = min(len(datos), DIMENSION_MAXIMA_MATRICES)
         self.columnas = min(max(len(fila) for fila in datos[:self.filas]), DIMENSION_MAXIMA_MATRICES)
         recortados = [fila[:self.columnas] + ["0"] * max(0, self.columnas - len(fila)) for fila in datos[:self.filas]]
+        recortados = preparar_matriz_numerica(recortados)
         self.cache = {(fila, columna): str(valor).strip() for fila, valores in enumerate(recortados)
                       for columna, valor in enumerate(valores) if str(valor).strip()}
         self._publicar()
