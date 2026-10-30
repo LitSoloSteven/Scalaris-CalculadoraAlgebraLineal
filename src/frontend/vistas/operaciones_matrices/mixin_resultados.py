@@ -12,6 +12,7 @@ from ._cuerpo_reproductor_matrices import renderizar_cuerpo_matrices
 from nicegui import ui
 from src.frontend.componentes.avisos_resultado import mostrar_error_inesperado
 from src.frontend.componentes.glosa_foco import crear_accion_explicacion
+from src.frontend.componentes.copia_resultado import renderizar_copia_resultado
 from src.frontend.controladores.sesion_matricial import actualizar_contexto
 from src.frontend.controladores.captura_contexto import capturar_matrices
 from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
@@ -84,6 +85,7 @@ class MixinResultadosOperacionesMatrices:
         respuesta_json, _ = calculo
         respuesta = json.loads(respuesta_json)
         self.ultimo_resultado = respuesta
+        self._actualizar_huella_ia(expresion)
 
         self.contenedor_resultados.clear()
         with self.contenedor_resultados:
@@ -96,7 +98,6 @@ class MixinResultadosOperacionesMatrices:
 
         ui.run_javascript('if(window.scalaris && window.scalaris.renderizarMathJax) window.scalaris.renderizarMathJax();')
 
-        self._actualizar_huella_ia(expresion)
 
     def _actualizar_huella_ia(self, expresion: str):
         """Registra la huella de entrada y programa la actualización de Glosa."""
@@ -139,6 +140,7 @@ class MixinResultadosOperacionesMatrices:
 
     def _renderizar_resultado_final(self, respuesta: dict):
         """Muestra el resultado final si la evaluación incluyó más de una suboperación."""
+        renderizar_copia_resultado(respuesta)
         mostrar_resultado_final = len(respuesta.get("pasos_segmento", [])) != 1
         if (
             mostrar_resultado_final

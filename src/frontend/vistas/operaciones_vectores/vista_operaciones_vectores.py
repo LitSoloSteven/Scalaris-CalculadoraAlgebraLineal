@@ -148,9 +148,9 @@ class VistaOperacionesVectores(MixinResultadosVectores):
                 self.boton_calcular.props(remove="loading")
 
     def _publicar_calculo(self, respuesta: dict, entrada: dict) -> None:
-        self.renderizar_resultado(respuesta)
         self.resultado_actual = respuesta
         self._huella_resultado = calcular_huella(entrada)
+        self.renderizar_resultado(respuesta)
         actualizar_contexto(self)
         ui.run_javascript("window.scalaris?.renderizarMathJax?.();")
 
