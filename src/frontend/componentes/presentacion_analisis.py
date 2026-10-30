@@ -1,5 +1,7 @@
 """Presentacion comun de analisis algebraicos calculados integramente en backend."""
 from nicegui import ui
+from dataclasses import replace
+from src.frontend import textos
 
 from src.frontend.componentes.glosa_foco import crear_accion_explicacion
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos
@@ -53,8 +55,19 @@ def montar_analisis(resultado: dict, panel_ia, identificador: str) -> Reproducto
     mostrar_resumen_analisis(resultado)
     if resultado.get("estado") == "ERROR":
         return None
-    pasos, grupos = adaptar_analisis(resultado)
-    return montar_pasos_analisis((pasos, grupos), panel_ia, identificador)
+    pasos, _ = adaptar_analisis(resultado)
+    grupos = []
+    adaptados = []
+    for indice, paso in enumerate(pasos):
+        fase = 0 if indice == 0 else (2 if indice == len(pasos) - 1 else 1)
+        if not grupos or grupos[-1][0] != fase:
+            grupos.append((fase, []))
+        grupos[-1][1].append(indice)
+        adaptados.append(replace(paso, indice_grupo=len(grupos) - 1))
+    fases = tuple(GrupoReproductor(textos.MODELOS_FASES[fase], textos.RESULTADO_CUENTA_PASOS.format(
+        cantidad=len(indices)), "operacion", tuple(indices)) for fase, indices in grupos)
+    return montar_pasos_analisis((tuple(adaptados), fases), panel_ia, identificador,
+                                {"lineas_ayuda": textos.MODELOS_AYUDA, "tipos_leyenda": textos.MODELOS_LEYENDA})
 
 
 def montar_pasos_analisis(secuencia: tuple, panel_ia, identificador: str, opciones: dict | None = None) -> ReproductorPasos:
