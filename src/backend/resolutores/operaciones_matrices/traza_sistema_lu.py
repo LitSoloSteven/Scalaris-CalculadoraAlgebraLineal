@@ -1,15 +1,15 @@
 """Presentacion de las operaciones ya calculadas al resolver un sistema con LU."""
 from fractions import Fraction
-from typing import Any
 
 from src.backend.modelos.matriz import Matriz
 from src.backend.utilidades.formateadores import numero_a_latex
 from .comprobacion_productos import crear_paso_analisis
 from .formateadores import matriz_a_latex
+from .sustitucion_lu import DatosFilaSustitucion
 
 
-def crear_traza_sistema_lu(permutada: Matriz, filas_inferiores: list[dict[str, Any]],
-                           filas_superiores: list[dict[str, Any]], solucion: list[Fraction]) -> list[dict]:
+def crear_traza_sistema_lu(permutada: Matriz, filas_inferiores: list[DatosFilaSustitucion],
+                           filas_superiores: list[DatosFilaSustitucion], solucion: list[Fraction]) -> list[dict]:
     """Construye pasos desde Pb, operaciones por fila y solucion sin recalcularlas.
 
     Recibe el vector permutado como matriz columna y devuelve la traza de resolucion.
@@ -24,7 +24,7 @@ def crear_traza_sistema_lu(permutada: Matriz, filas_inferiores: list[dict[str, A
     return traza
 
 
-def _paso_sustitucion(datos: dict[str, Any], variable: str) -> dict:
+def _paso_sustitucion(datos: DatosFilaSustitucion, variable: str) -> dict:
     indice = datos["fila"] + 1
     termino = numero_a_latex(datos["termino"])
     acumulado = numero_a_latex(datos["acumulado"])

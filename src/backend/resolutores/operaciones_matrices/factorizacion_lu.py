@@ -35,7 +35,7 @@ class _RegistroFactorizacion:
         elif tipo == "eliminacion":
             self.inferior.datos[datos["fila"]][datos["fila_pivote"]] = datos["factor"]
         self.registro.registrar(tipo, matriz, datos)
-        self.registro.traza[-1].update(permutacion=self.permutacion.clonar(), inferior=self.inferior.clonar())
+        _agregar_instantaneas(self.registro.traza[-1], self.permutacion, self.inferior)
 
 
 def factorizar_lu(matriz: Matriz) -> dict:
