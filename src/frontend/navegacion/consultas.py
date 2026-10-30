@@ -124,7 +124,7 @@ def _crear_elementos_visualizador() -> tuple[ElementoNavegacion, ...]:
 def elementos_navegacion(identificador_pilar: str) -> tuple[ElementoNavegacion, ...]:
     """Devuelve los elementos de navegación contextual asociados a un pilar."""
     if identificador_pilar == "algebra":
-        return _crear_elementos_herramientas(("sistemas", "vectores", "matrices", "inversa", "determinantes"))
+        return _crear_elementos_herramientas(("sistemas", "vectores", "matrices", "inversa", "determinantes", "factorizacion_lu"))
     if identificador_pilar == "visualizador":
         return _crear_elementos_visualizador()
     if identificador_pilar == "utilidades":

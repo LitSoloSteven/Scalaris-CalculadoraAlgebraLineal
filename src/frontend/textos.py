@@ -30,6 +30,37 @@ DETERMINANTES_VALOR = "Determinante: {valor}"
 DETERMINANTES_SINGULAR = "La matriz es singular."
 HISTORIAL_DETERMINANTE_CALCULADO = "Calculado"
 HISTORIAL_DETERMINANTE_DETALLE = "det = {determinante}. Método: {metodo}"
+HISTORIAL_FACTORIZACION_LU_CALCULADA = "Factorización calculada"
+HISTORIAL_FACTORIZACION_LU_DETALLE = "rango {rango}"
+CAPTURA_RECTANGULAR_AYUDA = "Pega desde Excel o un bloc de notas (tabuladores o comas). Máx. {limite}×{limite}."
+CAPTURA_RECTANGULAR_RECORTADA = "La matriz supera el límite; se conservaron las primeras {limite} filas y columnas."
+CAPTURA_PORTAPAPELES_ERROR = "No se pudo acceder al portapapeles. Comprueba los permisos y vuelve a intentarlo."
+CAPTURA_RECTANGULAR_MATRIZ = "Matriz A"
+CAPTURA_RECTANGULAR_PEGAR = "Pegar"
+CAPTURA_RECTANGULAR_TOOLTIP = "Pegar matriz desde el portapapeles"
+CAPTURA_RECTANGULAR_EJES = (("filas", "Filas"), ("columnas", "Columnas"))
+CAPTURA_RECTANGULAR_ACCIONES = ((-1, "remove", "Quitar"), (1, "add", "Añadir"))
+LU_TITULO = "Factorización LU"
+LU_DESCRIPCION = "Descompón una matriz mediante pivoteo parcial."
+LU_CONVENCION = "P registra los intercambios de filas, L guarda los multiplicadores con 1 en la diagonal y U es escalonada. La singularidad no impide factorizar."
+LU_ORIENTACION = "Ingresa una matriz y pulsa Calcular factorización."
+LU_VACIA = "Ingresa al menos un valor antes de calcular."
+LU_CALCULAR = "Calcular factorización"
+LU_EJEMPLOS = "Ejemplos precargados"
+LU_DATOS = "Dimensiones: {filas} × {columnas} · Rango: {rango} · Convención: {convencion}"
+LU_VEREDICTO = "LU = PA: {veredicto}"
+LU_CORRECTO = "Correcto"
+LU_INCORRECTO = "Incorrecto"
+LU_LECTURAS = ("P registra los intercambios de filas.", "L contiene los multiplicadores de eliminación.", "U contiene la matriz escalonada.")
+LU_AYUDA = ("Cómo leer esta factorización: sigue los pivotes y compara los factores con PA.",)
+LU_FASES = ("Convención", "Eliminación con pivoteo parcial", "Factores", "Desarrollo de PA y comprobación")
+LU_CUENTA_PASOS = "{cantidad} pasos"
+LU_EJEMPLOS_TEXTOS = (
+    ("Sin intercambios", "Ejemplo sin intercambios de filas."),
+    ("Con intercambios", "Ejemplo que requiere intercambiar filas."),
+    ("Singular", "Ejemplo de matriz singular."),
+    ("Rectangular", "Ejemplo de dos filas y tres columnas."),
+)
 VISTA_PREVIA_LIMITE = "Vista previa disponible hasta {dimension}×{dimension}."
 VISTA_PREVIA_ERROR = "No se pudo generar la vista previa. Revisa la matriz."
 

@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import logging
-import json
 from functools import partial
 from typing import Callable
 
@@ -19,6 +18,8 @@ from src.frontend.componentes.cuadricula_base import (
 )
 from .redimension_matriz_cuadrada import redimensionar_celdas, actualizar_etiqueta_dimension, DIMENSION_MAXIMA_CELDA_NORMAL
 from .tareas import lanzar_tarea
+from .animacion_matriz import animar_redimension_matriz
+from .portapapeles_matricial import parsear_texto_portapapeles
 from src.backend.constantes import DIMENSION_MAXIMA_INVERSA
 
 registro = logging.getLogger(__name__)
@@ -158,7 +159,7 @@ class PanelMatrizCuadrada:
             indice = indice_cambio_dimension(self.dimension, nuevo_n)
             selector = selector_dimension_matriz(IDENTIFICADOR_MATRIZ, indice, ("fila", "columna"))
             await ejecutar_transicion_cuadricula(
-                vars(self), CambioCuadricula(selectores_cambio_dimension(selector, delta), _animar_redimension_cuadrada),
+                vars(self), CambioCuadricula(selectores_cambio_dimension(selector, delta), animar_redimension_matriz),
                 partial(self._aplicar_dimension, nuevo_n), (self.boton_reducir, self.boton_aumentar), self._actualizar_botones,
             )
         finally:
@@ -211,7 +212,7 @@ class PanelMatrizCuadrada:
             return
         if not texto:
             return
-        filas = _parsear_texto_portapapeles(texto)
+        filas = parsear_texto_portapapeles(texto)
         if filas:
             self.cargar_matriz(filas)
 
@@ -225,22 +226,3 @@ class PanelMatrizCuadrada:
         self._renderizar_completa()
         if self.al_cambiar_datos:
             self.al_cambiar_datos()
-
-
-async def _animar_redimension_cuadrada(accion: str, selector: str) -> None:
-    try:
-        await ui.run_javascript(f"return window.scalaris?.cuadricula?.animarRedimensionCuadrada({json.dumps(selector)}, {json.dumps(accion)});")
-    except Exception:
-        pass
-
-
-def _parsear_texto_portapapeles(texto: str) -> list[list[str]]:
-    """Parsea una cadena con filas separadas por saltos de línea y celdas por coma o tab."""
-    lineas = [lin.strip() for lin in texto.strip().splitlines() if lin.strip()]
-    resultado: list[list[str]] = []
-    for lin in lineas:
-        delimitador = "\t" if "\t" in lin else "," if "," in lin else " "
-        celdas = [celda.strip() for celda in lin.split(delimitador) if celda.strip()]
-        if celdas:
-            resultado.append(celdas)
-    return resultado

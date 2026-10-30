@@ -1,0 +1,9 @@
+.factorizacion-lu-marco { container: sesion-matricial / inline-size; min-width: 0; }
+.factorizacion-lu-vista, .factorizacion-lu-convencion, .factorizacion-lu-factor { min-width: 0; max-width: 100%; }
+.factorizacion-lu-convencion { overflow-wrap: anywhere; }
+.factorizacion-lu-factores { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: var(--space-4); width: 100%; min-width: 0; }
+.factorizacion-lu-factor { overflow-wrap: anywhere; }
+
+@media (prefers-reduced-motion: reduce) {
+    .factorizacion-lu-vista { transform: none; }
+}

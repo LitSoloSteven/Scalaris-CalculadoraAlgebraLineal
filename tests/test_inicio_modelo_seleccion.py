@@ -22,8 +22,8 @@ def test_estructura_areas_inicio():
 
     assert p_algebra.identificador == "algebra"
     assert p_algebra.nombre_corto == "Álgebra lineal"
-    assert len(p_algebra.tarjetas) == 5
-    assert [t.clave for t in p_algebra.tarjetas] == ["sistemas", "vectores", "matrices", "inversa", "determinantes"]
+    assert len(p_algebra.tarjetas) == 6
+    assert [t.clave for t in p_algebra.tarjetas] == ["sistemas", "vectores", "matrices", "inversa", "determinantes", "factorizacion_lu"]
     assert all(isinstance(t, ModeloTarjeta) for t in p_algebra.tarjetas)
 
     assert p_vis.identificador == "visualizador"

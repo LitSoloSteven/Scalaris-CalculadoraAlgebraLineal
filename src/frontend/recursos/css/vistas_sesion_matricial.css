@@ -21,6 +21,17 @@
     max-width: 100%;
 }
 
+.sesion-paneles-compartidos .calculadora-boton { min-width: 0; }
+.sesion-paneles-compartidos .sesion-panel-herramientas,
+.sesion-paneles-compartidos .q-tab-panel,
+.sesion-paneles-compartidos .q-tab-panels { min-width: 0; max-width: 100%; }
+
+@container sesion-matricial (max-width: 20rem) {
+    .sesion-vista { padding-inline: var(--space-2) !important; }
+    .sesion-vista .sesion-panel-herramientas .panel-tarjeta { padding: var(--space-2); }
+    .sesion-vista .sesion-panel-herramientas .grid { gap: var(--space-2); }
+}
+
 @keyframes sistemasCambioMetodo {
     from { opacity: 0; transform: scale(0.95); }
     to { opacity: 1; transform: scale(1); }
