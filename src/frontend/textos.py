@@ -46,7 +46,6 @@ LU_CONVENCION = "P registra los intercambios de filas, L guarda los multiplicado
 LU_ORIENTACION = "Ingresa una matriz y pulsa Calcular factorización."
 LU_VACIA = "Ingresa al menos un valor antes de calcular."
 LU_CALCULAR = "Calcular factorización"
-LU_EJEMPLOS = "Ejemplos precargados"
 LU_DATOS = "Dimensiones: {filas} × {columnas} · Rango: {rango} · Convención: {convencion}"
 LU_VEREDICTO = "LU = PA: {veredicto}"
 LU_CORRECTO = "Correcto"
@@ -55,12 +54,6 @@ LU_LECTURAS = ("P registra los intercambios de filas.", "L contiene los multipli
 LU_AYUDA = ("Cómo leer esta factorización: sigue los pivotes y compara los factores con PA.",)
 LU_FASES = ("Convención", "Eliminación con pivoteo parcial", "Factores", "Desarrollo de PA y comprobación")
 LU_CUENTA_PASOS = "{cantidad} pasos"
-LU_EJEMPLOS_TEXTOS = (
-    ("Sin intercambios", "Ejemplo sin intercambios de filas."),
-    ("Con intercambios", "Ejemplo que requiere intercambiar filas."),
-    ("Singular", "Ejemplo de matriz singular."),
-    ("Rectangular", "Ejemplo de dos filas y tres columnas."),
-)
 VISTA_PREVIA_LIMITE = "Vista previa disponible hasta {dimension}×{dimension}."
 VISTA_PREVIA_ERROR = "No se pudo generar la vista previa. Revisa la matriz."
 
