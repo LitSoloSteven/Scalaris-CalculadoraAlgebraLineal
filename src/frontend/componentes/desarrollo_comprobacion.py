@@ -13,8 +13,22 @@ def mostrar_desarrollo(traza: list[dict], titulo: str = "Ver desarrollo de la co
     if es_traza_producto(traza):
         _mostrar_producto(traza, titulo)
         return
+    _mostrar_resumen_plano(traza)
+    _crear_detalle_diferido(titulo, lambda: _mostrar_pasos(traza[1:-1]))
+
+
+def _mostrar_resumen_plano(traza: list[dict]) -> None:
+    """Conserva planteamiento y conclusión visibles sin montar los pasos intermedios."""
     _mostrar_paso(traza[0])
-    _crear_detalle_diferido(titulo, lambda: _mostrar_pasos(traza[1:]))
+    if len(traza) > 1:
+        _mostrar_paso(traza[-1])
+    if any(str(paso.get("descripcion", "")).startswith("Propiedad por comprobar:") for paso in traza):
+        ui.label(textos.COMPROBACION_PROPIEDAD).classes("font-bold texto-principal")
+        renderizar_latex(textos.COMPROBACION_CELDA_GUIA)
+        conclusion = next((paso for paso in traza if str(paso.get("descripcion", "")).startswith(
+            "Comprobacion exacta de ")), None)
+        if conclusion and conclusion is not traza[-1]:
+            renderizar_latex(conclusion["detalle_latex"])
 
 
 def _mostrar_producto(traza: list[dict], titulo: str) -> None:

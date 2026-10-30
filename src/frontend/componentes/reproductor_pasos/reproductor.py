@@ -179,7 +179,7 @@ class ReproductorPasos:
         """Ajusta la lectura al paso vigente sin reactivar temporizadores retirados."""
         temporizador = getattr(self, "temporizador", None)
         if temporizador is not None and not temporizador.is_deleted and self.pasos:
-            temporizador.interval = intervalo_lectura(
+            self.temporizador.interval = intervalo_lectura(
                 self.pasos[self.indice_actual].explicacion, getattr(self, "velocidad", "Normal")
             )
 
