@@ -29,7 +29,7 @@ def test_resultado_determinante_tiene_paridad_y_senales(monkeypatch, metodo, dat
         assert {textos.PASOS_AYUDA_TITULO, textos.PASOS_INDICE_TITULO, textos.RESULTADO_INTERPRETACION} <= expansiones
         assert any(isinstance(elemento, ui.html) and r"\det(A)" in elemento.content for elemento in elementos)
         assert any(isinstance(elemento, ui.button) and elemento.text == textos.RESULTADO_COPIAR for elemento in elementos)
-        vista.panel_matriz.cargar_matriz([["incorrecto", "0"], ["0", "1"]])
+        vista.panel_matriz.cargar_matriz([["1/0", "0"], ["0", "1"]])
         senales = vista.obtener_senales_ia()
         assert senales.estado == "sin_resultado" and senales.invalida.foco == (0, 0)
     asyncio.run(construir_pagina(monkeypatch, "determinantes", comprobar))

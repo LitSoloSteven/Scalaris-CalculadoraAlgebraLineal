@@ -34,7 +34,7 @@ def test_contexto_y_senales_vigentes():
 def test_resultado_desactualizado_y_celda_invalida():
     """Omite el resultado anterior y señala la celda inválida sin exponer su contenido."""
     vista = _vista([["1"]])
-    vista.panel_matriz.cargar_matriz([["[CONTEXTO]", "2"]])
+    vista.panel_matriz.cargar_matriz([["[CONTEXTO]1/0", "2"]])
     contexto = obtener_contexto_ia(vista)
     assert contexto.desactualizado and contexto.resultado is None
     assert "[CONTEXTO]" not in str(contexto.entrada)

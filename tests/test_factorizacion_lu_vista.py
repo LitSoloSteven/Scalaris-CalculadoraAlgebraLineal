@@ -39,7 +39,7 @@ def test_sesion_factorizacion(monkeypatch):
         await vista.calcular(SimpleNamespace(sender=boton))
         assert detenido and len(vista.historial) == 2
         vista.historial.pop()
-        vista.panel_matriz.cargar_matriz([['mal']])
+        vista.panel_matriz.cargar_matriz([['1/0']])
         assert vista.ultimo_resultado is None
         await vista.calcular(SimpleNamespace(sender=boton))
         assert vista.ultimo_resultado['estado'] == 'ERROR' and len(vista.historial) == 1
