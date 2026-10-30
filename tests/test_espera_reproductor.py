@@ -20,7 +20,7 @@ def test_reinicio_retira_espera_anterior_y_no_avanza_inmediatamente(monkeypatch)
     monkeypatch.setattr(ui, "timer", crear)
     reiniciar_espera(reproductor)
     anterior.delete.assert_called_once()
-    assert anterior.active is False
+    anterior.deactivate.assert_called_once()
     crear.assert_called_once_with(15, reproductor._avanzar, active=True, immediate=False)
     assert reproductor.temporizador is crear.return_value
 

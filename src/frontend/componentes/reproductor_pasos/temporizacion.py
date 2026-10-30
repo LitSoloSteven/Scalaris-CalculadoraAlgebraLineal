@@ -8,7 +8,7 @@ def reiniciar_espera(reproductor) -> None:
     if anterior is None or anterior.is_deleted or reproductor.tarjeta.is_deleted:
         return
     intervalo = anterior.interval
-    anterior.active = False
+    anterior.deactivate()
     anterior.delete()
     with reproductor.tarjeta:
         reproductor.temporizador = ui.timer(
