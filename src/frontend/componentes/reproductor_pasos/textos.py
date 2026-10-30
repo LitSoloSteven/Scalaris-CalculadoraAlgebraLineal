@@ -15,6 +15,7 @@ COMPROBACION_CORRECTA = "Correcto"
 COMPROBACION_INCORRECTA = "Incorrecto"
 COMPROBACION_FILA = "Fila {fila}"
 COMPROBACION_CELDA_GUIA = r"C_{1,1}=\text{fila 1 por columna 1}"
+MATEMATICAS_DESPLAZAMIENTO = "Fórmula matemática; usa las flechas para desplazarte en horizontal"
 
 
 def formatear_descripcion_html(texto: str) -> str:
