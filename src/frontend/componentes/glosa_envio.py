@@ -164,6 +164,7 @@ class EnvioGlosaMixin(PreguntasGlosaMixin):
             mensaje = {"texto": resultado.texto, "enviado": False, "error": False, "animar": True}
 
         self.historial_chat = incorporar_mensaje(self.historial_chat, mensaje)
+        mensaje = self.historial_chat[-1]
 
         with self.area_chat:
             if banderas.panel_lateral_habilitado():

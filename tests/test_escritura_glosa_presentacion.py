@@ -4,11 +4,13 @@ from unittest.mock import Mock
 
 import pytest
 from nicegui import ui
+from nicegui.observables import ObservableDict
 
 from src.ai.respuestas import ResultadoIA, TipoErrorIA
 from src.frontend.componentes.glosa_envio import EnvioGlosaMixin
 from src.frontend.componentes.glosa_bitacora import _renderizar_mensaje_lateral
 from src.frontend.componentes.panel_ia_clasico import renderizar_mensaje_clasico
+from tests.comun_clientes import PanelIASimulado
 
 
 @pytest.mark.parametrize("lateral", [False, True])
@@ -52,3 +54,24 @@ def test_solo_respuestas_exitosas_solicitan_revelado(monkeypatch, exito):
         instancia._renderizar_mensaje.assert_called_once()
     finally:
         instancia.area_chat.delete()
+
+
+@pytest.mark.parametrize("lateral", [False, True])
+def test_reconstruir_almacen_observable_no_repite_revelado(monkeypatch, lateral):
+    """La marca se consume en el objeto persistido por NiceGUI, también tras reconstruir."""
+    monkeypatch.setattr('src.frontend.banderas.panel_lateral_habilitado', lambda: lateral)
+    monkeypatch.setattr('src.frontend.componentes.glosa_bitacora.sugerencias_activas', lambda: False)
+    almacen = ObservableDict({})
+    panel = PanelIASimulado(almacen=almacen)
+    panel.area_chat = ui.column()
+    panel._desplazar_al_final = Mock()
+    try:
+        panel._procesar_resultado(ResultadoIA(True, 'Respuesta de prueba'))
+        assert almacen['ia_historial_chat'][-1]['animar'] is False
+        contenidos = [elemento for elemento in panel.area_chat.descendants() if isinstance(elemento, ui.html)]
+        assert 'data-escritura-pendiente' in contenidos[0]._props
+        panel.renderizar_chat()
+        contenidos = [elemento for elemento in panel.area_chat.descendants() if isinstance(elemento, ui.html)]
+        assert 'data-escritura-pendiente' not in contenidos[0]._props
+    finally:
+        panel.area_chat.delete()
