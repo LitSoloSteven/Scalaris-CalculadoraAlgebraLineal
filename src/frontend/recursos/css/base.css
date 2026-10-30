@@ -112,11 +112,16 @@ html .texto-acento {
 
 .matematicas-desplazamiento {
     overflow-x: auto;
+    overflow-y: hidden;
     width: 100%;
     min-width: 0;
     max-width: 100%;
-    padding-bottom: var(--space-2);
+    padding-block: var(--space-3);
     box-sizing: border-box;
+}
+
+.matematicas-desplazamiento mjx-container[display="true"] {
+    margin-block: var(--space-2) !important;
 }
 
 .row>div:has(> .matematicas-desplazamiento),
