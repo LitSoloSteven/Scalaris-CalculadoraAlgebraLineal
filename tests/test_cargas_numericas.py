@@ -27,19 +27,23 @@ def test_cargar_matriz_filtra_sin_mover_celdas_ni_perder_fracciones(monkeypatch,
 
 
 @pytest.mark.parametrize('rectangular', [False, True])
-def test_pegar_portapapeles_sanea_sin_desplazar_celda_rechazada(monkeypatch, rectangular):
+@pytest.mark.parametrize('texto,esperado', [
+    ('a1\tletras\n-2/3\t0.25b', [['1', '0'], ['-2/3', '0.25']]),
+    ('1\t\n\t4', [['1', '0'], ['0', '4']]),
+])
+def test_pegar_portapapeles_sanea_sin_desplazar_celda_rechazada(monkeypatch, rectangular, texto, esperado):
     """Una celda de letras se vacía en su posición al pegar desde el botón Python."""
     monkeypatch.setattr(ui, 'notify', Mock())
 
     async def leer(_codigo):
         """Devuelve una tabla de prueba sin acceder al portapapeles del sistema."""
-        return 'a1\tletras\n-2/3\t0.25b'
+        return texto
 
     monkeypatch.setattr(ui, 'run_javascript', leer)
     panel = PanelMatrizRectangular() if rectangular else PanelMatrizCuadrada()
     setattr(panel, '_publicar' if rectangular else '_publicar_matriz', Mock())
     asyncio.run(panel.pegar_desde_portapapeles())
-    assert panel.obtener_datos_matriz() == [['1', '0'], ['-2/3', '0.25']]
+    assert panel.obtener_datos_matriz() == esperado
 
 
 def test_registro_matriz_sanea_datos_sin_alterar_dimensiones(monkeypatch):

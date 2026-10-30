@@ -19,7 +19,7 @@ from src.frontend.componentes.cuadricula_base import (
 from .redimension_matriz_cuadrada import redimensionar_celdas, actualizar_etiqueta_dimension, DIMENSION_MAXIMA_CELDA_NORMAL
 from .tareas import lanzar_tarea
 from .animacion_matriz import animar_redimension_matriz
-from .portapapeles_matricial import parsear_texto_portapapeles
+from .portapapeles_matricial import parsear_portapapeles_rectangular
 from .carga_numerica import preparar_matriz_numerica
 from src.backend.constantes import DIMENSION_MAXIMA_INVERSA
 
@@ -213,7 +213,7 @@ class PanelMatrizCuadrada:
             return
         if not texto:
             return
-        filas = parsear_texto_portapapeles(texto)
+        filas, _ = parsear_portapapeles_rectangular(texto, DIMENSION_MAXIMA_INVERSA)
         if filas:
             self.cargar_matriz(filas)
 
