@@ -13,7 +13,10 @@ _TIPOS_EXPLICACION = {"resultado": "factorizacion", "operacion": "verificacion"}
 
 
 def adaptar_traza_factorizacion_lu(resultado: dict) -> tuple[tuple, tuple]:
-    """Adapta la traza de resultado en cuatro grupos ordenados para el reproductor."""
+    """Adapta la traza de resultado; devuelve pasos y cuatro grupos ordenados.
+
+    Lanza KeyError si el dominio devuelve un tipo de paso desconocido.
+    """
     pasos_originales, _ = adaptar_analisis(resultado)
     pasos = []
     indices = [[] for _ in textos.LU_FASES]
@@ -22,13 +25,13 @@ def adaptar_traza_factorizacion_lu(resultado: dict) -> tuple[tuple, tuple]:
         indices[grupo].append(paso.indice)
         meta = {**paso.meta_explicar, "tipo": _TIPOS_EXPLICACION.get(paso.tipo, paso.tipo)}
         pasos.append(replace(paso, indice_grupo=grupo, meta_explicar=meta))
-    grupos = tuple(GrupoReproductor(titulo, f"{len(indices[indice])} pasos", "operacion", tuple(indices[indice]))
+    grupos = tuple(GrupoReproductor(titulo, textos.LU_CUENTA_PASOS.format(cantidad=len(indices[indice])), "operacion", tuple(indices[indice]))
                    for indice, titulo in enumerate(textos.LU_FASES))
     return tuple(pasos), grupos
 
 
 def montar_reproductor_lu(resultado: dict, panel_ia) -> ReproductorPasos:
-    """Monta la traza de resultado y conecta la explicación contextual de Glosa."""
+    """Monta el resultado con el panel de Glosa y devuelve su reproductor."""
     pasos, grupos = adaptar_traza_factorizacion_lu(resultado)
     reproductor = ReproductorPasos(pasos, grupos, _renderizar_cuerpo, "factorizacion-lu", opciones={
         "titulo": textos.LU_TITULO, "lineas_ayuda": textos.LU_AYUDA,

@@ -54,6 +54,13 @@ LU_INCORRECTO = "Incorrecto"
 LU_LECTURAS = ("P registra los intercambios de filas.", "L contiene los multiplicadores de eliminación.", "U contiene la matriz escalonada.")
 LU_AYUDA = ("Cómo leer esta factorización: sigue los pivotes y compara los factores con PA.",)
 LU_FASES = ("Convención", "Eliminación con pivoteo parcial", "Factores", "Desarrollo de PA y comprobación")
+LU_CUENTA_PASOS = "{cantidad} pasos"
+LU_EJEMPLOS_TEXTOS = (
+    ("Sin intercambios", "Ejemplo sin intercambios de filas."),
+    ("Con intercambios", "Ejemplo que requiere intercambiar filas."),
+    ("Singular", "Ejemplo de matriz singular."),
+    ("Rectangular", "Ejemplo de dos filas y tres columnas."),
+)
 VISTA_PREVIA_LIMITE = "Vista previa disponible hasta {dimension}×{dimension}."
 VISTA_PREVIA_ERROR = "No se pudo generar la vista previa. Revisa la matriz."
 
