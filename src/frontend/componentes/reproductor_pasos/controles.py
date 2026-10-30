@@ -4,7 +4,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 from nicegui import ui
 
-from src.frontend.componentes.reproductor_pasos.catalogo import VELOCIDADES_AUTOREPRODUCCION
+from src.frontend.componentes.reproductor_pasos.catalogo import MULTIPLICADORES_LECTURA
 
 if TYPE_CHECKING:
     from src.frontend.componentes.reproductor_pasos.reproductor import ReproductorPasos
@@ -22,8 +22,8 @@ def construir_controles(reproductor: ReproductorPasos) -> None:
             _boton_siguiente(reproductor)
             _boton_ultimo(reproductor)
             ui.select(
-                list(VELOCIDADES_AUTOREPRODUCCION.keys()),
-                value="Normal",
+                list(MULTIPLICADORES_LECTURA),
+                value=reproductor.velocidad,
                 on_change=reproductor._cambiar_velocidad,
             ).classes("selector-controles w-28 text-xs").props(
                 'dense popup-content-class="selector-menu" aria-label="Velocidad de reproducción"'

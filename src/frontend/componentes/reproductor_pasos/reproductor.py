@@ -18,6 +18,7 @@ from src.frontend.componentes.reproductor_pasos.catalogo import (
 from src.frontend.componentes.reproductor_pasos.modelo import GrupoReproductor, PasoReproductor
 from src.frontend.componentes.reproductor_pasos.vista import construir_vista
 from .opciones import OpcionesReproductor
+from .temporizacion import reiniciar_espera
 from .textos import formatear_descripcion_html, limpiar_latex_plano
 
 
@@ -77,7 +78,7 @@ class ReproductorPasos:
             return
         self.indice_actual = max(0, min(indice, len(self.pasos) - 1))
         paso = self.pasos[self.indice_actual]
-        self._actualizar_intervalo()
+        self._actualizar_intervalo(reiniciar=not autoreproduccion)
         self._actualizar_encabezado(paso)
         self._actualizar_explicacion(paso, autoreproduccion)
         self._actualizar_glosa(paso)
@@ -160,7 +161,7 @@ class ReproductorPasos:
             return
         if self.indice_actual == len(self.pasos) - 1:
             self.ir_a(0, autoreproduccion=True)
-        self.temporizador.active = True
+        reiniciar_espera(self)
         self.boton_reproducir.props('icon=pause')
 
     def _pausar_reproduccion(self) -> None:
@@ -175,13 +176,15 @@ class ReproductorPasos:
         self.velocidad = evento.value
         self._actualizar_intervalo()
 
-    def _actualizar_intervalo(self) -> None:
+    def _actualizar_intervalo(self, *, reiniciar: bool = True) -> None:
         """Ajusta la lectura al paso vigente sin reactivar temporizadores retirados."""
         temporizador = getattr(self, "temporizador", None)
         if temporizador is not None and not temporizador.is_deleted and self.pasos:
             self.temporizador.interval = intervalo_lectura(
                 self.pasos[self.indice_actual].explicacion, getattr(self, "velocidad", "Normal")
             )
+            if reiniciar and temporizador.active:
+                reiniciar_espera(self)
 
     def _cambiar_deslizador(self, evento) -> None:
         """Navega al paso elegido en el deslizador."""
