@@ -6,6 +6,7 @@ import html
 import itertools
 import json
 from collections.abc import Callable, Sequence
+from dataclasses import replace
 from typing import Any
 
 from nicegui import ui
@@ -17,7 +18,7 @@ from src.frontend.componentes.reproductor_pasos.catalogo import (
 from src.frontend.componentes.reproductor_pasos.modelo import GrupoReproductor, PasoReproductor
 from src.frontend.componentes.reproductor_pasos.vista import construir_vista
 from .opciones import OpcionesReproductor
-from .textos import formatear_descripcion_html
+from .textos import formatear_descripcion_html, limpiar_latex_plano
 
 
 _CONTADOR_EXPLICACION = itertools.count()
@@ -106,7 +107,8 @@ class ReproductorPasos:
         """Muestra la explicacion, con escritura animada fuera de autoplay."""
         texto = paso.explicacion
         contenido = formatear_descripcion_html(texto)
-        if contenido == formatear_descripcion_html(paso.descripcion):
+        descripcion = formatear_descripcion_html(paso.descripcion)
+        if " ".join(contenido.split()) == " ".join(descripcion.split()):
             contenido = texto = ""
         identificador = f"repro-expl-{next(_CONTADOR_EXPLICACION)}"
         if autoreproduccion or contenido != html.escape(texto):
@@ -130,10 +132,13 @@ class ReproductorPasos:
             return
         from src.frontend.componentes.glosa_sugerencias import renderizar_boton_explicacion
 
+        metadatos = dict(paso.meta_explicar)
+        metadatos["operacion"] = limpiar_latex_plano(metadatos.get("operacion", paso.descripcion))
+        paso_explicable = replace(paso, meta_explicar=metadatos)
         with self.contenedor_glosa:
             renderizar_boton_explicacion(
                 self.indice_actual + 1,
-                lambda indice: self.al_explicar(paso),
+                lambda indice: self.al_explicar(paso_explicable),
                 esta_cargando=self.esta_ocupado(),
             )
 
