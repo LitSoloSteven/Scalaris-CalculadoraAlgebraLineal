@@ -4,7 +4,7 @@ from functools import lru_cache
 
 _INICIO = frozenset({"inicio"})
 _NUMERICAS = frozenset({"bases", "romanos"})
-_ALGEBRA = frozenset({"sistemas", "vectores", "matrices", "inversa", "determinantes",
+_ALGEBRA = frozenset({"sistemas", "vectores", "matrices", "inversa", "determinantes", "factorizacion_lu",
                        "visualizador", "leontief", "transformaciones"})
 _VISTAS = _INICIO | _NUMERICAS | _ALGEBRA
 _POR_RECURSO = {

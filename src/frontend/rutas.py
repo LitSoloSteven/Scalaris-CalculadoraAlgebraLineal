@@ -79,6 +79,14 @@ def _registrar_paginas_algebra() -> None:
 def _registrar_paginas_avanzadas() -> None:
     """Registra las páginas de visualización y extensiones matriciales."""
 
+    @ui.page(ruta_de("factorizacion_lu"), title=herramienta_por_identificador("factorizacion_lu").titulo_pagina)
+    def pagina_factorizacion_lu():
+        """Construye la página de factorización matricial con pivoteo parcial."""
+        from src.frontend.vistas.operaciones_matrices.vista_factorizacion_lu import VistaFactorizacionLU
+
+        configurar_tema("factorizacion_lu")
+        VistaFactorizacionLU().construir()
+
     @ui.page(ruta_de("determinantes"), title=herramienta_por_identificador("determinantes").titulo_pagina)
     def pagina_determinantes():
         """Construye la captura pública de determinantes mediante triangulación LU."""
