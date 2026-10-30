@@ -1,7 +1,7 @@
 'use strict';
 const prueba = require('node:test');
 const afirmar = require('node:assert/strict');
-const { crearRevelado, insertarRespuesta } = require('./comun_revelado_glosa.js');
+const { crearRevelado, insertarRespuesta, nodoSimulado } = require('./comun_revelado_glosa.js');
 
 prueba('el revelado conserva nodos y texto hostil, ocupa hasta cuatro segundos y limpia estado', () => {
     const cliente = crearRevelado();
@@ -53,6 +53,19 @@ prueba('el borrado restaura los nodos desconectados y retira el temporizador', (
     afirmar.equal(cliente.tareas[0].cancelada, true);
     afirmar.equal(respuesta.bitacora.getAttribute('aria-busy'), undefined);
     afirmar.equal(respuesta.burbuja.eventos.size, 0);
+});
+
+prueba('un error nuevo sin animación cancela el revelado antes de anunciarse', () => {
+    const cliente = crearRevelado();
+    const anterior = insertarRespuesta(cliente, ['Respuesta en curso']);
+    const error = nodoSimulado();
+    error.matches = selector => selector === '[data-glosa-respuesta]';
+    error.closest = () => anterior.bitacora;
+    cliente.observar([{ addedNodes: [error] }]);
+    afirmar.equal(anterior.bitacora.getAttribute('aria-busy'), undefined);
+    afirmar.equal(anterior.contenido.nodos[0].textContent, 'Respuesta en curso');
+    afirmar.equal(anterior.burbuja.eventos.size, 0);
+    afirmar.equal(cliente.tareas[0].cancelada, true);
 });
 
 for (const modo of ['reducido', 'teclado', 'vacio']) {
