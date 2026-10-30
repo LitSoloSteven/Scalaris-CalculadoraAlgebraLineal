@@ -61,9 +61,11 @@ def test_reconstruir_almacen_observable_no_repite_revelado(monkeypatch, lateral)
     """La marca se consume en el objeto persistido por NiceGUI, también tras reconstruir."""
     monkeypatch.setattr('src.frontend.banderas.panel_lateral_habilitado', lambda: lateral)
     monkeypatch.setattr('src.frontend.componentes.glosa_bitacora.sugerencias_activas', lambda: False)
+    monkeypatch.setattr(ui, 'run_javascript', Mock())
     almacen = ObservableDict({})
     panel = PanelIASimulado(almacen=almacen)
     panel.area_chat = ui.column()
+    panel._cliente = SimpleNamespace(is_deleted=False, run_javascript=Mock())
     panel._desplazar_al_final = Mock()
     try:
         panel._procesar_resultado(ResultadoIA(True, 'Respuesta de prueba'))
