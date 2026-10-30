@@ -13,10 +13,7 @@ _TIPOS_EXPLICACION = {"resultado": "factorizacion", "operacion": "verificacion"}
 
 
 def adaptar_traza_factorizacion_lu(resultado: dict) -> tuple[tuple, tuple]:
-    """Adapta la traza de resultado; devuelve pasos y cuatro grupos ordenados.
-
-    Lanza KeyError si el dominio devuelve un tipo de paso desconocido.
-    """
+    """Adapta la traza y devuelve pasos y grupos; lanza KeyError ante un tipo desconocido."""
     pasos_originales, _ = adaptar_analisis(resultado)
     pasos = []
     indices = [[] for _ in textos.LU_FASES]

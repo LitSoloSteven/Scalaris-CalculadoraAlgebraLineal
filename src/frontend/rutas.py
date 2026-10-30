@@ -76,9 +76,8 @@ def _registrar_paginas_algebra() -> None:
         VistaOperacionesInversas().construir(token_transferencia=handoff)
 
 
-def _registrar_paginas_avanzadas() -> None:
-    """Registra las páginas de visualización y extensiones matriciales."""
-
+def _registrar_pagina_factorizacion_lu() -> None:
+    """Registra la página de factorización LU."""
     @ui.page(ruta_de("factorizacion_lu"), title=herramienta_por_identificador("factorizacion_lu").titulo_pagina)
     def pagina_factorizacion_lu():
         """Construye la página de factorización matricial con pivoteo parcial."""
@@ -86,6 +85,10 @@ def _registrar_paginas_avanzadas() -> None:
 
         configurar_tema("factorizacion_lu")
         VistaFactorizacionLU().construir()
+
+
+def _registrar_paginas_avanzadas() -> None:
+    """Registra las páginas de visualización y extensiones matriciales."""
 
     @ui.page(ruta_de("determinantes"), title=herramienta_por_identificador("determinantes").titulo_pagina)
     def pagina_determinantes():
@@ -158,6 +161,7 @@ def registrar_rutas() -> None:
     """Registra todas las redirecciones heredadas y páginas canónicas de la aplicación."""
     registrar_redirecciones_heredadas(app)
     _registrar_paginas_algebra()
+    _registrar_pagina_factorizacion_lu()
     _registrar_paginas_avanzadas()
     _registrar_paginas_utilidades()
     _registrar_pagina_inicio()
