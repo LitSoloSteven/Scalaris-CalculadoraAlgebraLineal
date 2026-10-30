@@ -2,6 +2,20 @@
 import html
 import re
 
+COMPROBACION_PROPIEDAD = "Propiedad por comprobar"
+COMPROBACION_CONTEXTO_INVERSA = (
+    "Multiplicamos A por A⁻¹ y comparamos con I; cada celda es una fila de A "
+    "por una columna de A⁻¹."
+)
+COMPROBACION_CONTEXTO_PRODUCTO = (
+    "Multiplicamos las matrices de la propiedad y comparamos con la matriz esperada; "
+    "cada celda es una fila de la primera matriz por una columna de la segunda."
+)
+COMPROBACION_CORRECTA = "Correcto"
+COMPROBACION_INCORRECTA = "Incorrecto"
+COMPROBACION_FILA = "Fila {fila}"
+COMPROBACION_CELDA_GUIA = r"C_{1,1}=\text{fila 1 por columna 1}"
+
 
 def formatear_descripcion_html(texto: str) -> str:
     """Escapa el texto y convierte potencias, subíndices y productos a HTML seguro."""
