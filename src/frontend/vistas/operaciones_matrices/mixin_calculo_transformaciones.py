@@ -14,6 +14,8 @@ class MixinCalculoTransformaciones:
     """Orquesta el análisis de la matriz capturada y presenta su resultado."""
 
     async def _analizar(self, boton):
+        if getattr(self, "_calculando", False):
+            return
         self._restablecer_resultados()
         await ejecutar_modelo(self, boton, self._analizar_nucleo)
 
