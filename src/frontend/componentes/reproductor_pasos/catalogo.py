@@ -4,6 +4,7 @@ from __future__ import annotations
 import html
 
 CATALOGO_TIPOS = {
+    "menor": {"etiqueta": "Menor", "icono": "grid_on"},
     "inicial": {"etiqueta": "Inicio", "icono": "grid_on"},
     "intercambio": {"etiqueta": "Intercambio", "icono": "swap_vert"},
     "pivote": {"etiqueta": "Pivote", "icono": "gps_fixed"},
