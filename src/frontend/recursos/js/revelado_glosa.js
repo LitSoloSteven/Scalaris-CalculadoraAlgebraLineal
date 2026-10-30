@@ -16,8 +16,8 @@
         }
         window.scalaris.escritura.revelar(contenido, fragmentos, {
             bitacora, respuesta, burbuja,
-            duracion: window.scalaris.movimiento.duracion('--dur-escritura-max'),
-            velocidad: window.scalaris.movimiento.duracion('--dur-escritura-caracter'),
+            duracion: window.scalaris.movimiento.duracion('--escritura-revelado-maximo'),
+            velocidad: window.scalaris.movimiento.duracion('--escritura-caracter'),
         });
     }
 

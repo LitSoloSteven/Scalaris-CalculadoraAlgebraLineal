@@ -7,5 +7,7 @@
     "selector_tema.js",
     "renderizado_mathjax.js",
     "escritura_progresiva.js",
+    "revelado_glosa.js",
+    "efecto_escritura.js",
     "tema_graficos.js"
 ]
