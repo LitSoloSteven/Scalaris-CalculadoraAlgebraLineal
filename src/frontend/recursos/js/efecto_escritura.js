@@ -6,7 +6,7 @@
     window.scalaris.efectoEscritura?.desmontar();
 
     function pulsar(evento) {
-        if (!evento.isTrusted || evento.inputType !== 'insertText' || !evento.data) return;
+        if (!esInsercionFisica(evento)) return;
         const entrada = evento.target;
         if (!entrada.matches?.('input, textarea') || entrada.disabled || entrada.readOnly) return;
         const campo = entrada.closest(campos);
@@ -23,6 +23,10 @@
             animacion.cancel();
             animacion.play();
         }
+    }
+
+    function esInsercionFisica(evento) {
+        return evento.isTrusted && evento.inputType === 'insertText' && Boolean(evento.data);
     }
 
     document.addEventListener('input', pulsar, { passive: true });
