@@ -188,7 +188,9 @@ class ReproductorPasos:
 
     def _cambiar_deslizador(self, evento) -> None:
         """Navega al paso elegido en el deslizador."""
-        self.ir_a(int(evento.value))
+        indice = int(evento.value)
+        if indice != self.indice_actual:
+            self.ir_a(indice)
 
     def _seleccionar_desde_indice(self, indice: int) -> None:
         """Navega desde el indice y desplaza el reproductor a la vista."""

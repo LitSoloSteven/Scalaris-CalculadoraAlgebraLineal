@@ -35,14 +35,19 @@ def test_reconstruccion_conserva_velocidad_y_reinicia_cambios_activos(monkeypatc
         try:
             with cliente:
                 pasos = [PasoReproductor(0, "inicial", "Inicio", "a" * 100),
-                         PasoReproductor(1, "final", "Fin", "a" * 1000)]
-                reproductor = ReproductorPasos(pasos, (), lambda paso, destino: None, "espera")
+                         PasoReproductor(1, "operacion", "Desarrollo", "a" * 1000),
+                         PasoReproductor(2, "final", "Fin", "a" * 100)]
+                renderizar = Mock()
+                reproductor = ReproductorPasos(pasos, (), renderizar, "espera")
                 reproductor.velocidad = "Lenta"
                 reproductor.construir()
                 selector = next(elemento for elemento in reproductor.tarjeta.descendants() if isinstance(elemento, ui.select))
                 assert selector.value == "Lenta" and reproductor.temporizador.interval == 14.4
                 reproductor._alternar_reproduccion()
                 anterior = reproductor.temporizador
+                reproductor._avanzar()
+                assert reproductor.temporizador is anterior and not anterior.is_deleted
+                assert renderizar.call_count == 2
                 reproductor.ir_a(1)
                 assert anterior.is_deleted and reproductor.temporizador.active
                 assert reproductor.temporizador.interval == 24
