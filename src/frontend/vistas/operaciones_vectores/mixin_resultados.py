@@ -7,6 +7,7 @@ from src.frontend.controladores.operaciones_vectores.captura import preparar_tra
 from ._pasos_reproductor import construir_pasos_combinacion_lineal, construir_pasos_vector_basico
 from .mixin_pasos import MixinPasosVectores, OpcionesReproductorVectores
 from src.frontend.componentes.presentacion_analisis import montar_analisis
+from src.frontend.componentes.copia_resultado import renderizar_copia_resultado
 
 
 class MixinResultadosVectores(MixinPasosVectores):
@@ -96,6 +97,7 @@ class MixinResultadosVectores(MixinPasosVectores):
     def _renderizar_boton_visualizador(self, resultado: dict) -> None:
         if resultado.get("estado") == "ERROR":
             return
+        renderizar_copia_resultado(resultado)
         from src.frontend.componentes.transferencia import url_transferencia, guardar_vectores
         from src.frontend.navegacion import ruta_de
         vectores, escena = preparar_transferencia(self.operacion_activa, self._capturar())

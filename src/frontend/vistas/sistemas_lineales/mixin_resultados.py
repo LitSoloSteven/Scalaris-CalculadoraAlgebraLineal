@@ -8,6 +8,7 @@ from src.frontend.controladores.sistemas_lineales.captura import preparar_captur
 from src.frontend.controladores.sistemas_lineales.estado_captura import modo_homogeneo_activo
 from src.frontend.componentes.presentacion_analisis import mostrar_resumen_analisis
 from .mixin_resolucion import MixinResolucionSistemas
+from src.frontend.componentes.copia_resultado import renderizar_copia_resultado
 
 
 
@@ -137,6 +138,7 @@ class MixinResultadosSistemasLineales(MixinResolucionSistemas):
 
         if getattr(self, 'panel_ia', None):
             self.panel_ia.renderizar_sugerencias_en_linea()
+        renderizar_copia_resultado(respuesta)
 
     def cambiar_metodo(self, evento=None) -> None:
         """Invalida el resultado del metodo anterior sin alterar la captura activa."""
