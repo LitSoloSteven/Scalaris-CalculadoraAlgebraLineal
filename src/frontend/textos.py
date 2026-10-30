@@ -28,6 +28,44 @@ DETERMINANTES_CALCULANDO = "Calculando determinante…"
 DETERMINANTES_ERROR = "No pudimos calcular el determinante. Revisa los datos y vuelve a intentarlo."
 DETERMINANTES_VALOR = "Determinante: {valor}"
 DETERMINANTES_SINGULAR = "La matriz es singular."
+DETERMINANTES_INVERTIBLE = "Matriz invertible"
+DETERMINANTES_ESTADO_SINGULAR = "Matriz singular"
+DETERMINANTES_AVISO_SINGULAR = "det(A) = 0: las columnas son dependientes y A no tiene inversa."
+DETERMINANTES_PASOS = "Pasos del determinante"
+DETERMINANTES_AYUDA = (
+    "Compara la matriz de cada paso con la anterior y recorre el índice por fases.",
+    "En cofactores, conserva los índices originales al eliminar una fila y una columna.",
+    "En eliminación, cada intercambio cambia el signo; sumar un múltiplo de otra fila lo conserva.",
+)
+DETERMINANTES_LEYENDA = ("planteamiento", "menor", "inicial", "pivote", "intercambio", "eliminacion", "final")
+DETERMINANTES_PLANTEAMIENTO = "Planteamiento"
+DETERMINANTES_MENOR = "Menores y cofactores · columna {columna}"
+DETERMINANTES_INICIAL = "Matriz inicial"
+DETERMINANTES_COLUMNA = "Columna {columna} · pivote {valor}{intercambio}"
+DETERMINANTES_INTERCAMBIO = " · con intercambio"
+DETERMINANTES_DIAGONAL = "Producto diagonal"
+DETERMINANTES_FINAL = "Resultado"
+RESULTADO_CUENTA_PASOS = "{cantidad} pasos"
+RESULTADO_INTERCAMBIOS = "{cantidad} intercambios"
+RESULTADO_TIEMPO = "calculado en {segundos:.2f} s"
+RESULTADO_INTERPRETACION = "¿Cómo interpretar este resultado?"
+DETERMINANTES_INTERPRETACION = (
+    "El determinante mide el factor de escala orientado. Si vale cero, A es singular; "
+    "si es distinto de cero, A tiene inversa. Cofactores y eliminación obtienen el mismo valor exacto."
+)
+MODELOS_AYUDA = (
+    "Recorre las fases y usa Explicar paso para consultar los datos del paso actual.",
+    "Las comprobaciones usan la captura original y aritmética exacta; no son un segundo cálculo aproximado.",
+)
+MODELOS_FASES = ("Planteamiento", "Desarrollo", "Comprobación y resultado")
+MODELOS_REDUCCION = "Reducción de A"
+MODELOS_COMPROBACION = "Comprobación del modelo"
+MODELOS_LEYENDA = ("planteamiento", "inicial", "pivote", "intercambio", "eliminacion", "normalizacion", "verificacion", "final")
+LEONTIEF_INTERPRETACION = "Comprueba (I − C)x = d y el balance de cada sector. Hawkins-Simon indica viabilidad económica cuando su criterio es aplicable."
+TRANSFORMACIONES_INTERPRETACION = "Los pivotes determinan el rango y la base de la imagen. Las variables libres determinan el núcleo; rango más nulidad es la dimensión del dominio."
+RESULTADO_COPIAR = "Copiar resultado"
+RESULTADO_COPIADO = "Resultado copiado al portapapeles"
+RESULTADO_COPIAR_ERROR = "No se pudo copiar el resultado. Revisa los permisos del portapapeles y vuelve a intentarlo."
 HISTORIAL_DETERMINANTE_CALCULADO = "Calculado"
 HISTORIAL_DETERMINANTE_DETALLE = "det = {determinante}. Método: {metodo}"
 HISTORIAL_FACTORIZACION_LU_CALCULADA = "Factorización calculada"
