@@ -95,9 +95,18 @@ def _validar_sistema_lu(matriz: Matriz, terminos: list[Fraction]) -> None:
         raise ValueError("La matriz no es cuadrada. Proporciona una matriz con igual numero de filas y columnas.")
     if not DIMENSION_MINIMA <= matriz.filas <= DIMENSION_MAXIMA_MATRICES:
         raise ValueError(f"La dimension esta fuera del limite. Usa entre {DIMENSION_MINIMA} y {DIMENSION_MAXIMA_MATRICES} filas.")
-    if any(isinstance(valor, float) and not isfinite(valor) for fila in matriz.datos for valor in fila):
+    if _contiene_valores_no_finitos(matriz):
         raise ValueError("La matriz contiene valores no finitos. Usa numeros finitos en todas las celdas.")
-    if not isinstance(terminos, list) or len(terminos) != matriz.filas:
+    _validar_terminos_lu(terminos, matriz.filas)
+
+
+def _contiene_valores_no_finitos(matriz: Matriz) -> bool:
+    return any(isinstance(valor, float) and not isfinite(valor)
+               for fila in matriz.datos for valor in fila)
+
+
+def _validar_terminos_lu(terminos: list[Fraction], filas: int) -> None:
+    if not isinstance(terminos, list) or len(terminos) != filas:
         raise ValueError("Los terminos no forman una lista de la longitud esperada. Proporciona un termino por fila.")
     if any(isinstance(valor, bool) or not isinstance(valor, (int, Fraction)) for valor in terminos):
         raise ValueError("Hay terminos de tipo no admitido. Usa enteros o fracciones exactas.")
