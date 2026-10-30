@@ -21,7 +21,7 @@ def test_escenas_coinciden_con_vista_geometrica():
 def test_elementos_por_pilar_en_orden():
     """Cada pilar ofrece sus herramientas en el orden previsto."""
     elementos_algebra = elementos_navegacion("algebra")
-    assert [elemento.clave for elemento in elementos_algebra] == ["sistemas", "vectores", "matrices", "inversa", "determinantes"]
+    assert [elemento.clave for elemento in elementos_algebra] == ["sistemas", "vectores", "matrices", "inversa", "determinantes", "factorizacion_lu"]
     elementos_visualizador = elementos_navegacion("visualizador")
     assert [elemento.clave for elemento in elementos_visualizador] == ["vis:rectas-planos", "vis:vectores", "vis:combinacion"]
     elementos_utilidades = elementos_navegacion("utilidades")
@@ -35,8 +35,8 @@ def test_claves_unicas_entre_pilares():
     for pilar in ("algebra", "visualizador", "utilidades"):
         for elemento in elementos_navegacion(pilar):
             claves.append(elemento.clave)
-    assert len(claves) == 10
-    assert len(set(claves)) == 10
+    assert len(claves) == 11
+    assert len(set(claves)) == 11
 
 
 def test_enlaces_validos_y_etiquetas_completas():

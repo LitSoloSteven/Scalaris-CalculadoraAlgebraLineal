@@ -13,7 +13,7 @@ def test_determinantes_tiene_estado_activo_exclusivo(monkeypatch):
         """Inspecciona la barra real montada por la ruta canónica."""
         enlaces = [elemento for elemento in cliente.elements.values()
                    if "navegacion-elemento" in elemento.classes]
-        assert len(enlaces) == 5
+        assert len(enlaces) == 6
         actuales = [elemento for elemento in enlaces if elemento._props.get("aria-current") == "page"]
         assert len(actuales) == 1
         assert actuales[0]._props["href"] == ruta_de("determinantes")
