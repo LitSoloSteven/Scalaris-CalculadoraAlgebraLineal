@@ -8,6 +8,7 @@ from src.frontend.controladores.sesion_matricial import actualizar_contexto, cap
 from src.frontend import textos
 from ._presentacion_determinante import montar_reproductor
 from ._tarjeta_determinante import mostrar_tarjeta_determinante, mostrar_interpretacion_determinante
+from src.frontend.componentes.copia_resultado import renderizar_copia_resultado
 
 
 class ResultadosDeterminante:
@@ -60,6 +61,7 @@ class ResultadosDeterminante:
                 ui.label(respuesta['mensaje']).props('role=alert').classes('distintivo-error')
                 return
             mostrar_tarjeta_determinante(respuesta)
+            renderizar_copia_resultado(respuesta)
             self.panel_ia.renderizar_sugerencias_en_linea()
             self.reproductor_pasos = montar_reproductor(respuesta, self.panel_ia)
             mostrar_interpretacion_determinante()

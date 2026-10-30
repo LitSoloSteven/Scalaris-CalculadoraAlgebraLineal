@@ -10,6 +10,7 @@ from src.frontend.controladores.operaciones_matrices.captura_factorizacion_lu im
 from ._estados_modelos import ejecutar_modelo, mostrar_estado
 from ._factores_factorizacion_lu import mostrar_factores_lu
 from ._presentacion_factorizacion_lu import montar_reproductor_lu
+from src.frontend.componentes.copia_resultado import renderizar_copia_resultado
 
 
 class ResultadosFactorizacionLU:
@@ -56,4 +57,5 @@ class ResultadosFactorizacionLU:
             ui.label(textos.LU_DATOS.format(**resultado)).classes("texto-secundario sesion-numero").props('role="status"')
             self.panel_ia.renderizar_sugerencias_en_linea()
             mostrar_factores_lu(resultado)
+            renderizar_copia_resultado(resultado)
             self.reproductor_pasos = montar_reproductor_lu(resultado, self.panel_ia)
