@@ -65,10 +65,12 @@ def propiedades_celda_accesible(
     *,
     identificador_matriz: str | None = None,
     nombre_campo: str | None = None,
+    solo_numerico: bool = True,
 ) -> str:
     """Construye las propiedades HTML accesibles incluyendo fila y columna para lectores."""
     aria = f'aria-label="Fila {fila + 1}, columna {columna + 1}"'
     base = f'{aria} borderless autocomplete="new-password"'
+    base += f' data-solo-numerico="{str(solo_numerico).lower()}"'
     if identificador_matriz:
         base += f' data-matriz-identificador="{identificador_matriz}" data-matriz-fila="{fila}" data-matriz-columna="{columna}"'
     else:
@@ -79,13 +81,14 @@ def propiedades_celda_accesible(
 
 
 def propiedades_vector_accesible(
-    indice: int, orientacion: str, *, nombre_vector: str, identificador_panel: str
+    indice: int, orientacion: str, *, nombre_vector: str, identificador_panel: str, solo_numerico: bool = True
 ) -> str:
     """Identifica una componente y su orientación para navegación y pegado vectoriales."""
     es_columna = orientacion == "columna"
     propiedades = propiedades_celda_accesible(
         indice if es_columna else 0, 0 if es_columna else indice,
         identificador_matriz=nombre_vector, nombre_campo=f"{nombre_vector}_{indice}",
+        solo_numerico=solo_numerico,
     )
     orientacion_cliente = "columna" if es_columna else "fila"
     return (f'{propiedades} data-geometria-vector="{identificador_panel}_{nombre_vector}" '

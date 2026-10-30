@@ -26,7 +26,7 @@ def crear_entradas_nombres(contenedor: Any, cantidad: int, etiqueta: str) -> lis
         for indice in range(cantidad):
             nombre = f"{etiqueta} {indice + 1}"
             entrada = ui.input(value=valores[indice] if indice < len(valores) else "", placeholder=nombre, label=nombre).classes("matriz-entrada w-28 min-w-0")
-            entrada.props(propiedades_celda_accesible(0, indice, identificador_matriz=etiqueta))
+            entrada.props(propiedades_celda_accesible(0, indice, identificador_matriz=etiqueta, solo_numerico=False))
             entradas.append(entrada)
     return entradas
 
