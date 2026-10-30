@@ -32,7 +32,7 @@ def renderizar_copia_resultado(resultado: dict) -> None:
         """Confirma la escritura antes de anunciar éxito y tolera el cliente desmontado."""
         try:
             copiado = await ui.run_javascript(
-                f"try {{ await navigator.clipboard.writeText({json.dumps(contenido)}); return true; }} catch {{ return false; }}")
+                f"(async () => {{ try {{ await navigator.clipboard.writeText({json.dumps(contenido)}); return true; }} catch {{ return false; }} }})()")
         except Exception:
             copiado = False
         if not boton.is_deleted:
@@ -40,4 +40,4 @@ def renderizar_copia_resultado(resultado: dict) -> None:
                       type="positive" if copiado else "warning")
 
     boton = ui.button(textos.RESULTADO_COPIAR, icon="content_copy", color=None, on_click=copiar).classes(
-        "boton-discreto").props("ripple=false")
+        "boton-discreto").props(f'ripple=false aria-label="{textos.RESULTADO_COPIAR}"')
