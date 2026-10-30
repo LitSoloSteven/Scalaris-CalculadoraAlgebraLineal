@@ -19,6 +19,21 @@ SEGUIMIENTOS: tuple[Seguimiento, ...] = (
 )
 
 CATALOGO_SUGERENCIAS: tuple[tuple[str, str, str, str, str], ...] = (
+    ("determinantes", "sin_resultado", "determinantes.sin_resultado.metodo", "¿Cuándo conviene usar cofactores y cuándo eliminación?", "estado"),
+    ("determinantes", "exito", "determinantes.exito.inversa", "¿Qué relación tiene este determinante con la inversa?", "estado"),
+    ("determinantes", "singular", "determinantes.singular.cero", "¿Qué significa que det(A) sea cero?", "estado"),
+    ("determinantes", "bandera_laplace", "determinantes.laplace.fila", "¿Por qué elegimos esa fila para expandir?", "bandera"),
+    ("determinantes", "bandera_lu", "determinantes.lu.diagonal", "¿Por qué multiplicamos la diagonal tras triangularizar?", "bandera"),
+    ("determinantes", "bandera_intercambio", "determinantes.intercambio.signo", "¿Por qué los intercambios cambian el signo?", "bandera"),
+    ("leontief", "sin_resultado", "leontief.sin_resultado.modelo", "¿Qué representan C, d y x en este modelo?", "estado"),
+    ("leontief", "exito", "leontief.exito.balance", "¿Cómo compruebo el balance de cada sector?", "estado"),
+    ("leontief", "singular", "leontief.singular.modelo", "¿Qué significa que I − C sea singular?", "estado"),
+    ("leontief", "bandera_no_viable", "leontief.no_viable.criterio", "¿Qué indica Hawkins-Simon sobre la viabilidad económica?", "bandera"),
+    ("transformaciones", "sin_resultado", "transformaciones.sin_resultado.dimensiones", "¿Qué representan el dominio y el codominio?", "estado"),
+    ("transformaciones", "exito", "transformaciones.exito.pivotes", "¿Cómo determinan los pivotes la imagen?", "estado"),
+    ("transformaciones", "exito", "transformaciones.exito.dimension", "¿Por qué rango más nulidad es la dimensión del dominio?", "estado"),
+    ("transformaciones", "bandera_nucleo_no_trivial", "transformaciones.nucleo.base", "¿Qué significa que el núcleo tenga vectores no nulos?", "bandera"),
+    ("transformaciones", "bandera_rectangular", "transformaciones.rectangular.propiedades", "¿Cómo cambian inyectividad y sobreyectividad en una matriz rectangular?", "bandera"),
     ("factorizacion_lu", "sin_resultado", "lu.sin_resultado.convencion", "¿Qué significa PA = LU?", "estado"),
     ("factorizacion_lu", "exito", "lu.exito.multiplicadores", "¿Cómo leo los multiplicadores de L?", "estado"),
     ("factorizacion_lu", "exito", "lu.exito.verificacion", "¿Cómo verifico que LU = PA?", "estado"),
