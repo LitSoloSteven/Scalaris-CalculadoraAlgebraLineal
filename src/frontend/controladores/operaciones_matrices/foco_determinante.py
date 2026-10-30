@@ -1,5 +1,6 @@
 """Extractos acotados de las matrices y menores del paso seleccionado."""
 from src.ai.contexto import describir_matriz, extraer_filas
+from .fases_determinante import columna_determinante
 
 
 def construir_meta_determinante(traza: list[dict], indice: int) -> dict:
@@ -10,7 +11,7 @@ def construir_meta_determinante(traza: list[dict], indice: int) -> dict:
     datos = paso.get("operacion", {})
     menor = paso.get("menor", {})
     fila = menor.get("fila", datos.get("fila", 0) + 1) - 1
-    columna = menor.get("columna", datos.get("columna", 0) + 1) - 1
+    columna = menor.get("columna", columna_determinante(traza, indice) + 1) - 1
     filas = [fila]
     if paso["tipo"] == "intercambio":
         filas.append(datos["seleccionada"])
