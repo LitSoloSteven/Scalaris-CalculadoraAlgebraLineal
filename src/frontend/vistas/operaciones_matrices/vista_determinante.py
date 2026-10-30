@@ -8,7 +8,8 @@ from src.frontend.componentes.selector_opciones import SelectorOpciones
 from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.panel_ia import PanelIA
 from src.frontend.componentes.panel_matriz_cuadrada import PanelMatrizCuadrada
-from src.frontend.controladores.operaciones_matrices.contexto_determinante import obtener_contexto_determinante
+from src.frontend.controladores.operaciones_matrices.contexto_determinante import obtener_contexto_determinante, obtener_senales_determinante
+from src.frontend.componentes.cuadricula_base import ubicar_celda_matriz
 from src.frontend.controladores.operaciones_matrices.vista_previa_determinante import preparar_presentacion_determinante
 from src.frontend.controladores.sesion_matricial import invalidar_resultado, actualizar_contexto
 from src.frontend.navegacion import ruta_de
@@ -115,3 +116,11 @@ class VistaDeterminante(ResultadosDeterminante, MixinSesionMatricial):
     def obtener_contexto_ia(self):
         """Devuelve el ejercicio vigente y el método para el asistente contextual."""
         return obtener_contexto_determinante(self)
+
+    def obtener_senales_ia(self):
+        """Devuelve estado, método y celdas inválidas de la captura vigente."""
+        return obtener_senales_determinante(self)
+
+    def enfocar_celda(self, coordenada: tuple[int, int]) -> None:
+        """Enfoca una celda señalada por una sugerencia de Glosa."""
+        ubicar_celda_matriz("A", *coordenada)

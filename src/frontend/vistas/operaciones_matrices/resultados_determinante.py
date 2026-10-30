@@ -7,6 +7,7 @@ from src.frontend.controladores.operaciones_matrices.controlador_determinante im
 from src.frontend.controladores.sesion_matricial import actualizar_contexto, captura_sigue_vigente, calculo_sigue_vigente
 from src.frontend import textos
 from ._presentacion_determinante import montar_reproductor
+from ._tarjeta_determinante import mostrar_tarjeta_determinante, mostrar_interpretacion_determinante
 
 
 class ResultadosDeterminante:
@@ -30,11 +31,11 @@ class ResultadosDeterminante:
             respuesta = await run.io_bound(ControladorDeterminante.procesar_captura, captura)
             if not self._respuesta_vigente(emisor, solicitud, revision, huella):
                 return
-            self._mostrar_resultado(respuesta)
             if respuesta.get('estado') == 'EXITO':
                 self.ultimo_resultado = respuesta
                 self._huella_resultado = huella
                 self._registrar_exito(captura, respuesta)
+            self._mostrar_resultado(respuesta)
             actualizar_contexto(self)
         except Exception:
             if self._respuesta_vigente(emisor, solicitud, revision, huella):
@@ -58,9 +59,7 @@ class ResultadosDeterminante:
             if respuesta.get('estado') == 'ERROR':
                 ui.label(respuesta['mensaje']).props('role=alert').classes('distintivo-error')
                 return
-            valor = formatear_fraccion_texto(respuesta['determinante'])
-            ui.label(textos.DETERMINANTES_VALOR.format(valor=valor)).classes(
-                'determinante-valor text-xl texto-principal').props('role=status aria-live=polite')
-            if respuesta.get('es_singular'):
-                ui.label(textos.DETERMINANTES_SINGULAR).classes('texto-secundario')
+            mostrar_tarjeta_determinante(respuesta)
+            self.panel_ia.renderizar_sugerencias_en_linea()
             self.reproductor_pasos = montar_reproductor(respuesta, self.panel_ia)
+            mostrar_interpretacion_determinante()
