@@ -1,6 +1,5 @@
 """Adaptación de sesiones para expresiones matriciales y familias vectoriales."""
 from src.frontend.componentes.sesion_capturas import SesionCapturas
-from src.frontend.vistas.operaciones_vectores.contexto import entrada_actual
 
 
 def conectar_sesion_capturas(vista, herramienta: str) -> None:
@@ -14,6 +13,7 @@ def conectar_sesion_capturas(vista, herramienta: str) -> None:
 def obtener_captura_sesion(vista, herramienta: str) -> dict:
     """Copia la captura completa, incluidas expresión, operación y orientaciones."""
     if herramienta == "vectores":
+        from src.frontend.vistas.operaciones_vectores.contexto import entrada_actual
         return entrada_actual(vista)
     return {"matrices": {nombre: datos["datos"] for nombre, datos in
                          vista.panel_captura_matrices.obtener_datos_crudos().items()},
