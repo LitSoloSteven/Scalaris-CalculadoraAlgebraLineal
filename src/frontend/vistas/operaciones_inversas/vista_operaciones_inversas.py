@@ -84,16 +84,9 @@ class VistaOperacionesInversas(MixinResultadosOperacionesInversas, MixinPasosOpe
 
     def _procesar_transferencia_inicial(self, token_transferencia: str) -> None:
         """Recupera la matriz desde navegación entrante si existe token."""
-        from src.frontend.componentes.transferencia import consumir_matriz, renderizar_aviso_transferencia, limpiar_url_transferencia
-        from src.backend.constantes import DIMENSION_MAXIMA_INVERSA
-        respuesta = consumir_matriz(token_transferencia, dimension_maxima=DIMENSION_MAXIMA_INVERSA)
-        if respuesta is not None:
-            with self.contenedor_transferencia:
-                dimension = len(respuesta.datos) if respuesta.datos else 0
-                renderizar_aviso_transferencia(respuesta, f"Cargamos A ({dimension}×{dimension}) desde {respuesta.nombre_origen}. Presiona Calcular inversa para ver A⁻¹.")
-            if respuesta.estado == 'exito':
-                self.panel_matriz_cuadrada.cargar_matriz(respuesta.datos)
-            limpiar_url_transferencia()
+        from src.frontend.componentes.transferencia import recibir_matriz
+        recibir_matriz(token_transferencia, "inversa", self.panel_matriz_cuadrada.cargar_matriz,
+                       self.contenedor_transferencia)
 
     def obtener_contexto_ia(self):
         """Delega la serializacion de captura y resultado al controlador."""

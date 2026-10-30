@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from copy import deepcopy
 import secrets
 import threading
 import time
@@ -12,6 +13,8 @@ from nicegui import ui
 from src.backend.utilidades import transferencias
 from src.frontend.constantes import MAXIMO_ENTRADAS_TRANSFERENCIA, TIEMPO_VIDA_TRANSFERENCIA_SEGUNDOS
 from src.frontend.navegacion import herramienta_por_identificador
+from src.frontend.controladores.destinos_matriz import LIMITES_DESTINOS_MATRIZ
+from src.frontend import textos
 
 _ALMACEN: dict[str, tuple[float, dict[str, Any]]] = {}
 _BLOQUEO = threading.Lock()
@@ -40,7 +43,7 @@ def _guardar_en_almacen(tipo: str, origen: str, datos: Any, **extra: Any) -> str
 
 def guardar_matriz(identificador_origen: str, datos: list[list[str]]) -> str:
     """Almacena una matriz A cuadrada o rectangular para transferirla a otra vista."""
-    return _guardar_en_almacen("matriz_a", identificador_origen, datos)
+    return _guardar_en_almacen("matriz_a", identificador_origen, deepcopy(datos))
 
 
 def guardar_sistema(identificador_origen: str, coeficientes: list[list[str]], independientes: list[str]) -> str:
@@ -125,6 +128,35 @@ def _consumir_transferencia(
 def consumir_matriz(token: str, *, dimension_maxima: int) -> ResultadoTransferencia | None:
     """Extrae y valida una matriz transferida por token."""
     return _consumir_transferencia(token, lambda carga: transferencias.validar_carga_matriz(carga, dimension_maxima=dimension_maxima))
+
+
+def recibir_matriz(token: str, destino: str, cargar: Callable[[list[list[str]]], None],
+                  contenedor: Any) -> ResultadoTransferencia | None:
+    """Consume una matriz, carga el panel y muestra un aviso con URL limpia.
+
+    Aplica los límites del destino sin ejecutar cálculos. Propaga errores del
+    cargador, pero retira el token de la URL incluso si la carga falla.
+    """
+    minimo, maximo = LIMITES_DESTINOS_MATRIZ[destino]
+    resultado = consumir_matriz(token, dimension_maxima=maximo)
+    if resultado is None:
+        return None
+    try:
+        if resultado.estado == "exito" and len(resultado.datos) < minimo:
+            resultado = ResultadoTransferencia("invalida", None, resultado.nombre_origen,
+                textos.TRANSFERENCIA_DIMENSION_MINIMA.format(minimo=minimo))
+        mensaje = ""
+        if resultado.estado == "exito":
+            cargar(resultado.datos)
+            matriz, orientacion = textos.TRANSFERENCIA_ORIENTACIONES[destino]
+            mensaje = textos.TRANSFERENCIA_MATRIZ_CARGADA.format(
+                matriz=matriz, filas=len(resultado.datos), columnas=len(resultado.datos[0]),
+                origen=resultado.nombre_origen, orientacion=orientacion)
+        with contenedor:
+            renderizar_aviso_transferencia(resultado, mensaje)
+        return resultado
+    finally:
+        limpiar_url_transferencia()
 
 
 def consumir_sistema(token: str, *, maximo_ecuaciones: int, dimensiones_permitidas: set[int]) -> ResultadoTransferencia | None:
