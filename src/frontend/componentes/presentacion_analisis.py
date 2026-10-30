@@ -54,8 +54,15 @@ def montar_analisis(resultado: dict, panel_ia, identificador: str) -> Reproducto
     if resultado.get("estado") == "ERROR":
         return None
     pasos, grupos = adaptar_analisis(resultado)
-    reproductor = ReproductorPasos(pasos, grupos, _renderizar_cuerpo, identificador,
-                                  opciones={"al_explicar": crear_accion_explicacion(panel_ia, pasos)})
+    return montar_pasos_analisis((pasos, grupos), panel_ia, identificador)
+
+
+def montar_pasos_analisis(secuencia: tuple, panel_ia, identificador: str, opciones: dict | None = None) -> ReproductorPasos:
+    """Monta pasos y fases adaptados con las opciones didácticas y el panel indicado."""
+    pasos, grupos = secuencia
+    configuracion = {"al_explicar": crear_accion_explicacion(panel_ia, pasos),
+                     "esta_ocupado": lambda: bool(getattr(panel_ia, "_esta_enviando", False)), **(opciones or {})}
+    reproductor = ReproductorPasos(pasos, grupos, _renderizar_cuerpo, identificador, opciones=configuracion)
     reproductor.construir()
     return reproductor
 
