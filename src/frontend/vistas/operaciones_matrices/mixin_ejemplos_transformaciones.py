@@ -1,7 +1,8 @@
 """Selección y carga de ejemplos de Transformaciones."""
 from nicegui import ui
-from src.frontend.componentes.captura_modelos import construir_ejemplos, llenar_entradas
+from src.frontend.componentes.captura_modelos import construir_ejemplos
 from ._ejemplos_transformaciones import EJEMPLOS_TRANSFORMACIONES
+from .carga_modelos import cargar_captura_modelo
 
 
 class MixinEjemplosTransformaciones:
@@ -11,12 +12,5 @@ class MixinEjemplosTransformaciones:
         construir_ejemplos(EJEMPLOS_TRANSFORMACIONES, self._cargar_ejemplo, "Ejemplos precargados")
 
     def _cargar_ejemplo(self, ejemplo: dict):
-        coeficientes = ejemplo["matriz_transformacion"]
-        self.filas, self.columnas = len(coeficientes), len(coeficientes[0])
-        self._generar_cuadricula()
-        self._generar_entradas_variables()
-        for entradas, valores in zip(self.entradas_coeficientes, coeficientes):
-            llenar_entradas(entradas, valores)
-        llenar_entradas(self.entradas_variables, ejemplo.get("nombres_variables", []))
-        self._restablecer_resultados()
+        cargar_captura_modelo(self, ejemplo)
         ui.notify(f"Ejemplo '{ejemplo['nombre']}' cargado.", type="positive", position="top")
