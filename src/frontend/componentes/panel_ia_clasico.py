@@ -96,7 +96,9 @@ def renderizar_mensaje_clasico(mensaje: dict[str, Any], indice: int | None = Non
     alineacion = "justify-end" if enviado else "justify-start"
     clase_burbuja = "glosa-burbuja-usuario" if enviado else "glosa-burbuja-asistente"
 
-    with ui.row().classes(f"w-full {alineacion} mb-4 glosa-respuesta"):
+    with ui.row().classes(f"w-full {alineacion} mb-4 glosa-respuesta") as respuesta:
+        if not enviado:
+            respuesta.props('data-glosa-respuesta')
         contenedor = ui.column().classes(f"p-3 {clase_burbuja}")
         with contenedor:
             crear_contenido_glosa(mensaje)

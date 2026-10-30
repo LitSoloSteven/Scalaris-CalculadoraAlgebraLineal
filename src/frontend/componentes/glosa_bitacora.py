@@ -70,7 +70,9 @@ def _renderizar_mensaje_lateral(instancia: Any, mensaje: dict[str, Any], es_ulti
     error = mensaje.get("error", False)
 
     alineacion_columna = "items-end" if enviado else "items-start"
-    with ui.column().classes(f"w-full {alineacion_columna} mb-0 glosa-respuesta"):
+    with ui.column().classes(f"w-full {alineacion_columna} mb-0 glosa-respuesta") as respuesta:
+        if not enviado:
+            respuesta.props('data-glosa-respuesta')
         _renderizar_contenido_burbuja(instancia, mensaje)
         if es_ultimo and not enviado and not error and sugerencias_activas():
             _renderizar_seguimientos_mensaje(instancia)

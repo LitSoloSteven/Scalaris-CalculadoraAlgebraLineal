@@ -1,5 +1,5 @@
 /** Vincula respuestas escapadas al motor de revelado sin temporizadores de servidor. */
-(function registrarReveladoGlosa() {
+{
     'use strict';
     const selector = '[data-escritura-pendiente]';
 
@@ -23,14 +23,24 @@
 
     function buscar(raiz) {
         if (raiz.nodeType !== 1) return;
-        if (raiz.matches(selector)) revelar(raiz);
-        raiz.querySelectorAll(selector).forEach(revelar);
+        procesar(raiz);
+        raiz.querySelectorAll('[data-glosa-respuesta], ' + selector).forEach(procesar);
     }
 
-    const observador = new MutationObserver(function actualizar(mutaciones) {
-        window.scalaris.escritura.retirarDesconectados();
-        mutaciones.forEach(mutacion => mutacion.addedNodes.forEach(buscar));
-    });
-    observador.observe(document.documentElement, { childList: true, subtree: true });
-    document.querySelectorAll(selector).forEach(revelar);
-})();
+    function procesar(nodo) {
+        if (nodo.matches('[data-glosa-respuesta]')) {
+            window.scalaris.escritura.cancelarEn(nodo.closest('[role="log"]'));
+        }
+        if (nodo.matches(selector)) revelar(nodo);
+    }
+
+    function registrarReveladoGlosa() {
+        const observador = new MutationObserver(function actualizar(mutaciones) {
+            window.scalaris.escritura.retirarDesconectados();
+            mutaciones.forEach(mutacion => mutacion.addedNodes.forEach(buscar));
+        });
+        observador.observe(document.documentElement, { childList: true, subtree: true });
+        document.querySelectorAll(selector).forEach(revelar);
+    }
+    registrarReveladoGlosa();
+}
