@@ -33,6 +33,12 @@ def test_sesion_factorizacion(monkeypatch):
         assert vista.ultimo_resultado['estado'] == 'EXITO'
         assert len(vista.historial) == 1 and vista.reproductor_pasos is not None
         registro = vista.historial[0]
+        reproductor_anterior = vista.reproductor_pasos
+        detenido = []
+        monkeypatch.setattr(reproductor_anterior, 'detener', lambda: detenido.append(True))
+        await vista.calcular(SimpleNamespace(sender=boton))
+        assert detenido and len(vista.historial) == 2
+        vista.historial.pop()
         vista.panel_matriz.cargar_matriz([['mal']])
         assert vista.ultimo_resultado is None
         await vista.calcular(SimpleNamespace(sender=boton))

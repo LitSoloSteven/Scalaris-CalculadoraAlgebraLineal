@@ -5,7 +5,7 @@ from src.frontend import textos
 from src.frontend.componentes.cuadricula_base import ubicar_celda_matriz
 from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
 from src.frontend.controladores.operaciones_matrices import ControladorFactorizacionLU
-from src.frontend.controladores.sesion_matricial import actualizar_contexto
+from src.frontend.controladores.sesion_matricial import actualizar_contexto, invalidar_resultado
 from src.frontend.sugerencias import primera_celda_invalida
 from ._estados_modelos import ejecutar_modelo, mostrar_estado
 from ._factores_factorizacion_lu import mostrar_factores_lu
@@ -20,6 +20,11 @@ class ResultadosFactorizacionLU:
         if self.panel_matriz.esta_vacio():
             mostrar_estado(self.contenedor_resultados, textos.LU_VACIA, "ERROR")
             return
+        if getattr(self, "_calculando", False):
+            return
+        invalidar_resultado(self)
+        self.panel_ia.limpiar_foco_explicacion()
+        actualizar_contexto(self)
         await ejecutar_modelo(self, evento.sender, self._calcular_nucleo)
 
     async def _calcular_nucleo(self) -> None:
