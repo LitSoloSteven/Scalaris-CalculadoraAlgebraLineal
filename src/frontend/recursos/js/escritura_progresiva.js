@@ -1,5 +1,5 @@
 /** Revela nodos de texto con una sola tarea cancelable por contenido. */
-(function registrarEscrituraProgresiva() {
+{
     'use strict';
     const activas = new Map();
 
@@ -109,6 +109,9 @@
         });
     }
 
-    window.scalaris.escritura = { revelar, cancelarEn, retirarDesconectados };
-    window.scalaris.efectoMaquinaEscribir = escribirProgresivamente;
-})();
+    function registrarEscrituraProgresiva() {
+        window.scalaris.escritura = { revelar, cancelarEn, retirarDesconectados };
+        window.scalaris.efectoMaquinaEscribir = escribirProgresivamente;
+    }
+    registrarEscrituraProgresiva();
+}
