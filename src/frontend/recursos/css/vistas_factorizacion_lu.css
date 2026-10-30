@@ -1,14 +1,8 @@
-.factorizacion-lu-marco { container: vista-factorizacion-lu / inline-size; min-width: 0; }
+.factorizacion-lu-marco { container: sesion-matricial / inline-size; min-width: 0; }
 .factorizacion-lu-vista, .factorizacion-lu-convencion, .factorizacion-lu-factor { min-width: 0; max-width: 100%; }
 .factorizacion-lu-convencion { overflow-wrap: anywhere; }
 .factorizacion-lu-factores { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: var(--space-4); width: 100%; min-width: 0; }
 .factorizacion-lu-factor { overflow-wrap: anywhere; }
-
-@container vista-factorizacion-lu (max-width: 20rem) {
-    .factorizacion-lu-vista { padding-inline: var(--space-2) !important; }
-    .factorizacion-lu-vista .sesion-panel-herramientas .panel-tarjeta { padding: var(--space-2); }
-    .factorizacion-lu-vista .sesion-panel-herramientas .grid { gap: var(--space-2); }
-}
 
 @media (prefers-reduced-motion: reduce) {
     .factorizacion-lu-vista { transform: none; }
