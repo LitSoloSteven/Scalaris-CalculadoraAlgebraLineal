@@ -1,9 +1,11 @@
 """Montaje diferido y agrupación de detalles con controles NiceGUI reales."""
 import asyncio
+from unittest.mock import Mock
 
 from nicegui import Client, core, ui
 
 from src.frontend.componentes.desarrollo_comprobacion import mostrar_desarrollo
+from src.frontend.componentes import desarrollo_comprobacion as desarrollo
 
 
 def _producto(dimension):
@@ -48,6 +50,20 @@ def _formulas(cliente):
     """Devuelve únicamente los bloques MathJax montados en el cliente."""
     return [elemento for elemento in cliente.elements.values()
             if isinstance(elemento, ui.html) and "matematicas-desplazamiento" in elemento.content]
+
+
+def test_producto_conserva_aclaracion_final_distinta(monkeypatch):
+    """Una aclaración final del dominio sigue visible y escapada en el modo producto."""
+    contenido = Mock()
+    monkeypatch.setattr(ui, "html", contenido)
+    monkeypatch.setattr(ui, "label", Mock())
+    monkeypatch.setattr(desarrollo, "renderizar_latex", Mock())
+    monkeypatch.setattr(desarrollo, "_crear_detalle_diferido", Mock())
+    traza = _producto(1)
+    traza[-1]["explicacion"] = "Por unicidad, (A^{-1})^T es la inversa. <script>"
+    mostrar_desarrollo(traza)
+    assert any("Por unicidad, (A<sup>-1</sup>)ᵀ es la inversa. &lt;script&gt;" == llamada.args[0]
+               for llamada in contenido.call_args_list)
 
 
 def test_modo_plano_normaliza_y_no_repite_explicacion(monkeypatch):

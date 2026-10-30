@@ -42,6 +42,7 @@ def _mostrar_producto(traza: list[dict], titulo: str) -> None:
     ui.label(textos.COMPROBACION_CORRECTA if coincide else textos.COMPROBACION_INCORRECTA).classes(
         "distintivo-exito" if coincide else "distintivo-error").props('role="status"')
     renderizar_latex(traza[-1]["detalle_latex"])
+    _mostrar_explicacion(traza[-1])
     renderizar_latex(textos.COMPROBACION_CELDA_GUIA)
     _crear_detalle_diferido(titulo, lambda: _mostrar_filas(traza))
 
@@ -81,9 +82,15 @@ def _mostrar_pasos(traza: list[dict]) -> None:
 def _mostrar_paso(paso: dict) -> None:
     """Normaliza los textos y omite la explicación cuando repite la descripción."""
     descripcion = formatear_descripcion_html(paso.get("descripcion", ""))
-    explicacion = formatear_descripcion_html(paso.get("explicacion", ""))
     ui.html(descripcion).classes("font-bold texto-principal")
     if paso.get("detalle_latex"):
         renderizar_latex(paso["detalle_latex"])
+    _mostrar_explicacion(paso)
+
+
+def _mostrar_explicacion(paso: dict) -> None:
+    """Conserva aclaraciones distintas sin repetir la descripción normalizada."""
+    descripcion = formatear_descripcion_html(paso.get("descripcion", ""))
+    explicacion = formatear_descripcion_html(paso.get("explicacion", ""))
     if " ".join(explicacion.split()) != " ".join(descripcion.split()):
         ui.html(explicacion).classes("texto-secundario")
