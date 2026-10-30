@@ -14,6 +14,7 @@ from src.backend.resolutores.operaciones_matrices.factorizacion_lu import factor
     [[1, 2, 3], [4, 5, 6]],
 ])
 def test_instantaneas_independientes_y_dimensiones(datos):
+    """Verifica que las instantáneas de P y L sean independientes y conserven sus dimensiones."""
     matriz = Matriz(len(datos), len(datos[0]), datos)
     resultado = factorizar_lu(matriz)
     pasos = resultado["traza"]
@@ -30,6 +31,7 @@ def test_instantaneas_independientes_y_dimensiones(datos):
 
 
 def test_intercambio_y_multiplicador_reflejan_eventos():
+    """Verifica que los intercambios actualicen P y que las eliminaciones guarden L."""
     resultado = factorizar_lu(Matriz(3, 3, [[1, 2, 3], [4, 5, 6], [7, 8, 10]]))
     pasos = resultado["traza"]
     indice = next(indice for indice, paso in enumerate(pasos) if paso["tipo"] == "intercambio")
@@ -40,6 +42,7 @@ def test_intercambio_y_multiplicador_reflejan_eventos():
 
 
 def test_comprobacion_conserva_sus_pasos_originales():
+    """Verifica que la comprobación mantenga exactamente las claves de paso esperadas."""
     resultado = factorizar_lu(Matriz(1, 1, [[1]]))
     assert all(set(paso) == {"tipo", "descripcion", "detalle_latex", "explicacion"}
                for paso in resultado["comprobacion"]["traza"])
