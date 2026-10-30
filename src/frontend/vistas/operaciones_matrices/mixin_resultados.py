@@ -13,6 +13,7 @@ from nicegui import ui
 from src.frontend.componentes.avisos_resultado import mostrar_error_inesperado
 from src.frontend.componentes.glosa_foco import crear_accion_explicacion
 from src.frontend.componentes.copia_resultado import renderizar_copia_resultado
+from src.frontend.vistas.sesion_capturas import registrar_captura_sesion
 from src.frontend.controladores.sesion_matricial import actualizar_contexto
 from src.frontend.controladores.captura_contexto import capturar_matrices
 from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
@@ -95,6 +96,7 @@ class MixinResultadosOperacionesMatrices:
             self._renderizar_estado_y_sugerencias(respuesta)
             self._renderizar_seccion_pasos(respuesta)
             self._renderizar_resultado_final(respuesta)
+            registrar_captura_sesion(self, "matrices", respuesta)
 
         ui.run_javascript('if(window.scalaris && window.scalaris.renderizarMathJax) window.scalaris.renderizarMathJax();')
 
