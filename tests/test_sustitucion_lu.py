@@ -6,6 +6,7 @@ from src.backend.resolutores.operaciones_matrices.sustitucion_lu import sustitui
 
 
 def test_sustituciones_con_fracciones():
+    """Verifica las sustituciones exactas en una factorización con fracciones."""
     inferior = Matriz(2, 2, [[1, 0], [Fraction(1, 2), 1]])
     superior = Matriz(2, 2, [[2, 1], [0, Fraction(5, 2)]])
     intermedio, filas_inferiores = sustituir_adelante(inferior, [Fraction(3), Fraction(5)])
