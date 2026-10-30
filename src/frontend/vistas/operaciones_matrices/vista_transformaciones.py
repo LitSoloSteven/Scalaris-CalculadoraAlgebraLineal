@@ -73,5 +73,3 @@ class VistaTransformaciones(MixinGlosaModelos, MixinLimpiezaModelos, MixinCalcul
 
     def _campos_captura(self):
         return [entrada for fila in self.entradas_coeficientes for entrada in fila] + self.entradas_variables
-
-

@@ -107,5 +107,3 @@ def _renderizar_imagen(resultado: dict, rango: int) -> None:
                 vector = datos_vector["vector"]
                 vector_latex = r"\begin{pmatrix} " + r" \\ ".join(html.escape(componente) for componente in vector) + r" \end{pmatrix}"
                 ui.html(f'<div class="matematicas-desplazamiento matematicas-etiqueta text-lg text-center">$$ \\mathbf{{a}}_{{{indice}}} = {vector_latex} $$</div>')
-
-
