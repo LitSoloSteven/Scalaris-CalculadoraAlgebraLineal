@@ -11,12 +11,13 @@ from typing import Any
 from nicegui import ui
 
 from src.frontend.componentes.reproductor_pasos.catalogo import (
-    VELOCIDADES_AUTOREPRODUCCION,
+    intervalo_lectura,
     html_sugerencia_tipo,
 )
 from src.frontend.componentes.reproductor_pasos.modelo import GrupoReproductor, PasoReproductor
 from src.frontend.componentes.reproductor_pasos.vista import construir_vista
 from .opciones import OpcionesReproductor
+from .textos import formatear_descripcion_html
 
 
 _CONTADOR_EXPLICACION = itertools.count()
@@ -44,6 +45,7 @@ class ReproductorPasos:
         self.al_explicar = al_explicar
         self.esta_ocupado = esta_ocupado
         self.indice_actual = 0
+        self.velocidad = "Normal"
         self.temporizador = None
         self.deslizador = None
         self.boton_reproducir = None
@@ -74,6 +76,7 @@ class ReproductorPasos:
             return
         self.indice_actual = max(0, min(indice, len(self.pasos) - 1))
         paso = self.pasos[self.indice_actual]
+        self._actualizar_intervalo()
         self._actualizar_encabezado(paso)
         self._actualizar_explicacion(paso, autoreproduccion)
         self._actualizar_glosa(paso)
@@ -89,6 +92,8 @@ class ReproductorPasos:
         """Actualiza indice, chip, fase y barra de progreso."""
         self.etiqueta_indice.set_text(f"Paso {self.indice_actual + 1} de {len(self.pasos)}")
         self.etiqueta_tipo.set_content(html_sugerencia_tipo(paso.tipo, paso.etiqueta_tipo))
+        if hasattr(self, "descripcion"):
+            self.descripcion.set_content(formatear_descripcion_html(paso.descripcion))
         if 0 <= paso.indice_grupo < len(self.grupos):
             self.fase.set_text(self.grupos[paso.indice_grupo].titulo)
         else:
@@ -100,9 +105,11 @@ class ReproductorPasos:
     def _actualizar_explicacion(self, paso: PasoReproductor, autoreproduccion: bool) -> None:
         """Muestra la explicacion, con escritura animada fuera de autoplay."""
         texto = paso.explicacion
+        contenido = formatear_descripcion_html(texto)
+        if contenido == formatear_descripcion_html(paso.descripcion):
+            contenido = texto = ""
         identificador = f"repro-expl-{next(_CONTADOR_EXPLICACION)}"
-        if autoreproduccion:
-            contenido = html.escape(texto)
+        if autoreproduccion or contenido != html.escape(texto):
             self.explicacion.set_content(
                 f'<span class="texto-secundario text-sm leading-relaxed">{contenido}</span>'
             )
@@ -160,9 +167,15 @@ class ReproductorPasos:
 
     def _cambiar_velocidad(self, evento) -> None:
         """Actualiza el intervalo del temporizador con la velocidad seleccionada."""
-        if self.temporizador is not None and not self.temporizador.is_deleted:
-            self.temporizador.interval = VELOCIDADES_AUTOREPRODUCCION.get(
-                evento.value, VELOCIDADES_AUTOREPRODUCCION["Normal"]
+        self.velocidad = evento.value
+        self._actualizar_intervalo()
+
+    def _actualizar_intervalo(self) -> None:
+        """Ajusta la lectura al paso vigente sin reactivar temporizadores retirados."""
+        temporizador = getattr(self, "temporizador", None)
+        if temporizador is not None and not temporizador.is_deleted and self.pasos:
+            temporizador.interval = intervalo_lectura(
+                self.pasos[self.indice_actual].explicacion, getattr(self, "velocidad", "Normal")
             )
 
     def _cambiar_deslizador(self, evento) -> None:

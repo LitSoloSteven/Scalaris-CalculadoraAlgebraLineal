@@ -62,9 +62,10 @@ def _construir_tarjeta(reproductor: ReproductorPasos) -> None:
         _construir_cuerpo(reproductor)
         construir_controles(reproductor)
         if len(reproductor.pasos) > 1:
-            from src.frontend.componentes.reproductor_pasos.catalogo import VELOCIDADES_AUTOREPRODUCCION
+            from src.frontend.componentes.reproductor_pasos.catalogo import intervalo_lectura
             reproductor.temporizador = ui.timer(
-                VELOCIDADES_AUTOREPRODUCCION['Normal'], reproductor._avanzar, active=False
+                intervalo_lectura(reproductor.pasos[0].explicacion, reproductor.velocidad),
+                reproductor._avanzar, active=False
             )
 
 
@@ -83,7 +84,7 @@ def _construir_descripcion(reproductor: ReproductorPasos) -> None:
     """Crea la fila de descripcion, explicacion y boton de Glosa."""
     with ui.row().classes('w-full justify-between items-start gap-2'):
         with ui.column().classes('flex-1 gap-1'):
-            reproductor.descripcion = ui.label('').classes('font-semibold texto-principal text-sm')
+            reproductor.descripcion = ui.html('').classes('font-semibold texto-principal text-sm')
             reproductor.explicacion = ui.html('').classes('w-full')
         reproductor.contenedor_glosa = ui.row()
 
