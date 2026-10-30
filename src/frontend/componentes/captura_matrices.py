@@ -18,6 +18,7 @@ from .estado_captura_matrices import (
 )
 from .redimension_rectangular import actualizar_rectangulo
 from .redimension_captura_matrices import crear_celda_matriz, crear_fila_matriz
+from .carga_coleccion_matrices import cargar_matriz_a
 
 
 def _validar_deltas(matriz: dict[str, Any], incremento_filas: int, incremento_columnas: int) -> tuple[int, int] | None:
@@ -260,6 +261,10 @@ class PanelCapturaMatrices:
         self.renderizar_todas()
         if self.al_cambiar_datos:
             self.al_cambiar_datos()
+
+    def cargar_matriz_a(self, datos: list[list[str]]) -> None:
+        """Carga solo A sin reemplazar B ni las matrices adicionales."""
+        cargar_matriz_a(self, datos)
 
     def limpiar(self) -> None:
         """Vacia todas las celdas conservando nombres, dimensiones y matrices permanentes."""
