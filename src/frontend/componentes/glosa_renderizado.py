@@ -3,6 +3,9 @@ from __future__ import annotations
 
 import html
 import re
+from typing import Any
+
+from nicegui import ui
 
 
 def renderizar_texto_glosa(texto: str) -> str:
@@ -22,3 +25,13 @@ def renderizar_texto_glosa(texto: str) -> str:
             salida.append(f'<div class="glosa-texto-bloque">{bloque}</div>')
 
     return "".join(salida)
+
+
+def crear_contenido_glosa(mensaje: dict[str, Any]) -> ui.html:
+    """Monta texto escapado y consume el revelado de una respuesta exitosa una vez."""
+    animar = bool(mensaje.get("animar") and not mensaje.get("enviado") and not mensaje.get("error"))
+    mensaje["animar"] = False
+    contenido = ui.html(renderizar_texto_glosa(mensaje.get("texto", ""))).classes("w-full")
+    if animar:
+        contenido.props('data-escritura-pendiente')
+    return contenido

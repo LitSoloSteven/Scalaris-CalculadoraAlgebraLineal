@@ -6,7 +6,7 @@ from typing import Any
 from nicegui import ui
 
 from src.frontend.componentes.iconos import icono_svg
-from src.frontend.componentes.glosa_renderizado import renderizar_texto_glosa
+from src.frontend.componentes.glosa_renderizado import crear_contenido_glosa
 from src.frontend.componentes.glosa_sugerencias import renderizar_seguimientos
 from src.frontend.sugerencias import sugerencias_activas
 from src.frontend.catalogo_sugerencias import SEGUIMIENTOS
@@ -49,31 +49,29 @@ def _renderizar_estado_vacio() -> None:
         ui.label("Aclarar un concepto").classes("fuente-pequena")
 
 
-def _renderizar_contenido_burbuja(instancia: Any, enviado: bool, error: bool, texto: str, reintentar: bool) -> None:
+def _renderizar_contenido_burbuja(instancia: Any, mensaje: dict[str, Any]) -> None:
     """Presenta un fallo con reintento opcional o un mensaje de conversación escapado."""
-    if error:
+    if mensaje.get("error"):
         with ui.column().classes("p-3 gap-2 glosa-burbuja-error"):
-            ui.label(texto).classes("whitespace-pre-wrap text-sm")
-            if reintentar and hasattr(instancia, "_reintentar_ultimo_mensaje"):
+            ui.label(mensaje.get("texto", "")).classes("whitespace-pre-wrap text-sm")
+            if mensaje.get("reintentar") and hasattr(instancia, "_reintentar_ultimo_mensaje"):
                 ui.button("Reintentar", icon="refresh", on_click=instancia._reintentar_ultimo_mensaje).classes(
                     "boton-principal text-xs"
                 ).props("flat")
     else:
-        clase_burbuja = "glosa-burbuja-usuario" if enviado else "glosa-burbuja-asistente"
+        clase_burbuja = "glosa-burbuja-usuario" if mensaje.get("enviado") else "glosa-burbuja-asistente"
         with ui.column().classes(f"p-3 {clase_burbuja}"):
-            ui.html(renderizar_texto_glosa(texto)).classes("w-full")
+            crear_contenido_glosa(mensaje)
 
 
 def _renderizar_mensaje_lateral(instancia: Any, mensaje: dict[str, Any], es_ultimo: bool = False) -> None:
     """Renderiza una burbuja de mensaje con alineación y opciones contextuales."""
     enviado = mensaje.get("enviado", False)
     error = mensaje.get("error", False)
-    texto = mensaje.get("texto", "")
-    reintentar = mensaje.get("reintentar", False)
 
     alineacion_columna = "items-end" if enviado else "items-start"
-    with ui.column().classes(f"w-full {alineacion_columna} mb-0"):
-        _renderizar_contenido_burbuja(instancia, enviado, error, texto, reintentar)
+    with ui.column().classes(f"w-full {alineacion_columna} mb-0 glosa-respuesta"):
+        _renderizar_contenido_burbuja(instancia, mensaje)
         if es_ultimo and not enviado and not error and sugerencias_activas():
             _renderizar_seguimientos_mensaje(instancia)
 
@@ -81,7 +79,7 @@ def _renderizar_mensaje_lateral(instancia: Any, mensaje: dict[str, Any], es_ulti
 
 def _renderizar_seguimientos_mensaje(instancia: Any) -> None:
     """Agrega las preguntas de seguimiento didáctico tras el último mensaje del asistente."""
-    instancia.contenedor_seguimientos = ui.column().classes("w-full mt-2")
+    instancia.contenedor_seguimientos = ui.column().classes("w-full mt-2").props('data-escritura-seguimientos')
     with instancia.contenedor_seguimientos:
         renderizar_seguimientos(
             SEGUIMIENTOS,

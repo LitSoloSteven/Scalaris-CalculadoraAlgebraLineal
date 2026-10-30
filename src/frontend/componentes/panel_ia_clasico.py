@@ -1,11 +1,10 @@
 """Panel modal flotante clásico de Glosa cuando el panel lateral está inactivo."""
 from __future__ import annotations
 
-import html
-import json
 from typing import Any
 from nicegui import ui
 from src.frontend.componentes.glosa_entrada import EstiloEntradaGlosa, construir_entrada_glosa
+from src.frontend.componentes.glosa_renderizado import crear_contenido_glosa
 
 
 def construir_panel_clasico(instancia: Any) -> None:
@@ -17,7 +16,7 @@ def construir_panel_clasico(instancia: Any) -> None:
     with instancia.contenedor_panel:
         _construir_cabecera_clasico(instancia)
         instancia.area_chat = ui.column().classes("w-full flex-1 p-4 overflow-y-auto gap-2").props(
-            'id="ia-area-chat"'
+            'id="ia-area-chat" role="log" aria-live="polite"'
         )
         instancia.renderizar_chat()
         _construir_pie_clasico(instancia)
@@ -93,20 +92,11 @@ def renderizar_chat_clasico(instancia: Any) -> None:
 
 def renderizar_mensaje_clasico(mensaje: dict[str, Any], indice: int | None = None) -> None:
     """Renderiza un mensaje individual con burbuja adaptada al remitente."""
-    texto = mensaje.get("texto", "")
     enviado = mensaje.get("enviado", False)
     alineacion = "justify-end" if enviado else "justify-start"
     clase_burbuja = "glosa-burbuja-usuario" if enviado else "glosa-burbuja-asistente"
 
-    with ui.row().classes(f"w-full {alineacion} mb-4"):
+    with ui.row().classes(f"w-full {alineacion} mb-4 glosa-respuesta"):
         contenedor = ui.column().classes(f"p-3 {clase_burbuja}")
         with contenedor:
-            identificador_mensaje = f"ia-mensaje-{id(texto)}-{indice}" if not enviado and mensaje.get("animar") else None
-            if identificador_mensaje:
-                mensaje["animar"] = False
-                ui.html(f'<div id="{identificador_mensaje}"></div>').classes("whitespace-pre-wrap matematicas-etiqueta")
-                ui.timer(0.05, lambda texto_mensaje=texto, identificador_mensaje=identificador_mensaje: ui.run_javascript(
-                    f'window.scalaris.efectoMaquinaEscribir("{identificador_mensaje}", {json.dumps(texto_mensaje)}, 15)'
-                ), once=True)
-            else:
-                ui.html(html.escape(texto).replace("\n", "<br>")).classes("whitespace-pre-wrap matematicas-etiqueta")
+            crear_contenido_glosa(mensaje)
