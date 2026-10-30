@@ -1,4 +1,5 @@
 /** Aviso accesible y animación reiniciable para caracteres rechazados. */
+'use strict';
 {
     const animaciones = new WeakMap();
     const identificadorAviso = 'captura-aviso-numerico';

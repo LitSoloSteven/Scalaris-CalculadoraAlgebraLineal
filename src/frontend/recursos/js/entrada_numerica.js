@@ -1,4 +1,5 @@
 /** Filtro de caracteres de captura compartidos con Python mediante JSON. */
+'use strict';
 {
     const configuracion = leerConfiguracion();
     const caracteres = new Set(configuracion?.caracteres || '');
@@ -27,6 +28,13 @@
 
     function puedeAnimar(evento) {
         return evento.isTrusted && evento.inputType === 'insertText' && !evento.isComposing;
+    }
+
+    function prepararValor(entrada, texto) {
+        if (!esCampo(entrada)) return texto;
+        const filtrado = filtrar(texto);
+        if (filtrado !== texto) window.scalaris.rechazoNumerico.rechazar(entrada, configuracion.mensaje, false);
+        return filtrado;
     }
 
     function antesDeInsertar(evento) {
@@ -84,7 +92,7 @@
             compositionstart: iniciarComposicion, compositionend: terminarComposicion };
         Object.entries(manejadores).forEach(([nombre, funcion]) =>
             document.addEventListener(nombre, funcion, { capture: true }));
-        window.scalaris.entradaNumerica = { filtrar, esCampo,
+        window.scalaris.entradaNumerica = { filtrar, esCampo, prepararValor,
             desmontar: () => Object.entries(manejadores).forEach(([nombre, funcion]) =>
                 document.removeEventListener(nombre, funcion, { capture: true })) };
     }
