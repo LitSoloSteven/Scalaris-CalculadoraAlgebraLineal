@@ -16,6 +16,7 @@ from src.backend.resolutores.operaciones_matrices.factorizacion_lu import resolv
     ([[4, 1, 0], [2, 0, 1], [1, 2, 2]], [1, 2, 3], None),
 ])
 def test_resolucion_y_productos_exactos(datos, terminos, esperada):
+    """Verifica solución, productos exactos e inmutabilidad de las entradas."""
     matriz = Matriz(len(datos), len(datos), datos)
     original, copia_terminos = [fila[:] for fila in matriz.datos], terminos[:]
     resultado = resolver_sistema_lu(matriz, terminos)
@@ -32,8 +33,12 @@ def test_resolucion_y_productos_exactos(datos, terminos, esperada):
     assert multiplicar_matrices(permutacion, matriz) == multiplicar_matrices(inferior, superior)
     assert multiplicar_matrices(inferior, vector(resultado["intermedio"])) == multiplicar_matrices(permutacion, vector(terminos))
     assert matriz.datos == original and terminos == copia_terminos
+    _comprobar_traza(resultado, matriz.filas)
+
+
+def _comprobar_traza(resultado, filas):
     pasos = resultado["traza"]
-    assert [paso["tipo"] for paso in pasos] == ["planteamiento", "operacion"] + ["sustitucion"] * (2 * matriz.filas) + ["resultado"]
+    assert [paso["tipo"] for paso in pasos] == ["planteamiento", "operacion"] + ["sustitucion"] * (2 * filas) + ["resultado"]
     assert all(set(paso) == {"tipo", "descripcion", "detalle_latex", "explicacion"} for paso in pasos)
 
 
@@ -46,5 +51,6 @@ def test_resolucion_y_productos_exactos(datos, terminos, esperada):
     (Matriz(DIMENSION_MAXIMA_MATRICES + 1, DIMENSION_MAXIMA_MATRICES + 1), [1] * (DIMENSION_MAXIMA_MATRICES + 1)),
 ])
 def test_rechaza_entradas_invalidas(matriz, terminos):
+    """Rechaza matrices y términos incompatibles con una solución exacta por LU."""
     with pytest.raises(ValueError, match=r"\."):
         resolver_sistema_lu(matriz, terminos)
