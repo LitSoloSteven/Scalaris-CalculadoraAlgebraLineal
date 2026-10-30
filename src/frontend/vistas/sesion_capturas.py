@@ -27,7 +27,7 @@ def actualizar_previa_captura(vista, herramienta: str) -> None:
         return
     captura = obtener_captura_sesion(vista, herramienta)
     if herramienta == "matrices":
-        partes = [f"{nombre}:\n" + "\n".join("\t".join(fila) for fila in datos)
+        partes = [f"{nombre}:\n" + "\n".join("\t".join(str(celda or "") for celda in fila) for fila in datos)
                   for nombre, datos in captura["matrices"].items()]
         partes.append(captura["expresion"])
     else:
