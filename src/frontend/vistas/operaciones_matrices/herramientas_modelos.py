@@ -7,6 +7,7 @@ from src.frontend.controladores.operaciones_matrices.contexto_modelos import cap
 from src.frontend.controladores.operaciones_matrices.vista_previa_modelos import preparar_vista_previa_modelo
 from src.frontend.controladores.sesion_matricial import registrar_calculo, programar_vista_previa
 from .carga_modelos import cargar_captura_modelo
+from src.frontend.componentes.sesion_capturas import renderizar_registro_captura
 
 
 class MixinHerramientasModelos:
@@ -49,8 +50,4 @@ class MixinHerramientasModelos:
                 self._renderizar_registro_modelo(registro)
 
     def _renderizar_registro_modelo(self, registro: dict) -> None:
-        with ui.column().classes("w-full panel-tarjeta p-3"):
-            ui.label(registro["hora"]).classes("texto-secundario")
-            ui.label(registro["mensaje"]).classes("texto-principal")
-            ui.button(textos.MODELOS_RESTAURAR, color=None, on_click=lambda evento: cargar_captura_modelo(
-                self, registro["captura"])).classes("boton-discreto").props("ripple=false")
+        renderizar_registro_captura(registro, lambda captura: cargar_captura_modelo(self, captura))
