@@ -120,3 +120,18 @@ LIMPIEZA_ESTADO_ROMANOS = "Ingresa dos operandos romanos y pulsa Calcular."
 
 MENSAJE_SECRETO_DESARROLLO_INSEGURO = "STORAGE_SECRET ausente. Usando secreto de desarrollo (inseguro)."
 MENSAJE_ERROR_PRODUCCION_SIN_SECRETO = "ERROR CRÍTICO: SCALARIS_ENV es production pero falta STORAGE_SECRET."
+
+TRANSFERENCIA_MATRIZ_TITULO = "Llevar esta matriz a"
+TRANSFERENCIA_MATRIZ_CAPTURADA = "Matriz {nombre} del cálculo"
+TRANSFERENCIA_RECTANGULAR = "La transferencia está disponible para matrices cuadradas."
+TRANSFERENCIA_MATRIZ_CARGADA = "Cargamos {matriz} ({filas}×{columnas}) desde {origen}. {orientacion}"
+TRANSFERENCIA_DIMENSION_MINIMA = "Esta herramienta necesita una matriz de al menos {minimo}×{minimo}. Captura una matriz compatible."
+TRANSFERENCIA_ORIENTACIONES = {
+    "inversa": ("A", "Presiona Calcular inversa para ver A⁻¹."),
+    "determinantes": ("A", "Presiona Calcular determinante para obtener el resultado."),
+    "factorizacion_lu": ("A", "Presiona Calcular factorización para obtener los factores."),
+    "sistemas": ("A", "El vector b está vacío: complétalo y presiona Resolver."),
+    "matrices": ("A", "Escribe una expresión y presiona Evaluar."),
+    "transformaciones": ("A", "Presiona Analizar para estudiar la transformación."),
+    "leontief": ("C", "La demanda está vacía: complétala y presiona Calcular."),
+}
