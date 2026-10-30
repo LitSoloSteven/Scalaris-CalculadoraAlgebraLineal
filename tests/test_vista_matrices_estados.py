@@ -5,7 +5,7 @@ from nicegui import ui
 from tests.comun_construccion_vistas import construir_pagina
 
 
-@pytest.mark.parametrize("valor", ["texto", "9" * 257, "<img src=x onerror=alert(1)>"])
+@pytest.mark.parametrize("valor", ["1/0", "9" * 257, "<img src=x onerror=alert(1/0)>"])
 def test_error_matricial_identifica_celda_sin_html_activo(monkeypatch, valor):
     """El error publicado identifica matriz y celda; el dato adverso no se interpreta."""
     async def comprobar(vista, cliente):
