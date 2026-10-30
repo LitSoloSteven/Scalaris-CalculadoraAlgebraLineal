@@ -6,7 +6,7 @@ from src.frontend.componentes.cuadricula_base import ubicar_celda_matriz
 from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
 from src.frontend.controladores.operaciones_matrices import ControladorFactorizacionLU
 from src.frontend.controladores.sesion_matricial import actualizar_contexto, invalidar_resultado
-from src.frontend.sugerencias import primera_celda_invalida
+from src.frontend.controladores.operaciones_matrices.contexto_factorizacion_lu import localizar_invalida
 from ._estados_modelos import ejecutar_modelo, mostrar_estado
 from ._factores_factorizacion_lu import mostrar_factores_lu
 from ._presentacion_factorizacion_lu import montar_reproductor_lu
@@ -43,9 +43,7 @@ class ResultadosFactorizacionLU:
     def _mostrar_error_captura(self, resultado: dict) -> None:
         mostrar_estado(self.contenedor_resultados, resultado["mensaje"], "ERROR")
         datos = self.panel_matriz.obtener_datos_matriz()
-        elementos = [(f"A[{fila + 1},{columna + 1}]", valor, (fila, columna))
-                     for fila, valores in enumerate(datos) for columna, valor in enumerate(valores)]
-        invalida = primera_celda_invalida(elementos)
+        invalida = localizar_invalida(datos)
         if invalida and invalida.foco:
             ubicar_celda_matriz("A", *invalida.foco)
 

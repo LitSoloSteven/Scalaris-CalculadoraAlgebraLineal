@@ -3,11 +3,13 @@ from nicegui import ui
 
 from src.frontend import textos
 from src.frontend.componentes.calculadora import PanelCalculadora
+from src.frontend.componentes.cuadricula_base import ubicar_celda_matriz
 from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
 from src.frontend.componentes.panel_ia import PanelIA
 from src.frontend.componentes.panel_matriz_rectangular import PanelMatrizRectangular
 from src.frontend.controladores.operaciones_matrices.vista_previa_factorizacion_lu import preparar_presentacion_factorizacion_lu
+from src.frontend.controladores.operaciones_matrices.contexto_factorizacion_lu import obtener_contexto_ia, obtener_senales_ia
 from src.frontend.controladores.sesion_matricial import invalidar_resultado, actualizar_contexto
 from src.frontend.navegacion import ruta_de
 from src.frontend.vistas.mixin_sesion_matricial import MixinSesionMatricial
@@ -89,5 +91,14 @@ class VistaFactorizacionLU(ResultadosFactorizacionLU, MixinEjemplosFactorizacion
         self.panel_matriz.limpiar()
 
     def obtener_contexto_ia(self):
-        """Indica que el contexto específico aún no está disponible."""
-        return None
+        """Devuelve la captura y resultado vigente para Glosa."""
+        return obtener_contexto_ia(self)
+
+    def obtener_senales_ia(self):
+        """Devuelve señales y celda inválida de la captura vigente."""
+        return obtener_senales_ia(self)
+
+    def enfocar_celda(self, coordenada: tuple[int, int]) -> None:
+        """Enfoca la coordenada de una sugerencia que señala una celda inválida."""
+        if coordenada:
+            ubicar_celda_matriz("A", *coordenada)
