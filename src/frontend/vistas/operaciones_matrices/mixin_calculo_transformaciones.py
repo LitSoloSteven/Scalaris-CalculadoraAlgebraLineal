@@ -14,6 +14,7 @@ class MixinCalculoTransformaciones:
     """Orquesta el análisis de la matriz capturada y presenta su resultado."""
 
     async def _analizar(self, boton):
+        self._restablecer_resultados()
         await ejecutar_modelo(self, boton, self._analizar_nucleo)
 
     async def _analizar_nucleo(self):
@@ -37,5 +38,5 @@ class MixinCalculoTransformaciones:
         ui.run_javascript("if(window.scalaris && window.scalaris.renderizarMathJax) window.scalaris.renderizarMathJax();")
 
     def _restablecer_resultados(self):
-        self.ultimo_resultado = None
+        self._sincronizar_captura_modelo()
         mostrar_estado(self.contenedor_resultados, "Ingresa la matriz A y presiona Analizar.")
