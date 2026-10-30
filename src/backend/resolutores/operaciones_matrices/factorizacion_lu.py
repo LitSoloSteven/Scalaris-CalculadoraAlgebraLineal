@@ -1,5 +1,6 @@
 """Factorizacion PA=LU por composicion con el reductor comun y pivoteo parcial."""
 from fractions import Fraction
+from math import isfinite
 from typing import Any
 
 from src.backend.constantes import DIMENSION_MAXIMA_MATRICES, DIMENSION_MINIMA, EXITO
@@ -54,14 +55,15 @@ def factorizar_lu(matriz: Matriz) -> dict:
         paso.update(tipo="operacion", explicacion="Desarrollamos el producto PA ya calculado. Esta es la evaluacion del lado izquierdo, no una verificacion independiente.")
     desarrollo_permutacion[-1]["descripcion"] = "Producto PA calculado"
     traza = _presentar_factores(registro, superior)
-    for paso in desarrollo_permutacion + comprobacion["traza"]:
+    pasos_comprobacion = [dict(paso) for paso in comprobacion["traza"]]
+    for paso in desarrollo_permutacion + pasos_comprobacion:
         _agregar_instantaneas(paso, registro.permutacion, registro.inferior)
     return {"estado": "EXITO", "mensaje": "Factorizacion PA = LU con pivoteo parcial.",
             "operacion": "factorizacion_lu", "convencion": "PA=LU", "rango": reduccion["rango"],
             "permutacion": registro.permutacion, "inferior": registro.inferior, "superior": superior,
             "formulas_resultado": [f"{nombre}={matriz_a_latex(factor)}" for nombre, factor in
                                    (("P", registro.permutacion), ("L", registro.inferior), ("U", superior))],
-            "comprobacion": comprobacion, "traza": traza + desarrollo_permutacion + comprobacion["traza"]}
+            "comprobacion": comprobacion, "traza": traza + desarrollo_permutacion + pasos_comprobacion}
 
 
 def _presentar_factores(registro: _RegistroFactorizacion, superior: Matriz) -> list[dict]:
@@ -93,6 +95,8 @@ def _validar_sistema_lu(matriz: Matriz, terminos: list[Fraction]) -> None:
         raise ValueError("La matriz no es cuadrada. Proporciona una matriz con igual numero de filas y columnas.")
     if not DIMENSION_MINIMA <= matriz.filas <= DIMENSION_MAXIMA_MATRICES:
         raise ValueError(f"La dimension esta fuera del limite. Usa entre {DIMENSION_MINIMA} y {DIMENSION_MAXIMA_MATRICES} filas.")
+    if any(isinstance(valor, float) and not isfinite(valor) for fila in matriz.datos for valor in fila):
+        raise ValueError("La matriz contiene valores no finitos. Usa numeros finitos en todas las celdas.")
     if not isinstance(terminos, list) or len(terminos) != matriz.filas:
         raise ValueError("Los terminos no forman una lista de la longitud esperada. Proporciona un termino por fila.")
     if any(isinstance(valor, bool) or not isinstance(valor, (int, Fraction)) for valor in terminos):

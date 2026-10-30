@@ -37,3 +37,9 @@ def test_intercambio_y_multiplicador_reflejan_eventos():
     assert pasos[indice]["permutacion"] != identidad(3)
     eliminacion = next(paso for paso in pasos if paso["tipo"] == "eliminacion")
     assert eliminacion["inferior"].obtener(1, 0) == Fraction(4, 7)
+
+
+def test_comprobacion_conserva_sus_pasos_originales():
+    resultado = factorizar_lu(Matriz(1, 1, [[1]]))
+    assert all(set(paso) == {"tipo", "descripcion", "detalle_latex", "explicacion"}
+               for paso in resultado["comprobacion"]["traza"])

@@ -42,6 +42,7 @@ def test_resolucion_y_productos_exactos(datos, terminos, esperada):
     (Matriz(1, 1, [[1]]), []), (Matriz(1, 1, [[1]]), (1,)),
     (Matriz(1, 1, [[1]]), [True]), (Matriz(1, 1, [[1]]), [1.0]),
     (Matriz(1, 1, [[1]]), ["1"]),
+    (Matriz(1, 1, [[float("inf")]]), [1]), (Matriz(1, 1, [[float("nan")]]), [1]),
     (Matriz(DIMENSION_MAXIMA_MATRICES + 1, DIMENSION_MAXIMA_MATRICES + 1), [1] * (DIMENSION_MAXIMA_MATRICES + 1)),
 ])
 def test_rechaza_entradas_invalidas(matriz, terminos):
