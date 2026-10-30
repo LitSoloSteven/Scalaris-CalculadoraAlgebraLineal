@@ -2,6 +2,7 @@
 from typing import Any
 from nicegui import ui
 from .cuadricula_base import propiedades_celda_accesible
+from .carga_numerica import preparar_matriz_numerica
 
 
 def crear_entradas_vector(contenedor: Any, cantidad: int, identificador: str) -> list[Any]:
@@ -33,8 +34,13 @@ def crear_entradas_nombres(contenedor: Any, cantidad: int, etiqueta: str) -> lis
 
 def llenar_entradas(entradas: list[Any], valores: list[str]) -> None:
     """Asigna datos de un ejemplo a controles ya montados y limpia posiciones sin datos."""
-    for indice, entrada in enumerate(entradas):
-        entrada.value = valores[indice] if indice < len(valores) else ""
+    cargados = [valores[indice] if indice < len(valores) else "" for indice in range(len(entradas))]
+    numericos = [indice for indice, entrada in enumerate(entradas) if entrada._props.get("data-solo-numerico") == "true"]
+    filtrados = preparar_matriz_numerica([[cargados[indice] for indice in numericos]])[0]
+    for indice, valor in zip(numericos, filtrados):
+        cargados[indice] = valor
+    for entrada, valor in zip(entradas, cargados):
+        entrada.value = valor
 
 
 def construir_ejemplos(ejemplos: list[dict], cargar: Any, titulo: str) -> None:
