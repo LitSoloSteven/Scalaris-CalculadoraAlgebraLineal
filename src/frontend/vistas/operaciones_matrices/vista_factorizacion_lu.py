@@ -37,7 +37,7 @@ class VistaFactorizacionLU(ResultadosFactorizacionLU, MixinEjemplosFactorizacion
         self.calculadora.inyectar_recursos_cliente()
         ui.add_head_html('<link rel="stylesheet" href="/assets/css/vistas_factorizacion_lu.css">')
         with (ui.element('div').classes('factorizacion-lu-marco w-full'),
-              ui.column().classes('vista-raiz sesion-vista factorizacion-lu-vista w-full max-w-7xl mx-auto p-6 gap-4')):
+              ui.column().classes('vista-raiz sesion-vista sesion-paneles-compartidos factorizacion-lu-vista w-full max-w-7xl mx-auto p-6 gap-4')):
             ui.label(textos.LU_TITULO).classes('text-2xl font-bold texto-principal')
             ui.label(textos.LU_DESCRIPCION).classes('texto-secundario')
             with ui.element('div').classes('disposicion-dividida'):

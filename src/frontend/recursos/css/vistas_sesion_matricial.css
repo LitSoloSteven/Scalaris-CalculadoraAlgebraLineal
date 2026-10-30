@@ -21,10 +21,10 @@
     max-width: 100%;
 }
 
-.sesion-vista .calculadora-boton { min-width: 0; }
-.sesion-vista .sesion-panel-herramientas,
-.sesion-vista .q-tab-panel,
-.sesion-vista .q-tab-panels { min-width: 0; max-width: 100%; }
+.sesion-paneles-compartidos .calculadora-boton { min-width: 0; }
+.sesion-paneles-compartidos .sesion-panel-herramientas,
+.sesion-paneles-compartidos .q-tab-panel,
+.sesion-paneles-compartidos .q-tab-panels { min-width: 0; max-width: 100%; }
 
 @container sesion-matricial (max-width: 20rem) {
     .sesion-vista { padding-inline: var(--space-2) !important; }
