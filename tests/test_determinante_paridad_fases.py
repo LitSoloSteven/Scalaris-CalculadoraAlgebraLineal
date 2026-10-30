@@ -38,3 +38,14 @@ def test_menor_incluye_coordenadas_valores_y_orden_original():
     assert meta["detalle"]["menor"]["datos"] == [["4"]]
     assert meta["detalle"]["elemento"] == "1"
     assert meta["detalle"]["filas_originales"] == [2]
+
+
+def test_intercambio_tardio_pertenece_a_su_columna():
+    """Un intercambio de la segunda columna no se incorpora a la fase anterior."""
+    resultado = ControladorDeterminante.procesar([[0, 2, 1], [1, 1, 0], [2, 1, 1]], "lu")
+    grupos, posiciones = agrupar_determinante(resultado)
+    intercambios = [indice for indice, paso in enumerate(resultado["traza"]) if paso["tipo"] == "intercambio"]
+    assert len(intercambios) == 2
+    assert posiciones[intercambios[0]] != posiciones[intercambios[1]]
+    assert grupos[posiciones[intercambios[1]]]["titulo"].startswith("Columna 2")
+    assert "con intercambio" in grupos[posiciones[intercambios[1]]]["titulo"]

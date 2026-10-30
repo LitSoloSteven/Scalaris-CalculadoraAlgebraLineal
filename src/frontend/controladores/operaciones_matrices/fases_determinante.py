@@ -7,14 +7,14 @@ from src.frontend.controladores.agrupacion_trazas import agrupar_traza
 def agrupar_determinante(resultado: dict) -> tuple[list[dict], tuple[int, ...]]:
     """Devuelve grupos y posiciones sin alterar pasos ni recalcular determinantes."""
     traza = resultado.get("traza", [])
-    grupos, posiciones = agrupar_traza(traza, _identificar)
+    grupos, posiciones = agrupar_traza(traza, lambda paso, indice: _identificar(paso, indice, traza))
     for grupo in grupos:
         if grupo["tipo"] == "columna":
             _nombrar_columna(grupo, traza)
     return grupos, posiciones
 
 
-def _identificar(paso: dict, indice: int) -> tuple:
+def _identificar(paso: dict, indice: int, traza: list[dict]) -> tuple:
     tipo = paso["tipo"]
     if tipo == "menor":
         columna = paso.get("menor", {}).get("columna", indice + 1)
@@ -25,8 +25,16 @@ def _identificar(paso: dict, indice: int) -> tuple:
     if tipo in ("planteamiento", "inicial"):
         titulo = textos.DETERMINANTES_PLANTEAMIENTO if tipo == "planteamiento" else textos.DETERMINANTES_INICIAL
         return tipo, titulo, tipo
-    columna = paso.get("operacion", {}).get("columna", 0)
+    columna = columna_determinante(traza, indice)
     return ("columna", columna), str(columna + 1), "columna"
+
+
+def columna_determinante(traza: list[dict], indice: int) -> int:
+    """Relaciona intercambios sin columna explícita con el pivote siguiente de la traza."""
+    paso = traza[indice]
+    if paso["tipo"] == "intercambio":
+        paso = next((siguiente for siguiente in traza[indice + 1:] if siguiente["tipo"] == "pivote"), paso)
+    return paso.get("operacion", {}).get("columna", 0)
 
 
 def _nombrar_columna(grupo: dict, traza: list[dict]) -> None:
