@@ -32,7 +32,6 @@ def renderizar_resultado_transformaciones(resultado: dict) -> None:
     _renderizar_conclusiones(resultado)
     _renderizar_nucleo(resultado, nulidad)
     _renderizar_imagen(resultado, rango)
-    _renderizar_pasos(resultado)
     mostrar_desarrollo(resultado.get("traza_comprobacion", []))
 
 
@@ -110,21 +109,3 @@ def _renderizar_imagen(resultado: dict, rango: int) -> None:
                 ui.html(f'<div class="matematicas-desplazamiento matematicas-etiqueta text-lg text-center">$$ \\mathbf{{a}}_{{{indice}}} = {vector_latex} $$</div>')
 
 
-def _renderizar_pasos(resultado: dict) -> None:
-    """Expansion con los pasos de reduccion Gauss-Jordan."""
-    pasos = resultado.get("pasos_reduccion", [])
-    if pasos:
-        with ui.expansion("Ver reduccion Gauss-Jordan de A", icon="visibility").classes(
-            "w-full panel-tarjeta mt-4 pasos-expansion"
-        ).props('header-class="font-bold texto-principal"'):
-            for paso in pasos:
-                _renderizar_paso_reduccion(paso)
-
-
-def _renderizar_paso_reduccion(paso):
-    """Presenta la descripción y matriz de un paso de reducción."""
-    with ui.column().classes(
-        "w-full p-4 border-l-2 border-l-[var(--accent)] ml-2 mb-2 bg-[var(--bg-panel)] rounded-r-lg"
-    ):
-        ui.label(paso["descripcion"]).classes("text-sm font-semibold mb-1 texto-secundario")
-        ui.html(f'<div class="matematicas-desplazamiento matematicas-etiqueta text-lg">$$ {paso["matriz"]} $$</div>')
