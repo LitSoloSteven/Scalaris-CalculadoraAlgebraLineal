@@ -31,4 +31,5 @@ class MixinCalculoLeontief:
         with self.contenedor_resultados:
             self.contenedor_resultados.classes(remove="items-center justify-center", add="items-start justify-start")
             renderizar_resultado_leontief(self.ultimo_resultado)
+            self._completar_resultado_modelo()
         ui.run_javascript("window.scalaris.renderizarMathJax();")
