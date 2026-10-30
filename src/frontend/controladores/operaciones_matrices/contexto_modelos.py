@@ -25,13 +25,7 @@ def resultado_modelo_vigente(vista) -> dict | None:
 def obtener_contexto_modelo(vista) -> ContextoIA:
     """Describe entrada saneada y conclusiones calculadas del modelo vigente."""
     herramienta = vista.herramienta_modelo
-    captura = capturar_modelo(vista)
-    matriz = captura[_CLAVES_MATRIZ[herramienta]]
-    descripcion = describir_matriz([[sanear_cadena_usuario(str(valor), 32) for valor in fila] for fila in matriz])
-    entrada = {"matriz": descripcion, "nombres": [sanear_cadena_usuario(nombre, 160)
-               for nombre in captura[_CLAVES_NOMBRES[herramienta]]]}
-    if herramienta == "leontief":
-        entrada["demanda"] = [sanear_cadena_usuario(str(valor), 32) for valor in captura["vector_demanda"]]
+    entrada = _describir_entrada_modelo(vista)
     vacio = not any(str(campo.value or "").strip() for campo in vista._campos_captura())
     contexto = ContextoIA(herramienta=herramienta, vista=herramienta.capitalize(),
                           etiqueta="C" if herramienta == "leontief" else "A", entrada=entrada,
@@ -43,6 +37,17 @@ def obtener_contexto_modelo(vista) -> ContextoIA:
         contexto.resultado = {clave: resultado[clave] for clave in claves if clave in resultado}
     contexto.desactualizado = bool(vista.ultimo_resultado and not resultado)
     return contexto
+
+
+def _describir_entrada_modelo(vista) -> dict:
+    herramienta = vista.herramienta_modelo
+    captura = capturar_modelo(vista)
+    matriz = captura[_CLAVES_MATRIZ[herramienta]]
+    entrada = {"matriz": describir_matriz([[sanear_cadena_usuario(str(valor), 32) for valor in fila] for fila in matriz]),
+               "nombres": [sanear_cadena_usuario(nombre, 160) for nombre in captura[_CLAVES_NOMBRES[herramienta]]]}
+    if herramienta == "leontief":
+        entrada["demanda"] = [sanear_cadena_usuario(str(valor), 32) for valor in captura["vector_demanda"]]
+    return entrada
 
 
 def obtener_senales_modelo(vista) -> Senales:
