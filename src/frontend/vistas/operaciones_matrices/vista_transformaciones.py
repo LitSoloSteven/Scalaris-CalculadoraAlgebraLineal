@@ -14,10 +14,12 @@ from .mixin_calculo_transformaciones import MixinCalculoTransformaciones
 
 from .mixin_captura_transformaciones import MixinCapturaTransformaciones
 from .mixin_ejemplos_transformaciones import MixinEjemplosTransformaciones
+from .glosa_modelos import MixinGlosaModelos
 
 
-class VistaTransformaciones(MixinLimpiezaModelos, MixinCalculoTransformaciones, MixinCapturaTransformaciones, MixinEjemplosTransformaciones):
+class VistaTransformaciones(MixinGlosaModelos, MixinLimpiezaModelos, MixinCalculoTransformaciones, MixinCapturaTransformaciones, MixinEjemplosTransformaciones):
     """Vista completa de Transformaciones Lineales."""
+    herramienta_modelo = "transformaciones"
 
     def __init__(self):
         self.filas = 2
@@ -57,6 +59,7 @@ class VistaTransformaciones(MixinLimpiezaModelos, MixinCalculoTransformaciones, 
                         "w-full panel-tarjeta p-6 items-center justify-center min-h-[400px]"
                     ).props('id="resultados-transformaciones"')
                     self._restablecer_resultados()
+        self._conectar_modelo()
 
     def _crear_accion_principal(self):
         """Construye crear accion principal conservando el orden de los elementos."""
@@ -72,10 +75,3 @@ class VistaTransformaciones(MixinLimpiezaModelos, MixinCalculoTransformaciones, 
         return [entrada for fila in self.entradas_coeficientes for entrada in fila] + self.entradas_variables
 
 
-    def obtener_contexto_ia(self):
-        """Devuelve None porque esta vista todavía no proporciona contexto al asistente."""
-        return None
-
-    def obtener_senales_ia(self):
-        """Devuelve None porque esta vista todavía no proporciona señales al asistente."""
-        return None
