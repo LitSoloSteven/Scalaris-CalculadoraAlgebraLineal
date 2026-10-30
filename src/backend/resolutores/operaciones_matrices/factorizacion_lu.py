@@ -1,5 +1,8 @@
 """Factorizacion PA=LU por composicion con el reductor comun y pivoteo parcial."""
-from src.backend.constantes import DIMENSION_MAXIMA_MATRICES
+from fractions import Fraction
+from typing import Any
+
+from src.backend.constantes import DIMENSION_MAXIMA_MATRICES, DIMENSION_MINIMA, EXITO
 from src.backend.modelos.matriz import Matriz
 from src.backend.modelos.construcciones import identidad
 from src.backend.modelos.calculo_matricial import multiplicar_matrices
@@ -8,6 +11,8 @@ from src.backend.resolutores.sistemas_lineales.reduccion import ReductorFilas
 from .pasos_determinante import RegistroPasosDeterminante
 from .comprobacion_productos import comprobar_producto, crear_paso_analisis, desarrollar_producto
 from .formateadores import matriz_a_latex
+from .sustitucion_lu import sustituir_adelante, sustituir_atras
+from .traza_sistema_lu import crear_traza_sistema_lu
 
 
 class _RegistroFactorizacion:
@@ -79,3 +84,36 @@ def _presentar_factores(registro: _RegistroFactorizacion, superior: Matriz) -> l
 
 def _agregar_instantaneas(paso: dict, permutacion: Matriz, inferior: Matriz) -> None:
     paso.update(permutacion=permutacion.clonar(), inferior=inferior.clonar())
+
+
+def _validar_sistema_lu(matriz: Matriz, terminos: list[Fraction]) -> None:
+    if not isinstance(matriz, Matriz):
+        raise ValueError("La entrada no es una Matriz. Proporciona una matriz cuadrada.")
+    if matriz.filas != matriz.columnas:
+        raise ValueError("La matriz no es cuadrada. Proporciona una matriz con igual numero de filas y columnas.")
+    if not DIMENSION_MINIMA <= matriz.filas <= DIMENSION_MAXIMA_MATRICES:
+        raise ValueError(f"La dimension esta fuera del limite. Usa entre {DIMENSION_MINIMA} y {DIMENSION_MAXIMA_MATRICES} filas.")
+    if not isinstance(terminos, list) or len(terminos) != matriz.filas:
+        raise ValueError("Los terminos no forman una lista de la longitud esperada. Proporciona un termino por fila.")
+    if any(isinstance(valor, bool) or not isinstance(valor, (int, Fraction)) for valor in terminos):
+        raise ValueError("Hay terminos de tipo no admitido. Usa enteros o fracciones exactas.")
+
+
+def resolver_sistema_lu(matriz: Matriz, terminos: list[Fraction]) -> dict[str, Any]:
+    """Resuelve Ax=b mediante PA=LU y devuelve factores, vectores y traza.
+
+    Recibe una matriz cuadrada y una lista de enteros o fracciones, sin modificarlas.
+    Lanza ValueError si las entradas son invalidas, exceden el limite o la matriz es singular.
+    """
+    _validar_sistema_lu(matriz, terminos)
+    factores = factorizar_lu(matriz)
+    if factores["rango"] < matriz.filas:
+        raise ValueError("La matriz es singular y no permite una solucion unica. Usa una matriz invertible.")
+    permutacion, inferior, superior = (factores[clave] for clave in ("permutacion", "inferior", "superior"))
+    vector = Matriz(matriz.filas, 1, [[Fraction(valor)] for valor in terminos])
+    permutada = multiplicar_matrices(permutacion, vector)
+    intermedio, filas_inferiores = sustituir_adelante(inferior, [Fraction(fila[0]) for fila in permutada.datos])
+    solucion, filas_superiores = sustituir_atras(superior, intermedio)
+    traza = crear_traza_sistema_lu(permutada, filas_inferiores, filas_superiores, solucion)
+    return {"estado": EXITO, "convencion": "PA=LU", "permutacion": permutacion, "inferior": inferior,
+            "superior": superior, "intermedio": intermedio, "solucion": solucion, "traza": traza}
