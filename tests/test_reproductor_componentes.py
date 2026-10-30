@@ -110,7 +110,7 @@ def test_catalogo_y_hoja_nueva_definen_todos_los_tipos():
     tipos_esperados = {
         "inicial", "intercambio", "pivote", "eliminacion", "normalizacion", "otro", "final",
         "planteamiento", "sustitucion", "verificacion", "operacion", "componente", "ajuste",
-        "expansion", "division", "lectura", "decodificacion", "construccion", "resultado",
+        "expansion", "division", "lectura", "decodificacion", "construccion", "resultado", "menor",
     }
     assert set(CATALOGO_TIPOS) == tipos_esperados
     assert all(f".pasos-etiqueta-{tipo}" in estilos for tipo in tipos_esperados)
