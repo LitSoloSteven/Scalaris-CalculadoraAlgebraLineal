@@ -19,6 +19,12 @@ SEGUIMIENTOS: tuple[Seguimiento, ...] = (
 )
 
 CATALOGO_SUGERENCIAS: tuple[tuple[str, str, str, str, str], ...] = (
+    ("factorizacion_lu", "sin_resultado", "lu.sin_resultado.convencion", "¿Qué significa PA = LU?", "estado"),
+    ("factorizacion_lu", "exito", "lu.exito.multiplicadores", "¿Cómo leo los multiplicadores de L?", "estado"),
+    ("factorizacion_lu", "exito", "lu.exito.verificacion", "¿Cómo verifico que LU = PA?", "estado"),
+    ("factorizacion_lu", "bandera_intercambio", "lu.bandera.intercambio", "¿Por qué se intercambiaron filas y qué hace P?", "bandera"),
+    ("factorizacion_lu", "bandera_rectangular", "lu.bandera.rectangular", "¿Se puede factorizar una matriz que no es cuadrada?", "bandera"),
+    ("factorizacion_lu", "bandera_rango_deficiente", "lu.bandera.rango", "¿Por qué puedo factorizar una matriz singular?", "bandera"),
     ("sistemas", "sin_resultado", "sistemas.sin_resultado.metodo", "¿Qué método uso, Gauss o Gauss-Jordan?", "estado"),
     ("sistemas", "sin_resultado", "sistemas.sin_resultado.fracciones", "¿Cómo escribo fracciones y decimales?", "estado"),
     ("sistemas", "unica", "sistemas.unica.comprobar", "¿Cómo compruebo la solución?", "estado"),
