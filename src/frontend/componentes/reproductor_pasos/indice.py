@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from nicegui import ui
+from src.frontend.textos import PASOS_INDICE_TITULO
 
 from src.frontend.componentes.reproductor_pasos.catalogo import html_sugerencia_tipo
 
@@ -17,7 +18,7 @@ def construir_indice(reproductor: ReproductorPasos) -> None:
     if len(reproductor.grupos) <= 1:
         return
     with (
-        ui.expansion('Indice de pasos por fases', icon='list').classes(
+        ui.expansion(PASOS_INDICE_TITULO, icon='list').classes(
         'w-full panel-tarjeta mt-4 pasos-expansion'
     ).props('header-class="font-bold texto-principal"'),
         ui.column().classes('w-full p-2 gap-2'),

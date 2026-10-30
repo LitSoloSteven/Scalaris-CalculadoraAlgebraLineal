@@ -15,8 +15,6 @@ def mostrar_tarjeta_determinante(resultado: dict) -> None:
         ui.label(textos.DETERMINANTES_ESTADO_SINGULAR if singular else
                  textos.DETERMINANTES_INVERTIBLE).classes("font-bold").props('role="status"')
     _mostrar_metricas(resultado)
-    ui.label(textos.DETERMINANTES_VALOR.format(valor=formatear_fraccion_texto(
-        resultado["determinante"]))).classes("determinante-valor texto-principal")
     renderizar_latex(r"\det(A) = " + numero_a_latex(resultado["determinante"]))
     if singular:
         ui.label(textos.DETERMINANTES_AVISO_SINGULAR).classes("texto-secundario").props('role="status"')
@@ -27,6 +25,8 @@ def _mostrar_metricas(resultado: dict) -> None:
     nombres = {clave: nombre for clave, nombre, _ in textos.OPCIONES_METODOS_DETERMINANTES}
     with ui.row().classes("panel-tarjeta px-4 py-2 fuente-pequena items-center gap-4 flex-wrap mb-6 w-full"):
         ui.label(f"{dimension} × {dimension}").classes("font-bold texto-principal")
+        ui.label(textos.DETERMINANTES_VALOR.format(valor=formatear_fraccion_texto(
+            resultado["determinante"]))).classes("determinante-valor texto-principal")
         ui.label(nombres.get(resultado["metodo"], resultado["metodo"])).classes("texto-principal")
         ui.label(textos.RESULTADO_CUENTA_PASOS.format(cantidad=len(resultado["traza"]))).classes("texto-secundario")
         ui.label(textos.RESULTADO_INTERCAMBIOS.format(cantidad=resultado.get("intercambios", 0))).classes("texto-secundario")
