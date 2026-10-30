@@ -14,6 +14,16 @@ def renderizar_registro_captura(registro: dict, cargar) -> None:
             registro["captura"])).classes("boton-discreto").props("ripple=false")
 
 
+def renderizar_historial_capturas(contenedor, registros: list[dict], cargar) -> None:
+    """Actualiza el historial con su estado vacío y acciones de restauración."""
+    contenedor.clear()
+    with contenedor:
+        if not registros:
+            ui.label(textos.MODELOS_HISTORIAL_VACIO).classes("texto-secundario")
+        for registro in registros:
+            renderizar_registro_captura(registro, cargar)
+
+
 class SesionCapturas:
     """Retiene cinco capturas y una vista textual sin depender de una herramienta concreta."""
 
@@ -39,9 +49,4 @@ class SesionCapturas:
         self._renderizar()
 
     def _renderizar(self) -> None:
-        self.contenedor.clear()
-        with self.contenedor:
-            if not self.registros:
-                ui.label(textos.MODELOS_HISTORIAL_VACIO).classes("texto-secundario")
-            for registro in self.registros:
-                renderizar_registro_captura(registro, self.cargar)
+        renderizar_historial_capturas(self.contenedor, self.registros, self.cargar)

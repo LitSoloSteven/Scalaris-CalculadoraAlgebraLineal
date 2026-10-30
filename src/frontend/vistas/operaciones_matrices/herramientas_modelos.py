@@ -7,7 +7,7 @@ from src.frontend.controladores.operaciones_matrices.contexto_modelos import cap
 from src.frontend.controladores.operaciones_matrices.vista_previa_modelos import preparar_vista_previa_modelo
 from src.frontend.controladores.sesion_matricial import registrar_calculo, programar_vista_previa
 from .carga_modelos import cargar_captura_modelo
-from src.frontend.componentes.sesion_capturas import renderizar_registro_captura
+from src.frontend.componentes.sesion_capturas import renderizar_historial_capturas
 
 
 class MixinHerramientasModelos:
@@ -42,12 +42,5 @@ class MixinHerramientasModelos:
         self._renderizar_historial_modelo()
 
     def _renderizar_historial_modelo(self) -> None:
-        self.contenedor_historial.clear()
-        with self.contenedor_historial:
-            if not self.historial:
-                ui.label(textos.MODELOS_HISTORIAL_VACIO).classes("texto-secundario")
-            for registro in self.historial:
-                self._renderizar_registro_modelo(registro)
-
-    def _renderizar_registro_modelo(self, registro: dict) -> None:
-        renderizar_registro_captura(registro, lambda captura: cargar_captura_modelo(self, captura))
+        renderizar_historial_capturas(self.contenedor_historial, self.historial,
+                                     lambda captura: cargar_captura_modelo(self, captura))
