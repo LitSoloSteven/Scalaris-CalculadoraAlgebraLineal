@@ -6,6 +6,7 @@ from typing import Mapping
 from nicegui import app, ui
 
 from src.frontend.rutas import registrar_rutas
+from src.frontend.constantes import PDF_PLAZO_CAPTURA_SEGUNDOS
 from src.frontend.configuracion_persistencia import configurar_persistencia
 from src.frontend.textos import (
     MENSAJE_ERROR_PRODUCCION_SIN_SECRETO,
@@ -72,6 +73,7 @@ def ejecutar() -> None:
         title="Scalaris",
         favicon=str(DIRECTORIO_RECURSOS / "LogoOscuro.png"),
         storage_secret=secreto,
+        reconnect_timeout=PDF_PLAZO_CAPTURA_SEGUNDOS,
     )
 
 
