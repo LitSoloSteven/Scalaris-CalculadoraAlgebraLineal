@@ -3,6 +3,8 @@ from __future__ import annotations
 
 import json
 from nicegui import ui
+from src.frontend.componentes.sonido import notificar
+from src.frontend.componentes.avisos_resultado import renderizar_aviso_resultado
 
 from src.backend.constantes import DIMENSION_MAXIMA_SISTEMAS
 from src.frontend.controladores.operaciones_inversas.presentacion import preparar_opciones_inversa
@@ -14,20 +16,18 @@ from src.frontend.componentes.acciones_matriz import renderizar_acciones_matriz
 
 def renderizar_resultado_error(vista, resultado: dict) -> None:
     """Renderiza el mensaje de error y resalta celdas si aplica."""
-    with ui.row().classes('items-center gap-2 px-4 py-2 distintivo-error mb-4 w-fit'):
-        ui.icon('error', size='sm')
-        ui.label(resultado.get('mensaje', 'Error en los datos ingresados.')).classes('font-bold')
+    renderizar_aviso_resultado(resultado.get('mensaje', 'Error en los datos ingresados.'), 'error',
+                              'items-center gap-2 px-4 py-2 distintivo-error mb-4 w-fit')
     if resultado.get('celda_error'):
         r, c = resultado['celda_error']
         vista.enfocar_celda((r, c))
-        ui.notify(resultado.get('mensaje', 'Celda inválida'), type='negative')
+        notificar(resultado.get('mensaje', 'Celda inválida'), type='negative')
 
 
 def renderizar_resultado_singular(vista, resultado: dict, dimension: int) -> None:
     """Renderiza la información de matriz singular y pasos si los hay."""
-    with ui.row().classes('items-center gap-2 px-4 py-2 distintivo-error mb-4 w-fit'):
-        ui.icon('warning', size='sm')
-        ui.label('Matriz singular: no tiene inversa').classes('font-bold')
+    renderizar_aviso_resultado('Matriz singular: no tiene inversa', 'warning',
+                              'items-center gap-2 px-4 py-2 distintivo-error mb-4 w-fit')
 
     with ui.column().classes('panel-tarjeta p-6 w-full mb-6 gap-3'):
         ui.label('Matriz Singular (det = 0)').classes('text-lg font-bold texto-principal')
@@ -55,9 +55,8 @@ def renderizar_resultado_singular(vista, resultado: dict, dimension: int) -> Non
 def renderizar_resultado_exitoso(vista, resultado: dict, dimension: int) -> None:
     """Presenta estado, matrices, acciones y comprobaciones de la inversa recibida."""
 
-    with ui.row().classes('items-center gap-2 px-4 py-2 distintivo-exito mb-4 w-fit'):
-        ui.icon('check_circle', size='sm')
-        ui.label('Matriz invertible').classes('font-bold')
+    renderizar_aviso_resultado('Matriz invertible', 'check_circle',
+                              'items-center gap-2 px-4 py-2 distintivo-exito mb-4 w-fit')
 
     with ui.row().classes('panel-tarjeta px-4 py-2 fuente-pequena items-center gap-4 flex-wrap mb-6 w-full'):
         ui.label(f"{dimension} × {dimension}").classes('font-bold texto-principal')
@@ -126,12 +125,12 @@ def _agregar_botones_acciones(resultado: dict, dimension: int) -> None:
         for i in range(dimension):
             lineas.append("\t".join(formatear_fraccion_texto(inversa.obtener(i, j)) for j in range(dimension)))
         ui.run_javascript(f"navigator.clipboard.writeText({json.dumps(chr(10).join(lineas))});")
-        ui.notify('A⁻¹ copiada al portapapeles', type='positive')
+        notificar('A⁻¹ copiada al portapapeles', type='positive')
 
     def ir_a_sistemas():
         """Transfiere la inversa calculada al editor de sistemas lineales."""
         if not preparar_opciones_inversa(dimension)['transferir_sistema']:
-            ui.notify(f"Sistemas de ecuaciones admite hasta {DIMENSION_MAXIMA_SISTEMAS}×{DIMENSION_MAXIMA_SISTEMAS}; tu matriz es de {dimension}×{dimension}.", type='warning')
+            notificar(f"Sistemas de ecuaciones admite hasta {DIMENSION_MAXIMA_SISTEMAS}×{DIMENSION_MAXIMA_SISTEMAS}; tu matriz es de {dimension}×{dimension}.", type='warning')
             return
         datos = [[formatear_fraccion_texto(resultado['inversa'].obtener(r, c)) for c in range(dimension)] for r in range(dimension)]
         from src.frontend.componentes.transferencia import guardar_matriz, url_transferencia
