@@ -95,3 +95,18 @@ prueba('una biblioteca pendiente vence y libera lienzos que llegan tarde', async
     afirmar.equal((await cliente.capturar()).error, 'captura');
     afirmar.equal(cliente.raiz.inert, false);
 });
+
+prueba('el clon conserva el ancho medido aunque cambie el espacio de la barra de desplazamiento', async () => {
+    const cliente = crearCliente();
+    const propiedades = [];
+    const region = {style: {setProperty: (...argumentos) => propiedades.push(argumentos)}};
+    const documento = {documentElement: {setAttribute() {}},
+        body: {classList: {remove() {}}, style: {}}, querySelectorAll: () => [],
+        createElement: () => ({getContext: () => ({})})};
+    cliente.ventana.html2canvas = async (nodo, ajustes) => {
+        ajustes.onclone(documento, region);
+        return {width: 100, height: 50, toDataURL: () => 'data:image/png;base64,AAAA'};
+    };
+    afirmar.equal((await cliente.capturar()).capturas.length, 1);
+    afirmar.deepEqual(propiedades, [['width', '100px', 'important']]);
+});

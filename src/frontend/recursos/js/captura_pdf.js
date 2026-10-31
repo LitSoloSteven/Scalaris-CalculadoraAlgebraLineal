@@ -71,12 +71,11 @@
     lienzo.height = 0;
   }
 
-  function prepararClon(documento, region) {
+  function prepararClon(documento, region, ancho) {
     documento.documentElement.setAttribute('data-tema', 'papel');
     documento.body.classList.remove('body--dark');
     documento.body.style.backgroundColor = 'white';
-    const anchos = [...region.querySelectorAll('*')].map(nodo => nodo.scrollWidth);
-    region.style.width = `${Math.max(region.scrollWidth, ...anchos)}px`;
+    region.style.setProperty('width', `${ancho}px`, 'important');
     documento.querySelectorAll('[data-pdf-captura], [data-pdf-captura] *').forEach(nodo => {
       nodo.style.animation = 'none';
       nodo.style.transition = 'none';
@@ -102,7 +101,7 @@
       lienzo = await biblioteca(nodo, {backgroundColor: 'white', scale: escala,
         width: ancho, height: alto, logging: false, onclone: (documento, region) => {
           if (estado.cancelada) throw new Error('cancelada');
-          prepararClon(documento, region);
+          prepararClon(documento, region, ancho);
         },
         imageTimeout: configuracion.plazoMathjax * 1000});
       if (estado.cancelada) throw new Error('cancelada');
