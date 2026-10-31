@@ -1,6 +1,7 @@
 """Mixin de interacción de usuario y gestión de entradas para Sistemas Numéricos."""
 import asyncio
 from nicegui import ui
+from src.frontend.componentes.sonido import emitir_sonido, notificar
 from src.backend.utilidades.reglas_dominio import BASES_NUMERICAS, validar_entrada_base
 from src.frontend.controladores.sesion_matricial import actualizar_contexto
 
@@ -84,7 +85,7 @@ class MixinInteraccionSistemasNumericos:
                 timeout=2.0
             )
             if not exito:
-                ui.notify("No se pudo copiar", type="warning")
+                notificar("No se pudo copiar", type="warning")
                 return
         except Exception:
             pass
@@ -157,9 +158,11 @@ class MixinInteraccionSistemasNumericos:
                 return
             if await self._ejecutar_conversion(valor, inmediato=True, revelar_tarjetas=False):
                 self._aplicar_opacidad_tarjetas(revelar=True)
+                emitir_sonido('exito')
         except Exception:
             self._limpiar_resultados()
             self.etiqueta_error.text = "No se pudo convertir. Revisa el número e inténtalo de nuevo."
+            emitir_sonido('error')
         finally:
             self._finalizar_conversion(boton, revision)
 
@@ -176,7 +179,7 @@ class MixinInteraccionSistemasNumericos:
             self.etiqueta_error.text = mensaje
             if self.tiene_resultado:
                 self._limpiar_resultados()
-            ui.notify(mensaje, type='warning')
+            notificar(mensaje, type='warning')
         return valido
 
     def _publicar_estado(self, mensaje: str) -> None:
