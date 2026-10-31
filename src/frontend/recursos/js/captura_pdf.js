@@ -1,5 +1,5 @@
-(() => {
-  'use strict';
+'use strict';
+{
   window.scalaris = window.scalaris || {};
   let carga = null;
   let ocupada = false;
@@ -90,7 +90,7 @@
     normalizarColores(documento);
   }
 
-  async function capturarRegion(nodo, configuracion, biblioteca) {
+  async function capturarRegion(nodo, configuracion, biblioteca, estado) {
     const anchos = [...nodo.querySelectorAll('*')].map(hijo => hijo.scrollWidth);
     const ancho = Math.max(nodo.scrollWidth, nodo.getBoundingClientRect().width, ...anchos);
     const alto = Math.max(nodo.scrollHeight, nodo.getBoundingClientRect().height);
@@ -100,8 +100,12 @@
     let lienzo;
     try {
       lienzo = await biblioteca(nodo, {backgroundColor: 'white', scale: escala,
-        width: ancho, height: alto, logging: false, onclone: prepararClon,
+        width: ancho, height: alto, logging: false, onclone: (documento, region) => {
+          if (estado.cancelada) throw new Error('cancelada');
+          prepararClon(documento, region);
+        },
         imageTimeout: configuracion.plazoMathjax * 1000});
+      if (estado.cancelada) throw new Error('cancelada');
       const png = lienzo.toDataURL('image/png').split(',')[1];
       if (png.length > Math.ceil(configuracion.maximoBytesImagen / 3) * 4) throw new Error('peso');
       return {clave: nodo.dataset.pdfCaptura, png};
@@ -110,30 +114,42 @@
     }
   }
 
+  async function obtenerCapturas(raiz, configuracion, estado) {
+    const biblioteca = await cargarBiblioteca(configuracion);
+    await esperarFormulas(configuracion);
+    if (estado.cancelada) throw new Error('cancelada');
+    const regiones = [...raiz.querySelectorAll('[data-pdf-captura]')].filter(nodo => nodo.getClientRects().length);
+    if (!regiones.length || regiones.length > configuracion.maximoFiguras) throw new Error('cantidad');
+    const capturas = [];
+    let total = 0;
+    for (const region of regiones) {
+      const captura = await capturarRegion(region, configuracion, biblioteca, estado);
+      total += Math.ceil(captura.png.length / 4) * 3;
+      if (total > configuracion.maximoBytesTotal) throw new Error('total');
+      capturas.push(captura);
+    }
+    return {capturas};
+  }
+
+  /** Captura regiones con plazo global y libera bloqueos incluso si la biblioteca queda pendiente. */
   async function capturar(identificador, configuracion) {
     if (ocupada) return {error: 'captura'};
     const raiz = document.getElementById(identificador);
     if (!raiz) return {error: 'captura'};
     ocupada = true;
     const inerte = raiz.inert;
+    const anteriores = new Set(document.querySelectorAll('iframe.html2canvas-container'));
+    const estado = {cancelada: false};
     raiz.inert = true;
     try {
-      const biblioteca = await cargarBiblioteca(configuracion);
-      await esperarFormulas(configuracion);
-      const regiones = [...raiz.querySelectorAll('[data-pdf-captura]')].filter(nodo => nodo.getClientRects().length);
-      if (!regiones.length || regiones.length > configuracion.maximoFiguras) throw new Error('cantidad');
-      const capturas = [];
-      let total = 0;
-      for (const region of regiones) {
-        const captura = await capturarRegion(region, configuracion, biblioteca);
-        total += Math.ceil(captura.png.length / 4) * 3;
-        if (total > configuracion.maximoBytesTotal) throw new Error('total');
-        capturas.push(captura);
-      }
-      return {capturas};
+      return await conPlazo(obtenerCapturas(raiz, configuracion, estado), configuracion.plazoCaptura);
     } catch (_) {
       return {error: 'captura'};
     } finally {
+      estado.cancelada = true;
+      document.querySelectorAll('iframe.html2canvas-container').forEach(marco => {
+        if (!anteriores.has(marco)) marco.remove();
+      });
       raiz.inert = inerte;
       ocupada = false;
     }
@@ -144,4 +160,4 @@
   }
 
   window.scalaris.capturaPdf = {capturar, enfocar};
-})();
+}

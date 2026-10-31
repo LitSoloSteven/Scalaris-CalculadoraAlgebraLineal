@@ -14,6 +14,7 @@ async def capturar_regiones(identificador: str) -> list:
         'maximoLado': limites.PDF_MAXIMO_LADO,
         'maximoPixeles': limites.PDF_MAXIMO_PIXELES,
         'plazoMathjax': limites.PDF_PLAZO_MATHJAX_SEGUNDOS,
+        'plazoCaptura': limites.PDF_PLAZO_CLIENTE_SEGUNDOS,
         'escala': limites.PDF_ESCALA_CAPTURA,
     }
     codigo = f'return await window.scalaris.capturaPdf.capturar({json.dumps(identificador)}, {json.dumps(configuracion)});'

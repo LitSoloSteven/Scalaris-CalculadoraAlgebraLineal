@@ -5,7 +5,7 @@ const maquinaVirtual = require('node:vm');
 const { cargarAssetCliente } = require('./comun_cliente_javascript.js');
 
 const configuracion = {maximoFiguras: 12, maximoBytesImagen: 1024, maximoBytesTotal: 2048,
-    maximoLado: 4096, maximoPixeles: 12000000, plazoMathjax: 0.05, escala: 2};
+    maximoLado: 4096, maximoPixeles: 12000000, plazoMathjax: 0.05, plazoCaptura: 0.1, escala: 2};
 
 function crearRegion(clave, visible = true) {
     return {dataset: {pdfCaptura: clave}, scrollWidth: 100, scrollHeight: 50,
@@ -25,7 +25,7 @@ function crearCliente(regiones = [crearRegion('sistemas-resumen')]) {
             lienzos.push(lienzo);
             return lienzo;
         }};
-    const documento = {getElementById: () => raiz, fonts: {ready: Promise.resolve()}};
+    const documento = {getElementById: () => raiz, querySelectorAll: () => [], fonts: {ready: Promise.resolve()}};
     const contexto = maquinaVirtual.createContext({window: ventana, document: documento, setTimeout, clearTimeout});
     cargarAssetCliente('captura_pdf.js', contexto);
     return {ventana, raiz, lienzos, opciones, capturar: () => ventana.scalaris.capturaPdf.capturar('resultado', configuracion)};
@@ -78,4 +78,20 @@ prueba('incluye descendientes anchos sin exceder el presupuesto de pixeles', asy
     afirmar.equal(ajustes.width, 9000);
     afirmar.ok(ajustes.width * ajustes.scale <= configuracion.maximoLado);
     afirmar.ok(ajustes.width * ajustes.height * ajustes.scale ** 2 <= configuracion.maximoPixeles);
+});
+
+prueba('una biblioteca pendiente vence y libera lienzos que llegan tarde', async () => {
+    const cliente = crearCliente();
+    let terminar;
+    cliente.ventana.html2canvas = () => new Promise(resolver => { terminar = resolver; });
+    afirmar.equal((await cliente.capturar()).error, 'captura');
+    afirmar.equal(cliente.raiz.inert, false);
+    const tardio = {width: 100, height: 50};
+    terminar(tardio);
+    await new Promise(resolver => setTimeout(resolver, 0));
+    afirmar.equal(tardio.width, 0);
+    afirmar.equal(tardio.height, 0);
+    cliente.ventana.html2canvas = () => Promise.reject(new Error('reintento'));
+    afirmar.equal((await cliente.capturar()).error, 'captura');
+    afirmar.equal(cliente.raiz.inert, false);
 });
