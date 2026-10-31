@@ -30,6 +30,10 @@
 
     function activarPorGesto(evento) {
         if (!evento?.isTrusted || evento.repeat || silenciado) return;
+        prepararContexto();
+    }
+
+    function prepararContexto() {
         const ConstructorAudio = window.AudioContext || window.webkitAudioContext;
         if (!ConstructorAudio) return;
         try {
@@ -50,7 +54,7 @@
             voz.oscilador.frequency.setValueAtTime(perfil.inicio, inicio);
             voz.oscilador.frequency.exponentialRampToValueAtTime(perfil.fin, fin);
             voz.ganancia.gain.setValueAtTime(0, inicio);
-            voz.ganancia.gain.linearRampToValueAtTime(catalogo.ganancia, inicio + catalogo.ataque);
+            voz.ganancia.gain.linearRampToValueAtTime(catalogo.ganancia * (perfil.volumen ?? 1), inicio + catalogo.ataque);
             voz.ganancia.gain.linearRampToValueAtTime(0, fin);
             voz.oscilador.connect(voz.ganancia);
             voz.ganancia.connect(contexto.destination);
@@ -67,7 +71,9 @@
 
     function reproducir(nombre) {
         if (!Object.hasOwn(catalogo.perfiles, nombre)) return false;
-        if (silenciado || document.hidden || contexto?.state !== 'running') return false;
+        if (silenciado || document.hidden) return false;
+        prepararEntrada(nombre);
+        if (contexto?.state !== 'running') return false;
         const ahora = performance.now();
         if (ahora - ultimoSonido < catalogo.intervalo || voces.size >= catalogo.polifonia) return false;
         try {
@@ -75,6 +81,11 @@
             ultimoSonido = ahora;
             return true;
         } catch (_) { return false; }
+    }
+
+    function prepararEntrada(nombre) {
+        if (nombre !== 'entrada' || contexto || !window.navigator?.userActivation?.hasBeenActive) return;
+        prepararContexto();
     }
 
     function cerrarContexto() {

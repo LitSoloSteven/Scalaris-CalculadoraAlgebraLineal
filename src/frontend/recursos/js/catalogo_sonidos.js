@@ -6,9 +6,11 @@
         intervalo: 90,
         polifonia: 2,
         ataque: 0.008,
-        ganancia: 0.025,
+        ganancia: 0.075,
         claveSilencio: 'scalaris:sonido-silenciado',
         perfiles: Object.freeze({
+            escritura: Object.freeze({ inicio: 740, fin: 560, duracion: 0.02, volumen: 0.12 }),
+            entrada: Object.freeze({ inicio: 440, fin: 880, duracion: 0.14, volumen: 0.8 }),
             accion: Object.freeze({ inicio: 480, fin: 560, duracion: 0.045 }),
             navegacion: Object.freeze({ inicio: 560, fin: 720, duracion: 0.07 }),
             apertura: Object.freeze({ inicio: 440, fin: 620, duracion: 0.075 }),
