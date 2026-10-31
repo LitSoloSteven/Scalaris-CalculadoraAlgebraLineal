@@ -21,8 +21,6 @@ def renderizar_acciones_matriz(origen: str, datos: list[list[str]]) -> None:
     filas, columnas = len(datos), len(datos[0])
     destinos = destinos_compatibles(filas, columnas, origen)
     if not destinos:
-        if filas != columnas:
-            ui.label(textos.TRANSFERENCIA_RECTANGULAR).classes("texto-secundario").props("role=status")
         return
     captura = [[valor or "0" for valor in fila] for fila in datos]
     with ui.column().classes("w-full min-w-0 gap-2"):

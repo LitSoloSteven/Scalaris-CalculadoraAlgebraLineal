@@ -13,7 +13,7 @@ from nicegui import ui
 from src.backend.utilidades import transferencias
 from src.frontend.constantes import MAXIMO_ENTRADAS_TRANSFERENCIA, TIEMPO_VIDA_TRANSFERENCIA_SEGUNDOS
 from src.frontend.navegacion import herramienta_por_identificador
-from src.frontend.controladores.destinos_matriz import LIMITES_DESTINOS_MATRIZ
+from src.frontend.controladores.destinos_matriz import LIMITES_DESTINOS_MATRIZ, DESTINOS_MATRIZ_RECTANGULAR
 from src.frontend import textos
 
 _ALMACEN: dict[str, tuple[float, dict[str, Any]]] = {}
@@ -130,12 +130,26 @@ def consumir_matriz(token: str, *, dimension_maxima: int) -> ResultadoTransferen
     return _consumir_transferencia(token, lambda carga: transferencias.validar_carga_matriz(carga, dimension_maxima=dimension_maxima))
 
 
+def consumir_matriz_rectangular(token: str, *, filas_maximas: int,
+                               columnas_maximas: int) -> ResultadoTransferencia | None:
+    """Consume una matriz validando cada eje en el dominio, sin modificar celdas."""
+    return _consumir_transferencia(token, lambda carga: transferencias.validar_carga_matriz_rectangular(
+        carga, filas_maximas=filas_maximas, columnas_maximas=columnas_maximas))
+
+
+def _consumir_matriz_destino(token: str, destino: str) -> ResultadoTransferencia | None:
+    _, maximo = LIMITES_DESTINOS_MATRIZ[destino]
+    if destino in DESTINOS_MATRIZ_RECTANGULAR:
+        return consumir_matriz_rectangular(token, filas_maximas=maximo, columnas_maximas=maximo)
+    return consumir_matriz(token, dimension_maxima=maximo)
+
+
 def recibir_matriz(token: str, destino: str, cargar: Callable[[list[list[str]]], None],
                   contenedor: Any) -> ResultadoTransferencia | None:
     """Valida y carga una matriz con aviso y URL limpia sin ejecutar cálculos;
     propaga errores del cargador, retirando el token incluso si la carga falla."""
-    minimo, maximo = LIMITES_DESTINOS_MATRIZ[destino]
-    resultado = consumir_matriz(token, dimension_maxima=maximo)
+    minimo, _ = LIMITES_DESTINOS_MATRIZ[destino]
+    resultado = _consumir_matriz_destino(token, destino)
     if resultado is None:
         return None
     try:
