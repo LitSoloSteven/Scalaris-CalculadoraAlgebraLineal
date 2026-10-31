@@ -89,6 +89,7 @@
     function reproducir() {
       if (completada) return;
       try {
+        window.scalaris.sonido?.reproducir('entrada');
         if (preferencia.matches) {
           animar(fondo, [{ opacity: 1 }, { opacity: 0 }], opciones('--dur-reduced'))
             .finished.then(finalizar, finalizar);
