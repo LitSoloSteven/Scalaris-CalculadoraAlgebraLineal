@@ -5,6 +5,7 @@ import asyncio
 import logging
 from typing import Any
 from nicegui import app, ui
+from src.frontend.componentes.sonido import notificar
 
 from src.ai.contexto import CapturaPaso, ReferenciaPaso, serializar_contexto
 from src.ai.cliente_openrouter import ClienteOpenRouter
@@ -57,7 +58,7 @@ def _recopilar_contexto_didactico(interfaz_activa: Any, foco_explicacion: dict[s
         return serializar_contexto(contexto)
     except Exception:
         registro.exception("Error al recopilar el contexto para la IA")
-        ui.notify("No pudimos leer tu ejercicio; enviamos solo tu pregunta.", type="warning")
+        notificar("No pudimos leer tu ejercicio; enviamos solo tu pregunta.", type="warning")
         return ""
 
 
@@ -168,9 +169,9 @@ class PanelIA(PanelLateralGlosaMixin):
             self.contexto_adjuntado = texto_contexto
             if self.capsula_contexto:
                 self.capsula_contexto.set_visibility(True)
-            ui.notify("Contexto adjuntado", type="positive")
+            notificar("Contexto adjuntado", type="positive")
         else:
-            ui.notify("No hay datos validos para adjuntar en la vista actual.", type="warning")
+            notificar("No hay datos validos para adjuntar en la vista actual.", type="warning")
 
     def limpiar_contexto(self) -> None:
         """Desvincula el contexto manual en la ruta clasico."""

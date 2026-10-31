@@ -1,6 +1,7 @@
 """Acciones de pegado y redimensión para la captura rectangular."""
 from functools import partial
 from nicegui import ui
+from src.frontend.componentes.sonido import notificar
 
 from src.backend.constantes import DIMENSION_MAXIMA_MATRICES, DIMENSION_MINIMA
 from src.frontend.componentes.cuadricula_base import (CambioCuadricula, actualizar_estados_botones_dimension,
@@ -72,12 +73,12 @@ class AccionesMatrizRectangular:
         try:
             texto = await ui.run_javascript("return navigator.clipboard.readText();")
         except Exception:
-            ui.notify(CAPTURA_PORTAPAPELES_ERROR, type="warning")
+            notificar(CAPTURA_PORTAPAPELES_ERROR, type="warning")
             return
         if self._redimensionando or revision != self._revision_panel:
             return
         filas, recortado = parsear_portapapeles_rectangular(texto or "", DIMENSION_MAXIMA_MATRICES)
         if recortado:
-            ui.notify(CAPTURA_RECTANGULAR_RECORTADA.format(limite=DIMENSION_MAXIMA_MATRICES), type="warning")
+            notificar(CAPTURA_RECTANGULAR_RECORTADA.format(limite=DIMENSION_MAXIMA_MATRICES), type="warning")
         if filas:
             self.cargar_matriz(filas)

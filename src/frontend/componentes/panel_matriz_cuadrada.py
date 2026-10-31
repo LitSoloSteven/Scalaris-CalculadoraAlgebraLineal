@@ -6,6 +6,7 @@ from functools import partial
 from typing import Callable
 
 from nicegui import ui
+from src.frontend.componentes.sonido import notificar
 
 from src.frontend.componentes.cuadricula_base import (
     DIMENSION_MINIMA,
@@ -209,7 +210,7 @@ class PanelMatrizCuadrada:
             texto = await ui.run_javascript("return navigator.clipboard.readText();")
         except Exception as error:
             registro.warning("No se pudo leer el portapapeles: %s", error)
-            ui.notify("No se pudo acceder al portapapeles.", type="warning")
+            notificar("No se pudo acceder al portapapeles.", type="warning")
             return
         if not texto:
             return
