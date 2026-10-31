@@ -132,11 +132,8 @@ def consumir_matriz(token: str, *, dimension_maxima: int) -> ResultadoTransferen
 
 def recibir_matriz(token: str, destino: str, cargar: Callable[[list[list[str]]], None],
                   contenedor: Any) -> ResultadoTransferencia | None:
-    """Consume una matriz, carga el panel y muestra un aviso con URL limpia.
-
-    Aplica los límites del destino sin ejecutar cálculos. Propaga errores del
-    cargador, pero retira el token de la URL incluso si la carga falla.
-    """
+    """Valida y carga una matriz con aviso y URL limpia sin ejecutar cálculos;
+    propaga errores del cargador, retirando el token incluso si la carga falla."""
     minimo, maximo = LIMITES_DESTINOS_MATRIZ[destino]
     resultado = consumir_matriz(token, dimension_maxima=maximo)
     if resultado is None:

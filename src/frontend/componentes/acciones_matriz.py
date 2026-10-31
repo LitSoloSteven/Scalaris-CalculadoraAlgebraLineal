@@ -14,10 +14,8 @@ def _llevar_matriz(origen: str, datos: list[list[str]], destino: str) -> None:
 
 
 def renderizar_acciones_matriz(origen: str, datos: list[list[str]]) -> None:
-    """Ofrece destinos compatibles para una copia de los datos del cálculo.
-
-    Los botones conservan su propia captura aunque el editor cambie después.
-    """
+    """Ofrece destinos compatibles con una copia de la matriz del cálculo,
+    conservada aunque el editor cambie después."""
     if not datos or not datos[0] or origen == "vectores":
         return
     filas, columnas = len(datos), len(datos[0])

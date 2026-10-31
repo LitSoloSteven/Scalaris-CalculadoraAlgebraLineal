@@ -16,10 +16,8 @@ LIMITES_DESTINOS_MATRIZ = {
 
 
 def destinos_compatibles(filas: int, columnas: int, origen: str) -> tuple[str, ...]:
-    """Devuelve destinos cuadrados dentro de sus límites, excluyendo el origen.
-
-    Las familias vectoriales y las formas inválidas o rectangulares no se transfieren.
-    """
+    """Devuelve destinos cuadrados dentro de sus límites, excluyendo el origen;
+    devuelve una tupla vacía para vectores y formas inválidas o rectangulares."""
     if type(filas) is not int or type(columnas) is not int:
         return ()
     if filas != columnas or origen == "vectores":
