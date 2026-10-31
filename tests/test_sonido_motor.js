@@ -3,21 +3,7 @@ const { test } = require('node:test');
 const comprobar = require('node:assert/strict');
 const { readFileSync: leerArchivo } = require('node:fs');
 const { runInNewContext: ejecutar } = require('node:vm');
-
-function superficie() {
-    const manejadores = new Map();
-    return {
-        hidden: false,
-        addEventListener(nombre, funcion) {
-            const funciones = manejadores.get(nombre) || new Set();
-            funciones.add(funcion);
-            manejadores.set(nombre, funciones);
-        },
-        removeEventListener(nombre, funcion) { manejadores.get(nombre)?.delete(funcion); },
-        emitir(nombre, datos = {}) { manejadores.get(nombre)?.forEach(funcion => funcion(datos)); },
-        contar(nombre) { return manejadores.get(nombre)?.size || 0; }
-    };
-}
+const { superficie } = require('./comun_sonido_cliente.js');
 
 function crearConstructorAudio(opciones, contextos) {
     const parametro = () => ({ setValueAtTime() {}, exponentialRampToValueAtTime() {},
