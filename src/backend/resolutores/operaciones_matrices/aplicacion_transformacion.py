@@ -4,6 +4,7 @@ from fractions import Fraction
 
 from src.backend.excepciones import ErrorDiscrepanciaDimension
 from src.backend.modelos.matriz import Matriz
+from src.backend.geometria.coordenadas import a_flotante_seguro
 from src.backend.utilidades.formateadores import numero_a_latex
 from .comprobacion_productos import crear_paso_analisis
 
@@ -12,14 +13,14 @@ def aplicar_vector(matriz: Matriz, vector: Matriz) -> dict:
     _validar_dimensiones(matriz, vector)
     resultado = _multiplicar_matriz_vector(matriz, vector)
     pasos = _construir_pasos(matriz, vector, resultado)
-    
+
     return {
         "estado": "EXITO",
         "mensaje": f"Transformación aplicada correctamente (R^{matriz.columnas} → R^{matriz.filas}).",
         "matriz_a": matriz,
         "vector_original": _serializar_vector(vector),
         "vector_transformado": _serializar_vector(resultado),
-        "aproximacion": False,
+        "aproximacion": _contiene_aproximaciones(matriz) or _contiene_aproximaciones(vector),
         "pasos": pasos,
     }
 
@@ -35,6 +36,17 @@ def _validar_dimensiones(matriz: Matriz, vector: Matriz) -> None:
             forma_a=(matriz.filas, matriz.columnas),
             forma_b=(vector.filas, vector.columnas),
         )
+    _validar_valores_finitos(matriz, vector)
+
+
+def _validar_valores_finitos(matriz: Matriz, vector: Matriz) -> None:
+    if any(isinstance(valor, float) and not math.isfinite(valor)
+           for entrada in (matriz, vector) for fila in entrada.datos for valor in fila):
+        raise ValueError("La matriz y el vector deben contener números finitos.")
+
+
+def _contiene_aproximaciones(matriz: Matriz) -> bool:
+    return any(isinstance(valor, float) for fila in matriz.datos for valor in fila)
 
 def _multiplicar_matriz_vector(matriz: Matriz, vector: Matriz) -> Matriz:
     """Multiplica A por v celda a celda usando Fraction."""
@@ -48,9 +60,9 @@ def _multiplicar_matriz_vector(matriz: Matriz, vector: Matriz) -> Matriz:
     return Matriz(matriz.filas, 1, datos)
 
 def _serializar_vector(vector: Matriz) -> dict:
-    """Devuelve las componentes del vector en formato exacto y aproximado."""
+    """Devuelve texto y decimales del vector, con None cuando un decimal desborda."""
     exacta = [str(vector.obtener(i, 0)) for i in range(vector.filas)]
-    aproximado = [float(vector.obtener(i, 0)) for i in range(vector.filas)]
+    aproximado = [a_flotante_seguro(vector.obtener(i, 0)) for i in range(vector.filas)]
     return {"aproximado": aproximado, "exacta": exacta}
 
 def _construir_pasos(matriz: Matriz, vector: Matriz, resultado: Matriz) -> list[dict]:

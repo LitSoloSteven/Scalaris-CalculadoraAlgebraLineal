@@ -24,7 +24,7 @@ class ResolutorTransformacionesLineales:
         reduccion = ResolutorGaussJordan(aumentada, self.tolerancia_cero, nombres).resolver_reduccion()
         parametros = calcular_solucion_parametrica(reduccion["matriz_reducida"], reduccion["columnas_pivote"], matriz_a.columnas)
         return presentar_transformacion(matriz_a, reduccion, parametros, nombres)
-    
+
     def aplicar(self, matriz: Matriz, vector: Matriz) -> dict:
         """Delega el cálculo exacto de T(v) = A·v al módulo de aplicación."""
         return aplicar_vector(matriz, vector)
