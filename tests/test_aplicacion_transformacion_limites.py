@@ -46,6 +46,26 @@ def test_vector_original_grande_puede_transformarse_en_cero():
     assert resultado["aproximacion"] is False
 
 
+@pytest.mark.parametrize("valor", [10**400, 1.7e308])
+def test_producto_de_entradas_finitas_no_desborda_por_mezclar_flotantes(valor):
+    """La mezcla con un flotante finito conserva un resultado racional representable en texto."""
+    matriz, vector = Matriz(1, 1, [[valor]]), Matriz(1, 1, [[math.sqrt(2)]])
+    esperado = Fraction(matriz.obtener(0, 0)) * Fraction(vector.obtener(0, 0))
+    resultado = aplicar_vector(matriz, vector)
+    assert resultado["estado"] == "EXITO" and resultado["aproximacion"] is True
+    assert resultado["vector_transformado"] == {"exacta": [str(esperado)], "aproximado": [None]}
+    assert matriz.obtener(0, 0) == valor and vector.obtener(0, 0) == math.sqrt(2)
+
+
+def test_productos_flotantes_grandes_pueden_cancelarse_antes_de_serializar():
+    """El reintento racional conserva la cancelación aunque cada término desborde float."""
+    matriz = Matriz(1, 2, [[10**400, 10**400]])
+    vector = Matriz(2, 1, [[math.sqrt(2)], [-math.sqrt(2)]])
+    resultado = aplicar_vector(matriz, vector)
+    assert resultado["aproximacion"] is True
+    assert resultado["vector_transformado"] == {"exacta": ["0"], "aproximado": [0.0]}
+
+
 @pytest.mark.parametrize("grados", [0, 90, 180, 270])
 def test_rotaciones_exactas_siguen_sin_marcar_aproximacion(grados):
     """Los constructores exactos mantienen la precisión del contrato anterior."""
