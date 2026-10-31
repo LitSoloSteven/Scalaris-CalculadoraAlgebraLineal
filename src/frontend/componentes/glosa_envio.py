@@ -5,6 +5,7 @@ import logging
 import threading
 import time
 from nicegui import run, ui
+from src.frontend.componentes.sonido import emitir_sonido, notificar
 
 from src.ai.respuestas import OpcionesConsulta, ResultadoIA, TipoErrorIA
 from src.ai.textos import CONSULTA_CANCELADA, ERROR_SERVICIO, RESPUESTA_DEMASIADO_EXTENSA
@@ -38,7 +39,7 @@ def _validar_mensaje_entrada(texto: str) -> bool:
     try:
         validar_longitud_mensaje(texto)
     except ValueError as error:
-        ui.notify(str(error), type="warning")
+        notificar(str(error), type="warning")
         return False
     return True
 
@@ -66,7 +67,7 @@ class EnvioGlosaMixin(PreguntasGlosaMixin):
 
         ahora = time.monotonic()
         if ahora - getattr(self, "_ultimo_envio", 0) < ANTI_REBOTE_GLOSA_SEGUNDOS:
-            ui.notify(MENSAJE_ANTI_REBOTE_GLOSA, type="warning")
+            notificar(MENSAJE_ANTI_REBOTE_GLOSA, type="warning")
             return
 
         if not texto or not texto.strip():
@@ -173,3 +174,4 @@ class EnvioGlosaMixin(PreguntasGlosaMixin):
             elif hasattr(self, "_renderizar_mensaje"):
                 self._renderizar_mensaje(mensaje, indice=len(self.historial_chat) - 1)
         self._desplazar_al_final()
+        emitir_sonido('exito' if resultado.exito else 'error')

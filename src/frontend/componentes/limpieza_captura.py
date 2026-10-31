@@ -6,6 +6,7 @@ from collections.abc import Callable
 from typing import Protocol
 
 from nicegui import ui
+from src.frontend.componentes.sonido import notificar
 from src.frontend.textos import (
     LIMPIAR, LIMPIEZA_CANCELAR, LIMPIEZA_DESCRIPCION, LIMPIEZA_TITULO,
     LIMPIEZA_SIN_DATOS,
@@ -60,7 +61,7 @@ class LimpiezaCaptura:
         if self._limpiando or not self.sigue_montada():
             return
         if self.captura.esta_completamente_vacio():
-            ui.notify(LIMPIEZA_SIN_DATOS, type='info', position='top')
+            notificar(LIMPIEZA_SIN_DATOS, type='info', position='top')
             return
         if self.dialogo is None:
             self._construir_dialogo()
