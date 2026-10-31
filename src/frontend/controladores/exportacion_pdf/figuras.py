@@ -30,7 +30,8 @@ def construir_figura(figura: dict, numero: int, estilos: dict, espacio: tuple) -
     ancho_util, alto_util = espacio
     imagen: ImagenValidada = figura['imagen']
     descripcion = figura['descripcion']
-    bloques = [parrafo(textos.PDF_CITA.format(numero=numero, descripcion=descripcion), estilos['cuerpo']),
+    cita = descripcion[:1].lower() + descripcion[1:]
+    bloques = [parrafo(textos.PDF_CITA.format(numero=numero, descripcion=cita), estilos['cuerpo']),
                parrafo(textos.PDF_FIGURA.format(numero=numero), estilos['nivel2']),
                parrafo(figura['titulo'], estilos['cursiva'])]
     nota = parrafo(descripcion, estilos['figura'], nota=True)

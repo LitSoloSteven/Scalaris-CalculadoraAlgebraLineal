@@ -91,7 +91,8 @@
   }
 
   async function capturarRegion(nodo, configuracion, biblioteca) {
-    const ancho = Math.max(nodo.scrollWidth, nodo.getBoundingClientRect().width);
+    const anchos = [...nodo.querySelectorAll('*')].map(hijo => hijo.scrollWidth);
+    const ancho = Math.max(nodo.scrollWidth, nodo.getBoundingClientRect().width, ...anchos);
     const alto = Math.max(nodo.scrollHeight, nodo.getBoundingClientRect().height);
     const escala = Math.min(configuracion.escala, configuracion.maximoLado / ancho,
       configuracion.maximoLado / alto, Math.sqrt(configuracion.maximoPixeles / (ancho * alto)));

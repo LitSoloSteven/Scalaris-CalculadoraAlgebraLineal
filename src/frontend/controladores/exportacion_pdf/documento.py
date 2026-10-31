@@ -3,7 +3,7 @@ from io import BytesIO
 
 from reportlab.lib.colors import HexColor
 from reportlab.lib.pagesizes import letter
-from reportlab.platypus import PageBreak, SimpleDocTemplate, Spacer
+from reportlab.platypus import BaseDocTemplate, Frame, PageBreak, PageTemplate, Spacer
 from src.frontend import constantes as medidas, textos
 from .estilos import crear_estilos, parrafo
 from .figuras import construir_figura, preparar_figuras
@@ -23,20 +23,24 @@ def generar_pdf(herramienta: str, datos_portada: dict, resultado: dict, capturas
     bloques = _portada(portada, titulo, estilos)
     bloques.extend([PageBreak(), parrafo(titulo, estilos['nivel1']), parrafo(textos.PDF_SECCION, estilos['nivel1'])])
     reducida = False
-    espacio = (documento.width - medidas.PDF_TEXTO_PUNTOS, documento.height - medidas.PDF_TEXTO_PUNTOS)
+    espacio = (documento.width, documento.height)
     for numero, figura in enumerate(figuras, start=1):
         bloque, aviso = construir_figura(figura, numero, estilos, espacio)
         bloques.append(bloque)
         reducida = reducida or aviso
-    documento.build(bloques, onFirstPage=_decorar_pagina, onLaterPages=_decorar_pagina)
+    documento.build(bloques)
     return salida.getvalue(), reducida
 
 
-def _crear_documento(salida: BytesIO) -> SimpleDocTemplate:
-    return SimpleDocTemplate(salida, pagesize=letter, leftMargin=medidas.PDF_MARGEN_PUNTOS,
-                             rightMargin=medidas.PDF_MARGEN_PUNTOS, topMargin=medidas.PDF_MARGEN_PUNTOS,
-                             bottomMargin=medidas.PDF_MARGEN_PUNTOS + medidas.PDF_DESPLAZAMIENTO_PAGINA,
-                             pageCompression=0, title=textos.PDF_MARCA, author='', creator=textos.PDF_MARCA)
+def _crear_documento(salida: BytesIO) -> BaseDocTemplate:
+    documento = BaseDocTemplate(salida, pagesize=letter, leftMargin=medidas.PDF_MARGEN_PUNTOS,
+                               rightMargin=medidas.PDF_MARGEN_PUNTOS, topMargin=medidas.PDF_MARGEN_PUNTOS,
+                               bottomMargin=medidas.PDF_MARGEN_PUNTOS + medidas.PDF_DESPLAZAMIENTO_PAGINA,
+                               pageCompression=0, title=textos.PDF_MARCA, author='', creator=textos.PDF_MARCA)
+    marco = Frame(documento.leftMargin, documento.bottomMargin, documento.width, documento.height,
+                  leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0)
+    documento.addPageTemplates(PageTemplate(id='apa', frames=[marco], onPage=_decorar_pagina))
+    return documento
 
 
 def _portada(portada: dict, titulo: str, estilos: dict) -> list:
