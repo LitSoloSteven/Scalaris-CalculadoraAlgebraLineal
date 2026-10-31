@@ -22,9 +22,11 @@ def _resultado(vista, herramienta: str):
 
 def montar_utilidad_pdf(vista, herramienta: str) -> None:
     """Monta un único exportador con identidad del resultado y revisión de entradas."""
+    contenedor = getattr(vista, 'contenedor_exportacion_pdf', None)
+    if contenedor is None or contenedor.is_deleted:
+        return
     original = _resultado(vista, herramienta)
     resultado = {'estado': 'EXITO'} if herramienta == 'romanos' else original
-    contenedor = vista.contenedor_exportacion_pdf
 
     def leer_estado() -> tuple:
         """Comprueba la identidad nativa sin reemplazar el resultado de la herramienta."""

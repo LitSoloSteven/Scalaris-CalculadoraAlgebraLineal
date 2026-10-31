@@ -29,7 +29,10 @@ function prepararEscenario(opciones = {}) {
             if (opciones.fallarImagen) throw new Error('imagen');
             return opciones.imagen || 'data:image/png;base64,AAAA';
         },
-        purge() { registro.purgas++; },
+        purge() {
+            registro.purgas++;
+            if (opciones.fallarPurga) throw new Error('purga');
+        },
     };
     const ventana = {Plotly: opciones.sinBiblioteca ? null : biblioteca,
         scalaris: {graficos: {paletas: {papel: ['rojo']}, texto: {papel: 'negro'}, cuadricula: {papel: 'gris'}}},
@@ -108,4 +111,19 @@ prueba('las dimensiones y el peso gráfico respetan los límites del transporte 
     excesiva.configuracion.maximoBytesImagen = 1;
     afirmar.equal((await excesiva.capturador.capturar('raiz', excesiva.configuracion)).error, 'captura');
     afirmar.equal(excesiva.registro.retiradas, 1);
+});
+
+prueba('un error de purga al vencer el plazo restaura inert y permite otra captura', async () => {
+    let completar;
+    const opciones = {fallarPurga: true,
+        esperarMontaje: new Promise(resolver => { completar = resolver; })};
+    const escenario = prepararEscenario(opciones);
+    escenario.configuracion.plazoCaptura = 0.01;
+    await afirmar.rejects(escenario.capturador.capturar('raiz', escenario.configuracion), /purga/);
+    afirmar.equal(escenario.raiz.inert, false);
+    afirmar.equal(escenario.registro.retiradas, 1);
+    completar();
+    await new Promise(resolver => setImmediate(resolver));
+    opciones.fallarPurga = false;
+    afirmar.ok((await escenario.capturador.capturar('raiz', escenario.configuracion)).capturas);
 });
