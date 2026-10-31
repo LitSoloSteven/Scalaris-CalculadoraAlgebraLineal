@@ -91,8 +91,7 @@
   }
 
   function prepararFormulas(documento) {
-    documento.querySelectorAll('mjx-assistive-mml').forEach(nodo => nodo.remove());
-    const formulas = [...documento.querySelectorAll('mjx-container, mjx-container *')];
+    const formulas = [...documento.querySelectorAll('.MathJax, .MathJax *')];
     if (!formulas.length) return;
     const color = documento.defaultView.getComputedStyle(documento.documentElement).getPropertyValue('--text-main');
     formulas.forEach(nodo => { nodo.style.color = color; });
@@ -119,6 +118,7 @@
     let lienzo;
     try {
       const ajustes = {backgroundColor: 'white', scale: escala,
+        ignoreElements: elemento => elemento.tagName === 'MJX-ASSISTIVE-MML',
         width: ancho, height: alto, logging: false, onclone: (documento, region) => {
           if (estado.cancelada) throw new Error('cancelada');
           prepararClon(documento, region, ancho);
