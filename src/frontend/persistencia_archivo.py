@@ -2,12 +2,12 @@
 import asyncio
 
 from nicegui import background_tasks, core
-from nicegui.helpers import unlink_with_retry, unlink_with_retry_async
 from nicegui.persistence import FilePersistentDict
 from nicegui.persistence.serialization import dumps
 
 from src.frontend.archivo_atomico import (
-    RespaldoObsoleto, comprobar_directorio, guardar_archivo_atomico, identificar_directorio,
+    RespaldoObsoleto, comprobar_directorio, eliminar_archivo_persistente,
+    guardar_archivo_atomico, identificar_directorio,
 )
 
 
@@ -28,14 +28,14 @@ class DiccionarioPersistenteSeguro(FilePersistentDict):
             guardar_archivo_atomico(self.filepath, dumps(self, str(self.filepath), indent=self.indent), self.encoding,
                                     directorio_esperado=identidad)
         else:
-            unlink_with_retry(self.filepath, missing_ok=True)
+            eliminar_archivo_persistente(self.filepath, identidad)
 
     @background_tasks.await_on_shutdown
     async def _respaldar_asincrono(self, identidad: tuple[int, int, int]) -> None:
         try:
             comprobar_directorio(self.filepath, identidad)
             if not self:
-                await unlink_with_retry_async(self.filepath, missing_ok=True)
+                await asyncio.to_thread(eliminar_archivo_persistente, self.filepath, identidad)
                 return
             contenido = dumps(self, str(self.filepath), indent=self.indent)
             await asyncio.to_thread(guardar_archivo_atomico, self.filepath, contenido, self.encoding,

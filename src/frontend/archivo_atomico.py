@@ -1,6 +1,7 @@
 """Escritura atómica con recuperación acotada de bloqueos transitorios de Windows."""
 import tempfile
 import time
+from collections.abc import Callable
 from pathlib import Path
 
 INTENTOS_REEMPLAZO = 8
@@ -48,11 +49,12 @@ def _crear_temporal(destino: Path, contenido: str, codificacion: str | None) -> 
     return temporal
 
 
-def _reemplazar(temporal: Path, destino: Path, identidad: tuple[int, int, int] | None) -> None:
+def _ejecutar_con_reintentos(destino: Path, identidad: tuple[int, int, int] | None,
+                            accion: Callable[[], object]) -> None:
     for intento in range(INTENTOS_REEMPLAZO):
         comprobar_directorio(destino, identidad)
         try:
-            temporal.replace(destino)
+            accion()
             return
         except PermissionError as error:
             if getattr(error, 'winerror', None) not in _BLOQUEOS_WINDOWS or intento == INTENTOS_REEMPLAZO - 1:
@@ -68,6 +70,11 @@ def guardar_archivo_atomico(destino: Path, contenido: str, codificacion: str | N
     comprobar_directorio(destino, directorio_esperado)
     temporal = _crear_temporal(destino, contenido, codificacion)
     try:
-        _reemplazar(temporal, destino, directorio_esperado)
+        _ejecutar_con_reintentos(destino, directorio_esperado, lambda: temporal.replace(destino))
     finally:
         temporal.unlink(missing_ok=True)
+
+
+def eliminar_archivo_persistente(destino: Path, directorio_esperado: tuple[int, int, int]) -> None:
+    """Elimina el archivo revalidando su directorio en cada intento para no borrar una sesión nueva."""
+    _ejecutar_con_reintentos(destino, directorio_esperado, lambda: destino.unlink(missing_ok=True))
