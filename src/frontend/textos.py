@@ -123,7 +123,6 @@ MENSAJE_ERROR_PRODUCCION_SIN_SECRETO = "ERROR CRÍTICO: SCALARIS_ENV es producti
 
 TRANSFERENCIA_MATRIZ_TITULO = "Llevar esta matriz a"
 TRANSFERENCIA_MATRIZ_CAPTURADA = "Matriz {nombre} del cálculo"
-TRANSFERENCIA_RECTANGULAR = "La transferencia está disponible para matrices cuadradas."
 TRANSFERENCIA_MATRIZ_CARGADA = "Cargamos {matriz} ({filas}×{columnas}) desde {origen}. {orientacion}"
 TRANSFERENCIA_DIMENSION_MINIMA = "Esta herramienta necesita una matriz de al menos {minimo}×{minimo}. Captura una matriz compatible."
 TRANSFERENCIA_ORIENTACIONES = {

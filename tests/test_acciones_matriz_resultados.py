@@ -80,9 +80,9 @@ def test_otros_origenes_publican_destinos_tras_exito(monkeypatch, herramienta):
 
 
 @pytest.mark.parametrize("datos,esperados", [([["1", "2"], ["2", "4"]], True),
-                                             ([["1", "2", "3"]], False), ([["1/0"]], False)])
+                                             ([["1", "2", "3"]], True), ([["1/0"]], False)])
 def test_lu_publica_solo_destinos_transferibles(monkeypatch, datos, esperados):
-    """LU singular conserva acciones; el rectángulo y el error carecen de botones."""
+    """LU singular y rectangular ofrecen acciones; los errores carecen de botones."""
     preparar_ruta_lu(monkeypatch)
     async def comprobar(vista, cliente):
         """Calcula la captura y comprueba las acciones asociadas al resultado."""

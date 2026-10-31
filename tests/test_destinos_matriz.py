@@ -24,10 +24,10 @@ def test_origen_excluido_sin_perder_los_otros_destinos(origen):
     assert set(destinos_compatibles(2, 2, origen)) == todos - {origen}
 
 
-@pytest.mark.parametrize("filas,columnas", [(0, 0), (-1, -1), (2, 3), (3, 2), (1, 50),
+@pytest.mark.parametrize("filas,columnas", [(0, 0), (-1, -1), (0, 3), (3, 0), (1, 50),
                                            (True, True), (2.0, 2), ("2", 2), (None, None)])
 def test_formas_no_admitidas_no_ofrecen_transferencia(filas, columnas):
-    """Vacíos, rectángulos y dimensiones ajenas al contrato no producen botones."""
+    """Vacíos, ejes fuera de límites y tipos ajenos al contrato no producen botones."""
     assert destinos_compatibles(filas, columnas, "determinantes") == ()
 
 
