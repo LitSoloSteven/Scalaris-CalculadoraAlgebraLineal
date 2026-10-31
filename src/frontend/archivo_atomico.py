@@ -11,15 +11,19 @@ _BLOQUEOS_WINDOWS = frozenset({5, 32, 33})
 
 def _crear_temporal(destino: Path, contenido: str, codificacion: str | None) -> Path:
     destino.parent.mkdir(exist_ok=True)
-    with tempfile.NamedTemporaryFile(mode='w', encoding=codificacion, dir=destino.parent,
-                                     prefix=f'{destino.stem}.', suffix=f'{destino.suffix}.tmp', delete=False) as archivo:
-        temporal = Path(archivo.name)
-        try:
+    temporal = None
+    try:
+        with tempfile.NamedTemporaryFile(mode='w', encoding=codificacion, dir=destino.parent,
+                                         prefix=f'{destino.stem}.', suffix=f'{destino.suffix}.tmp', delete=False) as archivo:
+            temporal = Path(archivo.name)
             archivo.write(contenido)
-        except BaseException:
-            archivo.close()
-            temporal.unlink(missing_ok=True)
-            raise
+    except BaseException as error:
+        if temporal is not None:
+            try:
+                temporal.unlink(missing_ok=True)
+            except OSError:
+                error.add_note('No se pudo retirar el archivo temporal de persistencia.')
+        raise
     return temporal
 
 

@@ -2,6 +2,7 @@
 import json
 import os
 import threading
+from contextlib import contextmanager
 from pathlib import Path
 from unittest.mock import Mock
 
@@ -72,6 +73,28 @@ def test_no_reintenta_errores_ajenos_al_bloqueo(monkeypatch, tmp_path, error):
     assert reemplazar.call_count == 1
     esperas.assert_not_called()
     assert not list(tmp_path.iterdir())
+
+
+def test_fallo_al_cerrar_el_temporal_conserva_destino_y_limpia(monkeypatch, tmp_path):
+    """Un error de vaciado o cierre también retira el temporal y conserva el error original."""
+    destino = tmp_path / 'usuario.json'
+    destino.write_text('anterior', encoding='utf-8')
+    constructor = archivo_atomico.tempfile.NamedTemporaryFile
+    error_cierre = OSError('No se pudo completar el vaciado')
+
+    @contextmanager
+    def fallar_al_cerrar(**opciones):
+        """Cierra el archivo real antes de reproducir un error al salir del contexto."""
+        with constructor(**opciones) as archivo:
+            yield archivo
+        raise error_cierre
+
+    monkeypatch.setattr(archivo_atomico.tempfile, 'NamedTemporaryFile', fallar_al_cerrar)
+    with pytest.raises(OSError) as capturado:
+        archivo_atomico.guardar_archivo_atomico(destino, 'actual')
+    assert capturado.value is error_cierre
+    assert destino.read_text(encoding='utf-8') == 'anterior'
+    assert list(tmp_path.iterdir()) == [destino]
 
 
 @pytest.mark.skipif(os.name != 'nt', reason='El bloqueo de reemplazo corresponde a Windows.')
