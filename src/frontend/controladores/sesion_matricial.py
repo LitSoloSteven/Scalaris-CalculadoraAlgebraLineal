@@ -95,6 +95,9 @@ def calculo_sigue_vigente(vista, identificador: int) -> bool:
 
 def actualizar_contexto(vista) -> None:
     """Notifica a Glosa una captura o resultado actualizado cuando esta disponible."""
+    actualizar_pdf = getattr(vista, 'actualizar_exportacion_pdf', None)
+    if callable(actualizar_pdf):
+        actualizar_pdf()
     panel = getattr(vista, 'panel_ia', None)
     if panel and hasattr(panel, 'programar_actualizacion_contexto'):
         panel.programar_actualizacion_contexto()

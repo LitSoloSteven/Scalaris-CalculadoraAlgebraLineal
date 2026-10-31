@@ -10,6 +10,8 @@ from src.frontend.controladores.sesion_matricial import actualizar_contexto, inv
 from src.frontend.componentes.transferencia import guardar_sistema, url_transferencia
 from src.frontend.componentes.acciones_matriz import renderizar_acciones_matriz
 from src.frontend.navegacion import ruta_de
+from src.frontend.componentes.exportacion_pdf.boton import renderizar_boton_pdf
+from src.frontend.controladores.exportacion_pdf.vigencia import EnlacePDF
 
 
 class MixinResolucionSistemas:
@@ -39,13 +41,24 @@ class MixinResolucionSistemas:
             return
         self.ultimo_resultado = respuesta
         self._huella_resultado = huella
-        with self.contenedor_resultados:
-            self.contenedor_resultados.classes(remove='items-center justify-center', add='items-start justify-start')
-            self._renderizar_encabezado_y_solucion(respuesta, variables)
-            self._renderizar_seccion_pasos(respuesta)
-            self._renderizar_botones_accion(respuesta, coeficientes, independientes)
+        self._presentar_resultado_pdf(respuesta, variables, coeficientes, independientes)
         ui.run_javascript('window.scalaris.renderizarMathJax();')
         actualizar_contexto(self)
+
+    def _presentar_resultado_pdf(self, respuesta: dict, variables: list, coeficientes: list, independientes: list) -> None:
+        """Compone el resultado y marca solo las regiones visibles que representan el cálculo."""
+        with self.contenedor_resultados:
+            self.contenedor_resultados.classes(remove='items-center justify-center', add='items-start justify-start')
+            with ui.column().classes('w-full').props('data-pdf-captura=sistemas-resumen'):
+                self._renderizar_encabezado_y_solucion(respuesta, variables)
+            self._renderizar_seccion_pasos(respuesta)
+            reproductor = getattr(self, 'reproductor_pasos', None)
+            if reproductor is not None and reproductor.tarjeta is not None:
+                reproductor.tarjeta.props('data-pdf-captura=sistemas-procedimiento')
+            self._renderizar_botones_accion(respuesta, coeficientes, independientes)
+            enlace = EnlacePDF(self, lambda: entrada_actual(self), 'sistemas-resultados')
+            control = renderizar_boton_pdf('sistemas', respuesta, enlace)
+            self.actualizar_exportacion_pdf = control.actualizar
 
     def _renderizar_botones_accion(self, respuesta: dict, coeficientes: list, independientes: list):
         estado = respuesta.get("estado")
