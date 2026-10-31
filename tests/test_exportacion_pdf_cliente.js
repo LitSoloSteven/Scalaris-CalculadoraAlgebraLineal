@@ -9,6 +9,7 @@ const configuracion = {maximoFiguras: 12, maximoBytesImagen: 1024, maximoBytesTo
 
 function crearRegion(clave, visible = true) {
     return {dataset: {pdfCaptura: clave}, scrollWidth: 100, scrollHeight: 50,
+        querySelectorAll: () => [],
         getClientRects: () => visible ? [{}] : [],
         getBoundingClientRect: () => ({width: 100, height: 50})};
 }
@@ -66,4 +67,15 @@ prueba('rechaza capturas simultaneas y presupuestos excesivos', async () => {
     const excesivo = crearCliente(Array.from({length: 13}, () => crearRegion('region')));
     afirmar.equal((await excesivo.capturar()).error, 'captura');
     afirmar.equal(excesivo.raiz.inert, false);
+});
+
+prueba('incluye descendientes anchos sin exceder el presupuesto de pixeles', async () => {
+    const region = crearRegion('sistemas-resumen');
+    region.querySelectorAll = () => [{scrollWidth: 9000}];
+    const cliente = crearCliente([region]);
+    await cliente.capturar();
+    const ajustes = cliente.opciones[0];
+    afirmar.equal(ajustes.width, 9000);
+    afirmar.ok(ajustes.width * ajustes.scale <= configuracion.maximoLado);
+    afirmar.ok(ajustes.width * ajustes.height * ajustes.scale ** 2 <= configuracion.maximoPixeles);
 });
