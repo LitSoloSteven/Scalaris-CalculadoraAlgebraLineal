@@ -9,6 +9,7 @@ from src.frontend.controladores.operaciones_inversas.presentacion import prepara
 from src.backend.utilidades.formateadores import formatear_fraccion_texto
 from src.frontend.componentes.reproductor_pasos.html_tablas import html_tabla_matriz
 from src.frontend.componentes.desarrollo_comprobacion import mostrar_desarrollo
+from src.frontend.componentes.acciones_matriz import renderizar_acciones_matriz
 
 
 def renderizar_resultado_error(vista, resultado: dict) -> None:
@@ -197,3 +198,7 @@ def renderizar_resultado_inversa(vista, resultado: dict):
             renderizar_resultado_singular(vista, resultado, dimension)
         else:
             renderizar_resultado_exitoso(vista, resultado, dimension)
+        if estado in ("EXITO", "SINGULAR") and resultado.get("matriz_a") is not None:
+            datos = [[formatear_fraccion_texto(valor) for valor in fila]
+                     for fila in resultado["matriz_a"].datos]
+            renderizar_acciones_matriz("inversa", datos)

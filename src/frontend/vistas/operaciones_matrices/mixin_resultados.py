@@ -13,6 +13,8 @@ from nicegui import ui
 from src.frontend.componentes.avisos_resultado import mostrar_error_inesperado
 from src.frontend.componentes.glosa_foco import crear_accion_explicacion
 from src.frontend.componentes.copia_resultado import renderizar_copia_resultado
+from src.frontend.componentes.acciones_matriz import renderizar_acciones_matriz
+from src.frontend import textos
 from src.frontend.vistas.sesion_capturas import registrar_captura_sesion
 from src.frontend.controladores.sesion_matricial import actualizar_contexto
 from src.frontend.controladores.captura_contexto import capturar_matrices
@@ -75,9 +77,9 @@ class MixinResultadosOperacionesMatrices:
             self.restablecer_resultados()
             return
 
+        captura = self._capturar_evaluacion()
         calculo = await ejecutar_calculo_vigente(
-            self, lambda: {'expresion': self.entrada_expresion.value,
-                           'matrices': self.panel_captura_matrices.obtener_datos_crudos()},
+            self, self._capturar_evaluacion,
             lambda captura: ControladorOperacionesMatrices.procesar_expresion(
                 captura['expresion'], json.dumps(captura['matrices'])),
         )
@@ -96,9 +98,22 @@ class MixinResultadosOperacionesMatrices:
             self._renderizar_estado_y_sugerencias(respuesta)
             self._renderizar_seccion_pasos(respuesta)
             self._renderizar_resultado_final(respuesta)
+            self._renderizar_transferencias(respuesta, captura['matrices'])
             registrar_captura_sesion(self, "matrices", respuesta)
 
         ui.run_javascript('if(window.scalaris && window.scalaris.renderizarMathJax) window.scalaris.renderizarMathJax();')
+
+    def _capturar_evaluacion(self) -> dict:
+        return {'expresion': self.entrada_expresion.value,
+                'matrices': self.panel_captura_matrices.obtener_datos_crudos()}
+
+    def _renderizar_transferencias(self, respuesta: dict, matrices: dict) -> None:
+        if respuesta.get('estado') != 'EXITO':
+            return
+        for nombre, matriz in matrices.items():
+            ui.label(textos.TRANSFERENCIA_MATRIZ_CAPTURADA.format(nombre=nombre)).classes(
+                'font-semibold texto-principal')
+            renderizar_acciones_matriz('matrices', matriz['datos'])
 
 
     def _actualizar_huella_ia(self, expresion: str):

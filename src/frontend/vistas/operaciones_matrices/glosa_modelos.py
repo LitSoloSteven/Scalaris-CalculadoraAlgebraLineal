@@ -9,6 +9,7 @@ from src.frontend.controladores.operaciones_matrices.contexto_modelos import obt
 from ._presentacion_modelos import montar_pasos_modelo
 from .herramientas_modelos import MixinHerramientasModelos
 from src.frontend.componentes.copia_resultado import renderizar_copia_resultado
+from src.frontend.componentes.acciones_matriz import renderizar_acciones_matriz
 
 
 class MixinGlosaModelos(MixinHerramientasModelos):
@@ -39,11 +40,14 @@ class MixinGlosaModelos(MixinHerramientasModelos):
         """Devuelve la captura y el resultado vigente para Glosa."""
         return obtener_contexto_modelo(self)
 
-    def _completar_resultado_modelo(self) -> None:
+    def _completar_resultado_modelo(self, captura: dict | None = None) -> None:
         self.panel_ia.renderizar_sugerencias_en_linea()
         renderizar_copia_resultado(self.ultimo_resultado)
         self.reproductor_pasos = montar_pasos_modelo(self)
         self._registrar_modelo()
+        if self.ultimo_resultado.get("estado") == "EXITO" and captura is not None:
+            clave = "matriz_coeficientes" if self.herramienta_modelo == "leontief" else "matriz_transformacion"
+            renderizar_acciones_matriz(self.herramienta_modelo, captura[clave])
         actualizar_contexto(self)
 
     def obtener_senales_ia(self):
