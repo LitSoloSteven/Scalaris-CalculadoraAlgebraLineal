@@ -16,7 +16,6 @@ from src.frontend.componentes.glosa_foco import crear_accion_explicacion
 from src.frontend.componentes.copia_resultado import renderizar_copia_resultado
 from src.frontend.componentes.acciones_matriz import renderizar_acciones_matriz
 from src.frontend import textos
-from src.frontend.vistas.sesion_capturas import registrar_captura_sesion
 from src.frontend.controladores.sesion_matricial import actualizar_contexto
 from src.frontend.controladores.captura_contexto import capturar_matrices
 from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
@@ -100,7 +99,6 @@ class MixinResultadosOperacionesMatrices:
             self._renderizar_seccion_pasos(respuesta)
             self._renderizar_resultado_final(respuesta)
             self._renderizar_transferencias(respuesta, captura['matrices'])
-            registrar_captura_sesion(self, "matrices", respuesta)
 
         ui.run_javascript('if(window.scalaris && window.scalaris.renderizarMathJax) window.scalaris.renderizarMathJax();')
 

@@ -13,7 +13,6 @@ from src.frontend.componentes.estructura_aplicacion import crear_estructura_apli
 from src.frontend.componentes.captura_vectores import PanelCapturaVectores
 from src.frontend.navegacion import ruta_de
 from src.frontend.controladores.sesion_matricial import actualizar_contexto
-from src.frontend.vistas.sesion_capturas import conectar_sesion_capturas, actualizar_previa_captura, registrar_captura_sesion
 from . import contexto, controles
 from .mixin_resultados import MixinResultadosVectores
 from src.frontend.controladores.operaciones_vectores.captura import (
@@ -65,7 +64,6 @@ class VistaOperacionesVectores(MixinResultadosVectores):
         self._retirar_foco_explicacion()
         self.renderizar_estado_vacio()
         actualizar_contexto(self)
-        actualizar_previa_captura(self, "vectores")
 
     def al_cambiar_pestana(self, evento):
         """Selecciona la operación del evento y retira los resultados anteriores."""
@@ -119,7 +117,6 @@ class VistaOperacionesVectores(MixinResultadosVectores):
             with ui.column().classes("disposicion-panel p-8 bg-[var(--bg-page)]") as self.panel_resultados:
                 self.renderizar_estado_vacio()
         self.panel_ia.construir()
-        conectar_sesion_capturas(self, "vectores")
 
     async def calcular(self):
         """Delega la captura al controlador y restaura el botón incluso ante fallos."""
@@ -155,7 +152,6 @@ class VistaOperacionesVectores(MixinResultadosVectores):
         self.resultado_actual = respuesta
         self._huella_resultado = calcular_huella(entrada)
         self.renderizar_resultado(respuesta)
-        registrar_captura_sesion(self, "vectores", respuesta)
         actualizar_contexto(self)
         ui.run_javascript("window.scalaris?.renderizarMathJax?.();")
 

@@ -17,7 +17,6 @@ from src.frontend.componentes.transferencia import recibir_matriz
 from src.frontend.vistas.operaciones_matrices.mixin_resultados import MixinResultadosOperacionesMatrices
 
 from .mixin_contexto_matrices import MixinContextoMatrices
-from src.frontend.vistas.sesion_capturas import conectar_sesion_capturas, actualizar_previa_captura
 
 
 class VistaOperacionesMatrices(MixinResultadosOperacionesMatrices, MixinContextoMatrices):
@@ -61,7 +60,6 @@ class VistaOperacionesMatrices(MixinResultadosOperacionesMatrices, MixinContexto
         if self.contenedor_resultados is not None and not self.contenedor_resultados.is_deleted:
             self.restablecer_resultados()
         actualizar_contexto(self)
-        actualizar_previa_captura(self, "matrices")
 
     def limpiar_todo(self) -> None:
         """Vacia matrices y expresion, retirando el resultado y su contexto."""
@@ -134,7 +132,6 @@ class VistaOperacionesMatrices(MixinResultadosOperacionesMatrices, MixinContexto
                     self.restablecer_resultados()
 
         self.panel_ia.construir()
-        conectar_sesion_capturas(self, "matrices")
         recibir_matriz(token_transferencia, "matrices", self.panel_captura_matrices.cargar_matriz_a,
                        self.contenedor_transferencia)
 
