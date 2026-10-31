@@ -10,7 +10,8 @@ import html
 from ._cuerpo_reproductor_matrices import renderizar_cuerpo_matrices
 
 from nicegui import ui
-from src.frontend.componentes.avisos_resultado import mostrar_error_inesperado
+from src.frontend.componentes.sonido import notificar
+from src.frontend.componentes.avisos_resultado import mostrar_error_inesperado, renderizar_aviso_resultado
 from src.frontend.componentes.glosa_foco import crear_accion_explicacion
 from src.frontend.componentes.copia_resultado import renderizar_copia_resultado
 from src.frontend.componentes.acciones_matriz import renderizar_acciones_matriz
@@ -37,7 +38,7 @@ class MixinResultadosOperacionesMatrices:
         expresion = self.entrada_expresion.value
         if not expresion:
             self.restablecer_resultados()
-            ui.notify('Ingresa una expresión para evaluar.', type='warning')
+            notificar('Ingresa una expresión para evaluar.', type='warning')
             return
 
         if getattr(self, "_calculando", False):
@@ -127,13 +128,11 @@ class MixinResultadosOperacionesMatrices:
     def _renderizar_estado_y_sugerencias(self, respuesta: dict):
         """Presenta el estado recibido y las sugerencias contextuales de Glosa."""
         if respuesta.get("estado") == "ERROR":
-            with ui.row().classes('items-center gap-2 px-4 py-2 distintivo-error mb-4 w-fit'):
-                ui.icon('close', size='sm')
-                ui.label(respuesta.get("mensaje", "Error desconocido")).classes('font-bold')
+            renderizar_aviso_resultado(respuesta.get("mensaje", "Error desconocido"), 'close',
+                                      'items-center gap-2 px-4 py-2 distintivo-error mb-4 w-fit')
         else:
-            with ui.row().classes('items-center gap-2 px-4 py-2 distintivo-exito mb-6 w-fit'):
-                ui.icon('check', size='sm')
-                ui.label(respuesta.get("mensaje", "Éxito")).classes('font-bold')
+            renderizar_aviso_resultado(respuesta.get("mensaje", "Éxito"), 'check',
+                                      'items-center gap-2 px-4 py-2 distintivo-exito mb-6 w-fit')
 
         if getattr(self, 'panel_ia', None):
             self.panel_ia.renderizar_sugerencias_en_linea()

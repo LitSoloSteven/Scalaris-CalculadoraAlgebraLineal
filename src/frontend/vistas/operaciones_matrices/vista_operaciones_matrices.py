@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from nicegui import ui
+from src.frontend.componentes.sonido import notificar
 from src.backend.utilidades.estado_captura import captura_vacia
 from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
 
@@ -82,7 +83,7 @@ class VistaOperacionesMatrices(MixinResultadosOperacionesMatrices, MixinContexto
             return
         transferencia = ControladorOperacionesMatrices.preparar_inversa(nombre, matriz)
         if transferencia.get("mensaje"):
-            ui.notify(transferencia["mensaje"], type='warning')
+            notificar(transferencia["mensaje"], type='warning')
             return
 
         from src.frontend.componentes.transferencia import url_transferencia, guardar_matriz

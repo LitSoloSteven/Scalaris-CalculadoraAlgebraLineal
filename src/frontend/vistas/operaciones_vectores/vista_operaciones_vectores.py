@@ -3,6 +3,7 @@ import json
 import logging
 
 from nicegui import run, ui
+from src.frontend.componentes.sonido import notificar
 from src.backend.utilidades.estado_captura import captura_vacia
 
 from src.ai.huellas import calcular_huella
@@ -143,7 +144,7 @@ class VistaOperacionesVectores(MixinResultadosVectores):
             registro.error("Error inesperado al calcular operaciones con vectores")
             if self._montada and revision == self._revision_calculo:
                 self._publicar_calculo({"estado": "ERROR", "mensaje": "No pudimos calcular. Revisa los datos e inténtalo de nuevo."}, entrada)
-                ui.notify("No pudimos calcular. Revisa los datos e inténtalo de nuevo.", type="negative")
+                notificar("No pudimos calcular. Revisa los datos e inténtalo de nuevo.", type="negative")
         finally:
             self._calculando = False
             if not self.boton_calcular.is_deleted:
