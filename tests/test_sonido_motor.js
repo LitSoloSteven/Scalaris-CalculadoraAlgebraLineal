@@ -19,14 +19,10 @@ function superficie() {
     };
 }
 
-function preparar(opciones = {}) {
-    const documento = superficie();
-    const ventana = superficie();
-    const contextos = [];
-    let ahora = 0;
+function crearConstructorAudio(opciones, contextos) {
     const parametro = () => ({ setValueAtTime() {}, exponentialRampToValueAtTime() {},
         linearRampToValueAtTime() {} });
-    ventana.AudioContext = class {
+    return class {
         constructor() {
             if (opciones.fallaConstructor) throw new Error('Audio bloqueado');
             this.state = opciones.suspendido ? 'suspended' : 'running';
@@ -55,6 +51,14 @@ function preparar(opciones = {}) {
             return { gain: parametro(), connect() {}, disconnect() {} };
         }
     };
+}
+
+function preparar(opciones = {}) {
+    const documento = superficie();
+    const ventana = superficie();
+    const contextos = [];
+    let ahora = 0;
+    ventana.AudioContext = crearConstructorAudio(opciones, contextos);
     if (opciones.sinAudio) delete ventana.AudioContext;
     const entorno = { window: ventana, document: documento, performance: { now: () => ahora } };
     const cargar = nombre => ejecutar(leerArchivo(`src/frontend/recursos/js/${nombre}.js`, 'utf8'), entorno);
