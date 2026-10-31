@@ -107,19 +107,14 @@ def test_boton_invertir_matriz_utiliza_firma_real_del_componente(monkeypatch):
     asyncio.run(construir_pagina(monkeypatch, "matrices", comprobar))
 
 
-def test_accion_copiar_inversa_consume_el_modelo_real(monkeypatch):
-    """Copiar la inversa conserva fracciones sin invocar un getter inexistente."""
+def test_inversa_ofrece_pdf_en_lugar_de_copiar(monkeypatch):
+    """La inversa calculada ofrece exportación PDF y retira el control de copia."""
     from tests.comun_calculos_vistas import calcular_inversa
 
     async def comprobar(vista, cliente):
         """Comprueba los datos y el estado del escenario de la prueba."""
         await calcular_inversa(vista)
-        ejecutar = Mock()
-        monkeypatch.setattr(ui, "run_javascript", ejecutar)
-        boton = next(elemento for elemento in cliente.elements.values()
-                     if isinstance(elemento, ui.button) and elemento._props.get("label") == "Copiar A⁻¹")
-        manejador = next(iter(boton._event_listeners.values())).handler
-        manejador(None)
-        assert "1/2" in ejecutar.call_args.args[0]
-        assert "1/3" in ejecutar.call_args.args[0]
+        botones = [elemento for elemento in cliente.elements.values() if isinstance(elemento, ui.button)]
+        assert not any(boton.text == "Copiar A⁻¹" for boton in botones)
+        assert any(boton.text == "Exportar PDF" and boton.visible for boton in botones)
     asyncio.run(construir_pagina(monkeypatch, "inversa", comprobar))
