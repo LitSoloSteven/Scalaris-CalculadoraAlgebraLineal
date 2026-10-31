@@ -181,7 +181,7 @@ def _renderizar_interpretacion() -> None:
         ).classes('texto-secundario text-sm p-3')
 
 
-def renderizar_resultado_inversa(vista, resultado: dict):
+def renderizar_resultado_inversa(vista, resultado: dict, datos_capturados: list[list[str]]):
     """Presenta el resultado exitoso, singular o erróneo de la matriz inversa."""
     vista.contenedor_resultados.clear()
     vista.contenedor_resultados.classes(
@@ -198,7 +198,5 @@ def renderizar_resultado_inversa(vista, resultado: dict):
             renderizar_resultado_singular(vista, resultado, dimension)
         else:
             renderizar_resultado_exitoso(vista, resultado, dimension)
-        if estado in ("EXITO", "SINGULAR") and resultado.get("matriz_a") is not None:
-            datos = [[formatear_fraccion_texto(valor) for valor in fila]
-                     for fila in resultado["matriz_a"].datos]
-            renderizar_acciones_matriz("inversa", datos)
+        if estado in ("EXITO", "SINGULAR"):
+            renderizar_acciones_matriz("inversa", datos_capturados)

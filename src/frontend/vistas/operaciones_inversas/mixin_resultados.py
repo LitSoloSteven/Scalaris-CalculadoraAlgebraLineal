@@ -151,7 +151,7 @@ class MixinResultadosOperacionesInversas:
             self.ultimo_resultado = resultado
             self._huella_resultado = huella
             self.contenedor_resultados.classes(remove='sesion-obsoleta')
-            renderizar_resultado_inversa(self, resultado)
+            renderizar_resultado_inversa(self, resultado, datos)
             self._finalizar_exito_calculo(resultado, dimension)
         except Exception as error:
             if calculo_sigue_vigente(self, solicitud):
