@@ -89,21 +89,34 @@
     normalizarColores(documento);
   }
 
+  function escalaSegura(ancho, alto, configuracion) {
+    return Math.min(configuracion.escala, configuracion.maximoLado / ancho,
+      configuracion.maximoLado / alto, Math.sqrt(configuracion.maximoPixeles / (ancho * alto)));
+  }
+
+  function ajustarDimensiones(ajustes, region, configuracion) {
+    const caja = region.getBoundingClientRect();
+    ajustes.width = Math.ceil(Math.max(region.scrollWidth, caja.width));
+    ajustes.height = Math.ceil(Math.max(region.scrollHeight, caja.height));
+    ajustes.scale = escalaSegura(ajustes.width, ajustes.height, configuracion);
+  }
+
   async function capturarRegion(nodo, configuracion, biblioteca, estado) {
     const anchos = [...nodo.querySelectorAll('*')].map(hijo => hijo.scrollWidth);
     const ancho = Math.max(nodo.scrollWidth, nodo.getBoundingClientRect().width, ...anchos);
     const alto = Math.max(nodo.scrollHeight, nodo.getBoundingClientRect().height);
-    const escala = Math.min(configuracion.escala, configuracion.maximoLado / ancho,
-      configuracion.maximoLado / alto, Math.sqrt(configuracion.maximoPixeles / (ancho * alto)));
+    const escala = escalaSegura(ancho, alto, configuracion);
     if (!(escala > 0)) throw new Error('dimensiones');
     let lienzo;
     try {
-      lienzo = await biblioteca(nodo, {backgroundColor: 'white', scale: escala,
+      const ajustes = {backgroundColor: 'white', scale: escala,
         width: ancho, height: alto, logging: false, onclone: (documento, region) => {
           if (estado.cancelada) throw new Error('cancelada');
           prepararClon(documento, region, ancho);
+          ajustarDimensiones(ajustes, region, configuracion);
         },
-        imageTimeout: configuracion.plazoMathjax * 1000});
+        imageTimeout: configuracion.plazoMathjax * 1000};
+      lienzo = await biblioteca(nodo, ajustes);
       if (estado.cancelada) throw new Error('cancelada');
       const png = lienzo.toDataURL('image/png').split(',')[1];
       if (png.length > Math.ceil(configuracion.maximoBytesImagen / 3) * 4) throw new Error('peso');

@@ -99,12 +99,15 @@ prueba('una biblioteca pendiente vence y libera lienzos que llegan tarde', async
 prueba('el clon conserva el ancho medido aunque cambie el espacio de la barra de desplazamiento', async () => {
     const cliente = crearCliente();
     const propiedades = [];
-    const region = {style: {setProperty: (...argumentos) => propiedades.push(argumentos)}};
+    const region = {style: {setProperty: (...argumentos) => propiedades.push(argumentos)},
+        scrollWidth: 100, scrollHeight: 125, getBoundingClientRect: () => ({width: 100, height: 125})};
     const documento = {documentElement: {setAttribute() {}},
         body: {classList: {remove() {}}, style: {}}, querySelectorAll: () => [],
         createElement: () => ({getContext: () => ({})})};
     cliente.ventana.html2canvas = async (nodo, ajustes) => {
         ajustes.onclone(documento, region);
+        afirmar.equal(ajustes.height, 125);
+        afirmar.equal(ajustes.width, 100);
         return {width: 100, height: 50, toDataURL: () => 'data:image/png;base64,AAAA'};
     };
     afirmar.equal((await cliente.capturar()).capturas.length, 1);
