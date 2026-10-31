@@ -17,7 +17,7 @@ async def capturar_regiones(identificador: str) -> list:
         'plazoCaptura': limites.PDF_PLAZO_CLIENTE_SEGUNDOS,
         'escala': limites.PDF_ESCALA_CAPTURA,
     }
-    codigo = f'return await window.scalaris.capturaPdf.capturar({json.dumps(identificador)}, {json.dumps(configuracion)});'
+    codigo = f'return window.scalaris.capturaPdf.capturar({json.dumps(identificador)}, {json.dumps(configuracion)});'
     try:
         respuesta = await ui.run_javascript(codigo, timeout=limites.PDF_PLAZO_CAPTURA_SEGUNDOS)
     except Exception as error:

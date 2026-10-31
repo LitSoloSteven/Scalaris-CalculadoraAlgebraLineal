@@ -20,7 +20,8 @@ class ExportacionPDF:
         self.ocupado = False
         self.dialogo = None
         self.boton = ui.button(textos.PDF_EXPORTAR, icon='picture_as_pdf', color=None,
-                               on_click=self.abrir).classes('boton-discreto pdf-control').props('ripple=false data-pdf-excluir')
+                               on_click=self.abrir).classes('boton-discreto pdf-control').props(
+                                   f'ripple=false data-pdf-excluir aria-label="{textos.PDF_EXPORTAR}"')
         self.actualizar()
 
     def actualizar(self) -> None:
