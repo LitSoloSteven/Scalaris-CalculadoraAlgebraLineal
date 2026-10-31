@@ -71,8 +71,9 @@ for (const tipo of ['scatter', 'scatter3d', 'surface']) {
         afirmar.equal(registro.disposicion.paper_bgcolor, 'white');
         afirmar.deepEqual(Array.from(registro.disposicion.xaxis.range), [-3, 7]);
         afirmar.equal(registro.disposicion.scene.camera.eye.x, 3);
-        afirmar.equal(registro.ajustes.width, 400);
-        afirmar.equal(registro.ajustes.height, 200);
+        afirmar.equal(registro.ajustes.width, 200);
+        afirmar.equal(registro.ajustes.height, 100);
+        afirmar.equal(registro.ajustes.scale, 2);
         afirmar.equal(JSON.stringify(escenario.figura), original);
         afirmar.equal(registro.purgas, 1);
         afirmar.equal(registro.retiradas, 1);
@@ -121,8 +122,9 @@ prueba('las dimensiones y el peso gráfico respetan los límites del transporte 
     escenario.configuracion.maximoPixeles = 1000;
     const respuesta = await escenario.capturador.capturar('raiz', escenario.configuracion);
     afirmar.equal(respuesta.capturas.length, 1);
-    afirmar.ok(escenario.registro.ajustes.width <= 100);
-    afirmar.ok(escenario.registro.ajustes.width * escenario.registro.ajustes.height <= 1000);
+    const {width: ancho, height: alto, scale: escala} = escenario.registro.ajustes;
+    afirmar.ok(ancho * escala <= 100);
+    afirmar.ok(Math.floor(ancho * escala) * Math.floor(alto * escala) <= 1000);
     escenario.configuracion.maximoBytesImagen = 1;
     const excesiva = prepararEscenario({imagen: 'data:image/png;base64,AAAAAAAA'});
     excesiva.configuracion.maximoBytesImagen = 1;

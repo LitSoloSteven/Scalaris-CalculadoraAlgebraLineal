@@ -218,7 +218,7 @@
       await biblioteca.newPlot(temporal, prepararDatosPlotly(figura), prepararDisposicionPlotly(figura), {staticPlot: true});
       if (estado.cancelada) throw new Error('cancelada');
       const imagen = await biblioteca.toImage(temporal, {format: 'png',
-        width: Math.floor(caja.width * escala), height: Math.floor(caja.height * escala)});
+        width: Math.floor(caja.width), height: Math.floor(caja.height), scale: escala});
       if (estado.cancelada || !imagen.startsWith('data:image/png;base64,')) throw new Error('cancelada');
       const png = imagen.split(',')[1];
       if (png.length > Math.ceil(configuracion.maximoBytesImagen / 3) * 4) throw new Error('peso');
