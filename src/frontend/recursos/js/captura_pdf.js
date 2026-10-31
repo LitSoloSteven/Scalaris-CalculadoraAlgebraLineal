@@ -75,6 +75,7 @@
     documento.documentElement.setAttribute('data-tema', 'papel');
     documento.body.classList.remove('body--dark');
     documento.body.style.backgroundColor = 'white';
+    prepararFormulas(documento);
     region.style.setProperty('width', `${ancho}px`, 'important');
     documento.querySelectorAll('[data-pdf-captura], [data-pdf-captura] *').forEach(nodo => {
       nodo.style.animation = 'none';
@@ -87,6 +88,14 @@
     });
     documento.querySelectorAll('[data-pdf-excluir]').forEach(nodo => nodo.remove());
     normalizarColores(documento);
+  }
+
+  function prepararFormulas(documento) {
+    documento.querySelectorAll('mjx-assistive-mml').forEach(nodo => nodo.remove());
+    const formulas = [...documento.querySelectorAll('mjx-container, mjx-container *')];
+    if (!formulas.length) return;
+    const color = documento.defaultView.getComputedStyle(documento.documentElement).getPropertyValue('--text-main');
+    formulas.forEach(nodo => { nodo.style.color = color; });
   }
 
   function escalaSegura(ancho, alto, configuracion) {
