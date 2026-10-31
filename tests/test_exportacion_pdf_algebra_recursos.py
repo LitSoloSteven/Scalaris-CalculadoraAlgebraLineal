@@ -6,7 +6,7 @@ from src.frontend import tema
 from tests.comun_exportacion_algebra import HERRAMIENTAS
 
 
-@pytest.mark.parametrize('herramienta', ('sistemas', *HERRAMIENTAS))
+@pytest.mark.parametrize('herramienta', ('sistemas', *HERRAMIENTAS, 'bases', 'romanos', 'visualizador'))
 def test_exportadores_reciben_script_y_estilos_pdf(herramienta):
     """Cada exportador dispone del espacio de nombres cliente y de su diálogo accesible."""
     cabecera = seleccionar_recursos(tema._CABECERA_HTML, herramienta)
@@ -15,7 +15,7 @@ def test_exportadores_reciben_script_y_estilos_pdf(herramienta):
     assert '/assets/js/html2canvas.min.js' not in cabecera
 
 
-@pytest.mark.parametrize('herramienta', ('inicio', 'bases', 'romanos', 'visualizador'))
+@pytest.mark.parametrize('herramienta', ('inicio',))
 def test_rutas_sin_exportador_no_cargan_recursos_pdf(herramienta):
     """Las vistas sin exportador conservan su selección de recursos existente."""
     cabecera = seleccionar_recursos(tema._CABECERA_HTML, herramienta)

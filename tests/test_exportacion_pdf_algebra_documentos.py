@@ -14,7 +14,8 @@ CASOS = [(herramienta, estado) for herramienta, estados in textos.PDF_ESTADOS_PO
 @pytest.mark.parametrize('herramienta,estado', CASOS)
 def test_cada_estado_admitido_genera_portada_y_resultado(herramienta, estado):
     """Los estados no erróneos generan un documento válido con descripción española."""
-    capturas = [crear_captura(f'{herramienta}-resumen')]
+    claves = textos.PDF_REGIONES_OBLIGATORIAS.get(herramienta, (f'{herramienta}-resumen',))
+    capturas = [crear_captura(clave) for clave in claves]
     resultado = {'estado': estado}
     figuras = preparar_figuras(herramienta, resultado, capturas)
     descripcion = textos.PDF_ESTADOS_POR_HERRAMIENTA[herramienta][estado]
