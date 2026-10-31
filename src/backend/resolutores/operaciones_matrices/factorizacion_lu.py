@@ -89,18 +89,39 @@ def _agregar_instantaneas(paso: dict, permutacion: Matriz, inferior: Matriz) -> 
 
 
 def _validar_sistema_lu(matriz: Matriz, terminos: list[Fraction]) -> None:
+    """Valida la matriz y los términos antes de factorizar o resolver."""
+    _validar_matriz(matriz)
+    _validar_terminos(terminos, matriz.filas)
+
+
+def _validar_matriz(matriz: Matriz) -> None:
+    """Verifica tipo, forma cuadrada, dimensión y valores finitos de la matriz."""
     if not isinstance(matriz, Matriz):
         raise ValueError("La entrada no es una Matriz. Proporciona una matriz cuadrada.")
     if matriz.filas != matriz.columnas:
         raise ValueError("La matriz no es cuadrada. Proporciona una matriz con igual numero de filas y columnas.")
     if not DIMENSION_MINIMA <= matriz.filas <= DIMENSION_MAXIMA_MATRICES:
         raise ValueError(f"La dimension esta fuera del limite. Usa entre {DIMENSION_MINIMA} y {DIMENSION_MAXIMA_MATRICES} filas.")
-    if any(isinstance(valor, float) and not isfinite(valor) for fila in matriz.datos for valor in fila):
+    if _tiene_valores_no_finitos(matriz):
         raise ValueError("La matriz contiene valores no finitos. Usa numeros finitos en todas las celdas.")
-    if not isinstance(terminos, list) or len(terminos) != matriz.filas:
+
+
+def _tiene_valores_no_finitos(matriz: Matriz) -> bool:
+    """Indica si alguna celda es un flotante no finito."""
+    return any(isinstance(valor, float) and not isfinite(valor) for fila in matriz.datos for valor in fila)
+
+
+def _validar_terminos(terminos: list[Fraction], filas: int) -> None:
+    """Verifica que sea una lista de longitud adecuada y con tipos numéricos exactos."""
+    if not isinstance(terminos, list) or len(terminos) != filas:
         raise ValueError("Los terminos no forman una lista de la longitud esperada. Proporciona un termino por fila.")
-    if any(isinstance(valor, bool) or not isinstance(valor, (int, Fraction)) for valor in terminos):
+    if _tiene_terminos_invalidos(terminos):
         raise ValueError("Hay terminos de tipo no admitido. Usa enteros o fracciones exactas.")
+
+
+def _tiene_terminos_invalidos(terminos: list[Fraction]) -> bool:
+    """Indica si algún término es booleano o un tipo no admitido."""
+    return any(isinstance(valor, bool) or not isinstance(valor, (int, Fraction)) for valor in terminos)
 
 
 def resolver_sistema_lu(matriz: Matriz, terminos: list[Fraction]) -> dict[str, Any]:
