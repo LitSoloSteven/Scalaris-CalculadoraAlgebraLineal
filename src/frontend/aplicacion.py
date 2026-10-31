@@ -6,6 +6,7 @@ from typing import Mapping
 from nicegui import app, ui
 
 from src.frontend.rutas import registrar_rutas
+from src.frontend.configuracion_persistencia import configurar_persistencia
 from src.frontend.textos import (
     MENSAJE_ERROR_PRODUCCION_SIN_SECRETO,
     MENSAJE_SECRETO_DESARROLLO_INSEGURO,
@@ -54,6 +55,7 @@ def inicializar_aplicacion() -> None:
     if _INICIALIZADO:
         return
 
+    configurar_persistencia()
     entorno = os.environ.get("SCALARIS_ENV", "").strip().lower()
     max_edad_cache = 3600 if entorno == "production" else 0
     app.add_static_files("/assets", str(DIRECTORIO_RECURSOS), max_cache_age=max_edad_cache)
