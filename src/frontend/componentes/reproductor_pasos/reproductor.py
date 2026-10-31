@@ -72,6 +72,10 @@ class ReproductorPasos:
         if self.boton_reproducir is not None and not self.boton_reproducir.is_deleted:
             self.boton_reproducir.props('icon=play_arrow')
 
+    def pausar(self) -> None:
+        """Pausa la reproducción conservando el temporizador para poder reanudarla."""
+        self._pausar_reproduccion()
+
     def ir_a(self, indice: int, *, autoreproduccion: bool = False) -> None:
         """Navega a un paso y actualiza sus metadatos, explicacion y cuerpo."""
         if not self.pasos or self.tarjeta is None or self.tarjeta.is_deleted:

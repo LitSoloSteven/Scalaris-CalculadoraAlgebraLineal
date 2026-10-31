@@ -17,6 +17,7 @@ def test_descarga_solo_si_sigue_vigente_y_dialogo_abierto(monkeypatch, cambio):
         await vista._resolver_nucleo()
         control = vista.actualizar_exportacion_pdf.__self__
         assert isinstance(control, ExportacionPDF)
+        temporizador = vista.reproductor_pasos.temporizador
         control.abrir()
         for clave, valor in PORTADA.items():
             control.dialogo.campos[clave].set_value(valor)
@@ -36,6 +37,10 @@ def test_descarga_solo_si_sigue_vigente_y_dialogo_abierto(monkeypatch, cambio):
         await control.generar()
         assert len(descargas) == int(cambio == 'ninguno')
         assert not control.ocupado
+        if cambio == 'ninguno':
+            assert vista.reproductor_pasos.temporizador is temporizador
+            vista.reproductor_pasos._alternar_reproduccion()
+            assert temporizador.active
         if cambio == 'fallar':
             assert 'detalle interno' not in control.dialogo.estado.text
     asyncio.run(construir_pagina(monkeypatch, 'sistemas', comprobar))
