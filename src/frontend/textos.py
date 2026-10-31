@@ -3,6 +3,43 @@
 MENSAJE_ANTI_REBOTE_GLOSA = "Espera un momento antes de enviar otra pregunta."
 MENSAJE_ENTRADA_NUMERICA = "Solo se admiten números, fracciones y decimales."
 
+PDF_EXPORTAR = "Exportar PDF"
+PDF_PORTADA_TITULO = "Datos de la portada"
+PDF_CAMPOS = {"nombre": "Nombre completo", "fecha": "Fecha", "docente": "Docente", "grupo": "Número de grupo"}
+PDF_AFILIACION = "UAM"
+PDF_MARCA = "Scalaris"
+PDF_TITULO_RESULTADO = "Resultado de {herramienta}"
+PDF_HERRAMIENTAS = {"sistemas": "Sistemas de ecuaciones lineales"}
+PDF_GRUPO = "Grupo {grupo}"
+PDF_DOCENTE = "Docente: {docente}"
+PDF_CANCELAR = "Cancelar"
+PDF_GENERAR = "Generar PDF"
+PDF_CARGANDO = "Preparando las capturas y el PDF. Espera un momento."
+PDF_ERROR_CAPTURA = "No pudimos capturar el resultado. Cierra la portada, comprueba que el resultado esté visible y vuelve a intentarlo."
+PDF_ERROR_GENERACION = "No pudimos generar el PDF. Revisa los datos de la portada y vuelve a intentarlo."
+PDF_ERROR_OBSOLETO = "Los datos cambiaron. Cierra la portada y vuelve a calcular antes de exportar."
+PDF_ERROR_IMAGEN = "Las capturas no son válidas o superan los límites. Reduce el resultado visible y vuelve a exportar."
+PDF_ERROR_GLIFOS = "Hay caracteres que la fuente del PDF no admite. Escribe los datos de la portada con caracteres latinos y vuelve a intentarlo."
+PDF_ERROR_CAMPO = "Escribe {campo} para generar la portada."
+PDF_ERRORES_VACIOS = {"nombre": "tu nombre completo", "docente": "el nombre del docente", "grupo": "el número de grupo"}
+PDF_ERROR_LONGITUD = "Usa como máximo {limite} caracteres en este campo."
+PDF_ERROR_GRUPO = "Usa solo letras y números, sin espacios, en el número de grupo."
+PDF_ERROR_FECHA = "Selecciona una fecha válida para generar la portada."
+PDF_ERROR_CARACTERES = "Usa caracteres latinos legibles, sin controles ni símbolos especiales."
+PDF_MESES = ("enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre")
+PDF_FECHA = "{dia} de {mes} de {anio}"
+PDF_SECCION = "Resultado"
+PDF_FIGURA = "Figura {numero}"
+PDF_NOTA = "Nota."
+PDF_CITA = "Como se muestra en la Figura {numero}, {descripcion}"
+PDF_AVISO_REDUCCION = "La figura se redujo para ajustarse al alto útil de la página. Amplía el PDF para revisar sus detalles."
+PDF_REGIONES_SISTEMAS = {
+    "sistemas-resumen": ("Clasificación y Solución del Sistema", "Se presenta la clasificación y la solución que muestra el resultado calculado."),
+    "sistemas-procedimiento": ("Paso Visible del Procedimiento", "Se presenta únicamente el paso visible del procedimiento, sin recorrer los demás pasos."),
+}
+PDF_DESCRIPCION_ESTADO = " Estado del resultado: {estado}."
+PDF_ESTADOS_SISTEMAS = {"SOLUCION_UNICA": "solución única", "SOLUCIONES_INFINITAS": "infinitas soluciones", "SIN_SOLUCION": "sin solución"}
+
 NOMBRE_SELECTOR_VECTORES = "Operaciones con vectores"
 OPCIONES_OPERACIONES_VECTORES = (
     ('suma_resta', 'Suma / Resta', 'Suma / Resta'),
