@@ -12,7 +12,7 @@ prueba('el clon excluye MathML asistivo y recolorea los elementos personalizados
     const clon = {documentElement: {setAttribute() {}}, body: {classList: {remove() {}}, style: {}},
         defaultView: {getComputedStyle: () => ({getPropertyValue: () => 'rgb(35, 38, 46)'})},
         createElement: () => ({getContext: () => ({})}),
-        querySelectorAll: selector => selector === '.MathJax, .MathJax *' ? [formula] : []};
+        querySelectorAll: selector => selector.includes('html2canvascustomelement') ? [formula] : []};
     const ventana = {MathJax: {startup: {promise: Promise.resolve()}, typesetPromise: () => Promise.resolve()},
         html2canvas: async (nodo, opciones) => {
             afirmar.equal(opciones.ignoreElements({tagName: 'MJX-ASSISTIVE-MML'}), true);

@@ -91,7 +91,7 @@
   }
 
   function prepararFormulas(documento) {
-    const formulas = [...documento.querySelectorAll('.MathJax, .MathJax *')];
+    const formulas = [...documento.querySelectorAll('.MathJax, .MathJax *, html2canvascustomelement, html2canvascustomelement *')];
     if (!formulas.length) return;
     const color = documento.defaultView.getComputedStyle(documento.documentElement).getPropertyValue('--text-main');
     formulas.forEach(nodo => { nodo.style.color = color; });
