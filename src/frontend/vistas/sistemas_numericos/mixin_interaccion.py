@@ -3,7 +3,7 @@ import asyncio
 from nicegui import ui
 from src.frontend.componentes.sonido import emitir_sonido, notificar
 from src.backend.utilidades.reglas_dominio import BASES_NUMERICAS, validar_entrada_base
-from src.frontend.controladores.sesion_matricial import actualizar_contexto
+from src.frontend.controladores.sesion_matricial import actualizar_contexto, notificar_edicion
 
 
 class MixinInteraccionSistemasNumericos:
@@ -13,6 +13,7 @@ class MixinInteraccionSistemasNumericos:
         if not evento.value:
             return
         self.base_activa = evento.value
+        notificar_edicion(self)
         self._actualizar_ejemplos()
         actualizar_contexto(self)
         if hasattr(self, 'entrada_valor'):
@@ -25,6 +26,7 @@ class MixinInteraccionSistemasNumericos:
         if not evento.value:
             return
         self.base_destino = evento.value
+        notificar_edicion(self)
         actualizar_contexto(self)
         if not hasattr(self, 'entrada_valor'):
             return
@@ -107,6 +109,7 @@ class MixinInteraccionSistemasNumericos:
         self._establecer_entrada(valor)
 
     async def _al_cambiar_entrada(self, evento):
+        notificar_edicion(self)
         valor = self.entrada_valor.value or ''
 
         valido, mensaje = validar_entrada_base(valor, BASES_NUMERICAS[self.base_activa])
