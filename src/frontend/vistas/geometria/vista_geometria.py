@@ -88,8 +88,7 @@ class VistaGeometria(MixinLimpiezaGeometria, MixinControlesGeometria, MixinEscen
             self.contenedor_figura = ui.column().classes('geometria-contenedor').props(
                 'data-pdf-captura=visualizador-figura data-pdf-motor=plotly')
             self.contenedor_deslizador = ui.column().classes('geometria-contenedor')
-            self.contenedor_resumen = ui.column().classes('geometria-contenedor').props(
-                'data-pdf-captura=visualizador-resumen')
+            self.contenedor_resumen = ui.column().classes('geometria-contenedor')
             self.contenedor_acciones_pdf = ui.column().classes('geometria-contenedor')
 
     @staticmethod

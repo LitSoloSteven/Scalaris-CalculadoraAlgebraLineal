@@ -69,7 +69,7 @@ for (const tipo of ['scatter', 'scatter3d', 'surface']) {
         afirmar.equal(registro.datos[0].marker.color, 'rojo');
         afirmar.equal(registro.disposicion.font.color, 'negro');
         afirmar.equal(registro.disposicion.paper_bgcolor, 'white');
-        afirmar.deepEqual(registro.disposicion.xaxis.range, [-3, 7]);
+        afirmar.deepEqual(Array.from(registro.disposicion.xaxis.range), [-3, 7]);
         afirmar.equal(registro.disposicion.scene.camera.eye.x, 3);
         afirmar.equal(registro.ajustes.width, 400);
         afirmar.equal(registro.ajustes.height, 200);
