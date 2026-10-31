@@ -9,8 +9,29 @@ ESPERA_MAXIMA = 0.25
 _BLOQUEOS_WINDOWS = frozenset({5, 32, 33})
 
 
+class RespaldoObsoleto(Exception):
+    """Indica que se eliminó o sustituyó el directorio que originó un respaldo pendiente."""
+
+
+def identificar_directorio(directorio: Path) -> tuple[int, int, int]:
+    """Devuelve identidad y creación estables del directorio; propaga errores de acceso o ausencia."""
+    datos = directorio.stat()
+    return datos.st_dev, datos.st_ino, getattr(datos, 'st_birthtime_ns', 0)
+
+
+def comprobar_directorio(destino: Path, identidad: tuple[int, int, int] | None) -> None:
+    """Rechaza un respaldo si su directorio fue eliminado o reemplazado desde que se programó."""
+    if identidad is None:
+        return
+    try:
+        actual = identificar_directorio(destino.parent)
+    except FileNotFoundError as error:
+        raise RespaldoObsoleto from error
+    if actual != identidad:
+        raise RespaldoObsoleto
+
+
 def _crear_temporal(destino: Path, contenido: str, codificacion: str | None) -> Path:
-    destino.parent.mkdir(exist_ok=True)
     temporal = None
     try:
         with tempfile.NamedTemporaryFile(mode='w', encoding=codificacion, dir=destino.parent,
@@ -27,8 +48,9 @@ def _crear_temporal(destino: Path, contenido: str, codificacion: str | None) -> 
     return temporal
 
 
-def _reemplazar(temporal: Path, destino: Path) -> None:
+def _reemplazar(temporal: Path, destino: Path, identidad: tuple[int, int, int] | None) -> None:
     for intento in range(INTENTOS_REEMPLAZO):
+        comprobar_directorio(destino, identidad)
         try:
             temporal.replace(destino)
             return
@@ -38,10 +60,14 @@ def _reemplazar(temporal: Path, destino: Path) -> None:
             time.sleep(min(ESPERA_INICIAL * 2 ** intento, ESPERA_MAXIMA))
 
 
-def guardar_archivo_atomico(destino: Path, contenido: str, codificacion: str | None = 'utf-8') -> None:
+def guardar_archivo_atomico(destino: Path, contenido: str, codificacion: str | None = 'utf-8', *,
+                            directorio_esperado: tuple[int, int, int] | None = None) -> None:
     """Escribe texto completo y reintenta reemplazos bloqueados; propaga errores permanentes sin alterar el destino."""
+    if directorio_esperado is None:
+        destino.parent.mkdir(exist_ok=True)
+    comprobar_directorio(destino, directorio_esperado)
     temporal = _crear_temporal(destino, contenido, codificacion)
     try:
-        _reemplazar(temporal, destino)
+        _reemplazar(temporal, destino, directorio_esperado)
     finally:
         temporal.unlink(missing_ok=True)

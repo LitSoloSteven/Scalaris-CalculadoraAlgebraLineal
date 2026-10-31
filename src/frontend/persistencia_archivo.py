@@ -6,7 +6,9 @@ from nicegui.helpers import unlink_with_retry, unlink_with_retry_async
 from nicegui.persistence import FilePersistentDict
 from nicegui.persistence.serialization import dumps
 
-from src.frontend.archivo_atomico import guardar_archivo_atomico
+from src.frontend.archivo_atomico import (
+    RespaldoObsoleto, comprobar_directorio, guardar_archivo_atomico, identificar_directorio,
+)
 
 
 class DiccionarioPersistenteSeguro(FilePersistentDict):
@@ -14,17 +16,29 @@ class DiccionarioPersistenteSeguro(FilePersistentDict):
 
     def backup(self) -> None:
         """Programa el respaldo si hay bucle activo; en arranque escribe o elimina el archivo directamente."""
+        if self:
+            self.filepath.parent.mkdir(exist_ok=True)
+        try:
+            identidad = identificar_directorio(self.filepath.parent)
+        except FileNotFoundError:
+            return
         if core.is_loop_running():
-            background_tasks.create_lazy(self._respaldar_asincrono(), name=f'persistencia:{self.filepath.resolve()}')
+            background_tasks.create_lazy(self._respaldar_asincrono(identidad), name=f'persistencia:{self.filepath.resolve()}')
         elif self:
-            guardar_archivo_atomico(self.filepath, dumps(self, str(self.filepath), indent=self.indent), self.encoding)
+            guardar_archivo_atomico(self.filepath, dumps(self, str(self.filepath), indent=self.indent), self.encoding,
+                                    directorio_esperado=identidad)
         else:
             unlink_with_retry(self.filepath, missing_ok=True)
 
     @background_tasks.await_on_shutdown
-    async def _respaldar_asincrono(self) -> None:
-        if not self:
-            await unlink_with_retry_async(self.filepath, missing_ok=True)
+    async def _respaldar_asincrono(self, identidad: tuple[int, int, int]) -> None:
+        try:
+            comprobar_directorio(self.filepath, identidad)
+            if not self:
+                await unlink_with_retry_async(self.filepath, missing_ok=True)
+                return
+            contenido = dumps(self, str(self.filepath), indent=self.indent)
+            await asyncio.to_thread(guardar_archivo_atomico, self.filepath, contenido, self.encoding,
+                                    directorio_esperado=identidad)
+        except (RespaldoObsoleto, FileNotFoundError):
             return
-        contenido = dumps(self, str(self.filepath), indent=self.indent)
-        await asyncio.to_thread(guardar_archivo_atomico, self.filepath, contenido, self.encoding)
