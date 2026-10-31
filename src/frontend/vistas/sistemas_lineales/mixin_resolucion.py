@@ -7,7 +7,8 @@ from src.ai.huellas import calcular_huella
 from src.frontend.controladores.sistemas_lineales.flujo_vista import entrada_actual, procesar_carga_sistema
 from src.frontend.controladores.sistemas_lineales.estado_captura import opciones_transferencia
 from src.frontend.controladores.sesion_matricial import actualizar_contexto, invalidar_resultado, captura_sigue_vigente, calculo_sigue_vigente
-from src.frontend.componentes.transferencia import guardar_matriz, guardar_sistema, url_transferencia
+from src.frontend.componentes.transferencia import guardar_sistema, url_transferencia
+from src.frontend.componentes.acciones_matriz import renderizar_acciones_matriz
 from src.frontend.navegacion import ruta_de
 
 
@@ -52,11 +53,8 @@ class MixinResolucionSistemas:
             return
         numero_variables = len(coeficientes[0]) if coeficientes else 0
         self._agregar_a_historial({'matriz_a': coeficientes, 'vector_b': independientes, 'filas': len(coeficientes), 'columnas': numero_variables, 'estado': estado, 'metodo': self.pestanas_metodo.value})
+        renderizar_acciones_matriz("sistemas", coeficientes)
         with ui.row().classes('gap-2 mt-4 flex-wrap'):
-            if opciones_transferencia(coeficientes)['inversa']:
-                ui.button('Ver A⁻¹ en Matriz inversa', icon='arrow_forward', color=None,
-                          on_click=lambda: ui.navigate.to(url_transferencia(ruta_de('inversa'), guardar_matriz('sistemas', coeficientes)))
-                          ).classes('boton-discreto').props('ripple=false').tooltip('Misma eliminación de filas, ahora sobre [A | I]')
             if opciones_transferencia(coeficientes)['visualizador']:
                 ui.button('Ver en el Visualizador', icon='insights', color=None,
                           on_click=lambda: ui.navigate.to(url_transferencia(ruta_de('visualizador'), guardar_sistema('sistemas', coeficientes, independientes)))

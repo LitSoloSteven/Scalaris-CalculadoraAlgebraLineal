@@ -9,6 +9,7 @@ from src.frontend import textos
 from ._presentacion_determinante import montar_reproductor
 from ._tarjeta_determinante import mostrar_tarjeta_determinante, mostrar_interpretacion_determinante
 from src.frontend.componentes.copia_resultado import renderizar_copia_resultado
+from src.frontend.componentes.acciones_matriz import renderizar_acciones_matriz
 
 
 class ResultadosDeterminante:
@@ -37,6 +38,9 @@ class ResultadosDeterminante:
                 self._huella_resultado = huella
                 self._registrar_exito(captura, respuesta)
             self._mostrar_resultado(respuesta)
+            if respuesta.get('estado') == 'EXITO':
+                with self.contenedor_resultados:
+                    renderizar_acciones_matriz("determinantes", captura['datos'])
             actualizar_contexto(self)
         except Exception:
             if self._respuesta_vigente(emisor, solicitud, revision, huella):

@@ -11,6 +11,7 @@ from ._estados_modelos import ejecutar_modelo, mostrar_estado
 from ._factores_factorizacion_lu import mostrar_factores_lu
 from ._presentacion_factorizacion_lu import montar_reproductor_lu
 from src.frontend.componentes.copia_resultado import renderizar_copia_resultado
+from src.frontend.componentes.acciones_matriz import renderizar_acciones_matriz
 
 
 class ResultadosFactorizacionLU:
@@ -29,6 +30,7 @@ class ResultadosFactorizacionLU:
         await ejecutar_modelo(self, evento.sender, self._calcular_nucleo)
 
     async def _calcular_nucleo(self) -> None:
+        captura = self._capturar()
         calculo = await ejecutar_calculo_vigente(self, self._capturar, ControladorFactorizacionLU.procesar_captura)
         if calculo is None:
             return
@@ -38,7 +40,7 @@ class ResultadosFactorizacionLU:
         if resultado.get("estado") == "ERROR":
             self._mostrar_error_captura(resultado)
         else:
-            self._mostrar_exito(resultado)
+            self._mostrar_exito(resultado, captura["matriz_a"])
         actualizar_contexto(self)
 
     def _mostrar_error_captura(self, resultado: dict) -> None:
@@ -48,8 +50,7 @@ class ResultadosFactorizacionLU:
         if invalida and invalida.foco:
             ubicar_celda_matriz("A", *invalida.foco)
 
-    def _mostrar_exito(self, resultado: dict) -> None:
-        datos = self.panel_matriz.obtener_datos_matriz()
+    def _mostrar_exito(self, resultado: dict, datos: list[list[str]]) -> None:
         self._agregar_a_historial({"datos": datos, "filas": resultado["filas"], "columnas": resultado["columnas"],
                                    "rango": resultado["rango"], "estado": "FACTORIZACION_LU_CALCULADA"})
         with self.contenedor_resultados:
@@ -59,3 +60,4 @@ class ResultadosFactorizacionLU:
             mostrar_factores_lu(resultado)
             renderizar_copia_resultado(resultado)
             self.reproductor_pasos = montar_reproductor_lu(resultado, self.panel_ia)
+            renderizar_acciones_matriz("factorizacion_lu", datos)
