@@ -14,6 +14,8 @@ PDF_HERRAMIENTAS = {
     "matrices": "Operaciones con matrices", "inversa": "Matriz inversa",
     "determinantes": "Determinantes", "lu": "Factorización LU",
     "leontief": "Modelo de Leontief", "transformaciones": "Transformaciones lineales",
+    "bases": "Conversor de bases", "romanos": "Números romanos",
+    "visualizador": "Visualizador geométrico",
 }
 PDF_GRUPO = "Grupo {grupo}"
 PDF_DOCENTE = "Docente: {docente}"
@@ -96,6 +98,30 @@ PDF_ESTADOS_POR_HERRAMIENTA = {
     "lu": {"EXITO": PDF_ESTADOS_ALGEBRA["EXITO"]},
     "leontief": {clave: PDF_ESTADOS_ALGEBRA[clave] for clave in ("EXITO", "SINGULAR", "SIN_SOLUCION", "SOLUCIONES_INFINITAS")},
     "transformaciones": {"EXITO": PDF_ESTADOS_ALGEBRA["EXITO"]},
+    "bases": {"EXITO": PDF_ESTADOS_ALGEBRA["EXITO"]},
+    "romanos": {"EXITO": PDF_ESTADOS_ALGEBRA["EXITO"]},
+    "visualizador": {"EXITO": PDF_ESTADOS_ALGEBRA["EXITO"]},
+}
+PDF_REGIONES_UTILIDADES = {
+    "bases": {
+        "bases-resultado": ("Conversión Entre Bases", "Se presentan las representaciones del número en las bases que muestra la herramienta."),
+        "bases-procedimiento": PDF_PROCEDIMIENTO,
+    },
+    "romanos": {
+        "romanos-resultado": ("Operación con Números Romanos", "Se presentan los operandos, la operación y el resultado romano calculado."),
+        "romanos-procedimiento": PDF_PROCEDIMIENTO,
+    },
+    "visualizador": {
+        "visualizador-resumen": ("Datos de la Escena Geométrica", "Se presentan los datos y el resumen de la escena que muestra el visualizador."),
+        "visualizador-figura": ("Escena Geométrica Visible", "Se presenta la figura visible con sus trazas, encuadre y cámara actuales en tema claro."),
+    },
+}
+PDF_REGIONES_POR_HERRAMIENTA = {
+    "sistemas": PDF_REGIONES_SISTEMAS, **PDF_REGIONES_ALGEBRA, **PDF_REGIONES_UTILIDADES,
+}
+PDF_REGIONES_OBLIGATORIAS = {
+    "bases": ("bases-resultado",), "romanos": ("romanos-resultado",),
+    "visualizador": ("visualizador-resumen", "visualizador-figura"),
 }
 
 NOMBRE_SELECTOR_VECTORES = "Operaciones con vectores"

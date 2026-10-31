@@ -12,11 +12,11 @@ def preparar_figuras(herramienta: str, resultado: dict, capturas: list) -> list[
     estados = textos.PDF_ESTADOS_POR_HERRAMIENTA.get(herramienta, {})
     if resultado.get('estado') not in estados:
         raise ValueError(textos.PDF_ERROR_OBSOLETO)
-    registro = (textos.PDF_REGIONES_SISTEMAS if herramienta == 'sistemas'
-                else textos.PDF_REGIONES_ALGEBRA[herramienta])
+    registro = textos.PDF_REGIONES_POR_HERRAMIENTA[herramienta]
     imagenes = validar_imagenes(capturas, tuple(registro))
     por_clave = {imagen.clave: imagen for imagen in imagenes}
-    if f'{herramienta}-resumen' not in por_clave:
+    obligatorias = textos.PDF_REGIONES_OBLIGATORIAS.get(herramienta, (f'{herramienta}-resumen',))
+    if any(clave not in por_clave for clave in obligatorias):
         raise ValueError(textos.PDF_ERROR_IMAGEN)
     estado = estados[resultado['estado']]
     figuras = []
