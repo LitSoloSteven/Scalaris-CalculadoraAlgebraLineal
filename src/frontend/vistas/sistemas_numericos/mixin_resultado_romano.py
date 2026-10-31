@@ -17,7 +17,7 @@ class MixinResultadoRomano:
 
     def _renderizar_tarjeta_resultado_destacado(self, presentacion, resultado_romano: str) -> None:
         """Presenta la operación recibida y su resultado romano en una tarjeta destacada."""
-        with ui.column().classes("w-full panel-tarjeta p-6 rounded-2xl gap-4"):
+        with ui.column().classes("w-full panel-tarjeta p-6 rounded-2xl gap-4").props('data-pdf-captura=romanos-resultado'):
             with ui.row().classes("w-full justify-between items-center"):
                 with ui.row().classes("items-center gap-2"):
                     ui.label("RESULTADO DE LA OPERACIÓN").classes("text-xs font-bold tracking-widest texto-secundario")
@@ -65,6 +65,8 @@ class MixinResultadoRomano:
                 getattr(getattr(self, "panel_ia", None), "_esta_enviando", False)
             )})
         self.reproductor.construir()
+        self.reproductor.tarjeta.props('data-pdf-captura=romanos-procedimiento')
+        self.contenedor_acciones_pdf = ui.column().classes('w-full')
 
 
 _LINEAS_AYUDA_ROMANOS = (
