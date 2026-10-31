@@ -18,6 +18,10 @@
     max-width: 100%;
 }
 
+.pdf-error {
+    color: var(--error);
+}
+
 .pdf-control {
     flex-shrink: 0;
     max-width: 100%;

@@ -43,10 +43,40 @@
     await conPlazo(document.fonts.ready, configuracion.plazoMathjax);
   }
 
-  function prepararClon(documento) {
+  function normalizarColores(documento) {
+    const lienzo = documento.createElement('canvas');
+    lienzo.width = 1;
+    lienzo.height = 1;
+    const contexto = lienzo.getContext('2d', {willReadFrequently: true});
+    const cache = new Map();
+    const propiedades = ['color', 'backgroundColor', 'borderTopColor', 'borderRightColor',
+      'borderBottomColor', 'borderLeftColor', 'outlineColor', 'textDecorationColor', 'boxShadow', 'backgroundImage'];
+    function convertir(color) {
+      if (cache.has(color)) return cache.get(color);
+      contexto.clearRect(0, 0, 1, 1);
+      contexto.fillStyle = color;
+      contexto.fillRect(0, 0, 1, 1);
+      const [rojo, verde, azul, alfa] = contexto.getImageData(0, 0, 1, 1).data;
+      const normalizado = `rgba(${rojo}, ${verde}, ${azul}, ${alfa / 255})`;
+      cache.set(color, normalizado);
+      return normalizado;
+    }
+    documento.querySelectorAll('[data-pdf-captura], [data-pdf-captura] *').forEach(nodo => {
+      const estilos = documento.defaultView.getComputedStyle(nodo);
+      for (const propiedad of propiedades) {
+        nodo.style[propiedad] = estilos[propiedad].replace(/(?:color|oklab|oklch|lab|lch)\([^)]*\)/g, convertir);
+      }
+    });
+    lienzo.width = 0;
+    lienzo.height = 0;
+  }
+
+  function prepararClon(documento, region) {
     documento.documentElement.setAttribute('data-tema', 'papel');
     documento.body.classList.remove('body--dark');
     documento.body.style.backgroundColor = 'white';
+    const anchos = [...region.querySelectorAll('*')].map(nodo => nodo.scrollWidth);
+    region.style.width = `${Math.max(region.scrollWidth, ...anchos)}px`;
     documento.querySelectorAll('[data-pdf-captura], [data-pdf-captura] *').forEach(nodo => {
       nodo.style.animation = 'none';
       nodo.style.transition = 'none';
@@ -57,6 +87,7 @@
       }
     });
     documento.querySelectorAll('[data-pdf-excluir]').forEach(nodo => nodo.remove());
+    normalizarColores(documento);
   }
 
   async function capturarRegion(nodo, configuracion, biblioteca) {

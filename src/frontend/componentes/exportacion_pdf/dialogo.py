@@ -40,7 +40,7 @@ class DialogoPortada:
             if clave == 'nombre':
                 campo.props('autofocus')
             self.campos[clave] = campo
-            self.errores[clave] = ui.label('').classes('texto-error pdf-mensaje').props(f'id={error_id} role=alert')
+            self.errores[clave] = ui.label('').classes('pdf-error pdf-mensaje').props(f'id={error_id} role=alert')
 
     def _crear_acciones(self) -> None:
         with ui.row().classes('w-full justify-end gap-3 flex-wrap'):
