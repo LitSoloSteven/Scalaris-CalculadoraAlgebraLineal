@@ -5,6 +5,7 @@ from functools import partial
 import string
 from typing import Any, Callable
 from nicegui import ui
+from src.frontend.componentes.sonido import notificar
 
 from src.frontend.componentes.cuadricula_base import (
     DIMENSION_MINIMA,
@@ -109,7 +110,7 @@ class PanelCapturaMatrices:
         """Agrega una nueva matriz 3x3 si no se ha alcanzado el limite alfabetico."""
         nombre = self.obtener_siguiente_nombre_disponible()
         if not nombre:
-            ui.notify("Limite de matrices alcanzado (Z)", type="warning")
+            notificar("Limite de matrices alcanzado (Z)", type="warning")
             return
 
         self.matrices[nombre] = crear_registro_matriz()

@@ -5,6 +5,7 @@ from src.backend.utilidades.estado_captura import captura_vacia
 from functools import partial
 from typing import Any, Callable
 from nicegui import ui
+from src.frontend.componentes.sonido import notificar
 
 from src.frontend.componentes.cuadricula_base import (
     DIMENSION_MINIMA,
@@ -234,7 +235,7 @@ class CuadriculaEcuaciones:
     def importar_desde_analizados(self, matriz_importada: Any) -> None:
         """Reconstruye la cuadricula desde una matriz con datos parseados."""
         if matriz_importada.filas > DIMENSION_MAXIMA_SISTEMAS or (matriz_importada.columnas - 1) > DIMENSION_MAXIMA_SISTEMAS:
-            ui.notify(f"El sistema excede el limite permitido ({DIMENSION_MAXIMA_SISTEMAS}x{DIMENSION_MAXIMA_SISTEMAS}).", type="warning")
+            notificar(f"El sistema excede el limite permitido ({DIMENSION_MAXIMA_SISTEMAS}x{DIMENSION_MAXIMA_SISTEMAS}).", type="warning")
             return
 
         coeficientes = [[str(valor) for valor in fila[:-1]] for fila in matriz_importada.datos]

@@ -5,6 +5,7 @@ from functools import partial
 import html
 from typing import Any, Callable
 from nicegui import ui
+from src.frontend.componentes.sonido import notificar
 from .opciones_captura_vectores import OpcionesCapturaVectores
 from .transicion_vectores import MixinTransicionVectores
 from .carga_numerica import preparar_matriz_numerica
@@ -130,7 +131,7 @@ class PanelCapturaVectores(MixinTransicionVectores):
     def agregar_vector(self) -> None:
         """Agrega un nuevo vector si la cantidad no sobrepasa el limite establecido."""
         if len(self.vectores) >= self.maximo_vectores:
-            ui.notify(f"Limite de vectores alcanzado ({self.maximo_vectores})", type="warning")
+            notificar(f"Limite de vectores alcanzado ({self.maximo_vectores})", type="warning")
             return
         nombre = self.obtener_siguiente_nombre_disponible()
         self.vectores[nombre] = {
@@ -147,7 +148,7 @@ class PanelCapturaVectores(MixinTransicionVectores):
     def eliminar_vector(self, nombre: str) -> None:
         """Elimina el vector indicado respetando el minimo permitido."""
         if len(self.vectores) <= self.minimo_vectores:
-            ui.notify(f"Se requiere al menos {self.minimo_vectores} vector(es)", type="warning")
+            notificar(f"Se requiere al menos {self.minimo_vectores} vector(es)", type="warning")
             return
         if nombre == self.etiqueta_fija_primer_vector:
             return
