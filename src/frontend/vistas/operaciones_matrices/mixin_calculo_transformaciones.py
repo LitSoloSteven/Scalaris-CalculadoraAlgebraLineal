@@ -20,6 +20,7 @@ class MixinCalculoTransformaciones:
         await ejecutar_modelo(self, boton, self._analizar_nucleo)
 
     async def _analizar_nucleo(self):
+        captura = capturar_transformaciones(self)
         calculo = await ejecutar_calculo_vigente(
             self, lambda: capturar_transformaciones(self),
             lambda captura: ControladorTransformaciones.procesar(json.dumps(captura)),
@@ -36,7 +37,7 @@ class MixinCalculoTransformaciones:
                 remove="items-center justify-center", add="items-start justify-start"
             )
             renderizar_resultado_transformaciones(respuesta)
-            self._completar_resultado_modelo()
+            self._completar_resultado_modelo(captura)
 
         ui.run_javascript("if(window.scalaris && window.scalaris.renderizarMathJax) window.scalaris.renderizarMathJax();")
 
