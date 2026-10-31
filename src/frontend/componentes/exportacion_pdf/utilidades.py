@@ -27,6 +27,7 @@ def montar_utilidad_pdf(vista, herramienta: str) -> None:
     contenedor = vista.contenedor_exportacion_pdf
 
     def leer_estado() -> tuple:
+        """Comprueba la identidad nativa sin reemplazar el resultado de la herramienta."""
         actual = resultado if _resultado(vista, herramienta) is original else None
         return (contenedor, actual, getattr(vista, '_revision_captura', 0),
                 getattr(vista, '_identificador_calculo', 0))

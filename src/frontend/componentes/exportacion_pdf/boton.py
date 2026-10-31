@@ -59,11 +59,14 @@ class ExportacionPDF:
             portada.clear()
             self._cargar(False)
 
-    async def _exportar(self, portada: dict, testigo: tuple) -> None:
+    def _pausar_procedimiento(self) -> None:
         reproductor = (getattr(self.enlace.vista, 'reproductor_pasos', None)
                        or getattr(self.enlace.vista, 'reproductor', None))
         if reproductor is not None:
             reproductor.pausar()
+
+    async def _exportar(self, portada: dict, testigo: tuple) -> None:
+        self._pausar_procedimiento()
         try:
             capturas = await capturar_regiones(self.enlace.raiz)
         except ValueError:
