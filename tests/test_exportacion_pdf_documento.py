@@ -1,10 +1,11 @@
 """Estructura PDF, portada APA, figuras, escape y geometría del documento."""
 import re
+from io import BytesIO
 
 import pytest
 from reportlab.lib.pagesizes import letter
 from src.frontend import constantes as medidas, textos
-from src.frontend.controladores.exportacion_pdf.documento import generar_pdf
+from src.frontend.controladores.exportacion_pdf.documento import generar_pdf, _crear_documento
 from src.frontend.controladores.exportacion_pdf.estilos import crear_estilos, parrafo
 from src.frontend.controladores.exportacion_pdf.figuras import preparar_figuras
 from tests.comun_exportacion_pdf import PORTADA, RESULTADO, crear_captura
@@ -72,3 +73,12 @@ def test_portada_con_nombres_maximos_envuelve_sin_agregar_paginas():
                'docente': 'W' * medidas.PDF_MAXIMO_DOCENTE}
     documento, _ = generar_pdf('sistemas', portada, RESULTADO, [crear_captura()])
     assert len(re.findall(rb'/Type\s*/Page\b', documento)) == 2
+
+
+def test_marco_sin_relleno_implicito_y_pie_reservado():
+    """El cuerpo inicia exactamente a una pulgada y conserva un pie libre para Scalaris."""
+    documento = _crear_documento(BytesIO())
+    marco = documento.pageTemplates[0].frames[0]
+    assert marco._x1 == 72 and marco._y2 == 720
+    assert marco._leftPadding == marco._rightPadding == marco._topPadding == 0
+    assert marco._y1 == 96

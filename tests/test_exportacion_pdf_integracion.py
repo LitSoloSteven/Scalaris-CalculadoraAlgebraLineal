@@ -8,6 +8,7 @@ from tests.comun_construccion_vistas import construir_pagina
 def test_boton_pdf_se_retira_al_editar_y_recalcular(monkeypatch):
     """La acción desaparece al cambiar la huella y el siguiente cálculo crea una nueva."""
     async def comprobar(vista, cliente):
+        """Resuelve, edita y limpia el sistema para comprobar el ciclo de vida del botón."""
         vista.cuadricula.cargar_datos([['1']], ['2'])
         await vista._resolver_nucleo()
         botones = [elemento for elemento in cliente.elements.values()
@@ -28,6 +29,7 @@ def test_boton_pdf_se_retira_al_editar_y_recalcular(monkeypatch):
 def test_sistema_sin_solucion_exporta_y_error_no_se_ofrece(monkeypatch):
     """Un resultado sin solución es exportable; un error de entrada queda sin acción visible."""
     async def comprobar(vista, cliente):
+        """Comprueba el resultado incompatible y una captura inválida en la misma vista."""
         vista.cuadricula.cargar_datos([['1'], ['1']], ['2', '3'])
         await vista._resolver_nucleo()
         assert vista.ultimo_resultado['estado'] == 'SIN_SOLUCION'
