@@ -3,6 +3,9 @@
   window.scalaris = window.scalaris || {};
   let carga = null;
   let ocupada = false;
+  let pendientes = null;
+  let vencimiento = null;
+  let solicitud = 0;
 
   function conPlazo(promesa, segundos) {
     let reloj;
@@ -180,5 +183,33 @@
     document.getElementById(identificador)?.focus();
   }
 
-  window.scalaris.capturaPdf = {capturar, enfocar};
+  function liberar(testigo) {
+    if (testigo !== solicitud) return false;
+    clearTimeout(vencimiento);
+    vencimiento = null;
+    pendientes = null;
+    return true;
+  }
+
+  async function preparar(identificador, configuracion) {
+    if (ocupada) return {error: 'captura'};
+    liberar(solicitud);
+    const testigo = ++solicitud;
+    const respuesta = await capturar(identificador, configuracion);
+    if (!respuesta.capturas) return respuesta;
+    pendientes = respuesta.capturas;
+    vencimiento = setTimeout(() => liberar(testigo), configuracion.plazoCaptura * 1000);
+    return {solicitud: testigo, capturas: pendientes.map(captura =>
+      ({clave: captura.clave, longitud: captura.png.length}))};
+  }
+
+  function leer(testigo, indice, desplazamiento, cantidad) {
+    if (testigo !== solicitud || !pendientes || !Number.isInteger(indice) ||
+      !Number.isInteger(desplazamiento) || desplazamiento < 0 || !Number.isInteger(cantidad) || cantidad < 1) return null;
+    const captura = pendientes[indice];
+    return captura ? captura.png.slice(desplazamiento, desplazamiento + cantidad) : null;
+  }
+
+  window.addEventListener?.('pagehide', () => liberar(solicitud));
+  window.scalaris.capturaPdf = {capturar, preparar, leer, liberar, enfocar};
 }
