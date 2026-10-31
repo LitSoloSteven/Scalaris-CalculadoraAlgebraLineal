@@ -15,6 +15,7 @@ from .mixin_calculo_transformaciones import MixinCalculoTransformaciones
 from .mixin_captura_transformaciones import MixinCapturaTransformaciones
 from .mixin_ejemplos_transformaciones import MixinEjemplosTransformaciones
 from .glosa_modelos import MixinGlosaModelos
+from .transferencia_modelos import recibir_matriz_modelo
 
 
 class VistaTransformaciones(MixinGlosaModelos, MixinLimpiezaModelos, MixinCalculoTransformaciones, MixinCapturaTransformaciones, MixinEjemplosTransformaciones):
@@ -32,12 +33,13 @@ class VistaTransformaciones(MixinGlosaModelos, MixinLimpiezaModelos, MixinCalcul
         self.ultimo_resultado = None
 
 
-    def construir(self):
+    def construir(self, token_transferencia: str = ''):
         """Construye los controles y contenedores de la vista."""
         PanelCapturaMatrices.inyectar_recursos_cliente()
         crear_estructura_aplicacion(self, ruta_activa=ruta_de("transformaciones"))
 
         with ui.column().classes("w-full max-w-7xl mx-auto p-6 mt-4 vista-raiz"):
+            self.contenedor_transferencia = ui.column().classes('w-full')
 
             with ui.row().classes("w-full items-center gap-3 mb-6"):
                 ui.icon("transform", size="2rem").classes("texto-acento")
@@ -60,6 +62,7 @@ class VistaTransformaciones(MixinGlosaModelos, MixinLimpiezaModelos, MixinCalcul
                     ).props('id="resultados-transformaciones"')
                     self._restablecer_resultados()
         self._conectar_modelo()
+        recibir_matriz_modelo(self, token_transferencia)
 
     def _crear_accion_principal(self):
         """Construye crear accion principal conservando el orden de los elementos."""

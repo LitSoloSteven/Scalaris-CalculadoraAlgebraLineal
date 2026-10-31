@@ -56,16 +56,16 @@ def _registrar_paginas_algebra() -> None:
         VistaOperacionesVectores().construir()
 
     @ui.page(ruta_de("matrices"), title=herramienta_por_identificador("matrices").titulo_pagina)
-    def pagina_matrices(operacion: str = ""):
+    def pagina_matrices(operacion: str = "", handoff: str = ""):
         """Construye la página de matrices con sus controles y contexto."""
         from src.frontend.vistas.operaciones_matrices.vista_operaciones_matrices import VistaOperacionesMatrices
 
         configurar_tema("determinantes" if operacion == OPERACION_DETERMINANTE else "matrices")
         if operacion == OPERACION_DETERMINANTE:
             from src.frontend.vistas.operaciones_matrices.vista_determinante import VistaDeterminante
-            VistaDeterminante().construir()
+            VistaDeterminante().construir(token_transferencia=handoff)
             return
-        VistaOperacionesMatrices().construir()
+        VistaOperacionesMatrices().construir(token_transferencia=handoff)
 
     @ui.page(ruta_de("inversa"), title=herramienta_por_identificador("inversa").titulo_pagina)
     def pagina_inversa(handoff: str = ""):
@@ -79,24 +79,24 @@ def _registrar_paginas_algebra() -> None:
 def _registrar_pagina_factorizacion_lu() -> None:
     """Registra la página de factorización LU."""
     @ui.page(ruta_de("factorizacion_lu"), title=herramienta_por_identificador("factorizacion_lu").titulo_pagina)
-    def pagina_factorizacion_lu():
+    def pagina_factorizacion_lu(handoff: str = ""):
         """Construye la página de factorización matricial con pivoteo parcial."""
         from src.frontend.vistas.operaciones_matrices.vista_factorizacion_lu import VistaFactorizacionLU
 
         configurar_tema("factorizacion_lu")
-        VistaFactorizacionLU().construir()
+        VistaFactorizacionLU().construir(token_transferencia=handoff)
 
 
 def _registrar_paginas_avanzadas() -> None:
     """Registra las páginas de visualización y extensiones matriciales."""
 
     @ui.page(ruta_de("determinantes"), title=herramienta_por_identificador("determinantes").titulo_pagina)
-    def pagina_determinantes():
+    def pagina_determinantes(handoff: str = ""):
         """Construye la captura pública de determinantes mediante triangulación LU."""
         from src.frontend.vistas.operaciones_matrices.vista_determinante import VistaDeterminante
 
         configurar_tema("determinantes")
-        VistaDeterminante().construir()
+        VistaDeterminante().construir(token_transferencia=handoff)
 
     @ui.page(ruta_de("visualizador"), title=herramienta_por_identificador("visualizador").titulo_pagina)
     def pagina_geometria(escena: str = "rectas-planos", handoff: str = ""):
@@ -107,20 +107,20 @@ def _registrar_paginas_avanzadas() -> None:
         VistaGeometria().construir(escena=escena, token_transferencia=handoff)
 
     @ui.page(ruta_de("leontief"), title=herramienta_por_identificador("leontief").titulo_pagina)
-    def pagina_leontief():
+    def pagina_leontief(handoff: str = ""):
         """Construye la página de leontief con sus controles y contexto."""
         from src.frontend.vistas.operaciones_matrices.vista_leontief import VistaLeontief
 
         configurar_tema("leontief")
-        VistaLeontief().construir()
+        VistaLeontief().construir(token_transferencia=handoff)
 
     @ui.page(ruta_de("transformaciones"), title=herramienta_por_identificador("transformaciones").titulo_pagina)
-    def pagina_transformaciones():
+    def pagina_transformaciones(handoff: str = ""):
         """Construye la página de transformaciones con sus controles y contexto."""
         from src.frontend.vistas.operaciones_matrices.vista_transformaciones import VistaTransformaciones
 
         configurar_tema("transformaciones")
-        VistaTransformaciones().construir()
+        VistaTransformaciones().construir(token_transferencia=handoff)
 
 
 def _registrar_paginas_utilidades() -> None:

@@ -15,6 +15,7 @@ from .mixin_calculo_leontief import MixinCalculoLeontief
 from .mixin_captura_leontief import MixinCapturaLeontief
 from .mixin_ejemplos_leontief import MixinEjemplosLeontief
 from .glosa_modelos import MixinGlosaModelos
+from .transferencia_modelos import recibir_matriz_modelo
 
 
 class VistaLeontief(MixinGlosaModelos, MixinLimpiezaModelos, MixinCalculoLeontief, MixinCapturaLeontief, MixinEjemplosLeontief):
@@ -30,12 +31,13 @@ class VistaLeontief(MixinGlosaModelos, MixinLimpiezaModelos, MixinCalculoLeontie
         self.contenedor_resultados = None
         self.ultimo_resultado = None
 
-    def construir(self):
+    def construir(self, token_transferencia: str = ''):
         """Monta captura, ejemplos y resultados del modelo económico."""
         PanelCapturaMatrices.inyectar_recursos_cliente()
         crear_estructura_aplicacion(self, ruta_activa=ruta_de("leontief"))
 
         with ui.column().classes("w-full max-w-7xl mx-auto p-6 mt-4 vista-raiz"):
+            self.contenedor_transferencia = ui.column().classes('w-full')
             with ui.row().classes("w-full items-center gap-3 mb-6"):
                 ui.html(icono_svg("matriz_inversa")).classes("w-8 h-8 texto-acento")
                 with ui.column().classes("gap-0"):
@@ -58,6 +60,7 @@ class VistaLeontief(MixinGlosaModelos, MixinLimpiezaModelos, MixinCalculoLeontie
                     ).props('id="resultados-leontief"')
                     self._restablecer_resultados()
         self._conectar_modelo()
+        recibir_matriz_modelo(self, token_transferencia)
 
     def _crear_accion_principal(self):
         """Construye crear accion principal conservando el orden de los elementos."""
