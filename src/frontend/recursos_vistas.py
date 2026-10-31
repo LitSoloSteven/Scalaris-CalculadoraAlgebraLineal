@@ -8,6 +8,8 @@ _ALGEBRA = frozenset({"sistemas", "vectores", "matrices", "inversa", "determinan
                        "visualizador", "leontief", "transformaciones"})
 _VISTAS = _INICIO | _NUMERICAS | _ALGEBRA
 _POR_RECURSO = {
+    "exportacion_pdf.css": frozenset({"sistemas"}),
+    "captura_pdf.js": frozenset({"sistemas"}),
     "presentacion.css": _INICIO,
     "vistas_inicio_matriz.css": _INICIO,
     "vistas_inicio_ventanas_emergentes.css": _INICIO,

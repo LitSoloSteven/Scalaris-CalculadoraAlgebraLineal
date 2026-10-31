@@ -1,0 +1,46 @@
+.pdf-portada {
+    width: min(100%, 34rem);
+    max-width: calc(100dvw - var(--space-6));
+    max-height: calc(100dvh - var(--space-6));
+    overflow-y: auto;
+    gap: var(--space-2);
+    padding: var(--space-6);
+    color: var(--text-main);
+}
+
+.pdf-portada .q-field__native {
+    min-width: 0;
+}
+
+.pdf-mensaje {
+    overflow-wrap: anywhere;
+    white-space: normal;
+    max-width: 100%;
+}
+
+.pdf-control {
+    flex-shrink: 0;
+    max-width: 100%;
+    white-space: normal;
+}
+
+.pdf-control:focus-visible {
+    outline: var(--space-1) solid var(--accent);
+    outline-offset: var(--space-1);
+    transform: none !important;
+    transition: none !important;
+}
+
+.pdf-portada .q-field:focus-within {
+    outline: var(--space-1) solid var(--accent);
+    outline-offset: var(--space-1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pdf-control,
+    .pdf-control:hover,
+    .pdf-control:active {
+        transform: none !important;
+        transition: none !important;
+    }
+}
