@@ -109,11 +109,14 @@ class MixinInteraccionSistemasNumericos:
         self._establecer_entrada(valor)
 
     def _notificar_entrada(self, evento):
-        """Versiona la edición antes de programar su validación visual asíncrona."""
+        """Versiona y orienta la edición antes de que pueda iniciarse otra conversión."""
         notificar_edicion(self)
-        return self._al_cambiar_entrada(evento)
+        self._orientar_entrada()
 
     async def _al_cambiar_entrada(self, evento):
+        self._orientar_entrada()
+
+    def _orientar_entrada(self):
         valor = self.entrada_valor.value or ''
 
         valido, mensaje = validar_entrada_base(valor, BASES_NUMERICAS[self.base_activa])
