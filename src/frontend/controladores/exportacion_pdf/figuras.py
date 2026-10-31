@@ -9,14 +9,16 @@ from .imagenes import ImagenValidada, validar_imagenes
 
 def preparar_figuras(herramienta: str, resultado: dict, capturas: list) -> list[dict]:
     """Asocia PNG con títulos registrados; rechaza claves desconocidas mediante ValueError."""
-    if herramienta != 'sistemas' or resultado.get('estado') not in textos.PDF_ESTADOS_SISTEMAS:
+    estados = textos.PDF_ESTADOS_POR_HERRAMIENTA.get(herramienta, {})
+    if resultado.get('estado') not in estados:
         raise ValueError(textos.PDF_ERROR_OBSOLETO)
-    registro = textos.PDF_REGIONES_SISTEMAS
+    registro = (textos.PDF_REGIONES_SISTEMAS if herramienta == 'sistemas'
+                else textos.PDF_REGIONES_ALGEBRA[herramienta])
     imagenes = validar_imagenes(capturas, tuple(registro))
     por_clave = {imagen.clave: imagen for imagen in imagenes}
-    if 'sistemas-resumen' not in por_clave:
+    if f'{herramienta}-resumen' not in por_clave:
         raise ValueError(textos.PDF_ERROR_IMAGEN)
-    estado = textos.PDF_ESTADOS_SISTEMAS[resultado['estado']]
+    estado = estados[resultado['estado']]
     figuras = []
     for clave, (titulo, descripcion) in registro.items():
         if clave in por_clave:

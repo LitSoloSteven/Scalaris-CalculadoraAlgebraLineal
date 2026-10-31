@@ -9,7 +9,12 @@ PDF_CAMPOS = {"nombre": "Nombre completo", "fecha": "Fecha", "docente": "Docente
 PDF_AFILIACION = "UAM"
 PDF_MARCA = "Scalaris"
 PDF_TITULO_RESULTADO = "Resultado de {herramienta}"
-PDF_HERRAMIENTAS = {"sistemas": "Sistemas de ecuaciones lineales"}
+PDF_HERRAMIENTAS = {
+    "sistemas": "Sistemas de ecuaciones lineales", "vectores": "Operaciones con vectores",
+    "matrices": "Operaciones con matrices", "inversa": "Matriz inversa",
+    "determinantes": "Determinantes", "lu": "Factorización LU",
+    "leontief": "Modelo de Leontief", "transformaciones": "Transformaciones lineales",
+}
 PDF_GRUPO = "Grupo {grupo}"
 PDF_DOCENTE = "Docente: {docente}"
 PDF_CANCELAR = "Cancelar"
@@ -39,6 +44,59 @@ PDF_REGIONES_SISTEMAS = {
 }
 PDF_DESCRIPCION_ESTADO = " Estado del resultado: {estado}."
 PDF_ESTADOS_SISTEMAS = {"SOLUCION_UNICA": "solución única", "SOLUCIONES_INFINITAS": "infinitas soluciones", "SIN_SOLUCION": "sin solución"}
+PDF_ESTADOS_ALGEBRA = {
+    "EXITO": "cálculo completado", "SINGULAR": "matriz singular",
+    "UNICA": "combinación única", "INFINITA": "infinitas combinaciones",
+    "SIN_SOLUCION": "sin solución", "SOLUCIONES_INFINITAS": "infinitas soluciones",
+}
+PDF_PROCEDIMIENTO = ("Paso Visible del Procedimiento", "Se presenta únicamente el paso visible del procedimiento, sin recorrer los demás pasos.")
+PDF_REGIONES_ALGEBRA = {
+    "vectores": {
+        "vectores-resumen": ("Estado de la Operación Vectorial", "Se presenta el estado de la operación con vectores calculada."),
+        "vectores-solucion": ("Solución de la Operación Vectorial", "Se presenta el vector resultante, los coeficientes o el análisis de independencia que muestra la herramienta."),
+        "vectores-procedimiento": PDF_PROCEDIMIENTO,
+    },
+    "matrices": {
+        "matrices-resumen": ("Estado de la Expresión Matricial", "Se presenta el estado de la evaluación matricial."),
+        "matrices-resultado": ("Matriz Resultante", "Se presenta la matriz final que muestra la herramienta."),
+        "matrices-procedimiento": PDF_PROCEDIMIENTO,
+    },
+    "inversa": {
+        "inversa-resumen": ("Estado de la Matriz Inversa", "Se presenta la clasificación de la matriz y el determinante mostrado."),
+        "inversa-resultado": ("Resultado de la Inversión", "Se presenta la matriz inversa o la matriz evaluada cuando es singular."),
+        "inversa-comprobaciones": ("Comprobaciones de la Inversa", "Se presentan las comprobaciones visibles entregadas por el cálculo."),
+        "inversa-procedimiento": PDF_PROCEDIMIENTO,
+    },
+    "determinantes": {
+        "determinantes-resumen": ("Valor del Determinante", "Se presenta el determinante y las métricas del cálculo."),
+        "determinantes-procedimiento": PDF_PROCEDIMIENTO,
+    },
+    "lu": {
+        "lu-resumen": ("Estado de la Factorización", "Se presenta el estado, las dimensiones y el rango de la factorización."),
+        "lu-factores": ("Factores de la Matriz", "Se presentan los factores de permutación, triangular inferior y triangular superior, y su comprobación."),
+        "lu-procedimiento": PDF_PROCEDIMIENTO,
+    },
+    "leontief": {
+        "leontief-resumen": ("Resultado del Modelo de Leontief", "Se presenta el estado del modelo y la producción calculada cuando existe."),
+        "leontief-analisis": ("Análisis del Modelo de Leontief", "Se presenta la condición de Hawkins-Simon y el análisis sectorial visible cuando existe."),
+        "leontief-procedimiento": PDF_PROCEDIMIENTO,
+    },
+    "transformaciones": {
+        "transformaciones-resumen": ("Propiedades de la Transformación", "Se presentan el rango, la nulidad y las propiedades de la transformación."),
+        "transformaciones-bases": ("Núcleo e Imagen", "Se presentan las bases del núcleo y de la imagen entregadas por el cálculo."),
+        "transformaciones-procedimiento": PDF_PROCEDIMIENTO,
+    },
+}
+PDF_ESTADOS_POR_HERRAMIENTA = {
+    "sistemas": PDF_ESTADOS_SISTEMAS,
+    "vectores": {clave: PDF_ESTADOS_ALGEBRA[clave] for clave in ("EXITO", "UNICA", "INFINITA", "SIN_SOLUCION")},
+    "matrices": {"EXITO": PDF_ESTADOS_ALGEBRA["EXITO"]},
+    "inversa": {clave: PDF_ESTADOS_ALGEBRA[clave] for clave in ("EXITO", "SINGULAR")},
+    "determinantes": {"EXITO": PDF_ESTADOS_ALGEBRA["EXITO"]},
+    "lu": {"EXITO": PDF_ESTADOS_ALGEBRA["EXITO"]},
+    "leontief": {clave: PDF_ESTADOS_ALGEBRA[clave] for clave in ("EXITO", "SINGULAR", "SIN_SOLUCION", "SOLUCIONES_INFINITAS")},
+    "transformaciones": {"EXITO": PDF_ESTADOS_ALGEBRA["EXITO"]},
+}
 
 NOMBRE_SELECTOR_VECTORES = "Operaciones con vectores"
 OPCIONES_OPERACIONES_VECTORES = (
