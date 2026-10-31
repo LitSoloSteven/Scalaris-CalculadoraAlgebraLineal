@@ -5,10 +5,11 @@ from src.frontend.componentes.panel_ia import PanelIA
 from src.frontend.componentes.cuadricula_base import ubicar_celda_matriz
 from src.frontend.controladores.limpieza_captura import retirar_estado_calculado
 from src.frontend.controladores.sesion_matricial import invalidar_resultado, actualizar_contexto, programar_vista_previa, cancelar_vista_previa
-from src.frontend.controladores.operaciones_matrices.contexto_modelos import obtener_contexto_modelo, obtener_senales_modelo
+from src.frontend.controladores.operaciones_matrices.contexto_modelos import obtener_contexto_modelo, obtener_senales_modelo, capturar_modelo
 from ._presentacion_modelos import montar_pasos_modelo
 from .herramientas_modelos import MixinHerramientasModelos
-from src.frontend.componentes.copia_resultado import renderizar_copia_resultado
+from src.frontend.componentes.exportacion_pdf.integracion import completar_exportacion
+from src.frontend.controladores.exportacion_pdf.vigencia import EnlacePDF
 from src.frontend.componentes.acciones_matriz import renderizar_acciones_matriz
 
 
@@ -42,13 +43,15 @@ class MixinGlosaModelos(MixinHerramientasModelos):
 
     def _completar_resultado_modelo(self, captura: dict | None = None) -> None:
         self.panel_ia.renderizar_sugerencias_en_linea()
-        renderizar_copia_resultado(self.ultimo_resultado)
         self.reproductor_pasos = montar_pasos_modelo(self)
         self._registrar_modelo()
         if self.ultimo_resultado.get("estado") == "EXITO" and captura is not None:
             clave = "matriz_coeficientes" if self.herramienta_modelo == "leontief" else "matriz_transformacion"
             renderizar_acciones_matriz(self.herramienta_modelo, captura[clave])
         actualizar_contexto(self)
+
+        enlace = EnlacePDF(self, lambda: capturar_modelo(self), f'c{self.contenedor_resultados.id}')
+        completar_exportacion(self, self.herramienta_modelo, self.ultimo_resultado, enlace)
 
     def obtener_senales_ia(self):
         """Devuelve estados, banderas y errores numéricos del modelo actual."""
