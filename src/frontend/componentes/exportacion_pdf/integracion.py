@@ -10,6 +10,11 @@ def region_pdf(clave: str):
     return ui.column().classes('w-full min-w-0').props(f'data-pdf-captura={clave}')
 
 
+def identificador_raiz(contenedor) -> str:
+    """Resuelve el id DOM efectivo, incluidos los ids explícitos de las vistas."""
+    return str(contenedor._props.get('id', contenedor.html_id))
+
+
 def completar_exportacion(vista, herramienta: str, resultado: dict, enlace: EnlacePDF) -> None:
     """Marca el reproductor visible y conecta la actualización del único botón PDF."""
     reproductor = getattr(vista, 'reproductor_pasos', None)

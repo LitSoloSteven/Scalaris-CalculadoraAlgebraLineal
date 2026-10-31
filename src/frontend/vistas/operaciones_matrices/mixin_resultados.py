@@ -13,7 +13,7 @@ from nicegui import ui
 from src.frontend.componentes.sonido import notificar
 from src.frontend.componentes.avisos_resultado import mostrar_error_inesperado, renderizar_aviso_resultado
 from src.frontend.componentes.glosa_foco import crear_accion_explicacion
-from src.frontend.componentes.exportacion_pdf.integracion import region_pdf, completar_exportacion
+from src.frontend.componentes.exportacion_pdf.integracion import region_pdf, completar_exportacion, identificador_raiz
 from src.frontend.controladores.exportacion_pdf.vigencia import EnlacePDF
 from src.frontend.componentes.acciones_matriz import renderizar_acciones_matriz
 from src.frontend import textos
@@ -107,7 +107,9 @@ class MixinResultadosOperacionesMatrices:
             self._renderizar_transferencias(respuesta, matrices)
             enlace = EnlacePDF(self, lambda: capturar_matrices(
                 self.panel_captura_matrices.matrices, self.entrada_expresion.value),
-                f'c{self.contenedor_resultados.id}')
+                identificador_raiz(self.contenedor_resultados),
+                lambda: (self.contenedor_resultados, self.ultimo_resultado,
+                         self._version_solicitud, self._version_solicitud))
             completar_exportacion(self, 'matrices', respuesta, enlace)
 
     def _capturar_evaluacion(self) -> dict:

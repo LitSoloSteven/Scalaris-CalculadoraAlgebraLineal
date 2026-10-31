@@ -11,7 +11,7 @@ from src.backend.utilidades.formateadores import formatear_fraccion_texto
 from src.frontend.componentes.reproductor_pasos.html_tablas import html_tabla_matriz
 from src.frontend.componentes.desarrollo_comprobacion import mostrar_desarrollo
 from src.frontend.componentes.acciones_matriz import renderizar_acciones_matriz
-from src.frontend.componentes.exportacion_pdf.integracion import region_pdf, completar_exportacion
+from src.frontend.componentes.exportacion_pdf.integracion import region_pdf, completar_exportacion, identificador_raiz
 from src.frontend.controladores.exportacion_pdf.vigencia import EnlacePDF
 
 
@@ -190,5 +190,5 @@ def renderizar_resultado_inversa(vista, resultado: dict, datos_capturados: list[
         if estado in ("EXITO", "SINGULAR"):
             renderizar_acciones_matriz("inversa", datos_capturados)
             enlace = EnlacePDF(vista, lambda: {'datos': vista.panel_matriz_cuadrada.obtener_datos_matriz()},
-                               f'c{vista.contenedor_resultados.id}')
+                               identificador_raiz(vista.contenedor_resultados))
             completar_exportacion(vista, 'inversa', resultado, enlace)
