@@ -8,7 +8,8 @@ from src.frontend.controladores.sesion_matricial import actualizar_contexto, cap
 from src.frontend import textos
 from ._presentacion_determinante import montar_reproductor
 from ._tarjeta_determinante import mostrar_tarjeta_determinante, mostrar_interpretacion_determinante
-from src.frontend.componentes.copia_resultado import renderizar_copia_resultado
+from src.frontend.componentes.exportacion_pdf.integracion import region_pdf, completar_exportacion
+from src.frontend.controladores.exportacion_pdf.vigencia import EnlacePDF
 from src.frontend.componentes.acciones_matriz import renderizar_acciones_matriz
 
 
@@ -64,8 +65,10 @@ class ResultadosDeterminante:
             if respuesta.get('estado') == 'ERROR':
                 ui.label(respuesta['mensaje']).props('role=alert').classes('distintivo-error')
                 return
-            mostrar_tarjeta_determinante(respuesta)
-            renderizar_copia_resultado(respuesta)
+            with region_pdf('determinantes-resumen'):
+                mostrar_tarjeta_determinante(respuesta)
             self.panel_ia.renderizar_sugerencias_en_linea()
             self.reproductor_pasos = montar_reproductor(respuesta, self.panel_ia)
             mostrar_interpretacion_determinante()
+            enlace = EnlacePDF(self, self._capturar, f'c{self.contenedor_resultados.id}')
+            completar_exportacion(self, 'determinantes', respuesta, enlace)

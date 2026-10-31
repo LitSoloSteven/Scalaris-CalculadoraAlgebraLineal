@@ -13,7 +13,8 @@ from nicegui import ui
 from src.frontend.componentes.sonido import notificar
 from src.frontend.componentes.avisos_resultado import mostrar_error_inesperado, renderizar_aviso_resultado
 from src.frontend.componentes.glosa_foco import crear_accion_explicacion
-from src.frontend.componentes.copia_resultado import renderizar_copia_resultado
+from src.frontend.componentes.exportacion_pdf.integracion import region_pdf, completar_exportacion
+from src.frontend.controladores.exportacion_pdf.vigencia import EnlacePDF
 from src.frontend.componentes.acciones_matriz import renderizar_acciones_matriz
 from src.frontend import textos
 from src.frontend.controladores.sesion_matricial import actualizar_contexto
@@ -90,17 +91,24 @@ class MixinResultadosOperacionesMatrices:
         self.ultimo_resultado = respuesta
         self._actualizar_huella_ia(expresion)
 
+        self._presentar_evaluacion(respuesta, captura['matrices'])
+        ui.run_javascript('if(window.scalaris && window.scalaris.renderizarMathJax) window.scalaris.renderizarMathJax();')
+
+    def _presentar_evaluacion(self, respuesta: dict, matrices: dict) -> None:
         self.contenedor_resultados.clear()
         with self.contenedor_resultados:
             self.contenedor_resultados.classes(
                 remove='items-center justify-center', add='items-start justify-start'
             )
-            self._renderizar_estado_y_sugerencias(respuesta)
+            with region_pdf('matrices-resumen'):
+                self._renderizar_estado_y_sugerencias(respuesta)
             self._renderizar_seccion_pasos(respuesta)
             self._renderizar_resultado_final(respuesta)
-            self._renderizar_transferencias(respuesta, captura['matrices'])
-
-        ui.run_javascript('if(window.scalaris && window.scalaris.renderizarMathJax) window.scalaris.renderizarMathJax();')
+            self._renderizar_transferencias(respuesta, matrices)
+            enlace = EnlacePDF(self, lambda: capturar_matrices(
+                self.panel_captura_matrices.matrices, self.entrada_expresion.value),
+                f'c{self.contenedor_resultados.id}')
+            completar_exportacion(self, 'matrices', respuesta, enlace)
 
     def _capturar_evaluacion(self) -> dict:
         return {'expresion': self.entrada_expresion.value,
@@ -154,7 +162,6 @@ class MixinResultadosOperacionesMatrices:
 
     def _renderizar_resultado_final(self, respuesta: dict):
         """Muestra el resultado final si la evaluación incluyó más de una suboperación."""
-        renderizar_copia_resultado(respuesta)
         mostrar_resultado_final = len(respuesta.get("pasos_segmento", [])) != 1
         if (
             mostrar_resultado_final
@@ -162,7 +169,7 @@ class MixinResultadosOperacionesMatrices:
             and respuesta.get("matriz_resultado_latex")
         ):
             ui.label('Resultado Final:').classes('font-bold text-xl texto-principal mt-6 mb-4')
-            with ui.row().classes('w-full justify-center items-center panel-tarjeta p-6 overflow-x-auto'):
+            with ui.row().classes('w-full justify-center items-center panel-tarjeta p-6 overflow-x-auto').props('data-pdf-captura=matrices-resultado'):
                 ui.html(
                     f'<div class="matematicas-desplazamiento matematicas-etiqueta text-2xl font-bold">'
                     f'$$ {html.escape(respuesta["variable_final"])} = {html.escape(respuesta["matriz_resultado_latex"])} $$'
