@@ -90,6 +90,9 @@
       }
     });
     documento.querySelectorAll('[data-pdf-excluir]').forEach(nodo => nodo.remove());
+    documento.querySelectorAll('.numericos-residuo-activo').forEach(nodo => {
+      nodo.style.paddingBlock = 'var(--space-1)';
+    });
     normalizarColores(documento);
   }
 
