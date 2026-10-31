@@ -66,7 +66,6 @@ class MixinResultadoRomano:
             )})
         self.reproductor.construir()
         self.reproductor.tarjeta.props('data-pdf-captura=romanos-procedimiento')
-        self.contenedor_acciones_pdf = ui.column().classes('w-full')
 
 
 _LINEAS_AYUDA_ROMANOS = (

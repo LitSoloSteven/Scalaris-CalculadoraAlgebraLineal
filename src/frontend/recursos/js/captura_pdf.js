@@ -147,12 +147,75 @@
     const capturas = [];
     let total = 0;
     for (const region of regiones) {
-      const captura = await capturarRegion(region, configuracion, biblioteca, estado);
+      const captura = region.dataset.pdfMotor === 'plotly'
+        ? await capturarPlotly(region, configuracion, estado)
+        : await capturarRegion(region, configuracion, biblioteca, estado);
       total += Math.ceil(captura.png.length / 4) * 3;
       if (total > configuracion.maximoBytesTotal) throw new Error('total');
       capturas.push(captura);
     }
     return {capturas};
+  }
+
+  function prepararDatosPlotly(figura) {
+    const datos = structuredClone(figura.data);
+    const colores = window.scalaris.graficos;
+    for (const traza of datos) {
+      for (const [ruta, rol] of Object.entries(traza.meta?.scalaris_colores || {})) {
+        const color = rol.startsWith('serie:') ? colores.paletas.papel[Number(rol.split(':')[1])] : colores[rol].papel;
+        const partes = ruta.split('.');
+        let destino = traza;
+        for (const parte of partes.slice(0, -1)) destino = destino[parte] ||= {};
+        destino[partes.at(-1)] = ruta === 'colorscale' ? [[0, color], [1, color]] : color;
+      }
+    }
+    return datos;
+  }
+
+  function prepararDisposicionPlotly(figura) {
+    const disposicion = structuredClone(figura.layout);
+    const colores = window.scalaris.graficos;
+    disposicion.font = {...disposicion.font, color: colores.texto.papel};
+    disposicion.paper_bgcolor = disposicion.plot_bgcolor = 'white';
+    for (const nombre of ['xaxis', 'yaxis', 'zaxis']) {
+      for (const contenedor of [disposicion, disposicion.scene].filter(Boolean)) {
+        if (!contenedor[nombre]) continue;
+        Object.assign(contenedor[nombre], {color: colores.texto.papel, gridcolor: colores.cuadricula.papel,
+          zerolinecolor: colores.texto.papel, backgroundcolor: 'white'});
+      }
+    }
+    if (disposicion.scene && figura._fullLayout.scene?.camera) {
+      disposicion.scene.camera = structuredClone(figura._fullLayout.scene.camera);
+    }
+    return disposicion;
+  }
+
+  async function capturarPlotly(region, configuracion, estado) {
+    const figura = region.querySelector('.js-plotly-plot');
+    const biblioteca = window.Plotly || window.getElement?.(figura)?.Plotly;
+    if (!figura?._fullLayout || !biblioteca?.newPlot || !biblioteca?.toImage) throw new Error('grafica');
+    const caja = figura.getBoundingClientRect();
+    const escala = escalaSegura(caja.width, caja.height, configuracion);
+    if (!(escala > 0)) throw new Error('dimensiones');
+    const temporal = document.createElement('div');
+    temporal.setAttribute('aria-hidden', 'true');
+    temporal.dataset.pdfTemporal = '';
+    Object.assign(temporal.style, {position: 'fixed', left: '100%', top: '0',
+      width: `${caja.width}px`, height: `${caja.height}px`, pointerEvents: 'none'});
+    document.body.appendChild(temporal);
+    try {
+      await biblioteca.newPlot(temporal, prepararDatosPlotly(figura), prepararDisposicionPlotly(figura), {staticPlot: true});
+      if (estado.cancelada) throw new Error('cancelada');
+      const imagen = await biblioteca.toImage(temporal, {format: 'png',
+        width: Math.floor(caja.width * escala), height: Math.floor(caja.height * escala)});
+      if (estado.cancelada || !imagen.startsWith('data:image/png;base64,')) throw new Error('cancelada');
+      const png = imagen.split(',')[1];
+      if (png.length > Math.ceil(configuracion.maximoBytesImagen / 3) * 4) throw new Error('peso');
+      return {clave: region.dataset.pdfCaptura, png};
+    } finally {
+      biblioteca.purge(temporal);
+      temporal.remove();
+    }
   }
 
   /** Captura regiones con plazo global y libera bloqueos incluso si la biblioteca queda pendiente. */
