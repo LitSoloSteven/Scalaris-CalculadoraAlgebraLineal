@@ -11,6 +11,12 @@ from tests.comun_exportacion_utilidades import (
 )
 
 
+def _comprobar_descendientes(regiones):
+    descendientes = [hijo for region in regiones for hijo in region.descendants()]
+    assert not any('data-pdf-captura' in hijo._props for hijo in descendientes)
+    assert not any(hijo._props.get('aria-label') == 'Preguntas sugeridas' for hijo in descendientes)
+
+
 @pytest.mark.parametrize('caso', CASOS)
 def test_resultado_marca_regiones_y_oculta_exportacion_al_editar(monkeypatch, caso):
     """Un resultado real conserva identidad y pierde vigencia al editar o limpiar."""
@@ -27,10 +33,7 @@ def test_resultado_marca_regiones_y_oculta_exportacion_al_editar(monkeypatch, ca
         esperada = 'visualizador-resumen' if herramienta == 'visualizador' else f'{herramienta}-resultado'
         assert esperada in claves
         assert len(claves) == len(regiones)
-        assert not any('data-pdf-captura' in hijo._props
-                       for region in regiones for hijo in region.descendants())
-        assert not any(hijo._props.get('aria-label') == 'Preguntas sugeridas'
-                       for region in regiones for hijo in region.descendants())
+        _comprobar_descendientes(regiones)
         testigo = control.enlace.testigo()
         await editar_utilidad(caso, vista)
         assert not control.enlace.comprobar(testigo, control.resultado)
