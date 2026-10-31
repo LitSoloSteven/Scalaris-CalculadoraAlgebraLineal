@@ -11,6 +11,19 @@ from tests.comun_exportacion_algebra import (
 )
 
 
+def _comprobar_regiones(control):
+    contenedor = control.enlace.estado()[0]
+    assert control.enlace.raiz == contenedor._props.get('id', contenedor.html_id)
+    regiones = regiones_control(control)
+    claves = [region._props['data-pdf-captura'] for region in regiones]
+    assert len(claves) == len(set(claves))
+    assert f'{control.herramienta}-resumen' in claves
+    assert set(claves) <= textos.PDF_REGIONES_ALGEBRA[control.herramienta].keys()
+    assert all(list(region) for region in regiones)
+    assert not any('data-pdf-captura' in ancestro._props for region in regiones for ancestro in region.ancestors())
+    return claves
+
+
 @pytest.mark.parametrize('herramienta', HERRAMIENTAS)
 def test_calculo_real_exportable_sin_copia_y_edicion_lo_retira(monkeypatch, herramienta):
     """Cada herramienta ofrece un único PDF vigente y regiones independientes registradas."""
@@ -22,13 +35,8 @@ def test_calculo_real_exportable_sin_copia_y_edicion_lo_retira(monkeypatch, herr
         assert sum(boton.text == textos.PDF_EXPORTAR and boton.visible for boton in botones) == 1
         assert not any(boton.text in ('Copiar resultado', 'Copiar A⁻¹') for boton in botones)
         assert control.enlace.vigente(control.resultado)
-        assert control.enlace.raiz == f'c{control.enlace.estado()[0].id}'
-        regiones = regiones_control(control)
-        claves = [region._props['data-pdf-captura'] for region in regiones]
-        assert len(claves) == len(set(claves))
-        assert f'{control.herramienta}-resumen' in claves
-        assert set(claves) <= textos.PDF_REGIONES_ALGEBRA[control.herramienta].keys()
-        assert not any('data-pdf-captura' in ancestro._props for region in regiones for ancestro in region.ancestors())
+        assert control.enlace.comprobar(control.enlace.testigo(), control.resultado)
+        claves = _comprobar_regiones(control)
         documento, _ = generar_pdf(control.herramienta, PORTADA, control.resultado,
                                    [crear_captura(clave) for clave in claves])
         assert documento.startswith(b'%PDF-')

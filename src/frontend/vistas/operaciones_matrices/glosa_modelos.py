@@ -8,7 +8,7 @@ from src.frontend.controladores.sesion_matricial import invalidar_resultado, act
 from src.frontend.controladores.operaciones_matrices.contexto_modelos import obtener_contexto_modelo, obtener_senales_modelo, capturar_modelo
 from ._presentacion_modelos import montar_pasos_modelo
 from .herramientas_modelos import MixinHerramientasModelos
-from src.frontend.componentes.exportacion_pdf.integracion import completar_exportacion
+from src.frontend.componentes.exportacion_pdf.integracion import completar_exportacion, identificador_raiz
 from src.frontend.controladores.exportacion_pdf.vigencia import EnlacePDF
 from src.frontend.componentes.acciones_matriz import renderizar_acciones_matriz
 
@@ -50,7 +50,7 @@ class MixinGlosaModelos(MixinHerramientasModelos):
             renderizar_acciones_matriz(self.herramienta_modelo, captura[clave])
         actualizar_contexto(self)
 
-        enlace = EnlacePDF(self, lambda: capturar_modelo(self), f'c{self.contenedor_resultados.id}')
+        enlace = EnlacePDF(self, lambda: capturar_modelo(self), identificador_raiz(self.contenedor_resultados))
         completar_exportacion(self, self.herramienta_modelo, self.ultimo_resultado, enlace)
 
     def obtener_senales_ia(self):

@@ -45,10 +45,12 @@ class MixinResultadosVectores(MixinPasosVectores):
                 self.panel_ia.renderizar_sugerencias_en_linea()
             if estado == "ERROR":
                 return
-            with region_pdf('vectores-solucion'):
+            with region_pdf('vectores-solucion') as solucion:
                 self._renderizar_solucion_vectorial(resultado)
             if self.reproductor_pasos is not None:
                 self.reproductor_pasos.tarjeta.move(self.panel_resultados)
+            if not list(solucion):
+                solucion.delete()
             self._renderizar_boton_visualizador(resultado)
             enlace = EnlacePDF(self, lambda: entrada_actual(self), f'c{self.panel_resultados.id}',
                                lambda: (self.panel_resultados, self.resultado_actual,
