@@ -6,14 +6,10 @@ from datetime import date
 from src.frontend import constantes as limites, textos
 from .glifos import texto_admitido
 
-_LIMITES = {'nombre': limites.PDF_MAXIMO_NOMBRE, 'docente': limites.PDF_MAXIMO_DOCENTE,
-            'grupo': limites.PDF_MAXIMO_GRUPO}
-
-
 def validar_portada(datos: dict) -> tuple[dict[str, str], dict[str, str]]:
     """Devuelve datos normalizados y errores por campo sin conservar información personal."""
     portada, errores = {}, {}
-    for campo, limite in _LIMITES.items():
+    for campo, limite in limites.PDF_LIMITES_PORTADA.items():
         valor = datos.get(campo, '')
         valor = valor.strip() if isinstance(valor, str) else ''
         portada[campo] = valor

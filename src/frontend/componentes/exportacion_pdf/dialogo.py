@@ -7,10 +7,6 @@ from nicegui import ui
 from src.frontend import constantes as limites, textos
 from src.frontend.controladores.exportacion_pdf.portada import validar_portada
 
-_MAXIMOS = {'nombre': limites.PDF_MAXIMO_NOMBRE, 'docente': limites.PDF_MAXIMO_DOCENTE,
-            'grupo': limites.PDF_MAXIMO_GRUPO}
-
-
 class DialogoPortada:
     """Gestiona campos y errores en memoria hasta cerrar; nunca usa almacenamiento."""
 
@@ -36,7 +32,7 @@ class DialogoPortada:
             ui.html(f'<label for="{identificador}">{escape(etiqueta)}</label>')
             campo = ui.input(value='').classes('w-full min-w-0').props(
                 f'outlined dense autocomplete=off for={identificador} aria-describedby={error_id}')
-            campo.props(f'maxlength={_MAXIMOS[clave]}' if clave in _MAXIMOS else 'type=date')
+            campo.props(f'maxlength={limites.PDF_LIMITES_PORTADA[clave]}' if clave in limites.PDF_LIMITES_PORTADA else 'type=date')
             if clave == 'nombre':
                 campo.props('autofocus')
             self.campos[clave] = campo
@@ -78,6 +74,7 @@ class DialogoPortada:
     def _al_cerrar(self) -> None:
         for campo in self.campos.values():
             campo.set_value('')
+            campo.props('aria-invalid=false')
         for error in self.errores.values():
             error.set_text('')
         if not self.activador.is_deleted and self.activador.visible:
