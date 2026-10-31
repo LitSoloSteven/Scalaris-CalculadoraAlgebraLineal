@@ -9,8 +9,7 @@ from nicegui import Client, core, ui
 
 from src.frontend.componentes import sonido
 from src.frontend.componentes.control_sonido import renderizar_control_sonido
-from src.frontend.componentes.barra_navegacion import crear_barra_navegacion
-from src.frontend.vistas.inicio.vista_inicio import VistaInicio
+from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.tema import _CABECERA_HTML
 from src.frontend.recursos_vistas import seleccionar_recursos
 from tests.comun import RAIZ
@@ -103,17 +102,18 @@ def test_control_nativo_con_nombre_estable_estado_e_iconos(monkeypatch):
 
 
 @pytest.mark.parametrize('actualizada', [True, False])
-def test_navegacion_e_inicio_montan_el_mismo_control(monkeypatch, actualizada):
-    """Las variantes de navegación y la cabecera inicial permiten cambiar el silencio."""
+@pytest.mark.parametrize('ruta', ['/', '/algebra-lineal/sistemas'])
+def test_navegacion_e_inicio_montan_el_mismo_control(monkeypatch, actualizada, ruta):
+    """Cada pantalla monta un único control fuera de la cabecera en ambas navegaciones."""
     monkeypatch.setattr(core, 'script_mode', False)
     monkeypatch.setattr('src.frontend.componentes.barra_navegacion.banderas.navegacion_actualizada', lambda: actualizada)
     cliente = Client(ui.page('/prueba_sonido_navegacion'))
     try:
         with cliente:
-            crear_barra_navegacion(ruta_activa='/algebra-lineal/sistemas')
-            VistaInicio()._renderizar_cabecera()
+            crear_estructura_aplicacion(ruta_activa=ruta)
         controles = [elemento for elemento in cliente.elements.values() if 'data-sonido-control' in elemento._props]
-        assert len(controles) == 2
+        assert len(controles) == 1
+        assert controles[0].parent_slot.parent is cliente.content
     finally:
         cliente.delete()
 
