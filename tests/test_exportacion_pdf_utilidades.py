@@ -29,6 +29,8 @@ def test_resultado_marca_regiones_y_oculta_exportacion_al_editar(monkeypatch, ca
         assert len(claves) == len(regiones)
         assert not any('data-pdf-captura' in hijo._props
                        for region in regiones for hijo in region.descendants())
+        assert not any(hijo._props.get('aria-label') == 'Preguntas sugeridas'
+                       for region in regiones for hijo in region.descendants())
         testigo = control.enlace.testigo()
         await editar_utilidad(caso, vista)
         assert not control.enlace.comprobar(testigo, control.resultado)
