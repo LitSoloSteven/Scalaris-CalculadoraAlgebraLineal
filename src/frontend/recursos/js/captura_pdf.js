@@ -203,6 +203,10 @@
     Object.assign(temporal.style, {position: 'fixed', left: '100%', top: '0',
       width: `${caja.width}px`, height: `${caja.height}px`, pointerEvents: 'none'});
     document.body.appendChild(temporal);
+    const limpiar = () => {
+      try { biblioteca.purge(temporal); } finally { temporal.remove(); }
+    };
+    estado.limpiarPlotly = limpiar;
     try {
       await biblioteca.newPlot(temporal, prepararDatosPlotly(figura), prepararDisposicionPlotly(figura), {staticPlot: true});
       if (estado.cancelada) throw new Error('cancelada');
@@ -213,8 +217,8 @@
       if (png.length > Math.ceil(configuracion.maximoBytesImagen / 3) * 4) throw new Error('peso');
       return {clave: region.dataset.pdfCaptura, png};
     } finally {
-      biblioteca.purge(temporal);
-      temporal.remove();
+      limpiar();
+      estado.limpiarPlotly = null;
     }
   }
 
@@ -234,6 +238,7 @@
       return {error: 'captura'};
     } finally {
       estado.cancelada = true;
+      estado.limpiarPlotly?.();
       document.querySelectorAll('iframe.html2canvas-container').forEach(marco => {
         if (!anteriores.has(marco)) marco.remove();
       });

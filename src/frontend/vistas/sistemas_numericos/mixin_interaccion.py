@@ -108,8 +108,12 @@ class MixinInteraccionSistemasNumericos:
         self.pestanas_origen.set_value(nueva_base)
         self._establecer_entrada(valor)
 
-    async def _al_cambiar_entrada(self, evento):
+    def _notificar_entrada(self, evento):
+        """Versiona la edición antes de programar su validación visual asíncrona."""
         notificar_edicion(self)
+        return self._al_cambiar_entrada(evento)
+
+    async def _al_cambiar_entrada(self, evento):
         valor = self.entrada_valor.value or ''
 
         valido, mensaje = validar_entrada_base(valor, BASES_NUMERICAS[self.base_activa])

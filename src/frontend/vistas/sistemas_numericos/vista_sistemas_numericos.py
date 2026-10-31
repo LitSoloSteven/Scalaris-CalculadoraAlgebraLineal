@@ -36,7 +36,7 @@ class VistaSistemasNumericos(MixinLimpiezaBases, MixinInteraccionSistemasNumeric
                     'w-full matriz-entrada numericos-entrada'
                 ).classes("numericos-entrada-base")
                 self.entrada_valor.props('autocomplete="off" spellcheck="false"')
-                self.entrada_valor.on_value_change(self._al_cambiar_entrada)
+                self.entrada_valor.on_value_change(self._notificar_entrada)
                 self.entrada_valor.on('keydown.enter', self._convertir_boton)
 
                 with ui.row().classes('absolute right-6 top-1/2 -translate-y-1/2'):
