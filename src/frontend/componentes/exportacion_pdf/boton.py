@@ -60,7 +60,8 @@ class ExportacionPDF:
             self._cargar(False)
 
     async def _exportar(self, portada: dict, testigo: tuple) -> None:
-        reproductor = getattr(self.enlace.vista, 'reproductor_pasos', None)
+        reproductor = (getattr(self.enlace.vista, 'reproductor_pasos', None)
+                       or getattr(self.enlace.vista, 'reproductor', None))
         if reproductor is not None:
             reproductor.pausar()
         try:
