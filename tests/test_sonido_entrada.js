@@ -39,7 +39,20 @@ test('entrada ya vista, ruta ajena o cancelación anterior al montaje no suenan'
     const cancelado = crearPresentacion();
     const sonidos = [];
     cancelado.ventana.scalaris.sonido = { reproducir: nombre => sonidos.push(nombre) };
-    cancelado.documento.emitir('pointerdown', { isTrusted: true });
+    cancelado.documento.emitir('pointerdown', { isTrusted: false });
     await cancelado.reloj.avanzar(3000);
     comprobar.deepEqual(sonidos, []);
+});
+
+test('el primer gesto real permite acompañar el cierre de una entrada bloqueada', async () => {
+    for (const tipo of ['pointerdown', 'keydown']) {
+        const cliente = crearPresentacion();
+        const sonidos = [];
+        cliente.ventana.scalaris.sonido = { reproducir: nombre => sonidos.push(nombre) };
+        cliente.documento.emitir(tipo, { isTrusted: true });
+        await cliente.reloj.avanzar(3000);
+        comprobar.deepEqual(sonidos, ['entrada']);
+        comprobar.equal(cliente.montado(), false);
+        comprobar.equal(cliente.documento.oyentes.get(tipo)?.size || 0, 1);
+    }
 });
