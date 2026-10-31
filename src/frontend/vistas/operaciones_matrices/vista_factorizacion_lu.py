@@ -8,6 +8,7 @@ from src.frontend.componentes.estructura_aplicacion import crear_estructura_apli
 from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
 from src.frontend.componentes.panel_ia import PanelIA
 from src.frontend.componentes.panel_matriz_rectangular import PanelMatrizRectangular
+from src.frontend.componentes.transferencia import recibir_matriz
 from src.frontend.controladores.operaciones_matrices.vista_previa_factorizacion_lu import preparar_presentacion_factorizacion_lu
 from src.frontend.controladores.operaciones_matrices.contexto_factorizacion_lu import obtener_contexto_ia, obtener_senales_ia
 from src.frontend.controladores.sesion_matricial import invalidar_resultado, actualizar_contexto
@@ -29,7 +30,7 @@ class VistaFactorizacionLU(ResultadosFactorizacionLU, MixinSesionMatricial):
         self.contenedor_vista_previa = self.contenedor_historial = self.tarea_vista_previa = None
         self.historial = []
 
-    def construir(self) -> None:
+    def construir(self, token_transferencia: str = '') -> None:
         """Monta captura, herramientas, resultados y el panel de Glosa."""
         self._registrar_desmontaje()
         crear_estructura_aplicacion(self, ruta_activa=ruta_de("factorizacion_lu"))
@@ -39,6 +40,7 @@ class VistaFactorizacionLU(ResultadosFactorizacionLU, MixinSesionMatricial):
         ui.add_head_html('<link rel="stylesheet" href="/assets/css/vistas_factorizacion_lu.css">')
         with (ui.element('div').classes('factorizacion-lu-marco w-full'),
               ui.column().classes('vista-raiz sesion-vista sesion-paneles-compartidos factorizacion-lu-vista w-full max-w-7xl mx-auto p-6 gap-4')):
+            self.contenedor_transferencia = ui.column().classes('w-full')
             ui.label(textos.LU_TITULO).classes('text-2xl font-bold texto-principal')
             ui.label(textos.LU_DESCRIPCION).classes('texto-secundario')
             with ui.element('div').classes('disposicion-dividida'):
@@ -49,6 +51,8 @@ class VistaFactorizacionLU(ResultadosFactorizacionLU, MixinSesionMatricial):
         self.panel_ia = PanelIA(self)
         self.panel_ia.construir()
         self._al_cambiar_matriz()
+        recibir_matriz(token_transferencia, "factorizacion_lu", self.panel_matriz.cargar_matriz,
+                       self.contenedor_transferencia)
 
     def _construir_captura(self) -> None:
         with ui.column().classes('disposicion-panel min-w-0'):
