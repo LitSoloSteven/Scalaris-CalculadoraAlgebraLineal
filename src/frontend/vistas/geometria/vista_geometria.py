@@ -10,7 +10,7 @@ from src.frontend.componentes.estructura_aplicacion import crear_estructura_apli
 from src.frontend.componentes.tareas import lanzar_tarea
 from src.frontend.constantes import ANTIRREBOTE_GEOMETRIA_SEGUNDOS
 from src.frontend.navegacion import ruta_de
-from src.frontend.controladores.sesion_matricial import actualizar_contexto
+from src.frontend.controladores.sesion_matricial import actualizar_contexto, notificar_edicion
 from .mixin_controles import MixinControlesGeometria
 from .limpieza_geometria import MixinLimpiezaGeometria
 from .mixin_escenas import MixinEscenasGeometria
@@ -82,11 +82,15 @@ class VistaGeometria(MixinLimpiezaGeometria, MixinControlesGeometria, MixinEscen
             self.contenedor_controles = ui.column().classes('geometria-contenedor')
 
     def _construir_panel_salida(self):
-        with ui.column().classes('disposicion-panel p-6 bg-[var(--bg-page)] geometria-panel'):
+        with ui.column().classes('disposicion-panel p-6 bg-[var(--bg-page)] geometria-panel') as salida:
+            self.contenedor_exportacion_pdf = salida
             self.contenedor_estado = ui.column().classes('geometria-contenedor')
-            self.contenedor_figura = ui.column().classes('geometria-contenedor')
+            self.contenedor_figura = ui.column().classes('geometria-contenedor').props(
+                'data-pdf-captura=visualizador-figura data-pdf-motor=plotly')
             self.contenedor_deslizador = ui.column().classes('geometria-contenedor')
-            self.contenedor_resumen = ui.column().classes('geometria-contenedor')
+            self.contenedor_resumen = ui.column().classes('geometria-contenedor').props(
+                'data-pdf-captura=visualizador-resumen')
+            self.contenedor_acciones_pdf = ui.column().classes('geometria-contenedor')
 
     @staticmethod
     def normalizar_escena(escena: str) -> str:
@@ -101,8 +105,10 @@ class VistaGeometria(MixinLimpiezaGeometria, MixinControlesGeometria, MixinEscen
 
     def _mostrar_estado_vacio(self):
         mostrar_estado_vacio(self)
+        actualizar_contexto(self)
 
     def _notificar_cambio_datos(self):
+        notificar_edicion(self)
         self._programar_actualizacion()
         actualizar_contexto(self)
 

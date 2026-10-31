@@ -146,6 +146,7 @@ class VistaCalculadoraRomana(MixinLimpiezaRomanos, MixinResultadoRomano, MixinCo
         with self.contenedor_resultado:
             self._renderizar_tarjeta_resultado_destacado(presentacion, resultado.resultado_romano)
             self._renderizar_reproductor_romano(resultado, presentacion.operacion)
+            self.contenedor_acciones_pdf = ui.column().classes('w-full')
 
     def _actualizar_sugerencias(self) -> None:
         if self.panel_ia and self.contenedor_sugerencias:
