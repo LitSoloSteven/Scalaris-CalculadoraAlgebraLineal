@@ -1,6 +1,7 @@
 """Copia explícita de valores calculados con confirmación del portapapeles."""
 import json
 from nicegui import ui
+from src.frontend.componentes.sonido import notificar
 
 from src.frontend import textos
 
@@ -36,7 +37,7 @@ def renderizar_copia_resultado(resultado: dict) -> None:
         except Exception:
             copiado = False
         if not boton.is_deleted:
-            ui.notify(textos.RESULTADO_COPIADO if copiado else textos.RESULTADO_COPIAR_ERROR,
+            notificar(textos.RESULTADO_COPIADO if copiado else textos.RESULTADO_COPIAR_ERROR,
                       type="positive" if copiado else "warning")
 
     boton = ui.button(textos.RESULTADO_COPIAR, icon="content_copy", color=None, on_click=copiar).classes(

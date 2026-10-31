@@ -1,6 +1,7 @@
 """Preguntas contextuales, seguimientos y reintentos del asistente Glosa."""
 from typing import Any
 from nicegui import ui
+from src.frontend.componentes.sonido import notificar
 
 from src.ai.mensajes import construir_pregunta_explicar_paso
 from src.frontend import banderas
@@ -58,7 +59,7 @@ class PreguntasGlosaMixin:
     def _rechazar_si_ocupado(self) -> bool:
         if not getattr(self, "_esta_enviando", False):
             return False
-        ui.notify("Glosa está respondiendo. Espera a que termine.", type="warning")
+        notificar("Glosa está respondiendo. Espera a que termine.", type="warning")
         return True
 
     def _enfocar_entrada(self) -> None:
