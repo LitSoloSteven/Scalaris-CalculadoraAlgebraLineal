@@ -7,7 +7,6 @@ from nicegui import ui
 from src.frontend.componentes.panel_ia import PanelIA
 from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.iconos import icono_svg
-from src.frontend.componentes.control_sonido import renderizar_control_sonido
 from src.frontend.navegacion import RUTA_INICIO
 from src.frontend.controladores.inicio._modelo import (
     ModeloTarjeta, formatear_cantidad_elementos, pilares_inicio, seleccion_inicial,
@@ -115,7 +114,6 @@ class VistaInicio:
                     ''')
                 _elemento_texto('h1', 'Scalaris', 'inicio-titulo')
             _elemento_texto('p', 'Álgebra lineal y utilidades numéricas, con cada paso a la vista.', 'inicio-descripcion')
-            renderizar_control_sonido()
 
     def _renderizar_matriz(self, pilares: list) -> None:
         """Renderiza los botones de áreas en la matriz de inicio."""

@@ -10,7 +10,6 @@ from nicegui import ui
 from src.frontend import banderas
 from src.frontend.componentes.iconos import icono_svg
 from src.frontend.componentes.selector_tema import renderizar_boton_tema
-from src.frontend.componentes.control_sonido import renderizar_control_sonido
 from src.frontend.navegacion import (
     RUTA_INICIO,
     ORDEN_NAVEGACION_PLANA,
@@ -76,7 +75,6 @@ def _renderizar_barra_plana(interfaz_activa: Any, ruta_activa: str, al_alternar_
                 ui.html(icono_svg("tutor_ia"))
 
         ui.element("div").classes("navegacion-separador")
-        renderizar_control_sonido()
         renderizar_boton_tema()
 
 
@@ -92,8 +90,7 @@ def _renderizar_barra_pilares(ruta_activa: str, clave_activa: str) -> None:
     with ui.element("div").classes("navegacion-centro"):
         _renderizar_elementos_centro(pilar, elementos, clave_activa)
 
-    with ui.element("div").classes("tema-boton-selector navegacion-tema flex items-center gap-2"):
-        renderizar_control_sonido()
+    with ui.element("div").classes("tema-boton-selector navegacion-tema"):
         renderizar_boton_tema()
 
 
