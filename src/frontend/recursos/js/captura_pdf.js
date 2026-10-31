@@ -157,8 +157,12 @@
     return {capturas};
   }
 
+  function copiarDatosPlotly(datos) {
+    return JSON.parse(JSON.stringify(datos));
+  }
+
   function prepararDatosPlotly(figura) {
-    const datos = structuredClone(figura.data);
+    const datos = copiarDatosPlotly(figura.data);
     const colores = window.scalaris.graficos;
     for (const traza of datos) {
       for (const [ruta, rol] of Object.entries(traza.meta?.scalaris_colores || {})) {
@@ -173,7 +177,7 @@
   }
 
   function prepararDisposicionPlotly(figura) {
-    const disposicion = structuredClone(figura.layout);
+    const disposicion = copiarDatosPlotly(figura.layout);
     const colores = window.scalaris.graficos;
     disposicion.font = {...disposicion.font, color: colores.texto.papel};
     disposicion.paper_bgcolor = disposicion.plot_bgcolor = 'white';
@@ -185,7 +189,7 @@
       }
     }
     if (disposicion.scene && figura._fullLayout.scene?.camera) {
-      disposicion.scene.camera = structuredClone(figura._fullLayout.scene.camera);
+      disposicion.scene.camera = copiarDatosPlotly(figura._fullLayout.scene.camera);
     }
     return disposicion;
   }

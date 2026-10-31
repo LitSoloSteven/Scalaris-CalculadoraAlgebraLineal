@@ -4,19 +4,8 @@ const prueba = require('node:test');
 const maquinaVirtual = require('node:vm');
 const {cargarAssetCliente} = require('./comun_cliente_javascript.js');
 
-function prepararEscenario(opciones = {}) {
-    const registro = {purgas: 0, retiradas: 0, lienzos: 0};
-    const camara = {eye: {x: 3, y: 2, z: 1}};
-    const figura = {data: [{type: opciones.tipo || 'scatter3d', x: [0, 7], visible: 'legendonly',
-        marker: {color: 'oscuro'}, meta: {scalaris_colores: {'marker.color': 'serie:0'}}}],
-    layout: {font: {color: 'oscuro'}, xaxis: {range: [-3, 7], autorange: false},
-        scene: {xaxis: {range: [-3, 7]}, camera: {eye: {x: 1, y: 1, z: 1}}}},
-    _fullLayout: {scene: {camera: camara}}, getBoundingClientRect: () => ({width: 200, height: 100})};
-    const region = {dataset: {pdfCaptura: 'visualizador-figura', pdfMotor: 'plotly'},
-        querySelector: () => opciones.sinFigura ? null : figura, getClientRects: () => [{}]};
-    const raiz = {inert: false, querySelectorAll: () => [region]};
-    const temporal = {style: {}, dataset: {}, setAttribute() {}, remove() { registro.retiradas++; }};
-    const biblioteca = {
+function crearBiblioteca(registro, opciones) {
+    return {
         async newPlot(nodo, datos, disposicion, configuracion) {
             registro.datos = datos;
             registro.disposicion = disposicion;
@@ -34,6 +23,25 @@ function prepararEscenario(opciones = {}) {
             if (opciones.fallarPurga) throw new Error('purga');
         },
     };
+}
+
+function prepararEscenario(opciones = {}) {
+    const registro = {purgas: 0, retiradas: 0, lienzos: 0};
+    const camara = {eye: {x: 3, y: 2, z: 1}};
+    const figura = {data: [{type: opciones.tipo || 'scatter3d', x: [0, 7], visible: 'legendonly',
+        marker: {color: 'oscuro'}, meta: {scalaris_colores: {'marker.color': 'serie:0'}}}],
+    layout: {font: {color: 'oscuro'}, xaxis: {range: [-3, 7], autorange: false},
+        scene: {xaxis: {range: [-3, 7]}, camera: {eye: {x: 1, y: 1, z: 1}}}},
+    _fullLayout: {scene: {camera: camara}}, getBoundingClientRect: () => ({width: 200, height: 100})};
+    if (opciones.proxies) {
+        for (const clave of ['data', 'layout']) figura[clave] = new Proxy(figura[clave], {});
+        figura._fullLayout.scene.camera = new Proxy(camara, {});
+    }
+    const region = {dataset: {pdfCaptura: 'visualizador-figura', pdfMotor: 'plotly'},
+        querySelector: () => opciones.sinFigura ? null : figura, getClientRects: () => [{}]};
+    const raiz = {inert: false, querySelectorAll: () => [region]};
+    const temporal = {style: {}, dataset: {}, setAttribute() {}, remove() { registro.retiradas++; }};
+    const biblioteca = crearBiblioteca(registro, opciones);
     const ventana = {Plotly: opciones.sinBiblioteca ? null : biblioteca,
         scalaris: {graficos: {paletas: {papel: ['rojo']}, texto: {papel: 'negro'}, cuadricula: {papel: 'gris'}}},
         MathJax: {startup: {promise: Promise.resolve()}, typesetPromise: async () => {}},
@@ -71,6 +79,15 @@ for (const tipo of ['scatter', 'scatter3d', 'surface']) {
         afirmar.equal(escenario.raiz.inert, false);
     });
 }
+
+prueba('los datos reactivos de Vue se copian conservando trazas y cámara', async () => {
+    const escenario = prepararEscenario({proxies: true});
+    afirmar.throws(() => structuredClone(escenario.figura.data), /could not be cloned/);
+    const respuesta = await escenario.capturador.capturar('raiz', escenario.configuracion);
+    afirmar.equal(respuesta.capturas.length, 1);
+    afirmar.equal(escenario.registro.datos[0].x[1], 7);
+    afirmar.equal(escenario.registro.disposicion.scene.camera.eye.x, 3);
+});
 
 for (const fallo of ['fallarMontaje', 'fallarImagen', 'sinFigura', 'sinBiblioteca']) {
     prueba(`el fallo ${fallo} rechaza captura y libera la raíz`, async () => {
