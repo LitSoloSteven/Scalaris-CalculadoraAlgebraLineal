@@ -29,7 +29,7 @@
     }
 
     function activarPorGesto(evento) {
-        if (!evento.isTrusted || evento.repeat || silenciado) return;
+        if (!evento?.isTrusted || evento.repeat || silenciado) return;
         const ConstructorAudio = window.AudioContext || window.webkitAudioContext;
         if (!ConstructorAudio) return;
         try {
@@ -93,13 +93,13 @@
         document.removeEventListener('pointerdown', activarPorGesto, true);
         document.removeEventListener('keydown', activarPorGesto, true);
         document.removeEventListener('visibilitychange', ocultarPagina);
-        window.removeEventListener('pagehide', cerrarContexto);
+        window.removeEventListener?.('pagehide', cerrarContexto);
         cerrarContexto();
     }
 
     document.addEventListener('pointerdown', activarPorGesto, true);
     document.addEventListener('keydown', activarPorGesto, true);
     document.addEventListener('visibilitychange', ocultarPagina);
-    window.addEventListener('pagehide', cerrarContexto);
+    window.addEventListener?.('pagehide', cerrarContexto);
     window.scalaris.sonido = { reproducir, silenciar, destruir };
 }

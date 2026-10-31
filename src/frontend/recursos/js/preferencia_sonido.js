@@ -49,14 +49,14 @@
     function destruir() {
         observador.disconnect();
         document.removeEventListener('click', alternarPorGesto);
-        window.removeEventListener('storage', recibirPreferencia);
-        window.removeEventListener('pageshow', leerPreferencia);
+        window.removeEventListener?.('storage', recibirPreferencia);
+        window.removeEventListener?.('pageshow', leerPreferencia);
     }
 
     leerPreferencia();
     observador.observe(document.documentElement, { childList: true, subtree: true });
     document.addEventListener('click', alternarPorGesto);
-    window.addEventListener('storage', recibirPreferencia);
-    window.addEventListener('pageshow', leerPreferencia);
+    window.addEventListener?.('storage', recibirPreferencia);
+    window.addEventListener?.('pageshow', leerPreferencia);
     window.scalaris.preferenciaSonido = { destruir };
 }
