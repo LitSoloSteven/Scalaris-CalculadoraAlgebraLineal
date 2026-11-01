@@ -13,10 +13,7 @@ def preparar_figuras(herramienta: str, resultado: dict, capturas: list) -> list[
     estados = textos.PDF_ESTADOS_POR_HERRAMIENTA.get(herramienta, {})
     if resultado.get('estado') not in estados:
         raise ValueError(textos.PDF_ERROR_OBSOLETO)
-    secuencia = isinstance(capturas, list) and any(
-        isinstance(captura, dict) and captura.get('clave') == f'{herramienta}-entrada' for captura in capturas)
-    registro = (registro_secuencia(herramienta) if secuencia
-                else textos.PDF_REGIONES_POR_HERRAMIENTA[herramienta])
+    registro = _elegir_registro(herramienta, capturas)
     imagenes = validar_imagenes(capturas, tuple(registro))
     por_clave = {imagen.clave: imagen for imagen in imagenes}
     obligatorias = textos.PDF_REGIONES_OBLIGATORIAS.get(herramienta, (f'{herramienta}-resumen',))
@@ -31,6 +28,13 @@ def preparar_figuras(herramienta: str, resultado: dict, capturas: list) -> list[
             figuras.append({'titulo': titulo, 'descripcion': descripcion + textos.PDF_DESCRIPCION_ESTADO.format(estado=estado),
                             'imagen': por_clave[clave]})
     return figuras
+
+
+def _elegir_registro(herramienta: str, capturas: list) -> dict:
+    secuencia = isinstance(capturas, list) and any(
+        isinstance(captura, dict) and captura.get('clave') == f'{herramienta}-entrada' for captura in capturas)
+    return (registro_secuencia(herramienta) if secuencia
+            else textos.PDF_REGIONES_POR_HERRAMIENTA[herramienta])
 
 
 def construir_figura(figura: dict, numero: int, estilos: dict, espacio: tuple) -> tuple[KeepTogether, bool]:

@@ -22,6 +22,7 @@ def preparar_secuencia(herramienta: str, enlace):
                            or getattr(enlace.vista, 'reproductor', None))
             if reproductor is not None:
                 _renderizar_pasos(herramienta, reproductor)
+                _renderizar_resultado(herramienta, reproductor, contenedor)
                 _renderizar_comprobaciones(herramienta, reproductor)
         yield temporal
     finally:
@@ -57,3 +58,13 @@ def _renderizar_comprobaciones(herramienta: str, reproductor) -> None:
         with _region(f'{herramienta}-verificaciones'):
             for paso in pasos:
                 _renderizar_paso(paso, reproductor)
+
+
+def _renderizar_resultado(herramienta: str, reproductor, contenedor) -> None:
+    clave = f'{herramienta}-resultado'
+    if clave not in textos.PDF_REGIONES_POR_HERRAMIENTA[herramienta] or not reproductor.pasos:
+        return
+    if any(elemento._props.get('data-pdf-captura') == clave for elemento in contenedor.descendants()):
+        return
+    with _region(clave):
+        _renderizar_paso(reproductor.pasos[-1], reproductor)
