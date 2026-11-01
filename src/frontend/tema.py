@@ -70,7 +70,10 @@ def _etiquetas_recursos_cliente(nombre_catalogo: str) -> str:
                      for nombre in json.loads(catalogo.read_text(encoding="utf-8")))
 
 _PLANTILLAS = Path(__file__).parent / "recursos" / "plantillas"
+_CONFIGURACION_SONIDOS = json.loads(
+    (_PLANTILLAS.parent / "catalogo_sonidos.json").read_text(encoding="utf-8"))
 _CABECERA_HTML = Template((_PLANTILLAS / "cabecera.html").read_text(encoding="utf-8")).substitute(
+    configuracion_sonidos=json.dumps(_CONFIGURACION_SONIDOS).replace("<", "\\u003c"),
     configuracion_graficos=_CONFIGURACION_GRAFICOS_JSON.replace("<", "\\u003c"),
     configuracion_numerica=json.dumps({"caracteres": CARACTERES_ENTRADA_NUMERICA,
                                       "mensaje": MENSAJE_ENTRADA_NUMERICA}).replace("<", "\\u003c"),
