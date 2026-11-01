@@ -113,3 +113,34 @@ test('escribir espacio Enter y borrar usa solo inputType y la comparacion de esp
         comprobar.equal(caso.sonidos.pop(), esperado);
     }
 });
+
+test('Quasar activa casillas interruptores y radios por keyup sin requerir clic DOM', () => {
+    const caso = preparar();
+    const regla = '.q-toggle, [role=switch], [role=checkbox]';
+    for (const key of ['Enter', ' ']) {
+        const boton = control({ 'aria-checked': 'false' }, [regla]);
+        const objetivo = { closest: selector => selector.includes('.q-toggle') ? boton : null };
+        caso.documento.emitir('keydown', { type: 'keydown', isTrusted: true, key, target: objetivo });
+        caso.documento.emitir('keyup', { type: 'keyup', isTrusted: true, key, target: objetivo });
+    }
+    comprobar.deepEqual(caso.sonidos, ['activar', 'activar']);
+    const opciones = [control(), control({}, ['[role=tab], [role=radio], .selector-opciones-opcion'])];
+    opciones[1].parentElement = { querySelectorAll: () => opciones };
+    const objetivo = { closest: () => opciones[1] };
+    caso.documento.emitir('keyup', { type: 'keyup', isTrusted: true, key: ' ', target: objetivo });
+    comprobar.equal(caso.sonidos.at(-1), 'seleccion_1');
+    pulsar(caso, opciones[1]);
+    comprobar.equal(caso.sonidos.at(-1), 'seleccion_1');
+});
+
+test('tabs Quasar activan con keydown y omiten controles deshabilitados', () => {
+    const caso = preparar();
+    const boton = control({ 'data-sonido-indice': '2' }, ['[data-sonido-indice]', '[role=tab]']);
+    const objetivo = { closest: () => boton };
+    caso.documento.emitir('keydown', { type: 'keydown', isTrusted: true, key: 'Enter', target: objetivo });
+    caso.documento.emitir('keyup', { type: 'keyup', isTrusted: true, key: 'Enter', target: objetivo });
+    comprobar.deepEqual(caso.sonidos, ['seleccion_2']);
+    boton.matches = selector => selector.includes(':disabled');
+    caso.documento.emitir('keydown', { type: 'keydown', isTrusted: true, key: 'Enter', target: objetivo });
+    comprobar.equal(caso.sonidos.length, 1);
+});
