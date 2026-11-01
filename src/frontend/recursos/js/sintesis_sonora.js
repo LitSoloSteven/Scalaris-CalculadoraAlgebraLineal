@@ -22,18 +22,20 @@
 
     function crearFiltro(voz, frecuencias, tiempos) {
         const filtro = registrarNodo(voz, voz.contexto.createBiquadFilter());
-        filtro.type = 'lowpass';
+        filtro.type = frecuencias.tipo ?? 'lowpass';
         filtro.frequency.setValueAtTime(frecuencias.inicio, tiempos.inicio);
         filtro.frequency.exponentialRampToValueAtTime(frecuencias.fin, tiempos.fin);
-        filtro.Q.setValueAtTime(0.5, tiempos.inicio);
+        filtro.Q.setValueAtTime(frecuencias.resonancia ?? 0.5, tiempos.inicio);
         return filtro;
     }
 
     function envolver(voz, fuente, datos, tiempos) {
         const ganancia = registrarNodo(voz, voz.contexto.createGain());
+        const finEnvolvente = Math.min(tiempos.fin, tiempos.inicio + (datos.decaimiento ?? Infinity));
         ganancia.gain.setValueAtTime(0, tiempos.inicio);
         ganancia.gain.linearRampToValueAtTime(datos.volumen, tiempos.inicio + catalogo.ataque);
-        ganancia.gain.exponentialRampToValueAtTime(0.0001, tiempos.fin);
+        ganancia.gain.exponentialRampToValueAtTime(0.0001, finEnvolvente);
+        ganancia.gain.setValueAtTime(0, finEnvolvente);
         fuente.connect(ganancia);
         ganancia.connect(datos.destino);
         voz.fuentes.set(fuente, tiempos);
@@ -53,16 +55,19 @@
         const tono = registrarNodo(voz, voz.contexto.createOscillator());
         tono.type = perfil.onda;
         tono.frequency.setValueAtTime(nota.inicio * voz.variacionTono, tiempos.inicio);
-        tono.frequency.exponentialRampToValueAtTime(nota.fin * voz.variacionTono, tiempos.fin);
+        const caida = Math.min(nota.duracion, catalogo.percusion.caidaTono);
+        tono.frequency.exponentialRampToValueAtTime(nota.fin * voz.variacionTono, tiempos.inicio + caida);
         const volumen = voz.volumen * nota.volumen * (1 - perfil.ruido);
-        envolver(voz, tono, { volumen, destino: voz.maestro }, tiempos);
+        const decaimiento = perfil.decaimiento ?? catalogo.percusion.decaimiento;
+        envolver(voz, tono, { volumen, destino: voz.maestro, decaimiento }, tiempos);
     }
 
     function crearRuido(voz, perfil) {
-        const tiempos = tiemposCapa(voz, perfil.duracionClic ?? perfil.duracion);
+        const tiempos = tiemposCapa(voz, perfil.duracionClic ?? catalogo.percusion.duracionRuido);
         const ruido = registrarNodo(voz, voz.contexto.createBufferSource());
         ruido.buffer = obtenerRuido(voz.contexto);
-        const frecuencias = { inicio: perfil.filtro, fin: perfil.filtroFin ?? perfil.filtro };
+        const frecuencias = { inicio: perfil.filtro, fin: perfil.filtroFin ?? perfil.filtro,
+            tipo: catalogo.percusion.filtro, resonancia: catalogo.percusion.resonancia };
         const filtro = crearFiltro(voz, frecuencias, tiempos);
         filtro.connect(voz.maestro);
         envolver(voz, ruido, { volumen: voz.volumen * perfil.ruido, destino: filtro }, tiempos);
