@@ -64,7 +64,8 @@
   }
 
   async function capturarRegion(nodo, configuracion, biblioteca, estado) {
-    const anchos = [...nodo.querySelectorAll('*')].map(hijo => hijo.scrollWidth);
+    const anchos = [...nodo.querySelectorAll('*')]
+      .filter(hijo => !hijo.closest?.('[data-pdf-excluir]')).map(hijo => hijo.scrollWidth);
     const ancho = Math.max(nodo.scrollWidth, nodo.getBoundingClientRect().width, ...anchos);
     const alto = Math.max(nodo.scrollHeight, nodo.getBoundingClientRect().height);
     const escala = escalaSegura(ancho, alto, configuracion);

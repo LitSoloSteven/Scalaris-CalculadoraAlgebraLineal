@@ -30,7 +30,8 @@ def renderizar_resultado_aplicacion(contenedor, resultado: dict, captura: dict, 
 def _mostrar_resumen(resultado: dict, captura: dict) -> None:
     ui.label(textos.RESULTADO_TITULO).classes("font-bold texto-principal text-xl").props('role="status"')
     ui.label(f"T: R^{resultado['dimension_dominio']} → R^{resultado['dimension_codominio']}").classes("texto-secundario")
-    renderizar_latex(preparar_vista_previa_aplicacion(captura))
+    with ui.column().classes("w-full min-w-0").props("data-pdf-excluir"):
+        renderizar_latex(preparar_vista_previa_aplicacion(captura))
     titulos = textos.TITULOS_COORDENADAS[captura["tipo_objeto"]]
     with ui.row().classes("w-full gap-4 items-start flex-wrap"):
         _mostrar_coordenadas(titulos[0], resultado["vector_original"]["exacta"])
