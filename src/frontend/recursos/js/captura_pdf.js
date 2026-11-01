@@ -75,6 +75,7 @@
         },
         imageTimeout: configuracion.plazoMathjax * 1000};
       lienzo = await biblioteca(nodo, ajustes);
+      await window.scalaris.clonPdf.ceder();
       if (estado.cancelada) throw new Error('cancelada');
       const png = lienzo.toDataURL('image/png').split(',')[1];
       if (png.length > Math.ceil(configuracion.maximoBytesImagen / 3) * 4) throw new Error('peso');
@@ -86,8 +87,10 @@
 
   async function obtenerCapturas(raiz, configuracion, estado) {
     await window.scalaris.clonPdf.pintarIndicador();
+    if (estado.cancelada) throw new Error('cancelada');
     const biblioteca = await cargarBiblioteca(configuracion);
     await window.scalaris.clonPdf.ceder();
+    if (estado.cancelada) throw new Error('cancelada');
     await esperarFormulas(configuracion);
     await window.scalaris.clonPdf.ceder();
     if (estado.cancelada) throw new Error('cancelada');

@@ -140,3 +140,26 @@ prueba('una cancelacion entre lotes interrumpe la normalizacion y libera su lien
     afirmar.equal(lienzo.width, 0);
     afirmar.equal(lienzo.height, 0);
 });
+
+prueba('los fotogramas tardios no cargan bibliotecas ni componen formulas despues del plazo', async () => {
+    const fotogramas = [];
+    let bibliotecas = 0, composiciones = 0;
+    const ventana = {requestAnimationFrame: resolver => fotogramas.push(resolver),
+        scheduler: {yield: async () => {}},
+        get html2canvas() { bibliotecas++; return async () => ({}); },
+        MathJax: {typesetPromise: async () => { composiciones++; }}};
+    const raiz = {inert: false, querySelectorAll: () => []};
+    const documento = {getElementById: () => raiz, querySelectorAll: () => []};
+    const contexto = maquinaVirtual.createContext({window: ventana, document: documento, setTimeout, clearTimeout});
+    cargarAssetCliente('clon_pdf.js', contexto);
+    cargarAssetCliente('captura_pdf.js', contexto);
+    const respuesta = await ventana.scalaris.capturaPdf.capturar('raiz', {plazoCaptura: 0.001});
+    afirmar.equal(respuesta.error, 'captura');
+    afirmar.equal(raiz.inert, false);
+    fotogramas.shift()();
+    await Promise.resolve();
+    fotogramas.shift()();
+    await new Promise(resolver => setImmediate(resolver));
+    afirmar.equal(bibliotecas, 0);
+    afirmar.equal(composiciones, 0);
+});
