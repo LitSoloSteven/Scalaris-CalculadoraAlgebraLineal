@@ -57,7 +57,7 @@ def _mostrar_filas(traza: list[dict]) -> None:
 
 def _crear_detalle_diferido(titulo: str, renderizar) -> None:
     """Monta contenido una sola vez al abrir una expansión que aún existe."""
-    with ui.expansion(titulo, icon="fact_check").classes("w-full panel-tarjeta") as expansion:
+    with ui.expansion(titulo, icon="fact_check").classes("w-full panel-tarjeta").props('data-pdf-excluir') as expansion:
         destino = ui.column().classes("w-full min-w-0")
     cargado = False
 

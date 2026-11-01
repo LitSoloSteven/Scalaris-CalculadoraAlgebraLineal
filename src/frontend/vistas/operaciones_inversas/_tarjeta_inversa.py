@@ -139,9 +139,9 @@ def _agregar_botones_acciones(resultado: dict, dimension: int) -> None:
 def _renderizar_comprobaciones(resultado: dict, dimension: int) -> None:
     """Muestra comprobaciones formales como expansion."""
     with (
-        ui.expansion('Comprobaciones formales', icon='verified').classes(
+        ui.expansion('Comprobaciones formales', icon='verified', value=True).classes(
         'w-full mb-6 panel-tarjeta'
-        ).props('default-opened header-class="font-bold texto-principal" data-pdf-captura=inversa-comprobaciones'),
+        ).props('header-class="font-bold texto-principal" data-pdf-captura=inversa-comprobaciones'),
         ui.column().classes('w-full gap-4 p-2'),
     ):
         for comprobacion in resultado.get('comprobaciones', []):
