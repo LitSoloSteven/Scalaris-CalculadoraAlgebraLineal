@@ -57,6 +57,8 @@ PDF_ETIQUETAS_ENTRADA = {
     "nombres_sectores": "Sectores", "matriz_transformacion": "Matriz de transformación",
     "nombres_variables": "Variables", "escena": "Escena", "carga": "Datos de la escena",
     "vector_b": "Vector b", "objetivo": "Vector objetivo",
+    "vector_original": "Coordenadas originales", "tipo_objeto": "Tipo de objeto",
+    "modo_transformacion": "Modo de transformación",
 }
 PDF_BOOLEANOS = {True: "Sí", False: "No"}
 PDF_SEGUNDO_OPERANDO = "Segundo operando"
@@ -105,8 +107,10 @@ PDF_REGIONES_ALGEBRA = {
         "leontief-procedimiento": PDF_PROCEDIMIENTO,
     },
     "transformaciones": {
-        "transformaciones-resumen": ("Propiedades de la Transformación", "Se presentan el rango, la nulidad y las propiedades de la transformación."),
+        "transformaciones-resumen": ("Resultado de la Transformación", "Se presenta el resultado exacto del modo de transformación elegido."),
         "transformaciones-bases": ("Núcleo e Imagen", "Se presentan las bases del núcleo y de la imagen entregadas por el cálculo."),
+        "transformaciones-grafica-1": ("Antes y Después: Primer Espacio", "Representación aproximada del original y del transformado cuando comparten dimensión, o del dominio cuando los espacios son distintos. La tabla conserva las coordenadas exactas."),
+        "transformaciones-grafica-2": ("Antes y Después: Codominio", "Representación aproximada del transformado en el codominio, separada del dominio. La tabla conserva las coordenadas exactas."),
         "transformaciones-procedimiento": PDF_PROCEDIMIENTO,
     },
 }

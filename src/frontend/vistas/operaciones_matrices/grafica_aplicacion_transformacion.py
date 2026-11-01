@@ -40,11 +40,11 @@ def _montar_presentacion(presentacion: dict, tipo_objeto: str) -> None:
         ui.label(textos.GRAFICA_ESTILOS).classes("texto-secundario text-sm")
         if tipo_objeto == "vector":
             ui.label(textos.GRAFICA_SEGMENTOS).classes("texto-secundario text-sm")
-        for escena in presentacion["escenas"]:
-            _montar_escena(escena)
+        for indice, escena in enumerate(presentacion["escenas"], 1):
+            _montar_escena(escena, indice)
 
 
-def _montar_escena(escena: dict) -> None:
+def _montar_escena(escena: dict, indice: int) -> None:
     ui.label(escena["titulo"]).classes("texto-principal font-semibold")
     ejes = textos.GRAFICA_EJES_3D if escena["figura"].data[0].type == "scatter3d" else textos.GRAFICA_EJES_2D
     ui.label(ejes).classes("texto-secundario text-sm")
@@ -53,6 +53,8 @@ def _montar_escena(escena: dict) -> None:
     opciones["config"] = dict(displayModeBar=False, scrollZoom=False, doubleClick="reset", responsive=True)
     with ui.element("div").classes("w-full min-w-0").props('role="group"') as region:
         region.props["aria-label"] = escena["titulo"]
+        region.props.update({"data-pdf-captura": f"transformaciones-grafica-{indice}",
+                             "data-pdf-motor": "plotly"})
         grafica = ui.plotly(opciones).classes("w-full h-80 min-w-0")
         grafica.props.update({"role": "img", "aria-label": textos.GRAFICA_DESCRIPCION})
         grafica.on("plotly_afterplot", js_handler=_SINCRONIZAR_TEMA)

@@ -123,7 +123,7 @@
   }
 
   function prepararDatosPlotly(figura) {
-    const datos = copiarDatosPlotly(figura.data);
+    const datos = copiarDatosPlotly(figura.data).filter(traza => !traza.meta?.scalaris_proyeccion);
     const colores = window.scalaris.graficos;
     for (const traza of datos) {
       for (const [ruta, rol] of Object.entries(traza.meta?.scalaris_colores || {})) {
