@@ -112,7 +112,7 @@ def test_desmontaje_y_doble_confirmacion(monkeypatch):
     """Una animación pendiente no limpia una vista desmontada ni se duplica."""
     async def comprobar():
         """Controla la respuesta del cliente para simular navegación durante la espera."""
-        captura = SimpleNamespace(limpiar_todo=Mock())
+        captura = SimpleNamespace(limpiar_todo=Mock(), esta_completamente_vacio=lambda: False)
         montada = [True]
         control = LimpiezaCaptura(captura, lambda: montada[0])
         inicio, continuar = asyncio.Event(), asyncio.Event()
