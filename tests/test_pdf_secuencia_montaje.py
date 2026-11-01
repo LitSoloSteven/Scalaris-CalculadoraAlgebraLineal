@@ -33,6 +33,7 @@ def _comprobar_montaje(control, cliente):
 def test_secuencia_algebra_con_cuerpos_reales(monkeypatch, herramienta):
     """Cada herramienta reutiliza su renderizador sin dejar elementos ni cambiar el índice."""
     async def comprobar(vista, cliente):
+        """Calcula y examina el montaje transitorio de la vista algebraica."""
         await calcular_algebra(herramienta, vista)
         _comprobar_montaje(vista.actualizar_exportacion_pdf.__self__, cliente)
     asyncio.run(construir_algebra(monkeypatch, herramienta, comprobar))
@@ -42,6 +43,7 @@ def test_secuencia_algebra_con_cuerpos_reales(monkeypatch, herramienta):
 def test_secuencia_utilidades_y_escenas(monkeypatch, caso):
     """Las utilidades incluyen su entrada y las escenas no inventan un procedimiento."""
     async def comprobar(vista, cliente):
+        """Calcula y examina el montaje transitorio de la utilidad o escena."""
         await calcular_utilidad(caso, vista)
         _comprobar_montaje(vista.actualizar_exportacion_pdf.__self__, cliente)
     asyncio.run(construir_utilidad(monkeypatch, caso, comprobar))

@@ -12,6 +12,7 @@ from tests.comun_construccion_vistas import construir_pagina
 def test_pdf_conserva_resultado_con_cero_una_o_varias_operaciones(monkeypatch, expresion):
     """La captura tiene exactamente una matriz resultante, incluso sin tarjeta final visible."""
     async def comprobar(vista, cliente):
+        """Evalúa la expresión y comprueba que el resultado numérico sea capturable."""
         vista.panel_captura_matrices.cargar_datos({'A': [['1/3']]})
         vista.entrada_expresion.set_value(expresion)
         await vista.evaluar_expresion(ui.button('Evaluar prueba'))
