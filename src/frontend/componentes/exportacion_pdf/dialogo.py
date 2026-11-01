@@ -44,9 +44,9 @@ class DialogoPortada:
     def _crear_acciones(self) -> None:
         with ui.row().classes('w-full justify-end gap-3 flex-wrap'):
             self.cancelar = ui.button(textos.PDF_CANCELAR, on_click=self.dialogo.close, color=None).classes(
-                'boton-discreto pdf-control').props('ripple=false')
+                'boton-discreto pdf-control').props('ripple=false data-sonido="cierre"')
             self.confirmar = ui.button(textos.PDF_GENERAR, on_click=self.generar, color=None).classes(
-                'boton-principal pdf-control').props('ripple=false')
+                'boton-principal pdf-control').props('ripple=false data-sonido-omitir')
             with self.confirmar:
                 self.indicador_confirmar = crear_indicador()
 

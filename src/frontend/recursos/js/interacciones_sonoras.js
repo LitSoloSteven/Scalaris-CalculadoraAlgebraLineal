@@ -25,12 +25,28 @@
         if (document.querySelector('dialog.inicio-dialogo[open]')) window.scalaris.sonido.reproducir('cierre');
     }
 
+    function reproducirSeleccionTeclado(evento) {
+        if (!evento.isTrusted || evento.defaultPrevented || evento.repeat || activacionModificada(evento)) return;
+        const desplazamiento = { ArrowLeft: -1, ArrowRight: 1 }[evento.key];
+        if (!desplazamiento) return;
+        const grupo = evento.target.closest?.('.selector-opciones');
+        if (!grupo || grupo.closest('[inert], [data-sonido-omitir]')) return;
+        const opciones = Array.from(grupo.querySelectorAll('[role="radio"]'));
+        const indice = opciones.indexOf(evento.target.closest('[role="radio"]'));
+        if (indice < 0) return;
+        const siguiente = opciones[(indice + desplazamiento + opciones.length) % opciones.length];
+        const nombre = window.scalaris.asignacionSonora.resolver(siguiente);
+        if (nombre) window.scalaris.sonido.reproducir(nombre);
+    }
+
     function destruir() {
         document.removeEventListener('click', reproducirActivacion, true);
         document.removeEventListener('keydown', reproducirEscape);
+        document.removeEventListener('keydown', reproducirSeleccionTeclado, true);
     }
 
     document.addEventListener('click', reproducirActivacion, true);
     document.addEventListener('keydown', reproducirEscape);
+    document.addEventListener('keydown', reproducirSeleccionTeclado, true);
     window.scalaris.interaccionesSonoras = { destruir };
 }
