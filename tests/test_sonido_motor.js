@@ -16,6 +16,7 @@ function crearConstructorAudio(opciones, contextos) {
             this.currentTime = 4;
             this.destination = {};
             this.nodos = [];
+            this.ruidos = [];
             contextos.push(this);
         }
         resume() {
@@ -39,14 +40,18 @@ function crearConstructorAudio(opciones, contextos) {
         }
         createBiquadFilter() { return { frequency: parametro(), Q: parametro(), connect() {}, disconnect() {} }; }
         createBuffer() { return { getChannelData: () => new Float32Array(100) }; }
-        createBufferSource() { return { connect() {}, disconnect() {}, start() {}, stop() {} }; }
+        createBufferSource() {
+            const nodo = { connect() {}, disconnect() {}, start(inicio) { this.inicio = inicio; }, stop(fin) { this.fin = fin; } };
+            this.ruidos.push(nodo);
+            return nodo;
+        }
         get sampleRate() { return 48000; }
     };
 }
 
 function preparar(opciones = {}) {
     const documento = superficie();
-    inyectarCatalogo(documento);
+    inyectarCatalogo(documento, opciones.polifonia ? { polifonia: opciones.polifonia } : {});
     const ventana = superficie();
     const contextos = [];
     let ahora = 0;
@@ -83,7 +88,7 @@ test('teclado real permite audio sin aceptar repeticiones', () => {
 });
 
 test('el intervalo global y la polifonía descartan ráfagas sin encolarlas', () => {
-    const caso = preparar();
+    const caso = preparar({ polifonia: 2 });
     caso.activar();
     comprobar.equal(caso.motor.reproducir('error'), true);
     caso.avanzar(89);
@@ -94,6 +99,7 @@ test('el intervalo global y la polifonía descartan ráfagas sin encolarlas', ()
     comprobar.equal(caso.motor.reproducir('aviso'), false);
     const nodo = caso.contextos[0].nodos[0];
     nodo.onended();
+    caso.contextos[0].ruidos[0].onended();
     comprobar.equal(nodo.desconectado, true);
     comprobar.equal(caso.motor.reproducir('aviso'), true);
 });
@@ -108,12 +114,14 @@ test('los perfiles son breves, suaves e inmutables y rechazan claves heredadas',
         comprobar.equal(caso.motor.reproducir(nombre), false);
     }
     for (const [nombre, perfil] of Object.entries(catalogo.perfiles)) {
-        comprobar.ok(perfil.duracion <= 0.15);
+        comprobar.ok(perfil.duracion <= 0.4);
         comprobar.equal(Object.isFrozen(perfil), true);
         comprobar.equal(caso.motor.reproducir(nombre), true);
         const nodo = caso.contextos[0].nodos.at(-1);
-        comprobar.ok(Math.abs(nodo.fin - nodo.inicio - perfil.duracion) < 1e-10);
-        nodo.onended();
+        const fuentes = [...caso.contextos[0].nodos, ...caso.contextos[0].ruidos].filter(fuente => fuente.onended);
+        const duracion = Math.max(...fuentes.map(fuente => fuente.fin)) - Math.min(...fuentes.map(fuente => fuente.inicio));
+        comprobar.ok(Math.abs(duracion - perfil.duracion) < 1e-10);
+        fuentes.forEach(fuente => fuente.onended?.());
         caso.avanzar(catalogo.intervalo);
     }
 });

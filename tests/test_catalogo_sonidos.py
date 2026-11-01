@@ -29,7 +29,11 @@ def test_perfiles_graves_breves_y_con_limites(nombre, perfil):
     assert 90 <= perfil['inicio'] <= 330, nombre
     assert 90 <= perfil['fin'] <= 330, nombre
     assert 0 < perfil['filtro'] <= 2500
-    assert _CATALOGO['ataque'] < perfil['duracion'] <= _CATALOGO['duracionRuido'] <= 0.15
+    assert _CATALOGO['ataque'] < perfil['duracion'] <= _CATALOGO['duracionRuido'] <= 0.4
+    assert 0 < perfil.get('filtroFin', perfil['filtro']) <= 2500
+    for nota in perfil.get('notas', []):
+        assert 90 <= nota['inicio'] <= 330 and 90 <= nota['fin'] <= 330
+        assert nota['demora'] + nota['duracion'] <= perfil['duracion'] + 1e-10
     assert 0 < perfil['volumen'] <= 1 and 0 <= perfil['ruido'] <= 1
     assert perfil['onda'] in ('sine', 'triangle')
     assert 0 < perfil['intervalo'] <= _CATALOGO['intervalo']
@@ -38,7 +42,8 @@ def test_perfiles_graves_breves_y_con_limites(nombre, perfil):
 
 def test_firmas_de_perfiles_son_unicas():
     """Las familias no son alias del mismo sonido con nombres diferentes."""
-    firmas = [json.dumps(perfil, sort_keys=True) for perfil in _CATALOGO['perfiles'].values()]
+    firmas = [json.dumps({clave: valor for clave, valor in perfil.items() if clave not in ('limite', 'intervalo')},
+                         sort_keys=True) for perfil in _CATALOGO['perfiles'].values()]
     assert len(set(firmas)) == len(firmas)
 
 
@@ -46,6 +51,7 @@ def test_asignaciones_solo_referencian_perfiles_conocidos():
     """Valida reglas ordenadas, iconos, variantes y notificaciones sin saltar omisiones."""
     asignaciones = _CATALOGO['asignaciones']
     nombres = list(asignaciones['iconos'].values()) + list(asignaciones['escritura'].values())
+    nombres += list(asignaciones['eventos'].values())
     nombres += list(_CATALOGO['notificaciones'].values()) + [asignaciones['generico']]
     for regla in asignaciones['selectores']:
         assert regla['selector']
@@ -59,7 +65,7 @@ def test_asignaciones_solo_referencian_perfiles_conocidos():
                                  'determinantes', 'bases', 'romanos', 'visualizador', 'leontief', 'transformaciones'])
 def test_orden_de_recursos_sonoros_en_cada_vista(vista):
     """Todos los consumidores reciben la configuración y dependencias una sola vez."""
-    nombres = ['catalogo_sonidos', 'sintesis_sonora', 'asignacion_sonora', 'sonido',
+    nombres = ['catalogo_sonidos', 'sintesis_sonora', 'asignacion_sonora', 'sonido', 'eventos_sonoros',
                'preferencia_sonido', 'interacciones_sonoras', 'sonido_escritura']
     cabecera = seleccionar_recursos(_CABECERA_HTML, vista)
     posiciones = [cabecera.index(f'/assets/js/{nombre}.js') for nombre in nombres]
