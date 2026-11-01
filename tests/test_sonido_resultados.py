@@ -44,6 +44,19 @@ def test_limpieza_desmontada_o_fallida_no_emite(monkeypatch):
     assert control._limpiando is False
 
 
+def test_el_golpe_emitido_por_compresion_no_se_duplica_en_python(monkeypatch):
+    """Una secuencia del cliente confirmada conserva el vaciado y omite el segundo golpe."""
+    captura = SimpleNamespace(esta_completamente_vacio=lambda: False, limpiar_todo=Mock())
+    control = limpieza_captura.LimpiezaCaptura(captura, lambda: True)
+    control._animar_captura = AsyncMock(return_value=True)
+    control._finalizar_movimiento = AsyncMock()
+    emision = Mock()
+    monkeypatch.setattr(limpieza_captura, 'emitir_sonido', emision)
+    asyncio.run(control.ejecutar())
+    captura.limpiar_todo.assert_called_once()
+    emision.assert_not_called()
+
+
 @pytest.mark.parametrize('vigente,fallo', [(True, False), (False, False), (True, True)])
 def test_pdf_solo_suena_al_entregar_documento_vigente(monkeypatch, vigente, fallo):
     """La señal sigue a la descarga, sin emitirse tras captura fallida o resultado obsoleto."""

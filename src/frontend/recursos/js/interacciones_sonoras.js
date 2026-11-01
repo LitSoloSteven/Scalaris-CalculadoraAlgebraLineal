@@ -45,7 +45,7 @@
 
     function reproducirControlTeclado(evento) {
         if (!evento?.isTrusted || evento.defaultPrevented || evento.repeat || activacionModificada(evento)) return;
-        if (evento.key !== 'Enter' && evento.key !== ' ') return;
+        if (!['Enter', ' '].includes(evento.key)) return;
         const control = evento.target.closest?.('.q-toggle, .q-checkbox, .q-radio, .q-tab');
         if (controlOmitido(control)) return;
         const tipo = control.matches('[role=tab]') ? 'keydown' : 'keyup';

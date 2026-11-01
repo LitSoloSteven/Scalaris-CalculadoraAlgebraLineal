@@ -37,14 +37,19 @@ test('el deslizador solo emite por valores distintos en gestos reales', () => {
     caso.documento.emitir('pointermove', { ...evento, buttons: 0 });
     caso.documento.emitir('input', { ...evento, isTrusted: false });
     comprobar.deepEqual(caso.sonidos, []);
+    caso.documento.emitir('pointerdown', evento);
     caso.documento.emitir('pointermove', evento);
     caso.documento.emitir('pointerup', evento);
+    comprobar.deepEqual(caso.sonidos, []);
     valor = '1';
+    caso.documento.emitir('pointermove', evento);
+    caso.documento.emitir('pointerup', evento);
+    valor = '2';
     caso.documento.emitir('keyup', { ...evento, key: 'ArrowRight' });
     caso.documento.emitir('input', evento);
     comprobar.deepEqual(caso.sonidos, ['deslizador', 'deslizador']);
     control.closest = () => ({});
-    valor = '2';
+    valor = '3';
     caso.documento.emitir('input', evento);
     comprobar.equal(caso.sonidos.length, 2);
 });
@@ -53,9 +58,22 @@ test('rechazo y vuelo resuelven perfiles declarados y desmontan todos sus listen
     const caso = preparar();
     comprobar.equal(caso.ventana.scalaris.eventosSonoros.rechazo(), true);
     comprobar.equal(caso.ventana.scalaris.eventosSonoros.limpiezaVuelo(), true);
-    comprobar.deepEqual(caso.sonidos, ['rechazo', 'limpiar_vuelo']);
+    comprobar.equal(caso.ventana.scalaris.eventosSonoros.limpiezaFinal(), true);
+    comprobar.deepEqual(caso.sonidos, ['rechazo', 'limpiar_vuelo', 'limpiar']);
     caso.ventana.scalaris.eventosSonoros.destruir();
-    for (const nombre of ['input', 'pointermove', 'pointerup', 'keyup']) {
+    for (const nombre of ['input', 'pointermove', 'pointerup', 'pointerdown', 'keyup', 'keydown', 'focusin']) {
         comprobar.equal(caso.documento.contar(nombre), 0);
     }
+});
+
+test('los sliders deshabilitados y de solo lectura no emiten ni al primer gesto', () => {
+    const caso = preparar();
+    for (const atributo of ['aria-disabled', 'aria-readonly']) {
+        const control = { getAttribute: nombre => nombre === atributo ? 'true' : '0', closest: () => null };
+        const evento = { isTrusted: true, target: { closest: () => control }, buttons: 1 };
+        caso.documento.emitir('pointerdown', evento);
+        caso.documento.emitir('pointerup', evento);
+        caso.documento.emitir('keyup', { ...evento, key: 'ArrowRight' });
+    }
+    comprobar.deepEqual(caso.sonidos, []);
 });
