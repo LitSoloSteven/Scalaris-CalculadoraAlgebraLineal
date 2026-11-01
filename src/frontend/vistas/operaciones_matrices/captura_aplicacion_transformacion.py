@@ -5,7 +5,6 @@ from src.frontend import textos_transformaciones as textos
 from src.frontend.componentes.cuadricula_base import crear_entradas_matriz
 from src.frontend.componentes.selector_opciones import SelectorOpciones
 from src.frontend.controladores.limpieza_captura import vaciar_campos
-from src.frontend.sugerencias import Senales
 from .procedimiento_aplicacion_transformacion import detener_procedimiento_aplicacion
 
 
@@ -43,16 +42,6 @@ class MixinAplicacionTransformacion:
     def _cambiar_tipo_objeto(self, evento) -> None:
         self.tipo_objeto = evento.value
         self._restablecer_resultados()
-
-    def obtener_contexto_ia(self):
-        """Devuelve el contexto del análisis; omite contratos de aplicación aún no disponibles."""
-        return None if self.modo_transformacion == textos.MODO_APLICACION else super().obtener_contexto_ia()
-
-    def obtener_senales_ia(self):
-        """Conserva señales del análisis sin atribuir sus propiedades a una aplicación."""
-        if self.modo_transformacion == textos.MODO_APLICACION:
-            return Senales(self.herramienta_modelo, "sin_resultado")
-        return super().obtener_senales_ia()
 
     def _sincronizar_captura_modelo(self) -> None:
         detener_procedimiento_aplicacion(self)
