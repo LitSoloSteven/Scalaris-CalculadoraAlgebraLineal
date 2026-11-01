@@ -12,8 +12,8 @@ def mostrar_tarjeta_determinante(resultado: dict) -> None:
     with ui.row().classes("items-center gap-2 px-4 py-2 mb-4 w-fit " + (
             "distintivo-advertencia" if singular else "distintivo-exito")):
         ui.icon("warning" if singular else "check_circle", size="sm")
-        ui.label(textos.DETERMINANTES_ESTADO_SINGULAR if singular else
-                 textos.DETERMINANTES_INVERTIBLE).classes("font-bold").props('role="status"')
+        ui.label(textos.DETERMINANTES_ESTADO_NULO if singular else
+                 textos.DETERMINANTES_ESTADO_NO_NULO).classes("font-bold").props('role="status"')
     _mostrar_metricas(resultado)
     renderizar_latex(r"\det(A) = " + numero_a_latex(resultado["determinante"]))
     if singular:
