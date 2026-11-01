@@ -14,6 +14,7 @@
 
     function resolverRegla(control, regla) {
         if (regla.estado) return regla.estado[Number(control.getAttribute('aria-checked') === 'true')];
+        if (regla.desplegable) return regla.desplegable[Number(control.getAttribute('aria-expanded') === 'true')];
         if (regla.indice) return indiceControl(control, regla.indice);
         if (regla.expansion) {
             const cerrada = control.closest('.q-expansion-item')?.classList.contains('q-expansion-item--collapsed');

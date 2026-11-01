@@ -53,10 +53,11 @@
       {"selector": ".inicio-dialogo-cerrar", "sonido": "cierre"},
       {"selector": ".inicio-fila", "sonido": "apertura"},
       {"selector": "[data-glosa-cerrar]", "sonido": "cierre"},
-      {"selector": "[data-glosa-abrir]", "sonido": "apertura"},
+      {"selector": "[data-glosa-alternar]", "desplegable": ["apertura", "cierre"]},
+      {"selector": "[data-sonido-indice]", "indice": ["seleccion_0", "seleccion_1", "seleccion_2", "seleccion_3"]},
       {"selector": ".q-toggle, [role=switch], [role=checkbox]", "estado": ["activar", "desactivar"]},
       {"selector": ".q-expansion-item__header", "expansion": ["apertura", "cierre"]},
-      {"selector": "[role=tab], .selector-operaciones button", "indice": ["seleccion_0", "seleccion_1", "seleccion_2", "seleccion_3"]},
+      {"selector": "[role=tab], .selector-opciones-opcion", "indice": ["seleccion_0", "seleccion_1", "seleccion_2", "seleccion_3"]},
       {"selector": ".q-select", "sonido": "apertura"},
       {"selector": "a[href], [href]", "sonido": "navegacion"},
       {"selector": "[aria-haspopup=menu]", "sonido": "apertura"}
@@ -66,7 +67,7 @@
       "delete": "eliminar", "delete_sweep": "limpiar", "close": "cierre", "content_paste": "pegar",
       "picture_as_pdf": "apertura", "play_arrow": "reproducir", "pause": "pausa", "first_page": "primero",
       "chevron_left": "anterior", "chevron_right": "siguiente", "last_page": "ultimo", "attach_file": "adjuntar",
-      "help_outline": "ayuda", "sync": "sincronizar", "insights": "transferencia", "content_copy": "accion"
+      "help_outline": "ayuda", "sync": "sincronizar", "insights": "transferencia", "content_copy": "accion", "send": null
     },
     "escritura": {"normal": "escritura", "espacio": "espacio", "enter": "enter", "borrado": "borrado"}
   }

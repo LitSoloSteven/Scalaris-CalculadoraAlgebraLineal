@@ -48,6 +48,7 @@ class SelectorOpciones(ValueElement):
             'selector-opciones-opcion'
         ).props('no-caps unelevated ripple=false role=radio')
         boton.props['aria-label'] = nombre_accesible
+        boton.props['data-sonido-indice'] = str(self._valores.index(valor))
         boton.on('keydown', js_handler='evento => window.scalaris.selectorOpciones.teclado(evento)')
         boton.on('click', js_handler='evento => window.scalaris.selectorOpciones.activar(evento)')
         self.botones[valor] = boton
