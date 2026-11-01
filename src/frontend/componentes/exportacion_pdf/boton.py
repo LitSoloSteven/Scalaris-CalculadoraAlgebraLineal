@@ -10,6 +10,7 @@ from src.frontend.controladores.exportacion_pdf.vigencia import EnlacePDF
 from .captura import capturar_regiones
 from .dialogo import DialogoPortada
 from .indicador import crear_indicador, cargar_indicador
+from .secuencia import preparar_secuencia
 
 
 class ExportacionPDF:
@@ -55,7 +56,8 @@ class ExportacionPDF:
         testigo = self.enlace.testigo()
         self._cargar(True)
         try:
-            await self._exportar(portada, testigo)
+            with preparar_secuencia(self.herramienta, self.enlace):
+                await self._exportar(portada, testigo)
         except Exception:
             if self._dialogo_abierto():
                 self.dialogo.estado.set_text(textos.PDF_ERROR_GENERACION)

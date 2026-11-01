@@ -18,6 +18,29 @@
     max-width: 100%;
 }
 
+.pdf-secuencia {
+    --pdf-ancho-secuencia: 64rem;
+    position: fixed;
+    left: calc(-100% - var(--pdf-ancho-secuencia));
+    top: 0;
+    width: var(--pdf-ancho-secuencia);
+    gap: var(--space-6);
+    pointer-events: none;
+    color: var(--text-main);
+}
+
+.pdf-tabla-entrada {
+    max-width: 100%;
+    overflow-x: auto;
+    font-variant-numeric: tabular-nums;
+}
+
+.pdf-tabla-entrada td {
+    padding: var(--space-2) var(--space-4);
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
 .pdf-error {
     color: var(--error);
 }

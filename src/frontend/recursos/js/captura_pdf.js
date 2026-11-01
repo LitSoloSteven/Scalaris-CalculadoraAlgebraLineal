@@ -94,7 +94,9 @@
     await esperarFormulas(configuracion);
     await window.scalaris.clonPdf.ceder();
     if (estado.cancelada) throw new Error('cancelada');
-    const regiones = [...raiz.querySelectorAll('[data-pdf-captura]')].filter(nodo => nodo.getClientRects().length);
+    const visibles = [...raiz.querySelectorAll('[data-pdf-captura]')].filter(nodo => nodo.getClientRects().length);
+    const secuencia = visibles.some(nodo => nodo.dataset.pdfCaptura.endsWith('-entrada'));
+    const regiones = visibles.filter(nodo => !(secuencia && nodo.dataset.pdfCaptura.endsWith('-procedimiento')));
     if (!regiones.length || regiones.length > configuracion.maximoFiguras) throw new Error('cantidad');
     const capturas = [];
     let total = 0;
