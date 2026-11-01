@@ -94,6 +94,6 @@
       "help_outline": "ayuda", "sync": "sincronizar", "insights": "transferencia", "content_copy": "copiar", "send": null, "swap_horiz": "intercambio", "swap_vert": "intercambio"
     },
     "escritura": {"normal": "escritura", "espacio": "espacio", "enter": "enter", "borrado": "borrado"},
-    "eventos": {"glosaAbrir": "glosa_abrir", "glosaCerrar": "glosa_cerrar", "deslizador": "deslizador", "rechazo": "rechazo", "limpiezaVuelo": "limpiar_vuelo"}
+    "eventos": {"glosaAbrir": "glosa_abrir", "glosaCerrar": "glosa_cerrar", "deslizador": "deslizador", "rechazo": "rechazo", "limpiezaVuelo": "limpiar_vuelo", "limpiezaFinal": "limpiar"}
   }
 }

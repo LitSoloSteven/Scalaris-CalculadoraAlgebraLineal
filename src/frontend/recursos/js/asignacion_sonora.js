@@ -7,7 +7,8 @@
 
     function indiceControl(control, opciones) {
         const declarada = control.getAttribute('data-sonido-indice');
-        const hermanos = control.parentElement?.querySelectorAll('[role=tab], [role=option], button') || [];
+        const grupo = control.closest('[role=radiogroup], [role=tablist]') || control.parentElement;
+        const hermanos = grupo?.querySelectorAll('[role=tab], [role=radio], [role=option], button') || [];
         const indice = declarada === null ? Array.from(hermanos).indexOf(control) : Number(declarada);
         const seguro = Number.isSafeInteger(indice) && indice >= 0 ? indice : 0;
         return opciones[seguro % opciones.length];
@@ -18,8 +19,7 @@
         if (regla.desplegable) return regla.desplegable[Number(control.getAttribute('aria-expanded') === 'true')];
         if (regla.indice) return indiceControl(control, regla.indice);
         if (regla.expansion) {
-            const cerrada = control.closest('.q-expansion-item')?.classList.contains('q-expansion-item--collapsed');
-            return regla.expansion[Number(!cerrada)];
+            return regla.expansion[Number(control.getAttribute('aria-expanded') === 'true')];
         }
         return regla.sonido;
     }
