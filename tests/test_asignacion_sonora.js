@@ -57,8 +57,8 @@ test('interruptores y paneles resuelven el estado anterior al cambio', () => {
     comprobar.equal(caso.resolver(control({ 'aria-checked': 'true' }, [interruptor])), 'desactivar');
     comprobar.equal(caso.resolver(control({}, ['[data-glosa-cerrar], [data-glosa-alternar]'])), null);
     for (const cerrada of [true, false]) {
-        const boton = control({}, ['.q-expansion-item__header']);
-        boton.closest = () => ({ classList: { contains: () => cerrada } });
+        const selector = '.q-expansion-item__container > .q-item[aria-expanded], .q-expansion-item__container > .q-item .q-item__section[aria-expanded]';
+        const boton = control({ 'aria-expanded': String(!cerrada) }, [selector]);
         comprobar.equal(caso.resolver(boton), cerrada ? 'despliegue' : 'pliegue');
     }
 });

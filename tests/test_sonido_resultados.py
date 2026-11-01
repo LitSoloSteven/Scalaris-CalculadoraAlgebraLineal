@@ -18,7 +18,7 @@ def test_limpieza_emite_despues_del_vaciado_efectivo(monkeypatch, vacia, fallo_m
     captura = SimpleNamespace(esta_completamente_vacio=lambda: vacia,
                               limpiar_todo=lambda: eventos.append('vaciar'))
     control = limpieza_captura.LimpiezaCaptura(captura, lambda: True)
-    control._animar_captura = AsyncMock(side_effect=TimeoutError() if fallo_movimiento else None)
+    control._animar_captura = AsyncMock(return_value=False, side_effect=TimeoutError() if fallo_movimiento else None)
     control._finalizar_movimiento = AsyncMock()
     monkeypatch.setattr(limpieza_captura, 'emitir_sonido', lambda nombre: eventos.append(nombre))
     asyncio.run(control.ejecutar())
