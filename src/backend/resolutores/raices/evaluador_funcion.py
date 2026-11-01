@@ -28,6 +28,7 @@ def compilar(expresion: str) -> Callable[[float], float]:
     _validar_nodos(arbol)
 
     def funcion(x: float) -> float:
+        """Evalúa el árbol ya compilado en el punto x."""
         return _evaluar_nodo(arbol.body, x)
 
     return funcion
