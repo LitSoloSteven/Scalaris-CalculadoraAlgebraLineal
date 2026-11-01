@@ -18,7 +18,7 @@ from src.frontend.controladores.exportacion_pdf.vigencia import EnlacePDF
 from src.frontend.componentes.acciones_matriz import renderizar_acciones_matriz
 from src.frontend import textos
 from src.frontend.controladores.sesion_matricial import actualizar_contexto
-from src.frontend.controladores.captura_contexto import capturar_matrices
+from src.frontend.controladores.captura_contexto import capturar_matrices, capturar_matrices_documento
 from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
 
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos
@@ -109,7 +109,9 @@ class MixinResultadosOperacionesMatrices:
                 self.panel_captura_matrices.matrices, self.entrada_expresion.value),
                 identificador_raiz(self.contenedor_resultados),
                 lambda: (self.contenedor_resultados, self.ultimo_resultado,
-                         self._version_solicitud, self._version_solicitud))
+                         self._version_solicitud, self._version_solicitud),
+                leer_entrada_documental=lambda: capturar_matrices_documento(
+                    self.panel_captura_matrices.obtener_datos_crudos(), self.entrada_expresion.value))
             completar_exportacion(self, 'matrices', respuesta, enlace)
 
     def _capturar_evaluacion(self) -> dict:

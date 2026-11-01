@@ -14,6 +14,12 @@ class EnlacePDF:
     entrada: Callable[[], dict]
     raiz: str
     leer_estado: Callable[[], tuple] | None = None
+    leer_entrada_documental: Callable[[], dict] | None = None
+
+    def entrada_documental(self) -> dict:
+        """Obtiene la entrada completa para figuras sin alterar el contrato de huella."""
+        proveedor = self.leer_entrada_documental or self.entrada
+        return proveedor()
 
     def estado(self) -> tuple:
         """Devuelve contenedor, resultado, revisión y solicitud con el contrato de la vista."""
