@@ -5,7 +5,7 @@ from src.frontend.componentes.panel_ia import PanelIA
 from src.frontend.componentes.cuadricula_base import ubicar_celda_matriz
 from src.frontend.controladores.limpieza_captura import retirar_estado_calculado
 from src.frontend.controladores.sesion_matricial import invalidar_resultado, actualizar_contexto, programar_vista_previa, cancelar_vista_previa
-from src.frontend.controladores.operaciones_matrices.contexto_modelos import obtener_contexto_modelo, obtener_senales_modelo, capturar_modelo
+from src.frontend.controladores.operaciones_matrices.contexto_modelos import obtener_contexto_modelo, obtener_senales_modelo, capturar_modelo, resultado_modelo_vigente
 from ._presentacion_modelos import montar_pasos_modelo
 from .herramientas_modelos import MixinHerramientasModelos
 from src.frontend.componentes.exportacion_pdf.integracion import completar_exportacion, identificador_raiz
@@ -48,7 +48,9 @@ class MixinGlosaModelos(MixinHerramientasModelos):
         self._registrar_modelo()
         if self.ultimo_resultado.get("estado") == "EXITO" and captura is not None:
             clave = "matriz_coeficientes" if self.herramienta_modelo == "leontief" else "matriz_transformacion"
-            renderizar_acciones_matriz(self.herramienta_modelo, captura[clave])
+            resultado = self.ultimo_resultado
+            renderizar_acciones_matriz(self.herramienta_modelo, captura[clave], vigente=lambda: (
+                not self.contenedor_resultados.is_deleted and resultado_modelo_vigente(self) is resultado))
         actualizar_contexto(self)
 
         enlace = EnlacePDF(self, lambda: capturar_modelo(self), identificador_raiz(self.contenedor_resultados))

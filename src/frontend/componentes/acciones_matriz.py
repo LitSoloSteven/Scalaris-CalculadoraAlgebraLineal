@@ -8,12 +8,14 @@ from src.frontend.controladores.destinos_matriz import destinos_compatibles
 from src.frontend.navegacion import herramienta_por_identificador, ruta_de
 
 
-def _llevar_matriz(origen: str, datos: list[list[str]], destino: str) -> None:
+def _llevar_matriz(origen: str, datos: list[list[str]], destino: str, vigente=None) -> None:
+    if vigente is not None and not vigente():
+        return
     token = guardar_matriz(origen, datos)
     ui.navigate.to(url_transferencia(ruta_de(destino), token))
 
 
-def renderizar_acciones_matriz(origen: str, datos: list[list[str]]) -> None:
+def renderizar_acciones_matriz(origen: str, datos: list[list[str]], *, vigente=None) -> None:
     """Ofrece destinos compatibles con una copia de la matriz del cálculo,
     conservada aunque el editor cambie después."""
     if not datos or not datos[0] or origen == "vectores":
@@ -30,5 +32,5 @@ def renderizar_acciones_matriz(origen: str, datos: list[list[str]]) -> None:
         ):
             for destino in destinos:
                 ui.button(herramienta_por_identificador(destino).nombre, color=None,
-                          on_click=partial(_llevar_matriz, origen, captura, destino)).classes(
+                          on_click=partial(_llevar_matriz, origen, captura, destino, vigente)).classes(
                     "boton-discreto max-w-full").props(f'ripple=false data-destino-matriz="{destino}"')
