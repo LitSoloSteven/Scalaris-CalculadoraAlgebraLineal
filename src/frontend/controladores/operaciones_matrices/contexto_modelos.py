@@ -3,6 +3,7 @@ from src.ai.contexto import ContextoIA, EstadoContexto, describir_matriz, sanear
 from src.ai.huellas import calcular_huella
 from src.frontend.sugerencias import Senales, primera_celda_invalida
 from .capturas_modelos import capturar_leontief, capturar_transformaciones
+from .contexto_aplicacion_transformacion import describir_aplicacion, senales_aplicacion
 
 _CAPTURADORES = {"leontief": capturar_leontief, "transformaciones": capturar_transformaciones}
 _CLAVES_MATRIZ = {"leontief": "matriz_coeficientes", "transformaciones": "matriz_transformacion"}
@@ -19,6 +20,8 @@ def resultado_modelo_vigente(vista) -> dict | None:
     resultado = vista.ultimo_resultado
     if not resultado or resultado.get("estado") == "ERROR":
         return None
+    if "vector_original" in capturar_modelo(vista) and resultado.get("verificacion") is not True:
+        return None
     return resultado if getattr(vista, "_huella_resultado", None) == calcular_huella(capturar_modelo(vista)) else None
 
 
@@ -31,11 +34,13 @@ def obtener_contexto_modelo(vista) -> ContextoIA:
                           etiqueta="C" if herramienta == "leontief" else "A", entrada=entrada,
                           estado=EstadoContexto(vacio=vacio))
     resultado = resultado_modelo_vigente(vista)
+    contexto.desactualizado = bool(vista.ultimo_resultado and not resultado)
+    if "vector_original" in capturar_modelo(vista):
+        return describir_aplicacion(contexto, capturar_modelo(vista), resultado)
     if resultado:
         claves = ("estado", "rango", "nulidad", "conclusiones", "vector_produccion", "vector_demanda",
                   "determinante_leontief", "hawkins_simon", "analisis_sistema")
         contexto.resultado = {clave: resultado[clave] for clave in claves if clave in resultado}
-    contexto.desactualizado = bool(vista.ultimo_resultado and not resultado)
     return contexto
 
 
@@ -54,6 +59,9 @@ def obtener_senales_modelo(vista) -> Senales:
     """Emite estado, banderas e invalidez numérica sin interpretar texto libre como números."""
     herramienta = vista.herramienta_modelo
     resultado = resultado_modelo_vigente(vista)
+    captura = capturar_modelo(vista)
+    if "vector_original" in captura:
+        return senales_aplicacion(captura, resultado)
     datos = capturar_modelo(vista)[_CLAVES_MATRIZ[herramienta]]
     etiqueta = "C" if herramienta == "leontief" else "A"
     elementos = [(f"{etiqueta}[{fila + 1},{columna + 1}]", valor, (fila, columna))
