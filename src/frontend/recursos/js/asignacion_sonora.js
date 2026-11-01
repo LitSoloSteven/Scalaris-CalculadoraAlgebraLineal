@@ -7,9 +7,10 @@
 
     function indiceControl(control, opciones) {
         const declarada = control.getAttribute('data-sonido-indice');
-        const hermanos = control.parentElement?.querySelectorAll('[role=tab], button') || [];
+        const hermanos = control.parentElement?.querySelectorAll('[role=tab], [role=option], button') || [];
         const indice = declarada === null ? Array.from(hermanos).indexOf(control) : Number(declarada);
-        return opciones[Math.max(0, indice) % opciones.length];
+        const seguro = Number.isSafeInteger(indice) && indice >= 0 ? indice : 0;
+        return opciones[seguro % opciones.length];
     }
 
     function resolverRegla(control, regla) {

@@ -4,7 +4,7 @@
     window.scalaris = window.scalaris || {};
     window.scalaris.interaccionesSonoras?.destruir();
     const selector = 'button, a[href], [role="button"], [role="tab"], [role="menuitem"], ' +
-        '[role="menuitemradio"], [role="switch"], [role="checkbox"], .q-select, .q-expansion-item__header';
+        '[role="menuitemradio"], [role="switch"], [role="checkbox"], [role="option"], .q-select, .q-expansion-item__header';
 
     function reproducirActivacion(evento) {
         if (!evento.isTrusted || evento.defaultPrevented || evento.button !== 0) return;

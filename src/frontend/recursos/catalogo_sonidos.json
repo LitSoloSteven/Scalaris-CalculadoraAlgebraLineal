@@ -59,6 +59,8 @@
       {"selector": ".q-expansion-item__header", "expansion": ["apertura", "cierre"]},
       {"selector": "[role=tab], .selector-opciones-opcion", "indice": ["seleccion_0", "seleccion_1", "seleccion_2", "seleccion_3"]},
       {"selector": ".q-select", "sonido": "apertura"},
+      {"selector": ".selector-menu [role=option]", "sonido": "velocidad"},
+      {"selector": "[role=option]", "indice": ["seleccion_0", "seleccion_1", "seleccion_2", "seleccion_3"]},
       {"selector": "a[href], [href]", "sonido": "navegacion"},
       {"selector": "[aria-haspopup=menu]", "sonido": "apertura"}
     ],
