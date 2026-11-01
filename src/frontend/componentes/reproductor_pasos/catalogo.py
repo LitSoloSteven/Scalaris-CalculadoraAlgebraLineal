@@ -25,8 +25,8 @@ CATALOGO_TIPOS = {
     "construccion": {"etiqueta": "Construcción", "icono": "build"},
     "resultado": {"etiqueta": "Resultado", "icono": "check_circle"},
 }
-VELOCIDADES_AUTOREPRODUCCION = {"Lenta": 2.0, "Normal": 1.2, "Rápida": 0.7}
-MULTIPLICADORES_LECTURA = {"Lenta": 1.6, "Normal": 1.0, "Rápida": 0.6}
+VELOCIDADES_AUTOREPRODUCCION = {"Lenta": 1.2, "Normal": 0.7, "Rápida": 0.4}
+MULTIPLICADORES_LECTURA = {"Lenta": 1.0, "Normal": 0.6, "Rápida": 0.35}
 SEGUNDOS_BASE_LECTURA = 3.5
 SEGUNDOS_POR_CARACTER = 0.055
 INTERVALO_MINIMO_LECTURA = 4.0
