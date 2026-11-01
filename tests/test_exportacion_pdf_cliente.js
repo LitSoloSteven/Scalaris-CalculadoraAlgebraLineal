@@ -2,7 +2,7 @@
 const afirmar = require('node:assert/strict');
 const prueba = require('node:test');
 const maquinaVirtual = require('node:vm');
-const { cargarAssetCliente } = require('./comun_cliente_javascript.js');
+const {cargarCapturadorPdf} = require('./comun_capturador_pdf.js');
 
 const configuracion = {maximoFiguras: 12, maximoBytesImagen: 1024, maximoBytesTotal: 2048,
     maximoLado: 4096, maximoPixeles: 12000000, plazoMathjax: 0.05, plazoCaptura: 0.1, escala: 2};
@@ -27,7 +27,7 @@ function crearCliente(regiones = [crearRegion('sistemas-resumen')]) {
         }};
     const documento = {getElementById: () => raiz, querySelectorAll: () => [], fonts: {ready: Promise.resolve()}};
     const contexto = maquinaVirtual.createContext({window: ventana, document: documento, setTimeout, clearTimeout});
-    cargarAssetCliente('captura_pdf.js', contexto);
+    cargarCapturadorPdf(contexto);
     return {ventana, raiz, lienzos, opciones, capturar: () => ventana.scalaris.capturaPdf.capturar('resultado', configuracion)};
 }
 
@@ -100,12 +100,13 @@ prueba('el clon conserva el ancho medido aunque cambie el espacio de la barra de
     const cliente = crearCliente();
     const propiedades = [];
     const region = {style: {setProperty: (...argumentos) => propiedades.push(argumentos)},
+        matches: () => false, querySelectorAll: () => [],
         scrollWidth: 100, scrollHeight: 125, getBoundingClientRect: () => ({width: 100, height: 125})};
     const documento = {documentElement: {setAttribute() {}},
         body: {classList: {remove() {}}, style: {}}, querySelectorAll: () => [],
         createElement: () => ({getContext: () => ({})})};
     cliente.ventana.html2canvas = async (nodo, ajustes) => {
-        ajustes.onclone(documento, region);
+        await ajustes.onclone(documento, region);
         afirmar.equal(ajustes.height, 125);
         afirmar.equal(ajustes.width, 100);
         return {width: 100, height: 50, toDataURL: () => 'data:image/png;base64,AAAA'};
