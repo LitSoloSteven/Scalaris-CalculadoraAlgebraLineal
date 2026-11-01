@@ -5,6 +5,7 @@ from src.frontend import textos_transformaciones as textos
 from src.frontend.componentes.reproductor_pasos.cuerpos import renderizar_latex
 from src.frontend.controladores.operaciones_matrices.vista_previa_modelos import preparar_vista_previa_aplicacion
 from ._estados_modelos import mostrar_estado
+from .grafica_aplicacion_transformacion import renderizar_grafica_aplicacion
 
 
 def renderizar_resultado_aplicacion(contenedor, resultado: dict, captura: dict) -> None:
@@ -24,6 +25,7 @@ def renderizar_resultado_aplicacion(contenedor, resultado: dict, captura: dict) 
             _mostrar_coordenadas(titulos[0], resultado["vector_original"]["exacta"])
             _mostrar_coordenadas(titulos[1], resultado["vector_transformado"]["exacta"])
         ui.label(textos.COORDENADAS_EXACTAS).classes("texto-secundario text-sm")
+        renderizar_grafica_aplicacion(resultado, captura["tipo_objeto"])
 
 
 def _mostrar_coordenadas(titulo: str, componentes: list[str]) -> None:
