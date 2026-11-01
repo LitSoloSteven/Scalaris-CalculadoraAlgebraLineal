@@ -42,7 +42,7 @@ test('la variacion mecanica cambia tono y ganancia sin salir de cuatro por cient
         const nodos = contexto.nodos.slice(cantidad);
         const tono = nodos.find(nodo => nodo.tipo === 'tono').frequency.valores[0][0];
         const ganancia = nodos.find(nodo => nodo.tipo === 'ganancia').gain.valores[1][0];
-        const base = 0.075 * perfil.volumen * (1 - perfil.ruido);
+        const base = caso.ventana.scalaris.catalogoSonidos.ganancia * perfil.volumen * (1 - perfil.ruido);
         comprobar.ok(tono >= perfil.inicio * 0.96 && tono <= perfil.inicio * 1.04);
         comprobar.ok(Math.abs(20 * Math.log10(ganancia / base)) <= 1.5);
         tonos.add(tono);

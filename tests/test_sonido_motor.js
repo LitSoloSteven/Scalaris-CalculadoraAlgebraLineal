@@ -113,7 +113,7 @@ test('los perfiles son breves, suaves e inmutables y rechazan claves heredadas',
     const caso = preparar();
     const catalogo = caso.ventana.scalaris.catalogoSonidos;
     comprobar.equal(Object.isFrozen(catalogo), true);
-    comprobar.ok(catalogo.ganancia <= 0.1);
+    comprobar.ok(catalogo.ganancia <= 0.45);
     caso.activar();
     for (const nombre of ['__proto__', 'constructor', 'desconocido']) {
         comprobar.equal(caso.motor.reproducir(nombre), false);

@@ -1,5 +1,5 @@
 {
-  "intervalo": 90, "polifonia": 8, "ataque": 0.003, "ganancia": 0.075,
+  "intervalo": 90, "polifonia": 8, "ataque": 0.003, "ganancia": 0.45,
   "duracionRuido": 0.4, "filtroMaestro": 2500, "variacionTono": 0.04, "variacionDecibelios": 1.5,
   "claveSilencio": "scalaris:sonido-silenciado",
   "notificaciones": {"positive": "exito", "negative": "error", "warning": "aviso"},
