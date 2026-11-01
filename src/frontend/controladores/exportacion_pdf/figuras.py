@@ -16,6 +16,8 @@ def preparar_figuras(herramienta: str, resultado: dict, capturas: list) -> list[
     imagenes = validar_imagenes(capturas, tuple(registro))
     por_clave = {imagen.clave: imagen for imagen in imagenes}
     obligatorias = textos.PDF_REGIONES_OBLIGATORIAS.get(herramienta, (f'{herramienta}-resumen',))
+    if herramienta == 'inversa' and resultado.get('comprobaciones'):
+        obligatorias = (*obligatorias, 'inversa-comprobaciones')
     if any(clave not in por_clave for clave in obligatorias):
         raise ValueError(textos.PDF_ERROR_IMAGEN)
     estado = estados[resultado['estado']]
