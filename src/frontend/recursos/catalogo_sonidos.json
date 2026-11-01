@@ -77,7 +77,7 @@
       {"selector": ".glosa-boton-explicacion", "sonido": "explicar"},
       {"selector": "[data-sonido-indice]", "indice": ["seleccion_0", "seleccion_1", "seleccion_2", "seleccion_3"]},
       {"selector": ".q-toggle, [role=switch], [role=checkbox]", "estado": ["activar", "desactivar"]},
-      {"selector": ".q-expansion-item__header", "expansion": ["despliegue", "pliegue"]},
+      {"selector": ".q-expansion-item__container > .q-item[aria-expanded], .q-expansion-item__container > .q-item .q-item__section[aria-expanded]", "expansion": ["despliegue", "pliegue"]},
       {"selector": "[role=tab], [role=radio], .selector-opciones-opcion", "indice": ["seleccion_0", "seleccion_1", "seleccion_2", "seleccion_3"]},
       {"selector": ".q-select", "sonido": "apertura"},
       {"selector": ".selector-menu [role=option]", "sonido": "velocidad"},

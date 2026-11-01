@@ -123,16 +123,19 @@ class LimpiezaCaptura:
         finally:
             try:
                 if self.sigue_montada():
-                    habia_datos = not self.captura.esta_completamente_vacio()
-                    self.captura.limpiar_todo()
-                    if habia_datos:
-                        emitir_sonido('limpiar')
+                    self._vaciar_captura()
             finally:
                 try:
                     await self._finalizar_movimiento()
                 finally:
                     self._limpiando = False
                     self._liberar_captura()
+
+    def _vaciar_captura(self) -> None:
+        habia_datos = not self.captura.esta_completamente_vacio()
+        self.captura.limpiar_todo()
+        if habia_datos:
+            emitir_sonido('limpiar')
 
     def _liberar_captura(self) -> None:
         contenedor = self._contenedor_captura

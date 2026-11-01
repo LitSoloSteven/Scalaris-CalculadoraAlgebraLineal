@@ -6,6 +6,18 @@ const { runInNewContext: ejecutar } = require('node:vm');
 const { superficie } = require('./comun_sonido_cliente.js');
 const { inyectarCatalogo } = require('./comun_catalogo_sonoro.js');
 
+function crearCapasAudio(parametro) {
+    return {
+        createBiquadFilter() { return { frequency: parametro(), Q: parametro(), connect() {}, disconnect() {} }; },
+        createBuffer() { return { getChannelData: () => new Float32Array(100) }; },
+        createBufferSource() {
+            const nodo = { connect() {}, disconnect() {}, start(inicio) { this.inicio = inicio; }, stop(fin) { this.fin = fin; } };
+            this.ruidos.push(nodo);
+            return nodo;
+        },
+        sampleRate: 48000 };
+}
+
 function crearConstructorAudio(opciones, contextos) {
     const parametro = () => ({ setValueAtTime() {}, exponentialRampToValueAtTime() {},
         linearRampToValueAtTime() {} });
@@ -17,6 +29,7 @@ function crearConstructorAudio(opciones, contextos) {
             this.destination = {};
             this.nodos = [];
             this.ruidos = [];
+            Object.assign(this, crearCapasAudio(parametro));
             contextos.push(this);
         }
         resume() {
@@ -38,14 +51,6 @@ function crearConstructorAudio(opciones, contextos) {
             if (opciones.fallaGanancia) throw new Error('Sin nodo');
             return { gain: parametro(), connect() {}, disconnect() {} };
         }
-        createBiquadFilter() { return { frequency: parametro(), Q: parametro(), connect() {}, disconnect() {} }; }
-        createBuffer() { return { getChannelData: () => new Float32Array(100) }; }
-        createBufferSource() {
-            const nodo = { connect() {}, disconnect() {}, start(inicio) { this.inicio = inicio; }, stop(fin) { this.fin = fin; } };
-            this.ruidos.push(nodo);
-            return nodo;
-        }
-        get sampleRate() { return 48000; }
     };
 }
 
@@ -117,7 +122,6 @@ test('los perfiles son breves, suaves e inmutables y rechazan claves heredadas',
         comprobar.ok(perfil.duracion <= 0.4);
         comprobar.equal(Object.isFrozen(perfil), true);
         comprobar.equal(caso.motor.reproducir(nombre), true);
-        const nodo = caso.contextos[0].nodos.at(-1);
         const fuentes = [...caso.contextos[0].nodos, ...caso.contextos[0].ruidos].filter(fuente => fuente.onended);
         const duracion = Math.max(...fuentes.map(fuente => fuente.fin)) - Math.min(...fuentes.map(fuente => fuente.inicio));
         comprobar.ok(Math.abs(duracion - perfil.duracion) < 1e-10);
