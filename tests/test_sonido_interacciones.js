@@ -4,6 +4,7 @@ const comprobar = require('node:assert/strict');
 const { readFileSync: leerArchivo } = require('node:fs');
 const { runInNewContext: ejecutar } = require('node:vm');
 const { superficie } = require('./comun_sonido_cliente.js');
+const { inyectarCatalogo } = require('./comun_catalogo_sonoro.js');
 
 function boton(tipo = 'accion') {
     const atributos = new Map([['aria-pressed', 'false']]);
@@ -12,7 +13,8 @@ function boton(tipo = 'accion') {
     return {
         tipo, atributos, iconos,
         setAttribute: (clave, valor) => atributos.set(clave, valor),
-        getAttribute: clave => atributos.get(clave),
+        getAttribute: clave => atributos.get(clave) ?? null,
+        querySelector: () => null,
         querySelectorAll: () => iconos,
         closest(selector) {
             if (selector.includes('data-sonido-control')) return tipo === 'silencio' ? this : null;
@@ -29,6 +31,7 @@ function boton(tipo = 'accion') {
 
 function preparar(valor = null, bloquear = false) {
     const documento = superficie();
+    inyectarCatalogo(documento);
     const ventana = superficie();
     const botones = [boton('silencio')];
     const sonidos = [];
@@ -52,6 +55,7 @@ function preparar(valor = null, bloquear = false) {
         } };
     const cargar = nombre => ejecutar(leerArchivo(`src/frontend/recursos/js/${nombre}.js`, 'utf8'), entorno);
     cargar('catalogo_sonidos');
+    cargar('asignacion_sonora');
     cargar('preferencia_sonido');
     cargar('interacciones_sonoras');
     const pulsar = (control, opciones = {}) => documento.emitir('click', {

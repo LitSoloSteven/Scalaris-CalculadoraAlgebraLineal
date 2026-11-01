@@ -4,6 +4,7 @@ const comprobar = require('node:assert/strict');
 const { readFileSync: leerArchivo } = require('node:fs');
 const { runInNewContext: ejecutar } = require('node:vm');
 const { superficie } = require('./comun_sonido_cliente.js');
+const { inyectarCatalogo } = require('./comun_catalogo_sonoro.js');
 
 function crearConstructorAudio(opciones, contextos) {
     const parametro = () => ({ setValueAtTime() {}, exponentialRampToValueAtTime() {},
@@ -36,11 +37,16 @@ function crearConstructorAudio(opciones, contextos) {
             if (opciones.fallaGanancia) throw new Error('Sin nodo');
             return { gain: parametro(), connect() {}, disconnect() {} };
         }
+        createBiquadFilter() { return { frequency: parametro(), Q: parametro(), connect() {}, disconnect() {} }; }
+        createBuffer() { return { getChannelData: () => new Float32Array(100) }; }
+        createBufferSource() { return { connect() {}, disconnect() {}, start() {}, stop() {} }; }
+        get sampleRate() { return 48000; }
     };
 }
 
 function preparar(opciones = {}) {
     const documento = superficie();
+    inyectarCatalogo(documento);
     const ventana = superficie();
     const contextos = [];
     let ahora = 0;
@@ -49,6 +55,7 @@ function preparar(opciones = {}) {
     const entorno = { window: ventana, document: documento, performance: { now: () => ahora } };
     const cargar = nombre => ejecutar(leerArchivo(`src/frontend/recursos/js/${nombre}.js`, 'utf8'), entorno);
     cargar('catalogo_sonidos');
+    cargar('sintesis_sonora');
     cargar('sonido');
     return { documento, ventana, contextos, cargar, avanzar: cantidad => { ahora += cantidad; },
         motor: ventana.scalaris.sonido,
