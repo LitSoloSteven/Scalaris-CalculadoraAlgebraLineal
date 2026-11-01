@@ -25,6 +25,7 @@ def test_ejemplo_aplica_y_muestra_coordenadas_exactas(monkeypatch, indice, esper
         vista._cargar_ejemplo(EJEMPLOS_APLICACION[indice])
         assert vista.modo_transformacion == textos.MODO_APLICACION
         assert vista.boton_calcular.text == textos.APLICAR
+        assert vista.boton_calcular._props["aria-label"] == textos.APLICAR
         assert vista.ultimo_resultado is None
         await vista._analizar(vista.boton_calcular)
         assert vista.ultimo_resultado["vector_transformado"]["exacta"] == esperado
@@ -122,6 +123,7 @@ def test_limpieza_y_cambio_de_modo_no_recuperan_resultados_ocultos(monkeypatch):
         assert all(not entrada.value for entrada in vista.entradas_variables + vista.entradas_vector_original)
         vista.selector_modo.set_value(textos.MODO_ANALISIS)
         assert vista.boton_calcular.text == textos.ANALIZAR
+        assert vista.boton_calcular._props["aria-label"] == textos.ANALIZAR
         await vista._analizar(vista.boton_calcular)
         assert "rango" in vista.ultimo_resultado
     asyncio.run(construir_pagina(monkeypatch, "transformaciones", comprobar))
