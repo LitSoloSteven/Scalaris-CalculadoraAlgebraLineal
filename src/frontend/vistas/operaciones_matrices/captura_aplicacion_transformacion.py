@@ -44,11 +44,6 @@ class MixinAplicacionTransformacion:
         self.tipo_objeto = evento.value
         self._restablecer_resultados()
 
-    def _construir_herramientas_modelo(self) -> None:
-        super()._construir_herramientas_modelo()
-        self.contenedor_historial.parent_slot.parent.bind_visibility_from(
-            self.selector_modo, 'value', backward=lambda modo: modo == textos.MODO_ANALISIS)
-
     def obtener_contexto_ia(self):
         """Devuelve el contexto del análisis; omite contratos de aplicación aún no disponibles."""
         return None if self.modo_transformacion == textos.MODO_APLICACION else super().obtener_contexto_ia()
