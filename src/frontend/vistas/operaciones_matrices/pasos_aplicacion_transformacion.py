@@ -3,7 +3,6 @@ from src.frontend import textos_transformaciones as textos
 from src.frontend.componentes.presentacion_analisis import adaptar_analisis
 from src.frontend.componentes.reproductor_pasos.modelo import GrupoReproductor
 from src.frontend.controladores.operaciones_matrices.vista_previa_modelos import preparar_vista_previa_aplicacion
-from dataclasses import replace
 
 
 def adaptar_pasos_aplicacion(resultado: dict, captura: dict) -> tuple:
@@ -20,7 +19,7 @@ def adaptar_pasos_aplicacion(resultado: dict, captura: dict) -> tuple:
     for fase, fuente in enumerate(fuentes):
         inicio = len(pasos)
         adaptados, _ = adaptar_analisis({"traza": fuente}, (inicio, fase))
-        pasos.extend(replace(paso, meta_explicar=None) for paso in adaptados)
+        pasos.extend(adaptados)
         grupos.append(GrupoReproductor(textos.FASES_APLICACION[fase], f"{len(fuente)} pasos", "operacion",
                                       tuple(range(inicio, len(pasos)))))
         componentes.extend(_componentes_fase(fase, len(fuente)))

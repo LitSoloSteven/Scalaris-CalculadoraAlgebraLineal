@@ -5,6 +5,7 @@ from nicegui import ui
 
 from src.frontend import textos_transformaciones as textos
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos
+from src.frontend.componentes.glosa_foco import crear_accion_explicacion
 from src.frontend.versionado_recursos import versionar_html
 from .pasos_aplicacion_transformacion import adaptar_pasos_aplicacion
 from .reproductor_aplicacion_transformacion import ReproductorAplicacion
@@ -12,8 +13,8 @@ from .reproductor_aplicacion_transformacion import ReproductorAplicacion
 URL_COMPONENTES = versionar_html('src="/assets/js/aplicacion_transformacion.js"').split('"')[1]
 
 
-def montar_procedimiento_aplicacion(resultado: dict, captura: dict, region) -> ReproductorPasos:
-    """Monta pasos con navegación común, sin habilitar aún historial, Glosa ni PDF."""
+def montar_procedimiento_aplicacion(resultado: dict, captura: dict, region, panel_ia=None) -> ReproductorPasos:
+    """Monta navegación y explicación del paso sin alterar la escena al exportar."""
     pasos, grupos, componentes = adaptar_pasos_aplicacion(resultado, captura)
     identificador = region.props.get("id", region.html_id)
     tiene_grafica = any(isinstance(elemento, ui.plotly) for elemento in region.descendants())
@@ -25,6 +26,8 @@ def montar_procedimiento_aplicacion(resultado: dict, captura: dict, region) -> R
         """Muestra una fórmula y señala su componente sin reconstruir las escenas."""
         with contenedor:
             paso.cuerpo()
+        if contenedor is not reproductor.contenedor_cuerpo:
+            return
         componente = componentes[paso.indice]
         aviso.set_text(_describir_componente(resultado, componente, tiene_grafica))
         indice = -1 if componente is None else componente
@@ -34,6 +37,8 @@ def montar_procedimiento_aplicacion(resultado: dict, captura: dict, region) -> R
 
     reproductor = ReproductorAplicacion(pasos, grupos, renderizar, f"aplicacion-{region.id}", opciones={
         "titulo": textos.PROCEDIMIENTO_APLICACION,
+        "al_explicar": crear_accion_explicacion(panel_ia, pasos),
+        "esta_ocupado": lambda: bool(getattr(panel_ia, "_esta_enviando", False)),
     })
     reproductor.construir()
     return reproductor
