@@ -46,7 +46,8 @@
     function reproducirControlTeclado(evento) {
         if (!evento?.isTrusted || evento.defaultPrevented || evento.repeat || activacionModificada(evento)) return;
         if (!['Enter', ' '].includes(evento.key)) return;
-        const control = evento.target.closest?.('.q-toggle, .q-checkbox, .q-radio, .q-tab');
+        const control = evento.target.closest?.('.q-toggle, .q-checkbox, .q-radio, .q-tab, ' +
+            '.q-item[aria-expanded], .q-item[role=menuitemradio], .q-item[role=option], .q-item[role=menuitem]');
         if (controlOmitido(control)) return;
         const tipo = control.matches('[role=tab]') ? 'keydown' : 'keyup';
         if (evento.type !== tipo) return;

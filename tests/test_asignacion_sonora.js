@@ -144,3 +144,16 @@ test('tabs Quasar activan con keydown y omiten controles deshabilitados', () => 
     caso.documento.emitir('keydown', { type: 'keydown', isTrusted: true, key: 'Enter', target: objetivo });
     comprobar.equal(caso.sonidos.length, 1);
 });
+
+test('cabeceras y opciones QItem suenan por keyup y omiten su clic sintetico', () => {
+    const caso = preparar();
+    const regla = '.q-expansion-item__container > .q-item[aria-expanded], .q-expansion-item__container > .q-item .q-item__section[aria-expanded]';
+    const cabecera = control({ 'aria-expanded': 'false' }, [regla]);
+    const tema = control({}, ['[data-tema-opcion=marea]']);
+    for (const boton of [cabecera, tema]) {
+        const objetivo = { closest: () => boton };
+        caso.documento.emitir('keyup', { type: 'keyup', isTrusted: true, key: 'Enter', target: objetivo });
+        pulsar(caso, boton, { isTrusted: false });
+    }
+    comprobar.deepEqual(caso.sonidos, ['despliegue', 'tema_marea']);
+});
