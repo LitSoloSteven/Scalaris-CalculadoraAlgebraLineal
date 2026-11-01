@@ -28,10 +28,7 @@
         fuente.connect(ganancia);
         ganancia.connect(voz.filtro);
         voz.fuentes.add(fuente);
-        fuente.onended = () => {
-            voz.fuentes.delete(fuente);
-            if (!voz.fuentes.size) voz.liberar();
-        };
+        fuente.onended = voz.liberar;
     }
 
     function prepararCapas(voz, perfil, tiempos) {
