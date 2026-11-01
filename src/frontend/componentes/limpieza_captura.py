@@ -16,8 +16,8 @@ registro = logging.getLogger(__name__)
 _PLAZO_LIMPIEZA = 2.0
 
 
-async def _ejecutar_movimiento(codigo: str) -> None:
-    await ui.run_javascript(codigo, timeout=_PLAZO_LIMPIEZA)
+async def _ejecutar_movimiento(codigo: str) -> bool:
+    return bool(await ui.run_javascript(codigo, timeout=_PLAZO_LIMPIEZA))
 
 
 class CapturaLimpiable(Protocol):
@@ -51,7 +51,7 @@ class LimpiezaCaptura:
         self.boton = ui.button(icon='delete', on_click=self.confirmar, color=None).classes(
             'boton-discreto flex-1 py-3'
         ).style('flex-shrink: 0;').props(
-            f'ripple=false data-sonido="apertura" id="boton-limpiar-principal" aria-label="{LIMPIAR}"'
+            f'ripple=false data-sonido-omitir id="boton-limpiar-principal" aria-label="{LIMPIAR}"'
         )
         with self.boton:
             ui.tooltip(LIMPIAR).props('target="#boton-limpiar-principal"')
@@ -66,6 +66,7 @@ class LimpiezaCaptura:
         if self.dialogo is None:
             self._construir_dialogo()
         self.dialogo.open()
+        emitir_sonido('apertura')
 
     def _construir_dialogo(self) -> None:
         # QDialog conserva su trampa de foco y devuelve el foco al activador al cerrar.
@@ -86,7 +87,7 @@ class LimpiezaCaptura:
         if self.sigue_montada():
             ui.run_javascript("document.getElementById('boton-limpiar-principal')?.focus()")
 
-    async def _animar_captura(self) -> None:
+    async def _animar_captura(self) -> bool:
         campos = self._campos_visuales() if self._campos_visuales else []
         identificadores = [campo.id for campo in campos if campo is not None and not campo.is_deleted]
         codigo = (
@@ -94,7 +95,7 @@ class LimpiezaCaptura:
             'window.scalaris?.animarRecoleccionBasura ? '
             f'window.scalaris.animarRecoleccionBasura({json.dumps(identificadores)}) : Promise.resolve()'
         )
-        await asyncio.wait_for(_ejecutar_movimiento(codigo), timeout=_PLAZO_LIMPIEZA)
+        return await asyncio.wait_for(_ejecutar_movimiento(codigo), timeout=_PLAZO_LIMPIEZA)
 
     async def _finalizar_movimiento(self) -> None:
         if not self.sigue_montada():
@@ -112,18 +113,19 @@ class LimpiezaCaptura:
         if self._limpiando or not self.sigue_montada():
             return
         self._limpiando = True
+        sonido_final = False
         if self._contenedor_captura is not None:
             self._contenedor_captura.props('inert')
         if dialogo is not None or self.dialogo is not None:
             (dialogo or self.dialogo).close()
         try:
-            await self._animar_captura()
+            sonido_final = await self._animar_captura()
         except Exception:
             registro.warning('No se pudo completar el movimiento de limpieza')
         finally:
             try:
                 if self.sigue_montada():
-                    self._vaciar_captura()
+                    self._vaciar_captura(sonido_final)
             finally:
                 try:
                     await self._finalizar_movimiento()
@@ -131,10 +133,10 @@ class LimpiezaCaptura:
                     self._limpiando = False
                     self._liberar_captura()
 
-    def _vaciar_captura(self) -> None:
+    def _vaciar_captura(self, sonido_final: bool) -> None:
         habia_datos = not self.captura.esta_completamente_vacio()
         self.captura.limpiar_todo()
-        if habia_datos:
+        if habia_datos and not sonido_final:
             emitir_sonido('limpiar')
 
     def _liberar_captura(self) -> None:

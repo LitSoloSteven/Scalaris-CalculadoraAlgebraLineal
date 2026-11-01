@@ -93,10 +93,11 @@
 
   function comprimirBoton(estado, vuelo) {
     estado.boton.classList.add('movimiento-compresion');
+    var sonidoFinal = window.scalaris.eventosSonoros?.limpiezaFinal() ?? false;
     programar(estado, function () {
       estado.boton.classList.remove('movimiento-compresion');
       if (estado.icono) estado.icono.textContent = 'delete';
-      estado.resolver();
+      estado.resolver(sonidoFinal);
     }, vuelo);
   }
 

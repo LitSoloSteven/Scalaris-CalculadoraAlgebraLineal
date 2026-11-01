@@ -48,5 +48,5 @@
     document.addEventListener('pointermove', alArrastrarDeslizador, { passive: true });
     document.addEventListener('keyup', alTecladoDeslizador, { passive: true });
     window.scalaris.eventosSonoros = { destruir, rechazo: () => reproducir('rechazo'),
-        limpiezaVuelo: () => reproducir('limpiezaVuelo') };
+        limpiezaVuelo: () => reproducir('limpiezaVuelo'), limpiezaFinal: () => reproducir('limpiezaFinal') };
 }
