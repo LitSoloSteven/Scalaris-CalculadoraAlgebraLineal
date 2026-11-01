@@ -36,8 +36,8 @@
   }
 
   function mostrarContenido(nodo, documento) {
-    const display = documento.defaultView.getComputedStyle(nodo).display;
-    const propiedades = {display: display === 'none' ? 'block' : display, height: 'auto',
+    const visualizacion = documento.defaultView.getComputedStyle(nodo).display;
+    const propiedades = {display: visualizacion === 'none' ? 'block' : visualizacion, height: 'auto',
       'max-height': 'none', overflow: 'visible', visibility: 'visible', opacity: '1'};
     for (const [propiedad, valor] of Object.entries(propiedades)) {
       nodo.style.setProperty(propiedad, valor, 'important');
