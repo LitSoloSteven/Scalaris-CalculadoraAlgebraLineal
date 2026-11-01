@@ -17,7 +17,7 @@ def preparar_secuencia(herramienta: str, enlace):
     try:
         with temporal:
             with _region(f'{herramienta}-entrada'):
-                renderizar_entrada(_leer_entrada(herramienta, enlace), herramienta)
+                renderizar_entrada(enlace.entrada_documental(), herramienta)
             reproductor = (getattr(enlace.vista, 'reproductor_pasos', None)
                            or getattr(enlace.vista, 'reproductor', None))
             if reproductor is not None:
@@ -32,15 +32,6 @@ def preparar_secuencia(herramienta: str, enlace):
 
 def _region(clave: str):
     return ui.column().classes('w-full gap-4').props(f'data-pdf-captura={clave}')
-
-
-def _leer_entrada(herramienta: str, enlace) -> dict:
-    entrada = enlace.entrada()
-    if herramienta == 'matrices':
-        matrices = enlace.vista.panel_captura_matrices.obtener_datos_crudos()
-        return {**entrada, 'matrices': {nombre: [[valor or '0' for valor in fila] for fila in matriz['datos']]
-                                       for nombre, matriz in matrices.items()}}
-    return entrada
 
 
 def _renderizar_pasos(herramienta: str, reproductor) -> None:
