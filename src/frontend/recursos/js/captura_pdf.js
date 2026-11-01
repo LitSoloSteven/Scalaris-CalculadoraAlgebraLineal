@@ -46,63 +46,6 @@
     await conPlazo(document.fonts.ready, configuracion.plazoMathjax);
   }
 
-  function normalizarColores(documento) {
-    const lienzo = documento.createElement('canvas');
-    lienzo.width = 1;
-    lienzo.height = 1;
-    const contexto = lienzo.getContext('2d', {willReadFrequently: true});
-    const cache = new Map();
-    const propiedades = ['color', 'backgroundColor', 'borderTopColor', 'borderRightColor',
-      'borderBottomColor', 'borderLeftColor', 'outlineColor', 'textDecorationColor', 'boxShadow', 'backgroundImage'];
-    function convertir(color) {
-      if (cache.has(color)) return cache.get(color);
-      contexto.clearRect(0, 0, 1, 1);
-      contexto.fillStyle = color;
-      contexto.fillRect(0, 0, 1, 1);
-      const [rojo, verde, azul, alfa] = contexto.getImageData(0, 0, 1, 1).data;
-      const normalizado = `rgba(${rojo}, ${verde}, ${azul}, ${alfa / 255})`;
-      cache.set(color, normalizado);
-      return normalizado;
-    }
-    documento.querySelectorAll('[data-pdf-captura], [data-pdf-captura] *').forEach(nodo => {
-      const estilos = documento.defaultView.getComputedStyle(nodo);
-      for (const propiedad of propiedades) {
-        nodo.style[propiedad] = estilos[propiedad].replace(/(?:color|oklab|oklch|lab|lch)\([^)]*\)/g, convertir);
-      }
-    });
-    lienzo.width = 0;
-    lienzo.height = 0;
-  }
-
-  function prepararClon(documento, region, ancho) {
-    documento.documentElement.setAttribute('data-tema', 'papel');
-    documento.body.classList.remove('body--dark');
-    documento.body.style.backgroundColor = 'white';
-    prepararFormulas(documento);
-    region.style.setProperty('width', `${ancho}px`, 'important');
-    documento.querySelectorAll('[data-pdf-captura], [data-pdf-captura] *').forEach(nodo => {
-      nodo.style.animation = 'none';
-      nodo.style.transition = 'none';
-      nodo.style.transform = 'none';
-      if (nodo.scrollWidth > nodo.clientWidth) {
-        nodo.style.overflow = 'visible';
-        nodo.style.maxWidth = 'none';
-      }
-    });
-    documento.querySelectorAll('[data-pdf-excluir]').forEach(nodo => nodo.remove());
-    documento.querySelectorAll('.numericos-residuo-activo').forEach(nodo => {
-      nodo.style.paddingBlock = 'var(--space-1)';
-    });
-    normalizarColores(documento);
-  }
-
-  function prepararFormulas(documento) {
-    const formulas = [...documento.querySelectorAll('.MathJax, .MathJax *, html2canvascustomelement, html2canvascustomelement *')];
-    if (!formulas.length) return;
-    const color = documento.defaultView.getComputedStyle(documento.documentElement).getPropertyValue('--text-main');
-    formulas.forEach(nodo => { nodo.style.color = color; });
-  }
-
   function escalaSegura(ancho, alto, configuracion) {
     return Math.min(configuracion.escala, configuracion.maximoLado / ancho,
       configuracion.maximoLado / alto, Math.sqrt(configuracion.maximoPixeles / (ancho * alto)));
@@ -125,9 +68,9 @@
     try {
       const ajustes = {backgroundColor: 'white', scale: escala,
         ignoreElements: elemento => elemento.tagName === 'MJX-ASSISTIVE-MML',
-        width: ancho, height: alto, logging: false, onclone: (documento, region) => {
+        width: ancho, height: alto, logging: false, onclone: async (documento, region) => {
           if (estado.cancelada) throw new Error('cancelada');
-          prepararClon(documento, region, ancho);
+          await window.scalaris.clonPdf.preparar(documento, region, ancho, estado);
           ajustarDimensiones(ajustes, region, configuracion);
         },
         imageTimeout: configuracion.plazoMathjax * 1000};
@@ -142,14 +85,19 @@
   }
 
   async function obtenerCapturas(raiz, configuracion, estado) {
+    await window.scalaris.clonPdf.pintarIndicador();
     const biblioteca = await cargarBiblioteca(configuracion);
+    await window.scalaris.clonPdf.ceder();
     await esperarFormulas(configuracion);
+    await window.scalaris.clonPdf.ceder();
     if (estado.cancelada) throw new Error('cancelada');
     const regiones = [...raiz.querySelectorAll('[data-pdf-captura]')].filter(nodo => nodo.getClientRects().length);
     if (!regiones.length || regiones.length > configuracion.maximoFiguras) throw new Error('cantidad');
     const capturas = [];
     let total = 0;
     for (const region of regiones) {
+      await window.scalaris.clonPdf.ceder();
+      if (estado.cancelada) throw new Error('cancelada');
       const captura = region.dataset.pdfMotor === 'plotly'
         ? await capturarPlotly(region, configuracion, estado)
         : await capturarRegion(region, configuracion, biblioteca, estado);

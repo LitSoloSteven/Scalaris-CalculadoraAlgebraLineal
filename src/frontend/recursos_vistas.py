@@ -10,6 +10,7 @@ _VISTAS = _INICIO | _NUMERICAS | _ALGEBRA
 _EXPORTACION_PDF = _ALGEBRA | _NUMERICAS
 _POR_RECURSO = {
     "exportacion_pdf.css": _EXPORTACION_PDF,
+    "clon_pdf.js": _EXPORTACION_PDF,
     "captura_pdf.js": _EXPORTACION_PDF,
     "presentacion.css": _INICIO,
     "vistas_inicio_matriz.css": _INICIO,
