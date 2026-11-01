@@ -58,6 +58,11 @@
     ajustes.scale = escalaSegura(ajustes.width, ajustes.height, configuracion);
   }
 
+  function excluirDeCaptura(elemento, region) {
+    return elemento.tagName === 'MJX-ASSISTIVE-MML' || elemento.hasAttribute?.('data-pdf-excluir') ||
+      Boolean(elemento.dataset?.pdfCaptura && elemento !== region && !elemento.contains(region));
+  }
+
   async function capturarRegion(nodo, configuracion, biblioteca, estado) {
     const anchos = [...nodo.querySelectorAll('*')].map(hijo => hijo.scrollWidth);
     const ancho = Math.max(nodo.scrollWidth, nodo.getBoundingClientRect().width, ...anchos);
@@ -67,7 +72,7 @@
     let lienzo;
     try {
       const ajustes = {backgroundColor: 'white', scale: escala,
-        ignoreElements: elemento => elemento.tagName === 'MJX-ASSISTIVE-MML',
+        ignoreElements: elemento => excluirDeCaptura(elemento, nodo),
         width: ancho, height: alto, logging: false, onclone: async (documento, region) => {
           if (estado.cancelada) throw new Error('cancelada');
           await window.scalaris.clonPdf.preparar(documento, region, ancho, estado);
