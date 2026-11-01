@@ -6,6 +6,8 @@ from nicegui import ui
 from src.frontend import textos_transformaciones as textos
 from src.frontend.versionado_recursos import versionar_html
 from .figura_aplicacion_transformacion import preparar_escenas_aplicacion
+from .procedimiento_aplicacion_transformacion import URL_COMPONENTES
+from .proyeccion_aplicacion_transformacion import anexar_proyeccion
 
 registro = logging.getLogger(__name__)
 _URL_TEMA = versionar_html('src="/assets/js/tema_graficos.js"').split('"')[1]
@@ -47,9 +49,13 @@ def _montar_escena(escena: dict) -> None:
     ejes = textos.GRAFICA_EJES_3D if escena["figura"].data[0].type == "scatter3d" else textos.GRAFICA_EJES_2D
     ui.label(ejes).classes("texto-secundario text-sm")
     opciones = escena["figura"].to_plotly_json()
+    anexar_proyeccion(opciones)
     opciones["config"] = dict(displayModeBar=False, scrollZoom=False, doubleClick="reset", responsive=True)
     with ui.element("div").classes("w-full min-w-0").props('role="group"') as region:
         region.props["aria-label"] = escena["titulo"]
         grafica = ui.plotly(opciones).classes("w-full h-80 min-w-0")
         grafica.props.update({"role": "img", "aria-label": textos.GRAFICA_DESCRIPCION})
         grafica.on("plotly_afterplot", js_handler=_SINCRONIZAR_TEMA)
+        grafica.on("plotly_afterplot", js_handler=(
+            f'() => {{ import("{URL_COMPONENTES}").then(() => '
+            f'window.scalaris.aplicacionTransformacion.sincronizar(document.getElementById("{grafica.html_id}"))); }}'))

@@ -44,3 +44,14 @@ GRAFICA_ERROR = "No se pudo mostrar la gráfica. Las coordenadas exactas siguen 
 GRAFICA_DESCRIPCION = "Representación aproximada del original y su transformación. Consulta las coordenadas exactas anteriores para una lectura completa."
 GRAFICA_EJES_2D = "Ejes x₁ y x₂: primera y segunda componente."
 GRAFICA_EJES_3D = "Ejes x₁, x₂ y x₃: primera, segunda y tercera componente."
+FASES_APLICACION = ("Planteamiento", "Aplicación por componentes", "Comprobación exacta")
+PASO_PLANTEAMIENTO = "Planteamos T(v) = Av"
+PASO_CONVENCION = "Cada fila de A calcula una componente de las coordenadas transformadas respecto al origen."
+PROCEDIMIENTO_APLICACION = "Aplicación y comprobación paso a paso"
+COMPROBACION_APLICACION = (
+    "La comprobación desarrolla Av con el producto común y lo compara exactamente con y; "
+    "no es un algoritmo independiente. En el reproductor puedes revisar cada igualdad."
+)
+COMPONENTE_SIN_SELECCION = "Sin componente seleccionada: se muestra el resultado completo."
+COMPONENTE_ACTIVA = "Componente activa y_{indice} = {valor}. En la gráfica, la cruz señala su proyección sobre el eje correspondiente."
+COMPONENTE_SIN_GRAFICA = "Componente activa y_{indice} = {valor}. Consulta la fila resaltada de las coordenadas exactas."

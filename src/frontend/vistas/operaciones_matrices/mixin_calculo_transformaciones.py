@@ -40,7 +40,7 @@ class MixinCalculoTransformaciones:
         self.contenedor_resultados.clear()
         self.contenedor_resultados.classes(remove="items-center justify-center", add="items-start justify-start")
         if "vector_original" in captura:
-            renderizar_resultado_aplicacion(self.contenedor_resultados, respuesta, captura)
+            self.reproductor_aplicacion = renderizar_resultado_aplicacion(self.contenedor_resultados, respuesta, captura)
             actualizar_contexto(self)
         else:
             self._presentar_analisis(respuesta, captura)

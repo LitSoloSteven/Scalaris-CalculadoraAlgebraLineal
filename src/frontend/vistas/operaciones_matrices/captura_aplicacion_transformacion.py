@@ -6,6 +6,7 @@ from src.frontend.componentes.cuadricula_base import crear_entradas_matriz
 from src.frontend.componentes.selector_opciones import SelectorOpciones
 from src.frontend.controladores.limpieza_captura import vaciar_campos
 from src.frontend.sugerencias import Senales
+from .procedimiento_aplicacion_transformacion import detener_procedimiento_aplicacion
 
 
 class MixinAplicacionTransformacion:
@@ -57,6 +58,14 @@ class MixinAplicacionTransformacion:
         if self.modo_transformacion == textos.MODO_APLICACION:
             return Senales(self.herramienta_modelo, "sin_resultado")
         return super().obtener_senales_ia()
+
+    def _sincronizar_captura_modelo(self) -> None:
+        detener_procedimiento_aplicacion(self)
+        super()._sincronizar_captura_modelo()
+
+    def _desmontar_modelo(self) -> None:
+        detener_procedimiento_aplicacion(self)
+        super()._desmontar_modelo()
 
     def limpiar_todo(self) -> None:
         """Limpia también las coordenadas y nombres ocultos para que no reaparezcan."""
