@@ -28,7 +28,7 @@ def test_conserva_formulas_fases_y_componente_de_cada_paso(dominio, codominio):
     assert componentes == (None, *range(codominio), None, *range(codominio), None)
     originales = resultado["pasos"] + resultado["traza_comprobacion"]
     assert [paso.cuerpo.latex for paso in pasos[1:]] == [paso["detalle_latex"] for paso in originales]
-    assert all(paso.meta_explicar is None for paso in pasos)
+    assert all(paso.meta_explicar["detalle"]["formula"] == paso.cuerpo.latex for paso in pasos)
     assert pasos[-1].tipo == "verificacion" and "coincide" in pasos[-1].descripcion
     assert resultado == copia
 

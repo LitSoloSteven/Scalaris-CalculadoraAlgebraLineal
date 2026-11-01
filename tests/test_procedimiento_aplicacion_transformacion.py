@@ -17,17 +17,17 @@ def test_navegacion_actualiza_formula_y_componente_sin_recrear_graficas(monkeypa
         await vista._analizar(vista.boton_calcular)
         reproductor = vista.reproductor_aplicacion
         graficas = [elemento for elemento in vista.contenedor_resultados.descendants() if isinstance(elemento, ui.plotly)]
-        assert reproductor is not None and vista.reproductor_pasos is None
-        assert reproductor.al_explicar is None and not vista.historial
+        assert reproductor is not None and vista.reproductor_pasos is reproductor
+        assert reproductor.al_explicar is not None and len(vista.historial) == 1
         for indice in range(len(reproductor.pasos)):
             reproductor.ir_a(indice)
             assert reproductor.etiqueta_indice.text == f"Paso {indice + 1} de 7"
             assert not any(grafica.is_deleted for grafica in graficas)
-            assert not list(reproductor.contenedor_glosa.descendants())
+            assert any(isinstance(elemento, ui.button) for elemento in reproductor.contenedor_glosa.descendants())
         reproductor.ir_a(1)
         etiquetas = [elemento.text for elemento in vista.contenedor_resultados.descendants() if isinstance(elemento, ui.label)]
         assert any("y_1 = 4/3" in texto for texto in etiquetas)
-        assert vista.obtener_contexto_ia() is None
+        assert vista.obtener_contexto_ia().resultado["verificacion"] is True
         assert reproductor.deslizador._props["aria-label"] == "Paso actual"
         assert reproductor.boton_reproducir._props["aria-label"] == "Reproducción automática"
     asyncio.run(construir_pagina(monkeypatch, "transformaciones", comprobar))

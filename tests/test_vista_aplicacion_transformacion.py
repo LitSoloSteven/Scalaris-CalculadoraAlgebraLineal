@@ -33,7 +33,7 @@ def test_ejemplo_aplica_y_muestra_coordenadas_exactas(monkeypatch, indice, esper
         etiquetas = _etiquetas(vista.contenedor_resultados)
         assert "Vector original" in etiquetas and "Vector transformado" in etiquetas
         assert all(f"{indice + 1}: {valor}" in etiquetas for indice, valor in enumerate(esperado))
-        assert not vista.historial and vista.reproductor_pasos is None
+        assert len(vista.historial) == 1 and vista.reproductor_pasos is vista.reproductor_aplicacion
     asyncio.run(construir_pagina(monkeypatch, "transformaciones", comprobar))
 
 
@@ -114,10 +114,10 @@ def test_limpieza_y_cambio_de_modo_no_recuperan_resultados_ocultos(monkeypatch):
         assert vista.historial and vista.reproductor_pasos is not None
         vista._cargar_ejemplo(EJEMPLOS_APLICACION[4])
         assert vista.ultimo_resultado is None and vista.reproductor_pasos is None
-        assert vista.obtener_contexto_ia() is None
-        assert vista.obtener_senales_ia().estado == "sin_resultado"
+        assert vista.obtener_contexto_ia().resultado is None
+        assert vista.obtener_senales_ia().estado == "aplicacion_sin_resultado"
         await vista._analizar(vista.boton_calcular)
-        assert not any("data-pdf-captura" in elemento._props for elemento in vista.contenedor_resultados.descendants())
+        assert any("data-pdf-captura" in elemento._props for elemento in vista.contenedor_resultados.descendants())
         vista.limpiar_todo()
         assert vista.esta_completamente_vacio() and vista.ultimo_resultado is None
         assert all(not entrada.value for entrada in vista.entradas_variables + vista.entradas_vector_original)
