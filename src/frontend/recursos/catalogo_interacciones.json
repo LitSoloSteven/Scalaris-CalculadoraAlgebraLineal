@@ -6,6 +6,7 @@
     "sintesis_sonora.js",
     "asignacion_sonora.js",
     "sonido.js",
+    "eventos_sonoros.js",
     "preferencia_sonido.js",
     "interacciones_sonoras.js",
     "sonido_escritura.js",
