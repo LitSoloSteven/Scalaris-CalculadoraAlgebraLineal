@@ -60,6 +60,7 @@ PDF_ETIQUETAS_ENTRADA = {
 }
 PDF_BOOLEANOS = {True: "Sí", False: "No"}
 PDF_SEGUNDO_OPERANDO = "Segundo operando"
+PDF_VERIFICACIONES = ("Comprobaciones del Resultado", "Se presentan las comprobaciones entregadas por el procedimiento calculado.")
 PDF_REGIONES_SISTEMAS = {
     "sistemas-resumen": ("Clasificación y Solución del Sistema", "Se presenta la clasificación y la solución que muestra el resultado calculado."),
     "sistemas-procedimiento": ("Paso Visible del Procedimiento", "Se presenta únicamente el paso visible del procedimiento, sin recorrer los demás pasos."),

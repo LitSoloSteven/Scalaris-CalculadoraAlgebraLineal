@@ -7,7 +7,7 @@ from src.frontend import constantes, textos
 def seleccionar_intermedios(pasos: Sequence) -> tuple:
     """Devuelve hasta tres pasos interiores repartidos, sin repetir entrada ni cierre."""
     candidatos = tuple(paso for paso in pasos[1:-1] if paso.tipo not in (
-        'inicial', 'entrada', 'resultado', 'final', 'comprobacion', 'verificacion'))
+        'inicial', 'entrada', 'planteamiento', 'resultado', 'final', 'comprobacion', 'verificacion'))
     cantidad = min(constantes.PDF_PASOS_INTERMEDIOS, len(candidatos))
     if cantidad == 0:
         return ()
@@ -28,4 +28,10 @@ def registro_secuencia(herramienta: str) -> dict:
                      if not clave.endswith(('-procedimiento', '-comprobaciones'))})
     registro.update({clave: valor for clave, valor in anteriores.items()
                      if clave.endswith('-comprobaciones')})
+    registro[f'{herramienta}-verificaciones'] = textos.PDF_VERIFICACIONES
     return registro
+
+
+def seleccionar_comprobaciones(pasos: Sequence) -> tuple:
+    """Recupera las verificaciones explícitas entregadas por el procedimiento."""
+    return tuple(paso for paso in pasos if paso.tipo in ('comprobacion', 'verificacion'))
