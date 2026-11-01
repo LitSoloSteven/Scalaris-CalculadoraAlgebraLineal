@@ -27,6 +27,8 @@ def test_explicacion_recibe_paso_y_resultado_y_editar_limpia_foco(monkeypatch):
         vista.panel_ia.establecer_foco_explicacion(recibidos[0])
         captura = copy.deepcopy(vista.historial[0]["captura"])
         vista.entradas_vector_original[0].set_value("7")
+        reproductor.al_explicar(reproductor.pasos[2])
+        assert len(recibidos) == 1
         assert vista.panel_ia.foco_explicacion is None
         assert reproductor.tarjeta.is_deleted
         assert vista.historial[0]["captura"] == captura

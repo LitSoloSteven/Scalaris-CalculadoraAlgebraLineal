@@ -21,7 +21,7 @@ def renderizar_resultado_aplicacion(contenedor, resultado: dict, captura: dict, 
         return
     with contenedor, ui.column().classes("w-full min-w-0 gap-4") as region:
         region.props.update({"data-procedimiento-aplicacion": "", "data-componente-activa": "-1"})
-        with region_pdf("transformaciones-resumen"):
+        with region_pdf("transformaciones-resumen").classes("pb-6"):
             _mostrar_resumen(resultado, captura)
         renderizar_grafica_aplicacion(resultado, captura["tipo_objeto"])
         return montar_procedimiento_aplicacion(resultado, captura, region, panel_ia)

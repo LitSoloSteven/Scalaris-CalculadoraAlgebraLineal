@@ -1,7 +1,6 @@
 """Selección y carga de ejemplos de Transformaciones."""
 from src.frontend.componentes.sonido import notificar
 from src.frontend.componentes.captura_modelos import construir_ejemplos
-from src.frontend.componentes.captura_modelos import llenar_entradas
 from src.frontend import textos_transformaciones as textos
 from nicegui import ui
 from ._ejemplos_transformaciones import EJEMPLOS_TRANSFORMACIONES
@@ -23,10 +22,5 @@ class MixinEjemplosTransformaciones:
             construir_ejemplos(EJEMPLOS_APLICACION, self._cargar_ejemplo, textos.TITULO_EJEMPLOS)
 
     def _cargar_ejemplo(self, ejemplo: dict):
-        aplicacion = "vector_original" in ejemplo
-        self.selector_modo.set_value(textos.MODO_APLICACION if aplicacion else textos.MODO_ANALISIS)
         cargar_captura_modelo(self, ejemplo)
-        if aplicacion:
-            llenar_entradas(self.entradas_vector_original, ejemplo["vector_original"])
-            self._restablecer_resultados()
         notificar(f"Ejemplo '{ejemplo['nombre']}' cargado.", type="positive", position="top")
