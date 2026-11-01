@@ -62,7 +62,7 @@ def _renderizar_paso(paso, reproductor) -> None:
 def _renderizar_comprobaciones(herramienta: str, reproductor) -> None:
     if f'{herramienta}-comprobaciones' in textos.PDF_REGIONES_POR_HERRAMIENTA[herramienta]:
         return
-    pasos = seleccionar_comprobaciones(reproductor.pasos)
+    pasos = seleccionar_comprobaciones(reproductor.pasos, herramienta)
     if pasos:
         with _region(f'{herramienta}-verificaciones'):
             for paso in pasos:

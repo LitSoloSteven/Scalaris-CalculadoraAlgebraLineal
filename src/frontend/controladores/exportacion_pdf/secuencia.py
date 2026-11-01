@@ -34,6 +34,7 @@ def registro_secuencia(herramienta: str) -> dict:
     return registro
 
 
-def seleccionar_comprobaciones(pasos: Sequence) -> tuple:
-    """Recupera las verificaciones explícitas entregadas por el procedimiento."""
-    return tuple(paso for paso in pasos if paso.tipo in ('comprobacion', 'verificacion'))
+def seleccionar_comprobaciones(pasos: Sequence, herramienta: str) -> tuple:
+    """Recupera verificaciones; en LU usa la igualdad final, sin el desarrollo celda a celda."""
+    verificaciones = tuple(paso for paso in pasos if paso.tipo in ('comprobacion', 'verificacion'))
+    return verificaciones[-1:] if herramienta == 'lu' else verificaciones
