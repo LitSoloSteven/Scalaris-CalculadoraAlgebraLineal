@@ -30,6 +30,7 @@
 
     function rechazar(entrada, mensaje, animar) {
         anunciar(mensaje);
+        window.scalaris.eventosSonoros?.rechazo();
         if (!animar) return;
         const control = entrada.closest('.q-field__control');
         if (!control) return;

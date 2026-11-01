@@ -135,6 +135,7 @@
     }
 
     var ultimoRetraso = Math.min((destinos.length - 1) * paso, limite);
+    window.scalaris.eventosSonoros?.limpiezaVuelo();
     programar(estado, () => comprimirBoton(estado, vuelo), ultimoRetraso + vuelo);
   }
 

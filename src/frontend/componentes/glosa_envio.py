@@ -102,6 +102,7 @@ class EnvioGlosaMixin(PreguntasGlosaMixin):
             self.historial_chat = incorporar_mensaje(self.historial_chat, mensaje)
 
         self._esta_enviando = True
+        emitir_sonido('enviar')
         self._ultimo_envio = time.monotonic()
         self._forzar_sugerencias = True
         self._renderizar_sugerencias_laterales()
