@@ -9,7 +9,7 @@ from src.frontend.componentes.menu_accesible import vincular_estado_menu
 def renderizar_boton_tema():
     """Renderiza el botón de tema con su menú desplegable accesible."""
     boton_tema = ui.button(color=None).classes("boton-icono p-0 texto-principal").props(
-        'flat ripple=false aria-label="Seleccionar Tema" aria-haspopup="menu" aria-expanded="false"'
+        'flat ripple=false data-sonido="apertura" aria-label="Seleccionar Tema" aria-haspopup="menu" aria-expanded="false"'
     )
 
     with boton_tema:

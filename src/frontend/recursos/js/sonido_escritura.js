@@ -5,7 +5,7 @@
     window.scalaris.escrituraSonora?.destruir();
     const tiposCampo = new Set(['text', 'search', 'email', 'url', 'tel', 'password', 'number']);
     const inserciones = new Set(['insertText', 'insertReplacementText', 'insertFromPaste',
-        'insertFromDrop', 'insertLineBreak', 'insertParagraph']);
+        'insertFromDrop', 'insertLineBreak', 'insertParagraph', 'insertCompositionText', 'insertFromComposition']);
 
     function campoEditable(entrada) {
         if (!entrada || entrada.closest?.('[inert], [data-sonido-omitir]')) return false;
@@ -16,21 +16,16 @@
     }
 
     function alInsertar(evento) {
-        if (!evento.isTrusted || evento.isComposing || !inserciones.has(evento.inputType)) return;
-        if (campoEditable(evento.target)) window.scalaris.sonido.reproducir('escritura');
-    }
-
-    function alComponer(evento) {
-        if (!evento.isTrusted || !evento.data || !campoEditable(evento.target)) return;
-        window.scalaris.sonido.reproducir('escritura');
+        if (!evento.isTrusted || evento.isComposing || !campoEditable(evento.target)) return;
+        if (!inserciones.has(evento.inputType) && !evento.inputType?.startsWith('delete')) return;
+        const nombre = window.scalaris.asignacionSonora.escritura(evento.inputType, evento.data === ' ');
+        window.scalaris.sonido.reproducir(nombre);
     }
 
     function destruir() {
         document.removeEventListener('input', alInsertar);
-        document.removeEventListener('compositionend', alComponer);
     }
 
     document.addEventListener('input', alInsertar, { passive: true });
-    document.addEventListener('compositionend', alComponer, { passive: true });
     window.scalaris.escrituraSonora = { destruir };
 }

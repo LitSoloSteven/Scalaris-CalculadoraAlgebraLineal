@@ -3,14 +3,8 @@
     'use strict';
     window.scalaris = window.scalaris || {};
     window.scalaris.interaccionesSonoras?.destruir();
-    const selector = 'button, a[href], [role="button"], [role="tab"], [role="menuitem"], [role="menuitemradio"]';
-
-    function tipoSonido(control) {
-        if (control.matches('.inicio-dialogo-cerrar')) return 'cierre';
-        if (control.matches('.inicio-fila')) return 'apertura';
-        if (control.matches('a[href], [href]')) return 'navegacion';
-        return 'accion';
-    }
+    const selector = 'button, a[href], [role="button"], [role="tab"], [role="menuitem"], ' +
+        '[role="menuitemradio"], [role="switch"], [role="checkbox"], .q-select, .q-expansion-item__header';
 
     function reproducirActivacion(evento) {
         if (!evento.isTrusted || evento.defaultPrevented || evento.button !== 0) return;
@@ -18,7 +12,8 @@
         const control = evento.target.closest?.(selector);
         if (!control || control.closest('[data-sonido-control], [data-sonido-omitir]')) return;
         if (control.matches(':disabled, [aria-disabled="true"], [inert]') || control.closest('[inert]')) return;
-        window.scalaris.sonido.reproducir(tipoSonido(control));
+        const nombre = window.scalaris.asignacionSonora.resolver(control);
+        if (nombre) window.scalaris.sonido.reproducir(nombre);
     }
 
     function activacionModificada(evento) {
@@ -31,11 +26,11 @@
     }
 
     function destruir() {
-        document.removeEventListener('click', reproducirActivacion);
+        document.removeEventListener('click', reproducirActivacion, true);
         document.removeEventListener('keydown', reproducirEscape);
     }
 
-    document.addEventListener('click', reproducirActivacion);
+    document.addEventListener('click', reproducirActivacion, true);
     document.addEventListener('keydown', reproducirEscape);
     window.scalaris.interaccionesSonoras = { destruir };
 }
