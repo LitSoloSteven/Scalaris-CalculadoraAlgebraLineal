@@ -2,7 +2,7 @@
 const afirmar = require('node:assert/strict');
 const prueba = require('node:test');
 const maquinaVirtual = require('node:vm');
-const { cargarAssetCliente } = require('./comun_cliente_javascript.js');
+const {cargarCapturadorPdf} = require('./comun_capturador_pdf.js');
 
 function prepararCliente() {
     const png = 'ABCD'.repeat(350000);
@@ -17,7 +17,7 @@ function prepararCliente() {
     const contexto = maquinaVirtual.createContext({window: ventana, document: documento,
         setTimeout: tarea => { relojes.set(++consecutivo, tarea); return consecutivo; },
         clearTimeout: identificador => relojes.delete(identificador)});
-    cargarAssetCliente('captura_pdf.js', contexto);
+    cargarCapturadorPdf(contexto);
     const api = ventana.scalaris.capturaPdf;
     const configuracion = {maximoFiguras: 12, maximoBytesImagen: 2000000, maximoBytesTotal: 4000000,
         maximoLado: 4096, maximoPixeles: 12000000, plazoMathjax: 15, plazoCaptura: 50, escala: 2};
