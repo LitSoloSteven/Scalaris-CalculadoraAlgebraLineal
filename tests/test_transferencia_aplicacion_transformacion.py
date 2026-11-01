@@ -9,6 +9,15 @@ from src.frontend.vistas.operaciones_matrices._ejemplos_aplicacion_transformacio
 from tests.comun_construccion_vistas import construir_pagina
 
 
+def _botones_transferencia(vista):
+    return [elemento for elemento in vista.contenedor_resultados.descendants()
+            if "data-destino-matriz" in elemento._props]
+
+
+def _accion_click(boton):
+    return next(escucha.handler for escucha in boton._event_listeners.values() if escucha.type == "click")
+
+
 @pytest.mark.parametrize("rectangular", [False, True])
 def test_transferencia_solo_envia_A_y_rechaza_eventos_obsoletos(monkeypatch, rectangular):
     """Los destinos respetan dimensiones; un evento retenido no transfiere tras editar."""
@@ -21,11 +30,10 @@ def test_transferencia_solo_envia_A_y_rechaza_eventos_obsoletos(monkeypatch, rec
         if rectangular:
             vista._aplicar_dimension("filas", 3)
         await vista._analizar(vista.boton_calcular)
-        botones = [elemento for elemento in vista.contenedor_resultados.descendants()
-                   if "data-destino-matriz" in elemento._props]
+        botones = _botones_transferencia(vista)
         assert {boton._props["data-destino-matriz"] for boton in botones} == set(
             destinos_compatibles(vista.filas, vista.columnas, "transformaciones"))
-        accion = next(escucha.handler for escucha in botones[0]._event_listeners.values() if escucha.type == "click")
+        accion = _accion_click(botones[0])
         accion(None)
         assert guardados == [[[entrada.value or "0" for entrada in fila] for fila in vista.entradas_coeficientes]]
         assert len(navegados) == 1

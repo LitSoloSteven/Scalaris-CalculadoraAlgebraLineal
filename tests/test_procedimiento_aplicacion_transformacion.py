@@ -23,7 +23,7 @@ def test_navegacion_actualiza_formula_y_componente_sin_recrear_graficas(monkeypa
             reproductor.ir_a(indice)
             assert reproductor.etiqueta_indice.text == f"Paso {indice + 1} de 7"
             assert not any(grafica.is_deleted for grafica in graficas)
-            assert any(isinstance(elemento, ui.button) for elemento in reproductor.contenedor_glosa.descendants())
+            assert list(reproductor.contenedor_glosa.descendants())
         reproductor.ir_a(1)
         etiquetas = [elemento.text for elemento in vista.contenedor_resultados.descendants() if isinstance(elemento, ui.label)]
         assert any("y_1 = 4/3" in texto for texto in etiquetas)

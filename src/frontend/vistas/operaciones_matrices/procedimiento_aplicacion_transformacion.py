@@ -1,5 +1,6 @@
 """Procedimiento de Av con foco de componente y ciclo de vida independiente del análisis."""
 import json
+from functools import partial
 
 from nicegui import ui
 
@@ -37,11 +38,17 @@ def montar_procedimiento_aplicacion(resultado: dict, captura: dict, region, pane
 
     reproductor = ReproductorAplicacion(pasos, grupos, renderizar, f"aplicacion-{region.id}", opciones={
         "titulo": textos.PROCEDIMIENTO_APLICACION,
-        "al_explicar": crear_accion_explicacion(panel_ia, pasos),
+        "al_explicar": (partial(_explicar_vigente, region, crear_accion_explicacion(panel_ia, pasos))
+                        if panel_ia else None),
         "esta_ocupado": lambda: bool(getattr(panel_ia, "_esta_enviando", False)),
     })
     reproductor.construir()
     return reproductor
+
+
+def _explicar_vigente(region, accion, paso) -> None:
+    if not region.is_deleted:
+        accion(paso)
 
 
 def _describir_componente(resultado: dict, componente: int | None, tiene_grafica: bool) -> str:
