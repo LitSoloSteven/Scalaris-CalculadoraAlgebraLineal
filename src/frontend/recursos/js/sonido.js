@@ -8,19 +8,12 @@
     let contexto = null;
     let silenciado = false;
     let ultimoSonido = -Infinity;
-
-    function liberarVoz(voz) {
-        if (voz.oscilador) voz.oscilador.onended = null;
-        voz.oscilador?.disconnect();
-        voz.ganancia?.disconnect();
-        voces.delete(voz);
-    }
+    let ultimoIntervalo = 0;
+    let exigeGesto = false;
+    const ultimos = new Map();
 
     function detenerVoces() {
-        voces.forEach(voz => {
-            try { voz.oscilador.stop(); } catch (_) { /* Puede haber terminado entre eventos. */ }
-            liberarVoz(voz);
-        });
+        voces.forEach(voz => voz.liberar());
     }
 
     function silenciar(valor) {
@@ -29,7 +22,8 @@
     }
 
     function activarPorGesto(evento) {
-        if (!evento?.isTrusted || evento.repeat || silenciado) return;
+        if (!evento?.isTrusted || evento.repeat || silenciado || document.hidden) return;
+        exigeGesto = false;
         prepararContexto();
     }
 
@@ -42,31 +36,11 @@
         } catch (_) { /* La interfaz conserva las indicaciones visuales sin audio disponible. */ }
     }
 
-    function crearVoz(perfil) {
-        const voz = { oscilador: null, ganancia: null };
-        voces.add(voz);
-        try {
-            voz.oscilador = contexto.createOscillator();
-            voz.ganancia = contexto.createGain();
-            const inicio = contexto.currentTime;
-            const fin = inicio + perfil.duracion;
-            voz.oscilador.type = 'sine';
-            voz.oscilador.frequency.setValueAtTime(perfil.inicio, inicio);
-            voz.oscilador.frequency.exponentialRampToValueAtTime(perfil.fin, fin);
-            voz.ganancia.gain.setValueAtTime(0, inicio);
-            voz.ganancia.gain.linearRampToValueAtTime(catalogo.ganancia * (perfil.volumen ?? 1), inicio + catalogo.ataque);
-            voz.ganancia.gain.linearRampToValueAtTime(0, fin);
-            voz.oscilador.connect(voz.ganancia);
-            voz.ganancia.connect(contexto.destination);
-            voz.oscilador.onended = () => liberarVoz(voz);
-            voz.oscilador.start(inicio);
-            voz.oscilador.stop(fin);
-            return true;
-        } catch (_) {
-            try { voz.oscilador.stop(); } catch (_) { /* Un nodo sin iniciar no necesita detenerse. */ }
-            liberarVoz(voz);
-            return false;
-        }
+    function admiteVoz(nombre, perfil, ahora) {
+        if (voces.size >= catalogo.polifonia) return false;
+        if (ahora - ultimoSonido < Math.min(ultimoIntervalo, perfil.intervalo)) return false;
+        if (ahora - (ultimos.get(nombre) ?? -Infinity) < perfil.intervalo) return false;
+        return Array.from(voces).filter(voz => voz.nombre === nombre).length < perfil.limite;
     }
 
     function reproducir(nombre) {
@@ -75,16 +49,21 @@
         prepararEntrada(nombre);
         if (contexto?.state !== 'running') return false;
         const ahora = performance.now();
-        if (ahora - ultimoSonido < catalogo.intervalo || voces.size >= catalogo.polifonia) return false;
-        try {
-            if (!crearVoz(catalogo.perfiles[nombre])) return false;
-            ultimoSonido = ahora;
-            return true;
-        } catch (_) { return false; }
+        const perfil = catalogo.perfiles[nombre];
+        if (!admiteVoz(nombre, perfil, ahora)) return false;
+        const voz = window.scalaris.sintesisSonora.crearVoz(contexto, perfil, terminada => voces.delete(terminada));
+        if (!voz) return false;
+        voz.nombre = nombre;
+        voces.add(voz);
+        ultimoSonido = ahora;
+        ultimoIntervalo = perfil.intervalo;
+        ultimos.set(nombre, ahora);
+        return true;
     }
 
     function prepararEntrada(nombre) {
-        if (nombre !== 'entrada' || contexto || !window.navigator?.userActivation?.hasBeenActive) return;
+        if (nombre !== 'entrada' || contexto || exigeGesto) return;
+        if (!window.navigator?.userActivation?.hasBeenActive) return;
         prepararContexto();
     }
 
@@ -93,6 +72,9 @@
         const anterior = contexto;
         contexto = null;
         ultimoSonido = -Infinity;
+        ultimoIntervalo = 0;
+        ultimos.clear();
+        exigeGesto = true;
         if (anterior && anterior.state !== 'closed') anterior.close().catch(() => {});
     }
 

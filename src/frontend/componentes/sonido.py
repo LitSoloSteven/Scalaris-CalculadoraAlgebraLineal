@@ -1,11 +1,13 @@
 """Emisión de señales sonoras y notificaciones en el cliente activo."""
 import json
+from pathlib import Path
 from typing import Any
 
 from nicegui import context, ui
 
-_SONIDOS = frozenset({'accion', 'navegacion', 'apertura', 'cierre', 'exito', 'aviso', 'error'})
-_POR_TIPO = {'positive': 'exito', 'negative': 'error', 'warning': 'aviso'}
+_CATALOGO = json.loads((Path(__file__).parents[1] / 'recursos' / 'catalogo_sonidos.json').read_text(encoding='utf-8'))
+_SONIDOS = frozenset(_CATALOGO['perfiles'])
+_POR_TIPO = _CATALOGO['notificaciones']
 
 
 def emitir_sonido(nombre: str) -> bool:

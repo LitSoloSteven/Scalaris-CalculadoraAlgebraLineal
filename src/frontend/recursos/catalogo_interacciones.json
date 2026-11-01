@@ -3,6 +3,8 @@
     "interacciones_globales.js",
     "observacion_dom.js",
     "catalogo_sonidos.js",
+    "sintesis_sonora.js",
+    "asignacion_sonora.js",
     "sonido.js",
     "preferencia_sonido.js",
     "interacciones_sonoras.js",
