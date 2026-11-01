@@ -3,6 +3,7 @@ import copy
 
 from nicegui import run, ui
 from src.frontend import textos
+from src.frontend.componentes.sonido import emitir_sonido
 from src.frontend.controladores.exportacion_pdf.documento import generar_pdf
 from src.frontend.controladores.exportacion_pdf.portada import nombre_archivo
 from src.frontend.controladores.exportacion_pdf.vigencia import EnlacePDF
@@ -91,6 +92,7 @@ class ExportacionPDF:
         if self._puede_entregar(testigo):
             ui.download(documento, filename=nombre_archivo(self.herramienta, portada['fecha']), media_type='application/pdf')
             self.dialogo.estado.set_text(textos.PDF_AVISO_REDUCCION if reducida else '')
+            emitir_sonido('exportar')
 
     def _dialogo_abierto(self) -> bool:
         return not self.dialogo.dialogo.is_deleted and self.dialogo.dialogo.value

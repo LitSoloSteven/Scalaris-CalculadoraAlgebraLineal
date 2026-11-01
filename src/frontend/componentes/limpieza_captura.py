@@ -6,7 +6,7 @@ from collections.abc import Callable
 from typing import Protocol
 
 from nicegui import ui
-from src.frontend.componentes.sonido import notificar
+from src.frontend.componentes.sonido import emitir_sonido, notificar
 from src.frontend.textos import (
     LIMPIAR, LIMPIEZA_CANCELAR, LIMPIEZA_DESCRIPCION, LIMPIEZA_TITULO,
     LIMPIEZA_SIN_DATOS,
@@ -51,7 +51,7 @@ class LimpiezaCaptura:
         self.boton = ui.button(icon='delete', on_click=self.confirmar, color=None).classes(
             'boton-discreto flex-1 py-3'
         ).style('flex-shrink: 0;').props(
-            f'ripple=false id="boton-limpiar-principal" aria-label="{LIMPIAR}"'
+            f'ripple=false data-sonido="apertura" id="boton-limpiar-principal" aria-label="{LIMPIAR}"'
         )
         with self.boton:
             ui.tooltip(LIMPIAR).props('target="#boton-limpiar-principal"')
@@ -76,10 +76,10 @@ class LimpiezaCaptura:
                 with ui.row().classes('w-full justify-end gap-3'):
                     ui.button(LIMPIEZA_CANCELAR, on_click=self.dialogo.close, color=None).classes(
                         'boton-discreto px-4'
-                    ).props('ripple=false autofocus')
+                    ).props('ripple=false data-sonido="cierre" autofocus')
                     ui.button(LIMPIAR, on_click=lambda: self.ejecutar(), color=None).classes(
                         'boton-principal px-4'
-                    ).props('ripple=false')
+                    ).props('ripple=false data-sonido-omitir')
         self.dialogo.on('hide', self._devolver_foco)
 
     def _devolver_foco(self) -> None:
@@ -123,7 +123,10 @@ class LimpiezaCaptura:
         finally:
             try:
                 if self.sigue_montada():
+                    habia_datos = not self.captura.esta_completamente_vacio()
                     self.captura.limpiar_todo()
+                    if habia_datos:
+                        emitir_sonido('limpiar')
             finally:
                 try:
                     await self._finalizar_movimiento()

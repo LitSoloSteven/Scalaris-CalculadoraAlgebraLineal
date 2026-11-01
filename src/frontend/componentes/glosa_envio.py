@@ -174,4 +174,4 @@ class EnvioGlosaMixin(PreguntasGlosaMixin):
             elif hasattr(self, "_renderizar_mensaje"):
                 self._renderizar_mensaje(mensaje, indice=len(self.historial_chat) - 1)
         self._desplazar_al_final()
-        emitir_sonido('exito' if resultado.exito else 'error')
+        emitir_sonido('respuesta' if resultado.exito else 'error')
