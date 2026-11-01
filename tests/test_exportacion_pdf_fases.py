@@ -71,6 +71,22 @@ def test_error_de_captura_retira_las_capas_y_conserva_un_mensaje(monkeypatch):
     asyncio.run(construir_pagina(monkeypatch, 'sistemas', comprobar))
 
 
+def _verificar_resumen_comprobaciones(elementos, comprobaciones):
+    """Comprueba títulos recibidos, distintivos y fórmulas del contenido estático."""
+    titulos = {elemento.text for elemento in elementos if isinstance(elemento, ui.label)}
+    for comprobacion in comprobaciones:
+        assert comprobacion['titulo'] in titulos
+    assert any(isinstance(elemento, ui.badge) and elemento.text == 'Correcto' for elemento in elementos)
+    assert any(isinstance(elemento, ui.html) and '$$' in elemento.content for elemento in elementos)
+
+
+def _verificar_detalles_excluidos(elementos):
+    """Exige que cada control diferido esté cerrado y excluido del documento estático."""
+    detalles = [elemento for elemento in elementos if isinstance(elemento, ui.expansion)]
+    assert detalles
+    assert all('data-pdf-excluir' in detalle._props and detalle.value is False for detalle in detalles)
+
+
 def test_comprobaciones_inicialmente_abiertas_y_detalles_excluidos(monkeypatch):
     """El árbol conserva títulos, distintivos y fórmulas sin montar detalles diferidos."""
     async def comprobar(vista, cliente):
@@ -82,12 +98,6 @@ def test_comprobaciones_inicialmente_abiertas_y_detalles_excluidos(monkeypatch):
         assert region.value is True
         assert 'default-opened' not in region._props
         elementos = list(region.descendants())
-        titulos = {elemento.text for elemento in elementos if isinstance(elemento, ui.label)}
-        for comprobacion in control.resultado['comprobaciones']:
-            assert comprobacion['titulo'] in titulos
-        assert any(isinstance(elemento, ui.badge) and elemento.text == 'Correcto' for elemento in elementos)
-        assert any(isinstance(elemento, ui.html) and '$$' in elemento.content for elemento in elementos)
-        detalles = [elemento for elemento in elementos if isinstance(elemento, ui.expansion)]
-        assert detalles
-        assert all('data-pdf-excluir' in detalle._props and detalle.value is False for detalle in detalles)
+        _verificar_resumen_comprobaciones(elementos, control.resultado['comprobaciones'])
+        _verificar_detalles_excluidos(elementos)
     asyncio.run(construir_pagina(monkeypatch, 'inversa', comprobar))
