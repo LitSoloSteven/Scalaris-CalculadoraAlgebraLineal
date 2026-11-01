@@ -4,6 +4,8 @@ from nicegui import ui
 from src.frontend import textos_transformaciones as textos
 from src.frontend.componentes.cuadricula_base import crear_entradas_matriz
 from src.frontend.componentes.selector_opciones import SelectorOpciones
+from src.frontend.controladores.limpieza_captura import vaciar_campos
+from src.frontend.sugerencias import Senales
 
 
 class MixinAplicacionTransformacion:
@@ -39,3 +41,23 @@ class MixinAplicacionTransformacion:
     def _cambiar_tipo_objeto(self, evento) -> None:
         self.tipo_objeto = evento.value
         self._restablecer_resultados()
+
+    def _construir_herramientas_modelo(self) -> None:
+        super()._construir_herramientas_modelo()
+        self.contenedor_historial.parent_slot.parent.bind_visibility_from(
+            self.selector_modo, 'value', backward=lambda modo: modo == textos.MODO_ANALISIS)
+
+    def obtener_contexto_ia(self):
+        """Devuelve el contexto del análisis; omite contratos de aplicación aún no disponibles."""
+        return None if self.modo_transformacion == textos.MODO_APLICACION else super().obtener_contexto_ia()
+
+    def obtener_senales_ia(self):
+        """Conserva señales del análisis sin atribuir sus propiedades a una aplicación."""
+        if self.modo_transformacion == textos.MODO_APLICACION:
+            return Senales(self.herramienta_modelo, "sin_resultado")
+        return super().obtener_senales_ia()
+
+    def limpiar_todo(self) -> None:
+        """Limpia también las coordenadas y nombres ocultos para que no reaparezcan."""
+        vaciar_campos(self.entradas_variables + self.entradas_vector_original)
+        super().limpiar_todo()
