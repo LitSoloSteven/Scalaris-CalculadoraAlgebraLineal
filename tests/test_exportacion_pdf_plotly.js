@@ -2,7 +2,7 @@
 const afirmar = require('node:assert/strict');
 const prueba = require('node:test');
 const maquinaVirtual = require('node:vm');
-const {cargarAssetCliente} = require('./comun_cliente_javascript.js');
+const {cargarCapturadorPdf} = require('./comun_capturador_pdf.js');
 
 function crearBiblioteca(registro, opciones) {
     return {
@@ -50,7 +50,7 @@ function prepararEscenario(opciones = {}) {
         createElement: () => temporal, body: {appendChild() {}}, fonts: {ready: Promise.resolve()}};
     const contexto = maquinaVirtual.createContext({window: ventana, document: documento,
         setTimeout, clearTimeout, structuredClone});
-    cargarAssetCliente('captura_pdf.js', contexto);
+    cargarCapturadorPdf(contexto);
     const configuracion = {maximoFiguras: 12, maximoBytesImagen: 1024, maximoBytesTotal: 2048,
         maximoLado: 4096, maximoPixeles: 12000000, plazoMathjax: 0.1, plazoCaptura: 0.1, escala: 2};
     return {registro, figura, raiz, capturador: ventana.scalaris.capturaPdf, configuracion};
