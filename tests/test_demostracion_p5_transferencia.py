@@ -62,6 +62,7 @@ async def _evaluar_y_transferir(monkeypatch, matriz: list[list[str]]) -> str:
 
 
 async def _comprobar_destino(vista, matriz: list[list[str]], esperado: list[str]) -> None:
+    """Comprueba la aplicación exacta y su repetición desde el historial restaurado."""
     assert [[entrada.value for entrada in fila] for fila in vista.entradas_coeficientes] == matriz
     assert vista.ultimo_resultado is None
     vista.selector_modo.set_value(textos.MODO_APLICACION)
@@ -73,14 +74,7 @@ async def _comprobar_destino(vista, matriz: list[list[str]], esperado: list[str]
     assert resultado["matriz_a"]["datos"] == matriz
     assert resultado["vector_original"]["exacta"] == VECTOR_ORIGINAL
     assert resultado["vector_transformado"]["exacta"] == esperado
-    graficas = [elemento for elemento in vista.contenedor_resultados.descendants() if isinstance(elemento, ui.plotly)]
-    assert len(graficas) == (1 if len(matriz) == 2 else 2)
-    transformada = graficas[-1].figure["data"][1 if len(matriz) == 2 else 0]
-    assert transformada["x"][-1] == pytest.approx(float(Fraction(esperado[0])))
-    assert transformada["y"][-1] == pytest.approx(float(Fraction(esperado[1])))
-    assert transformada["customdata"][-1] == "(" + ", ".join(esperado) + ")"
-    if len(matriz) == 3:
-        assert transformada["z"][-1] == pytest.approx(1 / 33)
+    _comprobar_grafica(vista, esperado)
     captura = vista.historial[0]["captura"]
     assert captura["matriz_transformacion"] == matriz and captura["vector_original"] == VECTOR_ORIGINAL
     assert len(vista.reproductor_pasos.pasos) == 2 * len(matriz) + 3
@@ -89,3 +83,15 @@ async def _comprobar_destino(vista, matriz: list[list[str]], esperado: list[str]
     cargar_captura_modelo(vista, captura)
     await vista._analizar(vista.boton_calcular)
     assert vista.ultimo_resultado["vector_transformado"]["exacta"] == esperado
+
+
+def _comprobar_grafica(vista, esperado: list[str]) -> None:
+    graficas = [elemento for elemento in vista.contenedor_resultados.descendants() if isinstance(elemento, ui.plotly)]
+    es_rectangular = len(esperado) == 3
+    assert len(graficas) == (2 if es_rectangular else 1)
+    transformada = graficas[-1].figure["data"][0 if es_rectangular else 1]
+    assert transformada["x"][-1] == pytest.approx(float(Fraction(esperado[0])))
+    assert transformada["y"][-1] == pytest.approx(float(Fraction(esperado[1])))
+    assert transformada["customdata"][-1] == "(" + ", ".join(esperado) + ")"
+    if es_rectangular:
+        assert transformada["z"][-1] == pytest.approx(1 / 33)

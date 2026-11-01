@@ -34,7 +34,7 @@ no reemplaza al historial de la herramienta.
 2. Ingresa A por filas: `1/2, 1/3`; `2/5, -1/7`.
 3. Evalúa `A+A` y recorre el detalle de la suma en el reproductor.
 4. El resultado esperado es `[[1, 2/3], [4/5, -2/7]]`.
-5. En las acciones de **Matriz capturada A**, elige **Transformaciones lineales**.
+5. En las acciones de **Matriz A del cálculo**, elige **Transformaciones lineales**.
 
 La transferencia lleva **A**, no el resultado de `A+A`. La pantalla de destino
 debe recibir `[[1/2, 1/3], [2/5, -1/7]]`, mostrar el aviso de recepción y esperar
