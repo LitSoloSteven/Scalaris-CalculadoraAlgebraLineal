@@ -36,6 +36,7 @@ class MixinAplicacionTransformacion:
     def _cambiar_modo(self, evento) -> None:
         self.modo_transformacion = evento.value
         self.boton_calcular.set_text(textos.APLICAR if evento.value == textos.MODO_APLICACION else textos.ANALIZAR)
+        self.boton_calcular.props["aria-label"] = self.boton_calcular.text
         self._restablecer_resultados()
 
     def _cambiar_tipo_objeto(self, evento) -> None:

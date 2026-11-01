@@ -78,7 +78,7 @@ class VistaTransformaciones(MixinAplicacionTransformacion, MixinGlosaModelos, Mi
                 textos.ANALIZAR, icon="analytics",
                 on_click=lambda evento: self._analizar(evento.sender),
                 color=None,
-            ).classes("boton-principal flex-[2] py-3").props("ripple=false")
+            ).classes("boton-principal flex-[2] py-3").props(f'ripple=false aria-label="{textos.ANALIZAR}"')
 
     def _campos_captura(self):
         auxiliares = (self.entradas_vector_original if self.modo_transformacion == textos.MODO_APLICACION
