@@ -42,6 +42,23 @@ PDF_FIGURA = "Figura {numero}"
 PDF_NOTA = "Nota."
 PDF_CITA = "Como se muestra en la Figura {numero}, {descripcion}"
 PDF_AVISO_REDUCCION = "La figura se redujo para ajustarse al alto útil de la página. Amplía el PDF para revisar sus detalles."
+PDF_ENTRADA = ("Datos Introducidos", "Se presentan los datos introducidos para el cálculo exportado.")
+PDF_PASO_INTERMEDIO = ("Paso Intermedio {numero}", "Se presenta una captura intermedia del procedimiento calculado.")
+PDF_PASO_ORIGINAL = "Paso {numero} de {total}"
+PDF_ETIQUETAS_ENTRADA = {
+    "A": "Matriz A", "b": "Vector b", "datos": "Datos", "matriz_a": "Matriz A",
+    "matrices": "Matrices", "expresion": "Expresión", "dimension": "Dimensión",
+    "metodo": "Método", "modo": "Modo", "homogeneo": "Sistema homogéneo",
+    "ecuaciones": "Ecuaciones", "vectores": "Vectores", "orientacion": "Orientación",
+    "operacion": "Operación", "escalar": "Escalar", "suma_resta": "Expresión vectorial",
+    "estricto": "Modo estricto", "valor": "Valor", "base_origen": "Base de origen",
+    "base_destino": "Base de destino", "a": "Primer operando",
+    "matriz_coeficientes": "Matriz de coeficientes", "vector_demanda": "Demanda",
+    "nombres_sectores": "Sectores", "matriz_transformacion": "Matriz de transformación",
+    "nombres_variables": "Variables", "escena": "Escena", "carga": "Datos de la escena",
+    "vector_b": "Vector b", "objetivo": "Vector objetivo",
+}
+PDF_BOOLEANOS = {True: "Sí", False: "No"}
 PDF_REGIONES_SISTEMAS = {
     "sistemas-resumen": ("Clasificación y Solución del Sistema", "Se presenta la clasificación y la solución que muestra el resultado calculado."),
     "sistemas-procedimiento": ("Paso Visible del Procedimiento", "Se presenta únicamente el paso visible del procedimiento, sin recorrer los demás pasos."),
