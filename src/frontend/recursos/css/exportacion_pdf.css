@@ -40,7 +40,39 @@
     outline-offset: var(--space-1);
 }
 
+.pdf-indicador {
+    display: inline-block;
+    width: var(--space-4);
+    height: var(--space-4);
+    flex-shrink: 0;
+    border: var(--space-1) solid var(--accent);
+    border-top-color: transparent;
+    border-radius: var(--radius-pill);
+}
+
+.pdf-indicador[data-destacada-activa] {
+    animation: pdfProgreso var(--dur-view) var(--ease-std) infinite;
+    will-change: transform, opacity;
+}
+
+@keyframes pdfProgreso {
+    from { transform: rotate(0turn); opacity: 0.55; }
+    to { transform: rotate(1turn); opacity: 1; }
+}
+
+:root[data-entrada="teclado"] .pdf-indicador[data-destacada-activa] {
+    animation: none;
+    transform: none;
+    will-change: auto;
+}
+
 @media (prefers-reduced-motion: reduce) {
+    .pdf-indicador[data-destacada-activa] {
+        animation: none;
+        transform: none;
+        will-change: auto;
+    }
+
     .pdf-control,
     .pdf-control:hover,
     .pdf-control:active {
