@@ -8,7 +8,7 @@ def seleccionar_intermedios(pasos: Sequence) -> tuple:
     """Devuelve hasta tres pasos interiores repartidos, sin repetir entrada ni cierre."""
     cierre = next((indice for indice, paso in enumerate(pasos)
                    if paso.tipo in ('resultado', 'final')), len(pasos) - 1)
-    candidatos = tuple(paso for paso in pasos[1:cierre] if paso.tipo not in (
+    candidatos = tuple(paso for paso in pasos[:cierre] if paso.tipo not in (
         'inicial', 'entrada', 'planteamiento', 'resultado', 'final', 'comprobacion', 'verificacion'))
     cantidad = min(constantes.PDF_PASOS_INTERMEDIOS, len(candidatos))
     if cantidad == 0:

@@ -12,7 +12,8 @@ from tests.comun_exportacion_pdf import PORTADA, crear_captura
                                               (4, [1, 2]), (5, [1, 2, 3]), (11, [1, 5, 9])])
 def test_muestreo_reparte_interiores_sin_duplicar(cantidad, esperados):
     """Los procedimientos cortos no inventan pasos y los largos cubren su recorrido."""
-    pasos = tuple(PasoReproductor(indice, 'operacion', str(indice)) for indice in range(cantidad))
+    pasos = tuple(PasoReproductor(indice, 'inicial' if indice == 0 else 'operacion', str(indice))
+                  for indice in range(cantidad))
     assert [paso.indice for paso in seleccionar_intermedios(pasos)] == esperados
 
 
@@ -21,6 +22,12 @@ def test_muestreo_excluye_resultados_y_desarrollos_posteriores():
     tipos = ('planteamiento', 'inicial', 'eliminacion', 'resultado', 'operacion', 'verificacion')
     pasos = tuple(PasoReproductor(indice, tipo, tipo) for indice, tipo in enumerate(tipos))
     assert [paso.indice for paso in seleccionar_intermedios(pasos)] == [2]
+
+
+def test_primera_operacion_real_se_conserva_como_intermedio():
+    """Una expresión con dos operaciones exporta la primera antes de su resultado final."""
+    pasos = tuple(PasoReproductor(indice, 'operacion', str(indice)) for indice in range(2))
+    assert seleccionar_intermedios(pasos) == (pasos[0],)
 
 
 def test_figuras_ordenan_entrada_pasos_resultado_y_comprobaciones():
