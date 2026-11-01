@@ -42,3 +42,20 @@ test('el clic usa una banda resonante breve y conserva el pasa bajos maestro', (
     comprobar.ok(Math.abs(ruido.fin - ruido.inicio - 0.006) < 1e-10);
     comprobar.equal(caso.ventana.scalaris.catalogoSonidos.ganancia, 0.45);
 });
+
+test('vuelo y papel conservan ruido audible durante toda su secuencia', () => {
+    const caso = prepararSintesis();
+    caso.activar();
+    const contexto = caso.contextos[0];
+    for (const nombre of ['limpiar_vuelo', 'exportar_inicio']) {
+        const cantidad = contexto.nodos.length;
+        caso.motor.reproducir(nombre);
+        const nodos = contexto.nodos.slice(cantidad);
+        const ruido = nodos.find(nodo => nodo.tipo === 'ruido');
+        const perfil = caso.ventana.scalaris.catalogoSonidos.perfiles[nombre];
+        comprobar.ok(Math.abs(ruido.fin - ruido.inicio - perfil.duracion) < 1e-10);
+        comprobar.equal(ruido.destino.gain.valores.at(-1)[1], ruido.fin);
+        nodos.forEach(nodo => nodo.onended?.());
+        caso.avanzar(500);
+    }
+});

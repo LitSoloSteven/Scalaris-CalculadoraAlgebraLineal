@@ -45,7 +45,7 @@
     "transferencia": {"inicio": 115, "fin": 305, "duracion": 0.105, "volumen": 0.5, "onda": "triangle", "ruido": 0.12, "filtro": 2000, "intervalo": 90, "limite": 1},
     "velocidad": {"inicio": 210, "fin": 300, "duracion": 0.04, "volumen": 0.4, "onda": "triangle", "ruido": 0.15, "filtro": 1800, "intervalo": 60, "limite": 1},
     "quitar": {"inicio": 240, "fin": 140, "duracion": 0.11, "volumen": 0.45, "onda": "triangle", "ruido": 0.22, "filtro": 1500, "intervalo": 60, "limite": 1},
-    "limpiar_vuelo": {"inicio": 145, "fin": 100, "duracion": 0.35, "volumen": 0.5, "onda": "sine", "ruido": 1, "filtro": 1800, "filtroFin": 250, "intervalo": 90, "limite": 1},
+    "limpiar_vuelo": {"inicio": 145, "fin": 100, "duracion": 0.35, "duracionClic": 0.35, "volumen": 0.5, "onda": "sine", "ruido": 1, "filtro": 1800, "filtroFin": 250, "intervalo": 90, "limite": 1},
     "despliegue": {"inicio": 125, "fin": 215, "duracion": 0.14, "volumen": 0.45, "onda": "sine", "ruido": 0.35, "filtro": 1600, "filtroFin": 2100, "intervalo": 90, "limite": 1},
     "pliegue": {"inicio": 215, "fin": 125, "duracion": 0.105, "volumen": 0.45, "onda": "sine", "ruido": 0.3, "filtro": 1600, "filtroFin": 700, "intervalo": 90, "limite": 1},
     "glosa_abrir": {"inicio": 196, "fin": 196, "duracion": 0.2, "duracionTono": 0.08, "notas": [{"inicio": 294, "fin": 294, "demora": 0.1, "duracion": 0.1, "volumen": 0.7}], "volumen": 0.45, "onda": "sine", "ruido": 0.03, "filtro": 2100, "intervalo": 90, "limite": 1},
@@ -57,7 +57,7 @@
     "rechazo": {"inicio": 110, "fin": 100, "duracion": 0.14, "duracionTono": 0.05, "notas": [{"inicio": 100, "fin": 95, "demora": 0.08, "duracion": 0.06, "volumen": 0.8}], "volumen": 0.5, "onda": "triangle", "ruido": 0.3, "filtro": 700, "intervalo": 90, "limite": 1},
     "copiar": {"inicio": 210, "fin": 210, "duracion": 0.09, "duracionTono": 0.025, "notas": [{"inicio": 260, "fin": 260, "demora": 0.06, "duracion": 0.03, "volumen": 0.8}], "volumen": 0.4, "onda": "triangle", "ruido": 0.3, "filtro": 1600, "intervalo": 90, "limite": 1},
     "intercambio": {"inicio": 150, "fin": 230, "duracion": 0.15, "duracionTono": 0.06, "notas": [{"inicio": 230, "fin": 150, "demora": 0.08, "duracion": 0.07, "volumen": 0.9}], "volumen": 0.45, "onda": "triangle", "ruido": 0.15, "filtro": 1800, "intervalo": 90, "limite": 1},
-    "exportar_inicio": {"inicio": 150, "fin": 220, "duracion": 0.2, "volumen": 0.45, "onda": "sine", "ruido": 0.8, "filtro": 800, "filtroFin": 2200, "intervalo": 90, "limite": 1},
+    "exportar_inicio": {"inicio": 150, "fin": 220, "duracion": 0.2, "duracionClic": 0.2, "volumen": 0.45, "onda": "sine", "ruido": 0.8, "filtro": 800, "filtroFin": 2200, "intervalo": 90, "limite": 1},
     "deslizador": {"inicio": 165, "fin": 190, "duracion": 0.02, "volumen": 0.25, "onda": "sine", "ruido": 0.05, "filtro": 1400, "intervalo": 35, "limite": 3}
   },
   "asignaciones": {
