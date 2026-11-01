@@ -23,11 +23,11 @@ def test_navegar_y_cambiar_velocidad_recalcula_intervalo(monkeypatch):
     """Lee el paso actual y conserva la velocidad seleccionada al navegar."""
     reproductor = _crear_reproductor(monkeypatch)
     reproductor.ir_a(0)
-    assert reproductor.temporizador.interval == 9
+    assert reproductor.temporizador.interval == 9 * 0.6
     reproductor._cambiar_velocidad(SimpleNamespace(value="Lenta"))
-    assert reproductor.temporizador.interval == 14.4
+    assert reproductor.temporizador.interval == 9
     reproductor.ir_a(1)
-    assert reproductor.temporizador.interval == 24
+    assert reproductor.temporizador.interval == 15
     reproductor.descripcion.set_content.assert_called_with("A·A<sup>-1</sup>=I")
     assert not reproductor.temporizador.active
 

@@ -42,7 +42,7 @@ def test_reconstruccion_conserva_velocidad_y_reinicia_cambios_activos(monkeypatc
                 reproductor.velocidad = "Lenta"
                 reproductor.construir()
                 selector = next(elemento for elemento in reproductor.tarjeta.descendants() if isinstance(elemento, ui.select))
-                assert selector.value == "Lenta" and reproductor.temporizador.interval == 14.4
+                assert selector.value == "Lenta" and reproductor.temporizador.interval == 9
                 reproductor._alternar_reproduccion()
                 anterior = reproductor.temporizador
                 reproductor._avanzar()
@@ -50,11 +50,11 @@ def test_reconstruccion_conserva_velocidad_y_reinicia_cambios_activos(monkeypatc
                 assert renderizar.call_count == 2
                 reproductor.ir_a(1)
                 assert anterior.is_deleted and reproductor.temporizador.active
-                assert reproductor.temporizador.interval == 24
+                assert reproductor.temporizador.interval == 15
                 assert reproductor.temporizador._immediate is False
                 anterior = reproductor.temporizador
                 reproductor._cambiar_velocidad(SimpleNamespace(value="Rápida"))
-                assert anterior.is_deleted and reproductor.temporizador.interval == 9
+                assert anterior.is_deleted and reproductor.temporizador.interval == 5.25
                 reproductor.detener()
         finally:
             cliente.delete()
