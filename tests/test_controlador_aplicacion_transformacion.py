@@ -137,6 +137,7 @@ def test_comprobacion_detecta_resultado_incorrecto():
     original = ResolutorTransformacionesLineales.aplicar
 
     def adulterar_resultado(resolutor, matriz, vector):
+        """Sustituye la coordenada exacta para comprobar la detección de discrepancias."""
         resultado = original(resolutor, matriz, vector)
         resultado["vector_transformado"]["exacta"] = ["999"]
         return resultado
