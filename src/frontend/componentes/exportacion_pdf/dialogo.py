@@ -6,6 +6,7 @@ from html import escape
 from nicegui import ui
 from src.frontend import constantes as limites, textos
 from src.frontend.controladores.exportacion_pdf.portada import validar_portada
+from .indicador import crear_indicador, cargar_indicador
 
 class DialogoPortada:
     """Gestiona campos y errores en memoria hasta cerrar; nunca usa almacenamiento."""
@@ -21,7 +22,9 @@ class DialogoPortada:
                 ui.label(textos.PDF_PORTADA_TITULO).classes('text-xl font-bold texto-principal').props('id=pdf-portada-titulo')
                 self.dialogo.props('aria-labelledby=pdf-portada-titulo')
                 self._crear_campos()
-                self.estado = ui.label('').classes('texto-secundario pdf-mensaje').props('role=status aria-live=polite')
+                with ui.row().classes('w-full items-center gap-2 flex-nowrap'):
+                    self.indicador = crear_indicador()
+                    self.estado = ui.label('').classes('texto-secundario pdf-mensaje').props('role=status aria-live=polite')
                 self._crear_acciones()
         self.dialogo.on('hide', self._al_cerrar)
 
@@ -44,6 +47,8 @@ class DialogoPortada:
                 'boton-discreto pdf-control').props('ripple=false')
             self.confirmar = ui.button(textos.PDF_GENERAR, on_click=self.generar, color=None).classes(
                 'boton-principal pdf-control').props('ripple=false')
+            with self.confirmar:
+                self.indicador_confirmar = crear_indicador()
 
     def abrir(self) -> None:
         """Abre el diálogo vacío y coloca el foco en el primer campo mediante autofocus."""
@@ -64,12 +69,11 @@ class DialogoPortada:
     def cargar(self, ocupado: bool) -> None:
         """Bloquea generación duplicada mientras mantiene Escape disponible para cancelar."""
         self.ocupado = ocupado
-        self.confirmar.props('loading' if ocupado else 'loading=false')
+        cargar_indicador(self.indicador, ocupado)
+        cargar_indicador(self.indicador_confirmar, ocupado)
         self.confirmar.set_enabled(not ocupado)
         for campo in self.campos.values():
             campo.set_enabled(not ocupado)
-        if ocupado:
-            self.estado.set_text(textos.PDF_CARGANDO)
 
     def _al_cerrar(self) -> None:
         for campo in self.campos.values():

@@ -8,6 +8,7 @@ from src.frontend.controladores.exportacion_pdf.portada import nombre_archivo
 from src.frontend.controladores.exportacion_pdf.vigencia import EnlacePDF
 from .captura import capturar_regiones
 from .dialogo import DialogoPortada
+from .indicador import crear_indicador, cargar_indicador
 
 
 class ExportacionPDF:
@@ -22,6 +23,8 @@ class ExportacionPDF:
         self.boton = ui.button(textos.PDF_EXPORTAR, icon='picture_as_pdf', color=None,
                                on_click=self.abrir).classes('boton-discreto pdf-control').props(
                                    f'ripple=false data-pdf-excluir aria-label="{textos.PDF_EXPORTAR}"')
+        with self.boton:
+            self.indicador = crear_indicador()
         self.actualizar()
 
     def actualizar(self) -> None:
@@ -67,6 +70,7 @@ class ExportacionPDF:
 
     async def _exportar(self, portada: dict, testigo: tuple) -> None:
         self._pausar_procedimiento()
+        self.dialogo.estado.set_text(textos.PDF_CAPTURANDO)
         try:
             capturas = await capturar_regiones(self.enlace.raiz)
         except ValueError:
@@ -75,6 +79,7 @@ class ExportacionPDF:
             return
         if not self._puede_entregar(testigo):
             return
+        self.dialogo.estado.set_text(textos.PDF_GENERANDO)
         try:
             documento, reducida = await run.io_bound(generar_pdf, self.herramienta, portada,
                                                      copy.deepcopy(self.resultado), capturas)
@@ -102,7 +107,7 @@ class ExportacionPDF:
         self.ocupado = ocupado
         if not self.boton.is_deleted:
             self.boton.set_enabled(not ocupado)
-            self.boton.props('loading' if ocupado else 'loading=false')
+            cargar_indicador(self.indicador, ocupado)
         if not self.dialogo.dialogo.is_deleted:
             self.dialogo.cargar(ocupado)
 
