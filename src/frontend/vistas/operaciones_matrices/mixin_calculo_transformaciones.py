@@ -40,8 +40,13 @@ class MixinCalculoTransformaciones:
         self.contenedor_resultados.clear()
         self.contenedor_resultados.classes(remove="items-center justify-center", add="items-start justify-start")
         if "vector_original" in captura:
-            self.reproductor_aplicacion = renderizar_resultado_aplicacion(self.contenedor_resultados, respuesta, captura)
-            actualizar_contexto(self)
+            self.reproductor_aplicacion = renderizar_resultado_aplicacion(
+                self.contenedor_resultados, respuesta, captura, self.panel_ia)
+            if self.reproductor_aplicacion is not None:
+                with self.contenedor_resultados:
+                    self._completar_resultado_modelo(captura)
+            else:
+                actualizar_contexto(self)
         else:
             self._presentar_analisis(respuesta, captura)
 

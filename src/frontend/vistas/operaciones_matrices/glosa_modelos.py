@@ -43,7 +43,8 @@ class MixinGlosaModelos(MixinHerramientasModelos):
 
     def _completar_resultado_modelo(self, captura: dict | None = None) -> None:
         self.panel_ia.renderizar_sugerencias_en_linea()
-        self.reproductor_pasos = montar_pasos_modelo(self)
+        self.reproductor_pasos = (self.reproductor_aplicacion if captura and "vector_original" in captura
+                                 else montar_pasos_modelo(self))
         self._registrar_modelo()
         if self.ultimo_resultado.get("estado") == "EXITO" and captura is not None:
             clave = "matriz_coeficientes" if self.herramienta_modelo == "leontief" else "matriz_transformacion"

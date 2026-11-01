@@ -35,6 +35,12 @@ def _region(clave: str):
 
 
 def _renderizar_pasos(herramienta: str, reproductor) -> None:
+    componentes = tuple(paso for paso in reproductor.pasos if paso.tipo == 'componente')
+    if herramienta == 'transformaciones' and componentes:
+        with _region(f'{herramienta}-paso-1'):
+            for paso in componentes:
+                _renderizar_paso(paso, reproductor)
+        return
     for numero, paso in enumerate(seleccionar_intermedios(reproductor.pasos), 1):
         with _region(f'{herramienta}-paso-{numero}'):
             _renderizar_paso(paso, reproductor)
