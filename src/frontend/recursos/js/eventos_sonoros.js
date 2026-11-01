@@ -30,16 +30,22 @@
         alMoverDeslizador(evento);
     }
 
+    function alArrastrarDeslizador(evento) {
+        if (evento.buttons === 1) alMoverDeslizador(evento);
+    }
+
     function destruir() {
         document.removeEventListener('scalaris:glosa', alCambiarGlosa);
         document.removeEventListener('input', alMoverDeslizador);
         document.removeEventListener('pointerup', alMoverDeslizador);
+        document.removeEventListener('pointermove', alArrastrarDeslizador);
         document.removeEventListener('keyup', alTecladoDeslizador);
     }
 
     document.addEventListener('scalaris:glosa', alCambiarGlosa);
     document.addEventListener('input', alMoverDeslizador, { passive: true });
     document.addEventListener('pointerup', alMoverDeslizador, { passive: true });
+    document.addEventListener('pointermove', alArrastrarDeslizador, { passive: true });
     document.addEventListener('keyup', alTecladoDeslizador, { passive: true });
     window.scalaris.eventosSonoros = { destruir, rechazo: () => reproducir('rechazo'),
         limpiezaVuelo: () => reproducir('limpiezaVuelo') };

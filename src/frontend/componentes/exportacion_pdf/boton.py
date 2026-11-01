@@ -71,6 +71,7 @@ class ExportacionPDF:
 
     async def _exportar(self, portada: dict, testigo: tuple) -> None:
         self._pausar_procedimiento()
+        emitir_sonido('exportar_inicio')
         self.dialogo.estado.set_text(textos.PDF_CAPTURANDO)
         try:
             capturas = await capturar_regiones(self.enlace.raiz)
