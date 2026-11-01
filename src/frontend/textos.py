@@ -59,6 +59,7 @@ PDF_ETIQUETAS_ENTRADA = {
     "vector_b": "Vector b", "objetivo": "Vector objetivo",
 }
 PDF_BOOLEANOS = {True: "Sí", False: "No"}
+PDF_SEGUNDO_OPERANDO = "Segundo operando"
 PDF_REGIONES_SISTEMAS = {
     "sistemas-resumen": ("Clasificación y Solución del Sistema", "Se presenta la clasificación y la solución que muestra el resultado calculado."),
     "sistemas-procedimiento": ("Paso Visible del Procedimiento", "Se presenta únicamente el paso visible del procedimiento, sin recorrer los demás pasos."),
