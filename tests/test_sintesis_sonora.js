@@ -9,20 +9,21 @@ test('las capas comparten ruido por contexto y liberan cada nodo al terminar', (
     const contexto = caso.contextos[0];
     for (const nombre of ['escritura', 'espacio', 'enter', 'borrado']) {
         comprobar.equal(caso.motor.reproducir(nombre), true);
-        const nodos = contexto.nodos.slice(-5);
+        const nodos = contexto.nodos.slice(-6);
         const tono = nodos.find(nodo => nodo.tipo === 'tono');
         const ruido = nodos.find(nodo => nodo.tipo === 'ruido');
         comprobar.equal(tono.inicio, ruido.inicio);
-        comprobar.equal(tono.fin, ruido.fin);
+        comprobar.ok(ruido.fin < tono.fin);
         comprobar.equal(nodos[0].type, 'lowpass');
         comprobar.equal(nodos[0].destino, contexto.destination);
         tono.onended();
+        ruido.onended();
         comprobar.ok(nodos.every(nodo => nodo.desconectado));
         comprobar.equal(ruido.onended, null);
         caso.avanzar(100);
     }
     comprobar.equal(contexto.buffers.length, 1);
-    comprobar.equal(contexto.buffers[0].longitud, 7200);
+    comprobar.equal(contexto.buffers[0].longitud, 19200);
 });
 
 test('un fallo en cualquier nodo limpia también las fuentes aún sin iniciar', () => {
@@ -38,11 +39,15 @@ test('cada perfil limita sus ráfagas sin frenar la cadencia de escritura', () =
     const caso = prepararSintesis();
     caso.activar();
     comprobar.equal(caso.motor.reproducir('escritura'), true);
-    caso.avanzar(27);
+    caso.avanzar(19);
     comprobar.equal(caso.motor.reproducir('escritura'), false);
     caso.avanzar(1);
     comprobar.equal(caso.motor.reproducir('escritura'), true);
-    caso.avanzar(28);
+    for (let indice = 0; indice < 4; indice++) {
+        caso.avanzar(20);
+        comprobar.equal(caso.motor.reproducir('escritura'), true);
+    }
+    caso.avanzar(20);
     comprobar.equal(caso.motor.reproducir('escritura'), false);
     caso.motor.silenciar(true);
     comprobar.ok(caso.contextos[0].nodos.every(nodo => nodo.desconectado));

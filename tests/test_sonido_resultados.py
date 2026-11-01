@@ -61,7 +61,7 @@ def test_pdf_solo_suena_al_entregar_documento_vigente(monkeypatch, vigente, fall
     monkeypatch.setattr(pdf.ui, 'download', lambda *datos, **opciones: eventos.append('descargar'))
     monkeypatch.setattr(pdf, 'emitir_sonido', lambda nombre: eventos.append(nombre))
     asyncio.run(control._exportar({'fecha': '2026-10-31'}, ()))
-    assert eventos == (['descargar', 'exportar'] if vigente and not fallo else [])
+    assert eventos == (['exportar_inicio', 'descargar', 'exportar'] if vigente and not fallo else ['exportar_inicio'])
 
 
 @pytest.mark.parametrize('exito', [True, False])

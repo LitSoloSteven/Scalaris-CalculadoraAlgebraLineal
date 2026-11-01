@@ -41,7 +41,7 @@ test('la prioridad es atributo valido, regla ordenada, icono y accion generica',
     }
 });
 
-for (const [icono, esperado] of Object.entries({ calculate: 'calcular', remove: 'eliminar',
+for (const [icono, esperado] of Object.entries({ calculate: 'calcular', remove: 'quitar',
     delete: 'eliminar', delete_sweep: 'limpiar', content_paste: 'pegar', play_arrow: 'reproducir',
     pause: 'pausa', first_page: 'primero', chevron_left: 'anterior', chevron_right: 'siguiente',
     last_page: 'ultimo', attach_file: 'adjuntar', help_outline: 'ayuda', sync: 'sincronizar', send: null })) {
@@ -55,12 +55,11 @@ test('interruptores y paneles resuelven el estado anterior al cambio', () => {
     const interruptor = '.q-toggle, [role=switch], [role=checkbox]';
     comprobar.equal(caso.resolver(control({ 'aria-checked': 'false' }, [interruptor])), 'activar');
     comprobar.equal(caso.resolver(control({ 'aria-checked': 'true' }, [interruptor])), 'desactivar');
-    comprobar.equal(caso.resolver(control({ 'aria-expanded': 'false' }, ['[data-glosa-alternar]'])), 'apertura');
-    comprobar.equal(caso.resolver(control({ 'aria-expanded': 'true' }, ['[data-glosa-alternar]'])), 'cierre');
+    comprobar.equal(caso.resolver(control({}, ['[data-glosa-cerrar], [data-glosa-alternar]'])), null);
     for (const cerrada of [true, false]) {
         const boton = control({}, ['.q-expansion-item__header']);
         boton.closest = () => ({ classList: { contains: () => cerrada } });
-        comprobar.equal(caso.resolver(boton), cerrada ? 'apertura' : 'cierre');
+        comprobar.equal(caso.resolver(boton), cerrada ? 'despliegue' : 'pliegue');
     }
 });
 
