@@ -13,8 +13,8 @@ def preparar_figuras(herramienta: str, resultado: dict, capturas: list) -> list[
     estados = textos.PDF_ESTADOS_POR_HERRAMIENTA.get(herramienta, {})
     if resultado.get('estado') not in estados:
         raise ValueError(textos.PDF_ERROR_OBSOLETO)
-    secuencia = any(isinstance(captura, dict) and captura.get('clave') == f'{herramienta}-entrada'
-                    for captura in capturas)
+    secuencia = isinstance(capturas, list) and any(
+        isinstance(captura, dict) and captura.get('clave') == f'{herramienta}-entrada' for captura in capturas)
     registro = (registro_secuencia(herramienta) if secuencia
                 else textos.PDF_REGIONES_POR_HERRAMIENTA[herramienta])
     imagenes = validar_imagenes(capturas, tuple(registro))

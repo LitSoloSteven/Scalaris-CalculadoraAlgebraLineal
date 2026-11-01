@@ -4,7 +4,7 @@ from contextlib import contextmanager
 from nicegui import ui
 from src.frontend import textos
 from src.frontend.componentes.reproductor_pasos.textos import formatear_descripcion_html
-from src.frontend.controladores.exportacion_pdf.secuencia import seleccionar_intermedios
+from src.frontend.controladores.exportacion_pdf.secuencia import seleccionar_intermedios, seleccionar_comprobaciones
 from .entrada import renderizar_entrada
 
 
@@ -22,6 +22,7 @@ def preparar_secuencia(herramienta: str, enlace):
                            or getattr(enlace.vista, 'reproductor', None))
             if reproductor is not None:
                 _renderizar_pasos(herramienta, reproductor)
+                _renderizar_comprobaciones(herramienta, reproductor)
         yield temporal
     finally:
         if not temporal.is_deleted:
@@ -35,10 +36,24 @@ def _region(clave: str):
 def _renderizar_pasos(herramienta: str, reproductor) -> None:
     for numero, paso in enumerate(seleccionar_intermedios(reproductor.pasos), 1):
         with _region(f'{herramienta}-paso-{numero}'):
-            ui.label(textos.PDF_PASO_ORIGINAL.format(numero=paso.indice + 1,
-                                                   total=len(reproductor.pasos))).classes('text-h6')
-            ui.html(formatear_descripcion_html(paso.descripcion))
-            if paso.explicacion and paso.explicacion != paso.descripcion:
-                ui.html(formatear_descripcion_html(paso.explicacion))
-            cuerpo = ui.column().classes('w-full')
-            reproductor.renderizar_cuerpo(paso, cuerpo)
+            _renderizar_paso(paso, reproductor)
+
+
+def _renderizar_paso(paso, reproductor) -> None:
+    ui.label(textos.PDF_PASO_ORIGINAL.format(numero=paso.indice + 1,
+                                           total=len(reproductor.pasos))).classes('text-h6')
+    ui.html(formatear_descripcion_html(paso.descripcion))
+    if paso.explicacion and paso.explicacion != paso.descripcion:
+        ui.html(formatear_descripcion_html(paso.explicacion))
+    cuerpo = ui.column().classes('w-full')
+    reproductor.renderizar_cuerpo(paso, cuerpo)
+
+
+def _renderizar_comprobaciones(herramienta: str, reproductor) -> None:
+    if f'{herramienta}-comprobaciones' in textos.PDF_REGIONES_POR_HERRAMIENTA[herramienta]:
+        return
+    pasos = seleccionar_comprobaciones(reproductor.pasos)
+    if pasos:
+        with _region(f'{herramienta}-verificaciones'):
+            for paso in pasos:
+                _renderizar_paso(paso, reproductor)
