@@ -15,9 +15,13 @@ class MixinCalculoLeontief:
     """Coordina el botón de cálculo, la captura y la respuesta del controlador."""
 
     async def _calcular(self, boton):
+        if getattr(self, "_calculando", False):
+            return
+        self._restablecer_resultados()
         await ejecutar_modelo(self, boton, self._calcular_nucleo)
 
     async def _calcular_nucleo(self):
+        captura = capturar_leontief(self)
         calculo = await ejecutar_calculo_vigente(
             self, lambda: capturar_leontief(self),
             lambda captura: ControladorLeontief.procesar(json.dumps(captura)),
@@ -30,4 +34,5 @@ class MixinCalculoLeontief:
         with self.contenedor_resultados:
             self.contenedor_resultados.classes(remove="items-center justify-center", add="items-start justify-start")
             renderizar_resultado_leontief(self.ultimo_resultado)
+            self._completar_resultado_modelo(captura)
         ui.run_javascript("window.scalaris.renderizarMathJax();")

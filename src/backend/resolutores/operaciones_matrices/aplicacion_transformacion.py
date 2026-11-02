@@ -4,22 +4,24 @@ from fractions import Fraction
 
 from src.backend.excepciones import ErrorDiscrepanciaDimension
 from src.backend.modelos.matriz import Matriz
+from src.backend.modelos.calculo_matricial import multiplicar_matrices
+from src.backend.geometria.coordenadas import a_flotante_seguro
 from src.backend.utilidades.formateadores import numero_a_latex
 from .comprobacion_productos import crear_paso_analisis
 
 def aplicar_vector(matriz: Matriz, vector: Matriz) -> dict:
     """Calcula T(v) = A·v con exactitud racional y devuelve el contrato serializable."""
     _validar_dimensiones(matriz, vector)
-    resultado = _multiplicar_matriz_vector(matriz, vector)
+    resultado = _multiplicar_sin_desborde(matriz, vector)
     pasos = _construir_pasos(matriz, vector, resultado)
-    
+
     return {
         "estado": "EXITO",
         "mensaje": f"Transformación aplicada correctamente (R^{matriz.columnas} → R^{matriz.filas}).",
         "matriz_a": matriz,
         "vector_original": _serializar_vector(vector),
         "vector_transformado": _serializar_vector(resultado),
-        "aproximacion": False,
+        "aproximacion": _contiene_aproximaciones(matriz) or _contiene_aproximaciones(vector),
         "pasos": pasos,
     }
 
@@ -35,22 +37,44 @@ def _validar_dimensiones(matriz: Matriz, vector: Matriz) -> None:
             forma_a=(matriz.filas, matriz.columnas),
             forma_b=(vector.filas, vector.columnas),
         )
+    _validar_valores_finitos(matriz, vector)
 
-def _multiplicar_matriz_vector(matriz: Matriz, vector: Matriz) -> Matriz:
-    """Multiplica A por v celda a celda usando Fraction."""
-    datos = []
-    for fila in range(matriz.filas):
-        suma = sum(
-            (matriz.obtener(fila, col) * vector.obtener(col, 0) for col in range(matriz.columnas)),
-            start=Fraction(0),
-        )
-        datos.append([suma])
-    return Matriz(matriz.filas, 1, datos)
+
+def _validar_valores_finitos(matriz: Matriz, vector: Matriz) -> None:
+    if _contiene_no_finitos(matriz) or _contiene_no_finitos(vector):
+        raise ValueError("La matriz y el vector deben contener números finitos.")
+
+
+def _contiene_no_finitos(matriz: Matriz) -> bool:
+    return any(isinstance(valor, float) and not math.isfinite(valor)
+               for fila in matriz.datos for valor in fila)
+
+
+def _contiene_aproximaciones(matriz: Matriz) -> bool:
+    return any(isinstance(valor, float) for fila in matriz.datos for valor in fila)
+
+
+def _multiplicar_sin_desborde(matriz: Matriz, vector: Matriz) -> Matriz:
+    """Reintenta el producto común con racionales si la aritmética flotante desborda."""
+    try:
+        resultado = multiplicar_matrices(matriz, vector)
+    except OverflowError:
+        return _producto_racional(matriz, vector)
+    return _producto_racional(matriz, vector) if _contiene_no_finitos(resultado) else resultado
+
+
+def _producto_racional(matriz: Matriz, vector: Matriz) -> Matriz:
+    return multiplicar_matrices(_matriz_racional(matriz), _matriz_racional(vector))
+
+
+def _matriz_racional(matriz: Matriz) -> Matriz:
+    return Matriz(matriz.filas, matriz.columnas,
+                  [[Fraction(valor) for valor in fila] for fila in matriz.datos])
 
 def _serializar_vector(vector: Matriz) -> dict:
-    """Devuelve las componentes del vector en formato exacto y aproximado."""
+    """Devuelve texto y decimales del vector, con None cuando un decimal desborda."""
     exacta = [str(vector.obtener(i, 0)) for i in range(vector.filas)]
-    aproximado = [float(vector.obtener(i, 0)) for i in range(vector.filas)]
+    aproximado = [a_flotante_seguro(vector.obtener(i, 0)) for i in range(vector.filas)]
     return {"aproximado": aproximado, "exacta": exacta}
 
 def _construir_pasos(matriz: Matriz, vector: Matriz, resultado: Matriz) -> list[dict]:

@@ -1,10 +1,13 @@
 """Presentacion comun de analisis algebraicos calculados integramente en backend."""
 from nicegui import ui
+from dataclasses import replace
+from src.frontend import textos
 
 from src.frontend.componentes.glosa_foco import crear_accion_explicacion
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos
 from src.frontend.componentes.reproductor_pasos.cuerpos import CuerpoLatex, renderizar_latex
 from src.frontend.componentes.reproductor_pasos.modelo import PasoReproductor, GrupoReproductor
+from src.frontend.controladores.agrupacion_trazas import agrupar_traza
 
 
 def adaptar_analisis(resultado: dict, inicio: tuple[int, int] = (0, 0)) -> tuple[tuple, tuple]:
@@ -53,9 +56,26 @@ def montar_analisis(resultado: dict, panel_ia, identificador: str) -> Reproducto
     mostrar_resumen_analisis(resultado)
     if resultado.get("estado") == "ERROR":
         return None
-    pasos, grupos = adaptar_analisis(resultado)
-    reproductor = ReproductorPasos(pasos, grupos, _renderizar_cuerpo, identificador,
-                                  opciones={"al_explicar": crear_accion_explicacion(panel_ia, pasos)})
+    pasos, _ = adaptar_analisis(resultado)
+    grupos, posiciones = agrupar_traza(resultado["traza"], lambda paso, indice: _identificar_fase_analisis(indice, len(pasos)))
+    adaptados = tuple(replace(paso, indice_grupo=posiciones[indice]) for indice, paso in enumerate(pasos))
+    fases = tuple(GrupoReproductor(grupo["titulo"], textos.RESULTADO_CUENTA_PASOS.format(
+        cantidad=len(grupo["indices_pasos"])), grupo["tipo"], tuple(grupo["indices_pasos"])) for grupo in grupos)
+    return montar_pasos_analisis((adaptados, fases), panel_ia, identificador,
+                                {"lineas_ayuda": textos.MODELOS_AYUDA, "tipos_leyenda": textos.MODELOS_LEYENDA})
+
+
+def _identificar_fase_analisis(indice: int, cantidad: int) -> tuple:
+    fase = 0 if indice == 0 else (2 if indice == cantidad - 1 else 1)
+    return fase, textos.MODELOS_FASES[fase], "operacion"
+
+
+def montar_pasos_analisis(secuencia: tuple, panel_ia, identificador: str, opciones: dict | None = None) -> ReproductorPasos:
+    """Monta pasos y fases adaptados con las opciones didácticas y el panel indicado."""
+    pasos, grupos = secuencia
+    configuracion = {"al_explicar": crear_accion_explicacion(panel_ia, pasos),
+                     "esta_ocupado": lambda: bool(getattr(panel_ia, "_esta_enviando", False)), **(opciones or {})}
+    reproductor = ReproductorPasos(pasos, grupos, _renderizar_cuerpo, identificador, opciones=configuracion)
     reproductor.construir()
     return reproductor
 

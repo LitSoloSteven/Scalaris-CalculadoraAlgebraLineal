@@ -7,6 +7,8 @@ from nicegui import ui
 from src.frontend import banderas
 from src.frontend.recursos_vistas import seleccionar_recursos
 from src.frontend.versionado_recursos import versionar_html
+from src.frontend.constantes import CARACTERES_ENTRADA_NUMERICA
+from src.frontend.textos import MENSAJE_ENTRADA_NUMERICA
 
 # Paletas de color con ratio de contraste no textual >= 3.0:1 verificado en cada tema
 PALETAS_POR_TEMA: dict[str, list[str]] = {
@@ -68,8 +70,13 @@ def _etiquetas_recursos_cliente(nombre_catalogo: str) -> str:
                      for nombre in json.loads(catalogo.read_text(encoding="utf-8")))
 
 _PLANTILLAS = Path(__file__).parent / "recursos" / "plantillas"
+_CONFIGURACION_SONIDOS = json.loads(
+    (_PLANTILLAS.parent / "catalogo_sonidos.json").read_text(encoding="utf-8"))
 _CABECERA_HTML = Template((_PLANTILLAS / "cabecera.html").read_text(encoding="utf-8")).substitute(
+    configuracion_sonidos=json.dumps(_CONFIGURACION_SONIDOS).replace("<", "\\u003c"),
     configuracion_graficos=_CONFIGURACION_GRAFICOS_JSON.replace("<", "\\u003c"),
+    configuracion_numerica=json.dumps({"caracteres": CARACTERES_ENTRADA_NUMERICA,
+                                      "mensaje": MENSAJE_ENTRADA_NUMERICA}).replace("<", "\\u003c"),
     plantilla_presentacion=(_PLANTILLAS / "presentacion.html").read_text(encoding="utf-8"),
     etiquetas_interacciones=_etiquetas_recursos_cliente("catalogo_interacciones.json"),
     etiquetas_captura=_etiquetas_recursos_cliente("catalogo_captura.json"),

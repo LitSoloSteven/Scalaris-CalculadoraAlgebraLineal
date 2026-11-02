@@ -48,6 +48,10 @@
     --dur-didactic: 900ms;
     --dur-didactic-exit: 675ms;
     --dur-reduced: 120ms;
+    --escritura-pulso: 200ms;
+    --escritura-caracter: 12ms;
+    --escritura-revelado-maximo: 4s;
+    --escritura-opacidad: 0.55;
     --stagger-step: 75ms;
     --stagger-max: 600ms;
     --tiempo-instantaneo: 0ms;

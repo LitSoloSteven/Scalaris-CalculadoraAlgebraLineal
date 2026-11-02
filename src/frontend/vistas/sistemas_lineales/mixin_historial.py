@@ -1,5 +1,5 @@
 """Tarjetas y restauracion del historial de sistemas lineales."""
-from nicegui import ui
+from src.frontend.componentes.sonido import notificar
 from src.frontend.vistas.mixin_sesion_matricial import MixinSesionMatricial
 
 
@@ -13,4 +13,4 @@ class MixinHistorialSistemasLineales(MixinSesionMatricial):
         self.cuadricula.limpiar()
         self.cuadricula.cargar_datos(datos['matriz_a'], datos['vector_b'])
         self._al_cambiar_cuadricula()
-        ui.notify('Matriz restaurada', type='positive')
+        notificar('Matriz restaurada', type='positive')

@@ -34,7 +34,7 @@ def test_controles_ausentes_no_impiden_deshabilitar_los_presentes():
 
 
 def test_matriz_cuadrada_carga_con_recorte_cache_compartido_y_una_notificacion():
-    """La consolidación conserva dimensión máxima, texto e identidad del caché."""
+    """La carga sanea letras y conserva dimensión máxima e identidad del caché."""
     panel = PanelMatrizCuadrada()
     cache_original = panel.cache
     panel.cache[(100, 100)] = "anterior"
@@ -47,7 +47,7 @@ def test_matriz_cuadrada_carga_con_recorte_cache_compartido_y_una_notificacion()
     assert panel.cache is cache_original
     assert panel.cache == {(fila, columna): valor
                            for fila in range(DIMENSION_MAXIMA_INVERSA)
-                           for columna, valor in [(0, "1/3"), (2, "invalido")]}
+                           for columna, valor in [(0, "1/3")]}
     assert len(panel.obtener_datos_matriz()) == DIMENSION_MAXIMA_INVERSA
     panel.al_cambiar_datos.assert_called_once_with()
     panel._renderizar_completa.assert_called_once_with()

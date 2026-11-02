@@ -1,5 +1,6 @@
 """Validación y delegación del cálculo pedagógico de determinantes."""
 from typing import Any
+from time import perf_counter
 
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_matrices.determinante import (
@@ -29,12 +30,15 @@ class ControladorDeterminante:
         if metodo_efectivo == "auto":
             metodo_efectivo = recomendacion["metodo_recomendado"]
 
+        inicio = perf_counter()
         if metodo_efectivo == "laplace":
             resultado = ResolutorDeterminante.resolver_laplace(matriz)
         else:
             resultado = ResolutorDeterminante.resolver_lu(matriz)
 
         resultado["recomendacion"] = recomendacion
+        resultado["dimension"] = dimension
+        resultado["tiempo_transcurrido_segundos"] = round(perf_counter() - inicio, 4)
         return resultado
 
     @staticmethod

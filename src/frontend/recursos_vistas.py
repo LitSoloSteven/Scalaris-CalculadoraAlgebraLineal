@@ -7,7 +7,15 @@ _NUMERICAS = frozenset({"bases", "romanos"})
 _ALGEBRA = frozenset({"sistemas", "vectores", "matrices", "inversa", "determinantes", "factorizacion_lu",
                        "visualizador", "leontief", "transformaciones"})
 _VISTAS = _INICIO | _NUMERICAS | _ALGEBRA
+_EXPORTACION_PDF = _ALGEBRA | _NUMERICAS
 _POR_RECURSO = {
+    "catalogo_sonidos.js": _VISTAS,
+    "sintesis_sonora.js": _VISTAS,
+    "asignacion_sonora.js": _VISTAS,
+    "eventos_sonoros.js": _VISTAS,
+    "exportacion_pdf.css": _EXPORTACION_PDF,
+    "clon_pdf.js": _EXPORTACION_PDF,
+    "captura_pdf.js": _EXPORTACION_PDF,
     "presentacion.css": _INICIO,
     "vistas_inicio_matriz.css": _INICIO,
     "vistas_inicio_ventanas_emergentes.css": _INICIO,

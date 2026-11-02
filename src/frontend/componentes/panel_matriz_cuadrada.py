@@ -6,6 +6,7 @@ from functools import partial
 from typing import Callable
 
 from nicegui import ui
+from src.frontend.componentes.sonido import notificar
 
 from src.frontend.componentes.cuadricula_base import (
     DIMENSION_MINIMA,
@@ -19,7 +20,8 @@ from src.frontend.componentes.cuadricula_base import (
 from .redimension_matriz_cuadrada import redimensionar_celdas, actualizar_etiqueta_dimension, DIMENSION_MAXIMA_CELDA_NORMAL
 from .tareas import lanzar_tarea
 from .animacion_matriz import animar_redimension_matriz
-from .portapapeles_matricial import parsear_texto_portapapeles
+from .portapapeles_matricial import parsear_portapapeles_rectangular
+from .carga_numerica import preparar_matriz_numerica
 from src.backend.constantes import DIMENSION_MAXIMA_INVERSA
 
 registro = logging.getLogger(__name__)
@@ -189,7 +191,7 @@ class PanelMatrizCuadrada:
             return
         nuevo_n = min(max(len(datos), DIMENSION_MINIMA), DIMENSION_MAXIMA_INVERSA)
         self.cache.clear()
-        datos_recortados = [fila[:nuevo_n] for fila in datos[:nuevo_n]]
+        datos_recortados = preparar_matriz_numerica([fila[:nuevo_n] for fila in datos[:nuevo_n]])
         self.cache.update(cache_matriz_desde_datos(datos_recortados))
         self.dimension = nuevo_n
         self._publicar_matriz()
@@ -208,11 +210,11 @@ class PanelMatrizCuadrada:
             texto = await ui.run_javascript("return navigator.clipboard.readText();")
         except Exception as error:
             registro.warning("No se pudo leer el portapapeles: %s", error)
-            ui.notify("No se pudo acceder al portapapeles.", type="warning")
+            notificar("No se pudo acceder al portapapeles.", type="warning")
             return
         if not texto:
             return
-        filas = parsear_texto_portapapeles(texto)
+        filas, _ = parsear_portapapeles_rectangular(texto, DIMENSION_MAXIMA_INVERSA)
         if filas:
             self.cargar_matriz(filas)
 

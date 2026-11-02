@@ -1,22 +1,26 @@
 """Selección y carga de ejemplos de Transformaciones."""
+from src.frontend.componentes.sonido import notificar
+from src.frontend.componentes.captura_modelos import construir_ejemplos
+from src.frontend import textos_transformaciones as textos
 from nicegui import ui
-from src.frontend.componentes.captura_modelos import construir_ejemplos, llenar_entradas
 from ._ejemplos_transformaciones import EJEMPLOS_TRANSFORMACIONES
+from ._ejemplos_aplicacion_transformacion import EJEMPLOS_APLICACION
+from .carga_modelos import cargar_captura_modelo
 
 
 class MixinEjemplosTransformaciones:
     """Carga datos internos de ejemplo en los controles de captura."""
 
     def _construir_ejemplos(self):
-        construir_ejemplos(EJEMPLOS_TRANSFORMACIONES, self._cargar_ejemplo, "Ejemplos precargados")
+        with ui.column().classes("w-full").bind_visibility_from(
+            self.selector_modo, 'value', backward=lambda modo: modo == textos.MODO_ANALISIS
+        ):
+            construir_ejemplos(EJEMPLOS_TRANSFORMACIONES, self._cargar_ejemplo, "Ejemplos precargados")
+        with ui.column().classes("w-full").bind_visibility_from(
+            self.selector_modo, 'value', backward=lambda modo: modo == textos.MODO_APLICACION
+        ):
+            construir_ejemplos(EJEMPLOS_APLICACION, self._cargar_ejemplo, textos.TITULO_EJEMPLOS)
 
     def _cargar_ejemplo(self, ejemplo: dict):
-        coeficientes = ejemplo["matriz_transformacion"]
-        self.filas, self.columnas = len(coeficientes), len(coeficientes[0])
-        self._generar_cuadricula()
-        self._generar_entradas_variables()
-        for entradas, valores in zip(self.entradas_coeficientes, coeficientes):
-            llenar_entradas(entradas, valores)
-        llenar_entradas(self.entradas_variables, ejemplo.get("nombres_variables", []))
-        self._restablecer_resultados()
-        ui.notify(f"Ejemplo '{ejemplo['nombre']}' cargado.", type="positive", position="top")
+        cargar_captura_modelo(self, ejemplo)
+        notificar(f"Ejemplo '{ejemplo['nombre']}' cargado.", type="positive", position="top")

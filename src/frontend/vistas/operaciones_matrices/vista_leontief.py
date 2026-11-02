@@ -14,10 +14,13 @@ from .mixin_calculo_leontief import MixinCalculoLeontief
 
 from .mixin_captura_leontief import MixinCapturaLeontief
 from .mixin_ejemplos_leontief import MixinEjemplosLeontief
+from .glosa_modelos import MixinGlosaModelos
+from .transferencia_modelos import recibir_matriz_modelo
 
 
-class VistaLeontief(MixinLimpiezaModelos, MixinCalculoLeontief, MixinCapturaLeontief, MixinEjemplosLeontief):
+class VistaLeontief(MixinGlosaModelos, MixinLimpiezaModelos, MixinCalculoLeontief, MixinCapturaLeontief, MixinEjemplosLeontief):
     """Vista completa del Modelo de Leontief."""
+    herramienta_modelo = "leontief"
 
     def __init__(self):
         self.numero_sectores = 2
@@ -28,12 +31,13 @@ class VistaLeontief(MixinLimpiezaModelos, MixinCalculoLeontief, MixinCapturaLeon
         self.contenedor_resultados = None
         self.ultimo_resultado = None
 
-    def construir(self):
+    def construir(self, token_transferencia: str = ''):
         """Monta captura, ejemplos y resultados del modelo económico."""
         PanelCapturaMatrices.inyectar_recursos_cliente()
         crear_estructura_aplicacion(self, ruta_activa=ruta_de("leontief"))
 
         with ui.column().classes("w-full max-w-7xl mx-auto p-6 mt-4 vista-raiz"):
+            self.contenedor_transferencia = ui.column().classes('w-full')
             with ui.row().classes("w-full items-center gap-3 mb-6"):
                 ui.html(icono_svg("matriz_inversa")).classes("w-8 h-8 texto-acento")
                 with ui.column().classes("gap-0"):
@@ -55,6 +59,8 @@ class VistaLeontief(MixinLimpiezaModelos, MixinCalculoLeontief, MixinCapturaLeon
                         "w-full panel-tarjeta p-6 items-center justify-center min-h-[400px]"
                     ).props('id="resultados-leontief"')
                     self._restablecer_resultados()
+        self._conectar_modelo()
+        recibir_matriz_modelo(self, token_transferencia)
 
     def _crear_accion_principal(self):
         """Construye crear accion principal conservando el orden de los elementos."""
@@ -70,13 +76,5 @@ class VistaLeontief(MixinLimpiezaModelos, MixinCalculoLeontief, MixinCapturaLeon
         return [entrada for fila in self.entradas_coeficientes for entrada in fila] + self.entradas_demanda + self.entradas_sectores
 
     def _restablecer_resultados(self):
-        self.ultimo_resultado = None
+        self._sincronizar_captura_modelo()
         mostrar_estado(self.contenedor_resultados, "Ingresa la matriz C y el vector d, luego presiona Calcular.")
-
-    def obtener_contexto_ia(self):
-        """Indica que esta vista no publica contexto del asistente."""
-        return None
-
-    def obtener_senales_ia(self):
-        """Indica que esta vista no solicita sugerencias automáticas."""
-        return None

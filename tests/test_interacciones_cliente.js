@@ -7,6 +7,7 @@ const rutas = require("node:path");
 const maquinaVirtual = require("node:vm");
 const { cargarAssetCliente } = require("./comun_cliente_javascript.js");
 const { estilosMovimiento } = require("./comun_tokens_movimiento.js");
+const { inyectarCatalogo } = require("./comun_catalogo_sonoro.js");
 
 const ARCHIVOS_CLIENTE = JSON.parse(sistemaArchivos.readFileSync(
     rutas.join(__dirname, "../src/frontend/recursos/catalogo_interacciones.json"), "utf8",
@@ -32,6 +33,7 @@ function crearClienteSimulado() {
         querySelectorAll: () => [],
     };
     const ventana = { innerWidth: 800, innerHeight: 600, matchMedia: () => ({ matches: false }) };
+    inyectarCatalogo(documento);
     const contexto = maquinaVirtual.createContext({
         window: ventana, document: documento, Date,
         getComputedStyle: estilosMovimiento,

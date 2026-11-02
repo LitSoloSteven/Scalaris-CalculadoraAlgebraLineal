@@ -4,6 +4,7 @@ from __future__ import annotations
 
 
 from nicegui import ui
+from src.frontend.componentes.sonido import notificar
 from ._cuerpo_numerico import renderizar_cuerpo_numerico
 from src.frontend.componentes.glosa_foco import crear_accion_explicacion
 
@@ -17,7 +18,7 @@ class MixinProcedimientoSistemasNumericos:
     def _mostrar_procedimiento(self) -> None:
         """Pinta el procedimiento paso a paso de la conversión activa."""
         if not hasattr(self, "resultados_completos") or "pasos" not in self.resultados_completos:
-            ui.notify("Realiza una conversión válida primero", type="warning")
+            notificar("Realiza una conversión válida primero", type="warning")
             return
 
         if getattr(self, "reproductor", None) is not None:

@@ -1,6 +1,7 @@
 """Operandos, operación y ejemplos de la calculadora romana."""
 from nicegui import ui
-from src.frontend.controladores.sesion_matricial import actualizar_contexto
+from src.frontend.componentes.sonido import notificar
+from src.frontend.controladores.sesion_matricial import actualizar_contexto, notificar_edicion
 
 
 class MixinCapturaRomanos:
@@ -61,10 +62,11 @@ class MixinCapturaRomanos:
     def copiar(self, texto: str) -> None:
         """Copia el texto al portapapeles y notifica al usuario."""
         ui.clipboard.write(texto)
-        ui.notify(f"Copiado: {texto}", type="positive", position="top")
+        notificar(f"Copiado: {texto}", type="positive", position="top")
 
     def _notificar_cambio(self) -> None:
         """Notifica al panel de Glosa para recalcular contexto."""
+        notificar_edicion(self)
         actualizar_contexto(self)
 
     def _orientar_error_operandos(self, error=None, mensaje: str = "") -> None:

@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from nicegui import ui
+from src.frontend.textos import PASOS_INDICE_TITULO
 
 from src.frontend.componentes.reproductor_pasos.catalogo import html_sugerencia_tipo
 
@@ -17,7 +18,7 @@ def construir_indice(reproductor: ReproductorPasos) -> None:
     if len(reproductor.grupos) <= 1:
         return
     with (
-        ui.expansion('Indice de pasos por fases', icon='list').classes(
+        ui.expansion(PASOS_INDICE_TITULO, icon='list').classes(
         'w-full panel-tarjeta mt-4 pasos-expansion'
     ).props('header-class="font-bold texto-principal"'),
         ui.column().classes('w-full p-2 gap-2'),
@@ -62,7 +63,8 @@ def _renderizar_boton_paso(reproductor: ReproductorPasos, indice_paso: int) -> N
         ui.button(
         color=None,
         on_click=lambda evento, destino=indice_paso: reproductor._seleccionar_desde_indice(destino),
-    ).classes('boton-discreto w-full justify-start py-2 px-3 text-left').props('ripple=false'),
+    ).classes('boton-discreto w-full justify-start py-2 px-3 text-left').props(
+        f'ripple=false data-sonido-indice="{indice_paso}"'),
         ui.row().classes('items-center gap-3 w-full'),
     ):
         ui.html(html_sugerencia_tipo(paso.tipo, paso.etiqueta_tipo))

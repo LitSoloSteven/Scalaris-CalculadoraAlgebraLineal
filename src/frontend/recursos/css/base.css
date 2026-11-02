@@ -112,11 +112,16 @@ html .texto-acento {
 
 .matematicas-desplazamiento {
     overflow-x: auto;
+    overflow-y: hidden;
     width: 100%;
     min-width: 0;
     max-width: 100%;
-    padding-bottom: var(--space-2);
+    padding-block: var(--space-3);
     box-sizing: border-box;
+}
+
+.matematicas-desplazamiento mjx-container[display="true"] {
+    margin-block: var(--space-2) !important;
 }
 
 .row>div:has(> .matematicas-desplazamiento),
@@ -137,6 +142,25 @@ html .texto-acento {
 .fuente-pequena {
     font-size: var(--fs-small);
     font-weight: var(--fw-small);
+}
+
+.captura-aviso-numerico {
+    position: fixed;
+    inset-inline: var(--space-4);
+    bottom: var(--space-4);
+    z-index: var(--z-modal);
+    width: fit-content;
+    max-width: calc(100% - 2 * var(--space-4));
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-input);
+    background: var(--badge-warn-bg);
+    color: var(--badge-warn-text);
+    overflow-wrap: anywhere;
+    pointer-events: none;
+}
+
+.captura-aviso-numerico:empty {
+    padding: 0;
 }
 
 [class*="q-transition--"][class*="-enter-active"],

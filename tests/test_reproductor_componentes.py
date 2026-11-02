@@ -110,7 +110,7 @@ def test_catalogo_y_hoja_nueva_definen_todos_los_tipos():
     tipos_esperados = {
         "inicial", "intercambio", "pivote", "eliminacion", "normalizacion", "otro", "final",
         "planteamiento", "sustitucion", "verificacion", "operacion", "componente", "ajuste",
-        "expansion", "division", "lectura", "decodificacion", "construccion", "resultado",
+        "expansion", "division", "lectura", "decodificacion", "construccion", "resultado", "menor",
     }
     assert set(CATALOGO_TIPOS) == tipos_esperados
     assert all(f".pasos-etiqueta-{tipo}" in estilos for tipo in tipos_esperados)
@@ -132,7 +132,7 @@ def test_recursos_compartidos_se_enlazan_y_destello_deja_el_script_anterior():
 def test_velocidades_y_renderizado_latex_conservan_contrato(monkeypatch):
     """Comprueba los intervalos fijos y la composición segura de bloques MathJax."""
     html_renderizado, llamadas_javascript = capturar_renderizado_latex(monkeypatch, "x < 1")
-    assert VELOCIDADES_AUTOREPRODUCCION == {"Lenta": 2.0, "Normal": 1.2, "Rápida": 0.7}
+    assert VELOCIDADES_AUTOREPRODUCCION == {"Lenta": 1.2, "Normal": 0.7, "Rápida": 0.4}
     assert len(html_renderizado) == 1
     assert 'class="matematicas-desplazamiento matematicas-etiqueta"' in html_renderizado[0]
     assert "$$ x &lt; 1 $$" in html_renderizado[0]

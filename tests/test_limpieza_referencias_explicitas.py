@@ -12,7 +12,7 @@ from src.frontend.componentes.limpieza_captura import LimpiezaCaptura
 def test_limpieza_envia_referencias_y_restaura_despues_de_vaciar(monkeypatch):
     """La ejecución transmite solo las referencias vigentes y restaura al final."""
     eventos = []
-    captura = SimpleNamespace(limpiar_todo=lambda: eventos.append('vaciar'))
+    captura = SimpleNamespace(limpiar_todo=lambda: eventos.append('vaciar'), esta_completamente_vacio=lambda: False)
     campos = [SimpleNamespace(id=12, is_deleted=False),
               SimpleNamespace(id=13, is_deleted=True)]
     async def ejecutar(codigo, **opciones):
@@ -27,7 +27,7 @@ def test_limpieza_envia_referencias_y_restaura_despues_de_vaciar(monkeypatch):
 
 def test_limpieza_restaura_si_la_animacion_agota_su_plazo(monkeypatch):
     """Un timeout no impide vaciar ni solicitar la restauración visual."""
-    captura = SimpleNamespace(limpiar_todo=Mock())
+    captura = SimpleNamespace(limpiar_todo=Mock(), esta_completamente_vacio=lambda: False)
     llamada = AsyncMock(side_effect=[TimeoutError(), None])
     monkeypatch.setattr(ui, 'run_javascript', llamada)
     control = LimpiezaCaptura(captura, lambda: True, lambda: [])
@@ -40,7 +40,7 @@ def test_limpieza_restaura_si_la_animacion_agota_su_plazo(monkeypatch):
 
 def test_cancelacion_de_restauracion_libera_el_control(monkeypatch):
     """La cancelación del transporte no deja bloqueada la captura."""
-    captura = SimpleNamespace(limpiar_todo=Mock())
+    captura = SimpleNamespace(limpiar_todo=Mock(), esta_completamente_vacio=lambda: False)
     llamada = AsyncMock(side_effect=[None, asyncio.CancelledError()])
     monkeypatch.setattr(ui, 'run_javascript', llamada)
     control = LimpiezaCaptura(captura, lambda: True, lambda: [])

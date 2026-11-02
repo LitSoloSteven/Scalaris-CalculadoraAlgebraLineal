@@ -1,34 +1,37 @@
 """Renderizado detallado de la tarjeta de matriz inversa calculada exitosamente."""
 from __future__ import annotations
 
-import json
 from nicegui import ui
+from src.frontend.componentes.sonido import notificar
+from src.frontend.componentes.avisos_resultado import renderizar_aviso_resultado
 
 from src.backend.constantes import DIMENSION_MAXIMA_SISTEMAS
 from src.frontend.controladores.operaciones_inversas.presentacion import preparar_opciones_inversa
 from src.backend.utilidades.formateadores import formatear_fraccion_texto
 from src.frontend.componentes.reproductor_pasos.html_tablas import html_tabla_matriz
 from src.frontend.componentes.desarrollo_comprobacion import mostrar_desarrollo
+from src.frontend.componentes.acciones_matriz import renderizar_acciones_matriz
+from src.frontend.componentes.exportacion_pdf.integracion import region_pdf, completar_exportacion, identificador_raiz
+from src.frontend.controladores.exportacion_pdf.vigencia import EnlacePDF
 
 
 def renderizar_resultado_error(vista, resultado: dict) -> None:
     """Renderiza el mensaje de error y resalta celdas si aplica."""
-    with ui.row().classes('items-center gap-2 px-4 py-2 distintivo-error mb-4 w-fit'):
-        ui.icon('error', size='sm')
-        ui.label(resultado.get('mensaje', 'Error en los datos ingresados.')).classes('font-bold')
+    renderizar_aviso_resultado(resultado.get('mensaje', 'Error en los datos ingresados.'), 'error',
+                              'items-center gap-2 px-4 py-2 distintivo-error mb-4 w-fit')
     if resultado.get('celda_error'):
         r, c = resultado['celda_error']
         vista.enfocar_celda((r, c))
-        ui.notify(resultado.get('mensaje', 'Celda inválida'), type='negative')
+        notificar(resultado.get('mensaje', 'Celda inválida'), type='negative')
 
 
 def renderizar_resultado_singular(vista, resultado: dict, dimension: int) -> None:
     """Renderiza la información de matriz singular y pasos si los hay."""
-    with ui.row().classes('items-center gap-2 px-4 py-2 distintivo-error mb-4 w-fit'):
-        ui.icon('warning', size='sm')
-        ui.label('Matriz singular: no tiene inversa').classes('font-bold')
+    with region_pdf('inversa-resumen'):
+        renderizar_aviso_resultado('Matriz singular: no tiene inversa', 'warning',
+                                  'items-center gap-2 px-4 py-2 distintivo-error mb-4 w-fit')
 
-    with ui.column().classes('panel-tarjeta p-6 w-full mb-6 gap-3'):
+    with ui.column().classes('panel-tarjeta p-6 w-full mb-6 gap-3').props('data-pdf-captura=inversa-resultado'):
         ui.label('Matriz Singular (det = 0)').classes('text-lg font-bold texto-principal')
         ui.label(
             'Una matriz cuadrada tiene inversa si y solo si det(A) ≠ 0. '
@@ -54,16 +57,15 @@ def renderizar_resultado_singular(vista, resultado: dict, dimension: int) -> Non
 def renderizar_resultado_exitoso(vista, resultado: dict, dimension: int) -> None:
     """Presenta estado, matrices, acciones y comprobaciones de la inversa recibida."""
 
-    with ui.row().classes('items-center gap-2 px-4 py-2 distintivo-exito mb-4 w-fit'):
-        ui.icon('check_circle', size='sm')
-        ui.label('Matriz invertible').classes('font-bold')
-
-    with ui.row().classes('panel-tarjeta px-4 py-2 fuente-pequena items-center gap-4 flex-wrap mb-6 w-full'):
-        ui.label(f"{dimension} × {dimension}").classes('font-bold texto-principal')
-        ui.label(f"det(A) = {resultado['determinante_texto']} ≠ 0").classes('font-semibold texto-principal')
-        ui.label(f"{resultado['estadisticas']['total']} pasos").classes('texto-secundario')
-        ui.label(f"{resultado['estadisticas']['intercambios']} intercambios").classes('texto-secundario')
-        ui.label(f"calculado en {resultado['tiempo_transcurrido_segundos']:.2f} s").classes('texto-secundario')
+    with region_pdf('inversa-resumen'):
+        renderizar_aviso_resultado('Matriz invertible', 'check_circle',
+                                  'items-center gap-2 px-4 py-2 distintivo-exito mb-4 w-fit')
+        with ui.row().classes('panel-tarjeta px-4 py-2 fuente-pequena items-center gap-4 flex-wrap mb-6 w-full'):
+            ui.label(f"{dimension} × {dimension}").classes('font-bold texto-principal')
+            ui.label(f"det(A) = {resultado['determinante_texto']} ≠ 0").classes('font-semibold texto-principal')
+            ui.label(f"{resultado['estadisticas']['total']} pasos").classes('texto-secundario')
+            ui.label(f"{resultado['estadisticas']['intercambios']} intercambios").classes('texto-secundario')
+            ui.label(f"calculado en {resultado['tiempo_transcurrido_segundos']:.2f} s").classes('texto-secundario')
 
     if getattr(vista, 'panel_ia', None):
         vista.panel_ia.renderizar_sugerencias_en_linea()
@@ -76,7 +78,7 @@ def renderizar_resultado_exitoso(vista, resultado: dict, dimension: int) -> None
 
 def _renderizar_tarjeta_matriz(resultado: dict, dimension: int) -> None:
     """Dibuja la tarjeta con la representacion de A y A^-1 y botones de accion."""
-    with ui.column().classes('panel-tarjeta p-6 w-full mb-6'):
+    with ui.column().classes('panel-tarjeta p-6 w-full mb-6').props('data-pdf-captura=inversa-resultado'):
         ui.label('Resultado: A⁻¹').classes('text-lg font-bold texto-principal mb-4')
 
         if preparar_opciones_inversa(dimension)['mostrar_latex']:
@@ -115,22 +117,11 @@ def _renderizar_matrices_tabulares(resultado):
 
 
 def _agregar_botones_acciones(resultado: dict, dimension: int) -> None:
-    """Botones para copiar A^-1 y enviar al solver de sistemas."""
-    def copiar_inversa():
-        """Copia la inversa calculada al portapapeles como filas tabuladas."""
-        inversa = resultado.get('inversa')
-        if not inversa:
-            return
-        lineas = []
-        for i in range(dimension):
-            lineas.append("\t".join(formatear_fraccion_texto(inversa.obtener(i, j)) for j in range(dimension)))
-        ui.run_javascript(f"navigator.clipboard.writeText({json.dumps(chr(10).join(lineas))});")
-        ui.notify('A⁻¹ copiada al portapapeles', type='positive')
-
+    """Ofrece la transferencia de la matriz inversa al editor de sistemas."""
     def ir_a_sistemas():
         """Transfiere la inversa calculada al editor de sistemas lineales."""
         if not preparar_opciones_inversa(dimension)['transferir_sistema']:
-            ui.notify(f"Sistemas de ecuaciones admite hasta {DIMENSION_MAXIMA_SISTEMAS}×{DIMENSION_MAXIMA_SISTEMAS}; tu matriz es de {dimension}×{dimension}.", type='warning')
+            notificar(f"Sistemas de ecuaciones admite hasta {DIMENSION_MAXIMA_SISTEMAS}×{DIMENSION_MAXIMA_SISTEMAS}; tu matriz es de {dimension}×{dimension}.", type='warning')
             return
         datos = [[formatear_fraccion_texto(resultado['inversa'].obtener(r, c)) for c in range(dimension)] for r in range(dimension)]
         from src.frontend.componentes.transferencia import guardar_matriz, url_transferencia
@@ -139,19 +130,18 @@ def _agregar_botones_acciones(resultado: dict, dimension: int) -> None:
         ui.navigate.to(url_transferencia(ruta_de('sistemas'), token))
 
     with (
-        ui.row().classes('w-full justify-between items-center mt-4 flex-wrap gap-2'),
+        ui.row().classes('w-full justify-between items-center mt-4 flex-wrap gap-2').props('data-pdf-excluir'),
         ui.row().classes('gap-2'),
     ):
-        ui.button('Copiar A⁻¹', icon='content_copy', on_click=copiar_inversa, color=None).classes('boton-discreto text-xs').props('ripple=false')
         ui.button('Resolver A·x = b con esta A', on_click=ir_a_sistemas, color=None).classes('boton-discreto text-xs').props('ripple=false')
 
 
 def _renderizar_comprobaciones(resultado: dict, dimension: int) -> None:
     """Muestra comprobaciones formales como expansion."""
     with (
-        ui.expansion('Comprobaciones formales', icon='verified').classes(
+        ui.expansion('Comprobaciones formales', icon='verified', value=True).classes(
         'w-full mb-6 panel-tarjeta'
-    ).props('default-opened header-class="font-bold texto-principal"'),
+        ).props('header-class="font-bold texto-principal" data-pdf-captura=inversa-comprobaciones'),
         ui.column().classes('w-full gap-4 p-2'),
     ):
         for comprobacion in resultado.get('comprobaciones', []):
@@ -180,7 +170,7 @@ def _renderizar_interpretacion() -> None:
         ).classes('texto-secundario text-sm p-3')
 
 
-def renderizar_resultado_inversa(vista, resultado: dict):
+def renderizar_resultado_inversa(vista, resultado: dict, datos_capturados: list[list[str]]):
     """Presenta el resultado exitoso, singular o erróneo de la matriz inversa."""
     vista.contenedor_resultados.clear()
     vista.contenedor_resultados.classes(
@@ -197,3 +187,8 @@ def renderizar_resultado_inversa(vista, resultado: dict):
             renderizar_resultado_singular(vista, resultado, dimension)
         else:
             renderizar_resultado_exitoso(vista, resultado, dimension)
+        if estado in ("EXITO", "SINGULAR"):
+            renderizar_acciones_matriz("inversa", datos_capturados)
+            enlace = EnlacePDF(vista, lambda: {'datos': vista.panel_matriz_cuadrada.obtener_datos_matriz()},
+                               identificador_raiz(vista.contenedor_resultados))
+            completar_exportacion(vista, 'inversa', resultado, enlace)

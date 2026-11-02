@@ -28,8 +28,8 @@
       fondo?.remove();
       raiz.removeAttribute('data-presentacion-activa');
       window.removeEventListener('pagehide', finalizar);
-      document.removeEventListener('keydown', finalizar, true);
-      document.removeEventListener('pointerdown', finalizar, true);
+      document.removeEventListener('keydown', finalizarPorGesto, true);
+      document.removeEventListener('pointerdown', finalizarPorGesto, true);
       document.removeEventListener('visibilitychange', alOcultar);
       preferencia.removeEventListener('change', alReducir);
       estado.activa = false;
@@ -38,6 +38,11 @@
 
     function alOcultar() { if (document.hidden) finalizar(); }
     function alReducir(evento) { if (evento.matches) finalizar(); }
+
+    function finalizarPorGesto(evento) {
+      if (evento?.isTrusted) window.scalaris.sonido?.reproducir('entrada');
+      finalizar();
+    }
 
     function debeReproducirse() {
       if (raiz.getAttribute('data-entrada') === 'teclado') return false;
@@ -89,6 +94,7 @@
     function reproducir() {
       if (completada) return;
       try {
+        window.scalaris.sonido?.reproducir('entrada');
         if (preferencia.matches) {
           animar(fondo, [{ opacity: 1 }, { opacity: 0 }], opciones('--dur-reduced'))
             .finished.then(finalizar, finalizar);
@@ -106,8 +112,8 @@
       raiz.setAttribute('data-presentacion-activa', '');
       raiz.appendChild(fondo);
       window.addEventListener('pagehide', finalizar);
-      document.addEventListener('keydown', finalizar, true);
-      document.addEventListener('pointerdown', finalizar, true);
+      document.addEventListener('keydown', finalizarPorGesto, true);
+      document.addEventListener('pointerdown', finalizarPorGesto, true);
       document.addEventListener('visibilitychange', alOcultar);
       preferencia.addEventListener('change', alReducir);
       const duracion = window.scalaris.movimiento.duracion;

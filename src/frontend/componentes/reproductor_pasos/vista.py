@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from nicegui import ui
+from src.frontend.textos import PASOS_AYUDA_TITULO
 
 from src.frontend.componentes.reproductor_pasos.catalogo import html_sugerencia_tipo
 from src.frontend.componentes.reproductor_pasos.controles import construir_controles
@@ -28,7 +29,7 @@ def _construir_ayuda(reproductor: ReproductorPasos) -> None:
     if not reproductor.lineas_ayuda and not reproductor.tipos_leyenda:
         return
     with (
-        ui.expansion('¿Como leer los pasos?', icon='help_outline').classes(
+        ui.expansion(PASOS_AYUDA_TITULO, icon='help_outline').classes(
         'w-full panel-tarjeta mt-2'
     ).props('default-opened header-class="font-bold texto-principal"'),
         ui.column().classes('p-4 gap-2 text-sm'),
@@ -62,9 +63,10 @@ def _construir_tarjeta(reproductor: ReproductorPasos) -> None:
         _construir_cuerpo(reproductor)
         construir_controles(reproductor)
         if len(reproductor.pasos) > 1:
-            from src.frontend.componentes.reproductor_pasos.catalogo import VELOCIDADES_AUTOREPRODUCCION
+            from src.frontend.componentes.reproductor_pasos.catalogo import intervalo_lectura
             reproductor.temporizador = ui.timer(
-                VELOCIDADES_AUTOREPRODUCCION['Normal'], reproductor._avanzar, active=False
+                intervalo_lectura(reproductor.pasos[0].explicacion, reproductor.velocidad),
+                reproductor._avanzar, active=False
             )
 
 
@@ -83,7 +85,7 @@ def _construir_descripcion(reproductor: ReproductorPasos) -> None:
     """Crea la fila de descripcion, explicacion y boton de Glosa."""
     with ui.row().classes('w-full justify-between items-start gap-2'):
         with ui.column().classes('flex-1 gap-1'):
-            reproductor.descripcion = ui.label('').classes('font-semibold texto-principal text-sm')
+            reproductor.descripcion = ui.html('').classes('font-semibold texto-principal text-sm')
             reproductor.explicacion = ui.html('').classes('w-full')
         reproductor.contenedor_glosa = ui.row()
 

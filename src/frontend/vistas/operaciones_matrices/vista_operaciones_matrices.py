@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from nicegui import ui
+from src.frontend.componentes.sonido import notificar
 from src.backend.utilidades.estado_captura import captura_vacia
 from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
 
@@ -12,6 +13,7 @@ from src.frontend.componentes.captura_matrices import PanelCapturaMatrices
 from src.frontend.navegacion import ruta_de
 from src.frontend.controladores.operaciones_matrices import ControladorOperacionesMatrices
 from src.frontend.controladores.sesion_matricial import actualizar_contexto
+from src.frontend.componentes.transferencia import recibir_matriz
 from src.frontend.vistas.operaciones_matrices.mixin_resultados import MixinResultadosOperacionesMatrices
 
 from .mixin_contexto_matrices import MixinContextoMatrices
@@ -79,7 +81,7 @@ class VistaOperacionesMatrices(MixinResultadosOperacionesMatrices, MixinContexto
             return
         transferencia = ControladorOperacionesMatrices.preparar_inversa(nombre, matriz)
         if transferencia.get("mensaje"):
-            ui.notify(transferencia["mensaje"], type='warning')
+            notificar(transferencia["mensaje"], type='warning')
             return
 
         from src.frontend.componentes.transferencia import url_transferencia, guardar_matriz
@@ -106,7 +108,7 @@ class VistaOperacionesMatrices(MixinResultadosOperacionesMatrices, MixinContexto
                     on_click=lambda evento: self.evaluar_expresion(evento.sender), color=None,
                 ).classes('boton-principal flex-[2] py-3').props('ripple=false')
 
-    def construir(self):
+    def construir(self, token_transferencia: str = ''):
         """Construye los paneles de captura, expresión y resultados."""
         ui.context.client.on_delete(self._al_borrar_cliente)
         self.panel_ia = PanelIA(self)
@@ -115,6 +117,7 @@ class VistaOperacionesMatrices(MixinResultadosOperacionesMatrices, MixinContexto
         self.panel_captura_matrices.al_cambiar_datos = self._al_cambiar_matriz
 
         with ui.column().classes('w-full max-w-7xl mx-auto p-6 mt-4 vista-raiz matrices-vista'):
+            self.contenedor_transferencia = ui.column().classes('w-full')
             with ui.row().classes('w-full justify-between items-center mb-8 gap-4 flex-wrap'):
                 ui.label('Matrices').classes('text-2xl font-bold texto-principal')
 
@@ -129,6 +132,8 @@ class VistaOperacionesMatrices(MixinResultadosOperacionesMatrices, MixinContexto
                     self.restablecer_resultados()
 
         self.panel_ia.construir()
+        recibir_matriz(token_transferencia, "matrices", self.panel_captura_matrices.cargar_matriz_a,
+                       self.contenedor_transferencia)
 
     def _renderizar_panel_captura(self) -> None:
         """Sitúa la acción de añadir sobre la lista y separa el panel de expresión."""

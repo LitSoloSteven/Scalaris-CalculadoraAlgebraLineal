@@ -1,0 +1,9 @@
+.sonido-control {
+    position: fixed;
+    inset-inline-start: max(var(--space-4), env(safe-area-inset-left));
+    inset-block-end: max(var(--space-4), env(safe-area-inset-bottom));
+    z-index: var(--z-fab);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+}

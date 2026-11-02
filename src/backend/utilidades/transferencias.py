@@ -42,6 +42,43 @@ def validar_carga_matriz(
     return datos, None
 
 
+def _forma_rectangular(datos: Any) -> tuple[int, int] | None:
+    if not isinstance(datos, list) or not datos:
+        return None
+    if not isinstance(datos[0], list) or not datos[0]:
+        return None
+    columnas = len(datos[0])
+    if any(not isinstance(fila, list) or len(fila) != columnas for fila in datos):
+        return None
+    return len(datos), columnas
+
+
+def _maximos_rectangulares_validos(filas: int, columnas: int) -> bool:
+    return all(type(maximo) is int and maximo > 0 for maximo in (filas, columnas))
+
+
+def validar_carga_matriz_rectangular(
+    carga: Any, *, filas_maximas: int, columnas_maximas: int,
+) -> tuple[list[list[str]] | None, str | None]:
+    """Devuelve matriz textual y error sin mutar la carga; valida ambos ejes
+    y devuelve un error controlado ante estructuras, celdas o máximos inválidos."""
+    if not _maximos_rectangulares_validos(filas_maximas, columnas_maximas):
+        return None, MENSAJE_TRANSFERENCIA_DATOS_INVALIDOS
+    if not _envoltura_valida(carga, "matriz_a"):
+        return None, MENSAJE_TRANSFERENCIA_DATOS_INVALIDOS
+    datos = carga["datos"]
+    forma = _forma_rectangular(datos)
+    if forma is None:
+        return None, MENSAJE_TRANSFERENCIA_DATOS_INVALIDOS
+    filas, columnas = forma
+    if filas > filas_maximas or columnas > columnas_maximas:
+        return None, (f"La matriz es de {filas}×{columnas} y esta herramienta admite hasta "
+                      f"{filas_maximas}×{columnas_maximas}. Empezamos con la herramienta vacía.")
+    if not _filas_validas(datos, columnas):
+        return None, MENSAJE_TRANSFERENCIA_DATOS_INVALIDOS
+    return datos, None
+
+
 def _error_dimensiones_sistema(
     filas: int, columnas: int, maximo_ecuaciones: int, dimensiones_permitidas: set[int]
 ) -> str | None:

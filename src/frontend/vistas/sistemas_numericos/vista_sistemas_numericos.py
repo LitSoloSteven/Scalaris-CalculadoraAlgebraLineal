@@ -36,7 +36,7 @@ class VistaSistemasNumericos(MixinLimpiezaBases, MixinInteraccionSistemasNumeric
                     'w-full matriz-entrada numericos-entrada'
                 ).classes("numericos-entrada-base")
                 self.entrada_valor.props('autocomplete="off" spellcheck="false"')
-                self.entrada_valor.on_value_change(self._al_cambiar_entrada)
+                self.entrada_valor.on_value_change(self._notificar_entrada)
                 self.entrada_valor.on('keydown.enter', self._convertir_boton)
 
                 with ui.row().classes('absolute right-6 top-1/2 -translate-y-1/2'):
@@ -88,7 +88,7 @@ class VistaSistemasNumericos(MixinLimpiezaBases, MixinInteraccionSistemasNumeric
 
     def _renderizar_cuadricula_resultados(self) -> None:
         """Renderiza las cuatro tarjetas de resultados (Dec, Hex, Bin, Oct)."""
-        with ui.element('div').classes('disposicion-cuadricula-dos mt-6'):
+        with ui.element('div').classes('disposicion-cuadricula-dos mt-6').props('data-pdf-captura=bases-resultado'):
             self._crear_tarjeta_resultado('decimal', 'Decimal', '10')
             self._crear_tarjeta_resultado('hexadecimal', 'Hexadecimal', '16')
             self._crear_tarjeta_resultado('binario', 'Binario', '2')
@@ -102,8 +102,12 @@ class VistaSistemasNumericos(MixinLimpiezaBases, MixinInteraccionSistemasNumeric
         with ui.column().classes('w-full max-w-4xl mx-auto items-center q-pa-md mt-6 vista-raiz'):
             self._renderizar_seccion_destacada()
             self.etiqueta_estado = ui.label("Ingresa un número y pulsa Convertir.").props('role="status" aria-live="polite"')
-            self._renderizar_cuadricula_resultados()
-            self.contenedor_pasos = ui.column().classes('w-full gap-4 mt-6 hidden')
+            self.contenedor_exportacion_pdf = ui.column().classes('w-full min-w-0')
+            with self.contenedor_exportacion_pdf:
+                self._renderizar_cuadricula_resultados()
+                self.contenedor_pasos = ui.column().classes('w-full gap-4 mt-6 hidden').props(
+                    'data-pdf-captura=bases-procedimiento')
+                self.contenedor_acciones_pdf = ui.column().classes('w-full')
 
         self.pestanas_origen.on_value_change(self._cambiar_base_origen)
         self.pestanas_destino.on_value_change(self._cambiar_base_destino)

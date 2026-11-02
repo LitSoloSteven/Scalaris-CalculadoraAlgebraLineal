@@ -22,6 +22,20 @@
   overflow-wrap: anywhere;
   font-variant-numeric: tabular-nums;
 }
+[data-componente-resultado][aria-current="true"] {
+  outline: 2px solid var(--accent);
+  font-weight: 700;
+  animation: componente-aplicacion var(--dur-state) var(--ease-std);
+}
+@keyframes componente-aplicacion {
+  from { opacity: 0.45; }
+  to { opacity: 1; }
+}
+[data-entrada="teclado"] [data-componente-resultado] { animation: none; }
+@media (max-width: 480px) {
+  [data-procedimiento-aplicacion] .pasos-expansion .pasos-distintivo-tipo { display: none; }
+}
 @media (prefers-reduced-motion: reduce) {
   .modelos-captura { transform: none; }
+  [data-componente-resultado][aria-current] { animation: none; }
 }

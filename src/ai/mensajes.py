@@ -70,6 +70,8 @@ def construir_mensajes(
 _SUFIJO_CONTEXTO = " Usa los datos del contexto, no recalcules nada."
 
 INSTRUCCIONES_EXPLICAR_PASO: dict[str, str] = {
+    "menor": "Explícame qué fila y columna se eliminan, cómo se conserva su orden y cómo el signo del cofactor usa los índices originales." + _SUFIJO_CONTEXTO,
+    "final": "Explícame cómo se obtiene e interpreta el resultado exacto de este procedimiento y qué significan sus conclusiones." + _SUFIJO_CONTEXTO,
     "factorizacion": "Explícame brevemente qué representa este factor en PA = LU y cómo se obtuvo." + _SUFIJO_CONTEXTO,
     "intercambio": "Explícame brevemente por qué intercambiamos estas filas y qué cambia en la matriz." + _SUFIJO_CONTEXTO,
     "pivote": "Explícame brevemente qué significa seleccionar este pivote y qué cambia." + _SUFIJO_CONTEXTO,

@@ -5,6 +5,7 @@ from functools import partial
 import string
 from typing import Any, Callable
 from nicegui import ui
+from src.frontend.componentes.sonido import notificar
 
 from src.frontend.componentes.cuadricula_base import (
     DIMENSION_MINIMA,
@@ -18,6 +19,7 @@ from .estado_captura_matrices import (
 )
 from .redimension_rectangular import actualizar_rectangulo
 from .redimension_captura_matrices import crear_celda_matriz, crear_fila_matriz
+from .carga_coleccion_matrices import cargar_matriz_a
 
 
 def _validar_deltas(matriz: dict[str, Any], incremento_filas: int, incremento_columnas: int) -> tuple[int, int] | None:
@@ -108,7 +110,7 @@ class PanelCapturaMatrices:
         """Agrega una nueva matriz 3x3 si no se ha alcanzado el limite alfabetico."""
         nombre = self.obtener_siguiente_nombre_disponible()
         if not nombre:
-            ui.notify("Limite de matrices alcanzado (Z)", type="warning")
+            notificar("Limite de matrices alcanzado (Z)", type="warning")
             return
 
         self.matrices[nombre] = crear_registro_matriz()
@@ -260,6 +262,10 @@ class PanelCapturaMatrices:
         self.renderizar_todas()
         if self.al_cambiar_datos:
             self.al_cambiar_datos()
+
+    def cargar_matriz_a(self, datos: list[list[str]]) -> None:
+        """Carga solo A sin reemplazar B ni las matrices adicionales."""
+        cargar_matriz_a(self, datos)
 
     def limpiar(self) -> None:
         """Vacia todas las celdas conservando nombres, dimensiones y matrices permanentes."""

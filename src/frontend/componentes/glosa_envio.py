@@ -5,6 +5,7 @@ import logging
 import threading
 import time
 from nicegui import run, ui
+from src.frontend.componentes.sonido import emitir_sonido, notificar
 
 from src.ai.respuestas import OpcionesConsulta, ResultadoIA, TipoErrorIA
 from src.ai.textos import CONSULTA_CANCELADA, ERROR_SERVICIO, RESPUESTA_DEMASIADO_EXTENSA
@@ -38,7 +39,7 @@ def _validar_mensaje_entrada(texto: str) -> bool:
     try:
         validar_longitud_mensaje(texto)
     except ValueError as error:
-        ui.notify(str(error), type="warning")
+        notificar(str(error), type="warning")
         return False
     return True
 
@@ -66,7 +67,7 @@ class EnvioGlosaMixin(PreguntasGlosaMixin):
 
         ahora = time.monotonic()
         if ahora - getattr(self, "_ultimo_envio", 0) < ANTI_REBOTE_GLOSA_SEGUNDOS:
-            ui.notify(MENSAJE_ANTI_REBOTE_GLOSA, type="warning")
+            notificar(MENSAJE_ANTI_REBOTE_GLOSA, type="warning")
             return
 
         if not texto or not texto.strip():
@@ -101,6 +102,7 @@ class EnvioGlosaMixin(PreguntasGlosaMixin):
             self.historial_chat = incorporar_mensaje(self.historial_chat, mensaje)
 
         self._esta_enviando = True
+        emitir_sonido('enviar')
         self._ultimo_envio = time.monotonic()
         self._forzar_sugerencias = True
         self._renderizar_sugerencias_laterales()
@@ -161,9 +163,10 @@ class EnvioGlosaMixin(PreguntasGlosaMixin):
             puede_reintentar = resultado.tipo_error not in (TipoErrorIA.SIN_CLAVE, TipoErrorIA.AUTENTICACION)
             mensaje = {"texto": resultado.texto, "enviado": False, "error": True, "reintentar": puede_reintentar}
         else:
-            mensaje = {"texto": resultado.texto, "enviado": False, "error": False}
+            mensaje = {"texto": resultado.texto, "enviado": False, "error": False, "animar": True}
 
         self.historial_chat = incorporar_mensaje(self.historial_chat, mensaje)
+        mensaje = self.historial_chat[-1]
 
         with self.area_chat:
             if banderas.panel_lateral_habilitado():
@@ -172,3 +175,4 @@ class EnvioGlosaMixin(PreguntasGlosaMixin):
             elif hasattr(self, "_renderizar_mensaje"):
                 self._renderizar_mensaje(mensaje, indice=len(self.historial_chat) - 1)
         self._desplazar_al_final()
+        emitir_sonido('respuesta' if resultado.exito else 'error')

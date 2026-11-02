@@ -1,5 +1,6 @@
 """Coordinacion de los controles de captura de sistemas lineales."""
 from nicegui import ui
+from src.frontend.componentes.sonido import notificar
 from functools import partial
 from src.backend.constantes import DIMENSION_MAXIMA_SISTEMAS, DIMENSION_MINIMA
 from src.frontend.componentes.cuadricula_base import ejecutar_transicion_cuadricula, selectores_cambio_dimension, actualizar_estados_botones_dimension
@@ -56,7 +57,7 @@ class MixinSincronizacionSistemasLineales:
         self.actualizar_botones_sincronizacion()
         if getattr(self, 'contenedor_vista_previa', None):
             self._programar_vista_previa()
-        ui.notify('Sincronizado desde Matriz', type='positive', position='top')
+        notificar('Sincronizado desde Matriz', type='positive', position='top')
 
     def _reconstruir_ecuaciones(self, valores):
         """Reconstruye las entradas de ecuaciones conservando sus valores y eventos."""
@@ -86,11 +87,11 @@ class MixinSincronizacionSistemasLineales:
         lineas = [entrada.value or "" for entrada in self.entradas_ecuaciones]
         resultado = preparar_captura_ecuaciones(lineas)
         if resultado["estado"] == "ERROR":
-            ui.notify(f'Error al sincronizar: {resultado["mensaje"]}', type='negative', position='top')
+            notificar(f'Error al sincronizar: {resultado["mensaje"]}', type='negative', position='top')
             return
 
         self.cuadricula.cargar_datos(resultado["matriz_a"], resultado["vector_b"])
-        ui.notify('Sincronizado desde Ecuaciones', type='positive', position='top')
+        notificar('Sincronizado desde Ecuaciones', type='positive', position='top')
 
     def esta_matriz_vacia(self):
         """Consulta al controlador si la matriz contiene valores significativos."""

@@ -5,6 +5,7 @@ import html
 import itertools
 import json
 from nicegui import ui
+from .textos import MATEMATICAS_DESPLAZAMIENTO
 
 _CONTADOR_IDENTIFICADOR = itertools.count()
 
@@ -27,7 +28,8 @@ def renderizar_latex(latex: str) -> None:
     identificador = f"reproductor-matematicas-{next(_CONTADOR_IDENTIFICADOR)}"
     contenido = html.escape(latex)
     ui.html(
-        f'<div id="{identificador}" class="matematicas-desplazamiento matematicas-etiqueta">$$ {contenido} $$</div>'
+        f'<div id="{identificador}" class="matematicas-desplazamiento matematicas-etiqueta" '
+        f'tabindex="0" role="region" aria-label="{MATEMATICAS_DESPLAZAMIENTO}">$$ {contenido} $$</div>'
     )
     ui.run_javascript(
         f"if(window.scalaris && window.scalaris.renderizarMathJax) "

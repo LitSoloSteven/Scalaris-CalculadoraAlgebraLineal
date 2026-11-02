@@ -5,6 +5,7 @@ import html
 from nicegui import ui
 from src.frontend.componentes.avisos_resultado import CLASES_AVISO_ERROR, renderizar_aviso_resultado
 from src.frontend.componentes.desarrollo_comprobacion import mostrar_desarrollo
+from src.frontend.componentes.exportacion_pdf.integracion import region_pdf
 
 
 def renderizar_resultado_leontief(resultado: dict) -> None:
@@ -15,21 +16,22 @@ def renderizar_resultado_leontief(resultado: dict) -> None:
         renderizar_aviso_resultado(resultado.get("mensaje", "Error"), "close", CLASES_AVISO_ERROR)
         return
 
-    if estado in {"SINGULAR", "SIN_SOLUCION", "SOLUCIONES_INFINITAS"}:
-        with ui.row().classes("items-center gap-2 px-4 py-2 distintivo-error mb-4 w-fit"):
-            ui.icon("warning_amber", size="sm")
-            ui.label(resultado.get("mensaje")).classes("font-bold")
-        condicion = resultado.get("hawkins_simon", {})
-        if condicion:
-            renderizar_hawkins_simon(condicion)
+    with region_pdf('leontief-resumen'):
+        _renderizar_resumen_leontief(resultado)
+    with region_pdf('leontief-analisis'):
+        renderizar_hawkins_simon(resultado.get("hawkins_simon", {}))
+        _renderizar_analisis_sectorial(resultado)
         mostrar_desarrollo(resultado.get("traza_comprobacion", []))
-        return
 
-    with ui.row().classes("items-center gap-2 px-4 py-2 distintivo-exito mb-4 w-fit"):
-        ui.icon("check", size="sm")
+
+def _renderizar_resumen_leontief(resultado: dict) -> None:
+    exito = resultado.get('estado') == 'EXITO'
+    distintivo = 'distintivo-exito' if exito else 'distintivo-error'
+    with ui.row().classes(f"items-center gap-2 px-4 py-2 {distintivo} mb-4 w-fit"):
+        ui.icon("check" if exito else "warning_amber", size="sm")
         ui.label(resultado.get("mensaje", "")).classes("font-bold")
-
-    renderizar_hawkins_simon(resultado.get("hawkins_simon", {}))
+    if not exito:
+        return
 
     with ui.column().classes("w-full panel-tarjeta p-4 mb-4"):
         ui.label("Matriz de Leontief  M = I - C").classes("font-bold texto-principal mb-2")
@@ -42,8 +44,6 @@ def renderizar_resultado_leontief(resultado: dict) -> None:
         ui.html(f'<div class="matematicas-desplazamiento matematicas-etiqueta text-xl text-center">$$ (I-C)^{{-1}} = {multiplicador_latex} $$</div>')
 
     _renderizar_vector_produccion(resultado)
-    _renderizar_analisis_sectorial(resultado)
-    mostrar_desarrollo(resultado.get("traza_comprobacion", []))
 
 
 def _renderizar_vector_produccion(resultado: dict) -> None:

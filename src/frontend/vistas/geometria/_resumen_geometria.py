@@ -4,6 +4,7 @@ from __future__ import annotations
 from html import escape
 import json
 from nicegui import ui
+from src.frontend.componentes.exportacion_pdf.integracion import region_pdf
 
 
 def _mostrar_formula(vista, formula: str, nombre: str):
@@ -97,7 +98,7 @@ def renderizar_resumen(vista, resultado: dict, escena: str) -> None:
     presentadores = {'rectas-planos': _resumir_rectas, 'vectores': _resumir_vectores, 'combinacion': _resumir_combinacion}
     presentador = presentadores.get(escena)
     if presentador:
-        with vista.contenedor_resumen:
+        with vista.contenedor_resumen, region_pdf('visualizador-resumen'):
             presentador(vista, resultado)
             _mostrar_avisos_rango(resultado)
 

@@ -49,6 +49,18 @@
     animation: sacudida var(--dur-panel) var(--ease-std);
 }
 
+@keyframes rechazoNumericoOpacidad {
+    0%, 100% { opacity: 1; }
+    50% { opacity: var(--escritura-opacidad); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .captura-rechazo-reducido {
+        animation: rechazoNumericoOpacidad var(--dur-reduced) var(--ease-std) !important;
+        transform: none !important;
+    }
+}
+
 @keyframes parpadeo {
     0%,
     100% {
@@ -243,4 +255,44 @@ html[data-entrada="teclado"] .pasos-expansion .q-expansion-item__content>* {
     animation: none !important;
     transform: none !important;
     opacity: 1 !important;
+}
+
+.escritura-activa input,
+.escritura-activa textarea {
+    caret-color: var(--accent);
+}
+
+.q-field__control.escritura-activa {
+    isolation: isolate;
+}
+
+.q-field__control.escritura-activa::after {
+    content: "";
+    display: block !important;
+    position: absolute;
+    inset: 0;
+    border: none;
+    border-radius: inherit;
+    background: var(--accent-soft);
+    pointer-events: none;
+    z-index: -1;
+    transform: none;
+    opacity: 0;
+    animation: escrituraPulso var(--escritura-pulso) var(--ease-std);
+}
+
+@keyframes escrituraPulso {
+    from { opacity: var(--escritura-opacidad); }
+    to { opacity: 0; }
+}
+
+.glosa-respuesta[data-escritura-estado="activo"] [data-escritura-seguimientos] {
+    display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .q-field__control.escritura-activa::after {
+        animation: escrituraPulso var(--dur-reduced) var(--ease-std) !important;
+        transform: none !important;
+    }
 }

@@ -7,6 +7,9 @@ from src.frontend.controladores.operaciones_vectores.captura import preparar_tra
 from ._pasos_reproductor import construir_pasos_combinacion_lineal, construir_pasos_vector_basico
 from .mixin_pasos import MixinPasosVectores, OpcionesReproductorVectores
 from src.frontend.componentes.presentacion_analisis import montar_analisis
+from src.frontend.componentes.exportacion_pdf.integracion import region_pdf, completar_exportacion
+from src.frontend.controladores.exportacion_pdf.vigencia import EnlacePDF
+from .contexto import entrada_actual
 
 
 class MixinResultadosVectores(MixinPasosVectores):
@@ -36,18 +39,31 @@ class MixinResultadosVectores(MixinPasosVectores):
         with self.panel_resultados:
             estado = resultado.get("estado", "ERROR")
             mensaje = resultado.get("mensaje", "")
-            self._renderizar_insignia(estado, mensaje)
+            with region_pdf('vectores-resumen'):
+                self._renderizar_insignia(estado, mensaje)
             if self.panel_ia:
                 self.panel_ia.renderizar_sugerencias_en_linea()
             if estado == "ERROR":
                 return
-            if self.operacion_activa == "independencia":
-                self.reproductor_pasos = montar_analisis(resultado, self.panel_ia, "independencia")
-            elif self.operacion_activa in ("suma_resta", "escalar"):
-                self.renderizar_resultado_basico(resultado)
-            else:
-                self.renderizar_resultado_combinacion(resultado)
+            with region_pdf('vectores-solucion') as solucion:
+                self._renderizar_solucion_vectorial(resultado)
+            if self.reproductor_pasos is not None:
+                self.reproductor_pasos.tarjeta.move(self.panel_resultados)
+            if not list(solucion):
+                solucion.delete()
             self._renderizar_boton_visualizador(resultado)
+            enlace = EnlacePDF(self, lambda: entrada_actual(self), f'c{self.panel_resultados.id}',
+                               lambda: (self.panel_resultados, self.resultado_actual,
+                                        self._revision_calculo, self._revision_calculo))
+            completar_exportacion(self, 'vectores', resultado, enlace)
+
+    def _renderizar_solucion_vectorial(self, resultado: dict) -> None:
+        if self.operacion_activa == "independencia":
+            self.reproductor_pasos = montar_analisis(resultado, self.panel_ia, "independencia")
+        elif self.operacion_activa in ("suma_resta", "escalar"):
+            self.renderizar_resultado_basico(resultado)
+        else:
+            self.renderizar_resultado_combinacion(resultado)
 
     def _renderizar_insignia(self, estado: str, mensaje: str) -> None:
         clase, icono = "distintivo-exito", "check"

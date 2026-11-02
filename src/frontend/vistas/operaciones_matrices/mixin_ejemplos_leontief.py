@@ -1,7 +1,8 @@
 """Selección y carga de ejemplos de Leontief."""
-from nicegui import ui
-from src.frontend.componentes.captura_modelos import construir_ejemplos, llenar_entradas
+from src.frontend.componentes.sonido import notificar
+from src.frontend.componentes.captura_modelos import construir_ejemplos
 from ._ejemplos_leontief import EJEMPLOS_LEONTIEF
+from .carga_modelos import cargar_captura_modelo
 
 
 class MixinEjemplosLeontief:
@@ -11,14 +12,5 @@ class MixinEjemplosLeontief:
         construir_ejemplos(EJEMPLOS_LEONTIEF, self._cargar_ejemplo, "Ejemplos precargados")
 
     def _cargar_ejemplo(self, ejemplo: dict):
-        coeficientes = ejemplo["matriz_coeficientes"]
-        self.numero_sectores = len(coeficientes)
-        self._generar_cuadricula()
-        self._generar_entradas_demanda()
-        self._generar_entradas_sectores()
-        for entradas, valores in zip(self.entradas_coeficientes, coeficientes):
-            llenar_entradas(entradas, valores)
-        llenar_entradas(self.entradas_demanda, ejemplo["vector_demanda"])
-        llenar_entradas(self.entradas_sectores, ejemplo.get("nombres_sectores", []))
-        self._restablecer_resultados()
-        ui.notify(f"Ejemplo '{ejemplo['nombre']}' cargado.", type="positive", position="top")
+        cargar_captura_modelo(self, ejemplo)
+        notificar(f"Ejemplo '{ejemplo['nombre']}' cargado.", type="positive", position="top")

@@ -8,6 +8,7 @@ TIPOS_JAVASCRIPT = {
     "", "module", "text/javascript", "application/javascript",
     "text/ecmascript", "application/ecmascript",
 }
+PROVEEDORES_CLIENTE = frozenset({'src/frontend/recursos/js/html2canvas.min.js'})
 
 
 class LectorCodigoHTML(HTMLParser):
@@ -44,7 +45,8 @@ class LectorCodigoHTML(HTMLParser):
 def fuentes_javascript(rutas):
     """Devuelve archivos JS y cuerpos de HTML/Python con procedencia verificable."""
     fuentes = [_fuente(ruta, 1, ruta.read_text(encoding="utf-8"), "archivo")
-               for ruta in rutas if ruta.suffix == ".js"]
+               for ruta in rutas if ruta.suffix == ".js"
+               and ruta.relative_to(RAIZ).as_posix() not in PROVEEDORES_CLIENTE]
     for ruta in rutas:
         if ruta.suffix == ".html":
             fuentes.extend(_codigo_html(ruta))

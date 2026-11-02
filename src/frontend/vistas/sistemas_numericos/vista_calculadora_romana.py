@@ -23,6 +23,7 @@ from .mixin_resultado_romano import MixinResultadoRomano
 from .mixin_contexto_romanos import MixinContextoRomano
 from .mixin_captura_romanos import MixinCapturaRomanos
 from .presentacion_romana import PresentacionRomana
+from src.frontend.componentes.exportacion_pdf.utilidades import montar_utilidad_pdf
 
 registro = logging.getLogger(__name__)
 
@@ -75,6 +76,7 @@ class VistaCalculadoraRomana(MixinLimpiezaRomanos, MixinResultadoRomano, MixinCo
                     ).classes("boton-principal flex-[2] py-3 text-lg font-bold")
 
             self.contenedor_resultado = ui.column().classes("w-full gap-6 mt-6")
+            self.contenedor_exportacion_pdf = self.contenedor_resultado
             with self.contenedor_resultado:
                 ui.label("Ingresa dos operandos romanos y pulsa Calcular.").props('role="status"')
 
@@ -144,6 +146,7 @@ class VistaCalculadoraRomana(MixinLimpiezaRomanos, MixinResultadoRomano, MixinCo
         with self.contenedor_resultado:
             self._renderizar_tarjeta_resultado_destacado(presentacion, resultado.resultado_romano)
             self._renderizar_reproductor_romano(resultado, presentacion.operacion)
+            self.contenedor_acciones_pdf = ui.column().classes('w-full')
 
     def _actualizar_sugerencias(self) -> None:
         if self.panel_ia and self.contenedor_sugerencias:
@@ -163,4 +166,6 @@ class VistaCalculadoraRomana(MixinLimpiezaRomanos, MixinResultadoRomano, MixinCo
         """Registra la huella de entrada y actualiza el contexto de IA."""
         entrada = capturar_romanos(operando_a, operando_b, operacion)
         self._huella_resultado = calcular_huella(entrada)
+        if self.ultimo_resultado is not None:
+            montar_utilidad_pdf(self, 'romanos')
         self._notificar_cambio()

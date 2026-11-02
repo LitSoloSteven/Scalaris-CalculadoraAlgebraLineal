@@ -1,8 +1,9 @@
 """Mixin de interacción de usuario y gestión de entradas para Sistemas Numéricos."""
 import asyncio
 from nicegui import ui
+from src.frontend.componentes.sonido import emitir_sonido, notificar
 from src.backend.utilidades.reglas_dominio import BASES_NUMERICAS, validar_entrada_base
-from src.frontend.controladores.sesion_matricial import actualizar_contexto
+from src.frontend.controladores.sesion_matricial import actualizar_contexto, notificar_edicion
 
 
 class MixinInteraccionSistemasNumericos:
@@ -12,6 +13,7 @@ class MixinInteraccionSistemasNumericos:
         if not evento.value:
             return
         self.base_activa = evento.value
+        notificar_edicion(self)
         self._actualizar_ejemplos()
         actualizar_contexto(self)
         if hasattr(self, 'entrada_valor'):
@@ -24,6 +26,7 @@ class MixinInteraccionSistemasNumericos:
         if not evento.value:
             return
         self.base_destino = evento.value
+        notificar_edicion(self)
         actualizar_contexto(self)
         if not hasattr(self, 'entrada_valor'):
             return
@@ -84,7 +87,7 @@ class MixinInteraccionSistemasNumericos:
                 timeout=2.0
             )
             if not exito:
-                ui.notify("No se pudo copiar", type="warning")
+                notificar("No se pudo copiar", type="warning")
                 return
         except Exception:
             pass
@@ -105,7 +108,15 @@ class MixinInteraccionSistemasNumericos:
         self.pestanas_origen.set_value(nueva_base)
         self._establecer_entrada(valor)
 
+    def _notificar_entrada(self, evento):
+        """Versiona y orienta la edición antes de que pueda iniciarse otra conversión."""
+        notificar_edicion(self)
+        self._orientar_entrada()
+
     async def _al_cambiar_entrada(self, evento):
+        self._orientar_entrada()
+
+    def _orientar_entrada(self):
         valor = self.entrada_valor.value or ''
 
         valido, mensaje = validar_entrada_base(valor, BASES_NUMERICAS[self.base_activa])
@@ -157,9 +168,11 @@ class MixinInteraccionSistemasNumericos:
                 return
             if await self._ejecutar_conversion(valor, inmediato=True, revelar_tarjetas=False):
                 self._aplicar_opacidad_tarjetas(revelar=True)
+                emitir_sonido('exito')
         except Exception:
             self._limpiar_resultados()
             self.etiqueta_error.text = "No se pudo convertir. Revisa el número e inténtalo de nuevo."
+            emitir_sonido('error')
         finally:
             self._finalizar_conversion(boton, revision)
 
@@ -176,7 +189,7 @@ class MixinInteraccionSistemasNumericos:
             self.etiqueta_error.text = mensaje
             if self.tiene_resultado:
                 self._limpiar_resultados()
-            ui.notify(mensaje, type='warning')
+            notificar(mensaje, type='warning')
         return valido
 
     def _publicar_estado(self, mensaje: str) -> None:

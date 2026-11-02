@@ -5,6 +5,7 @@ from src.backend.utilidades.estado_captura import captura_vacia
 from functools import partial
 from typing import Any, Callable
 from nicegui import ui
+from src.frontend.componentes.sonido import notificar
 
 from src.frontend.componentes.cuadricula_base import (
     DIMENSION_MINIMA,
@@ -18,6 +19,7 @@ from src.frontend.componentes.cuadricula_base import (
 from src.backend.resolutores.sistemas_lineales.exportacion_ecuaciones import exportar_ecuaciones_desde_datos
 from src.backend.constantes import DIMENSION_MAXIMA_SISTEMAS
 from .redimension_ecuaciones import crear_fila_ecuaciones, redimensionar_ecuaciones, actualizar_presentacion
+from .carga_numerica import preparar_matriz_numerica
 
 
 def _renderizar_cabecera_columnas(numero_columnas: int) -> ui.row:
@@ -233,7 +235,7 @@ class CuadriculaEcuaciones:
     def importar_desde_analizados(self, matriz_importada: Any) -> None:
         """Reconstruye la cuadricula desde una matriz con datos parseados."""
         if matriz_importada.filas > DIMENSION_MAXIMA_SISTEMAS or (matriz_importada.columnas - 1) > DIMENSION_MAXIMA_SISTEMAS:
-            ui.notify(f"El sistema excede el limite permitido ({DIMENSION_MAXIMA_SISTEMAS}x{DIMENSION_MAXIMA_SISTEMAS}).", type="warning")
+            notificar(f"El sistema excede el limite permitido ({DIMENSION_MAXIMA_SISTEMAS}x{DIMENSION_MAXIMA_SISTEMAS}).", type="warning")
             return
 
         coeficientes = [[str(valor) for valor in fila[:-1]] for fila in matriz_importada.datos]
@@ -242,6 +244,8 @@ class CuadriculaEcuaciones:
 
     def cargar_datos(self, coeficientes: list[list[str]], vector_b: list[str]) -> None:
         """Carga datos directamente actualizando dimensiones y cuadricula."""
+        coeficientes = preparar_matriz_numerica(coeficientes)
+        vector_b = preparar_matriz_numerica([vector_b])[0]
         self.filas = len(coeficientes)
         self.columnas = len(coeficientes[0]) if self.filas > 0 else 3
         self.modo_homogeneo = False

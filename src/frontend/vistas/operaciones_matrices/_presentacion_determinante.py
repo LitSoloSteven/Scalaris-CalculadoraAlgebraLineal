@@ -1,25 +1,29 @@
 """Adaptacion y renderizado de trazas de determinante sin operaciones matematicas."""
 from nicegui import ui
+from src.frontend import textos
+from src.frontend.controladores.operaciones_matrices.fases_determinante import agrupar_determinante
+from src.frontend.controladores.operaciones_matrices.foco_determinante import construir_meta_determinante
 
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos
 from src.frontend.componentes.reproductor_pasos.modelo import GrupoReproductor, PasoReproductor
 from src.frontend.componentes.reproductor_pasos.cuerpos import renderizar_latex
 from src.frontend.componentes.reproductor_pasos.html_tablas import html_tabla_aumentada
 from src.frontend.componentes.glosa_foco import crear_accion_explicacion
+from src.frontend.componentes.reproductor_pasos.textos import limpiar_latex_plano
 
 
 def adaptar_traza(resultado: dict) -> tuple[tuple, tuple]:
     """Convierte pasos del backend a modelos del reproductor sin recalcular valores."""
+    fases, posiciones = agrupar_determinante(resultado)
     pasos = tuple(PasoReproductor(
         indice=indice, tipo=paso["tipo"], descripcion=paso["descripcion"],
-        explicacion=paso["explicacion"], cuerpo=paso,
+        explicacion=paso["explicacion"], cuerpo=paso, indice_grupo=posiciones[indice],
         etiqueta_tipo="Menor" if paso["tipo"] == "menor" else None,
-        meta_explicar={"tipo": paso["tipo"], "operacion": paso["descripcion"],
-                       "detalle": {"formula": paso.get("detalle_latex", ""),
-                                   "explicacion": paso["explicacion"]}},
+        meta_explicar={**construir_meta_determinante(resultado["traza"], indice),
+                       "operacion": limpiar_latex_plano(paso["descripcion"])},
     ) for indice, paso in enumerate(resultado["traza"]))
-    grupos = (GrupoReproductor("Calculo del determinante", f"{len(pasos)} pasos", "operacion",
-                              tuple(range(len(pasos)))),)
+    grupos = tuple(GrupoReproductor(grupo["titulo"], textos.RESULTADO_CUENTA_PASOS.format(
+        cantidad=len(grupo["indices_pasos"])), grupo["tipo"], tuple(grupo["indices_pasos"])) for grupo in fases)
     return pasos, grupos
 
 
@@ -68,7 +72,9 @@ def montar_reproductor(resultado: dict, panel_ia) -> ReproductorPasos:
     pasos, grupos = adaptar_traza(resultado)
     reproductor = ReproductorPasos(
         pasos, grupos, renderizar_cuerpo_determinante, "determinante",
-        opciones={"titulo": "Pasos del determinante", "al_explicar": crear_accion_explicacion(panel_ia, pasos),
+        opciones={"titulo": textos.DETERMINANTES_PASOS, "lineas_ayuda": textos.DETERMINANTES_AYUDA,
+                  "tipos_leyenda": textos.DETERMINANTES_LEYENDA,
+                  "al_explicar": crear_accion_explicacion(panel_ia, pasos),
                   "esta_ocupado": lambda: bool(getattr(panel_ia, "_esta_enviando", False))},
     )
     reproductor.construir()

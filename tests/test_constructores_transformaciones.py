@@ -61,7 +61,7 @@ def test_cizalladura_eje_invalido():
     """Verifica que un eje desconocido lance un error."""
     with pytest.raises(ValueError, match="Eje de cizalladura"):
         matriz_cizalladura(2, "z")
-        
+
 @pytest.mark.parametrize("grados", [1, 17, 30, 45, 60, 89])
 def test_rotacion_no_notable_es_aproximada(grados):
     """Verifica que ángulos no múltiplos de 90 devuelvan flotantes marcados como aproximados."""

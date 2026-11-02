@@ -163,7 +163,10 @@
         function terminar() {
             estado.cancelarEspera();
             estado.cancelarEspera = null;
-            if (activa === estado) estado.animacion.play();
+            if (activa === estado) {
+                window.scalaris.sonido?.reproducir('entrada');
+                estado.animacion.play();
+            }
         }
         function comprobar() {
             if (!document.querySelector('.navegacion-cabecera') || !document.querySelector('main')) return;

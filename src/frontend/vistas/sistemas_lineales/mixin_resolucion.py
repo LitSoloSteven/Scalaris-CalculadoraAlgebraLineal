@@ -7,8 +7,11 @@ from src.ai.huellas import calcular_huella
 from src.frontend.controladores.sistemas_lineales.flujo_vista import entrada_actual, procesar_carga_sistema
 from src.frontend.controladores.sistemas_lineales.estado_captura import opciones_transferencia
 from src.frontend.controladores.sesion_matricial import actualizar_contexto, invalidar_resultado, captura_sigue_vigente, calculo_sigue_vigente
-from src.frontend.componentes.transferencia import guardar_matriz, guardar_sistema, url_transferencia
+from src.frontend.componentes.transferencia import guardar_sistema, url_transferencia
+from src.frontend.componentes.acciones_matriz import renderizar_acciones_matriz
 from src.frontend.navegacion import ruta_de
+from src.frontend.componentes.exportacion_pdf.boton import renderizar_boton_pdf
+from src.frontend.controladores.exportacion_pdf.vigencia import EnlacePDF
 
 
 class MixinResolucionSistemas:
@@ -38,13 +41,24 @@ class MixinResolucionSistemas:
             return
         self.ultimo_resultado = respuesta
         self._huella_resultado = huella
-        with self.contenedor_resultados:
-            self.contenedor_resultados.classes(remove='items-center justify-center', add='items-start justify-start')
-            self._renderizar_encabezado_y_solucion(respuesta, variables)
-            self._renderizar_seccion_pasos(respuesta)
-            self._renderizar_botones_accion(respuesta, coeficientes, independientes)
+        self._presentar_resultado_pdf(respuesta, variables, coeficientes, independientes)
         ui.run_javascript('window.scalaris.renderizarMathJax();')
         actualizar_contexto(self)
+
+    def _presentar_resultado_pdf(self, respuesta: dict, variables: list, coeficientes: list, independientes: list) -> None:
+        """Compone el resultado y marca solo las regiones visibles que representan el cálculo."""
+        with self.contenedor_resultados:
+            self.contenedor_resultados.classes(remove='items-center justify-center', add='items-start justify-start')
+            with ui.column().classes('w-full').props('data-pdf-captura=sistemas-resumen'):
+                self._renderizar_encabezado_y_solucion(respuesta, variables)
+            self._renderizar_seccion_pasos(respuesta)
+            reproductor = getattr(self, 'reproductor_pasos', None)
+            if reproductor is not None and reproductor.tarjeta is not None:
+                reproductor.tarjeta.props('data-pdf-captura=sistemas-procedimiento')
+            self._renderizar_botones_accion(respuesta, coeficientes, independientes)
+            enlace = EnlacePDF(self, lambda: entrada_actual(self), 'sistemas-resultados')
+            control = renderizar_boton_pdf('sistemas', respuesta, enlace)
+            self.actualizar_exportacion_pdf = control.actualizar
 
     def _renderizar_botones_accion(self, respuesta: dict, coeficientes: list, independientes: list):
         estado = respuesta.get("estado")
@@ -52,11 +66,8 @@ class MixinResolucionSistemas:
             return
         numero_variables = len(coeficientes[0]) if coeficientes else 0
         self._agregar_a_historial({'matriz_a': coeficientes, 'vector_b': independientes, 'filas': len(coeficientes), 'columnas': numero_variables, 'estado': estado, 'metodo': self.pestanas_metodo.value})
+        renderizar_acciones_matriz("sistemas", coeficientes)
         with ui.row().classes('gap-2 mt-4 flex-wrap'):
-            if opciones_transferencia(coeficientes)['inversa']:
-                ui.button('Ver A⁻¹ en Matriz inversa', icon='arrow_forward', color=None,
-                          on_click=lambda: ui.navigate.to(url_transferencia(ruta_de('inversa'), guardar_matriz('sistemas', coeficientes)))
-                          ).classes('boton-discreto').props('ripple=false').tooltip('Misma eliminación de filas, ahora sobre [A | I]')
             if opciones_transferencia(coeficientes)['visualizador']:
                 ui.button('Ver en el Visualizador', icon='insights', color=None,
                           on_click=lambda: ui.navigate.to(url_transferencia(ruta_de('visualizador'), guardar_sistema('sistemas', coeficientes, independientes)))

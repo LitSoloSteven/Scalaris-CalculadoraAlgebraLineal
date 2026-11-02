@@ -5,6 +5,7 @@ import html
 from nicegui import ui
 from src.frontend.componentes.avisos_resultado import CLASES_AVISO_ERROR, renderizar_aviso_resultado
 from src.frontend.componentes.desarrollo_comprobacion import mostrar_desarrollo
+from src.frontend.componentes.exportacion_pdf.integracion import region_pdf
 
 
 def renderizar_resultado_transformaciones(resultado: dict) -> None:
@@ -18,23 +19,25 @@ def renderizar_resultado_transformaciones(resultado: dict) -> None:
     rango = resultado.get("rango")
     nulidad = resultado.get("nulidad")
 
+    with region_pdf('transformaciones-resumen'):
+        _renderizar_resumen_transformacion(resultado)
+        _renderizar_metricas_dimension(resultado, filas, columnas, rango, nulidad)
+        _renderizar_conclusiones(resultado)
+    with region_pdf('transformaciones-bases'):
+        _renderizar_nucleo(resultado, nulidad)
+        _renderizar_imagen(resultado, rango)
+    mostrar_desarrollo(resultado.get("traza_comprobacion", []))
+
+
+def _renderizar_resumen_transformacion(resultado: dict) -> None:
     with ui.row().classes("items-center gap-2 px-4 py-2 distintivo-exito mb-4 w-fit"):
         ui.icon("check", size="sm")
         ui.label(resultado.get("mensaje", "")).classes("font-bold")
-
     aviso = resultado.get("aviso_convencion", "")
     if aviso:
         with ui.row().classes("w-full items-start gap-2 px-4 py-3 rounded-lg mb-4 modelos-aviso"):
             ui.icon("info", size="sm").classes("texto-acento mt-0.5 flex-shrink-0")
             ui.label(aviso).classes("text-xs texto-secundario")
-
-    _renderizar_metricas_dimension(resultado, filas, columnas, rango, nulidad)
-    _renderizar_conclusiones(resultado)
-    _renderizar_nucleo(resultado, nulidad)
-    _renderizar_imagen(resultado, rango)
-    _renderizar_pasos(resultado)
-    mostrar_desarrollo(resultado.get("traza_comprobacion", []))
-
 
 def _renderizar_metricas_dimension(resultado: dict, filas: int, columnas: int, rango: int, nulidad: int) -> None:
     """Muestra tarjetas de rango, nulidad y el Teorema de la Dimension."""
@@ -108,23 +111,3 @@ def _renderizar_imagen(resultado: dict, rango: int) -> None:
                 vector = datos_vector["vector"]
                 vector_latex = r"\begin{pmatrix} " + r" \\ ".join(html.escape(componente) for componente in vector) + r" \end{pmatrix}"
                 ui.html(f'<div class="matematicas-desplazamiento matematicas-etiqueta text-lg text-center">$$ \\mathbf{{a}}_{{{indice}}} = {vector_latex} $$</div>')
-
-
-def _renderizar_pasos(resultado: dict) -> None:
-    """Expansion con los pasos de reduccion Gauss-Jordan."""
-    pasos = resultado.get("pasos_reduccion", [])
-    if pasos:
-        with ui.expansion("Ver reduccion Gauss-Jordan de A", icon="visibility").classes(
-            "w-full panel-tarjeta mt-4 pasos-expansion"
-        ).props('header-class="font-bold texto-principal"'):
-            for paso in pasos:
-                _renderizar_paso_reduccion(paso)
-
-
-def _renderizar_paso_reduccion(paso):
-    """Presenta la descripción y matriz de un paso de reducción."""
-    with ui.column().classes(
-        "w-full p-4 border-l-2 border-l-[var(--accent)] ml-2 mb-2 bg-[var(--bg-panel)] rounded-r-lg"
-    ):
-        ui.label(paso["descripcion"]).classes("text-sm font-semibold mb-1 texto-secundario")
-        ui.html(f'<div class="matematicas-desplazamiento matematicas-etiqueta text-lg">$$ {paso["matriz"]} $$</div>')

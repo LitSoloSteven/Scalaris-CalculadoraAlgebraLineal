@@ -26,7 +26,7 @@ def renderizar_cuerpo_matrices(paso: PasoReproductor, contenedor) -> None:
         if pasos_celdas:
             with ui.expansion('Ver detalle celda a celda', icon='visibility').classes(
                 'w-full mt-2 pasos-expansion'
-            ).props('header-class="font-medium texto-secundario"') as expansion:
+            ).props('header-class="font-medium texto-secundario" data-pdf-excluir') as expansion:
                 contenedor_detalle = ui.column().classes('w-full py-1')
                 cargado = False
 

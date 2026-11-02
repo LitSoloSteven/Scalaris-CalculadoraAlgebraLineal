@@ -8,6 +8,7 @@
   function perteneceCaptura(entrada, configuracion) {
     if (!entrada || entrada.tagName !== 'INPUT') return false;
     const datos = entrada.dataset;
+    if (datos.soloNumerico === 'false') return false;
     if (configuracion.tipo === 'ecuaciones') {
       return datos.ecuacionesFila !== undefined && datos.matrizFila === undefined;
     }
@@ -64,7 +65,8 @@
   function asignarCelda(coordenadas, configuracion, valor) {
     const entrada = document.querySelector(selectorCelda(coordenadas, configuracion));
     if (!entrada) return;
-    entrada.value = valor.trim();
+    const texto = valor.trim();
+    entrada.value = window.scalaris.entradaNumerica?.prepararValor(entrada, texto) ?? texto;
     entrada.dispatchEvent(new Event('input', { bubbles: true }));
   }
 

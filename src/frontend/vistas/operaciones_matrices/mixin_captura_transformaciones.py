@@ -60,6 +60,7 @@ class MixinCapturaTransformaciones:
         selector = selector_dimension_matriz("A", indice, ("fila" if eje == "filas" else "columna",))
         if eje == "columnas":
             selector += "," + selector_dimension_matriz("Variable", indice, ("columna",))
+            selector += "," + selector_dimension_matriz("v", indice, ("fila",))
         botones = (self.boton_quitar_fila, self.boton_agregar_fila, self.boton_quitar_columna, self.boton_agregar_columna)
         await ejecutar_transicion_cuadricula(
             vars(self), selectores_cambio_dimension(selector, delta), partial(self._aplicar_dimension, eje, nuevo),
@@ -83,3 +84,5 @@ class MixinCapturaTransformaciones:
 
     def _generar_entradas_variables(self):
         self.entradas_variables = crear_entradas_nombres(self.contenedor_variables, self.columnas, "Variable")
+        if getattr(self, "contenedor_vector_original", None) is not None:
+            self._generar_vector_original()

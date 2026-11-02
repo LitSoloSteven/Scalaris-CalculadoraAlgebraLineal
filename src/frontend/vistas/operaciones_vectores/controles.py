@@ -33,7 +33,7 @@ def construir_escalar(vista):
         vista.entrada_escalar = ui.input(
             value=vista.valor_escalar,
             on_change=lambda evento: _actualizar_opcion(vista, "valor_escalar", evento.value),
-        ).classes("vectores-operacion-campo min-w-0 matriz-entrada").props('borderless aria-label="Escalar k"')
+        ).classes("vectores-operacion-campo min-w-0 matriz-entrada").props('borderless aria-label="Escalar k" data-solo-numerico="true"')
     vista.panel_escalar.construir(ui.column().classes("w-full"))
 
 

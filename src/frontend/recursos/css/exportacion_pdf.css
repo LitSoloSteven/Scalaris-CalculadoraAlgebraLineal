@@ -1,0 +1,109 @@
+.pdf-portada {
+    width: min(100%, 34rem);
+    max-width: calc(100dvw - var(--space-6));
+    max-height: calc(100dvh - var(--space-6));
+    overflow-y: auto;
+    gap: var(--space-2);
+    padding: var(--space-6);
+    color: var(--text-main);
+}
+
+.pdf-portada .q-field__native {
+    min-width: 0;
+}
+
+.pdf-mensaje {
+    overflow-wrap: anywhere;
+    white-space: normal;
+    max-width: 100%;
+}
+
+.pdf-secuencia {
+    --pdf-ancho-secuencia: 64rem;
+    position: fixed;
+    left: calc(-100% - var(--pdf-ancho-secuencia));
+    top: 0;
+    width: var(--pdf-ancho-secuencia);
+    gap: var(--space-6);
+    pointer-events: none;
+    color: var(--text-main);
+}
+
+.pdf-tabla-entrada {
+    max-width: 100%;
+    overflow-x: auto;
+    font-variant-numeric: tabular-nums;
+}
+
+.pdf-secuencia > [data-pdf-captura] {
+    padding-bottom: var(--space-4);
+}
+
+.pdf-tabla-entrada td {
+    padding: var(--space-2) var(--space-4);
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+.pdf-error {
+    color: var(--error);
+}
+
+.pdf-control {
+    flex-shrink: 0;
+    max-width: 100%;
+    white-space: normal;
+}
+
+.pdf-control:focus-visible {
+    outline: var(--space-1) solid var(--accent);
+    outline-offset: var(--space-1);
+    transform: none !important;
+    transition: none !important;
+}
+
+.pdf-portada .q-field:focus-within {
+    outline: var(--space-1) solid var(--accent);
+    outline-offset: var(--space-1);
+}
+
+.pdf-indicador {
+    display: inline-block;
+    width: var(--space-4);
+    height: var(--space-4);
+    flex-shrink: 0;
+    border: var(--space-1) solid var(--accent);
+    border-top-color: transparent;
+    border-radius: var(--radius-pill);
+}
+
+.pdf-indicador[data-destacada-activa] {
+    animation: pdfProgreso var(--dur-view) var(--ease-std) infinite;
+    will-change: transform, opacity;
+}
+
+@keyframes pdfProgreso {
+    from { transform: rotate(0turn); opacity: 0.55; }
+    to { transform: rotate(1turn); opacity: 1; }
+}
+
+:root[data-entrada="teclado"] .pdf-indicador[data-destacada-activa] {
+    animation: none;
+    transform: none;
+    will-change: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pdf-indicador[data-destacada-activa] {
+        animation: none;
+        transform: none;
+        will-change: auto;
+    }
+
+    .pdf-control,
+    .pdf-control:hover,
+    .pdf-control:active {
+        transform: none !important;
+        transition: none !important;
+    }
+}

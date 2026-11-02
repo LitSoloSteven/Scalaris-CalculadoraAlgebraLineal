@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from copy import deepcopy
 import secrets
 import threading
 import time
@@ -12,6 +13,8 @@ from nicegui import ui
 from src.backend.utilidades import transferencias
 from src.frontend.constantes import MAXIMO_ENTRADAS_TRANSFERENCIA, TIEMPO_VIDA_TRANSFERENCIA_SEGUNDOS
 from src.frontend.navegacion import herramienta_por_identificador
+from src.frontend.controladores.destinos_matriz import LIMITES_DESTINOS_MATRIZ, DESTINOS_MATRIZ_RECTANGULAR
+from src.frontend import textos
 
 _ALMACEN: dict[str, tuple[float, dict[str, Any]]] = {}
 _BLOQUEO = threading.Lock()
@@ -40,7 +43,7 @@ def _guardar_en_almacen(tipo: str, origen: str, datos: Any, **extra: Any) -> str
 
 def guardar_matriz(identificador_origen: str, datos: list[list[str]]) -> str:
     """Almacena una matriz A cuadrada o rectangular para transferirla a otra vista."""
-    return _guardar_en_almacen("matriz_a", identificador_origen, datos)
+    return _guardar_en_almacen("matriz_a", identificador_origen, deepcopy(datos))
 
 
 def guardar_sistema(identificador_origen: str, coeficientes: list[list[str]], independientes: list[str]) -> str:
@@ -125,6 +128,46 @@ def _consumir_transferencia(
 def consumir_matriz(token: str, *, dimension_maxima: int) -> ResultadoTransferencia | None:
     """Extrae y valida una matriz transferida por token."""
     return _consumir_transferencia(token, lambda carga: transferencias.validar_carga_matriz(carga, dimension_maxima=dimension_maxima))
+
+
+def consumir_matriz_rectangular(token: str, *, filas_maximas: int,
+                               columnas_maximas: int) -> ResultadoTransferencia | None:
+    """Consume una matriz validando cada eje en el dominio, sin modificar celdas."""
+    return _consumir_transferencia(token, lambda carga: transferencias.validar_carga_matriz_rectangular(
+        carga, filas_maximas=filas_maximas, columnas_maximas=columnas_maximas))
+
+
+def _consumir_matriz_destino(token: str, destino: str) -> ResultadoTransferencia | None:
+    _, maximo = LIMITES_DESTINOS_MATRIZ[destino]
+    if destino in DESTINOS_MATRIZ_RECTANGULAR:
+        return consumir_matriz_rectangular(token, filas_maximas=maximo, columnas_maximas=maximo)
+    return consumir_matriz(token, dimension_maxima=maximo)
+
+
+def recibir_matriz(token: str, destino: str, cargar: Callable[[list[list[str]]], None],
+                  contenedor: Any) -> ResultadoTransferencia | None:
+    """Valida y carga una matriz con aviso y URL limpia sin ejecutar cálculos;
+    propaga errores del cargador, retirando el token incluso si la carga falla."""
+    minimo, _ = LIMITES_DESTINOS_MATRIZ[destino]
+    resultado = _consumir_matriz_destino(token, destino)
+    if resultado is None:
+        return None
+    try:
+        if resultado.estado == "exito" and len(resultado.datos) < minimo:
+            resultado = ResultadoTransferencia("invalida", None, resultado.nombre_origen,
+                textos.TRANSFERENCIA_DIMENSION_MINIMA.format(minimo=minimo))
+        mensaje = ""
+        if resultado.estado == "exito":
+            cargar(resultado.datos)
+            matriz, orientacion = textos.TRANSFERENCIA_ORIENTACIONES[destino]
+            mensaje = textos.TRANSFERENCIA_MATRIZ_CARGADA.format(
+                matriz=matriz, filas=len(resultado.datos), columnas=len(resultado.datos[0]),
+                origen=resultado.nombre_origen, orientacion=orientacion)
+        with contenedor:
+            renderizar_aviso_transferencia(resultado, mensaje)
+        return resultado
+    finally:
+        limpiar_url_transferencia()
 
 
 def consumir_sistema(token: str, *, maximo_ecuaciones: int, dimensiones_permitidas: set[int]) -> ResultadoTransferencia | None:

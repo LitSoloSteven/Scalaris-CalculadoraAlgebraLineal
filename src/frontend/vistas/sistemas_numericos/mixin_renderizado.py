@@ -5,6 +5,7 @@ from src.backend.resolutores.sistemas_numericos.pasos_didacticos import desglosa
 from src.frontend.controladores.sesion_matricial import actualizar_contexto
 from src.frontend.controladores.captura_contexto import capturar_bases
 from .mixin_procedimiento import MixinProcedimientoSistemasNumericos
+from src.frontend.componentes.exportacion_pdf.utilidades import montar_utilidad_pdf
 
 
 class MixinRenderizadoSistemasNumericos(MixinProcedimientoSistemasNumericos):
@@ -54,6 +55,7 @@ class MixinRenderizadoSistemasNumericos(MixinProcedimientoSistemasNumericos):
         from src.ai.huellas import calcular_huella
         entrada = capturar_bases(self, valor_crudo)
         self._huella_resultado = calcular_huella(entrada)
+        montar_utilidad_pdf(self, 'bases')
         actualizar_contexto(self)
 
         if getattr(self, 'panel_ia', None) and getattr(self, 'contenedor_sugerencias', None):
@@ -107,6 +109,7 @@ class MixinRenderizadoSistemasNumericos(MixinProcedimientoSistemasNumericos):
         if self.contenedor_bits:
             self.contenedor_bits.style('opacity: 0;')
         self.contenedor_pasos.classes('hidden')
+        actualizar_contexto(self)
         if getattr(self, 'contenedor_sugerencias', None):
             self.contenedor_sugerencias.clear()
 

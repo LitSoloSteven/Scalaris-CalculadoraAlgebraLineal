@@ -10,6 +10,7 @@ from src.ai.huellas import calcular_huella
 from src.frontend.controladores.geometria import ControladorGeometria
 from src.frontend.controladores.sesion_matricial import actualizar_contexto
 from ._estados_geometria import aplicar_estado_carga
+from src.frontend.componentes.exportacion_pdf.utilidades import montar_utilidad_pdf
 
 registro = logging.getLogger(__name__)
 ERROR_RENDERIZADO = {
@@ -73,6 +74,7 @@ def finalizar_actualizacion_figura(vista, resultado: dict, carga: dict, hash_ent
             vista.panel_ia.renderizar_sugerencias_en_linea()
     vista._primer_dibujo = False
     refrescar_contexto(vista, carga)
+    montar_utilidad_pdf(vista, 'visualizador')
 
 
 async def _procesar_carga(vista, carga: dict, hash_entrada: int) -> None:
