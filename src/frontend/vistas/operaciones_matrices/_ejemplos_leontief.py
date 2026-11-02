@@ -4,7 +4,7 @@ from __future__ import annotations
 EJEMPLOS_LEONTIEF = [
     {
         "nombre": "2 Sectores (simple)",
-        "descripcion": "Economía de 2 sectores viable con solución entera.",
+        "descripcion": "Economía viable: producción de 220 en Agricultura y 560/3 en Industria.",
         "nombres_sectores": ["Agricultura", "Industria"],
         "matriz_coeficientes": [["0.2", "0.3"], ["0.4", "0.1"]],
         "vector_demanda": ["120", "80"],

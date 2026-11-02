@@ -122,14 +122,15 @@ def _crear_elementos_visualizador() -> tuple[ElementoNavegacion, ...]:
 
 
 def elementos_navegacion(identificador_pilar: str) -> tuple[ElementoNavegacion, ...]:
-    """Devuelve los elementos de navegación contextual asociados a un pilar."""
-    if identificador_pilar == "algebra":
-        return _crear_elementos_herramientas(("sistemas", "vectores", "matrices", "inversa", "determinantes", "factorizacion_lu"))
+    """Devuelve escenas o herramientas habilitadas del pilar; vacío si es desconocido."""
     if identificador_pilar == "visualizador":
         return _crear_elementos_visualizador()
-    if identificador_pilar == "utilidades":
-        return _crear_elementos_herramientas(("bases", "romanos"))
-    return ()
+    if identificador_pilar not in ("algebra", "utilidades"):
+        return ()
+    identificadores = tuple(
+        herramienta.identificador for herramienta in herramientas_visibles(identificador_pilar)
+    )
+    return _crear_elementos_herramientas(identificadores)
 
 
 def enlace_elemento_navegacion(elemento: ElementoNavegacion) -> str:
