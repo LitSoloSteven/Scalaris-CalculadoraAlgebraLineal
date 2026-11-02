@@ -54,3 +54,10 @@ class ErrorSistemaSingular(AlgebraLinealError):
 
 class ErrorVectorInvalido(AlgebraLinealError):
     """Indica que la estructura no representa un vector unidimensional válido."""
+    
+class ErrorDominio(AlgebraLinealError):
+    """Indica que una evaluación matemática está fuera de su dominio."""
+
+
+class ErrorNoFinito(AlgebraLinealError):
+    """Indica que una evaluación produjo un resultado no finito."""
