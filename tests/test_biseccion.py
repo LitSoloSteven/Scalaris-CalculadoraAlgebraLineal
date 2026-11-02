@@ -8,7 +8,7 @@ from src.backend.resolutores.raices.biseccion import biseccion
 
 def crear_entrada(expresion, a, b, d, limite=100):
     """Fábrica auxiliar para construir entradas válidas en los tests."""
-    return EntradaBiseccion(expresion=expresion, a=a, b=b, d=d, limite_iteraciones=limite)
+    return EntradaBiseccion(expresion=expresion, extremo_izquierdo=a, extremo_derecho=b, decimales=d, limite_iteraciones=limite)
 
 
 def test_convergencia_clasica():
@@ -75,7 +75,7 @@ def test_validacion_precision():
 def test_validacion_entrada_intervalo_invalido():
     """a debe ser estrictamente menor que b."""
     with pytest.raises(ValueError):
-        validar_entrada({"expresion": "x", "a": 2.0, "b": 1.0, "d": 4})
+        validar_entrada({"expresion": "x", "extremo_izquierdo": 2.0, "extremo_derecho": 1.0, "decimales": 4})
 
 
 def test_error_relativo():
