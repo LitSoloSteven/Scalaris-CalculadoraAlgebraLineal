@@ -13,15 +13,15 @@ class EntradaBiseccion:
     """Expresión, intervalo, precisión decimal y límite de iteraciones validados."""
 
     expresion: str
-    a: float
-    b: float
-    d: int
+    extremo_izquierdo: float
+    extremo_derecho: float
+    decimales: int
     limite_iteraciones: int = LIMITE_ITERACIONES_DEFECTO
 
     @property
     def error_absoluto(self) -> Fraction:
-        """Umbral E = 10^(-d) en fracción exacta."""
-        return Fraction(1, 10 ** self.d)
+        """Umbral error_absoluto = 10^(-decimales) en fracción exacta."""
+        return Fraction(1, 10 ** self.decimales)
 
 
 @dataclass(frozen=True)
@@ -29,8 +29,8 @@ class IteracionBiseccion:
     """Registro inmutable de una iteración del método."""
 
     i: int
-    a: float
-    b: float
+    extremo_izquierdo: float
+    extremo_derecho: float
     c: float
     f_a: float
     f_b: float
@@ -50,7 +50,7 @@ class ResultadoBiseccion:
     mensaje: str
     aproximacion: float | None = None
     intervalo_final: tuple[float, float] | None = None
-    E: Fraction | None = None
+    error_absoluto: Fraction | None = None
     cota: float | None = None
     iteraciones: tuple[IteracionBiseccion, ...] = ()
     motivo_parada: str = ""
@@ -58,19 +58,19 @@ class ResultadoBiseccion:
 
 
 def validar_precision(valor) -> int:
-    """Rechaza d no entero, booleano o fuera de rango; devuelve el entero validado."""
+    """Rechaza decimales no entero, booleano o fuera de rango; devuelve el entero validado."""
     if isinstance(valor, bool) or not isinstance(valor, int):
         raise ValueError(
-            f"La precisión d debe ser un entero (recibido {type(valor).__name__}: {valor!r})."
+            f"La precisión decimales debe ser un entero (recibido {type(valor).__name__}: {valor!r})."
         )
     if valor < 0 or valor > D_MAXIMO:
-        raise ValueError(f"La precisión d debe estar entre 0 y {D_MAXIMO} (recibido {valor}).")
+        raise ValueError(f"La precisión decimales debe estar entre 0 y {D_MAXIMO} (recibido {valor}).")
     return valor
 
 
-def derivar_E(d: int) -> Fraction:
-    """Devuelve 10^(-d) como fracción exacta; lanza ValueError si d es inválido."""
-    precision = validar_precision(d)
+def derivar_E(decimales: int) -> Fraction:
+    """Devuelve 10^(-decimales) como fracción exacta; lanza ValueError si decimales es inválido."""
+    precision = validar_precision(decimales)
     return Fraction(1, 10 ** precision)
 
 
@@ -79,13 +79,13 @@ def validar_entrada(datos: dict) -> EntradaBiseccion:
     if not isinstance(datos, dict):
         raise ValueError("La entrada debe ser un diccionario con la expresion y el intervalo.")
     expresion = _validar_expresion(datos.get("expresion"))
-    a = _validar_extremo(datos.get("a"), "a")
-    b = _validar_extremo(datos.get("b"), "b")
-    if a >= b:
-        raise ValueError(f"El intervalo es inválido: a ({a}) debe ser menor que b ({b}).")
-    d = validar_precision(datos.get("d"))
+    extremo_izquierdo = _validar_extremo(datos.get("extremo_izquierdo"), "extremo_izquierdo")
+    extremo_derecho = _validar_extremo(datos.get("extremo_derecho"), "extremo_derecho")
+    if extremo_izquierdo >= extremo_derecho:
+        raise ValueError(f"El intervalo es inválido: extremo_izquierdo ({extremo_izquierdo}) debe ser menor que extremo_derecho ({extremo_derecho}).")
+    decimales = validar_precision(datos.get("decimales"))
     limite = _validar_limite(datos.get("limite_iteraciones"))
-    return EntradaBiseccion(expresion=expresion, a=a, b=b, d=d, limite_iteraciones=limite)
+    return EntradaBiseccion(expresion=expresion, extremo_izquierdo=extremo_izquierdo, extremo_derecho=extremo_derecho, decimales=decimales, limite_iteraciones=limite)
 
 
 def _validar_expresion(valor) -> str:
