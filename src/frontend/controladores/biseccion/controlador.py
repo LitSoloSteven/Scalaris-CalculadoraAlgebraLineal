@@ -23,7 +23,10 @@ def calcular_presentacion(captura: dict) -> dict:
 
 def entero_capturado(valor, etiqueta: str) -> int:
     """Convierte un campo entero sin truncar decimales; lanza ValueError si es inválido."""
-    numero = float(valor)
+    try:
+        numero = float(valor)
+    except (ValueError, TypeError, OverflowError) as error:
+        raise ValueError(f"{etiqueta} debe ser un entero.") from error
     if isinstance(valor, bool) or not math.isfinite(numero) or not numero.is_integer():
         raise ValueError(f"{etiqueta} debe ser un entero.")
     return int(numero)
@@ -47,11 +50,20 @@ def preparar_entrada(captura: dict):
         raise ValueError(f"Usa de 1 a {LIMITE_ITERACIONES_INTERFAZ} iteraciones en esta interfaz.")
     return validar_entrada({
         "expresion": str(captura.get("expresion", "")).replace("^", "**"),
-        "extremo_izquierdo": float(captura.get("extremo_izquierdo")),
-        "extremo_derecho": float(captura.get("extremo_derecho")),
+        "extremo_izquierdo": _capturar_extremo(captura.get("extremo_izquierdo"), "El extremo inferior a"),
+        "extremo_derecho": _capturar_extremo(captura.get("extremo_derecho"), "El extremo superior b"),
         "decimales": entero_capturado(captura.get("decimales"), "La precisión"),
         "limite_iteraciones": limite,
     })
+
+
+def _capturar_extremo(valor, etiqueta: str) -> float:
+    try:
+        if isinstance(valor, bool):
+            raise ValueError
+        return float(valor)
+    except (ValueError, TypeError, OverflowError) as error:
+        raise ValueError(f"{etiqueta} debe ser un número real. Usa un punto para los decimales.") from error
 
 
 def resolver_captura(captura: dict) -> dict:
@@ -60,6 +72,10 @@ def resolver_captura(captura: dict) -> dict:
         entrada = preparar_entrada(captura)
         resultado = biseccion(entrada)
         respuesta = asdict(resultado)
+        if respuesta["estado"] == "ERROR" and any(
+            texto in respuesta["mensaje"] for texto in ("math domain error", "expected a ", "out of range")
+        ):
+            respuesta["mensaje"] = "La función no es real en un punto del intervalo. Revisa su dominio."
         respuesta["error_absoluto"] = str(resultado.error_absoluto)
         respuesta["entrada"] = asdict(entrada)
         respuesta["tolerancia"] = float(entrada.error_absoluto)

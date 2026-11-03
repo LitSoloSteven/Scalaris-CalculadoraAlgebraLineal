@@ -116,6 +116,14 @@ def test_salto_sospechoso_deja_resultado_provisional():
     assert respuesta["muestra"]["huecos"]
 
 
+def test_errores_de_captura_en_castellano():
+    """Orienta sobre el campo incorrecto sin exponer errores de conversión de Python."""
+    respuesta = resolver_captura(captura(intervalo=("texto", "2")))
+    assert "extremo inferior a debe ser un número real" in respuesta["mensaje"]
+    assert "precisión debe ser un entero" in resolver_captura(captura(decimales=None))["mensaje"]
+    assert "no es real" in resolver_captura(captura("sqrt(x)", intervalo=("-1", "1")))["mensaje"]
+
+
 def test_estancamiento_no_se_presenta_como_exito():
     """Conserva el estado provisional cuando la representación impide reducir el intervalo."""
     respuesta = resolver_captura(captura("sin(x)", 15, ("1e16", "10000000000000004")))
