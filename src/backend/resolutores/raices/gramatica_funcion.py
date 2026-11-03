@@ -39,15 +39,21 @@ def _validar_nodo(nodo: ast.AST, profundidad: int) -> None:
     elif isinstance(nodo, ast.Name):
         if nodo.id != "x" and nodo.id not in CONSTANTES_REALES:
             raise ValueError(f"Nombre no permitido como valor: {nodo.id}. Las funciones requieren un argumento.")
-    elif isinstance(nodo, ast.BinOp) and isinstance(nodo.op, _OPERADORES):
-        _validar_nodo(nodo.left, profundidad + 1)
-        _validar_nodo(nodo.right, profundidad + 1)
+    elif isinstance(nodo, ast.BinOp):
+        _validar_binario(nodo, profundidad)
     elif isinstance(nodo, ast.UnaryOp) and isinstance(nodo.op, (ast.USub, ast.UAdd)):
         _validar_nodo(nodo.operand, profundidad + 1)
     elif isinstance(nodo, ast.Call):
         _validar_llamada(nodo, profundidad)
     else:
         raise ValueError("La expresión contiene una operación no permitida.")
+
+
+def _validar_binario(nodo: ast.BinOp, profundidad: int) -> None:
+    if not isinstance(nodo.op, _OPERADORES):
+        raise ValueError("La expresión contiene un operador no permitido.")
+    _validar_nodo(nodo.left, profundidad + 1)
+    _validar_nodo(nodo.right, profundidad + 1)
 
 
 def _validar_llamada(nodo: ast.Call, profundidad: int) -> None:

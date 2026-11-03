@@ -55,11 +55,17 @@ def _contiene_cero(nodo: ast.AST, extremos: tuple) -> bool:
     if isinstance(nodo, ast.BinOp) and isinstance(nodo.op, ast.Mult):
         return _contiene_cero(nodo.left, extremos) or _contiene_cero(nodo.right, extremos)
     if isinstance(nodo, ast.BinOp) and isinstance(nodo.op, ast.Pow):
-        exponente = _como_afin(nodo.right)
-        return exponente is not None and exponente[0] == 0 and exponente[1] > 0 and _contiene_cero(nodo.left, extremos)
+        return _potencia_contiene_cero(nodo, extremos)
     if isinstance(nodo, ast.Call) and nodo.func.id == "abs":
         return _contiene_cero(nodo.args[0], extremos)
     return False
+
+
+def _potencia_contiene_cero(nodo: ast.BinOp, extremos: tuple) -> bool:
+    exponente = _como_afin(nodo.right)
+    if exponente is None or exponente[0] != 0 or exponente[1] <= 0:
+        return False
+    return _contiene_cero(nodo.left, extremos)
 
 
 def _rango_afin(nodo: ast.AST, extremos: tuple) -> tuple | None:
@@ -94,9 +100,15 @@ def _combinar_afines(operador: ast.operator, izquierda: Afin | None, derecha: Af
         return _multiplicar_afines(izquierda, derecha)
     if isinstance(operador, ast.Div) and derecha[0] == 0 and derecha[1] != 0:
         return izquierda[0] / derecha[1], izquierda[1] / derecha[1]
-    if isinstance(operador, ast.Pow) and derecha == (0, 1):
-        return izquierda
-    if isinstance(operador, ast.Pow) and derecha == (0, 0):
+    if isinstance(operador, ast.Pow):
+        return _potencia_afin(izquierda, derecha)
+    return None
+
+
+def _potencia_afin(base: Afin, exponente: Afin) -> Afin | None:
+    if exponente == (0, 1):
+        return base
+    if exponente == (0, 0):
         return Fraction(0), Fraction(1)
     return None
 
