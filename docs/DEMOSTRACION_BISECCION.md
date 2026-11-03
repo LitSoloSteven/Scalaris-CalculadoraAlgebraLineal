@@ -91,4 +91,6 @@ Commits locales de implementación y revisión del backend: `24ba63c`, `3b8a505`
 
 ## Estado de entrega
 
-Frontend, backend y recorrido local implementados. Rama local: `feature/semana-12-biseccion-interfaz-integracion`; sin push, PR ni fusión. El flujo del equipo continúa con publicación, PR hacia `develop`, revisión de otro integrante y Squash and merge desde GitHub. Los planes temporales se eliminan al entregar. Roger debe coordinar la revisión del equipo, cotejar las fuentes originales y validar el encaje académico antes de cerrar LIT-23 o LIT-20. Los issues de Linear no se marcaron terminados; la aprobación docente de las sustituciones académicas sigue pendiente.
+Frontend, backend y recorrido integrados a `develop` mediante el [PR #95](https://github.com/LitSoloSteven/Scalaris-CalculadoraAlgebraLineal/pull/95), commit `4eb5794`. Se cerraron técnicamente LIT-21, LIT-22, LIT-23 y LIT-20 en Linear y sus equivalentes #88, #89, #90 y #87 en GitHub, conservando la evidencia de implementación y pruebas. El cotejo final de adjuntos originales, la aprobación docente de las sustituciones académicas y la exposición no se dan por realizados.
+
+El ajuste posterior que desactiva las coordenadas al pasar el puntero por la gráfica está aislado en `feature/semana-12-biseccion-interaccion`, creada desde `develop` actualizado, commit `b9a6180`. Se verificaron 98 pruebas del motor, evaluador y recorrido en esta rama. Los planes temporales se eliminaron al entregar.
