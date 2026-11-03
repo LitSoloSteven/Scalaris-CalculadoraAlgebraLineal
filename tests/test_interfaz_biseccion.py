@@ -1,0 +1,139 @@
+"""Regresión del recorrido de precisión y sus adaptadores de presentación."""
+import asyncio
+import json
+import math
+
+import pytest
+from nicegui import Client, core, run, ui
+
+from src.frontend.controladores.biseccion.controlador import resolver_captura, texto_tolerancia
+from src.frontend.controladores.biseccion.muestreo import muestrear_funcion
+from src.frontend.controladores.biseccion.presentacion import construir_pasos, filas_tabla
+from src.frontend.navegacion import ruta_de, pilar_de
+from src.frontend.vistas.biseccion.vista_biseccion import VistaBiseccion, calcular_presentacion
+from tests.comun_construccion_vistas import preparar_transporte, cerrar_cliente
+
+
+def captura(expresion="x^2 - 2", decimales=4, intervalo=("1", "2"), limite=100):
+    """Construye los valores crudos equivalentes a los campos de la interfaz."""
+    return {"expresion": expresion, "extremo_izquierdo": intervalo[0], "extremo_derecho": intervalo[1],
+            "decimales": decimales, "limite_iteraciones": limite}
+
+
+@pytest.mark.parametrize("decimales", [0, 2, 4, 6])
+def test_precision_efectiva_y_presentacion(decimales):
+    respuesta = calcular_presentacion(captura(decimales=decimales))
+    inferior, superior = respuesta["intervalo_final"]
+    assert respuesta["estado"] == "EXITO"
+    assert respuesta["tolerancia"] == 10 ** -decimales
+    assert superior - inferior < respuesta["tolerancia"]
+    assert inferior <= math.sqrt(2) <= superior
+    assert respuesta["cota"] == (superior - inferior) / 2
+    json.dumps(respuesta, allow_nan=False)
+
+
+def test_aumentar_precision_cambia_convergencia():
+    respuestas = [resolver_captura(captura(decimales=valor)) for valor in [2, 4, 6]]
+    assert [len(respuesta["iteraciones"]) for respuesta in respuestas] == [8, 15, 21]
+    assert "0.01" in texto_tolerancia(2)
+    assert "0.000001" in texto_tolerancia(6)
+
+
+@pytest.mark.parametrize("datos, estado", [
+    (captura("x", intervalo=("0", "2")), "EXITO"),
+    (captura("x", intervalo=("-1", "1")), "EXITO"),
+    (captura("x^2+1", intervalo=("-1", "1")), "SIN_CAMBIO_DE_SIGNO"),
+    (captura("1/x", intervalo=("-1", "1")), "ERROR"),
+    (captura("sqrt(x)", intervalo=("-1", "1")), "ERROR"),
+    (captura("sin()"), "ERROR"),
+    (captura("(-1)**0.5"), "ERROR"),
+    (captura("__import__('os')"), "ERROR"),
+    (captura(decimales=2.5), "ERROR"),
+    (captura(decimales=16), "ERROR"),
+    (captura(intervalo=("2", "1")), "ERROR"),
+    (captura(limite=501), "ERROR"),
+    (captura(decimales=6, limite=2), "PRECISION_NO_ALCANZADA"),
+    (captura("x - 10000000000000002", 15, ("10000000000000000", "10000000000000004")), "EXITO"),
+])
+def test_estados_controlados(datos, estado):
+    respuesta = resolver_captura(datos)
+    assert respuesta["estado"] == estado
+    if respuesta.get("motivo_parada") == "raiz_exacta":
+        assert "aritmética aproximada" in respuesta["aviso"]
+
+
+def test_traza_tabla_y_reproductor_comparten_valores():
+    respuesta = resolver_captura(captura())
+    pasos, grupos = construir_pasos(respuesta)
+    assert len(pasos) == len(respuesta["iteraciones"]) + 2
+    assert pasos[1].cuerpo == respuesta["iteraciones"][0]
+    assert "Se devuelve el punto medio" in pasos[-2].explicacion
+    assert filas_tabla(respuesta)[0]["error_relativo"] == "No aplica"
+    assert filas_tabla(respuesta, True)[0]["c"] == "1.5"
+    assert grupos[-1].indices_pasos == (len(pasos) - 1,)
+
+
+def test_raiz_en_extremo_tiene_planteamiento_y_cierre():
+    respuesta = resolver_captura(captura("x", intervalo=("0", "2")))
+    pasos, _ = construir_pasos(respuesta)
+    assert len(pasos) == 2
+    assert respuesta["aproximacion"] == 0
+
+
+def test_grafica_no_une_evaluaciones_invalidas():
+    muestra = muestrear_funcion({"expresion": "1/x", "extremo_izquierdo": -1, "extremo_derecho": 1})
+    assert muestra["huecos"]
+    assert muestra["x"][200] == 0
+    assert muestra["y"][200] is None
+
+
+def test_ejemplos_reproducibles_del_curso():
+    polinomio = resolver_captura(captura("x^4 - 5*x^3 + 0.5*x^2 - 11*x + 10", intervalo=("0.6", "1")))
+    assert [fila["c"] for fila in polinomio["iteraciones"][:3]] == pytest.approx([0.8, 0.7, 0.75])
+    assert polinomio["aproximacion"] == pytest.approx(0.763916015625)
+    potencia = resolver_captura(captura("x^10-1", intervalo=("0", "1.3")))
+    assert potencia["aproximacion"] == pytest.approx(1, abs=1e-4)
+
+
+def test_ruta_y_categoria():
+    assert ruta_de("biseccion") == "/utilidades/biseccion"
+    assert pilar_de("biseccion").identificador == "utilidades"
+
+
+def test_recorrido_edicion_y_resultados_obsoletos(monkeypatch):
+    async def comprobar():
+        monkeypatch.setattr(core, "script_mode", False)
+        cliente = Client(ui.page("/prueba_biseccion"))
+        preparar_transporte(monkeypatch, cliente)
+        vista = VistaBiseccion()
+        try:
+            with cliente:
+                vista.construir()
+                vista.cargar_captura(captura())
+                await vista.resolver()
+                assert vista.ultimo_resultado["estado"] == "EXITO"
+                assert vista.reproductor_pasos is not None
+                assert vista.obtener_contexto_ia().resultado is not None
+                vista.expresion.set_value("x^2 - 3")
+                vista._editar()
+                assert vista.ultimo_resultado is None
+                assert vista.reproductor_pasos is None
+                assert vista.obtener_contexto_ia().resultado is None
+                await _comprobar_carrera(monkeypatch, vista)
+                vista.limpiar_todo()
+                assert vista.esta_completamente_vacio()
+        finally:
+            await cerrar_cliente(cliente, [vista])
+    asyncio.run(comprobar())
+
+
+async def _comprobar_carrera(monkeypatch, vista):
+    async def editar_durante_calculo(funcion, datos):
+        respuesta = funcion(datos)
+        vista.decimales.set_value(6)
+        vista._editar()
+        return respuesta
+    monkeypatch.setattr(run, "io_bound", editar_durante_calculo)
+    await vista.resolver()
+    assert vista.ultimo_resultado is None
+    assert vista.obtener_contexto_ia().resultado is None
