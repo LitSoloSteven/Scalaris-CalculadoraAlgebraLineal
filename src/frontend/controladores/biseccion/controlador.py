@@ -3,10 +3,10 @@ import math
 from dataclasses import asdict
 
 from src.backend.resolutores.raices.biseccion import biseccion
-from src.backend.resolutores.raices.contrato_biseccion import validar_entrada, derivar_E
+from src.backend.resolutores.raices.contrato_biseccion import validar_entrada, derivar_E, LIMITE_ITERACIONES_MAXIMO
 from .muestreo import muestrear_funcion
 
-LIMITE_ITERACIONES_INTERFAZ = 500
+LIMITE_ITERACIONES_INTERFAZ = LIMITE_ITERACIONES_MAXIMO
 
 
 def calcular_presentacion(captura: dict) -> dict:
@@ -72,10 +72,6 @@ def resolver_captura(captura: dict) -> dict:
         entrada = preparar_entrada(captura)
         resultado = biseccion(entrada)
         respuesta = asdict(resultado)
-        if respuesta["estado"] == "ERROR" and any(
-            texto in respuesta["mensaje"] for texto in ("math domain error", "expected a ", "out of range")
-        ):
-            respuesta["mensaje"] = "La función no es real en un punto del intervalo. Revisa su dominio."
         respuesta["error_absoluto"] = str(resultado.error_absoluto)
         respuesta["entrada"] = asdict(entrada)
         respuesta["tolerancia"] = float(entrada.error_absoluto)
@@ -95,7 +91,7 @@ def _comprobar_salida(respuesta: dict) -> None:
     if not all(math.isfinite(valor) for valor in valores):
         raise ValueError("El cálculo excede la capacidad numérica. Reduce el intervalo o la magnitud de f(x).")
     if respuesta["motivo_parada"] == "raiz_exacta":
-        respuesta["aviso"] = "El motor evaluó f(c) como cero en aritmética aproximada; esto no certifica una raíz exacta simbólica."
+        respuesta["aviso"] = respuesta["mensaje"]
     elif respuesta["estado"] == "EXITO":
         inferior, superior = respuesta["intervalo_final"]
         if superior - inferior >= respuesta["tolerancia"]:

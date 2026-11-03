@@ -4,7 +4,7 @@ from nicegui import ui
 from src.frontend.componentes.copia_resultado import renderizar_copia_resultado
 from src.frontend.componentes.glosa_foco import crear_accion_explicacion
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos
-from src.frontend.controladores.biseccion.presentacion import COLUMNAS, numero, motivo, filas_tabla, construir_pasos
+from src.frontend.controladores.biseccion.presentacion import COLUMNAS, numero, motivo, filas_tabla, construir_pasos, valor_columna
 from .figura import crear_figura
 from .captura import GUIA_CONTINUIDAD
 
@@ -74,7 +74,7 @@ def _reproductor(vista, respuesta: dict) -> None:
         if paso.cuerpo:
             with contenedor:
                 for clave, etiqueta in COLUMNAS:
-                    ui.label(f"{etiqueta}: {numero(paso.cuerpo[clave], True)}").classes("biseccion-numero text-sm")
+                    ui.label(f"{etiqueta}: {valor_columna(paso.cuerpo, clave, True)}").classes("biseccion-numero text-sm")
 
     vista.reproductor_pasos = ReproductorPasos(pasos, grupos, renderizar_cuerpo, "biseccion", {
         "titulo": "Procedimiento paso a paso", "al_explicar": crear_accion_explicacion(vista.panel_ia, pasos),

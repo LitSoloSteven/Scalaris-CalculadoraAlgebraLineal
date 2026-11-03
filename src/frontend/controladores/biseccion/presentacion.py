@@ -11,6 +11,7 @@ MOTIVOS = {
     "ancho_menor_que_E": "Ancho del intervalo menor que E",
     "raiz_exacta": "Evaluación igual a cero (aritmética aproximada)",
     "limite_iteraciones": "Límite de iteraciones; precisión no alcanzada",
+    "estancamiento": "Límite de representación numérica; precisión no alcanzada",
 }
 
 
@@ -23,8 +24,16 @@ def numero(valor, completo: bool = False) -> str:
 
 def filas_tabla(respuesta: dict, completo: bool = False) -> list[dict]:
     """Entrega filas de texto con todas las métricas originales de la traza."""
-    return [{clave: numero(fila[clave], completo) for clave, _ in COLUMNAS}
+    return [{clave: valor_columna(fila, clave, completo) for clave, _ in COLUMNAS}
             for fila in respuesta["iteraciones"]]
+
+
+def valor_columna(fila: dict, clave: str, completo: bool = False) -> str:
+    """Devuelve una métrica legible; en inspección usa el porcentaje numérico del motor."""
+    relativo = fila.get("error_relativo_valor")
+    if clave == "error_relativo" and completo and relativo is not None:
+        return numero(relativo, True) + "%"
+    return numero(fila[clave], completo)
 
 
 def motivo(respuesta: dict) -> str:
