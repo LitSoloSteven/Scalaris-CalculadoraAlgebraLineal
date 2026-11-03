@@ -65,7 +65,7 @@ No se añadió exportación PDF: su registro actual solo acepta las herramientas
 - **VERIFICADO con alcance limitado:** ampliación mediante CSS `zoom:2` a viewport 1280 px, sin desborde. **NO PROBADO:** zoom nativo del navegador al 200%, lector de pantalla, recorrido exhaustivo de todos los controles, rendimiento con CPU limitada y envío real a OpenRouter.
 - Revisión de seguridad, bugs y mantenibilidad: **NO DELEGADO**, tres pasadas de lectura y comprobación realizadas por el agente principal. Se corrigieron figura inicial, sincronización de tema, desplazamiento de tabla, mensajes en castellano y complejidad. No se añadieron dependencias ni se modificó backend.
 
-Las primeras pruebas detectaron contratos fijados al catálogo anterior. Se actualizaron únicamente las listas/cantidades afectadas: dos a tres utilidades, trece a catorce elementos y tarjetas, y una hoja CSS adicional en el orden de carga. No se eliminó ni debilitó ninguna prueba. Las modificaciones constan en Git y en el plan.
+Las primeras pruebas detectaron contratos fijados al catálogo anterior. Se actualizaron únicamente las listas/cantidades afectadas: dos a tres utilidades, trece a catorce elementos y tarjetas, y una hoja CSS adicional en el orden de carga. No se eliminó ni debilitó ninguna prueba. Las modificaciones constan en Git.
 
 ### MANUAL DE REQUERIMIENTOS PARA BACKEND
 
@@ -94,4 +94,4 @@ Requisitos verificables:
 
 ## Estado de entrega
 
-Frontend y recorrido local implementados. Rama local: `feature/semana-12-biseccion-interfaz-integracion`; sin push, PR ni fusión. El flujo del equipo continúa con publicación, PR hacia `develop`, revisión de otro integrante y Squash and merge desde GitHub. El plan conserva el estado de integración pendiente. Roger debe coordinar las correcciones matemáticas, cotejar originales y validar el encaje académico antes de cerrar LIT-23 o LIT-20. Los issues de Linear no se marcaron terminados.
+Frontend y recorrido local implementados. Rama local: `feature/semana-12-biseccion-interfaz-integracion`; sin push, PR ni fusión. El flujo del equipo continúa con publicación, PR hacia `develop`, revisión de otro integrante y Squash and merge desde GitHub. El plan temporal se eliminó tras la entrega; los pendientes de integración se conservan en este documento. Roger debe coordinar las correcciones matemáticas, cotejar originales y validar el encaje académico antes de cerrar LIT-23 o LIT-20. Los issues de Linear no se marcaron terminados.
