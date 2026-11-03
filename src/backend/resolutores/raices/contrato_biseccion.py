@@ -2,9 +2,11 @@
 import math
 from dataclasses import dataclass, field
 from fractions import Fraction
+from typing import TypedDict
 
 D_MAXIMO = 15
 LIMITE_ITERACIONES_DEFECTO = 100
+LIMITE_ITERACIONES_MAXIMO = 500
 LONGITUD_MAXIMA_EXPRESION = 512
 
 
@@ -40,6 +42,15 @@ class IteracionBiseccion:
     residuo: float
     error_relativo: str
     explicacion: str
+    error_relativo_valor: float | None = None
+
+
+class MetricasBiseccion(TypedDict, total=False):
+    """Magnitudes y condición de continuidad publicadas por el motor numérico."""
+
+    iteraciones_totales: int
+    residuo_final: float
+    continuidad: str
 
 
 @dataclass(frozen=True)
@@ -54,7 +65,8 @@ class ResultadoBiseccion:
     cota: float | None = None
     iteraciones: tuple[IteracionBiseccion, ...] = ()
     motivo_parada: str = ""
-    metricas: dict = field(default_factory=dict)
+    metricas: MetricasBiseccion = field(default_factory=dict)
+    codigo_diagnostico: str = ""
 
 
 def validar_precision(valor) -> int:
@@ -101,7 +113,10 @@ def _validar_extremo(valor, nombre: str) -> float:
         raise ValueError(f"El extremo {nombre} no puede ser booleano.")
     if not isinstance(valor, (int, float)):
         raise ValueError(f"El extremo {nombre} debe ser numérico (recibido {valor!r}).")
-    numero = float(valor)
+    try:
+        numero = float(valor)
+    except OverflowError as error:
+        raise ValueError(f"El extremo {nombre} excede la capacidad numérica.") from error
     if not math.isfinite(numero):
         raise ValueError(f"El extremo {nombre} debe ser finito (recibido {valor!r}).")
     return numero
@@ -110,8 +125,8 @@ def _validar_extremo(valor, nombre: str) -> float:
 def _validar_limite(valor) -> int:
     if valor is None:
         return LIMITE_ITERACIONES_DEFECTO
-    if isinstance(valor, bool) or not isinstance(valor, int) or valor <= 0:
+    if isinstance(valor, bool) or not isinstance(valor, int) or not 1 <= valor <= LIMITE_ITERACIONES_MAXIMO:
         raise ValueError(
-            f"El límite de iteraciones debe ser un entero positivo (recibido {valor!r})."
+            f"El límite de iteraciones debe ser un entero entre 1 y {LIMITE_ITERACIONES_MAXIMO} (recibido {valor!r})."
         )
     return valor
