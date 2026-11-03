@@ -38,16 +38,20 @@ def _resumen(respuesta: dict) -> None:
         texto_aproximacion = f"{respuesta['aproximacion']:.{decimales}f}"
         ui.label(f"x ≈ {texto_aproximacion}").classes("biseccion-aproximacion texto-principal")
         ui.label(motivo(respuesta)).classes("texto-acento" if respuesta["estado"] == "EXITO" else "texto-advertencia")
-        with ui.element("div").classes("biseccion-metricas"):
-            for etiqueta, valor in _metricas(respuesta):
-                with ui.column().classes("gap-1 min-w-0"):
-                    ui.label(etiqueta).classes("text-sm texto-secundario")
-                    ui.label(valor).classes("biseccion-numero texto-principal")
+        _mostrar_metricas(respuesta)
         ui.label("El redondeo de presentación no determina la convergencia. Inspecciona hasta 17 cifras en la tabla.").classes("text-sm texto-secundario")
         if respuesta.get("aviso"):
             ui.label(respuesta["aviso"]).classes("text-sm texto-advertencia")
         renderizar_copia_resultado({"estado": respuesta["estado"], "solucion": f"x ≈ {texto_aproximacion}\n" +
                                    "\n".join(f"{etiqueta}: {valor}" for etiqueta, valor in _metricas(respuesta)) + "\n" + motivo(respuesta)})
+
+
+def _mostrar_metricas(respuesta: dict) -> None:
+    with ui.element("div").classes("biseccion-metricas"):
+        for etiqueta, valor in _metricas(respuesta):
+            with ui.column().classes("gap-1 min-w-0"):
+                ui.label(etiqueta).classes("text-sm texto-secundario")
+                ui.label(valor).classes("biseccion-numero texto-principal")
 
 
 def _metricas(respuesta: dict) -> tuple:
@@ -63,8 +67,9 @@ def _reproductor(vista, respuesta: dict) -> None:
     pasos, grupos = construir_pasos(respuesta)
 
     def renderizar_cuerpo(paso, contenedor) -> None:
+        """Actualiza la figura del paso y muestra sus magnitudes internas en texto."""
         if not vista.grafica.is_deleted:
-            vista.grafica.update_figure(crear_figura(respuesta, respuesta["muestra"], paso.cuerpo))
+            vista.grafica.update_figure(crear_figura(respuesta, respuesta["muestra"], paso.cuerpo, paso.tipo == "planteamiento"))
         if paso.cuerpo:
             with contenedor:
                 for clave, etiqueta in COLUMNAS:
@@ -86,4 +91,5 @@ def _tabla(respuesta: dict) -> None:
         with ui.element("div").classes("biseccion-tabla w-full").props('tabindex=0 role=region aria-label="Tabla de iteraciones con desplazamiento horizontal"'):
             tabla = ui.table(columns=[{"name": clave, "label": etiqueta, "field": clave, "align": "left"}
                                       for clave, etiqueta in COLUMNAS], rows=filas_tabla(respuesta), row_key="i", pagination=15).classes("w-full")
+            tabla.props('rows-per-page-label="Filas por página" :pagination-label="(inicio, fin, total) => inicio + \'-\' + fin + \' de \' + total"')
         interruptor.on_value_change(lambda evento: tabla.update_rows(filas_tabla(respuesta, bool(evento.value))))

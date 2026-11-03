@@ -5,9 +5,11 @@ from src.frontend.tema import COLOR_TRANSPARENTE, PALETA_GRAFICOS, COLOR_SOLUCIO
 from src.frontend.vistas.geometria._colores_figuras import aplicar_colores_figura
 
 
-def crear_figura(respuesta: dict, muestra: dict, fila: dict | None = None) -> go.Figure:
+def crear_figura(respuesta: dict, muestra: dict, fila: dict | None = None, inicial: bool = False) -> go.Figure:
     """Construye una figura sin unir huecos, con intervalo y aproximación rotulados."""
     entrada = respuesta["entrada"]
+    if inicial:
+        respuesta = {**respuesta, "intervalo_final": None, "aproximacion": None}
     inferior, superior = (fila["extremo_izquierdo"], fila["extremo_derecho"]) if fila else (
         respuesta.get("intervalo_final") or (entrada["extremo_izquierdo"], entrada["extremo_derecho"]))
     medio = fila["c"] if fila else respuesta.get("aproximacion")

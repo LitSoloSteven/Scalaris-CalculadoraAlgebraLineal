@@ -22,6 +22,7 @@ def captura(expresion="x^2 - 2", decimales=4, intervalo=("1", "2"), limite=100):
 
 @pytest.mark.parametrize("decimales", [0, 2, 4, 6])
 def test_precision_efectiva_y_presentacion(decimales):
+    """Comprueba tolerancia, encierro de la raíz y serialización de valores finitos."""
     respuesta = calcular_presentacion(captura(decimales=decimales))
     inferior, superior = respuesta["intervalo_final"]
     assert respuesta["estado"] == "EXITO"
@@ -33,6 +34,7 @@ def test_precision_efectiva_y_presentacion(decimales):
 
 
 def test_aumentar_precision_cambia_convergencia():
+    """Verifica que d modifica iteraciones además del texto presentado."""
     respuestas = [resolver_captura(captura(decimales=valor)) for valor in [2, 4, 6]]
     assert [len(respuesta["iteraciones"]) for respuesta in respuestas] == [8, 15, 21]
     assert "0.01" in texto_tolerancia(2)
@@ -56,6 +58,7 @@ def test_aumentar_precision_cambia_convergencia():
     (captura("x - 10000000000000002", 15, ("10000000000000000", "10000000000000004")), "EXITO"),
 ])
 def test_estados_controlados(datos, estado):
+    """Verifica errores de captura, evaluador y límite sin excepciones en la vista."""
     respuesta = resolver_captura(datos)
     assert respuesta["estado"] == estado
     if respuesta.get("motivo_parada") == "raiz_exacta":
@@ -63,6 +66,7 @@ def test_estados_controlados(datos, estado):
 
 
 def test_traza_tabla_y_reproductor_comparten_valores():
+    """Compara las magnitudes del motor con la tabla y la secuencia didáctica."""
     respuesta = resolver_captura(captura())
     pasos, grupos = construir_pasos(respuesta)
     assert len(pasos) == len(respuesta["iteraciones"]) + 2
@@ -74,6 +78,7 @@ def test_traza_tabla_y_reproductor_comparten_valores():
 
 
 def test_raiz_en_extremo_tiene_planteamiento_y_cierre():
+    """Conserva un procedimiento explicable cuando no se requieren particiones."""
     respuesta = resolver_captura(captura("x", intervalo=("0", "2")))
     pasos, _ = construir_pasos(respuesta)
     assert len(pasos) == 2
@@ -81,6 +86,7 @@ def test_raiz_en_extremo_tiene_planteamiento_y_cierre():
 
 
 def test_grafica_no_une_evaluaciones_invalidas():
+    """Mantiene un hueco explícito en la singularidad de la función muestreada."""
     muestra = muestrear_funcion({"expresion": "1/x", "extremo_izquierdo": -1, "extremo_derecho": 1})
     assert muestra["huecos"]
     assert muestra["x"][200] == 0
@@ -88,6 +94,7 @@ def test_grafica_no_une_evaluaciones_invalidas():
 
 
 def test_ejemplos_reproducibles_del_curso():
+    """Recalcula las primeras filas del libro y la potencia décima de referencia."""
     polinomio = resolver_captura(captura("x^4 - 5*x^3 + 0.5*x^2 - 11*x + 10", intervalo=("0.6", "1")))
     assert [fila["c"] for fila in polinomio["iteraciones"][:3]] == pytest.approx([0.8, 0.7, 0.75])
     assert polinomio["aproximacion"] == pytest.approx(0.763916015625)
@@ -96,12 +103,15 @@ def test_ejemplos_reproducibles_del_curso():
 
 
 def test_ruta_y_categoria():
+    """Comprueba la ubicación canónica de la herramienta numérica."""
     assert ruta_de("biseccion") == "/utilidades/biseccion"
     assert pilar_de("biseccion").identificador == "utilidades"
 
 
 def test_recorrido_edicion_y_resultados_obsoletos(monkeypatch):
+    """Ejercita cálculo, edición, limpieza y carrera dentro de un cliente NiceGUI."""
     async def comprobar():
+        """Construye la vista y comprueba su contrato de vigencia sin red."""
         monkeypatch.setattr(core, "script_mode", False)
         cliente = Client(ui.page("/prueba_biseccion"))
         preparar_transporte(monkeypatch, cliente)
@@ -129,6 +139,7 @@ def test_recorrido_edicion_y_resultados_obsoletos(monkeypatch):
 
 async def _comprobar_carrera(monkeypatch, vista):
     async def editar_durante_calculo(funcion, datos):
+        """Simula una captura nueva mientras se resuelve la petición anterior."""
         respuesta = funcion(datos)
         vista.decimales.set_value(6)
         vista._editar()
