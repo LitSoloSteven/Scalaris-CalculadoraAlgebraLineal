@@ -94,4 +94,4 @@ Requisitos verificables:
 
 ## Estado de entrega
 
-Frontend y recorrido local implementados. Rama local: `codex/biseccion-interfaz-integracion`; sin push, PR ni fusión. El plan conserva el estado de integración pendiente. Roger debe coordinar las correcciones matemáticas, cotejar originales y validar el encaje académico antes de cerrar LIT-23 o LIT-20. Los issues de Linear no se marcaron terminados.
+Frontend y recorrido local implementados. Rama local: `feature/semana-12-biseccion-interfaz-integracion`; sin push, PR ni fusión. El flujo del equipo continúa con publicación, PR hacia `develop`, revisión de otro integrante y Squash and merge desde GitHub. El plan conserva el estado de integración pendiente. Roger debe coordinar las correcciones matemáticas, cotejar originales y validar el encaje académico antes de cerrar LIT-23 o LIT-20. Los issues de Linear no se marcaron terminados.
