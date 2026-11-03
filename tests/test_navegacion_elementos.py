@@ -25,7 +25,7 @@ def test_elementos_por_pilar_en_orden():
     elementos_visualizador = elementos_navegacion("visualizador")
     assert [elemento.clave for elemento in elementos_visualizador] == ["vis:rectas-planos", "vis:vectores", "vis:combinacion"]
     elementos_utilidades = elementos_navegacion("utilidades")
-    assert [elemento.clave for elemento in elementos_utilidades] == ["bases", "romanos"]
+    assert [elemento.clave for elemento in elementos_utilidades] == ["bases", "romanos", "biseccion"]
     assert elementos_navegacion("desconocido") == ()
 
 
@@ -35,8 +35,8 @@ def test_claves_unicas_entre_pilares():
     for pilar in ("algebra", "visualizador", "utilidades"):
         for elemento in elementos_navegacion(pilar):
             claves.append(elemento.clave)
-    assert len(claves) == 13
-    assert len(set(claves)) == 13
+    assert len(claves) == 14
+    assert len(set(claves)) == 14
 
 
 def test_enlaces_validos_y_etiquetas_completas():

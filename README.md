@@ -220,6 +220,8 @@ python -m compileall -q src tests
 
 La revisión visual debe incluir los tres temas, una ventana de 320 píxeles de ancho, zoom al 200 %, navegación con teclado y movimiento reducido. Comprueba las cuatro operaciones de Vectores, los dos métodos de Determinantes y las tres escenas del visualizador; revisa que las fórmulas y tablas se puedan desplazar sin ocultar controles.
 
+Las verificaciones con Playwright pueden generar capturas, instantáneas de página y registros en `.playwright-mcp/`. Esta carpeta contiene evidencia local temporal, está excluida mediante `.gitignore` y no debe publicarse en el repositorio.
+
 ## Participantes
 
 - Steven Cuadra
