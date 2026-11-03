@@ -6,11 +6,12 @@ import math
 import pytest
 from nicegui import Client, core, run, ui
 
-from src.frontend.controladores.biseccion.controlador import resolver_captura, texto_tolerancia
+from src.frontend.controladores.biseccion.controlador import calcular_presentacion, resolver_captura, texto_tolerancia
 from src.frontend.controladores.biseccion.muestreo import muestrear_funcion
 from src.frontend.controladores.biseccion.presentacion import construir_pasos, filas_tabla
 from src.frontend.navegacion import ruta_de, pilar_de
-from src.frontend.vistas.biseccion.vista_biseccion import VistaBiseccion, calcular_presentacion
+from src.frontend.vistas.biseccion.vista_biseccion import VistaBiseccion
+from src.frontend.vistas.biseccion.figura import crear_figura
 from tests.comun_construccion_vistas import preparar_transporte, cerrar_cliente
 
 
@@ -106,6 +107,31 @@ def test_ruta_y_categoria():
     """Comprueba la ubicación canónica de la herramienta numérica."""
     assert ruta_de("biseccion") == "/utilidades/biseccion"
     assert pilar_de("biseccion").identificador == "utilidades"
+
+
+def test_salto_sospechoso_deja_resultado_provisional():
+    """No anuncia una raíz cuando el muestreo observa un posible polo entre muestras."""
+    respuesta = calcular_presentacion(captura("1/(x-0.1234)", intervalo=("-1", "1")))
+    assert respuesta["estado"] == "CONTINUIDAD_NO_VERIFICADA"
+    assert respuesta["muestra"]["huecos"]
+
+
+def test_estancamiento_no_se_presenta_como_exito():
+    """Conserva el estado provisional cuando la representación impide reducir el intervalo."""
+    respuesta = resolver_captura(captura("sin(x)", 15, ("1e16", "10000000000000004")))
+    assert respuesta["estado"] == "PRECISION_NO_ALCANZADA"
+    assert respuesta["intervalo_final"][1] - respuesta["intervalo_final"][0] > respuesta["tolerancia"]
+
+
+def test_figura_del_planteamiento_y_particion():
+    """Comprueba intervalo inicial, punto medio y huecos sin unir en el gráfico."""
+    respuesta = calcular_presentacion(captura())
+    figura = crear_figura(respuesta, respuesta["muestra"], inicial=True)
+    assert list(figura.data[1].x) == [1, 2]
+    assert len(figura.data) == 2
+    figura = crear_figura(respuesta, respuesta["muestra"], respuesta["iteraciones"][0])
+    assert list(figura.data[2].x) == [1.5]
+    assert figura.data[0].connectgaps is False
 
 
 def test_recorrido_edicion_y_resultados_obsoletos(monkeypatch):
