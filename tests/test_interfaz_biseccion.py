@@ -110,10 +110,10 @@ def test_ruta_y_categoria():
 
 
 def test_salto_sospechoso_deja_resultado_provisional():
-    """No anuncia una raíz cuando el muestreo observa un posible polo entre muestras."""
+    """No anuncia una raíz cuando el motor verifica un polo entre las muestras."""
     respuesta = calcular_presentacion(captura("1/(x-0.1234)", intervalo=("-1", "1")))
-    assert respuesta["estado"] == "CONTINUIDAD_NO_VERIFICADA"
-    assert respuesta["muestra"]["huecos"]
+    assert respuesta["estado"] == "ERROR"
+    assert respuesta["codigo_diagnostico"] == "SINGULARIDAD_DETECTADA"
 
 
 def test_errores_de_captura_en_castellano():
