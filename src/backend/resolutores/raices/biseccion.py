@@ -3,7 +3,7 @@ import math
 from collections.abc import Callable
 from dataclasses import asdict
 
-from .aritmetica_biseccion import ancho_intervalo, cota_intervalo, punto_medio
+from .aritmetica_biseccion import cota_intervalo, punto_medio
 from .contrato_biseccion import EntradaBiseccion, IteracionBiseccion, ResultadoBiseccion, validar_entrada
 from .dominio_intervalo import comprobar_dominio_intervalo
 from .evaluador_funcion import compilar, evaluar

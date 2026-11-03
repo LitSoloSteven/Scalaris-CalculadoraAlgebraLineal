@@ -3,7 +3,7 @@ import ast
 import math
 from collections.abc import Callable
 
-from src.backend.excepciones import ErrorDominio
+from src.backend.excepciones import ErrorDominio, ErrorNoFinito
 from .errores_numericos import ErrorCapacidadNumerica
 from .gramatica_funcion import FUNCIONES_REALES
 
@@ -55,7 +55,7 @@ def ejecutar_operacion(operacion: Callable[[], float]) -> float:
     except OverflowError as error:
         raise ErrorCapacidadNumerica("Desbordamiento numérico al evaluar la función.") from error
     except (TypeError, ValueError) as error:
-        if isinstance(error, (ErrorDominio, ErrorCapacidadNumerica)):
+        if isinstance(error, (ErrorDominio, ErrorNoFinito)):
             raise
         raise ErrorDominio("La función no es real en un punto del intervalo.") from error
 

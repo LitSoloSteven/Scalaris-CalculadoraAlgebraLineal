@@ -66,3 +66,12 @@ def test_limites_de_expresion_y_argumento():
         compilar("sin(" * 34 + "x" + ")" * 34)
     with pytest.raises(ErrorNoFinito):
         evaluar(compilar("x"), math.inf)
+
+
+def test_evaluar_preserva_errores_numericos_del_callable():
+    """Una función compatible mantiene su excepción de capacidad sin reclasificarse como dominio."""
+    def funcion(valor):
+        """Simula una función que detecta un valor no representable."""
+        raise ErrorNoFinito("Valor no representable.")
+    with pytest.raises(ErrorNoFinito):
+        evaluar(funcion, 1)
