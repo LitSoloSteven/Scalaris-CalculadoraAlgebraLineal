@@ -23,7 +23,7 @@ def crear_figura(respuesta: dict, muestra: dict, fila: dict | None = None, inici
                                    marker=dict(color=COLOR_SOLUCION, size=11, symbol="diamond")))
     figura.update_layout(paper_bgcolor=COLOR_TRANSPARENTE, plot_bgcolor=COLOR_TRANSPARENTE,
                          margin=dict(l=40, r=15, t=25, b=40), height=340,
-                         legend=dict(orientation="h", y=-0.25), uirevision="biseccion",
+                         legend=dict(orientation="h", y=-0.25), uirevision="biseccion", hovermode=False,
                          xaxis_title="x", yaxis_title="f(x)", font_family="Space Grotesk, sans-serif")
     figura.update_xaxes(zeroline=True)
     figura.update_yaxes(zeroline=True)
