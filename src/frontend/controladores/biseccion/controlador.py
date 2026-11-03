@@ -4,8 +4,21 @@ from dataclasses import asdict
 
 from src.backend.resolutores.raices.biseccion import biseccion
 from src.backend.resolutores.raices.contrato_biseccion import validar_entrada, derivar_E
+from .muestreo import muestrear_funcion
 
 LIMITE_ITERACIONES_INTERFAZ = 500
+
+
+def calcular_presentacion(captura: dict) -> dict:
+    """Resuelve y prepara un muestreo orientativo sin bloquear el hilo de interfaz."""
+    respuesta = resolver_captura(captura)
+    if respuesta["estado"] != "ERROR":
+        respuesta["muestra"] = muestrear_funcion(respuesta["entrada"])
+        if respuesta["muestra"]["huecos"] and respuesta["estado"] == "EXITO":
+            respuesta["estado"] = "CONTINUIDAD_NO_VERIFICADA"
+            respuesta["mensaje"] = "La gráfica contiene evaluaciones inválidas o saltos pronunciados. Revisa la continuidad; la aproximación es provisional."
+            respuesta["aviso"] = respuesta["mensaje"]
+    return respuesta
 
 
 def entero_capturado(valor, etiqueta: str) -> int:

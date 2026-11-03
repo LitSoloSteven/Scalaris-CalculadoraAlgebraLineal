@@ -1,10 +1,12 @@
 """Muestreo acotado para dibujar funciones, sin certificar continuidad."""
 import math
+from statistics import median
 
 from src.backend.excepciones import ErrorDominio, ErrorNoFinito
 from src.backend.resolutores.raices.evaluador_funcion import compilar, evaluar
 
 MUESTRAS_GRAFICA = 401
+FACTOR_SALTO_SOSPECHOSO = 20
 
 
 def muestrear_funcion(entrada: dict) -> dict:
@@ -14,13 +16,21 @@ def muestrear_funcion(entrada: dict) -> dict:
     abscisas = [inferior * (1 - indice / (MUESTRAS_GRAFICA - 1))
                 + superior * (indice / (MUESTRAS_GRAFICA - 1)) for indice in range(MUESTRAS_GRAFICA)]
     ordenadas = [_evaluar_grafica(funcion, abscisa) for abscisa in abscisas]
-    # Un salto con cambio de signo y crecimiento local fuerte puede ocultar un polo entre muestras.
-    for indice in range(1, len(ordenadas) - 1):
-        anterior, actual, siguiente = ordenadas[indice - 1:indice + 2]
-        if None not in (anterior, actual, siguiente) and anterior * actual < 0:
-            if abs(actual - anterior) > 8 * max(abs(siguiente - actual), 1e-300):
-                ordenadas[indice] = None
+    _interrumpir_saltos(ordenadas)
     return {"x": abscisas, "y": ordenadas, "huecos": any(valor is None for valor in ordenadas)}
+
+
+def _interrumpir_saltos(ordenadas: list) -> None:
+    magnitudes = [abs(valor) for valor in ordenadas if valor is not None]
+    referencia = median(magnitudes) if magnitudes else 0
+    originales = tuple(ordenadas)
+    for indice in range(1, len(originales)):
+        anterior, actual = originales[indice - 1:indice + 1]
+        if anterior is None or actual is None:
+            continue
+        cambia_signo = math.copysign(1, anterior) != math.copysign(1, actual)
+        if cambia_signo and min(abs(anterior), abs(actual)) > FACTOR_SALTO_SOSPECHOSO * referencia:
+            ordenadas[indice] = None
 
 
 def _evaluar_grafica(funcion, abscisa: float) -> float | None:

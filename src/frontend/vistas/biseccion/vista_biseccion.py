@@ -6,8 +6,7 @@ from nicegui import ui
 from src.ai.contexto import ContextoIA, EstadoContexto
 from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.panel_ia import PanelIA
-from src.frontend.controladores.biseccion.controlador import resolver_captura, texto_tolerancia
-from src.frontend.controladores.biseccion.muestreo import muestrear_funcion
+from src.frontend.controladores.biseccion.controlador import calcular_presentacion, texto_tolerancia
 from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
 from src.frontend.controladores.sesion_matricial import invalidar_resultado, actualizar_contexto, registrar_calculo
 from src.frontend.navegacion import ruta_de
@@ -15,14 +14,6 @@ from .captura import construir_captura
 from .resultado import mostrar_resultado
 
 registro = logging.getLogger(__name__)
-
-
-def calcular_presentacion(captura: dict) -> dict:
-    """Resuelve y prepara el muestreo en el trabajador sin bloquear la interfaz."""
-    respuesta = resolver_captura(captura)
-    if respuesta["estado"] != "ERROR":
-        respuesta["muestra"] = muestrear_funcion(respuesta["entrada"])
-    return respuesta
 
 
 class VistaBiseccion:
