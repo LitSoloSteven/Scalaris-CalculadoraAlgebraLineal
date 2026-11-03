@@ -53,17 +53,6 @@ _PILARES_POR_IDENTIFICADOR: dict[str, Pilar] = {pilar.identificador: pilar for p
 
 HERRAMIENTAS: tuple[Herramienta, ...] = (
     Herramienta(
-        identificador="biseccion",
-        nombre="Método de bisección",
-        descriptor="Raíces con precisión configurable",
-        ruta="/utilidades/biseccion",
-        identificador_pilar="utilidades",
-        icono="utilidades",
-        titulo_pagina="Método de bisección | Scalaris",
-        ejemplo_latex=r"c = \frac{a+b}{2}",
-        habilitada=True,
-    ),
-    Herramienta(
         identificador="sistemas",
         nombre="Sistemas de ecuaciones",
         descriptor="SEL: Gauss y Gauss-Jordan",
@@ -160,6 +149,17 @@ HERRAMIENTAS: tuple[Herramienta, ...] = (
         icono="romanos",
         titulo_pagina="Números romanos | Scalaris",
         ejemplo_latex=r"\text{XIV} + \text{IX} = \text{XXIII}",
+        habilitada=True,
+    ),
+    Herramienta(
+        identificador="biseccion",
+        nombre="Método de bisección",
+        descriptor="Raíces con precisión configurable",
+        ruta="/utilidades/biseccion",
+        identificador_pilar="utilidades",
+        icono="utilidades",
+        titulo_pagina="Método de bisección | Scalaris",
+        ejemplo_latex=r"c = \frac{a+b}{2}",
         habilitada=True,
     ),
     Herramienta(
