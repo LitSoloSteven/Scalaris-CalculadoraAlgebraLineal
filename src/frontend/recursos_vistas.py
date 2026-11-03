@@ -4,9 +4,10 @@ from functools import lru_cache
 
 _INICIO = frozenset({"inicio"})
 _NUMERICAS = frozenset({"bases", "romanos"})
+_RAICES = frozenset({"biseccion"})
 _ALGEBRA = frozenset({"sistemas", "vectores", "matrices", "inversa", "determinantes", "factorizacion_lu",
                        "visualizador", "leontief", "transformaciones"})
-_VISTAS = _INICIO | _NUMERICAS | _ALGEBRA
+_VISTAS = _INICIO | _NUMERICAS | _ALGEBRA | _RAICES
 _EXPORTACION_PDF = _ALGEBRA | _NUMERICAS
 _POR_RECURSO = {
     "catalogo_sonidos.js": _VISTAS,
@@ -26,11 +27,12 @@ _POR_RECURSO = {
     "vistas_modelos.css": frozenset({"leontief", "transformaciones", "determinantes"}),
     "vistas_numericos.css": _NUMERICAS,
     "pasos_numericos.css": _NUMERICAS,
-    "vistas_inversa.css": _ALGEBRA | _NUMERICAS,
+    "vistas_inversa.css": _ALGEBRA | _NUMERICAS | _RAICES,
+    "vistas_biseccion.css": _RAICES,
     "inicio_entrada.js": _INICIO,
     "inicio.js": _INICIO,
     "sistemas_metodo.js": frozenset({"sistemas"}),
-    "tema_graficos.js": frozenset({"visualizador"}),
+    "tema_graficos.js": frozenset({"visualizador"}) | _RAICES,
     "sincronizacion_diseno.js": frozenset({"visualizador"}),
 }
 _ETIQUETAS = re.compile(

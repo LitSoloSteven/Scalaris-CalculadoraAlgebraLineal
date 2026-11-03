@@ -126,6 +126,14 @@ def _registrar_paginas_avanzadas() -> None:
 def _registrar_paginas_utilidades() -> None:
     """Registra las páginas del pilar de utilidades numéricas."""
 
+    @ui.page(ruta_de("biseccion"), title=herramienta_por_identificador("biseccion").titulo_pagina)
+    def pagina_biseccion():
+        """Construye el módulo de búsqueda de raíces con precisión configurable."""
+        from src.frontend.vistas.biseccion.vista_biseccion import VistaBiseccion
+
+        configurar_tema("biseccion")
+        VistaBiseccion().construir()
+
     @ui.page(ruta_de("bases"), title=herramienta_por_identificador("bases").titulo_pagina)
     def pagina_bases():
         """Construye la página de bases con sus controles y contexto."""

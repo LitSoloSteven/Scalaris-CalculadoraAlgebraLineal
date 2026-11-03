@@ -20,6 +20,7 @@ _ETIQUETAS_CORTAS: dict[str, str] = {
     "factorizacion_lu": "LU",
     "bases": "Bases",
     "romanos": "Romanos",
+    "biseccion": "Bisección",
     "leontief": "Leontief",
     "transformaciones": "Transformaciones",
 }
@@ -51,6 +52,17 @@ PILARES: tuple[Pilar, ...] = (
 _PILARES_POR_IDENTIFICADOR: dict[str, Pilar] = {pilar.identificador: pilar for pilar in PILARES}
 
 HERRAMIENTAS: tuple[Herramienta, ...] = (
+    Herramienta(
+        identificador="biseccion",
+        nombre="Método de bisección",
+        descriptor="Raíces con precisión configurable",
+        ruta="/utilidades/biseccion",
+        identificador_pilar="utilidades",
+        icono="utilidades",
+        titulo_pagina="Método de bisección | Scalaris",
+        ejemplo_latex=r"c = \frac{a+b}{2}",
+        habilitada=True,
+    ),
     Herramienta(
         identificador="sistemas",
         nombre="Sistemas de ecuaciones",
@@ -188,4 +200,5 @@ ORDEN_NAVEGACION_PLANA: tuple[str, ...] = (
     "visualizador",
     "bases",
     "romanos",
+    "biseccion",
 )
