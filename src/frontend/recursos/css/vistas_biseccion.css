@@ -26,6 +26,7 @@
 .biseccion-tabla { overflow-x: auto; }
 .biseccion-tabla .q-table__container { background: var(--bg-elevated); color: var(--text-main); }
 .biseccion-tabla .q-table { min-width: 1120px; }
+.biseccion-tabla .q-table__middle { overflow: visible; }
 .biseccion-tabla .q-table__bottom { flex-wrap: wrap; }
 .biseccion-grafica { min-height: 340px; }
 .biseccion-vista :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }

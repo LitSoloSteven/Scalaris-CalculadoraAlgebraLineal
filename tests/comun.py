@@ -31,6 +31,7 @@ ARCHIVOS_CSS = [
     RAIZ / "src" / "frontend" / "recursos" / "css" / "pasos_numericos.css",
     RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_modelos.css",
     RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_numericos.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_biseccion.css",
 ]
 
 
