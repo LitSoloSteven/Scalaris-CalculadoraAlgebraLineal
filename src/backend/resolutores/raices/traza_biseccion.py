@@ -59,6 +59,8 @@ def _explicar_particion(extremos: tuple, medio: tuple) -> str:
     abscisa, valor_medio = medio
     if valor_medio == 0:
         return "f(c) se evaluó como cero. Se detiene el cálculo sin certificar exactitud simbólica."
+    if abscisa in (inferior, superior):
+        return "El punto medio se redondea a un extremo. La representación numérica no permite reducir el intervalo."
     if math.copysign(1, valor_inferior) != math.copysign(1, valor_medio):
         return f"Se conserva [{inferior}, {abscisa}] porque f(a) y f(c) tienen signos opuestos."
     return f"Se conserva [{abscisa}, {superior}] porque f(c) y f(b) tienen signos opuestos."

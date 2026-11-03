@@ -23,6 +23,7 @@ def test_estancamiento_conserva_traza_y_no_repite_hasta_limite():
     assert resultado.codigo_diagnostico == "ESTANCAMIENTO"
     assert len(resultado.iteraciones) < 100
     assert resultado.aproximacion == resultado.iteraciones[-1].c
+    assert "no permite reducir el intervalo" in resultado.iteraciones[-1].explicacion
 
 
 def test_punto_medio_grande_no_desborda():
