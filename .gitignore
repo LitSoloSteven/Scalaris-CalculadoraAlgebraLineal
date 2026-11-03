@@ -38,6 +38,7 @@ $RECYCLE.BIN/
 
 # Pruebas y cobertura (si llegan a usar pytest)
 .pytest_cache/
+.playwright-mcp/
 .coverage
 htmlcov/git add .
 
