@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from fractions import Fraction
 from typing import TypedDict
 
-from .criterios_biseccion import CriterioParada, validar_criterio, validar_entero_criterio
+from .criterios_biseccion import CriterioParada, tolerancia_decimal, validar_criterio, validar_entero_criterio
 from .limites_biseccion import D_MAXIMO, LIMITE_ITERACIONES_DEFECTO, LIMITE_ITERACIONES_MAXIMO, LONGITUD_MAXIMA_EXPRESION
 
 
@@ -23,7 +23,7 @@ class EntradaBiseccion:
     def error_absoluto(self) -> Fraction:
         """Devuelve la tolerancia decimal exacta; otros criterios conservan el valor heredado."""
         precision = self.criterio.parametro if self.criterio and self.criterio.tipo == "decimales" else self.decimales
-        return Fraction(1, 10 ** precision)
+        return tolerancia_decimal(precision)
 
     @property
     def criterio_activo(self) -> CriterioParada:
@@ -86,8 +86,7 @@ def validar_precision(valor) -> int:
 
 def derivar_E(decimales: int) -> Fraction:
     """Devuelve 10^(-decimales) como fracción exacta; lanza ValueError si decimales es inválido."""
-    precision = validar_precision(decimales)
-    return Fraction(1, 10 ** precision)
+    return tolerancia_decimal(decimales)
 
 
 def validar_entrada(datos: dict) -> EntradaBiseccion:

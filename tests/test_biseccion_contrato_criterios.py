@@ -90,3 +90,10 @@ def test_motor_revalida_criterios_de_entradas_directas():
     assert resultado.estado == "ERROR"
     assert resultado.codigo_diagnostico == "ENTRADA_INVALIDA"
     assert not resultado.iteraciones
+
+
+@pytest.mark.parametrize("decimales", [True, 16, 100_000_000])
+def test_umbral_decimal_directo_valida_antes_de_calcular_potencias(decimales):
+    """Inspeccionar un criterio inválido no admite booleanos ni reserva una potencia desmesurada."""
+    with pytest.raises(ValueError):
+        _ = CriterioParada("decimales", decimales).umbral

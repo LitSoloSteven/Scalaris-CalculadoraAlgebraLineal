@@ -24,7 +24,13 @@ class CriterioParada:
     @property
     def umbral(self) -> Fraction | float | int:
         """Devuelve el umbral sin redondear; los decimales usan una fracción exacta."""
-        return Fraction(1, 10 ** self.parametro) if self.tipo == "decimales" else self.parametro
+        return tolerancia_decimal(self.parametro) if self.tipo == "decimales" else self.parametro
+
+
+def tolerancia_decimal(decimales: int) -> Fraction:
+    """Devuelve el umbral decimal exacto; lanza ValueError antes de operar con una precisión inválida."""
+    precision = validar_entero_criterio(decimales, "La precisión decimales", D_MAXIMO)
+    return Fraction(1, 10 ** precision)
 
 
 def validar_entero_criterio(valor: object, etiqueta: str, maximo: int, minimo: int = 0) -> int:
