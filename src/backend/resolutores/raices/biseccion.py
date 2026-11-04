@@ -74,12 +74,15 @@ def _validar_extremos(entrada: EntradaBiseccion, extremos: tuple) -> ResultadoBi
 def _iterar(entrada: EntradaBiseccion, funcion: Callable[[float], float], extremos: tuple) -> ResultadoBiseccion:
     iteraciones = []
     previo = None
-    abscisa = None
+    contexto = {"etapa": "capacidad", "x_fallo": None, "intervalo_valido": extremos[:2]}
     try:
         for indice in range(1, entrada.limite_iteraciones + 1):
             inferior, superior, valor_inferior, valor_superior = extremos
+            contexto.update(etapa="capacidad", x_fallo=None, intervalo_valido=extremos[:2])
             abscisa = punto_medio(inferior, superior)
+            contexto.update(etapa="iteracion", x_fallo=abscisa)
             valor = _evaluar_medio(funcion, abscisa, extremos)
+            contexto.update(etapa="capacidad", x_fallo=None)
             fila = crear_iteracion(indice, extremos, (abscisa, valor), previo)
             iteraciones.append(fila)
             motivo = _motivo_parada(entrada, fila)
@@ -89,8 +92,7 @@ def _iterar(entrada: EntradaBiseccion, funcion: Callable[[float], float], extrem
             previo = abscisa
         return construir_resultado(entrada, (inferior, superior), iteraciones, motivo, (abscisa, valor))
     except ValueError as error:
-        return error_contextual(error, {"etapa": "iteracion", "x_fallo": abscisa,
-                                        "intervalo_valido": extremos[:2]}, iteraciones)
+        return error_contextual(error, contexto, iteraciones)
 
 
 def _evaluar_medio(funcion: Callable[[float], float], abscisa: float, extremos: tuple) -> float:

@@ -6,6 +6,7 @@ import pytest
 
 from src.backend.resolutores.raices.biseccion import biseccion
 from src.backend.resolutores.raices.contrato_biseccion import EntradaBiseccion
+from src.backend.resolutores.raices.criterios_biseccion import CriterioParada
 from src.backend.resolutores.raices.dominio_intervalo import comprobar_dominio_intervalo
 from src.frontend.controladores.biseccion.controlador import resolver_captura
 
@@ -124,3 +125,18 @@ def test_controlador_serializa_el_contexto_sin_perder_la_traza():
     assert respuesta["intervalo_final"] == (-1, 0)
     assert respuesta["criterio_solicitado"] == {"tipo": "decimales", "parametro": 4}
     json.dumps(respuesta, allow_nan=False)
+
+
+def test_subdesbordamiento_de_cota_no_se_atribuye_a_evaluacion_valida():
+    """La capacidad geométrica puede fallar aunque el valor de f ya sea válido y conocido."""
+    resultado = biseccion(EntradaBiseccion(
+        "x/1e-308-7e-16", 5e-324, 1.5e-323, 4, criterio=CriterioParada("relativo", 1)))
+    assert resultado.estado == "ERROR"
+    assert resultado.codigo_diagnostico == "SUBDESBORDAMIENTO"
+    assert len(resultado.iteraciones) == 1
+    assert resultado.iteraciones[0].c == 1e-323
+    assert resultado.contexto_fallo == {
+        "etapa": "capacidad", "x_fallo": None, "intervalo_valido": (5e-324, 1e-323)}
+    assert resultado.intervalo_final == (5e-324, 1e-323)
+    assert resultado.diagnostico["origen"] == "capacidad"
+    json.dumps(asdict(resultado), default=str, allow_nan=False)
