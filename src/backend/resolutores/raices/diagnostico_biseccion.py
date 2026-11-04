@@ -35,7 +35,7 @@ def error_extremos(evaluaciones: tuple[EvaluacionExtremo, ...]) -> ResultadoBise
         estado="ERROR", mensaje=primero["mensaje"], codigo_diagnostico=primero["codigo"],
         motivo_parada="evaluacion_invalida", metricas={"iteraciones_totales": 0},
         diagnostico={"codigo": primero["codigo"], "origen": "extremos", "mensaje": primero["mensaje"]},
-        contexto_fallo={"etapa": "extremos", "x_fallo": primero["x"],
+        contexto_fallo={"etapa": "extremos", "x_fallo": primero["abscisa"],
                         "intervalo_valido": None, "extremos": evaluaciones},
     )
 
@@ -52,7 +52,7 @@ def diagnostico_interior(expresion: str, intervalo: tuple[float, float]) -> Diag
 
 def _evaluar_extremo(funcion: Callable[[float], float], abscisa: float) -> EvaluacionExtremo:
     try:
-        return {"x": abscisa, "valor": evaluar(funcion, abscisa), "codigo": "", "mensaje": ""}
+        return {"abscisa": abscisa, "valor": evaluar(funcion, abscisa), "codigo": "", "mensaje": ""}
     except ValueError as error:
         resultado = construir_error(error)
-        return {"x": abscisa, "valor": None, "codigo": resultado.codigo_diagnostico, "mensaje": resultado.mensaje}
+        return {"abscisa": abscisa, "valor": None, "codigo": resultado.codigo_diagnostico, "mensaje": resultado.mensaje}

@@ -69,7 +69,7 @@ class DiagnosticoBiseccion(TypedDict):
 class EvaluacionExtremo(TypedDict):
     """Evaluación individual finita o diagnóstico del extremo que se intentó evaluar."""
 
-    x: float
+    abscisa: float
     valor: float | None
     codigo: str
     mensaje: str

@@ -31,7 +31,7 @@ def test_extremo_invalido_impide_devolver_cero_del_otro(expresion, intervalo, fa
     assert contexto["etapa"] == "extremos"
     assert contexto["x_fallo"] == fallo
     assert contexto["intervalo_valido"] is None
-    evaluaciones = {evaluacion["x"]: evaluacion for evaluacion in contexto["extremos"]}
+    evaluaciones = {evaluacion["abscisa"]: evaluacion for evaluacion in contexto["extremos"]}
     assert evaluaciones[fallo]["valor"] is None
     assert evaluaciones[1]["valor"] == 0
     assert evaluaciones[fallo]["codigo"] == resultado.codigo_diagnostico
@@ -42,7 +42,7 @@ def test_ambos_extremos_invalidos_tienen_diagnosticos_individuales():
     """El fallo izquierdo no evita evaluar y registrar el derecho."""
     resultado = _resolver("sqrt(x)", (-2, -1))
     evaluaciones = resultado.contexto_fallo["extremos"]
-    assert [evaluacion["x"] for evaluacion in evaluaciones] == [-2, -1]
+    assert [evaluacion["abscisa"] for evaluacion in evaluaciones] == [-2, -1]
     assert [evaluacion["codigo"] for evaluacion in evaluaciones] == ["DOMINIO_INVALIDO"] * 2
     assert resultado.contexto_fallo["x_fallo"] == -2
 
