@@ -65,6 +65,15 @@ def test_texto_fraccionario_no_se_acepta_por_redondeo_a_entero(tipo):
         preparar_entrada(captura_criterio(tipo, "2.0000000000000000001"))
 
 
+@pytest.mark.parametrize("parametro", ["0e99999999999999999999999999", "1e-100000000000000000000"])
+def test_exponente_extremo_mantiene_error_controlado_en_guias_y_resolucion(parametro):
+    """La excepción de Decimal se traduce sin propagarse por el formulario ni el controlador."""
+    captura = captura_criterio("iteraciones", parametro)
+    assert resolver_captura(captura)["estado"] == "ERROR"
+    assert "entero" in texto_condicion(captura)
+    assert "entero" in texto_estimacion(captura)
+
+
 def test_estimacion_avisa_si_supera_limite():
     """La guía previa no promete completar una precisión fuera del presupuesto elegido."""
     captura = {**captura_criterio("decimales", 6), "limite_iteraciones": 2}

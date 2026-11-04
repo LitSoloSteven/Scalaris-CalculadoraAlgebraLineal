@@ -1,6 +1,6 @@
 """Conversión léxica de la captura y consulta de condiciones al dominio."""
 import math
-from decimal import Decimal
+from decimal import Decimal, DecimalException
 
 from src.backend.resolutores.raices.contrato_biseccion import EntradaBiseccion, validar_entrada, validar_precision
 from src.backend.resolutores.raices.criterios_biseccion import validar_criterio
@@ -17,10 +17,13 @@ def entero_capturado(valor, etiqueta: str) -> int:
     if isinstance(valor, bool) or not math.isfinite(numero) or not numero.is_integer():
         raise ValueError(f"{etiqueta} debe ser un entero.")
     if isinstance(valor, str):
-        exacto = Decimal(valor.strip())
-        if exacto != exacto.to_integral_value():
-            raise ValueError(f"{etiqueta} debe ser un entero.")
-        return int(exacto)
+        try:
+            exacto = Decimal(valor.strip())
+            if exacto != exacto.to_integral_value():
+                raise ValueError(f"{etiqueta} debe ser un entero.")
+            return int(exacto)
+        except DecimalException as error:
+            raise ValueError(f"{etiqueta} debe ser un entero representable.") from error
     return int(numero)
 
 
