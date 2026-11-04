@@ -9,6 +9,11 @@ from .gramatica_funcion import analizar_expresion, CONSTANTES_REALES
 Afin = tuple[Fraction, Fraction]
 
 
+def argumento_afin(nodo: ast.AST) -> Afin | None:
+    """Devuelve coeficientes exactos de un nodo de AST validado o None si no es afín."""
+    return _como_afin(nodo)
+
+
 def comprobar_dominio_intervalo(expresion: str, intervalo: tuple[float, float]) -> None:
     """Rechaza polos verificables; no certifica continuidad de expresiones generales."""
     arbol = analizar_expresion(expresion)

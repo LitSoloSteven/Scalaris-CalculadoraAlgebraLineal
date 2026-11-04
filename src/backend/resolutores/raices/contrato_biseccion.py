@@ -93,6 +93,14 @@ class ContextoFallo(TypedDict, total=False):
     extremos: tuple[EvaluacionExtremo, ...]
 
 
+class SugerenciaBiseccion(TypedDict, total=False):
+    """Acción opcional del dominio que requiere una decisión y un cálculo posteriores."""
+
+    tipo: str
+    mensaje: str
+    intervalo: tuple[float, float]
+
+
 @dataclass(frozen=True)
 class ResultadoBiseccion:
     """Resultado completo del método con estado, intervalo final y métricas."""
@@ -114,6 +122,7 @@ class ResultadoBiseccion:
     advertencias: tuple[str, ...] = ()
     diagnostico: DiagnosticoBiseccion | None = None
     contexto_fallo: ContextoFallo | None = None
+    sugerencias: tuple[SugerenciaBiseccion, ...] = ()
 
 
 def validar_precision(valor) -> int:
