@@ -9,6 +9,7 @@ from .contrato_biseccion import (
 from .dominio_intervalo import comprobar_dominio_intervalo
 from .evaluador_funcion import evaluar
 from .traza_biseccion import construir_error
+from .sugerencias_dominio import sugerir_acciones
 
 
 def completar_diagnostico(entrada: EntradaBiseccion, resultado: ResultadoBiseccion) -> ResultadoBiseccion:
@@ -17,7 +18,8 @@ def completar_diagnostico(entrada: EntradaBiseccion, resultado: ResultadoBisecci
         "codigo": resultado.codigo_diagnostico, "origen": "cierre", "mensaje": resultado.mensaje}
     advertencias = tuple(dict.fromkeys(entrada.advertencias + resultado.advertencias))
     return replace(resultado, diagnostico=diagnostico, advertencias=advertencias,
-                   metricas={"continuidad": CONTINUIDAD_CONDICIONAL, **resultado.metricas})
+                   metricas={"continuidad": CONTINUIDAD_CONDICIONAL, **resultado.metricas},
+                   sugerencias=sugerir_acciones(entrada, resultado))
 
 
 def error_contextual(error: ValueError, contexto: ContextoFallo,
