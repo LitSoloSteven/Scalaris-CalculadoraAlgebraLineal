@@ -38,6 +38,7 @@ def enlazar_parametros(vista) -> None:
 def actualizar_guia(vista) -> None:
     """Actualiza condición y estimación sin ejecutar la función matemática."""
     captura = vista.capturar()
+    vista.criterio.props(f'title="{CRITERIOS[vista.criterio.value][0]}"')
     vista.tolerancia.set_text(texto_condicion(captura))
     vista.estimacion.set_text(texto_estimacion(captura))
 
