@@ -32,6 +32,15 @@ class CandidatoExploracion:
 
 
 @dataclass(frozen=True)
+class MuestraExploracion:
+    """Evaluación finita o fallo controlado en una posición de la malla."""
+
+    abscisa: float
+    valor: float | None
+    mensaje: str = ""
+
+
+@dataclass(frozen=True)
 class ResultadoExploracion:
     """Registros acotados y número efectivo de evaluaciones, sin afirmar exhaustividad."""
 
