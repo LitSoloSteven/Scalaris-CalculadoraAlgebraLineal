@@ -1,5 +1,6 @@
 """Formato de magnitudes y pasos a partir de la traza del motor."""
 from src.frontend.componentes.reproductor_pasos.modelo import GrupoReproductor, PasoReproductor
+from .catalogo_criterios import condicion_criterio
 
 COLUMNAS = (
     ("i", "i"), ("extremo_izquierdo", "a"), ("extremo_derecho", "b"),
@@ -45,14 +46,18 @@ def construir_pasos(respuesta: dict) -> tuple[tuple, tuple]:
     """Adapta la traza al reproductor común, con planteamiento y cierre incluso sin iteraciones."""
     entrada = respuesta["entrada"]
     descripcion = f"f(x) = {entrada['expresion']} en [{numero(entrada['extremo_izquierdo'])}, {numero(entrada['extremo_derecho'])}]"
-    pasos = [PasoReproductor(0, "planteamiento", descripcion,
-             "La garantía requiere continuidad en todo el intervalo y cambio de signo, salvo raíz en un extremo.", cuerpo=None)]
+    criterio = respuesta.get("criterio_solicitado")
+    explicacion_inicial = "La garantía requiere continuidad en todo el intervalo y cambio de signo, salvo raíz en un extremo."
+    if criterio:
+        explicacion_inicial += " " + condicion_criterio(criterio["tipo"], criterio["parametro"])
+    pasos = [PasoReproductor(0, "planteamiento", descripcion, explicacion_inicial, cuerpo=None)]
     for fila in respuesta["iteraciones"]:
         explicacion = _explicar_iteracion(fila, respuesta)
         pasos.append(PasoReproductor(len(pasos), "division", f"Iteración {fila['i']}: c = (a + b) / 2 = {numero(fila['c'])}",
                      explicacion, 1, fila, "Bisección"))
     pasos.append(PasoReproductor(len(pasos), "final", motivo(respuesta),
-                 "La cota en x depende del intervalo y la continuidad. El residuo y el redondeo no sustituyen el criterio de ancho.", 2))
+                 "La cota en x depende del intervalo y la continuidad. El residuo no es una cota del error en x; "
+                 "solo el criterio elegido determina la parada ordinaria.", 2))
     total = len(pasos)
     pasos = [PasoReproductor(**{**paso.__dict__, "meta_explicar": {
         "indice": paso.indice + 1, "total": total, "tipo": paso.tipo,
@@ -69,4 +74,7 @@ def _explicar_iteracion(fila: dict, respuesta: dict) -> str:
         return "f(c) se evaluó como cero. El motor detiene la partición en este punto."
     if fila is respuesta["iteraciones"][-1] and respuesta["motivo_parada"] == "ancho_menor_que_E":
         return "El ancho ya es menor que E. Se devuelve el punto medio de este intervalo."
+    if fila is respuesta["iteraciones"][-1] and respuesta["motivo_parada"] in {
+            "relativo_menor_que_porcentaje", "residuo_menor_que_delta", "iteraciones_completadas"}:
+        return motivo(respuesta) + " Se devuelve el punto medio sin realizar otra partición."
     return fila["explicacion"]

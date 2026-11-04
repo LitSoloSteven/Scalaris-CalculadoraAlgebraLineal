@@ -3,7 +3,7 @@
 .biseccion-captura { margin-top: var(--space-6); }
 .biseccion-campos, .biseccion-metricas {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   width: 100%;
   gap: var(--space-4);
 }
@@ -30,6 +30,7 @@
 .biseccion-tabla .q-table__bottom { flex-wrap: wrap; }
 .biseccion-grafica { min-height: 340px; }
 .biseccion-vista :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.biseccion-vista .q-btn__content { white-space: normal; overflow-wrap: anywhere; }
 @media (max-width: 900px) {
   .biseccion-exploracion { grid-template-columns: minmax(0, 1fr); }
 }

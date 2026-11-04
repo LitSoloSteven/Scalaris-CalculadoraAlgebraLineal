@@ -12,7 +12,7 @@ CRITERIOS = {
 
 def condicion_criterio(tipo: str, parametro: int | float) -> str:
     """Describe la condición solicitada sin decidir si una fila la satisface."""
-    valor = format(parametro, ".9g")
+    valor = str(parametro)
     condiciones = {"decimales": f"b − a < 10^(−{valor}) · unidades de x",
                    "relativo": f"|(cᵢ − cᵢ₋₁) / cᵢ| × 100 < {valor} %",
                    "ancho": f"b − a < {valor} · unidades de x",
