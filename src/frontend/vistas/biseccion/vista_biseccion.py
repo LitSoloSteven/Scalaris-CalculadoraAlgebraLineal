@@ -41,7 +41,8 @@ class VistaBiseccion:
             self.contenedor_resultados = ui.column().classes("w-full min-w-0 gap-5")
         for campo in self._campos_captura():
             campo.on_value_change(self._editar)
-            campo.on("keydown.enter", self.resolver)
+            if campo is not self.criterio:
+                campo.on("keydown.enter", self.resolver)
         enlazar_parametros(self)
         actualizar_guia(self)
         self.panel_ia.construir()
