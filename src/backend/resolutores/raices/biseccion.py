@@ -5,7 +5,7 @@ from dataclasses import asdict, replace
 
 from .aritmetica_biseccion import cota_intervalo, punto_medio
 from .contrato_biseccion import EntradaBiseccion, IteracionBiseccion, ResultadoBiseccion, validar_entrada
-from .diagnostico_biseccion import diagnostico_interior, error_contextual, error_extremos, evaluar_extremos
+from .diagnostico_biseccion import completar_diagnostico, diagnostico_interior, error_contextual, error_extremos, evaluar_extremos
 from .evaluador_funcion import compilar, evaluar
 from .parada_biseccion import completar_criterio, motivo_criterio
 from .traza_biseccion import construir_error, construir_resultado, crear_iteracion
@@ -19,7 +19,8 @@ def biseccion(entrada: EntradaBiseccion) -> ResultadoBiseccion:
         entrada = validar_entrada(asdict(entrada))
     except ValueError as error:
         return construir_error(error, codigo="ENTRADA_INVALIDA")
-    return completar_criterio(entrada, _resolver_entrada(entrada))
+    resultado = completar_criterio(entrada, _resolver_entrada(entrada))
+    return completar_diagnostico(entrada, resultado)
 
 
 def _resolver_entrada(entrada: EntradaBiseccion) -> ResultadoBiseccion:

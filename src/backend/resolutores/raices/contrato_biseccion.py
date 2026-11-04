@@ -7,6 +7,9 @@ from typing import TypedDict
 from .criterios_biseccion import CriterioParada, tolerancia_decimal, validar_criterio, validar_entero_criterio
 from .limites_biseccion import D_MAXIMO, LIMITE_ITERACIONES_DEFECTO, LIMITE_ITERACIONES_MAXIMO, LONGITUD_MAXIMA_EXPRESION
 
+AVISO_INTERVALO_INVERTIDO = "Se intercambiaron los extremos para trabajar con a < b."
+CONTINUIDAD_CONDICIONAL = "La garantía requiere continuidad en todo el intervalo; el análisis estructural no es una certificación general."
+
 
 @dataclass(frozen=True)
 class EntradaBiseccion:
@@ -18,6 +21,12 @@ class EntradaBiseccion:
     decimales: int
     limite_iteraciones: int = LIMITE_ITERACIONES_DEFECTO
     criterio: CriterioParada | None = field(default=None, kw_only=True)
+    intervalo_invertido: bool = field(default=False, kw_only=True)
+
+    @property
+    def advertencias(self) -> tuple[str, ...]:
+        """Devuelve el aviso de normalización conservado al revalidar la entrada canónica."""
+        return (AVISO_INTERVALO_INVERTIDO,) if self.intervalo_invertido else ()
 
     @property
     def error_absoluto(self) -> Fraction:
@@ -124,14 +133,24 @@ def validar_entrada(datos: dict) -> EntradaBiseccion:
     expresion = _validar_expresion(datos.get("expresion"))
     extremo_izquierdo = _validar_extremo(datos.get("extremo_izquierdo"), "extremo_izquierdo")
     extremo_derecho = _validar_extremo(datos.get("extremo_derecho"), "extremo_derecho")
-    if extremo_izquierdo >= extremo_derecho:
+    if extremo_izquierdo == extremo_derecho:
         raise ValueError(f"El intervalo es inválido: extremo_izquierdo ({extremo_izquierdo}) debe ser menor que extremo_derecho ({extremo_derecho}).")
+    intercambio = _validar_intercambio(datos.get("intervalo_invertido", False))
+    if extremo_izquierdo > extremo_derecho:
+        extremo_izquierdo, extremo_derecho = extremo_derecho, extremo_izquierdo
+        intercambio = True
     decimales = validar_precision(datos.get("decimales", 4) if datos.get("criterio") is not None else datos.get("decimales"))
     limite = _validar_limite(datos.get("limite_iteraciones"))
     criterio = validar_criterio(datos.get("criterio"), decimales, limite)
     return EntradaBiseccion(expresion=expresion, extremo_izquierdo=extremo_izquierdo,
                            extremo_derecho=extremo_derecho, decimales=decimales,
-                           limite_iteraciones=limite, criterio=criterio)
+                           limite_iteraciones=limite, criterio=criterio, intervalo_invertido=intercambio)
+
+
+def _validar_intercambio(valor) -> bool:
+    if not isinstance(valor, bool):
+        raise ValueError("La marca de intervalo invertido debe ser booleana.")
+    return valor
 
 
 def _validar_expresion(valor) -> str:

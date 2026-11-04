@@ -3,11 +3,21 @@ from collections.abc import Callable, Sequence
 from dataclasses import replace
 
 from .contrato_biseccion import (
-    ContextoFallo, DiagnosticoBiseccion, EvaluacionExtremo, IteracionBiseccion, ResultadoBiseccion,
+    CONTINUIDAD_CONDICIONAL, ContextoFallo, DiagnosticoBiseccion, EntradaBiseccion,
+    EvaluacionExtremo, IteracionBiseccion, ResultadoBiseccion,
 )
 from .dominio_intervalo import comprobar_dominio_intervalo
 from .evaluador_funcion import evaluar
 from .traza_biseccion import construir_error
+
+
+def completar_diagnostico(entrada: EntradaBiseccion, resultado: ResultadoBiseccion) -> ResultadoBiseccion:
+    """Conserva el diagnóstico efectivo y añade normalización y continuidad condicionada."""
+    diagnostico = resultado.diagnostico or {
+        "codigo": resultado.codigo_diagnostico, "origen": "cierre", "mensaje": resultado.mensaje}
+    advertencias = tuple(dict.fromkeys(entrada.advertencias + resultado.advertencias))
+    return replace(resultado, diagnostico=diagnostico, advertencias=advertencias,
+                   metricas={"continuidad": CONTINUIDAD_CONDICIONAL, **resultado.metricas})
 
 
 def error_contextual(error: ValueError, contexto: ContextoFallo,
