@@ -3,8 +3,9 @@ import math
 from dataclasses import asdict
 
 from src.backend.resolutores.raices.biseccion import biseccion
-from src.backend.resolutores.raices.contrato_biseccion import ResultadoBiseccion, validar_entrada, derivar_E, LIMITE_ITERACIONES_MAXIMO
+from src.backend.resolutores.raices.contrato_biseccion import ResultadoBiseccion, derivar_E, LIMITE_ITERACIONES_MAXIMO
 from src.backend.resolutores.raices.parada_biseccion import comprobar_cierre_criterio
+from .captura_criterio import entero_capturado, preparar_entrada
 from .muestreo import muestrear_funcion
 
 LIMITE_ITERACIONES_INTERFAZ = LIMITE_ITERACIONES_MAXIMO
@@ -22,17 +23,6 @@ def calcular_presentacion(captura: dict) -> dict:
     return respuesta
 
 
-def entero_capturado(valor, etiqueta: str) -> int:
-    """Convierte un campo entero sin truncar decimales; lanza ValueError si es inválido."""
-    try:
-        numero = float(valor)
-    except (ValueError, TypeError, OverflowError) as error:
-        raise ValueError(f"{etiqueta} debe ser un entero.") from error
-    if isinstance(valor, bool) or not math.isfinite(numero) or not numero.is_integer():
-        raise ValueError(f"{etiqueta} debe ser un entero.")
-    return int(numero)
-
-
 def texto_tolerancia(valor) -> str:
     """Devuelve E en notación decimal a partir del contrato o una guía de validación."""
     try:
@@ -42,30 +32,6 @@ def texto_tolerancia(valor) -> str:
         return f"E = 10^(-{decimales}) = {tolerancia} · Parada: b − a < E"
     except (ValueError, TypeError, OverflowError):
         return "Introduce un entero de precisión dentro del rango permitido."
-
-
-def preparar_entrada(captura: dict):
-    """Adapta campos de texto al contrato; propaga ValueError con orientación de captura."""
-    limite = entero_capturado(captura.get("limite_iteraciones"), "El límite")
-    if not 1 <= limite <= LIMITE_ITERACIONES_INTERFAZ:
-        raise ValueError(f"Usa de 1 a {LIMITE_ITERACIONES_INTERFAZ} iteraciones en esta interfaz.")
-    return validar_entrada({
-        "expresion": str(captura.get("expresion", "")).replace("^", "**"),
-        "extremo_izquierdo": _capturar_extremo(captura.get("extremo_izquierdo"), "El extremo inferior a"),
-        "extremo_derecho": _capturar_extremo(captura.get("extremo_derecho"), "El extremo superior b"),
-        "decimales": entero_capturado(captura.get("decimales"), "La precisión"),
-        "limite_iteraciones": limite,
-        "criterio": captura.get("criterio"),
-    })
-
-
-def _capturar_extremo(valor, etiqueta: str) -> float:
-    try:
-        if isinstance(valor, bool):
-            raise ValueError
-        return float(valor)
-    except (ValueError, TypeError, OverflowError) as error:
-        raise ValueError(f"{etiqueta} debe ser un número real. Usa un punto para los decimales.") from error
 
 
 def resolver_captura(captura: dict) -> dict:
