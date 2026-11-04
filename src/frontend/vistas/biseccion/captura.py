@@ -4,6 +4,7 @@ from nicegui import ui
 from src.backend.resolutores.raices.contrato_biseccion import D_MAXIMO, LONGITUD_MAXIMA_EXPRESION, LIMITE_ITERACIONES_DEFECTO
 from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
 from src.frontend.controladores.biseccion.controlador import LIMITE_ITERACIONES_INTERFAZ
+from .selector_criterio import construir_selector
 
 EJEMPLOS = (
     ("Raíz de 2", "x^2 - 2", "1", "2"),
@@ -23,9 +24,7 @@ def construir_captura(vista) -> None:
         with ui.element("div").classes("biseccion-campos"):
             vista.inferior = _campo_extremo("Extremo inferior a")
             vista.superior = _campo_extremo("Extremo superior b")
-            vista.decimales = ui.number("Decimales de precisión", value=4, min=0, max=D_MAXIMO, step=1).classes("w-full matriz-entrada")
-        vista.tolerancia = ui.label().classes("biseccion-tolerancia texto-acento").props('aria-live="polite"')
-        ui.label("d=2: E=0.01 · d=4: E=0.0001 · d=6: E=0.000001. Para d≥1 hay d−1 ceros antes del 1 decimal.").classes("text-sm texto-secundario")
+        construir_selector(vista)
         _construir_ayuda(vista)
         with ui.row().classes("w-full gap-2 items-center"):
             ui.label("Cargar ejemplo:").classes("text-sm texto-secundario")

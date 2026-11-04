@@ -6,12 +6,14 @@ from nicegui import ui
 from src.ai.contexto import ContextoIA, EstadoContexto
 from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.panel_ia import PanelIA
-from src.frontend.controladores.biseccion.controlador import calcular_presentacion, texto_tolerancia
+from src.frontend.controladores.biseccion.controlador import calcular_presentacion
+from src.frontend.controladores.biseccion.catalogo_criterios import CRITERIOS, DECIMALES_PRESENTACION_DEFECTO
 from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
 from src.frontend.controladores.sesion_matricial import invalidar_resultado, actualizar_contexto, registrar_calculo
 from src.frontend.navegacion import ruta_de
 from .captura import construir_captura
 from .resultado import mostrar_resultado
+from .selector_criterio import actualizar_guia, enlazar_parametros
 
 registro = logging.getLogger(__name__)
 
@@ -26,6 +28,7 @@ class VistaBiseccion:
         self._identificador_calculo = 0
         self.ocupado = False
         self.historial = []
+        self._cargando_captura = False
 
     def construir(self) -> None:
         """Monta la herramienta y enlaza teclado, invalidación y limpieza del reproductor."""
@@ -39,22 +42,29 @@ class VistaBiseccion:
         for campo in self._campos_captura():
             campo.on_value_change(self._editar)
             campo.on("keydown.enter", self.resolver)
-        self.tolerancia.set_text(texto_tolerancia(self.decimales.value))
+        enlazar_parametros(self)
+        actualizar_guia(self)
         self.panel_ia.construir()
         ui.context.client.on_disconnect(self._desconectar)
 
     def _campos_captura(self) -> tuple:
-        return self.expresion, self.inferior, self.superior, self.decimales, self.limite
+        return self.expresion, self.inferior, self.superior, self.limite, self.criterio
 
     def capturar(self) -> dict:
-        """Devuelve los valores crudos del formulario para comparar su vigencia."""
-        return dict(zip(("expresion", "extremo_izquierdo", "extremo_derecho", "decimales", "limite_iteraciones"),
-                        (campo.value for campo in self._campos_captura())))
+        """Devuelve únicamente datos matemáticos comunes y el parámetro activo sin convertirlos."""
+        tipo = self.criterio.value
+        parametro = self.parametros_criterio[tipo].value
+        return {"expresion": self.expresion.value, "extremo_izquierdo": self.inferior.value,
+                "extremo_derecho": self.superior.value, "limite_iteraciones": self.limite.value,
+                "decimales": parametro if tipo == "decimales" else DECIMALES_PRESENTACION_DEFECTO,
+                "criterio": {"tipo": tipo, "parametro": parametro}}
 
     def _editar(self) -> None:
+        if self._cargando_captura:
+            return
         invalidar_resultado(self)
         self.contenedor_resultados.clear()
-        self.tolerancia.set_text(texto_tolerancia(self.decimales.value))
+        actualizar_guia(self)
         self.estado.set_text("Datos editados. Calcula para obtener un resultado vigente.")
         self.panel_ia.limpiar_foco_explicacion()
         actualizar_contexto(self)
@@ -92,10 +102,23 @@ class VistaBiseccion:
         actualizar_contexto(self)
 
     def cargar_captura(self, captura: dict) -> None:
-        """Restaura un ejemplo o captura reciente sin ejecutar ni alterar la precisión omitida."""
-        campos = dict(zip(self.capturar(), self._campos_captura()))
-        for clave, valor in captura.items():
-            campos[clave].set_value(valor)
+        """Restaura el criterio explícito o el decimal antiguo; los ejemplos conservan preferencias omitidas."""
+        self._cargando_captura = True
+        try:
+            campos = {"expresion": self.expresion, "extremo_izquierdo": self.inferior,
+                      "extremo_derecho": self.superior, "limite_iteraciones": self.limite}
+            for clave, campo in campos.items():
+                if clave in captura:
+                    campo.set_value(captura[clave])
+            criterio = captura.get("criterio")
+            if criterio is not None:
+                self.criterio.set_value(criterio["tipo"])
+                self.parametros_criterio[criterio["tipo"]].set_value(criterio["parametro"])
+            elif "decimales" in captura:
+                self.criterio.set_value("decimales")
+                self.decimales.set_value(captura["decimales"])
+        finally:
+            self._cargando_captura = False
         self._editar()
 
     def _mostrar_recientes(self) -> None:
@@ -104,7 +127,9 @@ class VistaBiseccion:
             ui.label("Recientes de esta sesión:").classes("text-sm texto-secundario")
             for indice, calculo in enumerate(self.historial, 1):
                 captura = calculo["captura"]
-                ui.button(f"{indice} · d={captura['decimales']}", color=None,
+                criterio = captura.get("criterio", {"tipo": "decimales", "parametro": captura["decimales"]})
+                etiqueta = f"{CRITERIOS[criterio['tipo']][0]} · {criterio['parametro']}"
+                ui.button(f"{indice} · {etiqueta}", color=None,
                           on_click=lambda captura=captura: self.cargar_captura(captura)).classes("boton-discreto").tooltip(str(captura["expresion"]))
 
     def esta_completamente_vacio(self) -> bool:
