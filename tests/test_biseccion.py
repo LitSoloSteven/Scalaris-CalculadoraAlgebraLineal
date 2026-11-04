@@ -73,9 +73,11 @@ def test_validacion_precision():
 
 
 def test_validacion_entrada_intervalo_invalido():
-    """a debe ser estrictamente menor que b."""
-    with pytest.raises(ValueError):
-        validar_entrada({"expresion": "x", "extremo_izquierdo": 2.0, "extremo_derecho": 1.0, "decimales": 4})
+    """Los extremos invertidos se ordenan conservando el aviso de normalización."""
+    entrada = validar_entrada({"expresion": "x", "extremo_izquierdo": 2.0, "extremo_derecho": 1.0, "decimales": 4})
+    assert (entrada.extremo_izquierdo, entrada.extremo_derecho) == (1.0, 2.0)
+    assert entrada.intervalo_invertido
+    assert entrada.advertencias
 
 
 def test_error_relativo():

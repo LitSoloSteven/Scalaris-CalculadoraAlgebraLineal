@@ -4,7 +4,7 @@ from collections.abc import Sequence
 
 from src.backend.excepciones import ErrorDominio, ErrorNoFinito
 from .aritmetica_biseccion import ancho_intervalo, cota_intervalo, error_relativo_numerico
-from .contrato_biseccion import EntradaBiseccion, IteracionBiseccion, ResultadoBiseccion
+from .contrato_biseccion import CONTINUIDAD_CONDICIONAL, EntradaBiseccion, IteracionBiseccion, ResultadoBiseccion
 
 _CIERRES = {
     "ancho_menor_que_E": ("EXITO", "CONVERGENCIA_POR_ANCHO", "El ancho del intervalo es menor que la tolerancia solicitada."),
@@ -42,7 +42,7 @@ def construir_resultado(entrada: EntradaBiseccion, intervalo: tuple[float, float
         error_absoluto=entrada.error_absoluto, cota=cota_intervalo(*intervalo),
         iteraciones=tuple(iteraciones), motivo_parada=motivo, codigo_diagnostico=codigo,
         metricas={"iteraciones_totales": len(iteraciones), "residuo_final": abs(muestra[1]),
-                  "continuidad": "La garantía requiere continuidad en todo el intervalo; el análisis estructural no es una certificación general."},
+                  "continuidad": CONTINUIDAD_CONDICIONAL},
     )
 
 
