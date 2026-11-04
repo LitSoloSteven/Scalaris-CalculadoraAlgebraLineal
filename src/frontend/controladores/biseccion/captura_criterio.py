@@ -31,8 +31,8 @@ def preparar_entrada(captura: dict) -> EntradaBiseccion:
     """Convierte los campos activos y delega su validez matemática; propaga ValueError orientativo."""
     return validar_entrada({
         "expresion": str(captura.get("expresion", "")).replace("^", "**"),
-        "extremo_izquierdo": _real_capturado(captura.get("extremo_izquierdo"), "El extremo inferior a"),
-        "extremo_derecho": _real_capturado(captura.get("extremo_derecho"), "El extremo superior b"),
+        "extremo_izquierdo": real_capturado(captura.get("extremo_izquierdo"), "El extremo inferior a"),
+        "extremo_derecho": real_capturado(captura.get("extremo_derecho"), "El extremo superior b"),
         "decimales": entero_capturado(captura.get("decimales"), "La precisión"),
         "limite_iteraciones": entero_capturado(captura.get("limite_iteraciones"), "El límite"),
         "criterio": _criterio_capturado(captura.get("criterio")),
@@ -73,11 +73,12 @@ def _criterio_capturado(valor):
     if tipo in ("decimales", "iteraciones"):
         parametro = entero_capturado(parametro, CRITERIOS[tipo][1])
     elif tipo in ("relativo", "ancho", "residuo"):
-        parametro = _real_capturado(parametro, CRITERIOS[tipo][1])
+        parametro = real_capturado(parametro, CRITERIOS[tipo][1])
     return {"tipo": tipo, "parametro": parametro}
 
 
-def _real_capturado(valor, etiqueta: str) -> float:
+def real_capturado(valor, etiqueta: str) -> float:
+    """Convierte una captura real sin aceptar booleanos; lanza ValueError orientativo."""
     try:
         if isinstance(valor, bool):
             raise ValueError
