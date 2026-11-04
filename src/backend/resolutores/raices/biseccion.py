@@ -1,11 +1,11 @@
 """Motor de bisección con control de dominio, resolución y traza numérica."""
 import math
 from collections.abc import Callable
-from dataclasses import asdict
+from dataclasses import asdict, replace
 
 from .aritmetica_biseccion import cota_intervalo, punto_medio
 from .contrato_biseccion import EntradaBiseccion, IteracionBiseccion, ResultadoBiseccion, validar_entrada
-from .dominio_intervalo import comprobar_dominio_intervalo
+from .diagnostico_biseccion import diagnostico_interior, error_contextual, error_extremos, evaluar_extremos
 from .evaluador_funcion import compilar, evaluar
 from .parada_biseccion import completar_criterio, motivo_criterio
 from .traza_biseccion import construir_error, construir_resultado, crear_iteracion
@@ -25,14 +25,38 @@ def biseccion(entrada: EntradaBiseccion) -> ResultadoBiseccion:
 def _resolver_entrada(entrada: EntradaBiseccion) -> ResultadoBiseccion:
     try:
         funcion = compilar(entrada.expresion)
-        intervalo = entrada.extremo_izquierdo, entrada.extremo_derecho
-        comprobar_dominio_intervalo(entrada.expresion, intervalo)
-        cota_intervalo(*intervalo)
-        extremos = (*intervalo, evaluar(funcion, intervalo[0]), evaluar(funcion, intervalo[1]))
-        inicial = _validar_extremos(entrada, extremos)
-        return inicial if inicial is not None else _iterar(entrada, funcion, extremos)
     except ValueError as error:
-        return construir_error(error)
+        return error_contextual(error, {"etapa": "sintaxis", "x_fallo": None, "intervalo_valido": None})
+    intervalo = entrada.extremo_izquierdo, entrada.extremo_derecho
+    evaluaciones = evaluar_extremos(funcion, intervalo)
+    fallo = error_extremos(evaluaciones)
+    if fallo is not None:
+        return fallo
+    try:
+        cota_intervalo(*intervalo)
+    except ValueError as error:
+        return error_contextual(error, {"etapa": "capacidad", "x_fallo": None,
+                                        "intervalo_valido": None, "extremos": evaluaciones})
+    extremos = (*intervalo, *(evaluacion["valor"] for evaluacion in evaluaciones))
+    return _resolver_intervalo(entrada, funcion, extremos)
+
+
+def _resolver_intervalo(entrada: EntradaBiseccion, funcion: Callable[[float], float], extremos: tuple) -> ResultadoBiseccion:
+    intervalo = extremos[:2]
+    diagnostico = diagnostico_interior(entrada.expresion, intervalo)
+    inicial = _validar_extremos(entrada, extremos)
+    if inicial is not None and inicial.motivo_parada == "raiz_exacta":
+        if diagnostico is not None:
+            return replace(inicial, diagnostico=diagnostico,
+                           advertencias=("Continuidad no certificada: " + diagnostico["mensaje"],))
+        return inicial
+    if diagnostico is not None:
+        return ResultadoBiseccion(
+            estado="ERROR", mensaje=diagnostico["mensaje"], codigo_diagnostico=diagnostico["codigo"],
+            motivo_parada="evaluacion_invalida", intervalo_final=intervalo, diagnostico=diagnostico,
+            metricas={"iteraciones_totales": 0},
+            contexto_fallo={"etapa": "estructura", "x_fallo": None, "intervalo_valido": intervalo})
+    return inicial if inicial is not None else _iterar(entrada, funcion, extremos)
 
 
 def _validar_extremos(entrada: EntradaBiseccion, extremos: tuple) -> ResultadoBiseccion | None:
@@ -50,6 +74,7 @@ def _validar_extremos(entrada: EntradaBiseccion, extremos: tuple) -> ResultadoBi
 def _iterar(entrada: EntradaBiseccion, funcion: Callable[[float], float], extremos: tuple) -> ResultadoBiseccion:
     iteraciones = []
     previo = None
+    abscisa = None
     try:
         for indice in range(1, entrada.limite_iteraciones + 1):
             inferior, superior, valor_inferior, valor_superior = extremos
@@ -64,7 +89,8 @@ def _iterar(entrada: EntradaBiseccion, funcion: Callable[[float], float], extrem
             previo = abscisa
         return construir_resultado(entrada, (inferior, superior), iteraciones, motivo, (abscisa, valor))
     except ValueError as error:
-        return construir_error(error, iteraciones)
+        return error_contextual(error, {"etapa": "iteracion", "x_fallo": abscisa,
+                                        "intervalo_valido": extremos[:2]}, iteraciones)
 
 
 def _evaluar_medio(funcion: Callable[[float], float], abscisa: float, extremos: tuple) -> float:

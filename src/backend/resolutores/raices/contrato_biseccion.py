@@ -58,6 +58,32 @@ class MetricasBiseccion(TypedDict, total=False):
     continuidad: str
 
 
+class DiagnosticoBiseccion(TypedDict):
+    """Código, origen y mensaje de una restricción identificada sin inventar una abscisa."""
+
+    codigo: str
+    origen: str
+    mensaje: str
+
+
+class EvaluacionExtremo(TypedDict):
+    """Evaluación individual finita o diagnóstico del extremo que se intentó evaluar."""
+
+    x: float
+    valor: float | None
+    codigo: str
+    mensaje: str
+
+
+class ContextoFallo(TypedDict, total=False):
+    """Etapa, abscisa fallida e intervalo con extremos válidos disponibles al fallar."""
+
+    etapa: str
+    x_fallo: float | None
+    intervalo_valido: tuple[float, float] | None
+    extremos: tuple[EvaluacionExtremo, ...]
+
+
 @dataclass(frozen=True)
 class ResultadoBiseccion:
     """Resultado completo del método con estado, intervalo final y métricas."""
@@ -77,6 +103,8 @@ class ResultadoBiseccion:
     umbral: float | int | None = None
     metrica_final: float | int | None = None
     advertencias: tuple[str, ...] = ()
+    diagnostico: DiagnosticoBiseccion | None = None
+    contexto_fallo: ContextoFallo | None = None
 
 
 def validar_precision(valor) -> int:
