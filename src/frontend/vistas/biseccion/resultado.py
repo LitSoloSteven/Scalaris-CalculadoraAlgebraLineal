@@ -13,19 +13,22 @@ def mostrar_resultado(vista, respuesta: dict) -> None:
     """Presenta los datos vigentes sin convertir un estado parcial en éxito."""
     with vista.contenedor_resultados:
         mostrar_resumen(vista, respuesta)
-        if "muestra" not in respuesta:
-            return
-        with ui.element("div").classes("biseccion-exploracion w-full"):
-            with ui.column().classes("panel-tarjeta p-5 w-full min-w-0"):
-                ui.label("El intervalo en la función").classes("text-lg font-bold")
-                vista.grafica = ui.plotly(crear_figura(respuesta, respuesta["muestra"])).classes("w-full biseccion-grafica")
-                vista.grafica.on("plotly_afterplot", js_handler="() => window.scalaris.sincronizarTemaPlotly()")
-                ui.label("El muestreo puede omitir singularidades. Los huecos detectados se dejan sin unir.").classes("text-sm texto-secundario")
-                ui.label(GUIA_CONTINUIDAD).classes("text-sm texto-secundario")
-            with ui.column().classes("w-full min-w-0"):
-                _reproductor(vista, respuesta)
-        if respuesta["iteraciones"]:
+        if "muestra" in respuesta:
+            _mostrar_exploracion(vista, respuesta)
+        if respuesta.get("iteraciones"):
             _tabla(respuesta)
+
+
+def _mostrar_exploracion(vista, respuesta: dict) -> None:
+    with ui.element("div").classes("biseccion-exploracion w-full"):
+        with ui.column().classes("panel-tarjeta p-5 w-full min-w-0"):
+            ui.label("El intervalo en la función").classes("text-lg font-bold")
+            vista.grafica = ui.plotly(crear_figura(respuesta, respuesta["muestra"])).classes("w-full biseccion-grafica")
+            vista.grafica.on("plotly_afterplot", js_handler="() => window.scalaris.sincronizarTemaPlotly()")
+            ui.label("El muestreo puede omitir singularidades. Los huecos detectados se dejan sin unir.").classes("text-sm texto-secundario")
+            ui.label(GUIA_CONTINUIDAD).classes("text-sm texto-secundario")
+        with ui.column().classes("w-full min-w-0"):
+            _reproductor(vista, respuesta)
 
 
 def _reproductor(vista, respuesta: dict) -> None:

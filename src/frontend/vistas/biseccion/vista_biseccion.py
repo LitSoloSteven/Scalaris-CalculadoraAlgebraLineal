@@ -155,7 +155,7 @@ class VistaBiseccion:
         resumen = None if resultado is None else {clave: resultado.get(clave) for clave in (
             "estado", "mensaje", "aproximacion", "intervalo_final", "tolerancia", "cota", "motivo_parada", "metricas",
             "criterio_solicitado", "unidad_criterio", "umbral", "metrica_final", "codigo_diagnostico", "advertencias",
-            "diagnostico", "aviso_grafica")}
+            "diagnostico", "aviso_grafica", "contexto_fallo", "sugerencias")}
         return ContextoIA("biseccion", "Método de bisección", "Búsqueda de raíces", self.capturar(),
                           EstadoContexto(resultado=resumen, vacio=not bool(self.expresion.value),
                                          nota_ventana="Aritmética aproximada. La garantía requiere continuidad en todo el intervalo."))

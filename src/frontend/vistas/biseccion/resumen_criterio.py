@@ -9,6 +9,7 @@ from src.frontend.controladores.biseccion.presentacion import motivo
 from src.frontend.controladores.biseccion.presentacion_criterio import (
     aproximacion_presentada, avisos_resumen, metricas_resumen, texto_resumen, titulo_estado,
 )
+from .avisos_diagnostico import mostrar_avisos_diagnostico
 
 
 def mostrar_resumen(vista, respuesta: dict) -> None:
@@ -17,9 +18,11 @@ def mostrar_resumen(vista, respuesta: dict) -> None:
         ui.label(titulo_estado(respuesta)).classes("text-xl font-bold texto-principal").props("role=status aria-live=polite")
         for aviso in avisos_resumen(respuesta):
             ui.label(aviso).classes("text-sm texto-advertencia").props("role=status aria-live=polite")
+        mostrar_avisos_diagnostico(vista, respuesta)
         if respuesta.get("aproximacion") is None:
             ui.label(respuesta["mensaje"]).classes("texto-advertencia").props("role=alert")
             _mostrar_metricas(respuesta)
+            renderizar_copia_resultado({"solucion": texto_resumen(respuesta, DECIMALES_PRESENTACION_DEFECTO)})
             return
         precision = getattr(vista, "_precision_visual", DECIMALES_PRESENTACION_DEFECTO)
         vista.formato = ui.number("Decimales de presentación", value=precision, min=0,
