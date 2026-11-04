@@ -14,6 +14,7 @@ from src.frontend.navegacion import ruta_de
 from .captura import construir_captura
 from .resultado import mostrar_resultado
 from .selector_criterio import actualizar_guia, enlazar_parametros
+from .intervalo_canonico import reflejar_intervalo
 
 registro = logging.getLogger(__name__)
 
@@ -94,6 +95,7 @@ class VistaBiseccion:
                 self.boton_resolver.props(remove="loading")
 
     def _publicar(self, respuesta: dict, huella: str) -> None:
+        huella = reflejar_intervalo(self, respuesta) or huella
         self.ultimo_resultado, self._huella_resultado = respuesta, huella
         mostrar_resultado(self, respuesta)
         self.estado.set_text("Resultado disponible." if respuesta["estado"] == "EXITO" else respuesta["mensaje"])
@@ -152,7 +154,8 @@ class VistaBiseccion:
         resultado = self.ultimo_resultado
         resumen = None if resultado is None else {clave: resultado.get(clave) for clave in (
             "estado", "mensaje", "aproximacion", "intervalo_final", "tolerancia", "cota", "motivo_parada", "metricas",
-            "criterio_solicitado", "unidad_criterio", "umbral", "metrica_final", "codigo_diagnostico", "advertencias")}
+            "criterio_solicitado", "unidad_criterio", "umbral", "metrica_final", "codigo_diagnostico", "advertencias",
+            "diagnostico", "aviso_grafica")}
         return ContextoIA("biseccion", "Método de bisección", "Búsqueda de raíces", self.capturar(),
                           EstadoContexto(resultado=resumen, vacio=not bool(self.expresion.value),
                                          nota_ventana="Aritmética aproximada. La garantía requiere continuidad en todo el intervalo."))
