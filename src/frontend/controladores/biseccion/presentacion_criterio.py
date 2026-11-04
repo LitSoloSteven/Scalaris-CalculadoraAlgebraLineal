@@ -1,6 +1,7 @@
 """Textos y magnitudes del resultado según el estado publicado por el motor."""
 from .catalogo_criterios import CRITERIOS, condicion_criterio
 from .presentacion import motivo, numero
+from .presentacion_diagnostico import detalles_diagnostico, texto_sugerencia
 
 
 def titulo_estado(respuesta: dict) -> str:
@@ -64,4 +65,6 @@ def texto_resumen(respuesta: dict, decimales: int) -> str:
     lineas = [titulo_estado(respuesta), aproximacion_presentada(respuesta, decimales), motivo(respuesta)]
     lineas.extend(f"{etiqueta}: {valor}" for etiqueta, valor in metricas_resumen(respuesta))
     lineas.extend(avisos_resumen(respuesta))
+    lineas.extend(f"{etiqueta}: {valor}" for etiqueta, valor in detalles_diagnostico(respuesta))
+    lineas.extend(texto_sugerencia(sugerencia) for sugerencia in respuesta.get("sugerencias", ()))
     return "\n".join(lineas)
