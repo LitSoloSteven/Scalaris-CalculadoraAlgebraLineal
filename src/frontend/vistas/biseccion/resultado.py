@@ -1,18 +1,18 @@
 """Composición del resultado, tabla y procedimiento de bisección."""
 from nicegui import ui
 
-from src.frontend.componentes.copia_resultado import renderizar_copia_resultado
 from src.frontend.componentes.glosa_foco import crear_accion_explicacion
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos
-from src.frontend.controladores.biseccion.presentacion import COLUMNAS, numero, motivo, filas_tabla, construir_pasos, valor_columna
+from src.frontend.controladores.biseccion.presentacion import COLUMNAS, filas_tabla, construir_pasos, valor_columna
 from .figura import crear_figura
 from .captura import GUIA_CONTINUIDAD
+from .resumen_criterio import mostrar_resumen
 
 
 def mostrar_resultado(vista, respuesta: dict) -> None:
     """Presenta los datos vigentes sin convertir un estado parcial en éxito."""
     with vista.contenedor_resultados:
-        _resumen(respuesta)
+        mostrar_resumen(vista, respuesta)
         if "muestra" not in respuesta:
             return
         with ui.element("div").classes("biseccion-exploracion w-full"):
@@ -26,42 +26,6 @@ def mostrar_resultado(vista, respuesta: dict) -> None:
                 _reproductor(vista, respuesta)
         if respuesta["iteraciones"]:
             _tabla(respuesta)
-
-
-def _resumen(respuesta: dict) -> None:
-    with ui.column().classes("panel-tarjeta p-6 w-full gap-3"):
-        if respuesta.get("aproximacion") is None:
-            ui.label(respuesta["mensaje"]).classes("texto-advertencia").props('role="alert"')
-            return
-        decimales = respuesta["entrada"]["decimales"]
-        etiqueta = "Aproximación de la raíz" if respuesta["estado"] == "EXITO" else "Aproximación provisional"
-        ui.label(etiqueta).classes("texto-secundario")
-        texto_aproximacion = f"{respuesta['aproximacion']:.{decimales}f}"
-        ui.label(f"x ≈ {texto_aproximacion}").classes("biseccion-aproximacion texto-principal")
-        ui.label(motivo(respuesta)).classes("texto-acento" if respuesta["estado"] == "EXITO" else "texto-advertencia")
-        _mostrar_metricas(respuesta)
-        ui.label("El redondeo de presentación no determina la convergencia. Inspecciona hasta 17 cifras en la tabla.").classes("text-sm texto-secundario")
-        if respuesta.get("aviso"):
-            ui.label(respuesta["aviso"]).classes("text-sm texto-advertencia")
-        renderizar_copia_resultado({"estado": respuesta["estado"], "solucion": f"x ≈ {texto_aproximacion}\n" +
-                                   "\n".join(f"{etiqueta}: {valor}" for etiqueta, valor in _metricas(respuesta)) + "\n" + motivo(respuesta)})
-
-
-def _mostrar_metricas(respuesta: dict) -> None:
-    with ui.element("div").classes("biseccion-metricas"):
-        for etiqueta, valor in _metricas(respuesta):
-            with ui.column().classes("gap-1 min-w-0"):
-                ui.label(etiqueta).classes("text-sm texto-secundario")
-                ui.label(valor).classes("biseccion-numero texto-principal")
-
-
-def _metricas(respuesta: dict) -> tuple:
-    inferior, superior = respuesta["intervalo_final"]
-    return (("Tolerancia E", numero(respuesta["tolerancia"])),
-            ("Intervalo final [a, b]", f"[{numero(inferior, True)}, {numero(superior, True)}]"),
-            ("Cota geométrica (b − a) / 2", numero(respuesta["cota"], True)),
-            ("Residuo |f(c)|", numero(respuesta["metricas"].get("residuo_final"), True)),
-            ("Iteraciones", str(len(respuesta["iteraciones"]))))
 
 
 def _reproductor(vista, respuesta: dict) -> None:
