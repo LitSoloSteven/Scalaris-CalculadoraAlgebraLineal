@@ -3,7 +3,8 @@ import math
 from dataclasses import asdict
 
 from src.backend.resolutores.raices.biseccion import biseccion
-from src.backend.resolutores.raices.contrato_biseccion import validar_entrada, derivar_E, LIMITE_ITERACIONES_MAXIMO
+from src.backend.resolutores.raices.contrato_biseccion import ResultadoBiseccion, validar_entrada, derivar_E, LIMITE_ITERACIONES_MAXIMO
+from src.backend.resolutores.raices.parada_biseccion import comprobar_cierre_criterio
 from .muestreo import muestrear_funcion
 
 LIMITE_ITERACIONES_INTERFAZ = LIMITE_ITERACIONES_MAXIMO
@@ -54,6 +55,7 @@ def preparar_entrada(captura: dict):
         "extremo_derecho": _capturar_extremo(captura.get("extremo_derecho"), "El extremo superior b"),
         "decimales": entero_capturado(captura.get("decimales"), "La precisión"),
         "limite_iteraciones": limite,
+        "criterio": captura.get("criterio"),
     })
 
 
@@ -75,7 +77,7 @@ def resolver_captura(captura: dict) -> dict:
         respuesta["error_absoluto"] = str(resultado.error_absoluto)
         respuesta["entrada"] = asdict(entrada)
         respuesta["tolerancia"] = float(entrada.error_absoluto)
-        _comprobar_salida(respuesta)
+        _comprobar_salida(respuesta, resultado)
         return respuesta
     except ValueError as error:
         return {"estado": "ERROR", "mensaje": str(error)}
@@ -83,7 +85,8 @@ def resolver_captura(captura: dict) -> dict:
         return {"estado": "ERROR", "mensaje": "No se pudo evaluar f(x). Revisa la sintaxis, el dominio y la magnitud de los valores."}
 
 
-def _comprobar_salida(respuesta: dict) -> None:
+def _comprobar_salida(respuesta: dict, resultado: ResultadoBiseccion) -> None:
+    comprobar_cierre_criterio(resultado)
     if respuesta["aproximacion"] is None:
         return
     valores = [respuesta["aproximacion"], respuesta["cota"], *respuesta["intervalo_final"]]
@@ -92,7 +95,3 @@ def _comprobar_salida(respuesta: dict) -> None:
         raise ValueError("El cálculo excede la capacidad numérica. Reduce el intervalo o la magnitud de f(x).")
     if respuesta["motivo_parada"] == "raiz_exacta":
         respuesta["aviso"] = respuesta["mensaje"]
-    elif respuesta["estado"] == "EXITO":
-        inferior, superior = respuesta["intervalo_final"]
-        if superior - inferior >= respuesta["tolerancia"]:
-            raise ValueError("El motor no alcanzó el ancho solicitado. Prueba con menos decimales.")
