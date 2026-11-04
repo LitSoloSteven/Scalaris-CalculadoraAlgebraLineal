@@ -7,6 +7,7 @@ from .aritmetica_biseccion import cota_intervalo, punto_medio
 from .contrato_biseccion import EntradaBiseccion, IteracionBiseccion, ResultadoBiseccion, validar_entrada
 from .dominio_intervalo import comprobar_dominio_intervalo
 from .evaluador_funcion import compilar, evaluar
+from .parada_biseccion import completar_criterio, motivo_criterio
 from .traza_biseccion import construir_error, construir_resultado, crear_iteracion
 
 
@@ -18,6 +19,10 @@ def biseccion(entrada: EntradaBiseccion) -> ResultadoBiseccion:
         entrada = validar_entrada(asdict(entrada))
     except ValueError as error:
         return construir_error(error, codigo="ENTRADA_INVALIDA")
+    return completar_criterio(entrada, _resolver_entrada(entrada))
+
+
+def _resolver_entrada(entrada: EntradaBiseccion) -> ResultadoBiseccion:
     try:
         funcion = compilar(entrada.expresion)
         intervalo = entrada.extremo_izquierdo, entrada.extremo_derecho
@@ -76,8 +81,9 @@ def _motivo_parada(entrada: EntradaBiseccion, fila: IteracionBiseccion) -> str:
         return "raiz_exacta"
     if fila.c in (fila.extremo_izquierdo, fila.extremo_derecho):
         return "estancamiento"
-    if fila.ancho < entrada.error_absoluto:
-        return "ancho_menor_que_E"
+    motivo = motivo_criterio(entrada.criterio_activo, fila)
+    if motivo:
+        return motivo
     return "limite_iteraciones" if fila.i == entrada.limite_iteraciones else ""
 
 
