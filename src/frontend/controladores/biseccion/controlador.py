@@ -16,10 +16,8 @@ def calcular_presentacion(captura: dict) -> dict:
     respuesta = resolver_captura(captura)
     if respuesta["estado"] != "ERROR":
         respuesta["muestra"] = muestrear_funcion(respuesta["entrada"])
-        if respuesta["muestra"]["huecos"] and respuesta["estado"] == "EXITO":
-            respuesta["estado"] = "CONTINUIDAD_NO_VERIFICADA"
-            respuesta["mensaje"] = "La gráfica contiene evaluaciones inválidas o saltos pronunciados. Revisa la continuidad; la aproximación es provisional."
-            respuesta["aviso"] = respuesta["mensaje"]
+        if respuesta["muestra"]["huecos"]:
+            respuesta["aviso_grafica"] = "La gráfica contiene huecos por evaluaciones inválidas o saltos pronunciados. El muestreo es orientativo; revisa la continuidad."
     return respuesta
 
 

@@ -15,6 +15,8 @@ def mostrar_resumen(vista, respuesta: dict) -> None:
     """Monta estado y magnitudes, con un control de formato que no invalida el resultado."""
     with ui.column().classes("panel-tarjeta p-6 w-full gap-3"):
         ui.label(titulo_estado(respuesta)).classes("text-xl font-bold texto-principal").props("role=status aria-live=polite")
+        for aviso in avisos_resumen(respuesta):
+            ui.label(aviso).classes("text-sm texto-advertencia").props("role=status aria-live=polite")
         if respuesta.get("aproximacion") is None:
             ui.label(respuesta["mensaje"]).classes("texto-advertencia").props("role=alert")
             _mostrar_metricas(respuesta)
@@ -37,8 +39,6 @@ def _mostrar_detalle(respuesta: dict, precision: int) -> None:
     _mostrar_metricas(respuesta)
     ui.label("El formato no determina la parada. La tabla conserva hasta 17 cifras; "
              "el residuo no es una cota del error en x.").classes("text-sm texto-secundario")
-    for aviso in avisos_resumen(respuesta):
-        ui.label(aviso).classes("text-sm texto-advertencia")
     renderizar_copia_resultado({"estado": respuesta["estado"], "solucion": texto_resumen(respuesta, precision)})
 
 

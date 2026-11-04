@@ -54,6 +54,8 @@ def avisos_resumen(respuesta: dict) -> tuple[str, ...]:
     avisos = tuple(respuesta.get("advertencias", ()))
     if respuesta.get("aviso"):
         avisos += (respuesta["aviso"],)
+    if respuesta.get("aviso_grafica"):
+        avisos += (respuesta["aviso_grafica"],)
     return tuple(dict.fromkeys(avisos))
 
 
