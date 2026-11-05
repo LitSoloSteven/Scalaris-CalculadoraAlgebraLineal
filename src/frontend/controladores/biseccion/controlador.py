@@ -6,7 +6,7 @@ from src.backend.resolutores.raices.biseccion import biseccion
 from src.backend.resolutores.raices.contrato_biseccion import EntradaBiseccion, ResultadoBiseccion, derivar_E, LIMITE_ITERACIONES_MAXIMO
 from src.backend.resolutores.raices.parada_biseccion import comprobar_cierre_criterio
 from .captura_criterio import entero_capturado, preparar_entrada
-from .muestreo import muestrear_funcion
+from .muestreo import muestrear_funcion, separar_intervalo_sospechoso
 
 LIMITE_ITERACIONES_INTERFAZ = LIMITE_ITERACIONES_MAXIMO
 
@@ -15,9 +15,14 @@ def calcular_presentacion(captura: dict) -> dict:
     """Resuelve y prepara un muestreo orientativo sin bloquear el hilo de interfaz."""
     respuesta = resolver_captura(captura)
     if respuesta["estado"] != "ERROR":
-        respuesta["muestra"] = muestrear_funcion(respuesta["entrada"])
-        if respuesta["muestra"]["huecos"]:
+        muestra = muestrear_funcion(respuesta["entrada"])
+        evidencia = (respuesta.get("diagnostico") or {}).get("evidencia_discontinuidad")
+        if evidencia is not None:
+            muestra = separar_intervalo_sospechoso(muestra, evidencia["intervalo"])
+            respuesta["aviso_grafica"] = "La gráfica separa el intervalo sospechoso según la traza."
+        elif muestra["huecos"]:
             respuesta["aviso_grafica"] = "La gráfica contiene huecos por evaluaciones inválidas o saltos pronunciados. El muestreo es orientativo; revisa la continuidad."
+        respuesta["muestra"] = muestra
     return respuesta
 
 

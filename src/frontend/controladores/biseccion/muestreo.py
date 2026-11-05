@@ -23,6 +23,17 @@ def muestrear_funcion(entrada: dict) -> dict:
     return {"x": abscisas, "y": ordenadas, "huecos": any(valor is None for valor in ordenadas)}
 
 
+def separar_intervalo_sospechoso(muestra: dict, intervalo: tuple[float, float]) -> dict:
+    """Corta segmentos que atraviesan el intervalo señalado por el motor sin evaluar puntos nuevos."""
+    inferior, superior = intervalo
+    abscisas = muestra["x"]
+    ordenadas = list(muestra["y"])
+    for indice, (izquierda, derecha) in enumerate(zip(abscisas, abscisas[1:]), 1):
+        if izquierda < superior and derecha > inferior:
+            ordenadas[indice] = None
+    return {**muestra, "y": ordenadas, "huecos": any(valor is None for valor in ordenadas)}
+
+
 def _interrumpir_restricciones(entrada: dict, abscisas: list, ordenadas: list) -> None:
     unidad = entrada.get("unidad_angular", "radianes")
     for indice in range(1, len(abscisas)):

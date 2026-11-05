@@ -1,6 +1,7 @@
 """Figura temática para relacionar la función con la partición activa."""
 import plotly.graph_objects as go
 
+from src.backend.resolutores.raices.contrato_biseccion import ESTADO_DISCONTINUIDAD
 from src.frontend.tema import COLOR_TRANSPARENTE, PALETA_GRAFICOS, COLOR_SOLUCION
 from src.frontend.vistas.geometria._colores_figuras import aplicar_colores_figura
 
@@ -17,11 +18,20 @@ def crear_figura(respuesta: dict, muestra: dict, fila: dict | None = None, inici
     figura.add_trace(go.Scatter(x=[inferior, superior], y=[0, 0], mode="lines+markers", name="Intervalo [a, b]",
                                line=dict(color=PALETA_GRAFICOS[1], width=5, dash="dot")))
     if medio is not None:
-        figura.add_trace(go.Scatter(x=[medio], y=[fila["f_c"] if fila else 0], mode="markers",
-                                   name="Punto medio c" if fila else "Aproximación en x",
+        valor, etiqueta = _ordenada_marcador(respuesta, fila)
+        figura.add_trace(go.Scatter(x=[medio], y=[valor], mode="markers", name=etiqueta,
                                    marker=dict(color=COLOR_SOLUCION, size=11, symbol="diamond")))
     aplicar_colores_figura(figura, "papel")
     return figura
+
+
+def _ordenada_marcador(respuesta: dict, fila: dict | None) -> tuple[float | None, str]:
+    if fila is not None:
+        return fila["f_c"], "Punto medio c"
+    if respuesta.get("estado") == ESTADO_DISCONTINUIDAD:
+        filas = respuesta.get("iteraciones") or ()
+        return (filas[-1]["f_c"] if filas else None), "Muestra provisional"
+    return 0, "Aproximación en x"
 
 
 def crear_figura_previa(respuesta: dict) -> go.Figure:
