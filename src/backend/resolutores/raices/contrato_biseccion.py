@@ -2,7 +2,7 @@
 import math
 from dataclasses import dataclass, field
 from fractions import Fraction
-from typing import TypedDict
+from typing import NotRequired, TypedDict
 
 from .criterios_biseccion import CriterioParada, tolerancia_decimal, validar_criterio, validar_entero_criterio
 from .limites_biseccion import D_MAXIMO, LIMITE_ITERACIONES_DEFECTO, LIMITE_ITERACIONES_MAXIMO, LONGITUD_MAXIMA_EXPRESION
@@ -10,6 +10,8 @@ from .unidades_angulares import validar_unidad_angular
 
 AVISO_INTERVALO_INVERTIDO = "Se intercambiaron los extremos para trabajar con a < b."
 CONTINUIDAD_CONDICIONAL = "La garantía requiere continuidad en todo el intervalo; el análisis estructural no es una certificación general."
+ESTADO_DISCONTINUIDAD = "CONTINUIDAD_NO_VERIFICADA"
+CODIGO_DISCONTINUIDAD = "DISCONTINUIDAD_SOSPECHADA"
 
 
 @dataclass(frozen=True)
@@ -69,12 +71,24 @@ class MetricasBiseccion(TypedDict, total=False):
     continuidad: str
 
 
+class EvidenciaDiscontinuidad(TypedDict):
+    """Magnitudes de filas válidas que sostienen una sospecha, sin ubicar un polo exacto."""
+
+    intervalo: tuple[float, float]
+    ancho_referencia: float
+    escala_inicial: float
+    magnitud_vecinal_referencia: float
+    magnitud_vecinal_final: float
+    residuo_reciente_minimo: float
+
+
 class DiagnosticoBiseccion(TypedDict):
-    """Código, origen y mensaje de una restricción identificada sin inventar una abscisa."""
+    """Código, origen, mensaje y evidencia opcional procedente de la traza."""
 
     codigo: str
     origen: str
     mensaje: str
+    evidencia_discontinuidad: NotRequired[EvidenciaDiscontinuidad]
 
 
 class EvaluacionExtremo(TypedDict):

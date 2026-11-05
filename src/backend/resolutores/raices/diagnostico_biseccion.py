@@ -6,6 +6,7 @@ from .contrato_biseccion import (
     CONTINUIDAD_CONDICIONAL, ContextoFallo, DiagnosticoBiseccion, EntradaBiseccion,
     EvaluacionExtremo, IteracionBiseccion, ResultadoBiseccion,
 )
+from .discontinuidades import calificar_discontinuidad
 from .dominio_intervalo import comprobar_dominio_intervalo
 from .evaluador_funcion import evaluar
 from .traza_biseccion import construir_error
@@ -13,7 +14,8 @@ from .sugerencias_dominio import sugerir_acciones
 
 
 def completar_diagnostico(entrada: EntradaBiseccion, resultado: ResultadoBiseccion) -> ResultadoBiseccion:
-    """Conserva el diagnóstico efectivo y añade normalización y continuidad condicionada."""
+    """Completa la evidencia de la traza y añade normalización y continuidad condicionada."""
+    resultado = calificar_discontinuidad(resultado)
     diagnostico = resultado.diagnostico or {
         "codigo": resultado.codigo_diagnostico, "origen": "cierre", "mensaje": resultado.mensaje}
     advertencias = tuple(dict.fromkeys(entrada.advertencias + resultado.advertencias))
