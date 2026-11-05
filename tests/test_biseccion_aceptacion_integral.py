@@ -109,3 +109,11 @@ def test_lote_conserva_dos_ceros_en_el_mismo_intervalo():
                for respuesta in respuestas)
     assert calcular_presentacion(captura)["aproximacion"] == 0
     json.dumps(lote, allow_nan=False)
+
+
+def test_malla_incluye_un_extremo_que_coincide_por_redondeo():
+    """Un paso de 0.3 llega a 1.5 sin duplicar el extremo ni rechazar el rango."""
+    exploracion = resolver_exploracion({"expresion": "x-1.5", "x_min": 0, "x_max": 1.5, "paso": .3})
+    assert exploracion["estado"] == "EXITO" and exploracion["evaluaciones"] == 6
+    ceros = [registro["candidato"]["abscisa"] for registro in _candidatos_aptos(exploracion)]
+    assert ceros == [1.5]

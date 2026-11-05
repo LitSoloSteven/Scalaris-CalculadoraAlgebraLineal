@@ -13,6 +13,9 @@ def generar_posiciones(entrada: EntradaExploracion) -> tuple[float, ...]:
     paso = Fraction(entrada.paso)
     cociente = (maximo - minimo) / paso
     segmentos = -(-cociente.numerator // cociente.denominator)
+    if 1 < segmentos <= MAXIMO_EVALUACIONES_EXPLORACION:
+        if float(minimo + (segmentos - 1) * paso) == entrada.x_max:
+            segmentos -= 1
     if segmentos + 1 > MAXIMO_EVALUACIONES_EXPLORACION:
         raise ValueError("El paso exige demasiadas evaluaciones; aumenta el paso o reduce el rango.")
     posiciones = tuple(float(minimo + indice * paso) for indice in range(segmentos))
