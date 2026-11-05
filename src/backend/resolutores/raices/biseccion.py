@@ -12,19 +12,19 @@ from .traza_biseccion import construir_error, construir_resultado, crear_iteraci
 from .unidades_angulares import opciones_unidad
 
 
-def biseccion(entrada: EntradaBiseccion) -> ResultadoBiseccion:
-    """Resuelve una entrada validada y devuelve estado, diagnóstico y traza sin lanzar errores numéricos."""
+def biseccion(entrada: EntradaBiseccion, *, cero_preferido: float | None = None) -> ResultadoBiseccion:
+    """Resuelve la entrada y prioriza el cero elegido si ambos extremos evalúan a cero."""
     try:
         if not isinstance(entrada, EntradaBiseccion):
             raise ValueError("La entrada debe cumplir el contrato de bisección.")
         entrada = validar_entrada(asdict(entrada))
     except ValueError as error:
         return construir_error(error, codigo="ENTRADA_INVALIDA")
-    resultado = completar_criterio(entrada, _resolver_entrada(entrada))
+    resultado = completar_criterio(entrada, _resolver_entrada(entrada, cero_preferido))
     return completar_diagnostico(entrada, resultado)
 
 
-def _resolver_entrada(entrada: EntradaBiseccion) -> ResultadoBiseccion:
+def _resolver_entrada(entrada: EntradaBiseccion, cero_preferido: float | None) -> ResultadoBiseccion:
     try:
         funcion = compilar(entrada.expresion, **opciones_unidad(entrada.unidad_angular))
     except ValueError as error:
@@ -40,13 +40,14 @@ def _resolver_entrada(entrada: EntradaBiseccion) -> ResultadoBiseccion:
         return error_contextual(error, {"etapa": "capacidad", "x_fallo": None,
                                         "intervalo_valido": None, "extremos": evaluaciones})
     extremos = (*intervalo, *(evaluacion["valor"] for evaluacion in evaluaciones))
-    return _resolver_intervalo(entrada, funcion, extremos)
+    return _resolver_intervalo(entrada, funcion, extremos, cero_preferido)
 
 
-def _resolver_intervalo(entrada: EntradaBiseccion, funcion: Callable[[float], float], extremos: tuple) -> ResultadoBiseccion:
+def _resolver_intervalo(entrada: EntradaBiseccion, funcion: Callable[[float], float],
+                        extremos: tuple, cero_preferido: float | None) -> ResultadoBiseccion:
     intervalo = extremos[:2]
     diagnostico = diagnostico_interior(entrada.expresion, intervalo, unidad_angular=entrada.unidad_angular)
-    inicial = _validar_extremos(entrada, extremos)
+    inicial = _validar_extremos(entrada, extremos, cero_preferido)
     if (inicial is not None and inicial.motivo_parada == "raiz_exacta"
             and (diagnostico is None or not _hay_restriccion_extrema(entrada))):
         if diagnostico is not None:
@@ -68,10 +69,12 @@ def _hay_restriccion_extrema(entrada: EntradaBiseccion) -> bool:
                for extremo in (entrada.extremo_izquierdo, entrada.extremo_derecho))
 
 
-def _validar_extremos(entrada: EntradaBiseccion, extremos: tuple) -> ResultadoBiseccion | None:
+def _validar_extremos(entrada: EntradaBiseccion, extremos: tuple,
+                      cero_preferido: float | None) -> ResultadoBiseccion | None:
     inferior, superior, valor_inferior, valor_superior = extremos
     if valor_inferior == 0 or valor_superior == 0:
-        raiz = inferior if valor_inferior == 0 else superior
+        preferir_superior = valor_superior == 0 and cero_preferido == superior
+        raiz = superior if preferir_superior or valor_inferior != 0 else inferior
         return construir_resultado(entrada, (inferior, superior), (), "raiz_exacta", (raiz, 0))
     if signo_producto(valor_inferior, valor_superior) == 1:
         return ResultadoBiseccion(

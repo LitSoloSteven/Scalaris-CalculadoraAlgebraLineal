@@ -46,7 +46,8 @@ def _resolver_candidato(configuracion: EntradaBiseccion, registro: CandidatoReso
                                   extremo_derecho=superior, intervalo_invertido=False)))
         valores = tuple(evaluar(funcion, extremo) for extremo in candidato.intervalo)
         _comprobar_aptitud(candidato, valores)
-        resultado = biseccion(entrada)
+        cero = candidato.abscisa if candidato.tipo == "cero_evaluado" else None
+        resultado = biseccion(entrada, cero_preferido=cero)
         return ResolucionCandidato(registro.identificador, resultado.estado, resultado.mensaje, entrada, resultado)
     except ValueError as error:
         return ResolucionCandidato(registro.identificador, "NO_APTO", str(error))

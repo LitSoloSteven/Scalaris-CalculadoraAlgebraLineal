@@ -94,3 +94,17 @@ def test_polo_en_grados_se_separa_de_un_cruce_resoluble():
     assert respuesta["aproximacion"] == pytest.approx(180, abs=.0001)
     _comprobar_presentacion(respuesta, "EXITO", "ancho_menor_que_E")
     json.dumps((previa, exploracion, lote, polo), allow_nan=False)
+
+
+def test_lote_conserva_dos_ceros_en_el_mismo_intervalo():
+    """La abscisa seleccionada distingue candidatos con ambos extremos en cero."""
+    captura = _intervalo({**captura_criterio(), "expresion": "x*(x-1)"}, (0, 1))
+    exploracion = resolver_exploracion({**captura, "x_min": 0, "x_max": 1, "paso": 1})
+    lote = resolver_lote({"configuracion": captura, "candidatos": _candidatos_aptos(exploracion)})
+    respuestas = [registro["respuesta"] for registro in lote["resultados"]]
+    assert lote["estado"] == "LOTE_COMPLETADO"
+    assert [respuesta["aproximacion"] for respuesta in respuestas] == [0, 1]
+    assert all(respuesta["codigo_diagnostico"] == "CERO_EVALUADO" and not respuesta["iteraciones"]
+               for respuesta in respuestas)
+    assert calcular_presentacion(captura)["aproximacion"] == 0
+    json.dumps(lote, allow_nan=False)
