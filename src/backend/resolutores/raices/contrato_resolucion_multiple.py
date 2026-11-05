@@ -2,6 +2,7 @@
 from dataclasses import asdict, dataclass
 
 from .contrato_biseccion import EntradaBiseccion, ResultadoBiseccion, validar_entrada
+from .contrato_continuidad import InformeContinuidad
 from .contrato_exploracion import AVISO_EXPLORACION, CandidatoExploracion
 from .unidades_angulares import validar_unidad_angular
 from .limites_resolucion_multiple import (
@@ -37,6 +38,7 @@ class ResolucionCandidato:
     entrada: EntradaBiseccion | None = None
     resultado: ResultadoBiseccion | None = None
     evaluaciones_reservadas: int = 0
+    informe_continuidad: InformeContinuidad | None = None
 
 
 @dataclass(frozen=True)
