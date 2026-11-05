@@ -15,6 +15,7 @@ from .candidatos import mostrar_candidatos
 from .modos_captura import MODO_BUSQUEDA
 
 registro = logging.getLogger(__name__)
+_ESTADO_INICIAL = "Define un rango y un paso para explorar la función."
 
 
 class PanelExploracion:
@@ -43,7 +44,7 @@ class PanelExploracion:
                 ui.button("Usar intervalo actual", color=None, on_click=self.usar_intervalo).classes("boton-discreto").props("ripple=false")
                 self.boton = ui.button("Explorar candidatos", color=None, on_click=self.enviar_busqueda).classes(
                     "boton-principal").props("ripple=false")
-            self.estado = ui.label("Define un rango y un paso para explorar la función.").classes(
+            self.estado = ui.label(_ESTADO_INICIAL).classes(
                 "texto-secundario").props("role=status aria-live=polite")
             self.contenedor_resultados = ui.column().classes("biseccion-candidatos w-full gap-4")
         for campo in self._campos_captura():
@@ -90,6 +91,10 @@ class PanelExploracion:
         self.minimo.set_value(self.vista.inferior.value)
         self.maximo.set_value(self.vista.superior.value)
         self.invalidar()
+
+    def mostrar_estado_inicial(self) -> None:
+        """Restablece la orientación tras vaciar el rango de búsqueda."""
+        self.estado.set_text(_ESTADO_INICIAL)
 
     async def explorar(self) -> None:
         """Ejecuta fuera de UI y publica solo en la revisión y contenedor aún vigentes."""

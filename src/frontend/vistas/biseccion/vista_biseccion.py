@@ -16,7 +16,7 @@ from src.frontend.controladores.sesion_matricial import invalidar_resultado, act
 from src.frontend.navegacion import ruta_de
 from .acciones_captura import mostrar_recientes
 from .composicion import componer_herramienta
-from .estado_captura import restaurar_captura, vaciar_captura
+from .estado_captura import hay_rangos_editados, restaurar_captura, vaciar_captura
 from .estados_entrada import actualizar_expresion, actualizar_intervalo
 from .modos_captura import MODO_BUSQUEDA, MODO_INTERVALO
 from .resultado import mostrar_resultado
@@ -193,13 +193,16 @@ class VistaBiseccion:
             self._invalidar_calculo()
 
     def esta_completamente_vacio(self) -> bool:
-        """Indica si los campos del ejercicio no contienen texto."""
-        return not any(str(campo.value or "").strip() for campo in (self.expresion, self.inferior, self.superior))
+        """Indica si limpiar dejaría intactos el ejercicio y sus rangos."""
+        campos = self.expresion, self.inferior, self.superior
+        hay_ejercicio = any(campo.value is not None and str(campo.value).strip() for campo in campos)
+        return not (hay_ejercicio or hay_rangos_editados(self))
 
     def limpiar_todo(self) -> None:
         """Vacía el ejercicio y retira sus resultados conservando las preferencias de precisión."""
         vaciar_captura(self)
         self._invalidar_funcion()
+        self.exploracion.mostrar_estado_inicial()
         self._invalidar_calculo()
         self.estado.set_text("Captura vacía. Ingresa una función o carga un ejemplo.")
 

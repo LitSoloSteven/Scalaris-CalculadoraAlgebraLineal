@@ -9,6 +9,15 @@ _EXTREMOS = ("extremo_izquierdo", "extremo_derecho")
 _CLAVES_CERO = ("expresion", *_EXTREMOS, "unidad_angular", "cero_preferido")
 
 
+def hay_rangos_editados(vista) -> bool:
+    """Indica si limpiar retiraría un rango o un paso distinto de los iniciales."""
+    exploracion = vista.exploracion
+    previa = vista.vista_previa
+    return (bool(exploracion.minimo.value or exploracion.maximo.value)
+            or exploracion.paso.value != PASO_EXPLORACION_DEFECTO
+            or (previa.minimo.value, previa.maximo.value) != tuple(map(str, RANGO_GRAFICA_DEFECTO)))
+
+
 @contextmanager
 def transaccion(vista):
     """Pospone los efectos de edición hasta completar la escritura de campos."""
