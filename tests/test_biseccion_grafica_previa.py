@@ -4,7 +4,7 @@ import json
 import math
 
 import pytest
-from nicegui import background_tasks, ui
+from nicegui import ui
 
 from src.frontend.controladores.biseccion import muestreo
 from src.frontend.controladores.biseccion.vista_previa import preparar_vista_previa
@@ -111,19 +111,20 @@ def test_rango_formato_y_copia_conservan_resultado_y_candidatos(monkeypatch):
         await panel.tarea
         vista.formato.set_value(9)
         copiar = next(elemento for elemento in panel.minimo.client.elements.values()
-                      if isinstance(elemento, ui.button) and elemento.text == "Copiar a y b a la gráfica")
+                      if isinstance(elemento, ui.button) and elemento.text == "Ajustar al intervalo")
         activar_accion(copiar)
         await panel.tarea
         assert (panel.minimo.value, panel.maximo.value) == ("1", "2")
         assert vista.ultimo_resultado is resultado and vista.reproductor_pasos is reproductor
         assert vista._huella_resultado == huella and vista.capturar() == captura
         assert vista.obtener_contexto_ia().resultado == contexto and len(vista.historial) == 1
-        assert exploracion.respuesta is candidatos
+        assert candidatos is not None and exploracion.respuesta is None
+        assert not list(exploracion.contenedor_resultados.descendants())
     ejecutar_escenario(monkeypatch, comprobar)
 
 
 def test_error_y_reintento_no_ocultan_resultado_principal(monkeypatch):
-    """Un rango visual inválido retira solo la previa y permite reintentar por su botón."""
+    """Un rango inválido retira solo la previa y se corrige con antirrebote."""
     async def comprobar(vista):
         """Conserva la resolución ante error local y activa el manejador asíncrono real."""
         vista.cargar_captura(captura_criterio())
@@ -131,15 +132,11 @@ def test_error_y_reintento_no_ocultan_resultado_principal(monkeypatch):
         panel, resultado = vista.vista_previa, vista.ultimo_resultado
         panel.minimo.set_value("20")
         await panel.tarea
-        assert panel.respuesta["estado"] == "ERROR" and panel.boton.enabled
+        assert panel.respuesta["estado"] == "ERROR" and panel.estado._props["aria-busy"] == "false"
         assert not list(panel.contenedor_resultados.descendants())
         assert vista.ultimo_resultado is resultado
         panel.minimo.set_value("-2")
-        pendientes = []
-        monkeypatch.setattr(background_tasks, "create_or_defer",
-                            lambda corrutina, **opciones: pendientes.append(asyncio.create_task(corrutina)))
-        activar_accion(panel.boton)
-        await asyncio.gather(*pendientes)
-        assert panel.respuesta["estado"] == "EXITO" and panel.boton.enabled
+        await panel.tarea
+        assert panel.respuesta["estado"] == "EXITO" and panel.estado._props["aria-busy"] == "false"
         assert vista.ultimo_resultado is resultado
     ejecutar_escenario(monkeypatch, comprobar)

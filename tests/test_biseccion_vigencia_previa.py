@@ -26,7 +26,7 @@ def test_ediciones_rapidas_muestrean_solo_la_ultima_captura(monkeypatch):
         await panel.tarea
         assert primera.cancelled() and llamadas == [{"expresion": "x^2", "x_min": "-1", "x_max": "3"}]
         assert panel.respuesta["entrada"]["expresion"] == "x**2"
-        assert panel.tarea is None and panel.boton.enabled
+        assert panel.tarea is None and panel.estado._props["aria-busy"] == "false"
     ejecutar_escenario(monkeypatch, comprobar)
 
 
@@ -49,12 +49,16 @@ def test_trabajador_tardio_no_publica_tras_edicion(monkeypatch, cambio):
         monkeypatch.setattr(run, "io_bound", trabajar)
         tarea = asyncio.create_task(panel.actualizar())
         await inicio.wait()
-        assert not panel.boton.enabled
+        assert panel.estado._props["aria-busy"] == "true"
         _cambiar(vista, cambio)
         liberar.set()
         await tarea
+        if cambio == "criterio":
+            assert panel.respuesta["estado"] == "EXITO"
+            assert panel.estado._props["aria-busy"] == "false"
+            return
         assert panel.respuesta is None and not list(panel.contenedor_resultados.descendants())
-        assert panel.boton.enabled
+        assert panel.estado._props["aria-busy"] == "false"
         assert "disponible" not in panel.estado.text
     ejecutar_escenario(monkeypatch, comprobar)
 
@@ -101,11 +105,11 @@ def test_finally_antiguo_no_libera_solicitud_nueva(monkeypatch):
         await inicios[1].wait()
         permisos[0].set()
         await antigua
-        assert panel.tarea is nueva and not panel.boton.enabled and panel.respuesta is None
+        assert panel.tarea is nueva and panel.estado._props["aria-busy"] == "true" and panel.respuesta is None
         permisos[1].set()
         await nueva
         assert panel.respuesta["entrada"]["expresion"] == "x**2"
-        assert panel.tarea is None and panel.boton.enabled
+        assert panel.tarea is None and panel.estado._props["aria-busy"] == "false"
     ejecutar_escenario(monkeypatch, comprobar)
 
 
@@ -133,7 +137,7 @@ def test_destino_y_errores_del_trabajador(monkeypatch, cambio):
         await asyncio.gather(asyncio.create_task(panel.actualizar()), return_exceptions=True)
         assert panel.respuesta is None
         assert ("No se pudo dibujar" in panel.estado.text) == (cambio == "fallo_vigente")
-        assert "detalle interno" not in panel.estado.text and panel.boton.enabled
+        assert "detalle interno" not in panel.estado.text and panel.estado._props["aria-busy"] == "false"
     ejecutar_escenario(monkeypatch, comprobar)
 
 

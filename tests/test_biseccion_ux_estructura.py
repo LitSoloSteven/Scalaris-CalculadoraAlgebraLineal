@@ -98,7 +98,7 @@ def test_ejemplos_y_limpieza_aplican_preferencias_explicitamente(monkeypatch):
         assert vista.modos.value == MODO_BUSQUEDA and vista.modo_examen
         assert vista.esta_completamente_vacio()
         assert vista.criterio.value == "ancho" and vista.parametros_criterio["ancho"].value == ".02"
-        assert vista.exploracion.minimo.value == ""
+        assert vista.exploracion.minimo.value == vista.vista_previa.minimo.value == str(RANGO_GRAFICA_DEFECTO[0])
         assert vista.exploracion.paso.value == PASO_EXPLORACION_DEFECTO
         assert vista.vista_previa.maximo.value == str(RANGO_GRAFICA_DEFECTO[1])
         assert vista.vista_previa.tarea is None and vista.exploracion.respuesta is None
