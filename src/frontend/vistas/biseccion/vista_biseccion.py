@@ -35,6 +35,7 @@ class VistaBiseccion:
         self.ocupado = False
         self.historial = []
         self._cargando_captura = False
+        self.modo_examen = False
 
     def construir(self) -> None:
         """Monta la herramienta y enlaza teclado, invalidación y limpieza del reproductor."""
