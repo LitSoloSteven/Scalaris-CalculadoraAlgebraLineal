@@ -16,6 +16,7 @@ def test_edicion_cancela_y_descarta_trabajador_antiguo(monkeypatch, cambio):
         panel = preparar_exploracion(vista)
         inicio, liberar = asyncio.Event(), asyncio.Event()
         async def trabajar(calcular, captura):
+            """Retiene una respuesta hasta liberarla incluso si su espera fue cancelada."""
             inicio.set()
             try:
                 await liberar.wait()
@@ -59,6 +60,7 @@ def test_respuesta_antigua_no_sustituye_solicitud_nueva(monkeypatch):
         panel = preparar_exploracion(vista)
         inicio, liberar = asyncio.Event(), asyncio.Event()
         async def trabajar(calcular, captura):
+            """Retrasa solo la primera malla para invertir el orden de sus respuestas."""
             if captura["paso"] == ".5":
                 inicio.set()
                 try:
@@ -87,6 +89,7 @@ def test_contenedor_o_error_obsoleto_no_publica(monkeypatch, cambio):
         """Cambia el destino desde el trabajador simulado sin modificar el servicio de dominio."""
         panel = preparar_exploracion(vista)
         async def trabajar(calcular, captura):
+            """Sustituye el destino o falla después de invalidar la captura original."""
             if cambio == "eliminar":
                 panel.contenedor_resultados.delete()
             elif cambio == "sustituir":
