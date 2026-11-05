@@ -45,7 +45,7 @@ def precision_presentacion(valor) -> int:
     return validar_precision(entero_capturado(valor, "Los decimales de presentación"))
 
 
-def texto_condicion(captura: dict) -> str:
+def texto_condicion(captura: dict, *, mostrar_error: bool = True) -> str:
     """Describe el criterio activo aun sin intervalo; devuelve orientación si su parámetro es inválido."""
     try:
         precision = captura.get("decimales", DECIMALES_PRESENTACION_DEFECTO)
@@ -53,15 +53,15 @@ def texto_condicion(captura: dict) -> str:
         criterio = validar_criterio(_criterio_capturado(captura.get("criterio")), precision, limite)
         return condicion_criterio(criterio.tipo, criterio.parametro)
     except ValueError as error:
-        return str(error)
+        return str(error) if mostrar_error else ""
 
 
-def texto_estimacion(captura: dict) -> str:
+def texto_estimacion(captura: dict, *, mostrar_error: bool = True) -> str:
     """Consulta la estimación acotada del dominio y devuelve sus hipótesis o una guía de entrada."""
     try:
         estimacion = estimar_iteraciones(preparar_entrada(captura))
     except ValueError as error:
-        return f"Para estimar las filas: {error}"
+        return f"Para estimar las filas: {error}" if mostrar_error else ""
     filas = estimacion.filas_previstas
     descripcion = "Sin estimación general." if filas is None else f"Filas previstas: {filas}."
     return descripcion + " " + " ".join(estimacion.advertencias)

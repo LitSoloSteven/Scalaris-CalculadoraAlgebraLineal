@@ -1,6 +1,26 @@
 .biseccion-vista { max-width: 1280px; }
 .biseccion-vista, .biseccion-vista * { min-width: 0; }
-.biseccion-captura { margin-top: var(--space-6); }
+.biseccion-disposicion {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  align-items: start;
+  gap: var(--space-5);
+}
+.biseccion-funcion { display: flex; gap: var(--space-4); }
+.biseccion-funcion > :first-child { flex: 3 1 0; }
+.biseccion-funcion > :last-child { flex: 2 1 0; }
+.biseccion-desplegable summary {
+  cursor: pointer;
+  min-height: 44px;
+  padding-block: var(--space-2);
+}
+.biseccion-desplegable summary > div { display: inline; }
+.biseccion-desplegable > :not(summary) { margin-block: var(--space-2); }
+.biseccion-captura .selector-opciones-indicador,
+.biseccion-captura .selector-opciones-opcion { animation: none !important; transition: none !important; }
+.biseccion-captura .selector-opciones-opcion:active { transform: none; }
+.biseccion-captura .biseccion-panel-exploracion,
+.biseccion-captura .biseccion-panel-multiple { padding: 0; border: 0; box-shadow: none; background: transparent; }
 .biseccion-campos, .biseccion-metricas {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -40,10 +60,11 @@
 }
 .biseccion-vista .q-btn__content { white-space: normal; overflow-wrap: anywhere; }
 @media (max-width: 900px) {
-  .biseccion-exploracion { grid-template-columns: minmax(0, 1fr); }
+  .biseccion-exploracion, .biseccion-disposicion { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 560px) {
   .biseccion-campos, .biseccion-metricas { grid-template-columns: minmax(0, 1fr); }
+  .biseccion-funcion { flex-direction: column; }
   .biseccion-captura, .biseccion-panel-previa, .biseccion-panel-exploracion,
   .biseccion-panel-multiple { padding: var(--space-4); }
   .biseccion-vista .panel-tarjeta { max-width: 100%; }
