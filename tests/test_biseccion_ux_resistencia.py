@@ -51,7 +51,7 @@ def test_preparacion_interactiva_publica_desde_su_tarea(monkeypatch):
         boton = next(elemento for elemento in reproductor.tarjeta.descendants()
                      if elemento._props.get("aria-label") == "Paso siguiente")
         evento = next(evento for evento in boton._event_listeners.values() if evento.type == "click")
-        evento.handler(SimpleNamespace(args={"detail": 1}))
+        evento.handler(SimpleNamespace(args=True))
         assert reproductor.indice_actual == 0
         await asyncio.wait_for(reproductor.tarea_paso, timeout=2)
         assert reproductor.indice_actual == 1
@@ -60,19 +60,25 @@ def test_preparacion_interactiva_publica_desde_su_tarea(monkeypatch):
     ejecutar_escenario(monkeypatch, _comprobar)
 
 
-def test_salir_del_procedimiento_restaura_el_indice_visible(monkeypatch):
+@pytest.mark.parametrize("pausar_con_boton", [False, True])
+def test_cancelar_preparacion_restaura_el_indice_visible(monkeypatch, pausar_con_boton):
     """Cancelar una preparación no deja el deslizador apuntando al destino descartado."""
     async def _comprobar(vista):
         vista.cargar_captura(captura_criterio())
         await vista.resolver()
         reproductor = vista.reproductor_pasos
+        if pausar_con_boton:
+            reproductor._alternar_reproduccion()
         deslizador = reproductor.deslizador
         deslizador.set_value(3)
         evento = next(evento for evento in deslizador._event_listeners.values() if evento.type == "change")
         evento.handler(SimpleNamespace(args=[3, False]))
         assert reproductor.indice_solicitado == 3
         pendiente = reproductor.tarea_paso
-        reproductor.pausar()
+        if pausar_con_boton:
+            reproductor._alternar_reproduccion()
+        else:
+            reproductor.pausar()
         await asyncio.gather(pendiente, return_exceptions=True)
         assert deslizador.value == reproductor.indice_actual == 0
         assert reproductor.estado_paso.text == ""

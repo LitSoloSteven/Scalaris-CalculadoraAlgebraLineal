@@ -132,6 +132,7 @@ class ReproductorBiseccion(ReproductorPasos):
     def _pausar_reproduccion(self) -> None:
         if self.temporizador is not None and self.temporizador.active:
             self._cancelar_preparacion()
+            self._restaurar_deslizador()
         super()._pausar_reproduccion()
 
     def pausar(self) -> None:

@@ -8,15 +8,13 @@ REGISTRAR_ENTRADA = "evento => window.scalaris.movimientoBiseccion.registrarEntr
 
 def vincular_envio(nodo, accion) -> None:
     """Envía la modalidad de la activación junto al clic."""
-    nodo.on("click", accion, args=["detail"])
+    nodo.on("click", accion, js_handler="evento => emit(evento.detail > 0)")
 
 
 def modalidad_puntero(evento) -> bool | None:
     """Interpreta clics físicos y devuelve None si no hay un evento de navegador."""
     datos = getattr(evento, "args", None)
-    if not isinstance(datos, dict) or type(datos.get("detail")) is not int:
-        return None
-    return datos["detail"] > 0
+    return datos if isinstance(datos, bool) else None
 
 
 def animar_entrada(nodo, puntero: bool) -> None:
