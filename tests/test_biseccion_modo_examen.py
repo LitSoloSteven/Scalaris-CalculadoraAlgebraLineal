@@ -48,6 +48,7 @@ def test_estancamiento_registra_detencion_y_cero_extremo_no_inventa_fila():
     ultima = estancado.iteraciones[-1]
     assert (ultima.accion, ultima.motivo_parada) == ("detener", "estancamiento")
     assert ultima.c in (ultima.extremo_izquierdo, ultima.extremo_derecho)
+    assert ultima.explicacion == estancado.mensaje
     extremo = biseccion(EntradaBiseccion("x", 0, 1, 4))
     assert extremo.motivo_parada == "raiz_exacta" and extremo.iteraciones == ()
 

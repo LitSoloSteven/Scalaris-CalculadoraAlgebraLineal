@@ -13,7 +13,9 @@ _CIERRES = {
     "residuo_menor_que_delta": ("EXITO", "CONVERGENCIA_POR_RESIDUO", "El residuo es menor que la tolerancia solicitada; no es una cota del error en x."),
     "iteraciones_completadas": ("ITERACIONES_COMPLETADAS", "ITERACIONES_COMPLETADAS", "Se completó el número fijo de iteraciones; esto no implica convergencia por tolerancia."),
     "raiz_exacta": ("EXITO", "CERO_EVALUADO", "La función se evaluó como cero en aritmética aproximada; esto no certifica exactitud simbólica."),
-    "estancamiento": ("PRECISION_NO_ALCANZADA", "ESTANCAMIENTO", "El punto medio coincide con un extremo por límites de representación. No se alcanzó la precisión solicitada."),
+    "estancamiento": ("PRECISION_NO_ALCANZADA", "ESTANCAMIENTO",
+                      "El punto medio coincide con un extremo. La representación numérica no permite reducir el intervalo. "
+                      "No se alcanzó la precisión solicitada."),
     "limite_iteraciones": ("PRECISION_NO_ALCANZADA", "LIMITE_ITERACIONES", "Se alcanzó el límite de iteraciones sin cumplir la precisión solicitada."),
 }
 
@@ -38,10 +40,7 @@ def crear_iteracion(indice: int, extremos: tuple[float, float, float, float], me
 def registrar_accion(fila: IteracionBiseccion, motivo: str) -> IteracionBiseccion:
     """Registra el cierre o el reemplazo de extremo que ejecutará el motor."""
     if motivo:
-        explicacion = _CIERRES[motivo][2]
-        if motivo == "estancamiento":
-            explicacion = "El punto medio se redondea a un extremo. La representación numérica no permite reducir el intervalo."
-        return replace(fila, accion="detener", motivo_parada=motivo, explicacion=explicacion)
+        return replace(fila, accion="detener", motivo_parada=motivo, explicacion=_CIERRES[motivo][2])
     if fila.signo_producto == -1:
         return replace(fila, accion="reemplazar_b",
                        explicacion=f"Se conserva [{fila.extremo_izquierdo}, {fila.c}] porque f(a) y f(c) tienen signos opuestos.")
