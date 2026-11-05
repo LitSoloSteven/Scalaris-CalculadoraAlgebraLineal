@@ -103,3 +103,15 @@ def test_ejemplos_y_limpieza_aplican_preferencias_explicitamente(monkeypatch):
         assert vista.vista_previa.maximo.value == str(RANGO_GRAFICA_DEFECTO[1])
         assert vista.vista_previa.tarea is None and vista.exploracion.respuesta is None
     ejecutar_escenario(monkeypatch, comprobar)
+
+
+def test_limpiar_rango_sin_funcion(monkeypatch):
+    """Permite vaciar un rango editado aunque todavía no haya expresión."""
+    async def comprobar(vista):
+        """Verifica el criterio de vaciado y recupera la orientación inicial."""
+        vista.exploracion.maximo.set_value("2")
+        assert not vista.esta_completamente_vacio()
+        vista.limpiar_todo()
+        assert vista.esta_completamente_vacio()
+        assert "Define un rango y un paso" in vista.exploracion.estado.text
+    ejecutar_escenario(monkeypatch, comprobar)
