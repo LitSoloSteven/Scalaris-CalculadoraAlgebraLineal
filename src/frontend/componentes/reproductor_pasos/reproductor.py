@@ -28,6 +28,8 @@ _CONTADOR_EXPLICACION = itertools.count()
 class ReproductorPasos:
     """Gestiona navegacion, renderizado y reproduccion automatica de pasos."""
 
+    sin_movimiento = False
+
     def __init__(self, pasos: Sequence[PasoReproductor], grupos: Sequence[GrupoReproductor], renderizar_cuerpo: Callable[[PasoReproductor, Any], None], identificador: str, opciones: OpcionesReproductor | None = None) -> None:
         """Guarda los pasos y acciones que controlan el reproductor."""
         configuracion = opciones if opciones is not None else {}
