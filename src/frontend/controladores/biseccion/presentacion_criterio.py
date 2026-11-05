@@ -74,3 +74,9 @@ def texto_resumen(respuesta: dict, decimales: int) -> str:
     lineas.extend(f"{etiqueta}: {valor}" for etiqueta, valor in detalles_diagnostico(respuesta))
     lineas.extend(texto_sugerencia(sugerencia) for sugerencia in respuesta.get("sugerencias", ()))
     return "\n".join(lineas)
+
+
+def datos_copia_biseccion(estado: str, texto: str) -> dict[str, str]:
+    """Entrega el texto al copiador con su rótulo de resultado para cierres provisionales."""
+    campo = "matriz_resultado" if estado == ESTADO_DISCONTINUIDAD else "solucion"
+    return {campo: texto}

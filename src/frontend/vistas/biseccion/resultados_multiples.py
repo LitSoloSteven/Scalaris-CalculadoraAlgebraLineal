@@ -3,7 +3,7 @@ from nicegui import ui
 
 from src.frontend.componentes.copia_resultado import renderizar_copia_resultado
 from src.frontend.controladores.biseccion.catalogo_criterios import DECIMALES_PRESENTACION_DEFECTO
-from src.frontend.controladores.biseccion.presentacion_criterio import texto_resumen, titulo_estado
+from src.frontend.controladores.biseccion.presentacion_criterio import datos_copia_biseccion, texto_resumen, titulo_estado
 from .resultado import mostrar_tabla
 
 
@@ -33,6 +33,6 @@ def _mostrar_registro(registro: dict) -> None:
         resumen = texto_resumen(respuesta, DECIMALES_PRESENTACION_DEFECTO)
         for linea in resumen.splitlines():
             ui.label(linea).classes("biseccion-numero text-sm texto-principal")
-        renderizar_copia_resultado({"solucion": f"{registro['identificador']}\n{resumen}"})
+        renderizar_copia_resultado(datos_copia_biseccion(respuesta["estado"], f"{registro['identificador']}\n{resumen}"))
         if respuesta.get("iteraciones"):
             mostrar_tabla(respuesta)

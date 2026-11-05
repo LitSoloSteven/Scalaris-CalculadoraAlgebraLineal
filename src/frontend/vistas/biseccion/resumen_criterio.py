@@ -7,7 +7,7 @@ from src.frontend.controladores.biseccion.catalogo_criterios import DECIMALES_PR
 from src.frontend.controladores.biseccion.captura_criterio import precision_presentacion
 from src.frontend.controladores.biseccion.presentacion import motivo
 from src.frontend.controladores.biseccion.presentacion_criterio import (
-    aproximacion_presentada, avisos_resumen, metricas_resumen, texto_resumen, titulo_estado,
+    aproximacion_presentada, avisos_resumen, datos_copia_biseccion, metricas_resumen, texto_resumen, titulo_estado,
 )
 from .avisos_diagnostico import mostrar_avisos_diagnostico
 
@@ -42,7 +42,7 @@ def _mostrar_detalle(respuesta: dict, precision: int) -> None:
     _mostrar_metricas(respuesta)
     ui.label("El formato no determina la parada. La tabla conserva hasta 17 cifras; "
              "el residuo no es una cota del error en x.").classes("text-sm texto-secundario")
-    renderizar_copia_resultado({"estado": respuesta["estado"], "solucion": texto_resumen(respuesta, precision)})
+    renderizar_copia_resultado(datos_copia_biseccion(respuesta["estado"], texto_resumen(respuesta, precision)))
 
 
 def _mostrar_metricas(respuesta: dict) -> None:
