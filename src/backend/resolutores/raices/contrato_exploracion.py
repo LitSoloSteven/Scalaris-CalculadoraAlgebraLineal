@@ -23,6 +23,17 @@ class EntradaExploracion:
 
 
 @dataclass(frozen=True)
+class EvidenciaContacto:
+    """Escala inicial, consumo efectivo y motivo de cierre de una búsqueda local sin certificación."""
+
+    valor_inicial: float
+    escala_inicial: float
+    evaluaciones: int
+    refinamientos: int
+    motivo: str
+
+
+@dataclass(frozen=True)
 class CandidatoExploracion:
     """Clasificación local con intervalo propio y muestra opcional finita."""
 
@@ -31,6 +42,7 @@ class CandidatoExploracion:
     abscisa: float | None = None
     valor: float | None = None
     mensaje: str = ""
+    evidencia_contacto: EvidenciaContacto | None = field(default=None, kw_only=True)
 
 
 @dataclass(frozen=True)
@@ -50,6 +62,9 @@ class ResultadoExploracion:
     evaluaciones: int
     advertencias: tuple[str, ...] = (AVISO_EXPLORACION,)
     unidad_angular: str = "radianes"
+    evaluaciones_refinamiento: int = field(default=0, kw_only=True)
+    refinamientos: int = field(default=0, kw_only=True)
+    refinamiento_agotado: bool = field(default=False, kw_only=True)
 
 
 def validar_exploracion(entrada: EntradaExploracion) -> EntradaExploracion:
