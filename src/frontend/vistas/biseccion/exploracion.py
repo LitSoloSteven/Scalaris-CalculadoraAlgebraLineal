@@ -7,12 +7,13 @@ from src.backend.resolutores.raices.unidades_angulares import opciones_unidad
 
 from src.frontend.controladores.biseccion.vigencia_panel import invalidar_panel
 from src.frontend.controladores.biseccion.exploracion import (
-    LONGITUD_CAMPO_EXPLORACION, PASO_EXPLORACION_DEFECTO, presentar_candidato, resolver_exploracion,
+    LONGITUD_CAMPO_EXPLORACION, PASO_EXPLORACION_DEFECTO, presentar_candidato, resolver_exploracion, sugerir_paso,
 )
 from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
 from .acciones_captura import desplegable
 from .candidatos import mostrar_candidatos
 from .modos_captura import MODO_BUSQUEDA
+from .rango_grafica import campos_rango
 
 registro = logging.getLogger(__name__)
 _ESTADO_INICIAL = "Define un rango y un paso para explorar la función."
@@ -28,28 +29,29 @@ class PanelExploracion:
         self.tarea = None
         self.respuesta = None
         self._cerrado = False
+        self._paso_automatico = True
 
     def construir(self) -> None:
         """Monta campos con nombres accesibles y estados de carga, error y candidatos."""
         with ui.column().classes("panel-tarjeta biseccion-panel-exploracion w-full gap-4 p-6"):
             ui.label("Explorar intervalos").classes("text-xl font-semibold texto-principal")
-            ui.label("Busca candidatos de la función capturada en un rango independiente. Los resultados del cálculo se conservan hasta cargar un intervalo.").classes(
+            ui.label("Busca candidatos en el rango del gráfico. Los extremos del cálculo cambian al cargar un intervalo.").classes(
                 "text-sm texto-secundario")
-            with ui.element("div").classes("biseccion-campos"):
-                self.minimo = self._campo("Mínimo x")
-                self.maximo = self._campo("Máximo x")
+            self.minimo, self.maximo = campos_rango("rango de búsqueda")
             with desplegable("Avanzado"):
                 self.paso = self._campo("Paso h", PASO_EXPLORACION_DEFECTO)
+                self.etiqueta_paso = ui.label().classes("text-sm texto-secundario")
+                ui.button("Volver a automático", color=None, on_click=self.restablecer_paso).classes("boton-discreto")
             with ui.row().classes("w-full gap-3"):
-                ui.button("Usar intervalo actual", color=None, on_click=self.usar_intervalo).classes("boton-discreto").props("ripple=false")
                 self.boton = ui.button("Explorar candidatos", color=None, on_click=self.enviar_busqueda).classes(
                     "boton-principal").props("ripple=false")
             self.estado = ui.label(_ESTADO_INICIAL).classes(
                 "texto-secundario").props("role=status aria-live=polite")
             self.contenedor_resultados = ui.column().classes("biseccion-candidatos w-full gap-4")
         for campo in self._campos_captura():
-            campo.on_value_change(self._editar_rango)
             campo.on("keydown.enter", self.enviar_busqueda)
+        self.paso.on_value_change(self._editar_rango)
+        self.actualizar_paso()
 
     async def enviar_busqueda(self) -> None:
         """Busca desde los controles solo cuando Buscar intervalo está activo."""
@@ -58,7 +60,35 @@ class PanelExploracion:
 
     def _editar_rango(self) -> None:
         if not self.vista._cargando_captura:
+            self._paso_automatico = False
             self.invalidar()
+            self.actualizar_paso()
+
+    def restablecer_paso(self) -> None:
+        """Recupera la sugerencia de paso y retira el escaneo hecho con el paso anterior."""
+        self._paso_automatico = True
+        self.actualizar_paso()
+        self.invalidar()
+
+    def actualizar_paso(self) -> None:
+        """Publica la sugerencia visible de paso o la orientación ante un rango inválido."""
+        if not self._paso_automatico:
+            self.etiqueta_paso.set_text("Paso manual.")
+            return
+        try:
+            valor = sugerir_paso({"x_min": self.minimo.value, "x_max": self.maximo.value})
+            texto = f"Paso automático efectivo · {valor:.9g}"
+        except ValueError as error:
+            texto = str(error)
+        self.etiqueta_paso.set_text(texto)
+
+    def _capturar_paso(self):
+        if not self._paso_automatico:
+            return self.paso.value
+        try:
+            return sugerir_paso({"x_min": self.minimo.value, "x_max": self.maximo.value})
+        except ValueError:
+            return None
 
     def _campo(self, etiqueta: str, valor: str = ""):
         return ui.input(etiqueta, value=valor).classes("w-full matriz-entrada").props(
@@ -70,7 +100,7 @@ class PanelExploracion:
     def capturar(self) -> dict:
         """Entrega función y rango sin exigir un criterio de parada válido."""
         return {"expresion": self.vista.expresion.value, "x_min": self.minimo.value,
-                "x_max": self.maximo.value, "paso": self.paso.value,
+                "x_max": self.maximo.value, "paso": self._capturar_paso(),
                 **opciones_unidad(self.vista.unidad_angular.value)}
 
     def invalidar(self) -> None:
@@ -86,11 +116,7 @@ class PanelExploracion:
 
     def usar_intervalo(self) -> None:
         """Copia los extremos capturados al rango exploratorio sin calcular ni cambiar a/b."""
-        if self._cerrado or self.contenedor_resultados.is_deleted:
-            return
-        self.minimo.set_value(self.vista.inferior.value)
-        self.maximo.set_value(self.vista.superior.value)
-        self.invalidar()
+        self.vista.vista_previa.usar_intervalo()
 
     def mostrar_estado_inicial(self) -> None:
         """Restablece la orientación tras vaciar el rango de búsqueda."""
