@@ -29,9 +29,9 @@
 .biseccion-tabla .q-table__middle { overflow: visible; }
 .biseccion-tabla .q-table__bottom { flex-wrap: wrap; }
 .biseccion-grafica { min-height: 340px; }
-.biseccion-panel-exploracion, .biseccion-candidatos, .biseccion-candidato { overflow-wrap: anywhere; }
+.biseccion-panel-previa, .biseccion-panel-exploracion, .biseccion-candidatos, .biseccion-candidato { overflow-wrap: anywhere; }
 .biseccion-candidato { padding-block: var(--space-3); border-top: 1px solid var(--border-input); }
-.biseccion-panel-exploracion .q-btn { flex-shrink: 0; max-width: 100%; }
+.biseccion-panel-previa .q-btn, .biseccion-panel-exploracion .q-btn { flex-shrink: 0; max-width: 100%; }
 .biseccion-vista :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .biseccion-vista .q-btn__content { white-space: normal; overflow-wrap: anywhere; }
 @media (max-width: 900px) {
@@ -39,7 +39,7 @@
 }
 @media (max-width: 560px) {
   .biseccion-campos, .biseccion-metricas { grid-template-columns: minmax(0, 1fr); }
-  .biseccion-captura, .biseccion-panel-exploracion { padding: var(--space-4); }
+  .biseccion-captura, .biseccion-panel-previa, .biseccion-panel-exploracion { padding: var(--space-4); }
   .biseccion-vista .panel-tarjeta { max-width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) {
