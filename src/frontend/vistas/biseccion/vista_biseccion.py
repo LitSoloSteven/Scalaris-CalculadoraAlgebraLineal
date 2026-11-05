@@ -17,6 +17,7 @@ from .selector_criterio import actualizar_guia, enlazar_parametros
 from .intervalo_canonico import reflejar_intervalo
 from .exploracion import PanelExploracion
 from .vista_previa import PanelVistaPrevia
+from .resolucion_multiple import PanelResolucionMultiple
 
 registro = logging.getLogger(__name__)
 
@@ -43,6 +44,8 @@ class VistaBiseccion:
             self.vista_previa.construir()
             self.exploracion = PanelExploracion(self)
             self.exploracion.construir()
+            self.resolucion_multiple = PanelResolucionMultiple(self)
+            self.resolucion_multiple.construir()
             self.estado = ui.label("Ingresa una función o carga un ejemplo para comenzar.").classes("texto-secundario").props('role=status aria-live=polite')
             self.recientes = ui.row().classes("w-full gap-2")
             self.contenedor_resultados = ui.column().classes("w-full min-w-0 gap-5")
@@ -159,10 +162,12 @@ class VistaBiseccion:
         invalidar_resultado(self)
         self.exploracion.cerrar()
         self.vista_previa.cerrar()
+        self.resolucion_multiple.cerrar()
 
     def _reconectar(self) -> None:
         self.exploracion.reabrir()
         self.vista_previa.reabrir()
+        self.resolucion_multiple.reabrir()
 
     def obtener_contexto_ia(self) -> ContextoIA:
         """Entrega a Glosa la captura y un resumen acotado del resultado vigente."""

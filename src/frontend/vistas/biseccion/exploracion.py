@@ -60,6 +60,9 @@ class PanelExploracion:
     def invalidar(self) -> None:
         """Cancela la espera y retira acciones antiguas sin tocar el resultado matemático."""
         invalidar_panel(self)
+        lote = getattr(self.vista, "resolucion_multiple", None)
+        if lote is not None:
+            lote.retirar_candidatos()
         if not self.contenedor_resultados.is_deleted:
             self.contenedor_resultados.clear()
             self.estado.set_text("Datos editados. Explora para obtener candidatos vigentes.")
@@ -108,6 +111,9 @@ class PanelExploracion:
                 mostrar_candidatos(self, respuesta)
             else:
                 ui.label(respuesta["mensaje"]).classes("texto-secundario")
+        lote = getattr(self.vista, "resolucion_multiple", None)
+        if lote is not None and respuesta["estado"] == "EXITO":
+            lote.actualizar_candidatos(respuesta)
 
     def seleccionar(self, respuesta: dict, candidato: dict) -> None:
         """Carga un intervalo apto actual y deja el cálculo posterior a una acción explícita."""
