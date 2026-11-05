@@ -3,6 +3,7 @@ import asyncio
 import logging
 
 from nicegui import ui
+from src.backend.resolutores.raices.unidades_angulares import opciones_unidad
 
 from src.frontend.controladores.biseccion.vigencia_panel import invalidar_panel
 from src.frontend.controladores.biseccion.exploracion import (
@@ -55,7 +56,8 @@ class PanelExploracion:
     def capturar(self) -> dict:
         """Entrega función y rango sin exigir un criterio de parada válido."""
         return {"expresion": self.vista.expresion.value, "x_min": self.minimo.value,
-                "x_max": self.maximo.value, "paso": self.paso.value}
+                "x_max": self.maximo.value, "paso": self.paso.value,
+                **opciones_unidad(self.vista.unidad_angular.value)}
 
     def invalidar(self) -> None:
         """Cancela la espera y retira acciones antiguas sin tocar el resultado matemático."""

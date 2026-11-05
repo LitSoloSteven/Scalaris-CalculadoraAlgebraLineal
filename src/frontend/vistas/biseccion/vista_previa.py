@@ -3,6 +3,7 @@ import asyncio
 import logging
 
 from nicegui import ui
+from src.backend.resolutores.raices.unidades_angulares import opciones_unidad
 
 from src.frontend.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
 from src.frontend.controladores.actualizacion_cancelable import programar_actualizacion
@@ -51,7 +52,8 @@ class PanelVistaPrevia:
     def capturar(self) -> dict:
         """Entrega solo expresión y rango visual; no incluye a/b ni criterio matemático."""
         return {"expresion": self.vista.expresion.value,
-                "x_min": self.minimo.value, "x_max": self.maximo.value}
+                "x_min": self.minimo.value, "x_max": self.maximo.value,
+                **opciones_unidad(self.vista.unidad_angular.value)}
 
     def _sigue_montada(self) -> bool:
         return not self._cerrado and not self.contenedor_resultados.is_deleted

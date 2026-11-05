@@ -91,7 +91,7 @@ class PanelResolucionMultiple:
         """Entrega configuración común y selección actual con identificadores del escaneo."""
         candidatos = self.candidatos if self._todos else {
             clave: candidato for clave, candidato in self.candidatos.items() if clave == self.selector.value}
-        return {"configuracion": self.vista.capturar(), "unidad_angular": "radianes",
+        return {"configuracion": self.vista.capturar(), "unidad_angular": self.vista.unidad_angular.value,
                 "candidatos": tuple({"identificador": clave, "candidato": candidato}
                                     for clave, candidato in candidatos.items())}
 
