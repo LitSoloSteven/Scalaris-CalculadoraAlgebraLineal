@@ -7,7 +7,8 @@ from src.frontend.controladores.biseccion.salidas_biseccion import COLUMNAS_EXAM
 def crear_interruptor_examen(vista) -> ui.switch:
     """Crea el control del resultado con la preferencia de la vista actual."""
     return ui.switch("Modo examen", value=vista.modo_examen,
-                     on_change=lambda evento: setattr(vista, "modo_examen", evento.value)).classes("texto-principal")
+                     on_change=lambda evento: setattr(vista, "modo_examen", evento.value)).classes(
+                         "biseccion-interruptor-examen texto-principal")
 
 
 def mostrar_accion_examen(interruptor: ui.switch, fila: dict, estado: str) -> None:
