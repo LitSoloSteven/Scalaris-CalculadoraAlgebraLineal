@@ -89,6 +89,7 @@ class DiagnosticoBiseccion(TypedDict):
     origen: str
     mensaje: str
     evidencia_discontinuidad: NotRequired[EvidenciaDiscontinuidad]
+    mensaje_parada: NotRequired[str]
 
 
 class EvaluacionExtremo(TypedDict):

@@ -35,7 +35,8 @@ def calificar_discontinuidad(resultado: ResultadoBiseccion) -> ResultadoBiseccio
     return replace(resultado, estado=ESTADO_DISCONTINUIDAD, codigo_diagnostico=CODIGO_DISCONTINUIDAD,
                    mensaje=_AVISO_SOSPECHA, advertencias=avisos,
                    diagnostico={"codigo": CODIGO_DISCONTINUIDAD, "origen": "traza",
-                                "mensaje": _AVISO_SOSPECHA, "evidencia_discontinuidad": evidencia})
+                                "mensaje": _AVISO_SOSPECHA, "evidencia_discontinuidad": evidencia,
+                                "mensaje_parada": resultado.mensaje})
 
 
 def _evidencia(filas: tuple[IteracionBiseccion, ...]) -> EvidenciaDiscontinuidad | None:
