@@ -64,6 +64,7 @@ def test_modo_examen_sincroniza_tabla_paso_y_copia_sin_invalidar(monkeypatch):
             _comprobar_fila(vista, fila, copias[-1])
         vista.formato.set_value(6)
         assert "x ≈ 1.375000" in copias[-1] and "Modo examen" in copias[-1]
+        assert copias[-1].startswith("Resultado:\n3 iteraciones completadas")
         examen.set_value(False)
         _comprobar_modo_oculto(reproductor, tabla, copias[-1])
 
@@ -105,6 +106,7 @@ def test_error_parcial_conserva_accion_y_fallo_en_el_procedimiento(monkeypatch):
         assert fila["accion_examen"] == "b = c"
         _comprobar_fila(vista, fila, copias[-1])
         assert "La evaluación falló en x = 0.25" in vista.reproductor_pasos.pasos[-1].explicacion
+        assert copias[-1].startswith("Resultado:\nError de entrada o evaluación")
         assert "0.25" in copias[-1]
 
     ejecutar_escenario(monkeypatch, _comprobar)

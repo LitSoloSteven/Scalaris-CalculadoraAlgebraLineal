@@ -76,7 +76,8 @@ def texto_resumen(respuesta: dict, decimales: int) -> str:
     return "\n".join(lineas)
 
 
-def datos_copia_biseccion(estado: str, texto: str) -> dict[str, str]:
-    """Entrega el texto al copiador con su rótulo de resultado para cierres provisionales."""
-    campo = "matriz_resultado" if estado == ESTADO_DISCONTINUIDAD else "solucion"
+def datos_copia_biseccion(estado: str, texto: str, *, examen: bool = False) -> dict[str, str]:
+    """Rotula la sospecha y las trazas de examen sin éxito como resultado."""
+    es_resultado = estado == ESTADO_DISCONTINUIDAD or (examen and estado != "EXITO")
+    campo = "matriz_resultado" if es_resultado else "solucion"
     return {campo: texto}

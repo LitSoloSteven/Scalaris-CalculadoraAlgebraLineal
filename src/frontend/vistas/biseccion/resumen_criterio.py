@@ -51,11 +51,12 @@ def _montar_copia(vista, respuesta: dict, examen: ui.switch | None) -> Callable[
             return
         precision = getattr(vista, "_precision_visual", DECIMALES_PRESENTACION_DEFECTO)
         texto = texto_resumen(respuesta, precision)
-        if examen is not None and examen.value:
+        modo_activo = examen is not None and examen.value
+        if modo_activo:
             texto += "\n\n" + texto_traza_examen(respuesta)
         contenedor.clear()
         with contenedor:
-            renderizar_copia_resultado(datos_copia_biseccion(respuesta["estado"], texto))
+            renderizar_copia_resultado(datos_copia_biseccion(respuesta["estado"], texto, examen=modo_activo))
 
     _actualizar()
     if examen is not None:
