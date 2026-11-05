@@ -6,8 +6,9 @@
         const opciones = Array.from(grupo.querySelectorAll('[role="radio"]'));
         const indice = opciones.indexOf(boton);
         const anterior = Math.max(0, opciones.findIndex(opcion => opcion.getAttribute?.('aria-checked') === 'true'));
+        const movimientoLocal = grupo.hasAttribute?.('data-selector-movimiento-local');
         const columnas = Number(grupo.dataset?.selectorColumnas) || opciones.length;
-        const indicador = grupo.querySelector?.('.selector-opciones-indicador');
+        const indicador = !movimientoLocal && grupo.querySelector?.('.selector-opciones-indicador');
         const origen = indicador && window.getComputedStyle?.(indicador).transform;
         if (origen) grupo.style.setProperty('--selector-origen-transformacion', origen);
         grupo.classList?.remove('selector-opciones-cambiando');
@@ -22,7 +23,7 @@
             opcion.setAttribute('aria-checked', String(activo));
             opcion.setAttribute('tabindex', activo ? '0' : '-1');
         });
-        if (indice !== anterior) {
+        if (!movimientoLocal && indice !== anterior) {
             void grupo.offsetWidth;
             grupo.classList?.add('selector-opciones-cambiando');
         }

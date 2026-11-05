@@ -36,20 +36,23 @@ def _componer_captura(vista) -> None:
         construir_captura(vista)
         vista.previa_expresion = PreviaExpresion()
         construir_modos(vista)
-        vista.region_intervalo = region_modo(vista, MODO_INTERVALO)
-        with vista.region_intervalo:
-            construir_intervalo(vista)
-            with desplegable("Avanzado"):
-                construir_limite(vista)
-                vista.vista_previa.construir_controles()
-            construir_boton_calculo(vista)
-            vista.continuidad = PanelContinuidad(vista)
-            vista.continuidad.construir()
-        vista.region_busqueda = region_modo(vista, MODO_BUSQUEDA)
-        with vista.region_busqueda:
-            vista.exploracion.construir()
-            vista.seleccion_grafico = SeleccionGrafico(vista)
-            vista.seleccion_grafico.construir()
-            vista.resolucion_multiple.construir()
+        with ui.element("div").classes("biseccion-regiones w-full"):
+            _componer_regiones(vista)
         construir_acciones(vista)
         vista.recientes = ui.row().classes("w-full gap-2")
+
+
+def _componer_regiones(vista) -> None:
+    with region_modo(vista, MODO_INTERVALO) as vista.region_intervalo:
+        construir_intervalo(vista)
+        with desplegable("Avanzado"):
+            construir_limite(vista)
+            vista.vista_previa.construir_controles()
+        construir_boton_calculo(vista)
+        vista.continuidad = PanelContinuidad(vista)
+        vista.continuidad.construir()
+    with region_modo(vista, MODO_BUSQUEDA) as vista.region_busqueda:
+        vista.exploracion.construir()
+        vista.seleccion_grafico = SeleccionGrafico(vista)
+        vista.seleccion_grafico.construir()
+        vista.resolucion_multiple.construir()

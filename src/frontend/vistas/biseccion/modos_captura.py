@@ -14,6 +14,8 @@ _OPCIONES = (
 def construir_modos(vista) -> None:
     """Monta el conmutador accesible conservando los controles de ambas tareas."""
     vista.modos = SelectorOpciones(_OPCIONES, MODO_INTERVALO, vista.cambiar_modo, "Tarea de bisección")
+    vista.modos.classes("biseccion-modos").props("data-selector-movimiento-local")
+    vista.modos.on("click.capture", js_handler="evento => window.scalaris.movimientoBiseccion.seleccionarModo(evento)")
 
 
 def region_modo(vista, modo: str):
