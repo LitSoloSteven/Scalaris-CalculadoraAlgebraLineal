@@ -25,7 +25,8 @@ def resolver_exploracion(captura: dict) -> dict:
             raise ValueError("Revisa los campos de exploración.")
         expresion = captura.get("expresion", "")
         entrada = EntradaExploracion(expresion, _campo(captura, "x_min"),
-                                     _campo(captura, "x_max"), _campo(captura, "paso"))
+                                     _campo(captura, "x_max"), _campo(captura, "paso"),
+                                     unidad_angular=captura.get("unidad_angular", "radianes"))
         return {"estado": "EXITO", "mensaje": "Exploración disponible.", **asdict(explorar_intervalos(entrada))}
     except ValueError as error:
         return {"estado": "ERROR", "mensaje": str(error), "candidatos": (), "advertencias": (), "evaluaciones": 0}

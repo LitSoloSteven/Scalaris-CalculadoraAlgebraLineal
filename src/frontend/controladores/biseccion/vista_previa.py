@@ -3,6 +3,7 @@ import math
 
 from src.backend.resolutores.raices.limites_biseccion import LONGITUD_MAXIMA_EXPRESION
 from src.backend.resolutores.raices.normalizacion_funcion import normalizar_expresion
+from src.backend.resolutores.raices.unidades_angulares import opciones_unidad
 from .captura_criterio import real_capturado
 from .muestreo import muestrear_funcion
 
@@ -23,7 +24,8 @@ def preparar_vista_previa(captura: dict) -> dict:
         if inferior >= superior:
             raise ValueError("El rango de la gráfica requiere mínimo < máximo.")
         entrada = {"expresion": normalizar_expresion(expresion),
-                   "extremo_izquierdo": inferior, "extremo_derecho": superior}
+                   "extremo_izquierdo": inferior, "extremo_derecho": superior,
+                   **opciones_unidad(captura.get("unidad_angular", "radianes"))}
         muestra = muestrear_funcion(entrada)
         return {"estado": "EXITO", "mensaje": _mensaje_muestra(muestra),
                 "entrada": entrada, "muestra": muestra}

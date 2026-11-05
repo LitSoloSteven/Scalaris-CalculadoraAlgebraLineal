@@ -4,6 +4,7 @@ from statistics import median
 
 from src.backend.excepciones import ErrorDominio, ErrorNoFinito
 from src.backend.resolutores.raices.evaluador_funcion import compilar, evaluar
+from src.backend.resolutores.raices.unidades_angulares import opciones_unidad
 
 MUESTRAS_GRAFICA = 401
 FACTOR_SALTO_SOSPECHOSO = 20
@@ -11,7 +12,7 @@ FACTOR_SALTO_SOSPECHOSO = 20
 
 def muestrear_funcion(entrada: dict) -> dict:
     """Devuelve coordenadas y huecos; las evaluaciones inválidas nunca se unen."""
-    funcion = compilar(entrada["expresion"])
+    funcion = compilar(entrada["expresion"], **opciones_unidad(entrada.get("unidad_angular", "radianes")))
     inferior, superior = entrada["extremo_izquierdo"], entrada["extremo_derecho"]
     abscisas = [inferior * (1 - indice / (MUESTRAS_GRAFICA - 1))
                 + superior * (indice / (MUESTRAS_GRAFICA - 1)) for indice in range(MUESTRAS_GRAFICA)]
