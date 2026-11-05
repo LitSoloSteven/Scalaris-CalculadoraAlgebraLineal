@@ -15,6 +15,7 @@ from .captura import construir_captura
 from .resultado import mostrar_resultado
 from .selector_criterio import actualizar_guia, enlazar_parametros
 from .intervalo_canonico import reflejar_intervalo
+from .exploracion import PanelExploracion
 
 registro = logging.getLogger(__name__)
 
@@ -37,6 +38,8 @@ class VistaBiseccion:
         crear_estructura_aplicacion(self, ruta_activa=ruta_de("biseccion"))
         with ui.column().classes("biseccion-vista vista-raiz w-full mx-auto p-4 gap-5"):
             construir_captura(self)
+            self.exploracion = PanelExploracion(self)
+            self.exploracion.construir()
             self.estado = ui.label("Ingresa una función o carga un ejemplo para comenzar.").classes("texto-secundario").props('role=status aria-live=polite')
             self.recientes = ui.row().classes("w-full gap-2")
             self.contenedor_resultados = ui.column().classes("w-full min-w-0 gap-5")
@@ -48,6 +51,7 @@ class VistaBiseccion:
         actualizar_guia(self)
         self.panel_ia.construir()
         ui.context.client.on_disconnect(self._desconectar)
+        ui.context.client.on_connect(self.exploracion.reabrir)
 
     def _campos_captura(self) -> tuple:
         return self.expresion, self.inferior, self.superior, self.limite, self.criterio
@@ -65,6 +69,7 @@ class VistaBiseccion:
         if self._cargando_captura:
             return
         invalidar_resultado(self)
+        self.exploracion.invalidar()
         self.contenedor_resultados.clear()
         actualizar_guia(self)
         self.estado.set_text("Datos editados. Calcula para obtener un resultado vigente.")
@@ -148,6 +153,7 @@ class VistaBiseccion:
 
     def _desconectar(self) -> None:
         invalidar_resultado(self)
+        self.exploracion.cerrar()
 
     def obtener_contexto_ia(self) -> ContextoIA:
         """Entrega a Glosa la captura y un resumen acotado del resultado vigente."""
