@@ -36,6 +36,7 @@ def _comprobar_presentacion(respuesta, estado, motivo):
     assert len(tabla) == len(pasos) - 2 == contexto["total_iteraciones"] == len(filas)
     assert pasos[-2].cuerpo == filas[-1]
     ultima = contexto["ultima_fila_valida"]
+    assert (ultima["a"], ultima["b"]) == (filas[-1]["extremo_izquierdo"], filas[-1]["extremo_derecho"])
     assert float(tabla[-1]["c"]) == ultima["c"] == respuesta["aproximacion"]
     assert ultima["accion"] == "detener" and ultima["motivo_parada"] == motivo
     assert contexto["titulo_estado"] in copia

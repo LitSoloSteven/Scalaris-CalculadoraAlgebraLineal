@@ -6,7 +6,7 @@ _CAMPOS_RESULTADO = (
     "criterio_solicitado", "unidad_criterio", "umbral", "metrica_final", "codigo_diagnostico", "advertencias",
     "diagnostico", "aviso_grafica", "contexto_fallo", "sugerencias", "unidad_angular",
 )
-_CAMPOS_FILA = ("i", "a", "b", "c", "f_c", "signo_producto", "accion", "motivo_parada")
+_CAMPOS_FILA = ("i", "c", "f_c", "signo_producto", "accion", "motivo_parada")
 
 
 def resumir_contexto_biseccion(respuesta: dict | None) -> dict | None:
@@ -19,5 +19,7 @@ def resumir_contexto_biseccion(respuesta: dict | None) -> dict | None:
     resumen["etiqueta_aproximacion"] = etiqueta_aproximacion(respuesta)
     resumen["total_iteraciones"] = len(filas)
     if filas:
-        resumen["ultima_fila_valida"] = {clave: filas[-1].get(clave) for clave in _CAMPOS_FILA}
+        ultima = filas[-1]
+        resumen["ultima_fila_valida"] = {**{clave: ultima.get(clave) for clave in _CAMPOS_FILA},
+                                        "a": ultima.get("extremo_izquierdo"), "b": ultima.get("extremo_derecho")}
     return resumen
