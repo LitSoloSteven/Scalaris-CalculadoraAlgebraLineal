@@ -47,10 +47,12 @@ def _comprobar_funcion(nodo: ast.Call, extremos: tuple) -> None:
     rango = _rango_afin(nodo.args[0], extremos)
     if rango is None:
         return
-    if nombre == "log" and rango[0] <= 0:
+    if nombre in ("log", "ln", "log10", "log2") and rango[0] <= 0:
         raise ErrorDominio("El logaritmo no es real o no está definido en todo el intervalo.")
     if nombre == "sqrt" and rango[0] < 0:
         raise ErrorDominio("La raíz cuadrada no es real en todo el intervalo.")
+    if nombre in ("asin", "acos") and (rango[0] < -1 or rango[1] > 1):
+        raise ErrorDominio("El argumento de la función trigonométrica inversa debe estar entre -1 y 1.")
 
 
 def _contiene_cero(nodo: ast.AST, extremos: tuple) -> bool:

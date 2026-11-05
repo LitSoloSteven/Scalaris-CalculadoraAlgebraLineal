@@ -3,11 +3,14 @@ import ast
 import math
 from decimal import Decimal
 
-from .contrato_biseccion import LONGITUD_MAXIMA_EXPRESION
 from .errores_numericos import ErrorCapacidadNumerica
+from .normalizacion_funcion import normalizar_expresion
 
 FUNCIONES_REALES = {"sin": math.sin, "cos": math.cos, "tan": math.tan, "exp": math.exp,
-                   "log": math.log, "sqrt": math.sqrt, "abs": abs}
+                   "log": math.log, "ln": math.log, "log10": math.log10, "log2": math.log2,
+                   "asin": math.asin, "acos": math.acos, "atan": math.atan,
+                   "sinh": math.sinh, "cosh": math.cosh, "tanh": math.tanh,
+                   "sqrt": math.sqrt, "abs": abs}
 CONSTANTES_REALES = {"pi": math.pi, "e": math.e}
 MAXIMO_NODOS_EXPRESION = 256
 MAXIMA_PROFUNDIDAD_EXPRESION = 32
@@ -16,18 +19,15 @@ _OPERADORES = (ast.Add, ast.Sub, ast.Mult, ast.Div, ast.Pow)
 
 def analizar_expresion(expresion: str) -> ast.Expression:
     """Valida sintaxis y recursos; devuelve AST o lanza ValueError/ErrorNoFinito."""
-    if not isinstance(expresion, str) or not expresion.strip():
-        raise ValueError("La expresión f(x) es obligatoria.")
-    if len(expresion) > LONGITUD_MAXIMA_EXPRESION:
-        raise ValueError(f"La expresión excede {LONGITUD_MAXIMA_EXPRESION} caracteres.")
+    normalizada = normalizar_expresion(expresion)
     try:
-        arbol = ast.parse(expresion.strip(), mode="eval")
+        arbol = ast.parse(normalizada, mode="eval")
     except (SyntaxError, RecursionError) as error:
         raise ValueError("Sintaxis inválida. Revisa operadores, paréntesis y llamadas a funciones.") from error
     if sum(1 for _ in ast.walk(arbol)) > MAXIMO_NODOS_EXPRESION:
         raise ValueError("La expresión contiene demasiadas operaciones.")
     _validar_nodo(arbol.body, 0)
-    _comprobar_literales(arbol, expresion.strip())
+    _comprobar_literales(arbol, normalizada)
     return arbol
 
 
