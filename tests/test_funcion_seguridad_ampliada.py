@@ -16,6 +16,7 @@ from src.backend.resolutores.raices.normalizacion_funcion import normalizar_expr
     "e(1)", "funcion(x)", "sinx", "xx", "xp i", "True", "None", "1j",
     "x//2", "x%2", "x<2", "x|2", "x&2", "x # comentario", "ｘ+1", "sіn(x)",
     "1 2", "x 2", "x**", "²x", "x⁴", "sin(x", "x)", "x\n+1",
+    "x* *2", "1 .2", "log 10(x)",
 ])
 def test_codigo_y_tokens_no_admitidos(expresion):
     """El catálogo y la lista AST siguen cerrados ante notación maliciosa o ambigua."""
@@ -30,7 +31,7 @@ def test_forma_y_longitud_original(expresion):
         normalizar_expresion(expresion)
 
 
-@pytest.mark.parametrize("expresion", ["(x)" * 110, "x²+" * 120 + "x", "x^1" * 130])
+@pytest.mark.parametrize("expresion", ["(x)" * 129, "x²+" * 120 + "x", "x^1" * 130])
 def test_longitud_posterior_a_expansion(expresion):
     """Una captura acotada no puede crecer sin límite al explicitar productos o potencias."""
     assert len(expresion) <= 512

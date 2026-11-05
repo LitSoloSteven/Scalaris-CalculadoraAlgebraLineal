@@ -2,6 +2,7 @@
 import math
 
 from src.backend.resolutores.raices.limites_biseccion import LONGITUD_MAXIMA_EXPRESION
+from src.backend.resolutores.raices.normalizacion_funcion import normalizar_expresion
 from .captura_criterio import real_capturado
 from .muestreo import muestrear_funcion
 
@@ -21,7 +22,7 @@ def preparar_vista_previa(captura: dict) -> dict:
         superior = _extremo(captura.get("x_max"), "El máximo de la gráfica")
         if inferior >= superior:
             raise ValueError("El rango de la gráfica requiere mínimo < máximo.")
-        entrada = {"expresion": expresion,
+        entrada = {"expresion": normalizar_expresion(expresion),
                    "extremo_izquierdo": inferior, "extremo_derecho": superior}
         muestra = muestrear_funcion(entrada)
         return {"estado": "EXITO", "mensaje": _mensaje_muestra(muestra),

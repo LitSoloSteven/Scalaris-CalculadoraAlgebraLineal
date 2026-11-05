@@ -22,9 +22,11 @@ def normalizar_expresion(expresion: str) -> str:
     for actual in tokens:
         if anterior is not None and _requiere_producto(anterior, actual):
             partes.append("*")
+        elif anterior is not None and _requiere_espacio(anterior, actual):
+            partes.append(" ")
         partes.append("**" if actual.type == tokenize.OP and actual.string == "^" else actual.string)
         anterior = actual
-    normalizada = " ".join(partes)
+    normalizada = "".join(partes)
     _comprobar_longitud(normalizada)
     return normalizada
 
@@ -45,6 +47,8 @@ def _obtener_tokens(texto: str) -> list[tokenize.TokenInfo]:
 
 
 def _token_admitido(token: tokenize.TokenInfo) -> bool:
+    if token.type == tokenize.NEWLINE and token.string:
+        raise ValueError("Escribe una sola expresión; usa paréntesis para continuarla en otra línea.")
     if token.type in _OMITIDOS:
         return False
     if token.type == tokenize.NUMBER:
@@ -63,3 +67,10 @@ def _requiere_producto(anterior: tokenize.TokenInfo, actual: tokenize.TokenInfo)
     if actual.string == "(":
         return anterior.type == tokenize.NUMBER or anterior.string == ")"
     return anterior.string == ")" and actual.type == tokenize.NUMBER
+
+
+def _requiere_espacio(anterior: tokenize.TokenInfo, actual: tokenize.TokenInfo) -> bool:
+    if actual.type == tokenize.NUMBER and anterior.type in (tokenize.NAME, tokenize.NUMBER):
+        return True
+    operadores = anterior.type == actual.type == tokenize.OP
+    return operadores and anterior.string not in ("(", ")") and actual.string not in ("(", ")")
