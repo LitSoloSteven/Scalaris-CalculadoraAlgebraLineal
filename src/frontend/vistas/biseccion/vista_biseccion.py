@@ -153,7 +153,9 @@ class VistaBiseccion:
             elif "decimales" in captura:
                 self.criterio.set_value("decimales")
                 self.decimales.set_value(captura["decimales"])
-            self._cero_preferido = captura.get("cero_preferido")
+            claves_cero = ("expresion", "extremo_izquierdo", "extremo_derecho", "unidad_angular", "cero_preferido")
+            if any(clave in captura for clave in claves_cero):
+                self._cero_preferido = captura.get("cero_preferido")
         finally:
             self._cargando_captura = False
         self._editar()

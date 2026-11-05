@@ -11,7 +11,8 @@ from src.frontend.controladores.biseccion.presentacion import construir_pasos, f
 from src.frontend.controladores.biseccion.resolucion_multiple import resolver_lote
 from src.frontend.controladores.biseccion.salidas_biseccion import texto_copia_biseccion
 from src.frontend.controladores.biseccion.vista_previa import preparar_vista_previa
-from tests.comun_biseccion_criterios import captura_criterio
+from tests.comun_biseccion_criterios import captura_criterio, ejecutar_escenario
+from tests.comun_exploracion_biseccion import acciones_exploracion, activar_accion
 
 
 def _intervalo(captura, intervalo):
@@ -117,3 +118,30 @@ def test_malla_incluye_un_extremo_que_coincide_por_redondeo():
     assert exploracion["estado"] == "EXITO" and exploracion["evaluaciones"] == 6
     ceros = [registro["candidato"]["abscisa"] for registro in _candidatos_aptos(exploracion)]
     assert ceros == [1.5]
+
+
+def test_seleccion_individual_restaura_el_cero_y_lo_descarta_al_editar(monkeypatch):
+    """El segundo cero sobrevive al criterio y a Recientes, con vigencia ligada al intervalo."""
+    async def comprobar(vista):
+        """Carga el segundo candidato por su botón y compara cálculos posteriores."""
+        captura = _intervalo({**captura_criterio(), "expresion": "x*(x-1)"}, ("0", "1"))
+        vista.cargar_captura(captura)
+        panel = vista.exploracion
+        panel.usar_intervalo()
+        panel.paso.set_value("1")
+        await panel.explorar()
+        activar_accion(acciones_exploracion(panel)[1])
+        vista.cargar_captura({"criterio": {"tipo": "iteraciones", "parametro": 3}})
+        assert vista.capturar()["cero_preferido"] == 1
+        await vista.resolver()
+        assert vista.ultimo_resultado["aproximacion"] == 1
+        guardada = vista.historial[0]["captura"]
+        vista.expresion.set_value("x")
+        vista.expresion.set_value("x*(x-1)")
+        assert "cero_preferido" not in vista.capturar()
+        await vista.resolver()
+        assert vista.ultimo_resultado["aproximacion"] == 0
+        vista.cargar_captura(guardada)
+        await vista.resolver()
+        assert vista.ultimo_resultado["aproximacion"] == 1
+    ejecutar_escenario(monkeypatch, comprobar)
