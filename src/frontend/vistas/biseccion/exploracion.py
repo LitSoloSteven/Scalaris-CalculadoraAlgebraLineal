@@ -4,7 +4,7 @@ import logging
 
 from nicegui import ui
 
-from src.frontend.controladores.actualizacion_cancelable import cancelar_actualizacion
+from src.frontend.controladores.biseccion.vigencia_panel import invalidar_panel
 from src.frontend.controladores.biseccion.exploracion import (
     LONGITUD_CAMPO_EXPLORACION, PASO_EXPLORACION_DEFECTO, presentar_candidato, resolver_exploracion,
 )
@@ -59,11 +59,7 @@ class PanelExploracion:
 
     def invalidar(self) -> None:
         """Cancela la espera y retira acciones antiguas sin tocar el resultado matemático."""
-        self._revision_captura += 1
-        self._identificador_calculo += 1
-        cancelar_actualizacion(self.tarea)
-        self.tarea = None
-        self.respuesta = None
+        invalidar_panel(self)
         if not self.contenedor_resultados.is_deleted:
             self.contenedor_resultados.clear()
             self.estado.set_text("Datos editados. Explora para obtener candidatos vigentes.")

@@ -5,8 +5,9 @@ import logging
 from nicegui import ui
 
 from src.frontend.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
-from src.frontend.controladores.actualizacion_cancelable import cancelar_actualizacion, programar_actualizacion
+from src.frontend.controladores.actualizacion_cancelable import programar_actualizacion
 from src.frontend.controladores.biseccion.vista_previa import preparar_vista_previa
+from src.frontend.controladores.biseccion.vigencia_panel import invalidar_panel
 from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
 from .captura import GUIA_CONTINUIDAD
 from .figura import crear_figura_previa
@@ -56,11 +57,7 @@ class PanelVistaPrevia:
         return not self._cerrado and not self.contenedor_resultados.is_deleted
 
     def _invalidar(self) -> None:
-        self._revision_captura += 1
-        self._identificador_calculo += 1
-        cancelar_actualizacion(self.tarea)
-        self.tarea = None
-        self.respuesta = None
+        invalidar_panel(self)
         if not self.contenedor_resultados.is_deleted:
             self.contenedor_resultados.clear()
             self._mostrar_carga(False)
