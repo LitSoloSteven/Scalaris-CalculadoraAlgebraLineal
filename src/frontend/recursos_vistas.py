@@ -34,6 +34,9 @@ _POR_RECURSO = {
     "sistemas_metodo.js": frozenset({"sistemas"}),
     "tema_graficos.js": frozenset({"visualizador"}) | _RAICES,
     "grafico_biseccion.js": _RAICES,
+    "movimiento_biseccion.js": _RAICES,
+    "banda_biseccion.js": _RAICES,
+    "paso_biseccion.js": _RAICES,
     "sincronizacion_diseno.js": frozenset({"visualizador"}),
 }
 _ETIQUETAS = re.compile(

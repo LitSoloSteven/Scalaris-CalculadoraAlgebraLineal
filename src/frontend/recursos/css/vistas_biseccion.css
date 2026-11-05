@@ -16,9 +16,48 @@
 }
 .biseccion-desplegable summary > div { display: inline; }
 .biseccion-desplegable > :not(summary) { margin-block: var(--space-2); }
-.biseccion-captura .selector-opciones-indicador,
-.biseccion-captura .selector-opciones-opcion { animation: none !important; transition: none !important; }
-.biseccion-captura .selector-opciones-opcion:active { transform: none; }
+.biseccion-modos[data-biseccion-puntero] .selector-opciones-indicador {
+  transition: transform var(--dur-state) var(--ease-std);
+}
+.biseccion-pestanas[data-biseccion-puntero] .q-tabs__content::after {
+  transition: transform var(--dur-state) var(--ease-std);
+}
+.biseccion-regiones { position: relative; isolation: isolate; }
+.biseccion-regiones > [data-biseccion-modo-local="inactivo"] { display: none !important; }
+.biseccion-regiones > [data-biseccion-modo-local="activo"],
+.biseccion-regiones > [data-biseccion-transicion] { display: flex !important; }
+.biseccion-regiones > [data-biseccion-transicion="salida"] {
+  position: absolute;
+  inset: 0 0 auto;
+  pointer-events: none;
+  z-index: -1;
+}
+.biseccion-pestanas .q-tab {
+  flex: 1 1 0;
+  min-width: 0;
+  padding-inline: var(--space-2);
+  transition: transform var(--dur-release) var(--ease-std);
+}
+.biseccion-pestanas .q-tab:active { transform: scale(0.97); transition-duration: var(--dur-press); }
+.biseccion-pestanas .q-tab__label { white-space: normal; overflow-wrap: anywhere; }
+.biseccion-pestanas .q-tab__indicator { display: none; }
+.biseccion-vista :is(.q-linear-progress__model, .q-slider__selection, .q-slider__thumb, .q-slider__text-container) {
+  transition: none;
+}
+.biseccion-pestanas .q-tabs__content::after {
+  content: "";
+  position: absolute;
+  inset: auto auto 0 0;
+  width: 50%;
+  height: 2px;
+  background: var(--accent);
+  pointer-events: none;
+  transform: translateX(0);
+}
+.biseccion-pestanas .q-tabs__content:has(.q-tab:nth-child(2)[aria-selected="true"])::after {
+  transform: translateX(100%);
+}
+html[data-entrada="teclado"] .biseccion-pestanas .q-tab { transform: none; transition: none; }
 .biseccion-captura .biseccion-panel-exploracion,
 .biseccion-captura .biseccion-panel-multiple { padding: 0; border: 0; box-shadow: none; background: transparent; }
 .biseccion-campos, .biseccion-metricas {
@@ -49,6 +88,15 @@
 .biseccion-tabla .q-table__middle { overflow: visible; }
 .biseccion-tabla .q-table__bottom { flex-wrap: wrap; }
 .biseccion-grafica { min-height: 340px; }
+.biseccion-marco-grafico { position: relative; isolation: isolate; }
+.biseccion-recorte-banda { position: absolute; overflow: hidden; pointer-events: none; }
+.biseccion-banda {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 1px;
+  transform-origin: left;
+}
+.biseccion-marco-grafico[data-biseccion-banda] .shape-group[data-index="0"] { visibility: hidden; }
 .biseccion-seleccion-activa .biseccion-grafica .nsewdrag { cursor: crosshair; }
 .biseccion-panel-previa, .biseccion-panel-exploracion, .biseccion-panel-multiple,
 .biseccion-resultado-multiple, .biseccion-candidatos, .biseccion-candidato { overflow-wrap: anywhere; }
@@ -72,4 +120,7 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .biseccion-vista { scroll-behavior: auto; }
+  .biseccion-pestanas[data-biseccion-puntero] .q-tabs__content::after { transition: none; }
+  .biseccion-modos[data-biseccion-puntero] .selector-opciones-indicador { transition: none; }
+  .biseccion-pestanas .q-tab { transform: none; transition: none; }
 }
