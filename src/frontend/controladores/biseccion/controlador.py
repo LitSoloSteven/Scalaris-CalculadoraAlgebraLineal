@@ -3,7 +3,7 @@ import math
 from dataclasses import asdict
 
 from src.backend.resolutores.raices.biseccion import biseccion
-from src.backend.resolutores.raices.contrato_biseccion import ResultadoBiseccion, derivar_E, LIMITE_ITERACIONES_MAXIMO
+from src.backend.resolutores.raices.contrato_biseccion import EntradaBiseccion, ResultadoBiseccion, derivar_E, LIMITE_ITERACIONES_MAXIMO
 from src.backend.resolutores.raices.parada_biseccion import comprobar_cierre_criterio
 from .captura_criterio import entero_capturado, preparar_entrada
 from .muestreo import muestrear_funcion
@@ -37,16 +37,21 @@ def resolver_captura(captura: dict) -> dict:
     try:
         entrada = preparar_entrada(captura)
         resultado = biseccion(entrada)
-        respuesta = asdict(resultado)
-        respuesta["error_absoluto"] = str(resultado.error_absoluto)
-        respuesta["entrada"] = asdict(entrada)
-        respuesta["tolerancia"] = float(entrada.error_absoluto)
-        _comprobar_salida(respuesta, resultado)
-        return respuesta
+        return serializar_resultado(entrada, resultado)
     except ValueError as error:
         return {"estado": "ERROR", "mensaje": str(error)}
     except (TypeError, OverflowError, ZeroDivisionError, RecursionError):
         return {"estado": "ERROR", "mensaje": "No se pudo evaluar f(x). Revisa la sintaxis, el dominio y la magnitud de los valores."}
+
+
+def serializar_resultado(entrada: EntradaBiseccion, resultado: ResultadoBiseccion) -> dict:
+    """Adapta un resultado del motor a datos finitos compartidos; lanza ValueError ante incoherencia."""
+    respuesta = asdict(resultado)
+    respuesta["error_absoluto"] = str(resultado.error_absoluto)
+    respuesta["entrada"] = asdict(entrada)
+    respuesta["tolerancia"] = float(entrada.error_absoluto)
+    _comprobar_salida(respuesta, resultado)
+    return respuesta
 
 
 def _comprobar_salida(respuesta: dict, resultado: ResultadoBiseccion) -> None:
