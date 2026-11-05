@@ -37,6 +37,7 @@ class VistaBiseccion:
         self.ocupado = False
         self.historial = []
         self._cargando_captura = False
+        self._cero_preferido = None
         self.modo_examen = False
 
     def construir(self) -> None:
@@ -55,7 +56,10 @@ class VistaBiseccion:
             self.recientes = ui.row().classes("w-full gap-2")
             self.contenedor_resultados = ui.column().classes("w-full min-w-0 gap-5")
         for campo in self._campos_captura():
-            campo.on_value_change(self._editar)
+            if campo in (self.criterio, self.limite):
+                campo.on_value_change(self._editar)
+            else:
+                campo.on_value_change(self._editar_intervalo)
             if campo not in (self.criterio, self.unidad_angular):
                 campo.on("keydown.enter", self.resolver)
         enlazar_parametros(self)
@@ -71,10 +75,18 @@ class VistaBiseccion:
         """Devuelve únicamente datos matemáticos comunes y el parámetro activo sin convertirlos."""
         tipo = self.criterio.value
         parametro = self.parametros_criterio[tipo].value
-        return {"expresion": self.expresion.value, "extremo_izquierdo": self.inferior.value,
-                "extremo_derecho": self.superior.value, "limite_iteraciones": self.limite.value,
-                "decimales": parametro if tipo == "decimales" else DECIMALES_PRESENTACION_DEFECTO,
-                "criterio": {"tipo": tipo, "parametro": parametro}, "unidad_angular": self.unidad_angular.value}
+        captura = {"expresion": self.expresion.value, "extremo_izquierdo": self.inferior.value,
+                   "extremo_derecho": self.superior.value, "limite_iteraciones": self.limite.value,
+                   "decimales": parametro if tipo == "decimales" else DECIMALES_PRESENTACION_DEFECTO,
+                   "criterio": {"tipo": tipo, "parametro": parametro}, "unidad_angular": self.unidad_angular.value}
+        if self._cero_preferido is not None:
+            captura["cero_preferido"] = self._cero_preferido
+        return captura
+
+    def _editar_intervalo(self) -> None:
+        if not self._cargando_captura:
+            self._cero_preferido = None
+        self._editar()
 
     def _editar(self) -> None:
         if self._cargando_captura:
@@ -141,6 +153,7 @@ class VistaBiseccion:
             elif "decimales" in captura:
                 self.criterio.set_value("decimales")
                 self.decimales.set_value(captura["decimales"])
+            self._cero_preferido = captura.get("cero_preferido")
         finally:
             self._cargando_captura = False
         self._editar()

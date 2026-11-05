@@ -126,7 +126,10 @@ class PanelExploracion:
         if not presentar_candidato(candidato)["seleccionable"]:
             return
         inferior, superior = candidato["intervalo"]
-        self.vista.cargar_captura({"extremo_izquierdo": str(inferior), "extremo_derecho": str(superior)})
+        captura = {"extremo_izquierdo": str(inferior), "extremo_derecho": str(superior)}
+        if candidato["tipo"] == "cero_evaluado":
+            captura["cero_preferido"] = candidato["abscisa"]
+        self.vista.cargar_captura(captura)
 
     def cerrar(self) -> None:
         """Invalida acciones y cancela la espera del cliente desconectado."""

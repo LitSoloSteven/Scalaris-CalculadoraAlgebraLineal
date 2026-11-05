@@ -5,7 +5,7 @@ from dataclasses import asdict
 from src.backend.resolutores.raices.biseccion import biseccion
 from src.backend.resolutores.raices.contrato_biseccion import EntradaBiseccion, ResultadoBiseccion, derivar_E, LIMITE_ITERACIONES_MAXIMO
 from src.backend.resolutores.raices.parada_biseccion import comprobar_cierre_criterio
-from .captura_criterio import entero_capturado, preparar_entrada
+from .captura_criterio import entero_capturado, preparar_entrada, real_capturado
 from .muestreo import muestrear_funcion, separar_intervalo_sospechoso
 
 LIMITE_ITERACIONES_INTERFAZ = LIMITE_ITERACIONES_MAXIMO
@@ -41,7 +41,9 @@ def resolver_captura(captura: dict) -> dict:
     """Devuelve una respuesta serializable; convierte fallos del evaluador en errores visibles."""
     try:
         entrada = preparar_entrada(captura)
-        resultado = biseccion(entrada)
+        cero = captura.get("cero_preferido")
+        resultado = biseccion(entrada) if cero is None else biseccion(
+            entrada, cero_preferido=real_capturado(cero, "El cero elegido"))
         return serializar_resultado(entrada, resultado)
     except ValueError as error:
         return {"estado": "ERROR", "mensaje": str(error)}
