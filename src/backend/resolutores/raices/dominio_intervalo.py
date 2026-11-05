@@ -5,6 +5,7 @@ from fractions import Fraction
 from src.backend.excepciones import ErrorDominio
 from .errores_numericos import ErrorSingularidad
 from .gramatica_funcion import analizar_expresion, CONSTANTES_REALES
+from .polos_trigonometricos import comprobar_polos_tangente
 from .unidades_angulares import validar_unidad_angular
 
 Afin = tuple[Fraction, Fraction]
@@ -24,7 +25,7 @@ def comprobar_dominio_intervalo(expresion: str, intervalo: tuple[float, float], 
         if isinstance(nodo, ast.BinOp):
             _comprobar_operacion(nodo, extremos)
         elif isinstance(nodo, ast.Call):
-            _comprobar_funcion(nodo, extremos)
+            _comprobar_funcion(nodo, extremos, unidad_angular)
 
 
 def _comprobar_operacion(nodo: ast.BinOp, extremos: tuple) -> None:
@@ -44,11 +45,13 @@ def _comprobar_potencia(base: ast.AST, exponente: Fraction, extremos: tuple) -> 
         raise ErrorDominio("La potencia no es real para una base negativa en el intervalo.")
 
 
-def _comprobar_funcion(nodo: ast.Call, extremos: tuple) -> None:
+def _comprobar_funcion(nodo: ast.Call, extremos: tuple, unidad: str) -> None:
     nombre = nodo.func.id
     rango = _rango_afin(nodo.args[0], extremos)
     if rango is None:
         return
+    if nombre == "tan":
+        comprobar_polos_tangente(rango, unidad)
     if nombre in ("log", "ln", "log10", "log2") and rango[0] <= 0:
         raise ErrorDominio("El logaritmo no es real o no está definido en todo el intervalo.")
     if nombre == "sqrt" and rango[0] < 0:
