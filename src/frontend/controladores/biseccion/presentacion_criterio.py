@@ -29,9 +29,9 @@ def titulo_estado(respuesta: dict) -> str:
 def metricas_resumen(respuesta: dict) -> tuple[tuple[str, str], ...]:
     """Prepara criterio, umbral, métrica e intervalo desde los datos recibidos, sin recalcular paradas."""
     criterio = respuesta.get("criterio_solicitado")
-    datos = ()
+    datos = (("Unidad trigonométrica", respuesta.get("unidad_angular", "radianes")),) if "entrada" in respuesta else ()
     if criterio:
-        datos = (("Criterio solicitado", CRITERIOS[criterio["tipo"]][0]),
+        datos += (("Criterio solicitado", CRITERIOS[criterio["tipo"]][0]),
                  ("Condición solicitada", condicion_criterio(criterio["tipo"], criterio["parametro"])),
                  ("Umbral", numero(respuesta["umbral"], True) + " " + respuesta["unidad_criterio"]),
                  ("Métrica final (" + respuesta["unidad_criterio"] + ")", numero(respuesta.get("metrica_final"), True)))

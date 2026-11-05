@@ -48,6 +48,7 @@ def construir_pasos(respuesta: dict) -> tuple[tuple, tuple]:
     descripcion = f"f(x) = {entrada['expresion']} en [{numero(entrada['extremo_izquierdo'])}, {numero(entrada['extremo_derecho'])}]"
     criterio = respuesta.get("criterio_solicitado")
     explicacion_inicial = "La garantía requiere continuidad en todo el intervalo y cambio de signo, salvo raíz en un extremo."
+    explicacion_inicial += f" Unidad trigonométrica: {entrada.get('unidad_angular', 'radianes')}."
     if criterio:
         explicacion_inicial += " " + condicion_criterio(criterio["tipo"], criterio["parametro"])
     pasos = [PasoReproductor(0, "planteamiento", descripcion, explicacion_inicial, cuerpo=None)]
