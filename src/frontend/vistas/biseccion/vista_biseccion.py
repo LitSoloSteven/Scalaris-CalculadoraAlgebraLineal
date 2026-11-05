@@ -14,6 +14,7 @@ from src.frontend.navegacion import ruta_de
 from .captura import construir_captura
 from .resultado import mostrar_resultado
 from .selector_criterio import actualizar_guia, enlazar_parametros
+from .selector_unidad import restaurar_unidad
 from .intervalo_canonico import reflejar_intervalo
 from .exploracion import PanelExploracion
 from .vista_previa import PanelVistaPrevia
@@ -51,7 +52,7 @@ class VistaBiseccion:
             self.contenedor_resultados = ui.column().classes("w-full min-w-0 gap-5")
         for campo in self._campos_captura():
             campo.on_value_change(self._editar)
-            if campo is not self.criterio:
+            if campo not in (self.criterio, self.unidad_angular):
                 campo.on("keydown.enter", self.resolver)
         enlazar_parametros(self)
         actualizar_guia(self)
@@ -60,7 +61,7 @@ class VistaBiseccion:
         ui.context.client.on_connect(self._reconectar)
 
     def _campos_captura(self) -> tuple:
-        return self.expresion, self.inferior, self.superior, self.limite, self.criterio
+        return self.expresion, self.inferior, self.superior, self.limite, self.criterio, self.unidad_angular
 
     def capturar(self) -> dict:
         """Devuelve únicamente datos matemáticos comunes y el parámetro activo sin convertirlos."""
@@ -69,7 +70,7 @@ class VistaBiseccion:
         return {"expresion": self.expresion.value, "extremo_izquierdo": self.inferior.value,
                 "extremo_derecho": self.superior.value, "limite_iteraciones": self.limite.value,
                 "decimales": parametro if tipo == "decimales" else DECIMALES_PRESENTACION_DEFECTO,
-                "criterio": {"tipo": tipo, "parametro": parametro}}
+                "criterio": {"tipo": tipo, "parametro": parametro}, "unidad_angular": self.unidad_angular.value}
 
     def _editar(self) -> None:
         if self._cargando_captura:
@@ -120,6 +121,7 @@ class VistaBiseccion:
         """Restaura el criterio explícito o el decimal antiguo; los ejemplos conservan preferencias omitidas."""
         self._cargando_captura = True
         try:
+            restaurar_unidad(self, captura)
             campos = {"expresion": self.expresion, "extremo_izquierdo": self.inferior,
                       "extremo_derecho": self.superior, "limite_iteraciones": self.limite}
             for clave, campo in campos.items():
@@ -143,7 +145,7 @@ class VistaBiseccion:
             for indice, calculo in enumerate(self.historial, 1):
                 captura = calculo["captura"]
                 criterio = captura.get("criterio", {"tipo": "decimales", "parametro": captura["decimales"]})
-                etiqueta = f"{CRITERIOS[criterio['tipo']][0]} · {criterio['parametro']}"
+                etiqueta = f"{CRITERIOS[criterio['tipo']][0]} · {criterio['parametro']} · {captura.get('unidad_angular', 'radianes')}"
                 ui.button(f"{indice} · {etiqueta}", color=None,
                           on_click=lambda captura=captura: self.cargar_captura(captura)).classes("boton-discreto").tooltip(str(captura["expresion"]))
 
@@ -175,7 +177,7 @@ class VistaBiseccion:
         resumen = None if resultado is None else {clave: resultado.get(clave) for clave in (
             "estado", "mensaje", "aproximacion", "intervalo_final", "tolerancia", "cota", "motivo_parada", "metricas",
             "criterio_solicitado", "unidad_criterio", "umbral", "metrica_final", "codigo_diagnostico", "advertencias",
-            "diagnostico", "aviso_grafica", "contexto_fallo", "sugerencias")}
+            "diagnostico", "aviso_grafica", "contexto_fallo", "sugerencias", "unidad_angular")}
         return ContextoIA("biseccion", "Método de bisección", "Búsqueda de raíces", self.capturar(),
                           EstadoContexto(resultado=resumen, vacio=not bool(self.expresion.value),
                                          nota_ventana="Aritmética aproximada. La garantía requiere continuidad en todo el intervalo."))

@@ -5,6 +5,7 @@ from src.backend.resolutores.raices.contrato_biseccion import D_MAXIMO, LONGITUD
 from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
 from src.frontend.controladores.biseccion.controlador import LIMITE_ITERACIONES_INTERFAZ
 from .selector_criterio import construir_selector
+from .selector_unidad import construir_selector_unidad
 
 EJEMPLOS = (
     ("Raíz de 2", "x^2 - 2", "1", "2"),
@@ -21,6 +22,7 @@ def construir_captura(vista) -> None:
         ui.label("Acota una raíz y observa cómo se reduce su intervalo.").classes("texto-secundario")
         vista.expresion = ui.input("Función f(x)", placeholder="Ejemplo: x^2 - 2").classes("w-full matriz-entrada").props(
             f'maxlength={LONGITUD_MAXIMA_EXPRESION} autocomplete=off spellcheck=false')
+        construir_selector_unidad(vista)
         with ui.element("div").classes("biseccion-campos"):
             vista.inferior = _campo_extremo("Extremo inferior a")
             vista.superior = _campo_extremo("Extremo superior b")
@@ -42,7 +44,11 @@ def _campo_extremo(etiqueta: str):
 
 def _construir_ayuda(vista) -> None:
     with ui.expansion("Sintaxis y límites", icon="help_outline").classes("w-full texto-secundario"):
-        ui.label("Usa x, +, −, *, /, ^ o **, paréntesis, sin, cos, tan, exp, log, sqrt, abs, pi y e. Escribe 2*x; log es el logaritmo natural.").classes("text-sm")
+        ui.label("Usa x, +, −, *, /, ^ o ** y paréntesis. Se admiten 2x, 3sin(x), 2(x+1), (x+1)(x-1), x² y x³. "
+                 "La potencia precede al signo: -x² = -(x²).").classes("text-sm")
+        ui.label("Funciones: sin, cos, tan, asin, acos, atan, sinh, cosh, tanh, exp, sqrt y abs. "
+                 "ln y log son naturales; log10 y log2 usan base 10 y 2. Constantes: pi y e. "
+                 "La unidad trigonométrica elegida se conserva al calcular y explorar.").classes("text-sm")
         ui.label(f"Aritmética aproximada de punto flotante de Python; d entre 0 y {D_MAXIMO}. No se redondean las iteraciones para calcular. Una precisión dentro de este rango puede no ser alcanzable para tu intervalo.").classes("text-sm")
         ui.label(GUIA_CONTINUIDAD).classes("text-sm")
         vista.limite = ui.number("Límite de iteraciones", value=LIMITE_ITERACIONES_DEFECTO, min=1,
