@@ -23,7 +23,7 @@ class CuerpoLatex:
         return self.latex
 
 
-def renderizar_latex(latex: str) -> None:
+def renderizar_latex(latex: str, *, vigilar_region: bool = False) -> None:
     """Inserta un bloque LaTeX desplazable y solicita su composición MathJax."""
     identificador = f"reproductor-matematicas-{next(_CONTADOR_IDENTIFICADOR)}"
     contenido = html.escape(latex)
@@ -31,6 +31,9 @@ def renderizar_latex(latex: str) -> None:
         f'<div id="{identificador}" class="matematicas-desplazamiento matematicas-etiqueta" '
         f'tabindex="0" role="region" aria-label="{MATEMATICAS_DESPLAZAMIENTO}">$$ {contenido} $$</div>'
     )
+    if vigilar_region:
+        ui.run_javascript(f"window.scalaris?.renderizarMathJaxVigente?.({json.dumps(identificador)});")
+        return
     ui.run_javascript(
         f"if(window.scalaris && window.scalaris.renderizarMathJax) "
         f"window.scalaris.renderizarMathJax([{json.dumps(identificador)}]);"
