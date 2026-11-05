@@ -4,6 +4,7 @@ import logging
 from nicegui import ui
 
 from src.ai.contexto import ContextoIA, EstadoContexto
+from src.backend.resolutores.raices.contrato_biseccion import ESTADO_DISCONTINUIDAD
 from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.panel_ia import PanelIA
 from src.frontend.controladores.biseccion.controlador import calcular_presentacion
@@ -146,6 +147,8 @@ class VistaBiseccion:
                 captura = calculo["captura"]
                 criterio = captura.get("criterio", {"tipo": "decimales", "parametro": captura["decimales"]})
                 etiqueta = f"{CRITERIOS[criterio['tipo']][0]} · {criterio['parametro']} · {captura.get('unidad_angular', 'radianes')}"
+                if calculo.get("estado") == ESTADO_DISCONTINUIDAD:
+                    etiqueta += " · Provisional"
                 ui.button(f"{indice} · {etiqueta}", color=None,
                           on_click=lambda captura=captura: self.cargar_captura(captura)).classes("boton-discreto").tooltip(str(captura["expresion"]))
 

@@ -8,6 +8,10 @@ _ETAPAS = {"sintaxis": "Análisis de sintaxis", "extremos": "Evaluación de extr
 
 def detalles_diagnostico(respuesta: dict) -> tuple[tuple[str, str], ...]:
     """Describe contexto y última fila válida sin recalcular ni atribuir ubicaciones evaluadas."""
+    return _detalles_contexto(respuesta) + _detalles_discontinuidad(respuesta)
+
+
+def _detalles_contexto(respuesta: dict) -> tuple[tuple[str, str], ...]:
     contexto = respuesta.get("contexto_fallo")
     diagnostico = respuesta.get("diagnostico") or {}
     if contexto is None:
@@ -32,6 +36,18 @@ def detalles_diagnostico(respuesta: dict) -> tuple[tuple[str, str], ...]:
         datos += (("Última muestra válida c", numero(ultima["c"], True)),
                   ("Último valor válido f(c)", numero(ultima["f_c"], True)))
     return datos
+
+
+def _detalles_discontinuidad(respuesta: dict) -> tuple[tuple[str, str], ...]:
+    evidencia = (respuesta.get("diagnostico") or {}).get("evidencia_discontinuidad")
+    if evidencia is None:
+        return ()
+    return (("Intervalo sospechoso según la traza", texto_intervalo(evidencia["intervalo"])),
+            ("Ancho al inicio de la ventana", numero(evidencia["ancho_referencia"], True)),
+            ("Mayor magnitud de los extremos iniciales", numero(evidencia["escala_inicial"], True)),
+            ("Menor magnitud vecinal de referencia", numero(evidencia["magnitud_vecinal_referencia"], True)),
+            ("Menor magnitud de los extremos finales", numero(evidencia["magnitud_vecinal_final"], True)),
+            ("Menor residuo reciente", numero(evidencia["residuo_reciente_minimo"], True)))
 
 
 def texto_intervalo(intervalo) -> str:

@@ -1,4 +1,6 @@
 """Textos y magnitudes del resultado según el estado publicado por el motor."""
+from src.backend.resolutores.raices.contrato_biseccion import ESTADO_DISCONTINUIDAD
+
 from .catalogo_criterios import CRITERIOS, condicion_criterio
 from .presentacion import motivo, numero
 from .presentacion_diagnostico import detalles_diagnostico, texto_sugerencia
@@ -8,6 +10,8 @@ def titulo_estado(respuesta: dict) -> str:
     """Describe primero el estado efectivo, sin reinterpretar el diagnóstico matemático."""
     estado = respuesta["estado"]
     parada = respuesta.get("motivo_parada")
+    if estado == ESTADO_DISCONTINUIDAD:
+        return "Posible discontinuidad · aproximación provisional"
     if estado == "EXITO":
         if parada == "raiz_exacta":
             return "Cero evaluado en un punto medio" if respuesta["iteraciones"] else "Cero evaluado en un extremo, sin iteraciones"
@@ -21,8 +25,7 @@ def titulo_estado(respuesta: dict) -> str:
         return "Límite de iteraciones"
     if respuesta.get("codigo_diagnostico") == "SINGULARIDAD_DETECTADA":
         return "Singularidad identificada"
-    titulos = {"SIN_CAMBIO_DE_SIGNO": "Sin cambio de signo",
-               "CONTINUIDAD_NO_VERIFICADA": "Continuidad no verificada · aproximación provisional"}
+    titulos = {"SIN_CAMBIO_DE_SIGNO": "Sin cambio de signo"}
     return titulos.get(estado, "Error de entrada o evaluación")
 
 
@@ -47,7 +50,10 @@ def metricas_resumen(respuesta: dict) -> tuple[tuple[str, str], ...]:
 def aproximacion_presentada(respuesta: dict, decimales: int) -> str:
     """Formatea la aproximación ya calculada sin alterar las métricas ni el criterio."""
     valor = respuesta.get("aproximacion")
-    return "No disponible" if valor is None else f"x ≈ {valor:.{decimales}f}"
+    if valor is None:
+        return "No disponible"
+    prefijo = "Punto medio x" if respuesta["estado"] == ESTADO_DISCONTINUIDAD else "x"
+    return f"{prefijo} ≈ {valor:.{decimales}f}"
 
 
 def avisos_resumen(respuesta: dict) -> tuple[str, ...]:
