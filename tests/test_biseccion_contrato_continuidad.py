@@ -13,27 +13,27 @@ from src.backend.resolutores.raices.limites_resolucion_multiple import EVALUACIO
 from src.backend.resolutores.raices.resolucion_multiple import resolver_candidatos
 
 
-@pytest.mark.parametrize("expresion,par,unidad,estado,politica,codigo,abscisa", [
-    ("x²-2", (2, 1), "radianes", "CONFIRMADA", "PERMITIR", "CONTINUIDAD_ESTRUCTURAL_CONFIRMADA", None),
-    ("1/x", (-1, 1), "radianes", "RESTRICCION_DETECTADA", "RECHAZAR", "SINGULARIDAD_DETECTADA", None),
-    ("tan(x)", (80, 100), "grados", "RESTRICCION_DETECTADA", "RECHAZAR", "SINGULARIDAD_DETECTADA", None),
-    ("tan(x)", (1, 2), "radianes", "RESTRICCION_DETECTADA", "RECHAZAR", "SINGULARIDAD_DETECTADA", None),
-    ("sqrt(x)", (-1, 1), "radianes", "RESTRICCION_DETECTADA", "RECHAZAR", "DOMINIO_INVALIDO", -1),
-    ("log(x)", (0, 2), "radianes", "RESTRICCION_DETECTADA", "RECHAZAR", "DOMINIO_INVALIDO", 0),
-    ("sqrt(x²)-.5", (0, 1), "radianes", "NO_VERIFICADA", "ADVERTIR", "COBERTURA_INSUFICIENTE", None),
-    ("sqrt(x)", (0, 1), "radianes", "NO_VERIFICADA", "ADVERTIR", "COBERTURA_INSUFICIENTE", None),
-    ("(x-1)/(x-2)", (1, 3), "radianes", "RESTRICCION_DETECTADA", "ADVERTIR", "SINGULARIDAD_DETECTADA", None),
-    ("x^2", (1e200, 2e200), "radianes", "NO_VERIFICADA", "ADVERTIR", "EVALUACION_NO_FINITA", 1e200),
+@pytest.mark.parametrize("expresion,par,unidad,esperado", [
+    ("x²-2", (2, 1), "radianes", ("CONFIRMADA", "PERMITIR", "CONTINUIDAD_ESTRUCTURAL_CONFIRMADA", None)),
+    ("1/x", (-1, 1), "radianes", ("RESTRICCION_DETECTADA", "RECHAZAR", "SINGULARIDAD_DETECTADA", None)),
+    ("tan(x)", (80, 100), "grados", ("RESTRICCION_DETECTADA", "RECHAZAR", "SINGULARIDAD_DETECTADA", None)),
+    ("tan(x)", (1, 2), "radianes", ("RESTRICCION_DETECTADA", "RECHAZAR", "SINGULARIDAD_DETECTADA", None)),
+    ("sqrt(x)", (-1, 1), "radianes", ("RESTRICCION_DETECTADA", "RECHAZAR", "DOMINIO_INVALIDO", -1)),
+    ("log(x)", (0, 2), "radianes", ("RESTRICCION_DETECTADA", "RECHAZAR", "DOMINIO_INVALIDO", 0)),
+    ("sqrt(x²)-.5", (0, 1), "radianes", ("NO_VERIFICADA", "ADVERTIR", "COBERTURA_INSUFICIENTE", None)),
+    ("sqrt(x)", (0, 1), "radianes", ("NO_VERIFICADA", "ADVERTIR", "COBERTURA_INSUFICIENTE", None)),
+    ("(x-1)/(x-2)", (1, 3), "radianes", ("RESTRICCION_DETECTADA", "ADVERTIR", "SINGULARIDAD_DETECTADA", None)),
+    ("x^2", (1e200, 2e200), "radianes", ("NO_VERIFICADA", "ADVERTIR", "EVALUACION_NO_FINITA", 1e200)),
 ])
-def test_politica_antes_y_despues_de_resolver(expresion, par, unidad, estado, politica, codigo, abscisa):
+def test_politica_antes_y_despues_de_resolver(expresion, par, unidad, esperado):
     """Comprueba cobertura explícita, polos, extremos, incertidumbre y la excepción local."""
     informe = analizar_continuidad_intervalo(expresion, par, unidad_angular=unidad)
     resultado = biseccion(EntradaBiseccion(expresion, *par, 4, unidad_angular=unidad))
     assert resultado.informe_continuidad == informe
-    assert (informe["estado"], informe["politica"]) == (estado, politica)
     assert informe["intervalo"] == tuple(sorted(par))
     evidencia = informe["evidencia"][0]
-    assert (evidencia["codigo"], evidencia["abscisa"], evidencia["intervalo"]) == (codigo, abscisa, informe["intervalo"])
+    assert (informe["estado"], informe["politica"], evidencia["codigo"], evidencia["abscisa"]) == esperado
+    assert evidencia["intervalo"] == informe["intervalo"]
 
 
 @pytest.mark.parametrize("expresion,par,opciones", [
