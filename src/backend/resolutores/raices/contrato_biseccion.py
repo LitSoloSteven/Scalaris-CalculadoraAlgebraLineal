@@ -5,6 +5,7 @@ from fractions import Fraction
 from typing import NotRequired, TypedDict
 
 from .criterios_biseccion import CriterioParada, tolerancia_decimal, validar_criterio, validar_entero_criterio
+from .decision_biseccion import AccionBiseccion, SignoProducto
 from .limites_biseccion import D_MAXIMO, LIMITE_ITERACIONES_DEFECTO, LIMITE_ITERACIONES_MAXIMO, LONGITUD_MAXIMA_EXPRESION
 from .unidades_angulares import validar_unidad_angular
 
@@ -61,6 +62,9 @@ class IteracionBiseccion:
     error_relativo: str
     explicacion: str
     error_relativo_valor: float | None = None
+    signo_producto: SignoProducto | None = None
+    accion: AccionBiseccion | None = None
+    motivo_parada: str = ""
 
 
 class MetricasBiseccion(TypedDict, total=False):
