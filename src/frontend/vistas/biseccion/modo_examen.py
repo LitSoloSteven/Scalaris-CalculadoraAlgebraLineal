@@ -4,11 +4,14 @@ from nicegui import ui
 from src.frontend.controladores.biseccion.salidas_biseccion import COLUMNAS_EXAMEN, datos_examen
 
 
-def crear_interruptor_examen(vista) -> ui.switch:
-    """Crea el control del resultado con la preferencia de la vista actual."""
-    return ui.switch("Modo examen", value=vista.modo_examen,
-                     on_change=lambda evento: setattr(vista, "modo_examen", evento.value)).classes(
-                         "biseccion-interruptor-examen texto-principal")
+def crear_interruptor_examen(vista=None) -> ui.switch:
+    """Crea el control individual con su preferencia o un control local para el lote."""
+    etiqueta = "Modo examen" if vista is not None else "Modo examen del lote"
+    interruptor = ui.switch(etiqueta, value=bool(vista and vista.modo_examen)).classes(
+        "biseccion-interruptor-examen texto-principal")
+    if vista is not None:
+        interruptor.on_value_change(lambda evento: setattr(vista, "modo_examen", evento.value))
+    return interruptor
 
 
 def mostrar_accion_examen(interruptor: ui.switch, fila: dict, estado: str) -> None:

@@ -86,8 +86,8 @@ def texto_resumen(respuesta: dict, decimales: int) -> str:
     return "\n".join(lineas)
 
 
-def datos_copia_biseccion(estado: str, texto: str, *, examen: bool = False) -> dict[str, str]:
-    """Rotula la sospecha y las trazas de examen sin éxito como resultado."""
-    es_resultado = estado == ESTADO_DISCONTINUIDAD or (examen and estado != "EXITO")
+def datos_copia_biseccion(estado: str, texto: str, *, examen: bool = False, lote: bool = False) -> dict[str, str]:
+    """Rotula las salidas sin éxito de examen y lote, y toda sospecha, como resultado."""
+    es_resultado = estado == ESTADO_DISCONTINUIDAD or ((examen or lote) and estado != "EXITO")
     campo = "matriz_resultado" if es_resultado else "solucion"
     return {campo: texto}
