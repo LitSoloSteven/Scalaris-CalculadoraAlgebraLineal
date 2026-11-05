@@ -15,11 +15,12 @@ from src.frontend.controladores.biseccion.presentacion_criterio import (
 from src.frontend.controladores.biseccion.salidas_biseccion import texto_copia_biseccion
 from .avisos_diagnostico import mostrar_avisos_diagnostico
 from .continuidad_intervalo import mostrar_informe
+from .movimiento import animar_entrada
 
 
-def mostrar_resumen(vista, respuesta: dict, examen: ui.switch | None = None) -> None:
+def mostrar_resumen(vista, respuesta: dict, examen: ui.switch | None = None, *, puntero: bool = False) -> None:
     """Monta estado y magnitudes, con un control de formato que no invalida el resultado."""
-    with ui.column().classes("panel-tarjeta p-6 w-full gap-3"):
+    with ui.column().classes("panel-tarjeta p-6 w-full gap-3") as resumen:
         with ui.row().classes("items-center gap-2"):
             ui.icon("check_circle" if respuesta["estado"] == "EXITO" else "info").props("aria-hidden=true")
             ui.label(titulo_estado(respuesta)).classes("text-xl font-bold texto-principal").props("role=status aria-live=polite")
@@ -39,6 +40,7 @@ def mostrar_resumen(vista, respuesta: dict, examen: ui.switch | None = None) -> 
         actualizar_copia = _montar_copia(vista, respuesta, examen)
         if hay_aproximacion:
             vista.formato.on_value_change(lambda: _actualizar_formato(vista, respuesta, actualizar_copia))
+    animar_entrada(resumen, puntero)
 
 
 def _montar_formato(vista, respuesta: dict) -> None:

@@ -13,6 +13,7 @@ from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
 from .acciones_captura import desplegable
 from .candidatos import mostrar_candidatos
 from .modos_captura import MODO_BUSQUEDA
+from .movimiento import animar_entrada, cancelar_entrada, modalidad_puntero, vincular_envio
 from .rango_grafica import campos_rango
 
 registro = logging.getLogger(__name__)
@@ -43,8 +44,9 @@ class PanelExploracion:
                 self.etiqueta_paso = ui.label().classes("text-sm texto-secundario")
                 ui.button("Volver a automático", color=None, on_click=self.restablecer_paso).classes("boton-discreto")
             with ui.row().classes("w-full gap-3"):
-                self.boton = ui.button("Explorar candidatos", color=None, on_click=self.enviar_busqueda).classes(
+                self.boton = ui.button("Explorar candidatos", color=None).classes(
                     "boton-principal").props("ripple=false")
+                vincular_envio(self.boton, self._enviar_desde_boton)
             self.estado = ui.label(_ESTADO_INICIAL).classes(
                 "texto-secundario").props("role=status aria-live=polite")
             self.contenedor_resultados = ui.column().classes("biseccion-candidatos w-full gap-4")
@@ -53,10 +55,13 @@ class PanelExploracion:
         self.paso.on_value_change(self._editar_rango)
         self.actualizar_paso()
 
-    async def enviar_busqueda(self) -> None:
+    async def _enviar_desde_boton(self, evento) -> None:
+        await self.enviar_busqueda(puntero=modalidad_puntero(evento) is True)
+
+    async def enviar_busqueda(self, *, puntero: bool = False) -> None:
         """Busca desde los controles solo cuando Buscar intervalo está activo."""
         if self.vista.modos.value == MODO_BUSQUEDA:
-            await self.explorar()
+            await self.explorar(puntero=puntero)
 
     def _editar_rango(self) -> None:
         if not self.vista._cargando_captura:
@@ -105,6 +110,8 @@ class PanelExploracion:
 
     def invalidar(self) -> None:
         """Cancela la espera y retira acciones antiguas sin tocar el resultado matemático."""
+        if self.respuesta is not None:
+            cancelar_entrada(self.contenedor_resultados)
         invalidar_panel(self)
         lote = getattr(self.vista, "resolucion_multiple", None)
         if lote is not None:
@@ -122,7 +129,7 @@ class PanelExploracion:
         """Restablece la orientación tras vaciar el rango de búsqueda."""
         self.estado.set_text(_ESTADO_INICIAL)
 
-    async def explorar(self) -> None:
+    async def explorar(self, *, puntero: bool = False) -> None:
         """Ejecuta fuera de UI y publica solo en la revisión y contenedor aún vigentes."""
         if self._cerrado or self.contenedor_resultados.is_deleted or self.tarea is not None:
             return
@@ -134,7 +141,7 @@ class PanelExploracion:
         try:
             vigente = await ejecutar_calculo_vigente(self, self.capturar, resolver_exploracion)
             if vigente is not None:
-                self._publicar(vigente[0])
+                self._publicar(vigente[0], puntero=puntero)
         except Exception:
             registro.exception("No se pudo presentar la exploración de bisección")
             if revision == self._revision_captura and not self.estado.is_deleted:
@@ -149,7 +156,7 @@ class PanelExploracion:
             self.boton.set_enabled(not ocupado)
             self.boton.props("loading" if ocupado else "", remove="" if ocupado else "loading")
 
-    def _publicar(self, respuesta: dict) -> None:
+    def _publicar(self, respuesta: dict, *, puntero: bool = False) -> None:
         self.respuesta = respuesta
         self.estado.set_text(respuesta["mensaje"])
         with self.contenedor_resultados:
@@ -160,6 +167,8 @@ class PanelExploracion:
         lote = getattr(self.vista, "resolucion_multiple", None)
         if lote is not None and respuesta["estado"] == "EXITO":
             lote.actualizar_candidatos(respuesta)
+        if respuesta["estado"] == "EXITO" and respuesta["candidatos"]:
+            animar_entrada(self.contenedor_resultados, puntero)
 
     def seleccionar(self, respuesta: dict, candidato: dict) -> None:
         """Carga un intervalo apto actual y deja el cálculo posterior a una acción explícita."""
