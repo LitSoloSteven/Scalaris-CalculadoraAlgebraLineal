@@ -9,6 +9,13 @@ _DIRECTAS = frozenset(("sin", "cos", "tan"))
 _INVERSAS = frozenset(("asin", "acos", "atan"))
 
 
+def funcion_sensible_a_unidad(nombre: str) -> bool:
+    """Indica si la llamada usa la unidad angular; lanza ValueError si el nombre no es texto."""
+    if not isinstance(nombre, str):
+        raise ValueError("El nombre de la función debe ser texto.")
+    return nombre in _DIRECTAS or nombre in _INVERSAS
+
+
 def validar_unidad_angular(unidad: str) -> str:
     """Devuelve la unidad canónica; lanza ValueError si no es radianes o grados."""
     if not isinstance(unidad, str) or unidad not in UNIDADES_ANGULARES:
