@@ -2,6 +2,7 @@
 from nicegui import ui
 
 from src.backend.resolutores.raices.contrato_biseccion import LONGITUD_MAXIMA_EXPRESION
+from .movimiento import modalidad_puntero, vincular_envio
 from .selector_criterio import construir_selector
 from .selector_unidad import construir_selector_unidad
 
@@ -28,8 +29,12 @@ def construir_intervalo(vista) -> None:
 
 def construir_boton_calculo(vista) -> None:
     """Monta el envío del cálculo después de las opciones avanzadas."""
-    vista.boton_resolver = ui.button("Calcular raíz", icon="calculate", color=None,
-                                    on_click=vista.enviar_calculo).classes("boton-principal").props("ripple=false")
+    async def _enviar(evento) -> None:
+        await vista.enviar_calculo(puntero=modalidad_puntero(evento) is True)
+
+    vista.boton_resolver = ui.button("Calcular raíz", icon="calculate", color=None).classes(
+        "boton-principal").props("ripple=false")
+    vincular_envio(vista.boton_resolver, _enviar)
 
 
 def _campo_extremo(etiqueta: str):
