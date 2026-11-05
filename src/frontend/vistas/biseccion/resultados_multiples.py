@@ -5,7 +5,7 @@ from src.frontend.componentes.copia_resultado import renderizar_copia_resultado
 from src.frontend.controladores.biseccion.catalogo_criterios import DECIMALES_PRESENTACION_DEFECTO
 from src.frontend.controladores.biseccion.presentacion_criterio import datos_copia_biseccion, texto_resumen, titulo_estado
 from src.frontend.controladores.biseccion.salidas_biseccion import texto_copia_biseccion
-from .modo_examen import crear_interruptor_examen
+from .modo_examen import crear_control_examen_lote
 from .resultado import mostrar_tabla
 
 
@@ -22,12 +22,12 @@ def mostrar_resultados_multiples(lote: dict) -> None:
         ui.label("El presupuesto se agotó. Los candidatos pendientes están identificados; puedes resolverlos uno por uno.").classes(
             "texto-advertencia").props("role=status")
     hay_filas = any((registro["respuesta"] or {}).get("iteraciones") for registro in lote["resultados"])
-    examen = crear_interruptor_examen() if hay_filas else None
+    examen = crear_control_examen_lote() if hay_filas else None
     for registro in lote["resultados"]:
         _mostrar_registro(registro, examen)
 
 
-def _mostrar_registro(registro: dict, examen: ui.switch | None) -> None:
+def _mostrar_registro(registro: dict, examen: ui.checkbox | None) -> None:
     respuesta = registro["respuesta"]
     titulo = titulo_estado(respuesta) if respuesta is not None else registro["estado"].replace("_", " ").capitalize()
     with ui.expansion(f"{registro['identificador']} · {titulo}").classes("biseccion-resultado-multiple w-full"):
@@ -43,7 +43,7 @@ def _mostrar_registro(registro: dict, examen: ui.switch | None) -> None:
             mostrar_tabla(respuesta, examen)
 
 
-def _mostrar_copia(registro: dict, resumen: str, examen: ui.switch | None) -> None:
+def _mostrar_copia(registro: dict, resumen: str, examen: ui.checkbox | None) -> None:
     respuesta = registro["respuesta"]
 
     @ui.refreshable

@@ -67,7 +67,7 @@ def _ayuda_reproductor(respuesta: dict) -> str:
     return "El procedimiento conserva las filas válidas anteriores al fallo. " + controles
 
 
-def mostrar_tabla(respuesta: dict, examen: ui.switch | None = None) -> None:
+def mostrar_tabla(respuesta: dict, examen: ui.switch | ui.checkbox | None = None) -> None:
     """Monta la traza de una sola respuesta con formato e inspección de valores internos."""
     with ui.column().classes("panel-tarjeta p-5 w-full min-w-0"):
         ui.label("Tabla de iteraciones").classes("text-xl font-bold")
