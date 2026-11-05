@@ -9,7 +9,7 @@ def construir_rango(panel) -> None:
     with ui.element("div").classes("biseccion-campos"):
         panel.minimo = _campo("Mínimo gráfico", RANGO_GRAFICA_DEFECTO[0])
         panel.maximo = _campo("Máximo gráfico", RANGO_GRAFICA_DEFECTO[1])
-    ui.label("Rango visual independiente. Se inicia en [-10, 10]; puedes editarlo o copiar a y b.").classes(
+    ui.label(f"Rango visual independiente. Se inicia en [{RANGO_GRAFICA_DEFECTO[0]}, {RANGO_GRAFICA_DEFECTO[1]}]; puedes editarlo o copiar a y b.").classes(
         "text-sm texto-secundario")
     ui.button("Copiar a y b a la gráfica", color=None, on_click=panel.usar_intervalo).classes(
         "boton-discreto").props("ripple=false")
