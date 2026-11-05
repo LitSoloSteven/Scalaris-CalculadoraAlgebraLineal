@@ -36,6 +36,7 @@ def preparar_entrada(captura: dict) -> EntradaBiseccion:
         "decimales": entero_capturado(captura.get("decimales"), "La precisión"),
         "limite_iteraciones": entero_capturado(captura.get("limite_iteraciones"), "El límite"),
         "criterio": _criterio_capturado(captura.get("criterio")),
+        "unidad_angular": captura.get("unidad_angular", "radianes"),
     })
 
 

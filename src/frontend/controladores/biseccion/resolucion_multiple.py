@@ -36,7 +36,8 @@ def _preparar_lote(captura: dict) -> EntradaResolucionMultiple:
     inferior, superior = candidatos[0].candidato.intervalo
     configuracion = preparar_entrada({**captura["configuracion"],
                     "extremo_izquierdo": inferior, "extremo_derecho": superior})
-    return EntradaResolucionMultiple(configuracion, candidatos, unidad_angular=captura.get("unidad_angular", "radianes"))
+    return EntradaResolucionMultiple(configuracion, candidatos,
+                                     unidad_angular=captura.get("unidad_angular", configuracion.unidad_angular))
 
 
 def _convertir_candidato(registro: dict) -> CandidatoResolucion:

@@ -12,12 +12,13 @@ from .contrato_resolucion_multiple import (
 )
 from .evaluador_funcion import compilar, evaluar
 from .limites_resolucion_multiple import EVALUACIONES_AUXILIARES_CANDIDATO
+from .unidades_angulares import opciones_unidad
 
 
 def resolver_candidatos(entrada: EntradaResolucionMultiple) -> ResultadoResolucionMultiple:
     """Devuelve un resultado por identificador; lanza ValueError solo por configuración común inválida."""
     entrada = validar_resolucion_multiple(entrada)
-    funcion = compilar(entrada.configuracion.expresion)
+    funcion = compilar(entrada.configuracion.expresion, **opciones_unidad(entrada.unidad_angular))
     reserva = entrada.configuracion.limite_iteraciones + EVALUACIONES_AUXILIARES_CANDIDATO
     resultados = []
     reservadas = 0
@@ -31,7 +32,8 @@ def resolver_candidatos(entrada: EntradaResolucionMultiple) -> ResultadoResoluci
         resultados.append(replace(resultado, evaluaciones_reservadas=reserva))
     filas = sum(len(registro.resultado.iteraciones) for registro in resultados if registro.resultado is not None)
     return ResultadoResolucionMultiple(tuple(resultados), reservadas, filas,
-                                      any(registro.estado == "PRESUPUESTO_AGOTADO" for registro in resultados))
+                                      any(registro.estado == "PRESUPUESTO_AGOTADO" for registro in resultados),
+                                      unidad_angular=entrada.unidad_angular)
 
 
 def _resolver_candidato(configuracion: EntradaBiseccion, registro: CandidatoResolucion,
