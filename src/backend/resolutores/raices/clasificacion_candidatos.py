@@ -8,7 +8,7 @@ from .limites_exploracion import MAXIMO_REGISTROS_EXPLORACION
 CONTRASTE_CONTACTO = 0.25
 AVISO_CRUCE = "Cambio de signo muestreado; continuidad no certificada."
 AVISO_CERO = "Cero evaluado aproximado; no constituye una prueba simbólica."
-AVISO_CONTACTO = "Posible contacto con el eje; no certifica raíz ni multiplicidad y no admite bisección sin cambio de signo."
+AVISO_CONTACTO = "Posible raíz de multiplicidad par o mínimo no nulo; no certifica raíz ni multiplicidad y no admite bisección sin cambio de signo."
 
 
 def clasificar_candidatos(expresion: str, muestras: tuple[MuestraExploracion, ...], *, unidad_angular: str = "radianes") -> tuple[CandidatoExploracion, ...]:

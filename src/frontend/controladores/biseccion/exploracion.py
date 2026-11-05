@@ -3,6 +3,7 @@ from dataclasses import asdict
 
 from src.backend.resolutores.raices.contrato_exploracion import EntradaExploracion
 from src.backend.resolutores.raices.exploracion_intervalos import explorar_intervalos
+from src.backend.resolutores.raices.limites_exploracion import MAXIMO_EVALUACIONES_REFINAMIENTO
 from .captura_criterio import real_capturado
 from .presentacion import numero
 from .presentacion_diagnostico import texto_intervalo
@@ -15,6 +16,15 @@ ETIQUETAS_CANDIDATOS = {
     "posible_contacto": "Posible contacto con el eje",
     "segmento_invalido": "Segmento con evaluación inválida",
     "discontinuidad": "Restricción estructural identificada",
+}
+_MOTIVOS_CONTACTO = {
+    "limite_refinamientos": "Se alcanzó el límite de refinamientos locales; el contacto sigue sin certificar.",
+    "presupuesto_global": "El presupuesto global no permite otro refinamiento de este contacto.",
+    "precision": "La precisión disponible no permite dos sondeos interiores distintos.",
+    "cero_evaluado": "El refinamiento encontró un cero evaluado aproximado, sin prueba simbólica.",
+    "cruce": "El refinamiento encontró un cambio de signo evaluado; la continuidad no está certificada.",
+    "segmento_invalido": "Se detuvo el refinamiento por una evaluación inválida.",
+    "discontinuidad": "Se detuvo el refinamiento por una restricción estructural identificada.",
 }
 
 
@@ -40,6 +50,24 @@ def presentar_candidato(candidato: dict) -> dict:
     return {"etiqueta": ETIQUETAS_CANDIDATOS[candidato["tipo"]],
             "intervalo": texto_intervalo(candidato["intervalo"]), "muestra": muestra,
             "seleccionable": candidato["tipo"] in ("cruce", "cero_evaluado")}
+
+
+def texto_consumo_exploracion(respuesta: dict) -> str:
+    """Distingue muestras de malla y consumo auxiliar sin recalcular sus contadores."""
+    return (f"Evaluaciones de malla: {respuesta['evaluaciones']} · "
+            f"Auxiliares: {respuesta.get('evaluaciones_refinamiento', 0)}/{MAXIMO_EVALUACIONES_REFINAMIENTO} · "
+            f"Refinamientos: {respuesta.get('refinamientos', 0)} · Registros: {len(respuesta['candidatos'])}")
+
+
+def detalles_contacto(candidato: dict) -> tuple[str, ...]:
+    """Presenta evidencia y cierre locales; capturas antiguas sin evidencia conservan su formato."""
+    evidencia = candidato.get("evidencia_contacto")
+    if evidencia is None:
+        return ()
+    return (f"Refinamiento local: {evidencia['refinamientos']} pasos y {evidencia['evaluaciones']} evaluaciones auxiliares.",
+            f"f(x) inicial: {numero(evidencia['valor_inicial'], True)}; "
+            f"escala vecinal inicial: {numero(evidencia['escala_inicial'], True)}.",
+            _MOTIVOS_CONTACTO[evidencia["motivo"]])
 
 
 def _campo(captura: dict, nombre: str) -> float:

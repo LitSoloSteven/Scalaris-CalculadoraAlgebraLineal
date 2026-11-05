@@ -1,14 +1,14 @@
 """Lista accesible de registros de exploración con carga explícita de intervalos aptos."""
 from nicegui import ui
 
-from src.frontend.controladores.biseccion.exploracion import presentar_candidato
+from src.frontend.controladores.biseccion.exploracion import detalles_contacto, presentar_candidato, texto_consumo_exploracion
 
 
 def mostrar_candidatos(panel, respuesta: dict) -> None:
     """Compone avisos y candidatos; los registros no aptos solo permiten inspección textual."""
     for advertencia in respuesta["advertencias"]:
         ui.label(advertencia).classes("text-sm texto-secundario")
-    ui.label(f"Evaluaciones: {respuesta['evaluaciones']} · Registros: {len(respuesta['candidatos'])}").classes(
+    ui.label(texto_consumo_exploracion(respuesta)).classes(
         "biseccion-numero texto-secundario")
     if not respuesta["candidatos"]:
         ui.label("No se detectaron candidatos en esta malla. Reduce el paso o cambia el rango para explorar de nuevo.").classes(
@@ -28,6 +28,8 @@ def _mostrar_candidato(panel, respuesta: dict, registro: tuple) -> None:
         if datos["muestra"]:
             ui.label(datos["muestra"]).classes("biseccion-numero text-sm texto-secundario")
         ui.label(candidato["mensaje"]).classes("text-sm texto-secundario")
+        for detalle in detalles_contacto(candidato):
+            ui.label(detalle).classes("biseccion-numero text-sm texto-secundario")
         if datos["seleccionable"]:
             ui.button(f"Cargar intervalo {indice}", color=None,
                       on_click=lambda: panel.seleccionar(respuesta, candidato)).classes(
