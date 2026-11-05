@@ -139,22 +139,22 @@ class VistaBiseccion:
         else:
             await self.enviar_calculo()
 
-    async def enviar_calculo(self) -> None:
+    async def enviar_calculo(self, *, puntero: bool = False) -> None:
         """Envía el cálculo desde los controles de Tengo el intervalo."""
         if self.modos.value == MODO_INTERVALO and not self.ocupado:
             actualizar_expresion(self, validar=True)
             actualizar_intervalo(self, validar=True)
             actualizar_guia(self, validar=True)
-            await self.resolver()
+            await self.resolver(puntero=puntero)
 
-    async def resolver(self) -> None:
+    async def resolver(self, *, puntero: bool = False) -> None:
         """Ejecuta en trabajador y publica solo si la captura y solicitud siguen vigentes."""
-        await resolver_calculo(self, calcular_presentacion)
+        await resolver_calculo(self, calcular_presentacion, puntero=puntero)
 
-    def _publicar(self, respuesta: dict, huella: str) -> None:
+    def _publicar(self, respuesta: dict, huella: str, *, puntero: bool = False) -> None:
         huella = reflejar_intervalo(self, respuesta) or huella
         self.ultimo_resultado, self._huella_resultado = respuesta, huella
-        mostrar_resultado(self, respuesta)
+        mostrar_resultado(self, respuesta, puntero=puntero)
         self.estado.set_text("Resultado disponible." if respuesta["estado"] == "EXITO" else respuesta["mensaje"])
         if respuesta.get("aproximacion") is not None or respuesta.get("iteraciones"):
             titulo = titulo_estado(respuesta)

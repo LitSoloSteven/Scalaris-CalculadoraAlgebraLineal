@@ -5,12 +5,12 @@ from .procedimiento import mostrar_traza
 from .resumen_criterio import mostrar_resumen
 
 
-def mostrar_resultado(vista, respuesta: dict) -> None:
+def mostrar_resultado(vista, respuesta: dict, *, puntero: bool = False) -> None:
     """Presenta el cálculo vigente y conserva el contexto de Glosa en sus pasos."""
     with vista.contenedor_resultados:
         hay_filas = bool(respuesta.get("iteraciones"))
         examen = crear_interruptor_examen(vista) if hay_filas else None
-        mostrar_resumen(vista, respuesta, examen)
+        mostrar_resumen(vista, respuesta, examen, puntero=puntero)
         mostrar_paso_principal(vista, respuesta)
         if examen is not None:
             examen.move(vista.contenedor_resultados)

@@ -7,7 +7,7 @@ from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
 registro = logging.getLogger(__name__)
 
 
-async def resolver_calculo(vista, calcular) -> None:
+async def resolver_calculo(vista, calcular, *, puntero: bool = False) -> None:
     """Admite un trabajador por vista y publica únicamente la captura vigente."""
     if vista.ocupado or vista.contenedor_resultados.is_deleted:
         return
@@ -18,7 +18,7 @@ async def resolver_calculo(vista, calcular) -> None:
     try:
         vigente = await ejecutar_calculo_vigente(vista, vista.capturar, calcular)
         if vigente is not None and vista.tarea_calculo is tarea:
-            vista._publicar(*vigente)
+            vista._publicar(*vigente, puntero=puntero)
     except asyncio.CancelledError:
         return
     except Exception:
