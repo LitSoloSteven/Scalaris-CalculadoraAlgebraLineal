@@ -15,7 +15,7 @@ def _refinar(expresion, presupuesto=24):
     entrada = EntradaExploracion(expresion, -.5, .5, .5)
     funcion = compilar(expresion)
     muestras = tuple(muestrear_punto(funcion, posicion) for posicion in (-.5, 0, .5))
-    return refinar_contacto(entrada, funcion, muestras, presupuesto)
+    return refinar_contacto(entrada, funcion, muestras, presupuesto)[0]
 
 
 @pytest.mark.parametrize("escala", ["1", "1e-200", "1e200", "-1"])
@@ -72,8 +72,8 @@ def test_precision_sin_avance_no_ejecuta_sondeos():
     centro = 1e16
     muestras = (MuestraExploracion(centro - 2, 1), MuestraExploracion(centro, .01), MuestraExploracion(centro + 2, 1))
     llamadas = []
-    candidato = refinar_contacto(EntradaExploracion("x", centro - 2, centro + 2, 2),
-                                lambda abscisa: llamadas.append(abscisa), muestras, 24)
+    candidato, = refinar_contacto(EntradaExploracion("x", centro - 2, centro + 2, 2),
+                                 lambda abscisa: llamadas.append(abscisa), muestras, 24)
     assert llamadas == [] and candidato.evidencia_contacto.evaluaciones == 0
     assert candidato.evidencia_contacto.motivo == "precision"
 
