@@ -2,6 +2,8 @@
 import json
 from dataclasses import asdict
 
+import pytest
+
 from src.backend.resolutores.raices.contrato_exploracion import (
     CandidatoExploracion, EntradaExploracion, EvidenciaContacto, ResultadoExploracion,
 )
@@ -47,3 +49,14 @@ def test_maximo_combinado_malla_y_auxiliares(monkeypatch):
     resultado = explorar_intervalos(entrada)
     assert resultado.evaluaciones == 4097 and resultado.evaluaciones_refinamiento == 512
     assert len(llamadas) == 4609 and resultado.refinamiento_agotado
+
+
+def test_maximo_de_registros_tras_descubrir_cruces_adicionales():
+    """La frontera admite 256 registros nuevos y rechaza el exceso sin truncar."""
+    expresion = "sin(pi*(x-.125))**2-.001"
+    resultado = explorar_intervalos(EntradaExploracion(expresion, -.5, 127.5, .5))
+    assert len(resultado.candidatos) == 256 and resultado.evaluaciones_refinamiento == 512
+    assert all(candidato.tipo == "cruce" for candidato in resultado.candidatos)
+    assert not resultado.refinamiento_agotado
+    with pytest.raises(ValueError, match="demasiados registros"):
+        explorar_intervalos(EntradaExploracion(expresion, -.5, 128.5, .5))

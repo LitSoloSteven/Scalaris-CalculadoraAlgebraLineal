@@ -84,17 +84,17 @@ def test_presupuesto_agotado_visible_sin_ocultar_contacto(monkeypatch):
     ejecutar_escenario(monkeypatch, comprobar)
 
 
-def test_cruce_refinado_apto_para_lote_sin_resolver_automaticamente(monkeypatch):
+def test_cruces_refinados_aptos_para_lote_sin_resolver_automaticamente(monkeypatch):
     """Los signos nuevos habilitan el lote, que solo se ejecuta al pedirlo."""
     async def comprobar(vista):
-        """Explora un valle con cambio de signo descubierto y resuelve ese cruce por separado."""
+        """Explora un valle con dos cambios de signo y resuelve ambos por separado."""
         panel = preparar_exploracion(vista, "(x-.125)**2-.001", ".5")
         await panel.explorar()
-        candidato = panel.respuesta["candidatos"][0]
         lote = vista.resolucion_multiple
-        assert candidato["tipo"] == "cruce" and lote.respuesta is None
-        assert len(lote.candidatos) == len(acciones_exploracion(panel)) == 1
-        await lote.resolver_uno()
-        assert lote.respuesta["resultados"][0]["respuesta"]["estado"] == "EXITO"
+        assert all(candidato["tipo"] == "cruce" for candidato in panel.respuesta["candidatos"])
+        assert lote.respuesta is None and len(lote.candidatos) == len(acciones_exploracion(panel)) == 2
+        await lote.resolver_todos()
+        assert len(lote.respuesta["resultados"]) == 2
+        assert all(registro["respuesta"]["estado"] == "EXITO" for registro in lote.respuesta["resultados"])
         assert vista.ultimo_resultado is None
     ejecutar_escenario(monkeypatch, comprobar)

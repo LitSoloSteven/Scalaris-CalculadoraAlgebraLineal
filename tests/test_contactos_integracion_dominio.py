@@ -105,9 +105,22 @@ def test_dos_ceros_refinados_son_unicos_y_con_vecino_valido():
 
 
 def test_fallo_en_sondeo_conserva_registro_y_contabilidad():
-    """Un polo no afín descubierto al refinar no se une ni se transforma en un contacto exitoso."""
+    """Los dos sondeos inválidos conservan todos sus segmentos y un solo consumo."""
     resultado = explorar_intervalos(EntradaExploracion("(x-.02)**2/((x*x-.0625)**2)", -.5, .5, .5))
-    assert len(resultado.candidatos) == 1 and resultado.candidatos[0].tipo == "segmento_invalido"
+    assert [candidato.intervalo for candidato in resultado.candidatos] == [(-.5, -.25), (-.25, 0), (0, .25), (.25, .5)]
+    assert all(candidato.tipo == "segmento_invalido" for candidato in resultado.candidatos)
     assert resultado.evaluaciones == 3 and resultado.evaluaciones_refinamiento == 2
-    assert resultado.candidatos[0].evidencia_contacto.motivo == "segmento_invalido"
+    evidencias = [candidato.evidencia_contacto for candidato in resultado.candidatos if candidato.evidencia_contacto]
+    assert len(evidencias) == 1 and evidencias[0].motivo == "segmento_invalido"
+    assert evidencias[0].evaluaciones == 2
     json.dumps(asdict(resultado), allow_nan=False)
+
+
+def test_dos_cruces_descubiertos_en_un_sondeo():
+    """Cada par vecino con signos contrarios se publica y el consumo se registra una vez."""
+    resultado = explorar_intervalos(EntradaExploracion("(x-.125)**2-.001", -.5, .5, .5))
+    assert [candidato.tipo for candidato in resultado.candidatos] == ["cruce", "cruce"]
+    assert [candidato.intervalo for candidato in resultado.candidatos] == [(0, .125), (.125, .25)]
+    assert resultado.evaluaciones_refinamiento == 4 and resultado.refinamientos == 2
+    assert resultado.candidatos[0].evidencia_contacto.evaluaciones == 4
+    assert resultado.candidatos[1].evidencia_contacto is None
