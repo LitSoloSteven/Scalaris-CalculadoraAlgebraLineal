@@ -56,4 +56,5 @@ def _serializar_registro(registro) -> dict:
     if registro.resultado is not None:
         respuesta = serializar_resultado(registro.entrada, registro.resultado)
     return {"identificador": registro.identificador, "estado": registro.estado, "mensaje": registro.mensaje,
-            "respuesta": respuesta, "evaluaciones_reservadas": registro.evaluaciones_reservadas}
+            "respuesta": respuesta, "evaluaciones_reservadas": registro.evaluaciones_reservadas,
+            "informe_continuidad": registro.informe_continuidad}

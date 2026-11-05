@@ -7,9 +7,11 @@ from src.backend.resolutores.raices.limites_exploracion import MAXIMO_EVALUACION
 from .captura_criterio import real_capturado
 from .presentacion import numero
 from .presentacion_diagnostico import texto_intervalo
+from .vista_previa import RANGO_GRAFICA_DEFECTO, rango_grafica
 
 LONGITUD_CAMPO_EXPLORACION = 64
 PASO_EXPLORACION_DEFECTO = "0.1"
+_DENSIDAD_AUTOMATICA = (RANGO_GRAFICA_DEFECTO[1] - RANGO_GRAFICA_DEFECTO[0]) / float(PASO_EXPLORACION_DEFECTO)
 ETIQUETAS_CANDIDATOS = {
     "cruce": "Cruce de signo",
     "cero_evaluado": "Cero evaluado aproximado",
@@ -40,6 +42,15 @@ def resolver_exploracion(captura: dict) -> dict:
         return {"estado": "EXITO", "mensaje": "Exploración disponible.", **asdict(explorar_intervalos(entrada))}
     except ValueError as error:
         return {"estado": "ERROR", "mensaje": str(error), "candidatos": (), "advertencias": (), "evaluaciones": 0}
+
+
+def sugerir_paso(captura: dict) -> float:
+    """Divide la escala antes de restar extremos para evitar desbordamiento."""
+    minimo, maximo = rango_grafica(captura)
+    paso = maximo / _DENSIDAD_AUTOMATICA - minimo / _DENSIDAD_AUTOMATICA
+    if paso <= 0:
+        raise ValueError("No se puede representar el paso automático para este rango. Introduce un paso manual.")
+    return paso
 
 
 def presentar_candidato(candidato: dict) -> dict:

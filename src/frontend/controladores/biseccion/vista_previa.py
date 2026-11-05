@@ -19,10 +19,7 @@ def preparar_vista_previa(captura: dict) -> dict:
         expresion = captura.get("expresion", "")
         if not isinstance(expresion, str) or len(expresion) > LONGITUD_MAXIMA_EXPRESION:
             raise ValueError("Escribe una función dentro de la longitud permitida.")
-        inferior = _extremo(captura.get("x_min"), "El mínimo de la gráfica")
-        superior = _extremo(captura.get("x_max"), "El máximo de la gráfica")
-        if inferior >= superior:
-            raise ValueError("El rango de la gráfica requiere mínimo < máximo.")
+        inferior, superior = rango_grafica(captura)
         entrada = {"expresion": normalizar_expresion(expresion),
                    "extremo_izquierdo": inferior, "extremo_derecho": superior,
                    **opciones_unidad(captura.get("unidad_angular", "radianes"))}
@@ -31,6 +28,15 @@ def preparar_vista_previa(captura: dict) -> dict:
                 "entrada": entrada, "muestra": muestra}
     except ValueError as error:
         return {"estado": "ERROR", "mensaje": str(error)}
+
+
+def rango_grafica(captura: dict) -> tuple[float, float]:
+    """Devuelve un rango ascendente y finito; lanza ValueError si el borrador es inválido."""
+    inferior = _extremo(captura.get("x_min"), "El mínimo de la gráfica")
+    superior = _extremo(captura.get("x_max"), "El máximo de la gráfica")
+    if inferior >= superior:
+        raise ValueError("El rango de la gráfica requiere mínimo < máximo.")
+    return inferior, superior
 
 
 def _extremo(valor, etiqueta: str) -> float:
