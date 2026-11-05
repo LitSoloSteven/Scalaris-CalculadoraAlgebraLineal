@@ -30,6 +30,10 @@ def test_edicion_cancela_y_descarta_trabajador_antiguo(monkeypatch, cambio):
         _cambiar(vista, cambio)
         liberar.set()
         await tarea
+        if cambio == "criterio":
+            assert panel.respuesta["estado"] == "EXITO" and panel.respuesta["candidatos"]
+            assert panel.boton.enabled and panel.tarea is None
+            return
         assert panel.respuesta is None and not list(panel.contenedor_resultados.descendants())
         assert panel.boton.enabled and panel.tarea is None
         assert "disponible" not in panel.estado.text

@@ -30,7 +30,7 @@ def _comprobar_fila(vista, fila: dict, copia: str) -> None:
 def _capturar_copias(monkeypatch) -> list[str]:
     copias = []
     monkeypatch.setattr(resumen_criterio, "renderizar_copia_resultado",
-                        lambda datos: copias.append(texto_resultado_copiable(datos)))
+                        lambda generar: copias.append(texto_resultado_copiable(generar())))
     return copias
 
 
