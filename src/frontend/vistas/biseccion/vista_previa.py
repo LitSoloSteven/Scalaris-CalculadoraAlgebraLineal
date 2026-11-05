@@ -29,12 +29,11 @@ class PanelVistaPrevia:
         self._cerrado = False
 
     def construir(self) -> None:
-        """Monta rango, acción de reintento y estados accesibles sin exigir un cálculo previo."""
+        """Monta la región del gráfico y enlaza los controles previamente construidos."""
         with ui.column().classes("panel-tarjeta biseccion-panel-previa w-full gap-4 p-6"):
             ui.label("Gráfica previa").classes("text-xl font-semibold texto-principal")
             ui.label("Inspecciona la función antes de elegir un intervalo. El rango visual conserva tu cálculo.").classes(
                 "text-sm texto-secundario")
-            construir_rango(self)
             self.boton = ui.button("Actualizar gráfica", color=None, on_click=self.actualizar).classes(
                 "boton-discreto").props("ripple=false")
             self.estado = ui.label("Escribe una función para ver su gráfica previa.").classes(
@@ -42,9 +41,17 @@ class PanelVistaPrevia:
             self.contenedor_resultados = ui.column().classes("w-full min-w-0")
             ui.label(GUIA_CONTINUIDAD).classes("text-sm texto-secundario")
         for campo in self._campos_captura():
-            campo.on_value_change(self.programar)
+            campo.on_value_change(self._editar_rango)
             campo.on("keydown.enter", self.actualizar)
         ui.context.client.on_delete(self.cerrar)
+
+    def construir_controles(self) -> None:
+        """Monta los campos de rango visual en las opciones del intervalo."""
+        construir_rango(self)
+
+    def _editar_rango(self) -> None:
+        if not self.vista._cargando_captura:
+            self.programar()
 
     def _campos_captura(self) -> tuple:
         return self.minimo, self.maximo

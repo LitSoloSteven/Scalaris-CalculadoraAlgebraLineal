@@ -9,6 +9,7 @@ from src.frontend.controladores.biseccion.exploracion import presentar_candidato
 from src.frontend.controladores.biseccion.resolucion_multiple import resolver_lote
 from src.frontend.controladores.biseccion.vigencia_panel import invalidar_panel
 from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
+from .modos_captura import MODO_BUSQUEDA
 from .resultados_multiples import mostrar_resultados_multiples
 
 registro = logging.getLogger(__name__)
@@ -37,9 +38,9 @@ class PanelResolucionMultiple:
             self.selector = ui.select({}, label="Candidato para resolver").classes("w-full matriz-entrada")
             self.intervalo = ui.label().classes("biseccion-numero texto-secundario")
             with ui.row().classes("w-full gap-3"):
-                self.boton_uno = ui.button("Resolver candidato", color=None, on_click=self.resolver_uno).classes(
+                self.boton_uno = ui.button("Resolver candidato", color=None, on_click=self._enviar_uno).classes(
                     "boton-discreto").props("ripple=false")
-                self.boton_todos = ui.button("Resolver todos los aptos", color=None, on_click=self.resolver_todos).classes(
+                self.boton_todos = ui.button("Resolver todos los aptos", color=None, on_click=self._enviar_todos).classes(
                     "boton-discreto").props("ripple=false")
             self.estado = ui.label("Explora la función para habilitar candidatos actuales.").classes(
                 "texto-secundario").props("role=status aria-live=polite")
@@ -91,9 +92,20 @@ class PanelResolucionMultiple:
         """Entrega configuración común y selección actual con identificadores del escaneo."""
         candidatos = self.candidatos if self._todos else {
             clave: candidato for clave, candidato in self.candidatos.items() if clave == self.selector.value}
-        return {"configuracion": self.vista.capturar(), "unidad_angular": self.vista.unidad_angular.value,
+        configuracion = self.vista.capturar()
+        for clave in ("extremo_izquierdo", "extremo_derecho", "cero_preferido"):
+            configuracion.pop(clave, None)
+        return {"configuracion": configuracion, "unidad_angular": self.vista.unidad_angular.value,
                 "candidatos": tuple({"identificador": clave, "candidato": candidato}
                                     for clave, candidato in candidatos.items())}
+
+    async def _enviar_uno(self) -> None:
+        if self.vista.modos.value == MODO_BUSQUEDA:
+            await self.resolver_uno()
+
+    async def _enviar_todos(self) -> None:
+        if self.vista.modos.value == MODO_BUSQUEDA:
+            await self.resolver_todos()
 
     async def resolver_uno(self) -> None:
         """Resuelve el candidato seleccionado mediante el mismo controlador del lote."""

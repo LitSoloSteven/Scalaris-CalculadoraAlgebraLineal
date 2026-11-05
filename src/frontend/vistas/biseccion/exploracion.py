@@ -10,7 +10,9 @@ from src.frontend.controladores.biseccion.exploracion import (
     LONGITUD_CAMPO_EXPLORACION, PASO_EXPLORACION_DEFECTO, presentar_candidato, resolver_exploracion,
 )
 from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
+from .acciones_captura import desplegable
 from .candidatos import mostrar_candidatos
+from .modos_captura import MODO_BUSQUEDA
 
 registro = logging.getLogger(__name__)
 
@@ -35,16 +37,27 @@ class PanelExploracion:
             with ui.element("div").classes("biseccion-campos"):
                 self.minimo = self._campo("Mínimo x")
                 self.maximo = self._campo("Máximo x")
-            self.paso = self._campo("Paso h", PASO_EXPLORACION_DEFECTO)
+            with desplegable("Avanzado"):
+                self.paso = self._campo("Paso h", PASO_EXPLORACION_DEFECTO)
             with ui.row().classes("w-full gap-3"):
                 ui.button("Usar intervalo actual", color=None, on_click=self.usar_intervalo).classes("boton-discreto").props("ripple=false")
-                self.boton = ui.button("Explorar candidatos", color=None, on_click=self.explorar).classes("boton-discreto").props("ripple=false")
+                self.boton = ui.button("Explorar candidatos", color=None, on_click=self.enviar_busqueda).classes(
+                    "boton-principal").props("ripple=false")
             self.estado = ui.label("Define un rango y un paso para explorar la función.").classes(
                 "texto-secundario").props("role=status aria-live=polite")
             self.contenedor_resultados = ui.column().classes("biseccion-candidatos w-full gap-4")
         for campo in self._campos_captura():
-            campo.on_value_change(self.invalidar)
-            campo.on("keydown.enter", self.explorar)
+            campo.on_value_change(self._editar_rango)
+            campo.on("keydown.enter", self.enviar_busqueda)
+
+    async def enviar_busqueda(self) -> None:
+        """Busca desde los controles solo cuando Buscar intervalo está activo."""
+        if self.vista.modos.value == MODO_BUSQUEDA:
+            await self.explorar()
+
+    def _editar_rango(self) -> None:
+        if not self.vista._cargando_captura:
+            self.invalidar()
 
     def _campo(self, etiqueta: str, valor: str = ""):
         return ui.input(etiqueta, value=valor).classes("w-full matriz-entrada").props(
@@ -130,6 +143,7 @@ class PanelExploracion:
         if candidato["tipo"] == "cero_evaluado":
             captura["cero_preferido"] = candidato["abscisa"]
         self.vista.cargar_captura(captura)
+        self.vista.inferior.run_method("focus")
 
     def cerrar(self) -> None:
         """Invalida acciones y cancela la espera del cliente desconectado."""
