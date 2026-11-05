@@ -92,3 +92,22 @@ def test_explorar_contactos_no_ejecuta_biseccion(monkeypatch):
     resultado = explorar_intervalos(EntradaExploracion("(x-.1)**2", -1, 1, .5))
     assert resultado.candidatos[0].tipo == "posible_contacto"
     assert resultado.evaluaciones_refinamiento <= MAXIMO_EVALUACIONES_REFINAMIENTO
+
+
+def test_dos_ceros_refinados_son_unicos_y_con_vecino_valido():
+    """Dos valles separados conservan sus ceros evaluados sin registros repetidos ni intervalos degenerados."""
+    resultado = explorar_intervalos(EntradaExploracion("(x-.125)**2*(x-2.125)**2", -.5, 2.5, .5))
+    ceros = [candidato for candidato in resultado.candidatos if candidato.tipo == "cero_evaluado"]
+    assert [candidato.abscisa for candidato in ceros] == [.125, 2.125]
+    assert len({candidato.abscisa for candidato in ceros}) == 2
+    assert all(candidato.abscisa in candidato.intervalo for candidato in ceros)
+    assert all(candidato.intervalo[0] < candidato.intervalo[1] for candidato in ceros)
+
+
+def test_fallo_en_sondeo_conserva_registro_y_contabilidad():
+    """Un polo no afín descubierto al refinar no se une ni se transforma en un contacto exitoso."""
+    resultado = explorar_intervalos(EntradaExploracion("(x-.02)**2/((x*x-.0625)**2)", -.5, .5, .5))
+    assert len(resultado.candidatos) == 1 and resultado.candidatos[0].tipo == "segmento_invalido"
+    assert resultado.evaluaciones == 3 and resultado.evaluaciones_refinamiento == 2
+    assert resultado.candidatos[0].evidencia_contacto.motivo == "segmento_invalido"
+    json.dumps(asdict(resultado), allow_nan=False)
