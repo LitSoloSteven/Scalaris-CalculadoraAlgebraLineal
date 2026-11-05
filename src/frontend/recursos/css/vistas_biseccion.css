@@ -49,6 +49,7 @@
 .biseccion-tabla .q-table__middle { overflow: visible; }
 .biseccion-tabla .q-table__bottom { flex-wrap: wrap; }
 .biseccion-grafica { min-height: 340px; }
+.biseccion-seleccion-activa .biseccion-grafica .nsewdrag { cursor: crosshair; }
 .biseccion-panel-previa, .biseccion-panel-exploracion, .biseccion-panel-multiple,
 .biseccion-resultado-multiple, .biseccion-candidatos, .biseccion-candidato { overflow-wrap: anywhere; }
 .biseccion-candidato { padding-block: var(--space-3); border-top: 1px solid var(--border-input); }
