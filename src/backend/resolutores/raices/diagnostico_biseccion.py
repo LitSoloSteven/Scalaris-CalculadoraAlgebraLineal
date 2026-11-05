@@ -19,7 +19,7 @@ def completar_diagnostico(entrada: EntradaBiseccion, resultado: ResultadoBisecci
     advertencias = tuple(dict.fromkeys(entrada.advertencias + resultado.advertencias))
     return replace(resultado, diagnostico=diagnostico, advertencias=advertencias,
                    metricas={"continuidad": CONTINUIDAD_CONDICIONAL, **resultado.metricas},
-                   sugerencias=sugerir_acciones(entrada, resultado))
+                   sugerencias=sugerir_acciones(entrada, resultado), unidad_angular=entrada.unidad_angular)
 
 
 def error_contextual(error: ValueError, contexto: ContextoFallo,
@@ -52,10 +52,10 @@ def error_extremos(evaluaciones: tuple[EvaluacionExtremo, ...]) -> ResultadoBise
     )
 
 
-def diagnostico_interior(expresion: str, intervalo: tuple[float, float]) -> DiagnosticoBiseccion | None:
+def diagnostico_interior(expresion: str, intervalo: tuple[float, float], *, unidad_angular: str = "radianes") -> DiagnosticoBiseccion | None:
     """Consulta restricciones estructurales; no afirma haber evaluado su ubicación."""
     try:
-        comprobar_dominio_intervalo(expresion, intervalo)
+        comprobar_dominio_intervalo(expresion, intervalo, unidad_angular=unidad_angular)
     except ValueError as error:
         resultado = construir_error(error)
         return {"codigo": resultado.codigo_diagnostico, "origen": "estructura", "mensaje": resultado.mensaje}

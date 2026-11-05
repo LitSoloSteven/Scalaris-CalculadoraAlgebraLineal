@@ -6,6 +6,7 @@ from typing import TypedDict
 
 from .criterios_biseccion import CriterioParada, tolerancia_decimal, validar_criterio, validar_entero_criterio
 from .limites_biseccion import D_MAXIMO, LIMITE_ITERACIONES_DEFECTO, LIMITE_ITERACIONES_MAXIMO, LONGITUD_MAXIMA_EXPRESION
+from .unidades_angulares import validar_unidad_angular
 
 AVISO_INTERVALO_INVERTIDO = "Se intercambiaron los extremos para trabajar con a < b."
 CONTINUIDAD_CONDICIONAL = "La garantía requiere continuidad en todo el intervalo; el análisis estructural no es una certificación general."
@@ -22,6 +23,7 @@ class EntradaBiseccion:
     limite_iteraciones: int = LIMITE_ITERACIONES_DEFECTO
     criterio: CriterioParada | None = field(default=None, kw_only=True)
     intervalo_invertido: bool = field(default=False, kw_only=True)
+    unidad_angular: str = field(default="radianes", kw_only=True)
 
     @property
     def advertencias(self) -> tuple[str, ...]:
@@ -123,6 +125,7 @@ class ResultadoBiseccion:
     diagnostico: DiagnosticoBiseccion | None = None
     contexto_fallo: ContextoFallo | None = None
     sugerencias: tuple[SugerenciaBiseccion, ...] = ()
+    unidad_angular: str = "radianes"
 
 
 def validar_precision(valor) -> int:
@@ -153,7 +156,8 @@ def validar_entrada(datos: dict) -> EntradaBiseccion:
     criterio = validar_criterio(datos.get("criterio"), decimales, limite)
     return EntradaBiseccion(expresion=expresion, extremo_izquierdo=extremo_izquierdo,
                            extremo_derecho=extremo_derecho, decimales=decimales,
-                           limite_iteraciones=limite, criterio=criterio, intervalo_invertido=intercambio)
+                           limite_iteraciones=limite, criterio=criterio, intervalo_invertido=intercambio,
+                           unidad_angular=validar_unidad_angular(datos.get("unidad_angular", "radianes")))
 
 
 def _validar_intercambio(valor) -> bool:

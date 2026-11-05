@@ -5,6 +5,7 @@ from fractions import Fraction
 from src.backend.excepciones import ErrorDominio
 from .errores_numericos import ErrorSingularidad
 from .gramatica_funcion import analizar_expresion, CONSTANTES_REALES
+from .unidades_angulares import validar_unidad_angular
 
 Afin = tuple[Fraction, Fraction]
 
@@ -14,8 +15,9 @@ def argumento_afin(nodo: ast.AST) -> Afin | None:
     return _como_afin(nodo)
 
 
-def comprobar_dominio_intervalo(expresion: str, intervalo: tuple[float, float]) -> None:
+def comprobar_dominio_intervalo(expresion: str, intervalo: tuple[float, float], *, unidad_angular: str = "radianes") -> None:
     """Rechaza polos verificables; no certifica continuidad de expresiones generales."""
+    validar_unidad_angular(unidad_angular)
     arbol = analizar_expresion(expresion)
     extremos = tuple(Fraction(valor) for valor in intervalo)
     for nodo in ast.walk(arbol):
