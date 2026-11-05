@@ -3,9 +3,12 @@ from nicegui import ui
 
 from .acciones_captura import construir_acciones, construir_limite, desplegable
 from .captura import construir_boton_calculo, construir_captura, construir_intervalo
+from .continuidad_intervalo import PanelContinuidad
 from .exploracion import PanelExploracion
 from .modos_captura import MODO_BUSQUEDA, MODO_INTERVALO, construir_modos, region_modo
+from .previa_expresion import PreviaExpresion
 from .resolucion_multiple import PanelResolucionMultiple
+from .seleccion_grafico import SeleccionGrafico
 from .vista_previa import PanelVistaPrevia
 
 
@@ -20,6 +23,7 @@ def componer_herramienta(vista) -> None:
         with ui.element("div").classes("biseccion-disposicion w-full"):
             _componer_captura(vista)
             vista.vista_previa.construir()
+            vista.seleccion_grafico.enlazar(vista.vista_previa.grafica)
         with ui.column().classes("w-full min-w-0 gap-5").bind_visibility_from(
                 vista.modos, "value", backward=lambda modo: modo == MODO_INTERVALO):
             vista.estado = ui.label("Ingresa una función o carga un ejemplo para comenzar.").classes(
@@ -30,6 +34,7 @@ def componer_herramienta(vista) -> None:
 def _componer_captura(vista) -> None:
     with ui.column().classes("panel-tarjeta biseccion-captura w-full gap-4 p-6"):
         construir_captura(vista)
+        vista.previa_expresion = PreviaExpresion()
         construir_modos(vista)
         vista.region_intervalo = region_modo(vista, MODO_INTERVALO)
         with vista.region_intervalo:
@@ -38,9 +43,13 @@ def _componer_captura(vista) -> None:
                 construir_limite(vista)
                 vista.vista_previa.construir_controles()
             construir_boton_calculo(vista)
+            vista.continuidad = PanelContinuidad(vista)
+            vista.continuidad.construir()
         vista.region_busqueda = region_modo(vista, MODO_BUSQUEDA)
         with vista.region_busqueda:
             vista.exploracion.construir()
+            vista.seleccion_grafico = SeleccionGrafico(vista)
+            vista.seleccion_grafico.construir()
             vista.resolucion_multiple.construir()
         construir_acciones(vista)
         vista.recientes = ui.row().classes("w-full gap-2")

@@ -9,6 +9,7 @@ from src.frontend.controladores.biseccion.exploracion import presentar_candidato
 from src.frontend.controladores.biseccion.resolucion_multiple import resolver_lote
 from src.frontend.controladores.biseccion.vigencia_panel import invalidar_panel
 from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
+from .grafico_compartido import restaurar_grafico_principal
 from .modos_captura import MODO_BUSQUEDA
 from .resultados_multiples import mostrar_resultados_multiples
 
@@ -28,19 +29,23 @@ class PanelResolucionMultiple:
         self._identificador_calculo = 0
         self._cerrado = False
         self._todos = False
+        self._detalle = None
+        self._paso_detalle = None
+        self._reproductor_detalle = None
+        self.detalle_activo = False
 
     def construir(self) -> None:
         """Monta acciones independientes con selección accesible y estados del lote."""
         with ui.column().classes("panel-tarjeta biseccion-panel-multiple w-full gap-4 p-6"):
             ui.label("Resolver candidatos").classes("text-xl font-semibold texto-principal")
             ui.label(f"Usa el criterio y el límite actuales para resolver uno o hasta {MAXIMO_CANDIDATOS_MULTIPLE} candidatos aptos. "
-                     "Cada resultado conserva su propia tabla; el cálculo principal se mantiene.").classes("text-sm texto-secundario")
+                     "Abre un resultado para consultar sus iteraciones.").classes("text-sm texto-secundario")
             self.selector = ui.select({}, label="Candidato para resolver").classes("w-full matriz-entrada")
             self.intervalo = ui.label().classes("biseccion-numero texto-secundario")
             with ui.row().classes("w-full gap-3"):
                 self.boton_uno = ui.button("Resolver candidato", color=None, on_click=self._enviar_uno).classes(
                     "boton-discreto").props("ripple=false")
-                self.boton_todos = ui.button("Resolver todos los aptos", color=None, on_click=self._enviar_todos).classes(
+                self.boton_todos = ui.button("Resolver todos", color=None, on_click=self._enviar_todos).classes(
                     "boton-discreto").props("ripple=false")
             self.estado = ui.label("Explora la función para habilitar candidatos actuales.").classes(
                 "texto-secundario").props("role=status aria-live=polite")
@@ -68,6 +73,8 @@ class PanelResolucionMultiple:
         self._seleccionar()
         self.estado.set_text("Elige un candidato o resuelve todos los aptos." if opciones else
                              "Esta malla no contiene candidatos aptos para bisección. Cambia el rango o el paso.")
+        if len(opciones) > MAXIMO_CANDIDATOS_MULTIPLE:
+            self.estado.set_text(f"Hay más de {MAXIMO_CANDIDATOS_MULTIPLE} aptos. Elige uno o reduce el rango.")
 
     def retirar_candidatos(self) -> None:
         """Invalida tareas y selección cuando el escaneo deja de corresponder a la captura."""
@@ -83,10 +90,15 @@ class PanelResolucionMultiple:
     def invalidar(self) -> None:
         """Cancela la espera y retira resultados del lote sin tocar el cálculo individual."""
         invalidar_panel(self)
+        self._montar_reproductor(None)
+        self._detalle = None
+        self.detalle_activo = False
         if not self.contenedor_resultados.is_deleted:
             self.contenedor_resultados.clear()
             self.estado.set_text("Solicita la resolución para obtener resultados vigentes.")
             self._actualizar_controles(False)
+            if self.vista.modos.value == MODO_BUSQUEDA and hasattr(self.vista.vista_previa, "compartido"):
+                restaurar_grafico_principal(self.vista)
 
     def capturar(self) -> dict:
         """Entrega configuración común y selección actual con identificadores del escaneo."""
@@ -150,13 +162,50 @@ class PanelResolucionMultiple:
             if not boton.is_deleted:
                 boton.set_enabled(not ocupado and self._puede_resolver())
                 boton.props("loading" if ocupado else "", remove="" if ocupado else "loading")
+        if not self.boton_todos.is_deleted:
+            self.boton_todos.set_visibility(2 <= len(self.candidatos) <= MAXIMO_CANDIDATOS_MULTIPLE)
 
     def _publicar(self, respuesta: dict) -> None:
         self.respuesta = respuesta
         self.estado.set_text(respuesta["mensaje"])
         if respuesta["estado"] != "ERROR":
             with self.contenedor_resultados:
-                mostrar_resultados_multiples(respuesta)
+                mostrar_resultados_multiples(
+                    respuesta, self._graficar_detalle, self._volver_al_principal, self._montar_reproductor)
+
+    def _montar_reproductor(self, reproductor) -> None:
+        if self._reproductor_detalle is not None:
+            self._reproductor_detalle.detener()
+        self._reproductor_detalle = reproductor
+
+    def pausar_detalle(self) -> None:
+        """Pausa el procedimiento del lote antes de ocultar su tarea."""
+        if self._reproductor_detalle is not None:
+            self._reproductor_detalle.pausar()
+
+    def _graficar_detalle(self, respuesta: dict | None, paso=None) -> None:
+        self._detalle = respuesta
+        self._paso_detalle = paso
+        self.detalle_activo = True
+        if self.vista.modos.value != MODO_BUSQUEDA:
+            return
+        grafico = self.vista.vista_previa.compartido
+        if respuesta is None:
+            grafico.sospecha(None)
+            grafico.intervalo(None)
+        else:
+            grafico.resultado(respuesta, paso.cuerpo if paso else None,
+                              inicial=bool(paso and paso.tipo == "planteamiento"))
+
+    def restaurar_detalle(self) -> None:
+        """Sincroniza el gráfico con el registro aún abierto al volver a Buscar."""
+        if self.detalle_activo:
+            self._graficar_detalle(self._detalle, self._paso_detalle)
+
+    def _volver_al_principal(self) -> None:
+        self._detalle = None
+        self.detalle_activo = False
+        restaurar_grafico_principal(self.vista)
 
     def cerrar(self) -> None:
         """Bloquea el panel desconectado y retira tareas, selección y resultados anteriores."""

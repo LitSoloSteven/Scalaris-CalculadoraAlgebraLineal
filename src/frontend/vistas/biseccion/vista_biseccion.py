@@ -1,6 +1,4 @@
 """Orquestación de captura, vigencia y presentación de la herramienta de raíces."""
-import logging
-
 from nicegui import ui
 
 from src.ai.contexto import ContextoIA, EstadoContexto
@@ -11,20 +9,18 @@ from src.frontend.controladores.biseccion.controlador import calcular_presentaci
 from src.frontend.controladores.biseccion.catalogo_criterios import DECIMALES_PRESENTACION_DEFECTO
 from src.frontend.controladores.biseccion.contexto_biseccion import resumir_contexto_biseccion
 from src.frontend.controladores.biseccion.presentacion_criterio import etiqueta_aproximacion, titulo_estado
-from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
 from src.frontend.controladores.sesion_matricial import invalidar_resultado, actualizar_contexto, registrar_calculo
 from src.frontend.navegacion import ruta_de
 from .acciones_captura import mostrar_recientes
+from .calculo_individual import resolver_calculo
 from .composicion import componer_herramienta
 from .estado_captura import hay_rangos_editados, restaurar_captura, vaciar_captura
 from .estados_entrada import actualizar_expresion, actualizar_intervalo
+from .grafico_compartido import restaurar_grafico_principal
 from .modos_captura import MODO_BUSQUEDA, MODO_INTERVALO
 from .resultado import mostrar_resultado
 from .selector_criterio import actualizar_guia, enlazar_parametros
 from .intervalo_canonico import reflejar_intervalo
-
-registro = logging.getLogger(__name__)
-
 
 class VistaBiseccion:
     """Compone el módulo con resultados vigentes, reproductor y contexto pedagógico."""
@@ -35,6 +31,7 @@ class VistaBiseccion:
         self._revision_captura = 0
         self._identificador_calculo = 0
         self.ocupado = False
+        self.tarea_calculo = None
         self.historial = []
         self._cargando_captura = False
         self._cero_preferido = None
@@ -96,19 +93,22 @@ class VistaBiseccion:
         self._invalidar_calculo()
 
     def _invalidar_funcion(self) -> None:
+        self.seleccion_grafico.cancelar()
         self.exploracion.invalidar()
         self.vista_previa.programar()
         actualizar_expresion(self)
+        self.previa_expresion.programar(self.expresion.value or "")
 
     def _editar(self) -> None:
         if self._cargando_captura:
             return
-        self.exploracion.invalidar()
-        self.vista_previa.programar()
+        self.resolucion_multiple.invalidar()
         self._invalidar_calculo()
 
     def _invalidar_calculo(self) -> None:
         self._retirar_resultado()
+        restaurar_grafico_principal(self)
+        self.continuidad.programar()
         actualizar_intervalo(self)
         actualizar_guia(self)
         self.estado.set_text("Datos editados. Calcula para obtener un resultado vigente.")
@@ -123,6 +123,12 @@ class VistaBiseccion:
         """Pausa el procedimiento al ocultarlo y conserva la captura y sus resultados."""
         if evento.value == MODO_BUSQUEDA and self.reproductor_pasos is not None:
             self.reproductor_pasos.pausar()
+        if evento.value == MODO_INTERVALO:
+            self.seleccion_grafico.cancelar()
+            self.resolucion_multiple.pausar_detalle()
+            restaurar_grafico_principal(self)
+        else:
+            self.resolucion_multiple.restaurar_detalle()
 
     async def _enviar_funcion(self) -> None:
         if self.modos.value == MODO_BUSQUEDA:
@@ -140,26 +146,7 @@ class VistaBiseccion:
 
     async def resolver(self) -> None:
         """Ejecuta en trabajador y publica solo si la captura y solicitud siguen vigentes."""
-        if self.ocupado or self.contenedor_resultados.is_deleted:
-            return
-        self._retirar_resultado()
-        self.ocupado = True
-        self.boton_resolver.disable()
-        self.boton_resolver.props("loading")
-        self.estado.set_text("Calculando el intervalo y preparando la gráfica…")
-        try:
-            vigente = await ejecutar_calculo_vigente(self, self.capturar, calcular_presentacion)
-            if vigente is not None:
-                self._publicar(*vigente)
-        except Exception:
-            registro.exception("No se pudo presentar el cálculo de bisección")
-            if not self.estado.is_deleted:
-                self.estado.set_text("No se pudo completar el cálculo. Revisa la función y vuelve a intentarlo.")
-        finally:
-            self.ocupado = False
-            if not self.boton_resolver.is_deleted:
-                self.boton_resolver.enable()
-                self.boton_resolver.props(remove="loading")
+        await resolver_calculo(self, calcular_presentacion)
 
     def _publicar(self, respuesta: dict, huella: str) -> None:
         huella = reflejar_intervalo(self, respuesta) or huella
@@ -201,21 +188,28 @@ class VistaBiseccion:
     def limpiar_todo(self) -> None:
         """Vacía el ejercicio y retira sus resultados conservando las preferencias de precisión."""
         vaciar_captura(self)
+        self.seleccion_grafico.cancelar()
+        self.exploracion.restablecer_paso()
         self._invalidar_funcion()
         self.exploracion.mostrar_estado_inicial()
         self._invalidar_calculo()
         self.estado.set_text("Captura vacía. Ingresa una función o carga un ejemplo.")
 
     def _desconectar(self) -> None:
-        invalidar_resultado(self)
+        self._retirar_resultado()
         self.exploracion.cerrar()
         self.vista_previa.cerrar()
         self.resolucion_multiple.cerrar()
+        self.continuidad.cerrar()
+        self.previa_expresion.cerrar()
+        self.seleccion_grafico.cancelar()
 
     def _reconectar(self) -> None:
         self.exploracion.reabrir()
         self.vista_previa.reabrir()
         self.resolucion_multiple.reabrir()
+        self.continuidad.reabrir()
+        self.previa_expresion.reabrir(self.expresion.value or "")
 
     def obtener_contexto_ia(self) -> ContextoIA:
         """Entrega a Glosa la captura y un resumen acotado del resultado vigente."""
