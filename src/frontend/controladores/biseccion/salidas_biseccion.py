@@ -1,6 +1,7 @@
 """Formato compartido para el signo y la acción registrados en el modo examen."""
 from src.backend.resolutores.raices.contrato_biseccion import ESTADO_DISCONTINUIDAD
 from .presentacion import MOTIVOS
+from .presentacion_criterio import texto_resumen
 
 COLUMNAS_EXAMEN = (("signo_examen", "Signo de f(a)·f(c)"), ("accion_examen", "Acción ejecutada"))
 _SIGNOS = {-1: "Negativo (−)", 0: "Cero (0)", 1: "Positivo (+)"}
@@ -20,6 +21,14 @@ def datos_examen(fila: dict, estado: str) -> dict[str, str]:
     else:
         texto = _REEMPLAZOS.get(accion, _SIN_DATO)
     return {"signo_examen": signo, "accion_examen": texto}
+
+
+def texto_copia_biseccion(respuesta: dict, decimales: int, examen: bool) -> str:
+    """Combina el resumen y, si está activa, la traza válida del modo examen."""
+    texto = texto_resumen(respuesta, decimales)
+    if examen and respuesta.get("iteraciones"):
+        texto += "\n\n" + texto_traza_examen(respuesta)
+    return texto
 
 
 def texto_traza_examen(respuesta: dict) -> str:

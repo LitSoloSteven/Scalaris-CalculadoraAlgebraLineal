@@ -9,9 +9,9 @@ from src.frontend.controladores.biseccion.catalogo_criterios import DECIMALES_PR
 from src.frontend.controladores.biseccion.captura_criterio import precision_presentacion
 from src.frontend.controladores.biseccion.presentacion import motivo
 from src.frontend.controladores.biseccion.presentacion_criterio import (
-    aproximacion_presentada, avisos_resumen, datos_copia_biseccion, metricas_resumen, texto_resumen, titulo_estado,
+    aproximacion_presentada, avisos_resumen, datos_copia_biseccion, etiqueta_aproximacion, metricas_resumen, titulo_estado,
 )
-from src.frontend.controladores.biseccion.salidas_biseccion import texto_traza_examen
+from src.frontend.controladores.biseccion.salidas_biseccion import texto_copia_biseccion
 from .avisos_diagnostico import mostrar_avisos_diagnostico
 
 
@@ -50,10 +50,8 @@ def _montar_copia(vista, respuesta: dict, examen: ui.switch | None) -> Callable[
         if contenedor.is_deleted:
             return
         precision = getattr(vista, "_precision_visual", DECIMALES_PRESENTACION_DEFECTO)
-        texto = texto_resumen(respuesta, precision)
         modo_activo = examen is not None and examen.value
-        if modo_activo:
-            texto += "\n\n" + texto_traza_examen(respuesta)
+        texto = texto_copia_biseccion(respuesta, precision, modo_activo)
         contenedor.clear()
         with contenedor:
             renderizar_copia_resultado(datos_copia_biseccion(respuesta["estado"], texto, examen=modo_activo))
@@ -66,7 +64,7 @@ def _montar_copia(vista, respuesta: dict, examen: ui.switch | None) -> Callable[
 
 def _mostrar_detalle(respuesta: dict, precision: int) -> None:
     provisional = respuesta["estado"] != "EXITO"
-    ui.label("Aproximación provisional" if provisional else "Aproximación de la raíz").classes("texto-secundario")
+    ui.label(etiqueta_aproximacion(respuesta)).classes("texto-secundario")
     ui.label(aproximacion_presentada(respuesta, precision)).classes("biseccion-aproximacion texto-principal")
     ui.label(motivo(respuesta)).classes("texto-advertencia" if provisional else "texto-acento")
     _mostrar_metricas(respuesta)

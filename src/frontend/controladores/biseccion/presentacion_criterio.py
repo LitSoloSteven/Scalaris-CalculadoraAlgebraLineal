@@ -11,7 +11,7 @@ def titulo_estado(respuesta: dict) -> str:
     estado = respuesta["estado"]
     parada = respuesta.get("motivo_parada")
     if estado == ESTADO_DISCONTINUIDAD:
-        return "Posible discontinuidad · aproximación provisional"
+        return "Posible discontinuidad · Provisional"
     if estado == "EXITO":
         if parada == "raiz_exacta":
             return "Cero evaluado en un punto medio" if respuesta["iteraciones"] else "Cero evaluado en un extremo, sin iteraciones"
@@ -56,6 +56,13 @@ def aproximacion_presentada(respuesta: dict, decimales: int) -> str:
     return f"{prefijo} ≈ {valor:.{decimales}f}"
 
 
+def etiqueta_aproximacion(respuesta: dict) -> str:
+    """Identifica cómo debe interpretarse la aproximación publicada."""
+    if respuesta.get("aproximacion") is None:
+        return "Aproximación no disponible"
+    return "Aproximación de la raíz" if respuesta["estado"] == "EXITO" else "Aproximación provisional"
+
+
 def avisos_resumen(respuesta: dict) -> tuple[str, ...]:
     """Reúne avisos del motor y del adaptador sin repetir textos idénticos."""
     avisos = tuple(respuesta.get("advertencias", ()))
@@ -68,7 +75,10 @@ def avisos_resumen(respuesta: dict) -> tuple[str, ...]:
 
 def texto_resumen(respuesta: dict, decimales: int) -> str:
     """Entrega el mismo estado, criterio, magnitudes y avisos mostrados para copiar el resultado."""
-    lineas = [titulo_estado(respuesta), aproximacion_presentada(respuesta, decimales), motivo(respuesta)]
+    lineas = [titulo_estado(respuesta), etiqueta_aproximacion(respuesta)]
+    if respuesta.get("aproximacion") is not None:
+        lineas.append(aproximacion_presentada(respuesta, decimales))
+    lineas.append(motivo(respuesta))
     lineas.extend(f"{etiqueta}: {valor}" for etiqueta, valor in metricas_resumen(respuesta))
     lineas.extend(avisos_resumen(respuesta))
     lineas.extend(f"{etiqueta}: {valor}" for etiqueta, valor in detalles_diagnostico(respuesta))
