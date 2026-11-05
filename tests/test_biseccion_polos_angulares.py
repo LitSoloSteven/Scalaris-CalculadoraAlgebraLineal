@@ -126,3 +126,26 @@ def test_lote_reevalua_un_cruce_que_atraviesa_polo():
     assert resultado == biseccion(configuracion)
     assert resultado.codigo_diagnostico == "SINGULARIDAD_DETECTADA"
     assert resultado.aproximacion is None
+
+
+@pytest.mark.parametrize("expresion,intervalo", [
+    ("(x-90)*tan(x)", (90, 91)),
+    ("(x-91)*tan(x)", (90, 91)),
+    ("(x-89)*tan(x)", (89, 90)),
+    ("x*tan(90)", (0, 1)),
+])
+def test_polo_extremo_invalida_cero_flotante(expresion, intervalo):
+    """Un valor finito de math.tan no convierte un extremo indefinido en cero válido."""
+    resultado = biseccion(EntradaBiseccion(expresion, *intervalo, 4, unidad_angular="grados"))
+    assert resultado.estado == "ERROR" and resultado.codigo_diagnostico == "SINGULARIDAD_DETECTADA"
+    assert resultado.aproximacion is None and resultado.iteraciones == ()
+    assert resultado.contexto_fallo["etapa"] == "estructura"
+    assert resultado.contexto_fallo["x_fallo"] is None
+
+
+def test_cero_valido_en_grados_con_polo_solo_interior():
+    """El rechazo de extremos indefinidos conserva el cero válido y su aviso de polo interior."""
+    resultado = biseccion(EntradaBiseccion("x*tan(x)", 0, 100, 4, unidad_angular="grados"))
+    assert resultado.estado == "EXITO" and resultado.codigo_diagnostico == "CERO_EVALUADO"
+    assert resultado.aproximacion == 0 and resultado.iteraciones == ()
+    assert resultado.diagnostico["codigo"] == "SINGULARIDAD_DETECTADA"

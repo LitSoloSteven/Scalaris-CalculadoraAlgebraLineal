@@ -47,7 +47,8 @@ def _resolver_intervalo(entrada: EntradaBiseccion, funcion: Callable[[float], fl
     intervalo = extremos[:2]
     diagnostico = diagnostico_interior(entrada.expresion, intervalo, unidad_angular=entrada.unidad_angular)
     inicial = _validar_extremos(entrada, extremos)
-    if inicial is not None and inicial.motivo_parada == "raiz_exacta":
+    if (inicial is not None and inicial.motivo_parada == "raiz_exacta"
+            and (diagnostico is None or not _hay_restriccion_extrema(entrada))):
         if diagnostico is not None:
             return replace(inicial, diagnostico=diagnostico,
                            advertencias=("Continuidad no certificada: " + diagnostico["mensaje"],))
@@ -59,6 +60,12 @@ def _resolver_intervalo(entrada: EntradaBiseccion, funcion: Callable[[float], fl
             metricas={"iteraciones_totales": 0},
             contexto_fallo={"etapa": "estructura", "x_fallo": None, "intervalo_valido": intervalo})
     return inicial if inicial is not None else _iterar(entrada, funcion, extremos)
+
+
+def _hay_restriccion_extrema(entrada: EntradaBiseccion) -> bool:
+    return any(diagnostico_interior(entrada.expresion, (extremo, extremo),
+               unidad_angular=entrada.unidad_angular) is not None
+               for extremo in (entrada.extremo_izquierdo, entrada.extremo_derecho))
 
 
 def _validar_extremos(entrada: EntradaBiseccion, extremos: tuple) -> ResultadoBiseccion | None:
