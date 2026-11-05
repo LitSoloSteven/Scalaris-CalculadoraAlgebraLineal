@@ -9,6 +9,8 @@ from src.frontend.componentes.estructura_aplicacion import crear_estructura_apli
 from src.frontend.componentes.panel_ia import PanelIA
 from src.frontend.controladores.biseccion.controlador import calcular_presentacion
 from src.frontend.controladores.biseccion.catalogo_criterios import CRITERIOS, DECIMALES_PRESENTACION_DEFECTO
+from src.frontend.controladores.biseccion.contexto_biseccion import resumir_contexto_biseccion
+from src.frontend.controladores.biseccion.presentacion_criterio import etiqueta_aproximacion, titulo_estado
 from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
 from src.frontend.controladores.sesion_matricial import invalidar_resultado, actualizar_contexto, registrar_calculo
 from src.frontend.navegacion import ruta_de
@@ -114,8 +116,11 @@ class VistaBiseccion:
         self.ultimo_resultado, self._huella_resultado = respuesta, huella
         mostrar_resultado(self, respuesta)
         self.estado.set_text("Resultado disponible." if respuesta["estado"] == "EXITO" else respuesta["mensaje"])
-        if respuesta.get("aproximacion") is not None:
-            registrar_calculo(self.historial, {"captura": self.capturar(), "estado": respuesta["estado"]})
+        if respuesta.get("aproximacion") is not None or respuesta.get("iteraciones"):
+            titulo = titulo_estado(respuesta)
+            if respuesta["estado"] not in ("EXITO", ESTADO_DISCONTINUIDAD) and respuesta.get("aproximacion") is not None:
+                titulo += " · " + etiqueta_aproximacion(respuesta)
+            registrar_calculo(self.historial, {"captura": self.capturar(), "estado": respuesta["estado"], "titulo": titulo})
             self._mostrar_recientes()
         actualizar_contexto(self)
 
@@ -148,9 +153,7 @@ class VistaBiseccion:
                 captura = calculo["captura"]
                 criterio = captura.get("criterio", {"tipo": "decimales", "parametro": captura["decimales"]})
                 etiqueta = f"{CRITERIOS[criterio['tipo']][0]} · {criterio['parametro']} · {captura.get('unidad_angular', 'radianes')}"
-                if calculo.get("estado") == ESTADO_DISCONTINUIDAD:
-                    etiqueta += " · Provisional"
-                ui.button(f"{indice} · {etiqueta}", color=None,
+                ui.button(f"{indice} · {calculo['titulo']} · {etiqueta}", color=None,
                           on_click=lambda captura=captura: self.cargar_captura(captura)).classes("boton-discreto").tooltip(str(captura["expresion"]))
 
     def esta_completamente_vacio(self) -> bool:
@@ -177,11 +180,7 @@ class VistaBiseccion:
 
     def obtener_contexto_ia(self) -> ContextoIA:
         """Entrega a Glosa la captura y un resumen acotado del resultado vigente."""
-        resultado = self.ultimo_resultado
-        resumen = None if resultado is None else {clave: resultado.get(clave) for clave in (
-            "estado", "mensaje", "aproximacion", "intervalo_final", "tolerancia", "cota", "motivo_parada", "metricas",
-            "criterio_solicitado", "unidad_criterio", "umbral", "metrica_final", "codigo_diagnostico", "advertencias",
-            "diagnostico", "aviso_grafica", "contexto_fallo", "sugerencias", "unidad_angular")}
+        resumen = resumir_contexto_biseccion(self.ultimo_resultado)
         return ContextoIA("biseccion", "Método de bisección", "Búsqueda de raíces", self.capturar(),
                           EstadoContexto(resultado=resumen, vacio=not bool(self.expresion.value),
                                          nota_ventana="Aritmética aproximada. La garantía requiere continuidad en todo el intervalo."))
