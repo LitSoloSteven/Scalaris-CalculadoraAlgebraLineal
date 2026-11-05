@@ -36,8 +36,7 @@
 .biseccion-panel-multiple .q-btn { flex-shrink: 0; max-width: 100%; }
 .biseccion-vista :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .biseccion-vista .biseccion-interruptor-examen:focus-visible {
-  outline: 2px solid var(--focus-ring) !important;
-  outline-offset: 3px;
+  box-shadow: 0 0 0 2px var(--focus-ring);
 }
 .biseccion-vista .q-btn__content { white-space: normal; overflow-wrap: anywhere; }
 @media (max-width: 900px) {
