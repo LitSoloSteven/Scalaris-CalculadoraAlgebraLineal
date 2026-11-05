@@ -7,11 +7,6 @@ from src.frontend.controladores.biseccion.controlador import LIMITE_ITERACIONES_
 from .selector_criterio import construir_selector
 from .selector_unidad import construir_selector_unidad
 
-EJEMPLOS = (
-    ("Raíz de 2", "x^2 - 2", "1", "2"),
-    ("Polinomio del Excel", "x^4 - 5*x^3 + 0.5*x^2 - 11*x + 10", "0.6", "1"),
-    ("Potencia décima", "x^10 - 1", "0", "1.3"),
-)
 GUIA_CONTINUIDAD = "La garantía requiere continuidad en todo [a, b]. Un cambio de signo y una gráfica muestreada no demuestran continuidad."
 
 
@@ -28,11 +23,7 @@ def construir_captura(vista) -> None:
             vista.superior = _campo_extremo("Extremo superior b")
         construir_selector(vista)
         _construir_ayuda(vista)
-        with ui.row().classes("w-full gap-2 items-center"):
-            ui.label("Cargar ejemplo:").classes("text-sm texto-secundario")
-            for etiqueta, expresion, inferior, superior in EJEMPLOS:
-                ui.button(etiqueta, color=None, on_click=lambda expresion=expresion, inferior=inferior, superior=superior:
-                          vista.cargar_captura({"expresion": expresion, "extremo_izquierdo": inferior, "extremo_derecho": superior})).classes("boton-discreto").props("ripple=false")
+        _mostrar_ejemplos(vista)
         with ui.row().classes("w-full gap-3"):
             crear_boton_limpieza(vista, lambda: not vista.contenedor_resultados.is_deleted, lambda: list(vista._campos_captura()))
             vista.boton_resolver = ui.button("Calcular raíz", icon="calculate", color=None, on_click=vista.resolver).classes("boton-principal flex-1").props("ripple=false")
@@ -40,6 +31,34 @@ def construir_captura(vista) -> None:
 
 def _campo_extremo(etiqueta: str):
     return ui.input(etiqueta, placeholder="0").classes("w-full matriz-entrada").props('inputmode=decimal maxlength=64 autocomplete=off')
+
+
+def _ejercicio(expresion: str, inferior: str, superior: str, **preferencias) -> dict:
+    return {"expresion": expresion, "extremo_izquierdo": inferior, "extremo_derecho": superior, **preferencias}
+
+
+EJEMPLOS = (
+    ("Raíz de 2", _ejercicio("x^2 - 2", "1", "2")),
+    ("Polinomio del Excel", _ejercicio("x^4 - 5*x^3 + 0.5*x^2 - 11*x + 10", "0.6", "1")),
+    ("Potencia décima", _ejercicio("x^10 - 1", "0", "1.3")),
+    ("Cero en un extremo", _ejercicio("x² − 4", "2", "3", criterio={"tipo": "decimales", "parametro": 4},
+                                      limite_iteraciones=LIMITE_ITERACIONES_DEFECTO)),
+    ("Tres iteraciones", _ejercicio("x² − 2", "1", "2", criterio={"tipo": "iteraciones", "parametro": 3},
+                                    limite_iteraciones=LIMITE_ITERACIONES_DEFECTO)),
+    ("Posible discontinuidad", _ejercicio("1/(x² − 0.2)", "0", "1", criterio={"tipo": "decimales", "parametro": 4},
+                                          limite_iteraciones=LIMITE_ITERACIONES_DEFECTO)),
+    ("Seno en grados", _ejercicio("2sin(x) − 1", "0", "60", unidad_angular="grados",
+                                 criterio={"tipo": "decimales", "parametro": 4},
+                                 limite_iteraciones=LIMITE_ITERACIONES_DEFECTO)),
+)
+
+
+def _mostrar_ejemplos(vista) -> None:
+    with ui.row().classes("w-full gap-2 items-center"):
+        ui.label("Cargar ejemplo").classes("text-sm texto-secundario")
+        for etiqueta, captura in EJEMPLOS:
+            ui.button(etiqueta, color=None, on_click=lambda captura=captura: vista.cargar_captura(captura)).classes(
+                "boton-discreto").props("ripple=false")
 
 
 def _construir_ayuda(vista) -> None:
@@ -53,3 +72,11 @@ def _construir_ayuda(vista) -> None:
         ui.label(GUIA_CONTINUIDAD).classes("text-sm")
         vista.limite = ui.number("Límite de iteraciones", value=LIMITE_ITERACIONES_DEFECTO, min=1,
                                  max=LIMITE_ITERACIONES_INTERFAZ, step=1).classes("w-full matriz-entrada")
+    with ui.expansion("Cómo leer el resultado", icon="help_outline").classes("w-full texto-secundario"):
+        ui.label("El criterio solicitado fija la condición del cálculo. El motivo de parada indica qué ocurrió. "
+                 "Un cero evaluado en un extremo produce cero filas. El conteo fijo y los límites pueden dejar una aproximación provisional.").classes("text-sm")
+        ui.label("Ante una sospecha de discontinuidad, interpreta el punto medio como provisional. "
+                 "Si una evaluación falla, la tabla conserva las filas válidas anteriores al fallo.").classes("text-sm")
+        ui.label("Activa Modo examen para ver el signo de f(a)·f(c) y el extremo que cambió en cada fila. "
+                 "Una fila que detiene el cálculo no cambia los extremos. El lote tiene su propio control.").classes("text-sm")
+        ui.label("Los ejemplos y los recientes solo cargan los datos. Pulsa Calcular raíz para obtener un resultado vigente.").classes("text-sm")
