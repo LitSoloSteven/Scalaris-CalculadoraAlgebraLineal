@@ -27,3 +27,42 @@
         intentar();
     };
 })();
+
+{
+    const regiones = new Map();
+    let cola = Promise.resolve();
+    let observador;
+
+    function serializar(trabajo) {
+        cola = cola.then(trabajo).catch(() => {});
+    }
+
+    function limpiarDesmontadas() {
+        for (const [identificador, region] of regiones) {
+            if (!region.isConnected) {
+                regiones.delete(identificador);
+                serializar(() => window.MathJax?.typesetClear?.([region]));
+            }
+        }
+        if (!regiones.size) observador.disconnect();
+    }
+
+    window.scalaris.renderizarMathJaxVigente = function (identificador) {
+        const limite = Date.now() + 5000;
+        function esperar() {
+            const region = document.getElementById(identificador);
+            if (!region?.isConnected || !window.MathJax?.typesetPromise) {
+                if (Date.now() < limite) setTimeout(esperar, 100);
+                return;
+            }
+            if (regiones.has(identificador)) return;
+            regiones.set(identificador, region);
+            observador ??= new MutationObserver(limpiarDesmontadas);
+            observador.observe(document.body, { childList: true, subtree: true });
+            serializar(() => {
+                if (region.isConnected) return window.MathJax.typesetPromise([region]);
+            });
+        }
+        esperar();
+    };
+}

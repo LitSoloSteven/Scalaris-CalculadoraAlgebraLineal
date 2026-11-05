@@ -1,50 +1,45 @@
-"""Controles de captura y ejemplos identificados para la búsqueda de raíces."""
+"""Función compartida y captura del intervalo individual."""
 from nicegui import ui
 
-from src.backend.resolutores.raices.contrato_biseccion import D_MAXIMO, LONGITUD_MAXIMA_EXPRESION, LIMITE_ITERACIONES_DEFECTO
-from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
-from src.frontend.controladores.biseccion.controlador import LIMITE_ITERACIONES_INTERFAZ
+from src.backend.resolutores.raices.contrato_biseccion import LONGITUD_MAXIMA_EXPRESION
+from .movimiento import modalidad_puntero, vincular_envio
+from .selector_criterio import construir_selector
+from .selector_unidad import construir_selector_unidad
 
-EJEMPLOS = (
-    ("Raíz de 2", "x^2 - 2", "1", "2"),
-    ("Polinomio del Excel", "x^4 - 5*x^3 + 0.5*x^2 - 11*x + 10", "0.6", "1"),
-    ("Potencia décima", "x^10 - 1", "0", "1.3"),
-)
 GUIA_CONTINUIDAD = "La garantía requiere continuidad en todo [a, b]. Un cambio de signo y una gráfica muestreada no demuestran continuidad."
 
 
 def construir_captura(vista) -> None:
-    """Monta campos etiquetados, tolerancia reactiva, ayuda y acciones compartidas."""
-    with ui.column().classes("panel-tarjeta biseccion-captura w-full gap-4 p-6"):
-        ui.label("Método de bisección").classes("text-2xl font-bold texto-principal")
-        ui.label("Acota una raíz y observa cómo se reduce su intervalo.").classes("texto-secundario")
-        vista.expresion = ui.input("Función f(x)", placeholder="Ejemplo: x^2 - 2").classes("w-full matriz-entrada").props(
-            f'maxlength={LONGITUD_MAXIMA_EXPRESION} autocomplete=off spellcheck=false')
-        with ui.element("div").classes("biseccion-campos"):
-            vista.inferior = _campo_extremo("Extremo inferior a")
-            vista.superior = _campo_extremo("Extremo superior b")
-            vista.decimales = ui.number("Decimales de precisión", value=4, min=0, max=D_MAXIMO, step=1).classes("w-full matriz-entrada")
-        vista.tolerancia = ui.label().classes("biseccion-tolerancia texto-acento").props('aria-live="polite"')
-        ui.label("d=2: E=0.01 · d=4: E=0.0001 · d=6: E=0.000001. Para d≥1 hay d−1 ceros antes del 1 decimal.").classes("text-sm texto-secundario")
-        _construir_ayuda(vista)
-        with ui.row().classes("w-full gap-2 items-center"):
-            ui.label("Cargar ejemplo:").classes("text-sm texto-secundario")
-            for etiqueta, expresion, inferior, superior in EJEMPLOS:
-                ui.button(etiqueta, color=None, on_click=lambda expresion=expresion, inferior=inferior, superior=superior:
-                          vista.cargar_captura({"expresion": expresion, "extremo_izquierdo": inferior, "extremo_derecho": superior})).classes("boton-discreto").props("ripple=false")
-        with ui.row().classes("w-full gap-3"):
-            crear_boton_limpieza(vista, lambda: not vista.contenedor_resultados.is_deleted, lambda: list(vista._campos_captura()))
-            vista.boton_resolver = ui.button("Calcular raíz", icon="calculate", color=None, on_click=vista.resolver).classes("boton-principal flex-1").props("ripple=false")
+    """Monta la función y su unidad en una fila adaptable."""
+    with ui.element("div").classes("biseccion-funcion w-full"):
+        vista.expresion = ui.input("Función f(x)", placeholder="Ejemplo: x^2 - 2").classes(
+            "w-full matriz-entrada").props(f"maxlength={LONGITUD_MAXIMA_EXPRESION} autocomplete=off spellcheck=false")
+        construir_selector_unidad(vista)
+    vista.estado_expresion = _region_estado()
+
+
+def construir_intervalo(vista) -> None:
+    """Monta los extremos vacíos, el criterio y la acción del cálculo individual."""
+    with ui.element("div").classes("biseccion-campos"):
+        vista.inferior = _campo_extremo("Extremo inferior a")
+        vista.superior = _campo_extremo("Extremo superior b")
+    vista.estado_continuidad = _region_estado()
+    construir_selector(vista)
+
+
+def construir_boton_calculo(vista) -> None:
+    """Monta el envío del cálculo después de las opciones avanzadas."""
+    async def _enviar(evento) -> None:
+        await vista.enviar_calculo(puntero=modalidad_puntero(evento) is True)
+
+    vista.boton_resolver = ui.button("Calcular raíz", icon="calculate", color=None).classes(
+        "boton-principal").props("ripple=false")
+    vincular_envio(vista.boton_resolver, _enviar)
 
 
 def _campo_extremo(etiqueta: str):
-    return ui.input(etiqueta, placeholder="0").classes("w-full matriz-entrada").props('inputmode=decimal maxlength=64 autocomplete=off')
+    return ui.input(etiqueta).classes("w-full matriz-entrada").props("inputmode=decimal maxlength=64 autocomplete=off")
 
 
-def _construir_ayuda(vista) -> None:
-    with ui.expansion("Sintaxis y límites", icon="help_outline").classes("w-full texto-secundario"):
-        ui.label("Usa x, +, −, *, /, ^ o **, paréntesis, sin, cos, tan, exp, log, sqrt, abs, pi y e. Escribe 2*x; log es el logaritmo natural.").classes("text-sm")
-        ui.label(f"Aritmética aproximada de punto flotante de Python; d entre 0 y {D_MAXIMO}. No se redondean las iteraciones para calcular. Una precisión dentro de este rango puede no ser alcanzable para tu intervalo.").classes("text-sm")
-        ui.label(GUIA_CONTINUIDAD).classes("text-sm")
-        vista.limite = ui.number("Límite de iteraciones", value=LIMITE_ITERACIONES_DEFECTO, min=1,
-                                 max=LIMITE_ITERACIONES_INTERFAZ, step=1).classes("w-full matriz-entrada")
+def _region_estado():
+    return ui.label().classes("text-sm texto-secundario").props("role=status aria-live=polite")

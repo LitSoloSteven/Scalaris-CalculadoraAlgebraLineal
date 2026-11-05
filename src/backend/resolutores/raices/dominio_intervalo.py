@@ -5,19 +5,31 @@ from fractions import Fraction
 from src.backend.excepciones import ErrorDominio
 from .errores_numericos import ErrorSingularidad
 from .gramatica_funcion import analizar_expresion, CONSTANTES_REALES
+from .polos_trigonometricos import comprobar_polos_tangente
+from .unidades_angulares import validar_unidad_angular
 
 Afin = tuple[Fraction, Fraction]
 
 
-def comprobar_dominio_intervalo(expresion: str, intervalo: tuple[float, float]) -> None:
+def argumento_afin(nodo: ast.AST) -> Afin | None:
+    """Devuelve coeficientes exactos de un nodo de AST validado o None si no es afín."""
+    return _como_afin(nodo)
+
+
+def comprobar_dominio_intervalo(expresion: str, intervalo: tuple[float, float], *, unidad_angular: str = "radianes") -> None:
     """Rechaza polos verificables; no certifica continuidad de expresiones generales."""
-    arbol = analizar_expresion(expresion)
+    validar_unidad_angular(unidad_angular)
+    comprobar_dominio_arbol(analizar_expresion(expresion), intervalo, unidad_angular)
+
+
+def comprobar_dominio_arbol(arbol: ast.Expression, intervalo: tuple[float, float], unidad_angular: str) -> None:
+    """Comprueba restricciones estructurales con un AST y una unidad ya validados."""
     extremos = tuple(Fraction(valor) for valor in intervalo)
     for nodo in ast.walk(arbol):
         if isinstance(nodo, ast.BinOp):
             _comprobar_operacion(nodo, extremos)
         elif isinstance(nodo, ast.Call):
-            _comprobar_funcion(nodo, extremos)
+            _comprobar_funcion(nodo, extremos, unidad_angular)
 
 
 def _comprobar_operacion(nodo: ast.BinOp, extremos: tuple) -> None:
@@ -37,15 +49,19 @@ def _comprobar_potencia(base: ast.AST, exponente: Fraction, extremos: tuple) -> 
         raise ErrorDominio("La potencia no es real para una base negativa en el intervalo.")
 
 
-def _comprobar_funcion(nodo: ast.Call, extremos: tuple) -> None:
+def _comprobar_funcion(nodo: ast.Call, extremos: tuple, unidad: str) -> None:
     nombre = nodo.func.id
     rango = _rango_afin(nodo.args[0], extremos)
     if rango is None:
         return
-    if nombre == "log" and rango[0] <= 0:
+    if nombre == "tan":
+        comprobar_polos_tangente(rango, unidad)
+    if nombre in ("log", "ln", "log10", "log2") and rango[0] <= 0:
         raise ErrorDominio("El logaritmo no es real o no está definido en todo el intervalo.")
     if nombre == "sqrt" and rango[0] < 0:
         raise ErrorDominio("La raíz cuadrada no es real en todo el intervalo.")
+    if nombre in ("asin", "acos") and (rango[0] < -1 or rango[1] > 1):
+        raise ErrorDominio("El argumento de la función trigonométrica inversa debe estar entre -1 y 1.")
 
 
 def _contiene_cero(nodo: ast.AST, extremos: tuple) -> bool:

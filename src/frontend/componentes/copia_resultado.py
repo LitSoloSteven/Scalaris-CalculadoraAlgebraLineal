@@ -1,5 +1,6 @@
 """Copia explícita de valores calculados con confirmación del portapapeles."""
 import json
+from collections.abc import Callable
 from nicegui import ui
 from src.frontend.componentes.sonido import notificar
 
@@ -23,15 +24,19 @@ def _texto_valor(valor) -> str:
     return str(datos)
 
 
-def renderizar_copia_resultado(resultado: dict) -> None:
-    """Monta un botón que copia solo esta respuesta y avisa si falta permiso del navegador."""
-    contenido = texto_resultado_copiable(resultado)
-    if not contenido or resultado.get("estado") == "ERROR":
+def renderizar_copia_resultado(resultado: dict | Callable[[], dict]) -> None:
+    """Monta un botón para datos fijos o generados al copiar y confirma la escritura."""
+    generar = resultado if callable(resultado) else None
+    contenido_fijo = "" if generar else texto_resultado_copiable(resultado)
+    if not generar and (not contenido_fijo or resultado.get("estado") == "ERROR"):
         return
 
     async def copiar() -> None:
         """Confirma la escritura antes de anunciar éxito y tolera el cliente desmontado."""
+        if boton.is_deleted:
+            return
         try:
+            contenido = texto_resultado_copiable(generar()) if generar else contenido_fijo
             copiado = await ui.run_javascript(
                 f"(async () => {{ try {{ await navigator.clipboard.writeText({json.dumps(contenido)}); return true; }} catch {{ return false; }} }})()")
         except Exception:

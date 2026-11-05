@@ -2,12 +2,18 @@
 import math
 from dataclasses import dataclass, field
 from fractions import Fraction
-from typing import TypedDict
+from typing import NotRequired, TypedDict
 
-D_MAXIMO = 15
-LIMITE_ITERACIONES_DEFECTO = 100
-LIMITE_ITERACIONES_MAXIMO = 500
-LONGITUD_MAXIMA_EXPRESION = 512
+from .contrato_continuidad import InformeContinuidad
+from .criterios_biseccion import CriterioParada, tolerancia_decimal, validar_criterio, validar_entero_criterio
+from .decision_biseccion import AccionBiseccion, SignoProducto
+from .limites_biseccion import D_MAXIMO, LIMITE_ITERACIONES_DEFECTO, LIMITE_ITERACIONES_MAXIMO, LONGITUD_MAXIMA_EXPRESION
+from .unidades_angulares import validar_unidad_angular
+
+AVISO_INTERVALO_INVERTIDO = "Se intercambiaron los extremos para trabajar con a < b."
+CONTINUIDAD_CONDICIONAL = "La garantía requiere continuidad en todo el intervalo; el análisis estructural no es una certificación general."
+ESTADO_DISCONTINUIDAD = "CONTINUIDAD_NO_VERIFICADA"
+CODIGO_DISCONTINUIDAD = "DISCONTINUIDAD_SOSPECHADA"
 
 
 @dataclass(frozen=True)
@@ -19,11 +25,25 @@ class EntradaBiseccion:
     extremo_derecho: float
     decimales: int
     limite_iteraciones: int = LIMITE_ITERACIONES_DEFECTO
+    criterio: CriterioParada | None = field(default=None, kw_only=True)
+    intervalo_invertido: bool = field(default=False, kw_only=True)
+    unidad_angular: str = field(default="radianes", kw_only=True)
+
+    @property
+    def advertencias(self) -> tuple[str, ...]:
+        """Devuelve el aviso de normalización conservado al revalidar la entrada canónica."""
+        return (AVISO_INTERVALO_INVERTIDO,) if self.intervalo_invertido else ()
 
     @property
     def error_absoluto(self) -> Fraction:
-        """Umbral error_absoluto = 10^(-decimales) en fracción exacta."""
-        return Fraction(1, 10 ** self.decimales)
+        """Devuelve la tolerancia decimal exacta; otros criterios conservan el valor heredado."""
+        precision = self.criterio.parametro if self.criterio and self.criterio.tipo == "decimales" else self.decimales
+        return tolerancia_decimal(precision)
+
+    @property
+    def criterio_activo(self) -> CriterioParada:
+        """Devuelve el criterio explícito o la precisión decimal de una captura antigua."""
+        return self.criterio or CriterioParada("decimales", self.decimales)
 
 
 @dataclass(frozen=True)
@@ -43,6 +63,9 @@ class IteracionBiseccion:
     error_relativo: str
     explicacion: str
     error_relativo_valor: float | None = None
+    signo_producto: SignoProducto | None = None
+    accion: AccionBiseccion | None = None
+    motivo_parada: str = ""
 
 
 class MetricasBiseccion(TypedDict, total=False):
@@ -51,6 +74,53 @@ class MetricasBiseccion(TypedDict, total=False):
     iteraciones_totales: int
     residuo_final: float
     continuidad: str
+
+
+class EvidenciaDiscontinuidad(TypedDict):
+    """Magnitudes de filas válidas que sostienen una sospecha, sin ubicar un polo exacto."""
+
+    intervalo: tuple[float, float]
+    ancho_referencia: float
+    escala_inicial: float
+    magnitud_vecinal_referencia: float
+    magnitud_vecinal_final: float
+    residuo_reciente_minimo: float
+
+
+class DiagnosticoBiseccion(TypedDict):
+    """Código, origen, mensaje y evidencia opcional procedente de la traza."""
+
+    codigo: str
+    origen: str
+    mensaje: str
+    evidencia_discontinuidad: NotRequired[EvidenciaDiscontinuidad]
+    mensaje_parada: NotRequired[str]
+
+
+class EvaluacionExtremo(TypedDict):
+    """Evaluación individual finita o diagnóstico del extremo que se intentó evaluar."""
+
+    abscisa: float
+    valor: float | None
+    codigo: str
+    mensaje: str
+
+
+class ContextoFallo(TypedDict, total=False):
+    """Etapa, abscisa fallida e intervalo con extremos válidos disponibles al fallar."""
+
+    etapa: str
+    x_fallo: float | None
+    intervalo_valido: tuple[float, float] | None
+    extremos: tuple[EvaluacionExtremo, ...]
+
+
+class SugerenciaBiseccion(TypedDict, total=False):
+    """Acción opcional del dominio que requiere una decisión y un cálculo posteriores."""
+
+    tipo: str
+    mensaje: str
+    intervalo: tuple[float, float]
 
 
 @dataclass(frozen=True)
@@ -67,23 +137,26 @@ class ResultadoBiseccion:
     motivo_parada: str = ""
     metricas: MetricasBiseccion = field(default_factory=dict)
     codigo_diagnostico: str = ""
+    criterio_solicitado: CriterioParada | None = None
+    unidad_criterio: str = ""
+    umbral: float | int | None = None
+    metrica_final: float | int | None = None
+    advertencias: tuple[str, ...] = ()
+    diagnostico: DiagnosticoBiseccion | None = None
+    contexto_fallo: ContextoFallo | None = None
+    sugerencias: tuple[SugerenciaBiseccion, ...] = ()
+    unidad_angular: str = "radianes"
+    informe_continuidad: InformeContinuidad | None = None
 
 
 def validar_precision(valor) -> int:
     """Rechaza decimales no entero, booleano o fuera de rango; devuelve el entero validado."""
-    if isinstance(valor, bool) or not isinstance(valor, int):
-        raise ValueError(
-            f"La precisión decimales debe ser un entero (recibido {type(valor).__name__}: {valor!r})."
-        )
-    if valor < 0 or valor > D_MAXIMO:
-        raise ValueError(f"La precisión decimales debe estar entre 0 y {D_MAXIMO} (recibido {valor}).")
-    return valor
+    return validar_entero_criterio(valor, "La precisión decimales", D_MAXIMO)
 
 
 def derivar_E(decimales: int) -> Fraction:
     """Devuelve 10^(-decimales) como fracción exacta; lanza ValueError si decimales es inválido."""
-    precision = validar_precision(decimales)
-    return Fraction(1, 10 ** precision)
+    return tolerancia_decimal(decimales)
 
 
 def validar_entrada(datos: dict) -> EntradaBiseccion:
@@ -93,11 +166,25 @@ def validar_entrada(datos: dict) -> EntradaBiseccion:
     expresion = _validar_expresion(datos.get("expresion"))
     extremo_izquierdo = _validar_extremo(datos.get("extremo_izquierdo"), "extremo_izquierdo")
     extremo_derecho = _validar_extremo(datos.get("extremo_derecho"), "extremo_derecho")
-    if extremo_izquierdo >= extremo_derecho:
+    if extremo_izquierdo == extremo_derecho:
         raise ValueError(f"El intervalo es inválido: extremo_izquierdo ({extremo_izquierdo}) debe ser menor que extremo_derecho ({extremo_derecho}).")
-    decimales = validar_precision(datos.get("decimales"))
+    intercambio = _validar_intercambio(datos.get("intervalo_invertido", False))
+    if extremo_izquierdo > extremo_derecho:
+        extremo_izquierdo, extremo_derecho = extremo_derecho, extremo_izquierdo
+        intercambio = True
+    decimales = validar_precision(datos.get("decimales", 4) if datos.get("criterio") is not None else datos.get("decimales"))
     limite = _validar_limite(datos.get("limite_iteraciones"))
-    return EntradaBiseccion(expresion=expresion, extremo_izquierdo=extremo_izquierdo, extremo_derecho=extremo_derecho, decimales=decimales, limite_iteraciones=limite)
+    criterio = validar_criterio(datos.get("criterio"), decimales, limite)
+    return EntradaBiseccion(expresion=expresion, extremo_izquierdo=extremo_izquierdo,
+                           extremo_derecho=extremo_derecho, decimales=decimales,
+                           limite_iteraciones=limite, criterio=criterio, intervalo_invertido=intercambio,
+                           unidad_angular=validar_unidad_angular(datos.get("unidad_angular", "radianes")))
+
+
+def _validar_intercambio(valor) -> bool:
+    if not isinstance(valor, bool):
+        raise ValueError("La marca de intervalo invertido debe ser booleana.")
+    return valor
 
 
 def _validar_expresion(valor) -> str:

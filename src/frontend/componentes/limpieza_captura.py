@@ -34,7 +34,8 @@ class LimpiezaCaptura:
     """Coordina una captura y su vigencia sin depender de contenedores concretos."""
 
     def __init__(self, captura: CapturaLimpiable, sigue_montada: Callable[[], bool],
-                 campos_visuales: Callable[[], list[ui.element | None]] | None = None):
+                 campos_visuales: Callable[[], list[ui.element | None]] | None = None,
+                 *, animar: bool = True, campo_foco: ui.element | None = None):
         self.captura = captura
         self.sigue_montada = sigue_montada
         self.dialogo = None
@@ -42,6 +43,9 @@ class LimpiezaCaptura:
         self._limpiando = False
         self._contenedor_captura = None
         self._campos_visuales = campos_visuales
+        self._animar = animar
+        self._campo_foco = campo_foco
+        self._confirmada = False
 
     def construir(self) -> None:
         """Monta la acción accesible, con espacio estable en filas estrechas."""
@@ -65,12 +69,15 @@ class LimpiezaCaptura:
             return
         if self.dialogo is None:
             self._construir_dialogo()
+        self._confirmada = False
         self.dialogo.open()
         emitir_sonido('apertura')
 
     def _construir_dialogo(self) -> None:
         # QDialog conserva su trampa de foco y devuelve el foco al activador al cerrar.
         with ui.dialog() as self.dialogo:
+            if not self._animar:
+                self.dialogo.props('transition-duration=0 no-refocus')
             with ui.card().classes('panel-tarjeta p-6'):
                 ui.label(LIMPIEZA_TITULO).classes('text-xl font-bold mb-4')
                 ui.label(LIMPIEZA_DESCRIPCION).classes('text-sm texto-secundario mb-6')
@@ -85,7 +92,11 @@ class LimpiezaCaptura:
 
     def _devolver_foco(self) -> None:
         if self.sigue_montada():
-            ui.run_javascript("document.getElementById('boton-limpiar-principal')?.focus()")
+            if self._confirmada and self._campo_foco is not None:
+                if not self._campo_foco.is_deleted:
+                    self._campo_foco.run_method('focus')
+            else:
+                ui.run_javascript("document.getElementById('boton-limpiar-principal')?.focus()")
 
     async def _animar_captura(self) -> bool:
         campos = self._campos_visuales() if self._campos_visuales else []
@@ -113,11 +124,19 @@ class LimpiezaCaptura:
         if self._limpiando or not self.sigue_montada():
             return
         self._limpiando = True
+        self._confirmada = True
         sonido_final = False
         if self._contenedor_captura is not None:
             self._contenedor_captura.props('inert')
         if dialogo is not None or self.dialogo is not None:
             (dialogo or self.dialogo).close()
+        if not self._animar:
+            try:
+                self._vaciar_captura(False)
+            finally:
+                self._limpiando = False
+                self._liberar_captura()
+            return
         try:
             sonido_final = await self._animar_captura()
         except Exception:
@@ -147,8 +166,9 @@ class LimpiezaCaptura:
 
 
 def crear_boton_limpieza(captura: CapturaLimpiable, sigue_montada: Callable[[], bool],
-                         campos_visuales: Callable[[], list[ui.element | None]] | None = None) -> LimpiezaCaptura:
+                         campos_visuales: Callable[[], list[ui.element | None]] | None = None,
+                         *, animar: bool = True, campo_foco: ui.element | None = None) -> LimpiezaCaptura:
     """Construye el control; el proveedor opcional devuelve los elementos vigentes de la captura."""
-    control = LimpiezaCaptura(captura, sigue_montada, campos_visuales)
+    control = LimpiezaCaptura(captura, sigue_montada, campos_visuales, animar=animar, campo_foco=campo_foco)
     control.construir()
     return control

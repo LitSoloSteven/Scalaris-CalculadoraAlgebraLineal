@@ -47,7 +47,6 @@ def test_ancho_fuera_de_capacidad_no_publica_infinito():
     ("sin()", "EXPRESION_INVALIDA"), ("pi(1)", "EXPRESION_INVALIDA"),
     ("sin", "EXPRESION_INVALIDA"), ("(-1)**0.5", "DOMINIO_INVALIDO"),
     ("exp(-1000)", "SUBDESBORDAMIENTO"), ("1/(x-0.1234)", "SINGULARIDAD_DETECTADA"),
-    ("(x-1)/(x-0.1234)", "SINGULARIDAD_DETECTADA"),
 ])
 def test_fallos_del_motor_tienen_codigo_estable(expresion, codigo):
     """Los fallos no dependen del texto de excepciones generado por Python."""
@@ -55,6 +54,18 @@ def test_fallos_del_motor_tienen_codigo_estable(expresion, codigo):
     assert resultado.estado == "ERROR"
     assert resultado.codigo_diagnostico == codigo
     assert resultado.aproximacion is None
+    json.dumps(asdict(resultado), default=str, allow_nan=False)
+
+
+def test_cero_extremo_prevalece_sobre_singularidad_interior():
+    """Devuelve el cero evaluado sin certificar continuidad a través del polo interior."""
+    resultado = biseccion(entrada("(x-1)/(x-0.1234)", (-1, 1)))
+    assert resultado.estado == "EXITO"
+    assert resultado.codigo_diagnostico == "CERO_EVALUADO"
+    assert resultado.aproximacion == 1
+    assert resultado.iteraciones == ()
+    assert resultado.diagnostico["codigo"] == "SINGULARIDAD_DETECTADA"
+    assert any("Continuidad no certificada" in aviso for aviso in resultado.advertencias)
     json.dumps(asdict(resultado), default=str, allow_nan=False)
 
 

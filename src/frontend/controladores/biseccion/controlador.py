@@ -3,8 +3,10 @@ import math
 from dataclasses import asdict
 
 from src.backend.resolutores.raices.biseccion import biseccion
-from src.backend.resolutores.raices.contrato_biseccion import validar_entrada, derivar_E, LIMITE_ITERACIONES_MAXIMO
-from .muestreo import muestrear_funcion
+from src.backend.resolutores.raices.contrato_biseccion import EntradaBiseccion, ResultadoBiseccion, derivar_E, LIMITE_ITERACIONES_MAXIMO
+from src.backend.resolutores.raices.parada_biseccion import comprobar_cierre_criterio
+from .captura_criterio import entero_capturado, preparar_entrada, real_capturado
+from .muestreo import muestrear_funcion, separar_intervalo_sospechoso
 
 LIMITE_ITERACIONES_INTERFAZ = LIMITE_ITERACIONES_MAXIMO
 
@@ -13,23 +15,15 @@ def calcular_presentacion(captura: dict) -> dict:
     """Resuelve y prepara un muestreo orientativo sin bloquear el hilo de interfaz."""
     respuesta = resolver_captura(captura)
     if respuesta["estado"] != "ERROR":
-        respuesta["muestra"] = muestrear_funcion(respuesta["entrada"])
-        if respuesta["muestra"]["huecos"] and respuesta["estado"] == "EXITO":
-            respuesta["estado"] = "CONTINUIDAD_NO_VERIFICADA"
-            respuesta["mensaje"] = "La gráfica contiene evaluaciones inválidas o saltos pronunciados. Revisa la continuidad; la aproximación es provisional."
-            respuesta["aviso"] = respuesta["mensaje"]
+        muestra = muestrear_funcion(respuesta["entrada"])
+        evidencia = (respuesta.get("diagnostico") or {}).get("evidencia_discontinuidad")
+        if evidencia is not None:
+            muestra = separar_intervalo_sospechoso(muestra, evidencia["intervalo"])
+            respuesta["aviso_grafica"] = "La gráfica separa el intervalo sospechoso según la traza."
+        elif muestra["huecos"]:
+            respuesta["aviso_grafica"] = "La gráfica contiene huecos por evaluaciones inválidas o saltos pronunciados. El muestreo es orientativo; revisa la continuidad."
+        respuesta["muestra"] = muestra
     return respuesta
-
-
-def entero_capturado(valor, etiqueta: str) -> int:
-    """Convierte un campo entero sin truncar decimales; lanza ValueError si es inválido."""
-    try:
-        numero = float(valor)
-    except (ValueError, TypeError, OverflowError) as error:
-        raise ValueError(f"{etiqueta} debe ser un entero.") from error
-    if isinstance(valor, bool) or not math.isfinite(numero) or not numero.is_integer():
-        raise ValueError(f"{etiqueta} debe ser un entero.")
-    return int(numero)
 
 
 def texto_tolerancia(valor) -> str:
@@ -43,47 +37,32 @@ def texto_tolerancia(valor) -> str:
         return "Introduce un entero de precisión dentro del rango permitido."
 
 
-def preparar_entrada(captura: dict):
-    """Adapta campos de texto al contrato; propaga ValueError con orientación de captura."""
-    limite = entero_capturado(captura.get("limite_iteraciones"), "El límite")
-    if not 1 <= limite <= LIMITE_ITERACIONES_INTERFAZ:
-        raise ValueError(f"Usa de 1 a {LIMITE_ITERACIONES_INTERFAZ} iteraciones en esta interfaz.")
-    return validar_entrada({
-        "expresion": str(captura.get("expresion", "")).replace("^", "**"),
-        "extremo_izquierdo": _capturar_extremo(captura.get("extremo_izquierdo"), "El extremo inferior a"),
-        "extremo_derecho": _capturar_extremo(captura.get("extremo_derecho"), "El extremo superior b"),
-        "decimales": entero_capturado(captura.get("decimales"), "La precisión"),
-        "limite_iteraciones": limite,
-    })
-
-
-def _capturar_extremo(valor, etiqueta: str) -> float:
-    try:
-        if isinstance(valor, bool):
-            raise ValueError
-        return float(valor)
-    except (ValueError, TypeError, OverflowError) as error:
-        raise ValueError(f"{etiqueta} debe ser un número real. Usa un punto para los decimales.") from error
-
-
 def resolver_captura(captura: dict) -> dict:
     """Devuelve una respuesta serializable; convierte fallos del evaluador en errores visibles."""
     try:
         entrada = preparar_entrada(captura)
-        resultado = biseccion(entrada)
-        respuesta = asdict(resultado)
-        respuesta["error_absoluto"] = str(resultado.error_absoluto)
-        respuesta["entrada"] = asdict(entrada)
-        respuesta["tolerancia"] = float(entrada.error_absoluto)
-        _comprobar_salida(respuesta)
-        return respuesta
+        cero = captura.get("cero_preferido")
+        resultado = biseccion(entrada) if cero is None else biseccion(
+            entrada, cero_preferido=real_capturado(cero, "El cero elegido"))
+        return serializar_resultado(entrada, resultado)
     except ValueError as error:
         return {"estado": "ERROR", "mensaje": str(error)}
     except (TypeError, OverflowError, ZeroDivisionError, RecursionError):
         return {"estado": "ERROR", "mensaje": "No se pudo evaluar f(x). Revisa la sintaxis, el dominio y la magnitud de los valores."}
 
 
-def _comprobar_salida(respuesta: dict) -> None:
+def serializar_resultado(entrada: EntradaBiseccion, resultado: ResultadoBiseccion) -> dict:
+    """Adapta un resultado del motor a datos finitos compartidos; lanza ValueError ante incoherencia."""
+    respuesta = asdict(resultado)
+    respuesta["error_absoluto"] = str(resultado.error_absoluto)
+    respuesta["entrada"] = asdict(entrada)
+    respuesta["tolerancia"] = float(entrada.error_absoluto)
+    _comprobar_salida(respuesta, resultado)
+    return respuesta
+
+
+def _comprobar_salida(respuesta: dict, resultado: ResultadoBiseccion) -> None:
+    comprobar_cierre_criterio(resultado)
     if respuesta["aproximacion"] is None:
         return
     valores = [respuesta["aproximacion"], respuesta["cota"], *respuesta["intervalo_final"]]
@@ -92,7 +71,3 @@ def _comprobar_salida(respuesta: dict) -> None:
         raise ValueError("El cálculo excede la capacidad numérica. Reduce el intervalo o la magnitud de f(x).")
     if respuesta["motivo_parada"] == "raiz_exacta":
         respuesta["aviso"] = respuesta["mensaje"]
-    elif respuesta["estado"] == "EXITO":
-        inferior, superior = respuesta["intervalo_final"]
-        if superior - inferior >= respuesta["tolerancia"]:
-            raise ValueError("El motor no alcanzó el ancho solicitado. Prueba con menos decimales.")

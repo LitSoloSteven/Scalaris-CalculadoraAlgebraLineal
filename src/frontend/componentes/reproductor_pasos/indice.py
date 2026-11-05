@@ -8,6 +8,7 @@ from nicegui import ui
 from src.frontend.textos import PASOS_INDICE_TITULO
 
 from src.frontend.componentes.reproductor_pasos.catalogo import html_sugerencia_tipo
+from src.frontend.componentes.reproductor_pasos.controles import vincular_accion
 
 if TYPE_CHECKING:
     from src.frontend.componentes.reproductor_pasos.reproductor import ReproductorPasos
@@ -59,14 +60,10 @@ def _cargar_pasos(reproductor: ReproductorPasos, grupo, contenedor) -> None:
 def _renderizar_boton_paso(reproductor: ReproductorPasos, indice_paso: int) -> None:
     """Dibuja un boton de acceso directo a un paso dentro del indice."""
     paso = reproductor.pasos[indice_paso]
-    with (
-        ui.button(
-        color=None,
-        on_click=lambda evento, destino=indice_paso: reproductor._seleccionar_desde_indice(destino),
-    ).classes('boton-discreto w-full justify-start py-2 px-3 text-left').props(
-        f'ripple=false data-sonido-indice="{indice_paso}"'),
-        ui.row().classes('items-center gap-3 w-full'),
-    ):
+    boton = ui.button(color=None).classes('boton-discreto w-full justify-start py-2 px-3 text-left').props(
+        f'ripple=false data-sonido-indice="{indice_paso}"')
+    vincular_accion(reproductor, boton, lambda: reproductor._seleccionar_desde_indice(indice_paso))
+    with boton, ui.row().classes('items-center gap-3 w-full'):
         ui.html(html_sugerencia_tipo(paso.tipo, paso.etiqueta_tipo))
         ui.label(f"{indice_paso + 1}. {paso.descripcion}").classes(
             'text-sm font-medium texto-principal'

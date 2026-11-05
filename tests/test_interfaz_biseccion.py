@@ -53,7 +53,7 @@ def test_aumentar_precision_cambia_convergencia():
     (captura("__import__('os')"), "ERROR"),
     (captura(decimales=2.5), "ERROR"),
     (captura(decimales=16), "ERROR"),
-    (captura(intervalo=("2", "1")), "ERROR"),
+    (captura(intervalo=("2", "1")), "EXITO"),
     (captura(limite=501), "ERROR"),
     (captura(decimales=6, limite=2), "PRECISION_NO_ALCANZADA"),
     (captura("x - 10000000000000002", 15, ("10000000000000000", "10000000000000004")), "EXITO"),

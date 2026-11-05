@@ -12,6 +12,7 @@ class OpcionesReproductor(TypedDict, total=False):
     tipos_leyenda: Sequence[str]
     al_explicar: Callable[[PasoReproductor], None] | None
     esta_ocupado: Callable[[], bool]
+    sin_movimiento: bool
 
 
 class OpcionesTablaAumentada(TypedDict, total=False):

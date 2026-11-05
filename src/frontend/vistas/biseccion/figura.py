@@ -1,6 +1,7 @@
 """Figura temática para relacionar la función con la partición activa."""
 import plotly.graph_objects as go
 
+from src.backend.resolutores.raices.contrato_biseccion import ESTADO_DISCONTINUIDAD
 from src.frontend.tema import COLOR_TRANSPARENTE, PALETA_GRAFICOS, COLOR_SOLUCION
 from src.frontend.vistas.geometria._colores_figuras import aplicar_colores_figura
 
@@ -13,19 +14,44 @@ def crear_figura(respuesta: dict, muestra: dict, fila: dict | None = None, inici
     inferior, superior = (fila["extremo_izquierdo"], fila["extremo_derecho"]) if fila else (
         respuesta.get("intervalo_final") or (entrada["extremo_izquierdo"], entrada["extremo_derecho"]))
     medio = fila["c"] if fila else respuesta.get("aproximacion")
-    figura = go.Figure(go.Scatter(x=muestra["x"], y=muestra["y"], mode="lines", name="f(x)",
-                                  connectgaps=False, line=dict(color=PALETA_GRAFICOS[2])))
+    figura = _crear_base(muestra)
     figura.add_trace(go.Scatter(x=[inferior, superior], y=[0, 0], mode="lines+markers", name="Intervalo [a, b]",
                                line=dict(color=PALETA_GRAFICOS[1], width=5, dash="dot")))
     if medio is not None:
-        figura.add_trace(go.Scatter(x=[medio], y=[fila["f_c"] if fila else 0], mode="markers",
-                                   name="Punto medio c" if fila else "Aproximación en x",
+        valor, etiqueta = _ordenada_marcador(respuesta, fila)
+        figura.add_trace(go.Scatter(x=[medio], y=[valor], mode="markers", name=etiqueta,
                                    marker=dict(color=COLOR_SOLUCION, size=11, symbol="diamond")))
+    aplicar_colores_figura(figura, "papel")
+    return figura
+
+
+def _ordenada_marcador(respuesta: dict, fila: dict | None) -> tuple[float | None, str]:
+    if fila is not None:
+        return fila["f_c"], "Punto medio c"
+    if respuesta.get("estado") == ESTADO_DISCONTINUIDAD:
+        filas = respuesta.get("iteraciones") or ()
+        return (filas[-1]["f_c"] if filas else None), "Muestra provisional"
+    return 0, "Aproximación en x"
+
+
+def crear_figura_previa(respuesta: dict) -> go.Figure:
+    """Dibuja solo la función en el rango exploratorio, sin simular un resultado de bisección."""
+    figura = _crear_base(respuesta["muestra"])
+    entrada = respuesta["entrada"]
+    rango = (entrada["extremo_izquierdo"], entrada["extremo_derecho"])
+    figura.update_layout(uirevision=f"previa:{entrada['expresion']}:{rango}", showlegend=False)
+    figura.update_xaxes(range=rango, autorange=False)
+    aplicar_colores_figura(figura, "papel")
+    return figura
+
+
+def _crear_base(muestra: dict) -> go.Figure:
+    figura = go.Figure(go.Scatter(x=muestra["x"], y=muestra["y"], mode="lines", name="f(x)",
+                                  connectgaps=False, line=dict(color=PALETA_GRAFICOS[2])))
     figura.update_layout(paper_bgcolor=COLOR_TRANSPARENTE, plot_bgcolor=COLOR_TRANSPARENTE,
                          margin=dict(l=40, r=15, t=25, b=40), height=340,
                          legend=dict(orientation="h", y=-0.25), uirevision="biseccion", hovermode=False,
                          xaxis_title="x", yaxis_title="f(x)", font_family="Space Grotesk, sans-serif")
     figura.update_xaxes(zeroline=True)
     figura.update_yaxes(zeroline=True)
-    aplicar_colores_figura(figura, "papel")
     return figura
