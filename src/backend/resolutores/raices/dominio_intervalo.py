@@ -19,7 +19,11 @@ def argumento_afin(nodo: ast.AST) -> Afin | None:
 def comprobar_dominio_intervalo(expresion: str, intervalo: tuple[float, float], *, unidad_angular: str = "radianes") -> None:
     """Rechaza polos verificables; no certifica continuidad de expresiones generales."""
     validar_unidad_angular(unidad_angular)
-    arbol = analizar_expresion(expresion)
+    comprobar_dominio_arbol(analizar_expresion(expresion), intervalo, unidad_angular)
+
+
+def comprobar_dominio_arbol(arbol: ast.Expression, intervalo: tuple[float, float], unidad_angular: str) -> None:
+    """Comprueba restricciones estructurales con un AST y una unidad ya validados."""
     extremos = tuple(Fraction(valor) for valor in intervalo)
     for nodo in ast.walk(arbol):
         if isinstance(nodo, ast.BinOp):
