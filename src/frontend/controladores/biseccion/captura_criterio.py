@@ -30,7 +30,7 @@ def entero_capturado(valor, etiqueta: str) -> int:
 def preparar_entrada(captura: dict) -> EntradaBiseccion:
     """Convierte los campos activos y delega su validez matemática; propaga ValueError orientativo."""
     return validar_entrada({
-        "expresion": str(captura.get("expresion", "")).replace("^", "**"),
+        "expresion": captura.get("expresion", ""),
         "extremo_izquierdo": real_capturado(captura.get("extremo_izquierdo"), "El extremo inferior a"),
         "extremo_derecho": real_capturado(captura.get("extremo_derecho"), "El extremo superior b"),
         "decimales": entero_capturado(captura.get("decimales"), "La precisión"),

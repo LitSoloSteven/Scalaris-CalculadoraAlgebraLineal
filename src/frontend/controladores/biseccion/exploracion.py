@@ -24,8 +24,6 @@ def resolver_exploracion(captura: dict) -> dict:
         if not isinstance(captura, dict):
             raise ValueError("Revisa los campos de exploración.")
         expresion = captura.get("expresion", "")
-        if isinstance(expresion, str):
-            expresion = expresion.replace("^", "**")
         entrada = EntradaExploracion(expresion, _campo(captura, "x_min"),
                                      _campo(captura, "x_max"), _campo(captura, "paso"))
         return {"estado": "EXITO", "mensaje": "Exploración disponible.", **asdict(explorar_intervalos(entrada))}
