@@ -1,10 +1,11 @@
 """Construcción de trazas y cierres finitos con diagnósticos de bisección."""
-import math
 from collections.abc import Sequence
+from dataclasses import replace
 
 from src.backend.excepciones import ErrorDominio, ErrorNoFinito
 from .aritmetica_biseccion import ancho_intervalo, cota_intervalo, error_relativo_numerico
 from .contrato_biseccion import CONTINUIDAD_CONDICIONAL, EntradaBiseccion, IteracionBiseccion, ResultadoBiseccion
+from .decision_biseccion import signo_producto
 
 _CIERRES = {
     "ancho_menor_que_E": ("EXITO", "CONVERGENCIA_POR_ANCHO", "El ancho del intervalo es menor que la tolerancia solicitada."),
@@ -30,8 +31,22 @@ def crear_iteracion(indice: int, extremos: tuple[float, float, float, float], me
         f_a=valor_inferior, f_b=valor_superior, f_c=valor_medio,
         ancho=ancho_intervalo(inferior, superior), cota=cota_intervalo(inferior, superior),
         residuo=abs(valor_medio), error_relativo=texto, error_relativo_valor=relativo,
-        explicacion=_explicar_particion(extremos, medio),
+        explicacion="", signo_producto=signo_producto(valor_inferior, valor_medio),
     )
+
+
+def registrar_accion(fila: IteracionBiseccion, motivo: str) -> IteracionBiseccion:
+    """Registra el cierre o el reemplazo de extremo que ejecutará el motor."""
+    if motivo:
+        explicacion = _CIERRES[motivo][2]
+        if motivo == "estancamiento":
+            explicacion = "El punto medio se redondea a un extremo. La representación numérica no permite reducir el intervalo."
+        return replace(fila, accion="detener", motivo_parada=motivo, explicacion=explicacion)
+    if fila.signo_producto == -1:
+        return replace(fila, accion="reemplazar_b",
+                       explicacion=f"Se conserva [{fila.extremo_izquierdo}, {fila.c}] porque f(a) y f(c) tienen signos opuestos.")
+    return replace(fila, accion="reemplazar_a",
+                   explicacion=f"Se conserva [{fila.c}, {fila.extremo_derecho}] porque f(c) y f(b) tienen signos opuestos.")
 
 
 def construir_resultado(entrada: EntradaBiseccion, intervalo: tuple[float, float], iteraciones: Sequence[IteracionBiseccion], motivo: str, muestra: tuple[float, float]) -> ResultadoBiseccion:
@@ -55,15 +70,3 @@ def construir_error(error: ValueError, iteraciones: Sequence[IteracionBiseccion]
     return ResultadoBiseccion(estado="ERROR", mensaje=str(error), iteraciones=tuple(iteraciones),
                               motivo_parada="evaluacion_invalida", codigo_diagnostico=getattr(error, "codigo", codigo),
                               metricas={"iteraciones_totales": len(iteraciones)})
-
-
-def _explicar_particion(extremos: tuple, medio: tuple) -> str:
-    inferior, superior, valor_inferior, _ = extremos
-    abscisa, valor_medio = medio
-    if valor_medio == 0:
-        return "f(c) se evaluó como cero. Se detiene el cálculo sin certificar exactitud simbólica."
-    if abscisa in (inferior, superior):
-        return "El punto medio se redondea a un extremo. La representación numérica no permite reducir el intervalo."
-    if math.copysign(1, valor_inferior) != math.copysign(1, valor_medio):
-        return f"Se conserva [{inferior}, {abscisa}] porque f(a) y f(c) tienen signos opuestos."
-    return f"Se conserva [{abscisa}, {superior}] porque f(c) y f(b) tienen signos opuestos."

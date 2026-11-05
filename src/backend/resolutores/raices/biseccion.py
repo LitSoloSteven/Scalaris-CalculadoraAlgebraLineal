@@ -1,14 +1,14 @@
 """Motor de bisección con control de dominio, resolución y traza numérica."""
-import math
 from collections.abc import Callable
 from dataclasses import asdict, replace
 
 from .aritmetica_biseccion import cota_intervalo, punto_medio
 from .contrato_biseccion import EntradaBiseccion, IteracionBiseccion, ResultadoBiseccion, validar_entrada
+from .decision_biseccion import signo_producto
 from .diagnostico_biseccion import completar_diagnostico, diagnostico_interior, error_contextual, error_extremos, evaluar_extremos
 from .evaluador_funcion import compilar, evaluar
 from .parada_biseccion import completar_criterio, motivo_criterio
-from .traza_biseccion import construir_error, construir_resultado, crear_iteracion
+from .traza_biseccion import construir_error, construir_resultado, crear_iteracion, registrar_accion
 from .unidades_angulares import opciones_unidad
 
 
@@ -73,7 +73,7 @@ def _validar_extremos(entrada: EntradaBiseccion, extremos: tuple) -> ResultadoBi
     if valor_inferior == 0 or valor_superior == 0:
         raiz = inferior if valor_inferior == 0 else superior
         return construir_resultado(entrada, (inferior, superior), (), "raiz_exacta", (raiz, 0))
-    if math.copysign(1, valor_inferior) == math.copysign(1, valor_superior):
+    if signo_producto(valor_inferior, valor_superior) == 1:
         return ResultadoBiseccion(
             estado="SIN_CAMBIO_DE_SIGNO", mensaje="Los valores f(a) y f(b) tienen el mismo signo. Elige otro intervalo.",
             error_absoluto=entrada.error_absoluto, codigo_diagnostico="SIN_CAMBIO_DE_SIGNO")
@@ -86,18 +86,19 @@ def _iterar(entrada: EntradaBiseccion, funcion: Callable[[float], float], extrem
     contexto = {"etapa": "capacidad", "x_fallo": None, "intervalo_valido": extremos[:2]}
     try:
         for indice in range(1, entrada.limite_iteraciones + 1):
-            inferior, superior, valor_inferior, valor_superior = extremos
+            inferior, superior = extremos[:2]
             contexto.update(etapa="capacidad", x_fallo=None, intervalo_valido=extremos[:2])
             abscisa = punto_medio(inferior, superior)
             contexto.update(etapa="iteracion", x_fallo=abscisa)
             valor = _evaluar_medio(funcion, abscisa, extremos)
             contexto.update(etapa="capacidad", x_fallo=None)
             fila = crear_iteracion(indice, extremos, (abscisa, valor), previo)
-            iteraciones.append(fila)
             motivo = _motivo_parada(entrada, fila)
+            fila = registrar_accion(fila, motivo)
+            iteraciones.append(fila)
             if motivo:
                 break
-            extremos = _actualizar_intervalo(extremos, (abscisa, valor))
+            extremos = _actualizar_intervalo(fila)
             previo = abscisa
         return construir_resultado(entrada, (inferior, superior), iteraciones, motivo, (abscisa, valor))
     except ValueError as error:
@@ -124,9 +125,7 @@ def _motivo_parada(entrada: EntradaBiseccion, fila: IteracionBiseccion) -> str:
     return "limite_iteraciones" if fila.i == entrada.limite_iteraciones else ""
 
 
-def _actualizar_intervalo(extremos: tuple, medio: tuple[float, float]) -> tuple:
-    inferior, superior, valor_inferior, valor_superior = extremos
-    abscisa, valor = medio
-    if math.copysign(1, valor_inferior) != math.copysign(1, valor):
-        return inferior, abscisa, valor_inferior, valor
-    return abscisa, superior, valor, valor_superior
+def _actualizar_intervalo(fila: IteracionBiseccion) -> tuple[float, float, float, float]:
+    if fila.accion == "reemplazar_b":
+        return fila.extremo_izquierdo, fila.c, fila.f_a, fila.f_c
+    return fila.c, fila.extremo_derecho, fila.f_c, fila.f_b
