@@ -47,6 +47,17 @@ def metricas_resumen(respuesta: dict) -> tuple[tuple[str, str], ...]:
                     ("Iteraciones", str(len(respuesta["iteraciones"]))))
 
 
+def metricas_principales(respuesta: dict) -> tuple[tuple[str, str], ...]:
+    """Obtiene las tres magnitudes principales con los valores publicados por el motor."""
+    metricas = respuesta.get("metricas") or {}
+    intervalo = respuesta.get("intervalo_final")
+    extremos = f"[{numero(intervalo[0], True)}, {numero(intervalo[1], True)}]" if intervalo else "No disponible"
+    cero_extremo = respuesta.get("motivo_parada") == "raiz_exacta" and not respuesta.get("iteraciones")
+    residuo = "Residuo del extremo evaluado" if cero_extremo else "Residuo |f(c)|"
+    return (("Iteraciones", numero(metricas.get("iteraciones_totales"), True)),
+            ("Intervalo final [a, b]", extremos), (residuo, numero(metricas.get("residuo_final"), True)))
+
+
 def aproximacion_presentada(respuesta: dict, decimales: int) -> str:
     """Formatea la aproximación ya calculada sin alterar las métricas ni el criterio."""
     valor = respuesta.get("aproximacion")
