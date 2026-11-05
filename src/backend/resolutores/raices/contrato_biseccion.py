@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from fractions import Fraction
 from typing import NotRequired, TypedDict
 
+from .contrato_continuidad import InformeContinuidad
 from .criterios_biseccion import CriterioParada, tolerancia_decimal, validar_criterio, validar_entero_criterio
 from .decision_biseccion import AccionBiseccion, SignoProducto
 from .limites_biseccion import D_MAXIMO, LIMITE_ITERACIONES_DEFECTO, LIMITE_ITERACIONES_MAXIMO, LONGITUD_MAXIMA_EXPRESION
@@ -145,6 +146,7 @@ class ResultadoBiseccion:
     contexto_fallo: ContextoFallo | None = None
     sugerencias: tuple[SugerenciaBiseccion, ...] = ()
     unidad_angular: str = "radianes"
+    informe_continuidad: InformeContinuidad | None = None
 
 
 def validar_precision(valor) -> int:
