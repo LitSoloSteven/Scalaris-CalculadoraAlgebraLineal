@@ -12,9 +12,9 @@ from .modo_examen import mostrar_accion_examen
 from .tabla_iteraciones import mostrar_tabla
 
 
-def mostrar_traza(respuesta: dict, examen, al_mostrar_paso, identificador: str, panel_ia=None) -> ReproductorPasos:
+def mostrar_traza(respuesta: dict, examen, al_mostrar_paso, identificador: str, preferencias=None) -> ReproductorPasos:
     """Monta las pestañas y enlaza el paso activo a la figura del origen que lo abrió."""
-    reproductor = _crear_reproductor(respuesta, examen, al_mostrar_paso, identificador, panel_ia)
+    reproductor = _crear_reproductor(respuesta, examen, al_mostrar_paso, identificador, preferencias or {})
     with ui.tabs().classes("w-full") as pestanas:
         procedimiento = ui.tab("Procedimiento")
         tabla = ui.tab("Tabla")
@@ -27,7 +27,7 @@ def mostrar_traza(respuesta: dict, examen, al_mostrar_paso, identificador: str, 
     return reproductor
 
 
-def _crear_reproductor(respuesta: dict, examen, al_mostrar_paso, identificador: str, panel_ia):
+def _crear_reproductor(respuesta: dict, examen, al_mostrar_paso, identificador: str, preferencias: dict):
     pasos, grupos = construir_pasos(respuesta)
 
     def _renderizar_cuerpo(paso, contenedor) -> None:
@@ -42,10 +42,13 @@ def _crear_reproductor(respuesta: dict, examen, al_mostrar_paso, identificador: 
         "lineas_ayuda": ("Usa las flechas, el índice o la reproducción automática para recorrer el intervalo.",),
         "sin_movimiento": True,
     }
+    panel_ia = preferencias.get("panel_ia")
     if panel_ia is not None:
         opciones["al_explicar"] = crear_accion_explicacion(panel_ia, pasos)
         opciones["esta_ocupado"] = lambda: bool(getattr(panel_ia, "_esta_enviando", False))
-    return ReproductorPasos(pasos, grupos, _renderizar_cuerpo, identificador, opciones)
+    reproductor = ReproductorPasos(pasos, grupos, _renderizar_cuerpo, identificador, opciones)
+    reproductor.velocidad = preferencias.get("velocidad") or reproductor.velocidad
+    return reproductor
 
 
 def _mostrar_iteracion(fila: dict, examen, estado: str) -> None:

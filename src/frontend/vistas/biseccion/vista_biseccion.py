@@ -28,6 +28,7 @@ class VistaBiseccion:
     def __init__(self):
         self.ultimo_resultado = None
         self.reproductor_pasos = None
+        self.velocidad_procedimiento = None
         self._revision_captura = 0
         self._identificador_calculo = 0
         self.ocupado = False
@@ -114,6 +115,8 @@ class VistaBiseccion:
         self.estado.set_text("Datos editados. Calcula para obtener un resultado vigente.")
 
     def _retirar_resultado(self) -> None:
+        if self.reproductor_pasos is not None:
+            self.velocidad_procedimiento = self.reproductor_pasos.velocidad
         invalidar_resultado(self)
         self.contenedor_resultados.clear()
         self.panel_ia.limpiar_foco_explicacion()

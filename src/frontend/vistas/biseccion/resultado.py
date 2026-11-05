@@ -16,4 +16,4 @@ def mostrar_resultado(vista, respuesta: dict) -> None:
             examen.move(vista.contenedor_resultados)
             vista.reproductor_pasos = mostrar_traza(
                 respuesta, examen, lambda paso: mostrar_paso_principal(vista, respuesta, paso),
-                "biseccion", vista.panel_ia)
+                "biseccion", {"panel_ia": vista.panel_ia, "velocidad": vista.velocidad_procedimiento})
