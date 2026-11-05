@@ -1,7 +1,7 @@
 """Decisiones y comprobaciones del criterio activo sobre las filas del motor."""
 from dataclasses import replace
 
-from .contrato_biseccion import EntradaBiseccion, IteracionBiseccion, ResultadoBiseccion
+from .contrato_biseccion import ESTADO_DISCONTINUIDAD, EntradaBiseccion, IteracionBiseccion, ResultadoBiseccion
 from .criterios_biseccion import CriterioParada
 
 _MOTIVOS = {"relativo": "relativo_menor_que_porcentaje", "ancho": "ancho_menor_que_E",
@@ -40,14 +40,23 @@ def completar_criterio(entrada: EntradaBiseccion, resultado: ResultadoBiseccion)
 
 def comprobar_cierre_criterio(resultado: ResultadoBiseccion) -> None:
     """Comprueba un cierre ordinario contra su última fila; lanza ValueError si es incoherente."""
-    if resultado.estado not in {"EXITO", "ITERACIONES_COMPLETADAS"} or resultado.motivo_parada == "raiz_exacta":
+    if resultado.estado not in {"EXITO", "ITERACIONES_COMPLETADAS", ESTADO_DISCONTINUIDAD}:
+        return
+    provisional = resultado.estado == ESTADO_DISCONTINUIDAD
+    if not provisional and resultado.motivo_parada == "raiz_exacta":
         return
     criterio = resultado.criterio_solicitado
     if criterio is None or not resultado.iteraciones:
         raise ValueError("El resultado no contiene el criterio y la fila de cierre.")
+    if provisional and resultado.motivo_parada in {"estancamiento", "limite_iteraciones"}:
+        return
+    _comprobar_metrica_cierre(resultado, criterio)
+
+
+def _comprobar_metrica_cierre(resultado: ResultadoBiseccion, criterio: CriterioParada) -> None:
     motivo = motivo_criterio(criterio, resultado.iteraciones[-1])
     estado = "ITERACIONES_COMPLETADAS" if criterio.tipo == "iteraciones" else "EXITO"
-    if not motivo or resultado.motivo_parada != motivo or resultado.estado != estado:
+    if not motivo or resultado.motivo_parada != motivo or resultado.estado not in {estado, ESTADO_DISCONTINUIDAD}:
         raise ValueError("El motor no cumplió el criterio de parada solicitado.")
 
 

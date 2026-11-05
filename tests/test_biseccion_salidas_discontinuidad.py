@@ -3,11 +3,13 @@ import json
 
 from nicegui import ui
 
+from src.frontend.componentes.copia_resultado import texto_resultado_copiable
 from src.frontend.controladores.biseccion import controlador
 from src.frontend.controladores.biseccion.presentacion import construir_pasos, filas_tabla, motivo
 from src.frontend.controladores.biseccion.presentacion_criterio import texto_resumen
 from src.frontend.controladores.biseccion.resolucion_multiple import resolver_lote
 from src.frontend.vistas.biseccion.figura import crear_figura
+from src.frontend.vistas.biseccion import resumen_criterio, resultados_multiples
 from tests.comun_biseccion_criterios import captura_criterio, ejecutar_escenario
 
 
@@ -45,14 +47,19 @@ def test_copia_y_procedimiento_distinguen_motivo_y_sospecha():
     assert "última muestra" in pasos[-2].explicacion and len(filas_tabla(respuesta)) == 15
 
 
-def test_lote_conserva_diagnostico_individual_y_resultado_vecino():
-    """El mismo motor separa una sospecha y una convergencia en intervalos distintos."""
+def _captura_lote():
     configuracion = {**_captura(), "expresion": "(x-.8)/(x*x-.2)"}
     candidatos = tuple({"identificador": nombre, "candidato": {"tipo": "cruce", "intervalo": intervalo}}
                        for nombre, intervalo in (("polo", (0, .6)), ("raiz", (.7, .9))))
-    lote = resolver_lote({"configuracion": configuracion, "candidatos": candidatos})
+    return {"configuracion": configuracion, "candidatos": candidatos}
+
+
+def test_lote_conserva_diagnostico_individual_y_resultado_vecino():
+    """El mismo motor separa una sospecha y una convergencia en intervalos distintos."""
+    captura = _captura_lote()
+    lote = resolver_lote(captura)
     polo, raiz = lote["resultados"]
-    individual = controlador.resolver_captura({**configuracion, "extremo_derecho": .6})
+    individual = controlador.resolver_captura({**captura["configuracion"], "extremo_derecho": .6})
     assert polo["respuesta"] == individual and polo["estado"] == "CONTINUIDAD_NO_VERIFICADA"
     assert raiz["estado"] == "EXITO" and raiz["respuesta"]["codigo_diagnostico"] == "CERO_EVALUADO"
     json.dumps(lote, allow_nan=False)
@@ -72,4 +79,23 @@ def test_vista_historial_y_glosa_comparten_estado_provisional(monkeypatch):
         botones = [elemento.text for elemento in vista.recientes.descendants() if isinstance(elemento, ui.button)]
         assert any("Provisional" in boton for boton in botones)
         assert "discontinuidad" in vista.estado.text and vista.reproductor_pasos is not None
+    ejecutar_escenario(monkeypatch, comprobar)
+
+
+def test_copia_individual_y_lote_rotulan_la_sospecha_como_resultado(monkeypatch):
+    """El texto enviado al copiador identifica la sospecha como resultado provisional."""
+    textos = []
+    def registrar_copia(datos):
+        """Captura el texto que construiría el componente compartido del portapapeles."""
+        textos.append(texto_resultado_copiable(datos))
+    monkeypatch.setattr(resumen_criterio, "renderizar_copia_resultado", registrar_copia)
+    monkeypatch.setattr(resultados_multiples, "renderizar_copia_resultado", registrar_copia)
+    async def comprobar(vista):
+        """Contrasta las cargas de copia emitidas por las dos vistas reales."""
+        vista.cargar_captura(_captura())
+        await vista.resolver()
+        resultados_multiples.mostrar_resultados_multiples(resolver_lote(_captura_lote()))
+        assert textos[0].startswith("Resultado:\nPosible discontinuidad")
+        assert textos[1].startswith("Resultado:\npolo\nPosible discontinuidad")
+        assert textos[2].startswith("Solución:\nraiz\n")
     ejecutar_escenario(monkeypatch, comprobar)

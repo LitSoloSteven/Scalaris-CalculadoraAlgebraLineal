@@ -1,4 +1,5 @@
 """Sospechas sustentadas por filas válidas y prioridad de los fallos observados."""
+from dataclasses import replace
 from importlib import import_module
 
 import pytest
@@ -7,6 +8,7 @@ from src.backend.resolutores.raices.biseccion import biseccion
 from src.backend.resolutores.raices.contrato_biseccion import EntradaBiseccion
 from src.backend.resolutores.raices.criterios_biseccion import CriterioParada
 from src.backend.resolutores.raices.evaluador_funcion import compilar
+from src.frontend.controladores.biseccion.controlador import serializar_resultado
 
 
 @pytest.mark.parametrize("expresion,intervalo,unidad", [
@@ -70,3 +72,14 @@ def test_presupuesto_nulo_de_evaluaciones_adicionales(monkeypatch):
     resultado = biseccion(EntradaBiseccion("1/(x*x-.2)", 0, 1, 4))
     assert resultado.codigo_diagnostico == "DISCONTINUIDAD_SOSPECHADA"
     assert llamadas == [0, 1, *(fila.c for fila in resultado.iteraciones)]
+
+
+@pytest.mark.parametrize("cambios", [
+    {"iteraciones": ()}, {"motivo_parada": "residuo_menor_que_delta"}, {"motivo_parada": "raiz_exacta"},
+])
+def test_serializacion_rechaza_cierre_provisional_incoherente(cambios):
+    """Un estado provisional conserva la verificación de la fila y del criterio satisfecho."""
+    entrada = EntradaBiseccion("1/(x*x-.2)", 0, 1, 4)
+    resultado = biseccion(entrada)
+    with pytest.raises(ValueError):
+        serializar_resultado(entrada, replace(resultado, **cambios))
