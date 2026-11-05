@@ -3,6 +3,7 @@ from dataclasses import asdict, dataclass
 
 from .contrato_biseccion import EntradaBiseccion, ResultadoBiseccion, validar_entrada
 from .contrato_exploracion import AVISO_EXPLORACION, CandidatoExploracion
+from .unidades_angulares import validar_unidad_angular
 from .limites_resolucion_multiple import (
     LONGITUD_IDENTIFICADOR_CANDIDATO, MAXIMO_CANDIDATOS_MULTIPLE, MAXIMO_EVALUACIONES_MULTIPLE,
 )
@@ -59,11 +60,12 @@ def validar_resolucion_multiple(entrada: EntradaResolucionMultiple) -> EntradaRe
     presupuesto = entrada.presupuesto_evaluaciones
     if type(presupuesto) is not int or not 1 <= presupuesto <= MAXIMO_EVALUACIONES_MULTIPLE:
         raise ValueError(f"El presupuesto del lote debe ser un entero entre 1 y {MAXIMO_EVALUACIONES_MULTIPLE}.")
-    if entrada.unidad_angular != "radianes":
-        raise ValueError("La resolución múltiple admite radianes en la configuración actual.")
     _validar_identificadores(entrada.candidatos)
     configuracion = validar_entrada(asdict(entrada.configuracion))
-    return EntradaResolucionMultiple(configuracion, entrada.candidatos, presupuesto, entrada.unidad_angular)
+    unidad = validar_unidad_angular(entrada.unidad_angular)
+    if unidad != configuracion.unidad_angular:
+        raise ValueError("La unidad angular del lote debe coincidir con su configuración de bisección.")
+    return EntradaResolucionMultiple(configuracion, entrada.candidatos, presupuesto, unidad)
 
 
 def _validar_identificadores(candidatos: tuple[CandidatoResolucion, ...]) -> None:

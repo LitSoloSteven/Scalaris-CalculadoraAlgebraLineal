@@ -7,16 +7,17 @@ from .contrato_exploracion import (
 )
 from .evaluador_funcion import compilar, evaluar
 from .muestreo_intervalos import generar_posiciones
+from .unidades_angulares import opciones_unidad
 
 
 def explorar_intervalos(entrada: EntradaExploracion) -> ResultadoExploracion:
     """Devuelve candidatos y huecos; lanza ValueError por captura, sintaxis o presupuesto inválidos."""
     entrada = validar_exploracion(entrada)
     posiciones = generar_posiciones(entrada)
-    funcion = compilar(entrada.expresion)
+    funcion = compilar(entrada.expresion, **opciones_unidad(entrada.unidad_angular))
     muestras = tuple(_muestrear(funcion, posicion) for posicion in posiciones)
-    candidatos = clasificar_candidatos(entrada.expresion, muestras)
-    return ResultadoExploracion(candidatos, len(muestras))
+    candidatos = clasificar_candidatos(entrada.expresion, muestras, unidad_angular=entrada.unidad_angular)
+    return ResultadoExploracion(candidatos, len(muestras), unidad_angular=entrada.unidad_angular)
 
 
 def _muestrear(funcion: Callable[[float], float], posicion: float) -> MuestraExploracion:
