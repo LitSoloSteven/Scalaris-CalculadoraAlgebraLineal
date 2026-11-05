@@ -11,6 +11,7 @@ from src.backend.resolutores.raices.contrato_exploracion import EntradaExploraci
 from src.backend.resolutores.raices.contrato_resolucion_multiple import CandidatoResolucion, EntradaResolucionMultiple
 from src.backend.resolutores.raices.dominio_intervalo import comprobar_dominio_intervalo
 from src.backend.resolutores.raices.exploracion_intervalos import explorar_intervalos
+from src.backend.resolutores.raices.normalizacion_funcion import normalizar_expresion
 from src.backend.resolutores.raices.resolucion_multiple import resolver_candidatos
 from src.frontend.controladores.biseccion.controlador import calcular_presentacion, resolver_captura
 from src.frontend.controladores.biseccion.exploracion import resolver_exploracion
@@ -24,6 +25,8 @@ from tests.comun_biseccion_criterios import captura_criterio, ejecutar_escenario
     ("(x+1)(x−1.3)", "(x+1)*(x-1.3)"), ("3sin(x)−2.6", "3*sin(x)-2.6"),
     ("ln(x)−.4", "log(x)-.4"), ("log10(x)−.2", "log10(x)-.2"),
     ("log2(x)−.4", "log2(x)-.4"), ("sinh(x)−2", "sinh(x)-2"),
+    ("asin(.5x)−.8", "asin(.5*x)-.8"), ("acos(.5x)−.6", "acos(.5*x)-.6"),
+    ("atan(x)−.9", "atan(x)-.9"), ("cosh(x)−2", "cosh(x)-2"), ("tanh(x)−.8", "tanh(x)-.8"),
 ])
 def test_motor_presentacion_y_grafica_comparten_sintaxis(expresion, explicita):
     """Notaciones equivalentes producen la misma traza y las mismas 401 muestras finitas."""
@@ -37,7 +40,8 @@ def test_motor_presentacion_y_grafica_comparten_sintaxis(expresion, explicita):
     assert respuesta["iteraciones"] == asdict(resultado)["iteraciones"]
     assert previa["muestra"] == respuesta["muestra"]
     assert len(previa["muestra"]["x"]) == 401
-    assert respuesta["entrada"]["expresion"] == previa["entrada"]["expresion"] == expresion
+    assert respuesta["entrada"]["expresion"] == expresion
+    assert previa["entrada"]["expresion"] == normalizar_expresion(expresion)
     json.dumps((respuesta, previa), allow_nan=False)
 
 
