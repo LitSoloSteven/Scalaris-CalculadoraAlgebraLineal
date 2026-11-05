@@ -1,4 +1,6 @@
 """Gráfico persistente con trazas independientes para la curva y el intervalo."""
+import json
+
 from nicegui import ui
 from plotly import graph_objects as go
 
@@ -42,8 +44,11 @@ class GraficoCompartido:
         self._borrador = []
         self._curva = None
         self._sospecha = None
-        self.nodo = ui.plotly(self._figura(None)).classes("w-full biseccion-grafica")
-        self.nodo.on("plotly_afterplot", js_handler="() => window.scalaris.sincronizarTemaPlotly()")
+        with ui.element("div").classes("biseccion-marco-grafico w-full") as self.marco:
+            self.nodo = ui.plotly(self._figura(None)).classes("w-full biseccion-grafica")
+        self.nodo.on("plotly_afterplot", js_handler=(
+            f"() => window.scalaris.graficoBiseccion.actualizar(document.getElementById('{self.nodo.html_id}'))"
+        ))
 
     def publicar_curva(self, respuesta: dict | None) -> None:
         """Reemplaza el muestreo visible y conserva las marcas vigentes."""
@@ -88,10 +93,11 @@ class GraficoCompartido:
         ordenadas = [] if ordenada is None else [ordenada]
         self._marcas = extremos, [0] * len(extremos), abscisas, ordenadas, nombre
         if not self.nodo.is_deleted:
-            self.nodo.run_plot_method("update", {
+            marcas = {
                 "x": [extremos, abscisas], "y": [self._marcas[1], ordenadas],
                 "name": ["Intervalo [a, b]", nombre],
-            }, _posicion_banda(extremos), [1, 2])
+            }
+            self.marco.props["data-biseccion-marcas"] = json.dumps([marcas, _posicion_banda(extremos)])
 
     def resultado(self, respuesta: dict, fila: dict | None = None, *, inicial: bool = False) -> None:
         """Representa el intervalo publicado de un resultado o de su paso activo."""
