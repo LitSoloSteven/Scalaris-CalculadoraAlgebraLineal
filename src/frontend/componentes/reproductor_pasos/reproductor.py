@@ -46,6 +46,7 @@ class ReproductorPasos:
         self.tipos_leyenda = tuple(tipos_leyenda)
         self.al_explicar = al_explicar
         self.esta_ocupado = esta_ocupado
+        self.sin_movimiento = configuracion.get("sin_movimiento", False)
         self.indice_actual = 0
         self.velocidad = "Normal"
         self.temporizador = None
@@ -88,9 +89,10 @@ class ReproductorPasos:
         self._actualizar_glosa(paso)
         self.contenedor_cuerpo.clear()
         self.renderizar_cuerpo(paso, self.contenedor_cuerpo)
-        ui.run_javascript(
-            f"if(window.scalaris && window.scalaris.pasos) window.scalaris.pasos.destellar({json.dumps(self.id_tarjeta)});"
-        )
+        if not self.sin_movimiento:
+            ui.run_javascript(
+                f"if(window.scalaris && window.scalaris.pasos) window.scalaris.pasos.destellar({json.dumps(self.id_tarjeta)});"
+            )
         if autoreproduccion and self.indice_actual == len(self.pasos) - 1:
             self._pausar_reproduccion()
 
@@ -116,7 +118,7 @@ class ReproductorPasos:
         if " ".join(contenido.split()) == " ".join(descripcion.split()):
             contenido = texto = ""
         identificador = f"repro-expl-{next(_CONTADOR_EXPLICACION)}"
-        if autoreproduccion or contenido != html.escape(texto):
+        if self.sin_movimiento or autoreproduccion or contenido != html.escape(texto):
             self.explicacion.set_content(
                 f'<span class="texto-secundario text-sm leading-relaxed">{contenido}</span>'
             )
