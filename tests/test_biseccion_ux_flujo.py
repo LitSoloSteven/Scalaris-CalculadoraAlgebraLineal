@@ -93,3 +93,21 @@ def test_editar_no_admite_otro_trabajador_individual(monkeypatch):
         assert vista.ultimo_resultado is None and not vista.ocupado
 
     ejecutar_escenario(monkeypatch, comprobar)
+
+
+def test_limpiar_conserva_velocidad_del_procedimiento(monkeypatch):
+    """El ejercicio siguiente hereda la velocidad elegida en el procedimiento anterior."""
+    async def comprobar(vista):
+        """Cambia la velocidad desde su selector y monta otro resultado."""
+        captura = captura_criterio()
+        vista.cargar_captura(captura)
+        await vista.resolver()
+        selector = next(elemento for elemento in vista.contenedor_resultados.descendants()
+                        if isinstance(elemento, ui.select) and "Rápida" in elemento.options)
+        selector.set_value("Rápida")
+        vista.limpiar_todo()
+        vista.cargar_captura(captura)
+        await vista.resolver()
+        assert vista.reproductor_pasos.velocidad == "Rápida"
+
+    ejecutar_escenario(monkeypatch, comprobar)
