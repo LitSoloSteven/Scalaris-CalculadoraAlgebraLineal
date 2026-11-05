@@ -2,6 +2,7 @@
 import json
 import math
 from dataclasses import asdict, replace
+from importlib import import_module
 
 import pytest
 
@@ -11,6 +12,7 @@ from src.backend.resolutores.raices.contrato_exploracion import CandidatoExplora
 from src.backend.resolutores.raices.contrato_resolucion_multiple import CandidatoResolucion, EntradaResolucionMultiple
 from src.backend.resolutores.raices.criterios_biseccion import CriterioParada
 from src.backend.resolutores.raices.exploracion_intervalos import explorar_intervalos
+from src.backend.resolutores.raices.evaluador_funcion import compilar
 from src.backend.resolutores.raices.limites_resolucion_multiple import (
     EVALUACIONES_AUXILIARES_CANDIDATO, MAXIMO_CANDIDATOS_MULTIPLE, MAXIMO_EVALUACIONES_CANDIDATO,
 )
@@ -151,3 +153,25 @@ def test_adaptador_captura_invalida(captura):
     respuesta = resolver_lote(captura)
     assert respuesta["estado"] == "ERROR" and respuesta["resultados"] == ()
     json.dumps(respuesta, allow_nan=False)
+
+
+@pytest.mark.parametrize("presupuesto", [105, 106, 318])
+def test_reserva_acota_evaluaciones_efectivas(monkeypatch, presupuesto):
+    """Contar las evaluaciones reales confirma la reserva y la ausencia de trabajo sin presupuesto."""
+    entrada = replace(_entrada(), presupuesto_evaluaciones=presupuesto)
+    llamadas = []
+    def compilar_contando(expresion):
+        """Envuelve el evaluador real sin cambiar sintaxis, aritmética ni errores de dominio."""
+        evaluador = compilar(expresion)
+        def funcion(valor):
+            """Registra cada evaluación del lote, el motor y sus sugerencias."""
+            llamadas.append(valor)
+            return evaluador(valor)
+        return funcion
+    for nombre in ("resolucion_multiple", "biseccion", "sugerencias_dominio"):
+        modulo = import_module(f"src.backend.resolutores.raices.{nombre}")
+        monkeypatch.setattr(modulo, "compilar", compilar_contando)
+    lote = resolver_candidatos(entrada)
+    assert len(llamadas) <= lote.evaluaciones_reservadas <= presupuesto
+    if presupuesto == 105:
+        assert llamadas == []

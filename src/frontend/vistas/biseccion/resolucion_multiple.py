@@ -114,8 +114,8 @@ class PanelResolucionMultiple:
         self.estado.set_text("Resolviendo candidatos con el criterio actual…")
         try:
             vigente = await ejecutar_calculo_vigente(self, self.capturar, resolver_lote)
-            if vigente is not None and self.tarea is tarea and self._puede_resolver():
-                self._publicar(vigente[0])
+            if vigente is not None:
+                self._publicar_si_vigente(vigente[0], tarea)
         except Exception:
             registro.warning("No se pudo presentar la resolución múltiple de bisección")
             if revision == self._revision_captura and self._puede_resolver():
@@ -128,6 +128,10 @@ class PanelResolucionMultiple:
     def _puede_resolver(self) -> bool:
         return (not self._cerrado and not self.contenedor_resultados.is_deleted and bool(self.candidatos)
                 and self._fuente is self.vista.exploracion.respuesta)
+
+    def _publicar_si_vigente(self, respuesta: dict, tarea: asyncio.Task) -> None:
+        if self.tarea is tarea and self._puede_resolver():
+            self._publicar(respuesta)
 
     def _actualizar_controles(self, ocupado: bool) -> None:
         for boton in (self.boton_uno, self.boton_todos):
