@@ -85,16 +85,20 @@ def test_vista_historial_y_glosa_comparten_estado_provisional(monkeypatch):
 def test_copia_individual_y_lote_rotulan_la_sospecha_como_resultado(monkeypatch):
     """El texto enviado al copiador identifica la sospecha como resultado provisional."""
     textos = []
-    def registrar_copia(datos):
+    def registrar_copia(generar):
         """Captura el texto que construiría el componente compartido del portapapeles."""
-        textos.append(texto_resultado_copiable(datos))
+        textos.append(texto_resultado_copiable(generar()))
     monkeypatch.setattr(resumen_criterio, "renderizar_copia_resultado", registrar_copia)
     monkeypatch.setattr(resultados_multiples, "renderizar_copia_resultado", registrar_copia)
     async def comprobar(vista):
         """Contrasta las cargas de copia emitidas por las dos vistas reales."""
         vista.cargar_captura(_captura())
         await vista.resolver()
-        resultados_multiples.mostrar_resultados_multiples(resolver_lote(_captura_lote()))
+        panel = vista.resolucion_multiple
+        panel._publicar(resolver_lote(_captura_lote()))
+        for boton in list(panel.contenedor_resultados.descendants()):
+            if isinstance(boton, ui.button) and boton.text.startswith(("polo ·", "raiz ·")):
+                next(evento.handler for evento in boton._event_listeners.values() if evento.type == "click")(None)
         assert textos[0].startswith("Resultado:\nPosible discontinuidad")
         assert textos[1].startswith("Resultado:\npolo\nPosible discontinuidad")
         assert textos[2].startswith("Solución:\nraiz\n")

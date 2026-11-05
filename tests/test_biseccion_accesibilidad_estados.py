@@ -78,20 +78,19 @@ def _captura_lote():
                                 for nombre, intervalo in (("polo", (0, .6)), ("raiz", (.7, .9))))}
 
 
-def _comprobar_trazas(tablas, lote, copias):
-    for tabla, registro, copia in zip(tablas, lote["resultados"], copias, strict=True):
-        respuesta = registro["respuesta"]
-        detalle = datos_examen(respuesta["iteraciones"][-1], respuesta["estado"])
-        for clave, valor in detalle.items():
-            assert tabla.rows[-1][clave] == valor
-            assert valor in copia
+def _comprobar_traza(tabla, registro, copia):
+    respuesta = registro["respuesta"]
+    detalle = datos_examen(respuesta["iteraciones"][-1], respuesta["estado"])
+    for clave, valor in detalle.items():
+        assert tabla.rows[-1][clave] == valor
+        assert valor in copia
 
 
 def test_examen_del_lote_actualiza_tablas_y_copias_sin_cambiar_glosa(monkeypatch):
     """Comprueba la alternancia local y los textos de cada candidato."""
     textos = []
     monkeypatch.setattr(resultados_multiples, "renderizar_copia_resultado",
-                        lambda datos: textos.append(texto_resultado_copiable(datos)))
+                        lambda generar: textos.append(texto_resultado_copiable(generar())))
 
     async def comprobar(vista):
         """Monta un lote mixto junto al resultado individual vigente."""
@@ -99,22 +98,24 @@ def test_examen_del_lote_actualiza_tablas_y_copias_sin_cambiar_glosa(monkeypatch
         await vista.resolver()
         contexto = vista.obtener_contexto_ia().resultado
         lote = resolver_lote(_captura_lote())
-        contenedor = vista.resolucion_multiple.contenedor_resultados
-        with contenedor:
-            resultados_multiples.mostrar_resultados_multiples(lote)
-        elementos = list(contenedor.descendants())
-        examen = next(elemento for elemento in elementos if isinstance(elemento, ui.checkbox))
-        assert examen.text == "Modo examen del lote"
-        tablas = [elemento for elemento in elementos if isinstance(elemento, ui.table)]
-        assert len(tablas) == 2 and not examen.value
-        assert textos[0].startswith("Resultado:\npolo\nPosible discontinuidad")
-        assert "Modo examen" not in textos[0]
-        examen.set_value(True)
-        await asyncio.sleep(0)
-        _comprobar_trazas(tablas, lote, textos[-2:])
-        examen.set_value(False)
-        await asyncio.sleep(0)
-        assert all("accion_examen" not in tabla.rows[-1] for tabla in tablas)
-        assert "Modo examen" not in textos[-2]
+        panel = vista.resolucion_multiple
+        panel._publicar(lote)
+        for registro in lote["resultados"]:
+            boton = next(elemento for elemento in panel.contenedor_resultados.descendants()
+                         if isinstance(elemento, ui.button) and elemento.text.startswith(registro["identificador"] + " ·"))
+            _pulsar(boton)
+            elementos = list(panel.contenedor_resultados.descendants())
+            examen = next(elemento for elemento in elementos if isinstance(elemento, ui.checkbox))
+            tablas = [elemento for elemento in elementos if isinstance(elemento, ui.table)]
+            assert examen.text == "Modo examen del lote" and not examen.value and len(tablas) == 1
+            if registro["identificador"] == "polo":
+                assert textos[-1].startswith("Resultado:\npolo\nPosible discontinuidad")
+            assert "Modo examen" not in textos[-1]
+            examen.set_value(True)
+            await asyncio.sleep(0)
+            _comprobar_traza(tablas[0], registro, textos[-1])
+            examen.set_value(False)
+            await asyncio.sleep(0)
+            assert "accion_examen" not in tablas[0].rows[-1] and "Modo examen" not in textos[-1]
         assert vista.obtener_contexto_ia().resultado == contexto and not vista.modo_examen
     ejecutar_escenario(monkeypatch, comprobar)

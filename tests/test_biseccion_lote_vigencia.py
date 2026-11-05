@@ -8,7 +8,7 @@ from nicegui import run, ui
 from src.frontend.controladores.biseccion.resolucion_multiple import resolver_lote
 from src.frontend.controladores.biseccion.presentacion import filas_tabla
 from tests.comun_biseccion_criterios import ejecutar_escenario
-from tests.comun_exploracion_biseccion import preparar_exploracion
+from tests.comun_exploracion_biseccion import activar_accion, preparar_exploracion
 
 
 async def _preparar(vista, principal=False):
@@ -37,17 +37,23 @@ def test_resolver_todos_y_uno_conserva_calculo_y_tablas_separadas(monkeypatch):
         registros = panel.respuesta["resultados"]
         assert [registro["respuesta"]["aproximacion"] for registro in registros] == pytest.approx(
             [math.pi, 2 * math.pi, 3 * math.pi], abs=1e-4)
-        tablas = [elemento for elemento in panel.contenedor_resultados.descendants() if isinstance(elemento, ui.table)]
-        assert len(tablas) == 3
-        for tabla, registro in zip(tablas, registros):
-            assert tabla.rows == filas_tabla(registro["respuesta"])
-        primera = list(tablas[0].rows)
-        interruptores = [elemento for elemento in panel.contenedor_resultados.descendants() if isinstance(elemento, ui.switch)]
-        interruptores[1].set_value(True)
-        assert tablas[1].rows == filas_tabla(registros[1]["respuesta"], True) and tablas[0].rows == primera
+        botones = [elemento for elemento in panel.contenedor_resultados.descendants()
+                   if isinstance(elemento, ui.button) and elemento.text.startswith("candidato-")]
+        assert len(botones) == 3
+        for boton, registro in zip(botones, registros, strict=True):
+            activar_accion(boton)
+            elementos = list(panel.contenedor_resultados.descendants())
+            tablas = [elemento for elemento in elementos if isinstance(elemento, ui.table)]
+            assert len(tablas) == 1 and tablas[0].rows == filas_tabla(registro["respuesta"])[:15]
+            precision = next(elemento for elemento in elementos if isinstance(elemento, ui.switch))
+            assert not precision.value
+            precision.set_value(True)
+            assert tablas[0].rows == filas_tabla(registro["respuesta"], True)[:15]
         vista.formato.set_value(8)
         vista.vista_previa.minimo.set_value("-2")
-        assert panel.respuesta["resultados"] is registros
+        assert panel.respuesta is None
+        vista.exploracion.minimo.set_value("1")
+        await vista.exploracion.explorar()
         panel.selector.set_value("candidato-2")
         await panel.resolver_uno()
         assert len(panel.respuesta["resultados"]) == 1
