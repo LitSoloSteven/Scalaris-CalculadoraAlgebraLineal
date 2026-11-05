@@ -46,6 +46,10 @@ def analizar_continuidad_intervalo(expresion: str, intervalo: tuple[float, float
     arbol = analizar_expresion(entrada.expresion)
     funcion = compilar(entrada.expresion, **opciones_unidad(entrada.unidad_angular))
     preparado = preparar_intervalo(entrada, funcion, arbol)
+    if cero_preferido is not None and not any(
+        muestra["abscisa"] == cero_preferido and muestra["valor"] == 0 for muestra in preparado.evaluaciones
+    ):
+        raise ValueError("El extremo elegido no evalúa a cero.")
     return preparado.informe
 
 

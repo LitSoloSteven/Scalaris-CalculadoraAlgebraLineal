@@ -17,7 +17,7 @@ def crear_informe(intervalo: tuple[float, float], unidad: str, evidencia: tuple[
     """Determina la política usando observaciones del intervalo y la excepción del cero válido."""
     if any(dato["codigo"] in _RESTRICCIONES for dato in evidencia):
         estado, politica = "RESTRICCION_DETECTADA", "ADVERTIR" if admite_cero else "RECHAZAR"
-    elif all(dato["tipo"] == "COBERTURA_ESTRUCTURAL" for dato in evidencia):
+    elif evidencia and all(dato["tipo"] == "COBERTURA_ESTRUCTURAL" for dato in evidencia):
         estado, politica = "CONFIRMADA", "PERMITIR"
     else:
         estado, politica = "NO_VERIFICADA", "ADVERTIR"
@@ -32,11 +32,17 @@ def observacion(tipo: TipoEvidencia, codigo: str, intervalo: tuple[float, float]
 
 
 def incorporar_traza(informe: InformeContinuidad, resultado: ResultadoBiseccion) -> InformeContinuidad:
-    """Incorpora la sospecha observada en la traza sin convertirla en restricción estructural."""
+    """Agrega fallos observados y sospechas de la traza con sus respectivas ubicaciones."""
     diagnostico = resultado.diagnostico or {}
+    contexto = resultado.contexto_fallo or {}
+    evidencia = informe["evidencia"]
+    if contexto.get("etapa") == "iteracion":
+        evidencia += (observacion("FALLO_INTERIOR", resultado.codigo_diagnostico, informe["intervalo"],
+                                  resultado.mensaje, contexto.get("x_fallo")),)
     sospecha = diagnostico.get("evidencia_discontinuidad")
-    if sospecha is None:
+    if sospecha is not None:
+        detalle = "Las magnitudes crecieron al reducir el intervalo; la traza sugiere una discontinuidad."
+        evidencia += (observacion("SOSPECHA_TRAZA", CODIGO_DISCONTINUIDAD, sospecha["intervalo"], detalle),)
+    if evidencia is informe["evidencia"]:
         return informe
-    detalle = ("Las magnitudes crecieron al reducir el intervalo; la traza sugiere una discontinuidad.")
-    dato = observacion("SOSPECHA_TRAZA", CODIGO_DISCONTINUIDAD, sospecha["intervalo"], detalle)
-    return crear_informe(informe["intervalo"], informe["unidad_angular"], (*informe["evidencia"], dato), False)
+    return crear_informe(informe["intervalo"], informe["unidad_angular"], evidencia, False)
