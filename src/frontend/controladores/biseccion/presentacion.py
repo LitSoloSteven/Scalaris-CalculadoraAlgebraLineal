@@ -84,6 +84,13 @@ def _explicar_iteracion(fila: dict, respuesta: dict) -> str:
 
 
 def _paso_final(respuesta: dict, indice: int) -> PasoReproductor:
+    if respuesta["estado"] == "ERROR":
+        contexto = respuesta.get("contexto_fallo") or {}
+        abscisa = contexto.get("x_fallo")
+        detalle = "Se conservan las filas válidas anteriores al fallo."
+        if abscisa is not None:
+            detalle = f"La evaluación falló en x = {numero(abscisa, True)}. " + detalle
+        return PasoReproductor(indice, "final", respuesta["mensaje"], detalle, 2)
     if respuesta["estado"] == ESTADO_DISCONTINUIDAD:
         return PasoReproductor(indice, "final", respuesta["mensaje"],
                               motivo(respuesta) + " El punto medio queda como aproximación provisional.", 2)
