@@ -9,6 +9,7 @@ from .contrato_biseccion import EntradaBiseccion, ResultadoBiseccion, Sugerencia
 from .dominio_intervalo import argumento_afin, comprobar_dominio_intervalo
 from .evaluador_funcion import compilar, evaluar
 from .gramatica_funcion import analizar_expresion
+from .unidades_angulares import opciones_unidad
 
 
 def sugerir_acciones(entrada: EntradaBiseccion, resultado: ResultadoBiseccion) -> tuple[SugerenciaBiseccion, ...]:
@@ -33,10 +34,10 @@ def sugerir_intervalo_dominio(entrada: EntradaBiseccion) -> tuple[float, float] 
         if intervalo is None or intervalo == original or intervalo[0] >= intervalo[1]:
             return None
         cota_intervalo(*intervalo)
-        funcion = compilar(entrada.expresion)
+        funcion = compilar(entrada.expresion, **opciones_unidad(entrada.unidad_angular))
         evaluar(funcion, intervalo[0])
         evaluar(funcion, intervalo[1])
-        comprobar_dominio_intervalo(entrada.expresion, intervalo)
+        comprobar_dominio_intervalo(entrada.expresion, intervalo, unidad_angular=entrada.unidad_angular)
         return intervalo
     except (ValueError, OverflowError):
         return None

@@ -1,8 +1,9 @@
 """Datos inmutables y validación de solicitudes de exploración real."""
 import math
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from .limites_biseccion import LONGITUD_MAXIMA_EXPRESION
+from .unidades_angulares import validar_unidad_angular
 
 AVISO_EXPLORACION = (
     "La exploración finita puede omitir raíces. Los candidatos no certifican raíces "
@@ -18,6 +19,7 @@ class EntradaExploracion:
     x_min: float
     x_max: float
     paso: float
+    unidad_angular: str = field(default="radianes", kw_only=True)
 
 
 @dataclass(frozen=True)
@@ -47,6 +49,7 @@ class ResultadoExploracion:
     candidatos: tuple[CandidatoExploracion, ...]
     evaluaciones: int
     advertencias: tuple[str, ...] = (AVISO_EXPLORACION,)
+    unidad_angular: str = "radianes"
 
 
 def validar_exploracion(entrada: EntradaExploracion) -> EntradaExploracion:
@@ -63,7 +66,8 @@ def validar_exploracion(entrada: EntradaExploracion) -> EntradaExploracion:
     paso = _numero_finito(entrada.paso)
     if minimo >= maximo or paso <= 0:
         raise ValueError("Usa x_min < x_max y un paso positivo.")
-    return EntradaExploracion(expresion.strip(), minimo, maximo, paso)
+    return EntradaExploracion(expresion.strip(), minimo, maximo, paso,
+                              unidad_angular=validar_unidad_angular(entrada.unidad_angular))
 
 
 def _numero_finito(valor: object) -> float:

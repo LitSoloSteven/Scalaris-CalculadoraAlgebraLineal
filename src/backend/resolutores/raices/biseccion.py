@@ -9,6 +9,7 @@ from .diagnostico_biseccion import completar_diagnostico, diagnostico_interior, 
 from .evaluador_funcion import compilar, evaluar
 from .parada_biseccion import completar_criterio, motivo_criterio
 from .traza_biseccion import construir_error, construir_resultado, crear_iteracion
+from .unidades_angulares import opciones_unidad
 
 
 def biseccion(entrada: EntradaBiseccion) -> ResultadoBiseccion:
@@ -25,7 +26,7 @@ def biseccion(entrada: EntradaBiseccion) -> ResultadoBiseccion:
 
 def _resolver_entrada(entrada: EntradaBiseccion) -> ResultadoBiseccion:
     try:
-        funcion = compilar(entrada.expresion)
+        funcion = compilar(entrada.expresion, **opciones_unidad(entrada.unidad_angular))
     except ValueError as error:
         return error_contextual(error, {"etapa": "sintaxis", "x_fallo": None, "intervalo_valido": None})
     intervalo = entrada.extremo_izquierdo, entrada.extremo_derecho
@@ -44,7 +45,7 @@ def _resolver_entrada(entrada: EntradaBiseccion) -> ResultadoBiseccion:
 
 def _resolver_intervalo(entrada: EntradaBiseccion, funcion: Callable[[float], float], extremos: tuple) -> ResultadoBiseccion:
     intervalo = extremos[:2]
-    diagnostico = diagnostico_interior(entrada.expresion, intervalo)
+    diagnostico = diagnostico_interior(entrada.expresion, intervalo, unidad_angular=entrada.unidad_angular)
     inicial = _validar_extremos(entrada, extremos)
     if inicial is not None and inicial.motivo_parada == "raiz_exacta":
         if diagnostico is not None:
