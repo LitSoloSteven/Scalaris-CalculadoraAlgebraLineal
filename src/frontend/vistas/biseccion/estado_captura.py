@@ -13,8 +13,7 @@ def hay_rangos_editados(vista) -> bool:
     """Indica si limpiar retiraría un rango o un paso distinto de los iniciales."""
     exploracion = vista.exploracion
     previa = vista.vista_previa
-    return (bool(exploracion.minimo.value or exploracion.maximo.value)
-            or exploracion.paso.value != PASO_EXPLORACION_DEFECTO
+    return (exploracion.paso.value != PASO_EXPLORACION_DEFECTO
             or (previa.minimo.value, previa.maximo.value) != tuple(map(str, RANGO_GRAFICA_DEFECTO)))
 
 
@@ -52,10 +51,10 @@ def restaurar_captura(vista, captura: dict) -> None:
 def vaciar_captura(vista) -> None:
     """Vacía el ejercicio y reinicia los rangos de esta captura."""
     with transaccion(vista):
-        for campo in (vista.expresion, vista.inferior, vista.superior,
-                      vista.exploracion.minimo, vista.exploracion.maximo):
+        for campo in (vista.expresion, vista.inferior, vista.superior):
             campo.set_value("")
         vista.exploracion.paso.set_value(PASO_EXPLORACION_DEFECTO)
-        for campo, valor in zip((vista.vista_previa.minimo, vista.vista_previa.maximo), RANGO_GRAFICA_DEFECTO):
-            campo.set_value(str(valor))
+        for panel in (vista.vista_previa, vista.exploracion):
+            for campo, valor in zip((panel.minimo, panel.maximo), RANGO_GRAFICA_DEFECTO):
+                campo.set_value(str(valor))
         vista._cero_preferido = None

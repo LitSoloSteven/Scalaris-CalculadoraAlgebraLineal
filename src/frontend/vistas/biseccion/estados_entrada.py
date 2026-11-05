@@ -31,3 +31,4 @@ def actualizar_intervalo(vista, *, validar: bool = False) -> None:
         except ValueError as error:
             texto = str(error)
     vista.estado_continuidad.set_text(texto)
+    vista.estado_continuidad.set_visibility(texto != "Continuidad no verificada." and completo)
