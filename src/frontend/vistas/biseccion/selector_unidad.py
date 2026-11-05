@@ -8,8 +8,7 @@ def construir_selector_unidad(vista) -> None:
     """Monta la unidad trigonométrica etiquetada y una guía sin conversiones en la vista."""
     vista.unidad_angular = ui.select({unidad: unidad.capitalize() for unidad in UNIDADES_ANGULARES},
                                     value=UNIDAD_ANGULAR_DEFECTO, label="Unidad trigonométrica").classes("w-full matriz-entrada")
-    ui.label("La unidad se aplica a sin, cos y tan, y a los resultados de asin, acos y atan. "
-             "Las funciones hiperbólicas y la constante pi conservan su valor.").classes("text-sm texto-secundario")
+    vista.unidad_angular.set_visibility(False)
 
 
 def restaurar_unidad(vista, captura: dict) -> None:
