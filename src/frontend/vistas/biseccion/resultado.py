@@ -16,7 +16,7 @@ def mostrar_resultado(vista, respuesta: dict) -> None:
         if "muestra" in respuesta:
             _mostrar_exploracion(vista, respuesta)
         if respuesta.get("iteraciones"):
-            _tabla(respuesta)
+            mostrar_tabla(respuesta)
 
 
 def _mostrar_exploracion(vista, respuesta: dict) -> None:
@@ -51,7 +51,8 @@ def _reproductor(vista, respuesta: dict) -> None:
     vista.reproductor_pasos.construir()
 
 
-def _tabla(respuesta: dict) -> None:
+def mostrar_tabla(respuesta: dict) -> None:
+    """Monta la traza de una sola respuesta con formato e inspección de valores internos."""
     with ui.column().classes("panel-tarjeta p-5 w-full min-w-0"):
         ui.label("Tabla de iteraciones").classes("text-xl font-bold")
         ui.label("Ancho: b−a. Cota: (b−a)/2 en x, si f es continua. Residuo: |f(c)|. Error relativo: |(cᵢ−cᵢ₋₁)/cᵢ|·100%; no aplica en la primera fila o si cᵢ=0.").classes("text-sm texto-secundario")
