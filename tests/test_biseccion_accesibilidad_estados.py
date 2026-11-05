@@ -86,6 +86,26 @@ def _comprobar_traza(tabla, registro, copia):
         assert valor in copia
 
 
+async def _comprobar_detalle_lote(panel, registro, textos):
+    boton = next(elemento for elemento in panel.contenedor_resultados.descendants()
+                 if isinstance(elemento, ui.button) and elemento.text.startswith(registro["identificador"] + " ·"))
+    _pulsar(boton)
+    elementos = list(panel.contenedor_resultados.descendants())
+    examen = next(elemento for elemento in elementos if isinstance(elemento, ui.checkbox))
+    tablas = [elemento for elemento in elementos if isinstance(elemento, ui.table)]
+    assert examen.text == "Modo examen del lote"
+    assert not examen.value and len(tablas) == 1
+    prefijos = {"polo": "Resultado:\npolo\nPosible discontinuidad", "raiz": "Solución:\nraiz\n"}
+    assert textos[-1].startswith(prefijos[registro["identificador"]])
+    assert "Modo examen" not in textos[-1]
+    examen.set_value(True)
+    await asyncio.sleep(0)
+    _comprobar_traza(tablas[0], registro, textos[-1])
+    examen.set_value(False)
+    await asyncio.sleep(0)
+    assert "accion_examen" not in tablas[0].rows[-1] and "Modo examen" not in textos[-1]
+
+
 def test_examen_del_lote_actualiza_tablas_y_copias_sin_cambiar_glosa(monkeypatch):
     """Comprueba la alternancia local y los textos de cada candidato."""
     textos = []
@@ -101,21 +121,6 @@ def test_examen_del_lote_actualiza_tablas_y_copias_sin_cambiar_glosa(monkeypatch
         panel = vista.resolucion_multiple
         panel._publicar(lote)
         for registro in lote["resultados"]:
-            boton = next(elemento for elemento in panel.contenedor_resultados.descendants()
-                         if isinstance(elemento, ui.button) and elemento.text.startswith(registro["identificador"] + " ·"))
-            _pulsar(boton)
-            elementos = list(panel.contenedor_resultados.descendants())
-            examen = next(elemento for elemento in elementos if isinstance(elemento, ui.checkbox))
-            tablas = [elemento for elemento in elementos if isinstance(elemento, ui.table)]
-            assert examen.text == "Modo examen del lote" and not examen.value and len(tablas) == 1
-            if registro["identificador"] == "polo":
-                assert textos[-1].startswith("Resultado:\npolo\nPosible discontinuidad")
-            assert "Modo examen" not in textos[-1]
-            examen.set_value(True)
-            await asyncio.sleep(0)
-            _comprobar_traza(tablas[0], registro, textos[-1])
-            examen.set_value(False)
-            await asyncio.sleep(0)
-            assert "accion_examen" not in tablas[0].rows[-1] and "Modo examen" not in textos[-1]
+            await _comprobar_detalle_lote(panel, registro, textos)
         assert vista.obtener_contexto_ia().resultado == contexto and not vista.modo_examen
     ejecutar_escenario(monkeypatch, comprobar)

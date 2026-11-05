@@ -27,6 +27,17 @@ def _estado_principal(vista):
             vista.capturar(), vista.obtener_contexto_ia().resultado, list(vista.historial))
 
 
+def _comprobar_tabla_lote(panel, registro, boton):
+    activar_accion(boton)
+    elementos = list(panel.contenedor_resultados.descendants())
+    tablas = [elemento for elemento in elementos if isinstance(elemento, ui.table)]
+    assert len(tablas) == 1 and tablas[0].rows == filas_tabla(registro["respuesta"])[:15]
+    precision = next(elemento for elemento in elementos if isinstance(elemento, ui.switch))
+    assert not precision.value
+    precision.set_value(True)
+    assert tablas[0].rows == filas_tabla(registro["respuesta"], True)[:15]
+
+
 def test_resolver_todos_y_uno_conserva_calculo_y_tablas_separadas(monkeypatch):
     """El lote no reemplaza resultado, contexto, historial, captura ni reproductor del cálculo principal."""
     async def comprobar(vista):
@@ -41,14 +52,7 @@ def test_resolver_todos_y_uno_conserva_calculo_y_tablas_separadas(monkeypatch):
                    if isinstance(elemento, ui.button) and elemento.text.startswith("candidato-")]
         assert len(botones) == 3
         for boton, registro in zip(botones, registros, strict=True):
-            activar_accion(boton)
-            elementos = list(panel.contenedor_resultados.descendants())
-            tablas = [elemento for elemento in elementos if isinstance(elemento, ui.table)]
-            assert len(tablas) == 1 and tablas[0].rows == filas_tabla(registro["respuesta"])[:15]
-            precision = next(elemento for elemento in elementos if isinstance(elemento, ui.switch))
-            assert not precision.value
-            precision.set_value(True)
-            assert tablas[0].rows == filas_tabla(registro["respuesta"], True)[:15]
+            _comprobar_tabla_lote(panel, registro, boton)
         vista.formato.set_value(8)
         vista.vista_previa.minimo.set_value("-2")
         assert panel.respuesta is None
