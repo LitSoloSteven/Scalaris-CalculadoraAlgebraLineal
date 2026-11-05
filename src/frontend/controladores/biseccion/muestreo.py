@@ -3,6 +3,7 @@ import math
 from statistics import median
 
 from src.backend.excepciones import ErrorDominio, ErrorNoFinito
+from src.backend.resolutores.raices.dominio_intervalo import comprobar_dominio_intervalo
 from src.backend.resolutores.raices.evaluador_funcion import compilar, evaluar
 from src.backend.resolutores.raices.unidades_angulares import opciones_unidad
 
@@ -17,8 +18,21 @@ def muestrear_funcion(entrada: dict) -> dict:
     abscisas = [inferior * (1 - indice / (MUESTRAS_GRAFICA - 1))
                 + superior * (indice / (MUESTRAS_GRAFICA - 1)) for indice in range(MUESTRAS_GRAFICA)]
     ordenadas = [_evaluar_grafica(funcion, abscisa) for abscisa in abscisas]
+    _interrumpir_restricciones(entrada, abscisas, ordenadas)
     _interrumpir_saltos(ordenadas)
     return {"x": abscisas, "y": ordenadas, "huecos": any(valor is None for valor in ordenadas)}
+
+
+def _interrumpir_restricciones(entrada: dict, abscisas: list, ordenadas: list) -> None:
+    unidad = entrada.get("unidad_angular", "radianes")
+    for indice in range(1, len(abscisas)):
+        if ordenadas[indice - 1] is None or ordenadas[indice] is None:
+            continue
+        try:
+            comprobar_dominio_intervalo(entrada["expresion"], (abscisas[indice - 1], abscisas[indice]),
+                                        unidad_angular=unidad)
+        except ValueError:
+            ordenadas[indice] = None
 
 
 def _interrumpir_saltos(ordenadas: list) -> None:
