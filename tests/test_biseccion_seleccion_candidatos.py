@@ -25,7 +25,8 @@ def test_seleccionar_candidato_invalida_sin_resolver(monkeypatch, indice):
         assert vista.ultimo_resultado is resultado
         assert vista.reproductor_pasos is reproductor
         assert len(acciones_exploracion(panel)) == 2
-        intervalo = panel.respuesta["candidatos"][indice]["intervalo"]
+        fuente = panel.respuesta
+        intervalo = fuente["candidatos"][indice]["intervalo"]
         activar_accion(acciones_exploracion(panel)[indice])
         assert (float(vista.inferior.value), float(vista.superior.value)) == intervalo
         assert intervalo[0] < intervalo[1]
@@ -34,7 +35,7 @@ def test_seleccionar_candidato_invalida_sin_resolver(monkeypatch, indice):
         assert vista.ultimo_resultado is None and vista.reproductor_pasos is None
         assert vista.obtener_contexto_ia().resultado is None
         assert len(vista.historial) == historial
-        assert panel.respuesta is None and not acciones_exploracion(panel)
+        assert panel.respuesta is fuente and vista.region_intervalo.visible and not vista.region_busqueda.visible
         await vista.resolver()
         assert vista.ultimo_resultado["aproximacion"] == (-1, 1)[indice]
     ejecutar_escenario(monkeypatch, comprobar)
