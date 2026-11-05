@@ -39,7 +39,7 @@
 }
 @media (max-width: 560px) {
   .biseccion-campos, .biseccion-metricas { grid-template-columns: minmax(0, 1fr); }
-  .biseccion-captura { padding: var(--space-4); }
+  .biseccion-captura, .biseccion-panel-exploracion { padding: var(--space-4); }
   .biseccion-vista .panel-tarjeta { max-width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) {

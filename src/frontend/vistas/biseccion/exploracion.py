@@ -32,9 +32,9 @@ class PanelExploracion:
             ui.label("Busca candidatos de la función capturada en un rango independiente. Los resultados del cálculo se conservan hasta cargar un intervalo.").classes(
                 "text-sm texto-secundario")
             with ui.element("div").classes("biseccion-campos"):
-                self.minimo = self._campo("Mínimo de exploración x_min")
-                self.maximo = self._campo("Máximo de exploración x_max")
-            self.paso = self._campo("Paso de exploración h", PASO_EXPLORACION_DEFECTO)
+                self.minimo = self._campo("Mínimo x")
+                self.maximo = self._campo("Máximo x")
+            self.paso = self._campo("Paso h", PASO_EXPLORACION_DEFECTO)
             with ui.row().classes("w-full gap-3"):
                 ui.button("Usar intervalo actual", color=None, on_click=self.usar_intervalo).classes("boton-discreto").props("ripple=false")
                 self.boton = ui.button("Explorar candidatos", color=None, on_click=self.explorar).classes("boton-discreto").props("ripple=false")
