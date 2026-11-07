@@ -195,6 +195,7 @@ def _ciclo(
         if motivo:
             return construir_resultado(entrada, motivo, iteraciones)
         estado.avanzar(fila)
+        contexto["intervalo_valido"] = estado.intervalo
     return construir_resultado(entrada, "limite_iteraciones", iteraciones)
 
 
