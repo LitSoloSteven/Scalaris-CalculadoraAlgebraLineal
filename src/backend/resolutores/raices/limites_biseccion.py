@@ -1,6 +1,14 @@
-"""Límites compartidos de captura y ejecución del método de bisección."""
+"""Reexportación compatible de los límites compartidos de raíces."""
+from .limites_raices import (
+    D_MAXIMO,
+    LIMITE_ITERACIONES_DEFECTO,
+    LIMITE_ITERACIONES_MAXIMO,
+    LONGITUD_MAXIMA_EXPRESION,
+)
 
-D_MAXIMO = 15
-LIMITE_ITERACIONES_DEFECTO = 100
-LIMITE_ITERACIONES_MAXIMO = 500
-LONGITUD_MAXIMA_EXPRESION = 512
+__all__ = [
+    "D_MAXIMO",
+    "LIMITE_ITERACIONES_DEFECTO",
+    "LIMITE_ITERACIONES_MAXIMO",
+    "LONGITUD_MAXIMA_EXPRESION",
+]
