@@ -76,11 +76,14 @@ def regla_falsa(entrada: EntradaReglaFalsa) -> ResultadoReglaFalsa:
 
 
 def _resultado_raiz_extremo(entrada, preparado) -> ResultadoReglaFalsa:
-    extremo = preparado.intervalo[0]
-    for evaluacion in preparado.evaluaciones:
-        if evaluacion["valor"] == 0:
-            extremo = evaluacion["abscisa"]
-            break
+    ceros = [evaluacion for evaluacion in preparado.evaluaciones if evaluacion["valor"] == 0]
+    extremo = ceros[0]["abscisa"] if ceros else preparado.intervalo[0]
+    extras = []
+    if len(ceros) == 2:
+        extras.append("Ambos extremos se evaluan como cero; no se infiere unicidad de la raiz.")
+    if preparado.restriccion is not None:
+        extras.append(preparado.restriccion["mensaje"])
+    advertencias = tuple(dict.fromkeys(entrada.advertencias + tuple(extras)))
     return ResultadoReglaFalsa(
         entrada=entrada,
         estado="EXITO",
@@ -92,12 +95,15 @@ def _resultado_raiz_extremo(entrada, preparado) -> ResultadoReglaFalsa:
         iteraciones_totales=0,
         motivo_parada="raiz_en_extremo",
         codigo_diagnostico="RAIZ_EN_EXTREMO",
-        advertencias=entrada.advertencias,
+        advertencias=advertencias,
         informe_continuidad=preparado.informe,
     )
 
 
 def _resultado_restriccion(entrada, preparado) -> ResultadoReglaFalsa:
+    advertencias = tuple(dict.fromkeys(
+        entrada.advertencias + (preparado.restriccion["mensaje"],)
+    ))
     return ResultadoReglaFalsa(
         entrada=entrada,
         estado="ERROR",
@@ -109,11 +115,10 @@ def _resultado_restriccion(entrada, preparado) -> ResultadoReglaFalsa:
         intervalo_final=preparado.intervalo,
         iteraciones=(),
         iteraciones_totales=0,
-        advertencias=entrada.advertencias,
+        advertencias=advertencias,
         contexto_fallo={"etapa": "estructura", "x_fallo": None, "intervalo_valido": preparado.intervalo},
         informe_continuidad=preparado.informe,
     )
-
 
 def _iterar(entrada, preparado) -> ResultadoReglaFalsa:
     estado = _abrir_iteracion(preparado)

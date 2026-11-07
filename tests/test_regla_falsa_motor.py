@@ -171,3 +171,31 @@ def test_estancamiento_conserva_intervalo_y_accion():
     assert ultima.accion == "sin_cambio"
     assert ultima.intervalo_siguiente == resultado.intervalo_final
     assert math.isfinite(ultima.residuo)
+    
+def test_ambos_extremos_cero_advierte_y_elige_a():
+    """x*(x-1) en [0,1]: ambos extremos cero; aproximacion a=0 y aviso de no unicidad."""
+    resultado = regla_falsa(_entrada("x*(x-1)", 0, 1))
+    assert resultado.estado == "EXITO"
+    assert resultado.motivo_parada == "raiz_en_extremo"
+    assert resultado.aproximacion == 0.0
+    assert any("ambos extremos" in aviso.lower() for aviso in resultado.advertencias)
+
+
+def test_cero_extremo_con_restriccion_advierte():
+    """(x-1)/(x-2) en [1,3]: raiz en extremo con restriccion interior; advertencia presente."""
+    resultado = regla_falsa(_entrada("(x-1)/(x-2)", 1, 3))
+    assert resultado.estado == "EXITO"
+    assert resultado.motivo_parada == "raiz_en_extremo"
+    assert resultado.aproximacion == 1.0
+    assert any("anula" in aviso.lower() or "cero" in aviso.lower()
+               for aviso in resultado.advertencias)
+
+
+def test_intervalo_invertido_no_duplica_advertencia_en_raiz_extremo():
+    """x-1 en [1,0]: se normaliza a [0,1], hay cero en el extremo 1 y una sola advertencia."""
+    resultado = regla_falsa(_entrada("x-1", 1, 0))
+    assert resultado.estado == "EXITO"
+    assert resultado.motivo_parada == "raiz_en_extremo"
+    assert resultado.aproximacion == 1.0
+    assert len(resultado.advertencias) == 1
+    assert "intercambiaron" in resultado.advertencias[0].lower()
