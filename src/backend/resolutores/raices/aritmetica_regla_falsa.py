@@ -1,48 +1,38 @@
 """Aritmetica acotada del peso escalado y la aproximacion de regla falsa."""
 import math
 
-from .aritmetica_biseccion import ancho_intervalo, error_relativo_numerico
+from .aritmetica_biseccion import ancho_intervalo, error_relativo_numerico  # noqa: F401  reexport para traza_regla_falsa
 from .errores_numericos import ErrorCapacidadNumerica
 
 
 def peso_escalado(valor_inferior: float, valor_superior: float) -> float:
-    """Devuelve f(a) / (f(a) - f(b)); rechaza denominador nulo o resultado no finito."""
+    """Devuelve t normalizado; lanza ErrorCapacidadNumerica si los valores son iguales o no finitos."""
     if valor_inferior == valor_superior:
         raise ErrorCapacidadNumerica(
             "El denominador de la secante es nulo; no es posible aproximar.",
-            "ANCHO_NO_REPRESENTABLE",
+            "INTERPOLACION_NO_REPRESENTABLE",
         )
-    try:
-        peso = valor_inferior / (valor_inferior - valor_superior)
-    except ZeroDivisionError as error:
+    escala = max(abs(valor_inferior), abs(valor_superior))
+    if not math.isfinite(escala):
         raise ErrorCapacidadNumerica(
-            "El denominador de la secante es nulo; no es posible aproximar.",
-            "ANCHO_NO_REPRESENTABLE",
-        ) from error
-    if not math.isfinite(peso):
-        raise ErrorCapacidadNumerica(
-            "El peso de la secante excede la capacidad numerica.",
-            "ANCHO_NO_REPRESENTABLE",
+            "No es posible interpolar con estos valores.",
+            "INTERPOLACION_NO_REPRESENTABLE",
         )
-    return peso
+    relativo_inferior = abs(valor_inferior) / escala
+    relativo_superior = abs(valor_superior) / escala
+    return relativo_inferior / (relativo_inferior + relativo_superior)
 
 
 def punto_cruce(
     inferior: float, superior: float, valor_inferior: float, valor_superior: float
 ) -> float:
-    """Devuelve c = a + w*(b-a) sin desbordar la suma."""
-    ancho = ancho_intervalo(inferior, superior)
+    """Devuelve c acotado a [a, b]; lanza ErrorCapacidadNumerica si el ancho no es representable."""
+    ancho_intervalo(inferior, superior)
     peso = peso_escalado(valor_inferior, valor_superior)
-    contribucion = ancho * peso
-    if not math.isfinite(contribucion):
-        raise ErrorCapacidadNumerica(
-            "La aproximacion de la secante excede la capacidad numerica.",
-            "ANCHO_NO_REPRESENTABLE",
-        )
-    cruce = inferior + contribucion
+    cruce = (1.0 - peso) * inferior + peso * superior
     if not math.isfinite(cruce):
         raise ErrorCapacidadNumerica(
             "La aproximacion de la secante excede la capacidad numerica.",
             "ANCHO_NO_REPRESENTABLE",
         )
-    return cruce
+    return min(max(cruce, inferior), superior)
