@@ -1,5 +1,6 @@
 """Validacion especifica del contrato de regla falsa sobre entrada cruda."""
 import math
+from collections.abc import Mapping
 
 from .contrato_regla_falsa import EntradaReglaFalsa
 from .limites_raices import LIMITE_ITERACIONES_MAXIMO
@@ -11,9 +12,9 @@ from .validacion_raices import (
 )
 
 
-def validar_entrada_regla_falsa(datos: dict) -> EntradaReglaFalsa:
+def validar_entrada_regla_falsa(datos: Mapping[str, object]) -> EntradaReglaFalsa:
     """Valida y devuelve la entrada canonica; lanza ValueError granular."""
-    if not isinstance(datos, dict):
+    if not isinstance(datos, Mapping):
         raise ValueError("La entrada debe ser un diccionario con la expresion, el intervalo y la tolerancia.")
     expresion = validar_expresion(datos.get("expresion"))
     extremo_izquierdo = validar_extremo(datos.get("extremo_izquierdo"), "extremo_izquierdo")
@@ -26,14 +27,17 @@ def validar_entrada_regla_falsa(datos: dict) -> EntradaReglaFalsa:
     if extremo_izquierdo > extremo_derecho:
         extremo_izquierdo, extremo_derecho = extremo_derecho, extremo_izquierdo
         intercambio = True
+    tolerancia = _validar_tolerancia(datos["tolerancia"]) if "tolerancia" in datos else 1e-6
+    limite = _validar_limite_regla_falsa(datos["limite_iteraciones"]) if "limite_iteraciones" in datos else 100
+    unidad = validar_unidad_angular(datos["unidad_angular"]) if "unidad_angular" in datos else "radianes"
     return EntradaReglaFalsa(
         expresion=expresion,
         extremo_izquierdo=extremo_izquierdo,
         extremo_derecho=extremo_derecho,
-        tolerancia=_validar_tolerancia(datos.get("tolerancia")),
-        limite_iteraciones=_validar_limite_regla_falsa(datos.get("limite_iteraciones")),
+        tolerancia=tolerancia,
+        limite_iteraciones=limite,
+        unidad_angular=unidad,
         intervalo_invertido=intercambio,
-        unidad_angular=validar_unidad_angular(datos.get("unidad_angular", "radianes")),
     )
 
 
@@ -58,6 +62,6 @@ def _validar_tolerancia(valor) -> float:
 def _validar_limite_regla_falsa(valor) -> int:
     if valor is None:
         raise ValueError(
-            f"El límite de iteraciones es obligatorio y debe ser un entero entre 1 y {LIMITE_ITERACIONES_MAXIMO}."
+            f"El limite de iteraciones es obligatorio y debe ser un entero entre 1 y {LIMITE_ITERACIONES_MAXIMO}."
         )
     return validar_limite_iteraciones(valor)

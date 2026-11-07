@@ -1,39 +1,27 @@
 """Contrato de entrada y salida del motor de regla falsa."""
 from dataclasses import dataclass, field
-from typing import TypedDict
+from typing import Literal
 
-from .contrato_biseccion import (
-    AVISO_INTERVALO_INVERTIDO,
-    ContextoFallo,
-    DiagnosticoBiseccion,
-)
+from .contrato_biseccion import AVISO_INTERVALO_INVERTIDO, ContextoFallo
 from .contrato_continuidad import InformeContinuidad
-from .decision_biseccion import AccionBiseccion, SignoProducto
+from .decision_biseccion import SignoProducto
 from .limites_raices import LIMITE_ITERACIONES_DEFECTO
 
-AccionReglaFalsa = AccionBiseccion
-DiagnosticoReglaFalsa = DiagnosticoBiseccion
+AccionReglaFalsa = Literal["reemplazar_a", "reemplazar_b", "raiz", "sin_cambio"]
+DiagnosticoReglaFalsa = dict
 
 
-class MetricasReglaFalsa(TypedDict, total=False):
-    """Magnitudes y condicion de continuidad publicadas por el motor de regla falsa."""
-
-    iteraciones_totales: int
-    residuo_final: float
-    continuidad: str
-
-
-@dataclass(frozen=True)
+@dataclass(frozen=True, kw_only=True)
 class EntradaReglaFalsa:
     """Expresion, intervalo y tolerancia de residuo validados para falsa posicion."""
 
     expresion: str
     extremo_izquierdo: float
     extremo_derecho: float
-    tolerancia: float
+    tolerancia: float = 1e-6
     limite_iteraciones: int = LIMITE_ITERACIONES_DEFECTO
-    intervalo_invertido: bool = field(default=False, kw_only=True)
-    unidad_angular: str = field(default="radianes", kw_only=True)
+    unidad_angular: Literal["radianes", "grados"] = "radianes"
+    intervalo_invertido: bool = False
 
     @property
     def advertencias(self) -> tuple[str, ...]:
@@ -48,35 +36,35 @@ class IteracionReglaFalsa:
     i: int
     extremo_izquierdo: float
     extremo_derecho: float
-    c: float
-    f_a: float
-    f_b: float
-    f_c: float
-    ancho: float
+    valor_izquierdo: float
+    valor_derecho: float
+    aproximacion: float
+    valor_aproximacion: float
     residuo: float
-    error_relativo: str
-    error_relativo_valor: float | None = None
-    signo_producto: SignoProducto | None = None
-    accion: AccionReglaFalsa | None = None
+    ancho: float
+    peso_secante: float
+    error_relativo_porcentual: float | None
+    signo_producto: SignoProducto
+    accion: AccionReglaFalsa
+    intervalo_siguiente: tuple[float, float]
     motivo_parada: str = ""
-    explicacion: str = ""
 
 
 @dataclass(frozen=True)
 class ResultadoReglaFalsa:
     """Resultado completo del metodo con estado, intervalo final y metricas."""
 
-    estado: str
-    mensaje: str
-    aproximacion: float | None = None
-    intervalo_final: tuple[float, float] | None = None
-    tolerancia: float | None = None
-    iteraciones: tuple[IteracionReglaFalsa, ...] = ()
-    motivo_parada: str = ""
-    metricas: MetricasReglaFalsa = field(default_factory=dict)
+    metodo: Literal["regla_falsa"] = field(default="regla_falsa", init=False)
+    entrada: EntradaReglaFalsa | None = None
+    estado: Literal["EXITO", "SIN_CAMBIO_DE_SIGNO", "ESTANCAMIENTO", "LIMITE_ITERACIONES", "ERROR"] = "ERROR"
+    mensaje: str = ""
     codigo_diagnostico: str = ""
+    motivo_parada: str = ""
+    aproximacion: float | None = None
+    residuo: float | None = None
+    intervalo_final: tuple[float, float] | None = None
+    iteraciones: tuple[IteracionReglaFalsa, ...] = ()
+    iteraciones_totales: int = 0
     advertencias: tuple[str, ...] = ()
-    diagnostico: DiagnosticoReglaFalsa | None = None
-    contexto_fallo: ContextoFallo | None = None
-    unidad_angular: str = "radianes"
     informe_continuidad: InformeContinuidad | None = None
+    contexto_fallo: ContextoFallo | None = None
