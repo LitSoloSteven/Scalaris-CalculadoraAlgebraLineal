@@ -6,7 +6,6 @@ import pytest
 from src.backend.resolutores.raices.contrato_regla_falsa import (
     EntradaReglaFalsa,
     IteracionReglaFalsa,
-    MetricasReglaFalsa,
     ResultadoReglaFalsa,
 )
 from src.backend.resolutores.raices.limites_raices import (
@@ -30,7 +29,12 @@ def _datos(expresion="x**2-2", a=1, b=2, tol=1e-6, limite=100):
 
 def test_entrada_regla_falsa_admite_valores_validos():
     """Campos canonicos con tipos correctos."""
-    entrada = EntradaReglaFalsa("x-1", 0.0, 2.0, 1e-4)
+    entrada = EntradaReglaFalsa(
+        expresion="x-1",
+        extremo_izquierdo=0.0,
+        extremo_derecho=2.0,
+        tolerancia=1e-4,
+    )
     assert entrada.tolerancia == 1e-4
     assert entrada.limite_iteraciones == LIMITE_ITERACIONES_DEFECTO
     assert entrada.intervalo_invertido is False
@@ -38,34 +42,68 @@ def test_entrada_regla_falsa_admite_valores_validos():
     assert entrada.advertencias == ()
 
 
+def test_entrada_regla_falsa_defaults():
+    """Tolerancia y limite tienen defaults."""
+    entrada = EntradaReglaFalsa(
+        expresion="x-1",
+        extremo_izquierdo=0.0,
+        extremo_derecho=2.0,
+    )
+    assert entrada.tolerancia == 1e-6
+    assert entrada.limite_iteraciones == LIMITE_ITERACIONES_DEFECTO
+
+
 def test_entrada_regla_falsa_aviso_de_intervalo_invertido():
     """Solo aparece el aviso si la entrada lo declara."""
-    entrada = EntradaReglaFalsa("x-1", 0.0, 2.0, 1e-4, intervalo_invertido=True)
+    entrada = EntradaReglaFalsa(
+        expresion="x-1",
+        extremo_izquierdo=0.0,
+        extremo_derecho=2.0,
+        tolerancia=1e-4,
+        intervalo_invertido=True,
+    )
     assert len(entrada.advertencias) == 1
 
 
 def test_iteracion_regla_falsa_defaults():
     """Los campos opcionales se mantienen en None o vacio."""
-    fila = IteracionReglaFalsa(1, 0.0, 1.0, 0.5, -1.0, 1.0, 0.0, 1.0, 0.0, "No aplica")
-    assert fila.error_relativo_valor is None
-    assert fila.signo_producto is None
-    assert fila.accion is None
+    fila = IteracionReglaFalsa(
+        i=1,
+        extremo_izquierdo=0.0,
+        extremo_derecho=1.0,
+        valor_izquierdo=-1.0,
+        valor_derecho=1.0,
+        aproximacion=0.5,
+        valor_aproximacion=0.0,
+        residuo=0.0,
+        ancho=1.0,
+        peso_secante=0.5,
+        error_relativo_porcentual=None,
+        signo_producto=-1,
+        accion="reemplazar_b",
+        intervalo_siguiente=(0.0, 0.5),
+    )
+    assert fila.error_relativo_porcentual is None
     assert fila.motivo_parada == ""
 
 
 def test_resultado_regla_falsa_defaults():
     """Resultado sin iteraciones y con estado minimo."""
-    resultado = ResultadoReglaFalsa("EXITO", "ok")
-    assert resultado.aproximacion is None
+    resultado = ResultadoReglaFalsa(
+        entrada=None,
+        estado="EXITO",
+        mensaje="ok",
+        codigo_diagnostico="RAIZ_EN_EXTREMO",
+        motivo_parada="raiz_en_extremo",
+        aproximacion=1.0,
+        residuo=0.0,
+        intervalo_final=(1.0, 1.0),
+        iteraciones=(),
+        iteraciones_totales=0,
+    )
+    assert resultado.metodo == "regla_falsa"
     assert resultado.iteraciones == ()
-    assert resultado.metricas == {}
-    assert resultado.informe_continuidad is None
-
-
-def test_metricas_regla_falsa_acepta_claves_parciales():
-    """TypedDict total=False admite subconjuntos."""
-    metricas: MetricasReglaFalsa = {"iteraciones_totales": 3}
-    assert metricas["iteraciones_totales"] == 3
+    assert resultado.advertencias == ()
 
 
 def test_validar_entrada_regla_falsa_acepta_captura_canonica():
@@ -101,7 +139,7 @@ def test_validar_entrada_regla_falsa_rechaza_tolerancia_invalida(tol):
 
 def test_validar_entrada_regla_falsa_exige_limite_no_nulo():
     """A diferencia de biseccion, regla falsa no admite None como ausencia."""
-    with pytest.raises(ValueError, match="límite"):
+    with pytest.raises(ValueError, match="limite"):
         validar_entrada_regla_falsa(_datos(limite=None))
 
 

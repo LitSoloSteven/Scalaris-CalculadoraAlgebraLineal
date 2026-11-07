@@ -11,12 +11,11 @@ from .decision_biseccion import signo_producto
 from .evaluador_funcion import evaluar
 from .preparacion_regla_falsa import preparar_intervalo_regla_falsa
 from .traza_regla_falsa import (
-    _CIERRES,
     construir_error,
     construir_resultado,
     crear_iteracion,
+    crear_iteracion_estancamiento,
 )
-from .traza_comun_raices import registrar_accion
 from .validacion_regla_falsa import validar_entrada_regla_falsa
 
 
@@ -49,9 +48,9 @@ class _EstadoIteracion:
     def avanzar(self, fila: IteracionReglaFalsa) -> None:
         """Reemplaza el extremo indicado por el signo del producto."""
         if fila.signo_producto == -1:
-            self.superior, self.valor_superior = fila.c, fila.f_c
+            self.superior, self.valor_superior = fila.aproximacion, fila.valor_aproximacion
         else:
-            self.inferior, self.valor_inferior = fila.c, fila.f_c
+            self.inferior, self.valor_inferior = fila.aproximacion, fila.valor_aproximacion
 
 
 def regla_falsa(entrada: EntradaReglaFalsa) -> ResultadoReglaFalsa:
@@ -61,15 +60,15 @@ def regla_falsa(entrada: EntradaReglaFalsa) -> ResultadoReglaFalsa:
             raise ValueError("La entrada debe cumplir el contrato de regla falsa.")
         entrada = validar_entrada_regla_falsa(asdict(entrada))
     except ValueError as error:
-        return construir_error(error, codigo="ENTRADA_INVALIDA")
+        return construir_error(error, codigo="ENTRADA_INVALIDA", motivo="entrada_invalida")
     preparado = preparar_intervalo_regla_falsa(entrada)
     if preparado.fallo is not None:
-        return _con_advertencias(entrada, _completar_informe(preparado.fallo, preparado.informe))
+        return preparado.fallo
     if preparado.admite_cero:
-        return _con_advertencias(entrada, _resultado_raiz_extremo(entrada, preparado))
+        return _resultado_raiz_extremo(entrada, preparado)
     if preparado.restriccion is not None:
-        return _con_advertencias(entrada, _resultado_restriccion(preparado))
-    return _con_advertencias(entrada, _iterar(entrada, preparado))
+        return _resultado_restriccion(entrada, preparado)
+    return _iterar(entrada, preparado)
 
 
 def _resultado_raiz_extremo(entrada, preparado) -> ResultadoReglaFalsa:
@@ -78,38 +77,46 @@ def _resultado_raiz_extremo(entrada, preparado) -> ResultadoReglaFalsa:
         if evaluacion["valor"] == 0:
             extremo = evaluacion["abscisa"]
             break
-    return _completar_informe(ResultadoReglaFalsa(
+    return ResultadoReglaFalsa(
+        entrada=entrada,
         estado="EXITO",
-        mensaje="La funcion se evaluo como cero en un extremo; esto no certifica exactitud simbolica.",
+        mensaje="La funcion se evaluo como cero en un extremo; no se infiere unicidad.",
         aproximacion=extremo,
-        intervalo_final=preparado.intervalo,
-        tolerancia=entrada.tolerancia,
+        residuo=0.0,
+        intervalo_final=(extremo, extremo),
+        iteraciones=(),
+        iteraciones_totales=0,
         motivo_parada="raiz_en_extremo",
-        codigo_diagnostico="CERO_EVALUADO",
-        metricas={"iteraciones_totales": 0, "residuo_final": 0.0},
-        unidad_angular=entrada.unidad_angular,
-    ), preparado.informe)
+        codigo_diagnostico="RAIZ_EN_EXTREMO",
+        advertencias=entrada.advertencias,
+        informe_continuidad=preparado.informe,
+    )
 
 
-def _resultado_restriccion(preparado) -> ResultadoReglaFalsa:
-    return _completar_informe(ResultadoReglaFalsa(
+def _resultado_restriccion(entrada, preparado) -> ResultadoReglaFalsa:
+    return ResultadoReglaFalsa(
+        entrada=entrada,
         estado="ERROR",
         mensaje=preparado.restriccion["mensaje"],
         codigo_diagnostico=preparado.restriccion["codigo"],
         motivo_parada="evaluacion_invalida",
+        aproximacion=None,
+        residuo=None,
         intervalo_final=preparado.intervalo,
-        metricas={"iteraciones_totales": 0},
-        diagnostico=preparado.restriccion,
+        iteraciones=(),
+        iteraciones_totales=0,
+        advertencias=entrada.advertencias,
         contexto_fallo={"etapa": "estructura", "x_fallo": None, "intervalo_valido": preparado.intervalo},
-    ), preparado.informe)
-
+        informe_continuidad=preparado.informe,
+    )
 
 def _iterar(entrada, preparado) -> ResultadoReglaFalsa:
     estado = _abrir_iteracion(preparado)
     if estado is None:
-        return _completar_informe(_sin_cambio_signo(entrada), preparado.informe)
+        return _sin_cambio_signo(entrada, preparado.informe)
     iteraciones: list[IteracionReglaFalsa] = []
-    return _completar_informe(_ciclo(entrada, preparado, estado, iteraciones), preparado.informe)
+    resultado = _ciclo(entrada, preparado, estado, iteraciones)
+    return replace(resultado, informe_continuidad=preparado.informe)
 
 
 def _abrir_iteracion(preparado) -> _EstadoIteracion | None:
@@ -121,14 +128,20 @@ def _abrir_iteracion(preparado) -> _EstadoIteracion | None:
     return _EstadoIteracion(inferior, superior, valor_inferior, valor_superior)
 
 
-def _sin_cambio_signo(entrada: EntradaReglaFalsa) -> ResultadoReglaFalsa:
+def _sin_cambio_signo(entrada: EntradaReglaFalsa, informe) -> ResultadoReglaFalsa:
     return ResultadoReglaFalsa(
+        entrada=entrada,
         estado="SIN_CAMBIO_DE_SIGNO",
         mensaje="Los valores f(a) y f(b) tienen el mismo signo. Elige otro intervalo.",
         codigo_diagnostico="SIN_CAMBIO_DE_SIGNO",
-        motivo_parada="sin_cambio_signo",
-        tolerancia=entrada.tolerancia,
-        unidad_angular=entrada.unidad_angular,
+        motivo_parada="sin_cambio_de_signo",
+        aproximacion=None,
+        residuo=None,
+        intervalo_final=None,
+        iteraciones=(),
+        iteraciones_totales=0,
+        advertencias=entrada.advertencias,
+        informe_continuidad=informe,
     )
 
 
@@ -159,27 +172,27 @@ def _ciclo(entrada, preparado, estado: _EstadoIteracion, iteraciones) -> Resulta
             muestra = _MuestraCruce(cruce, valor_cruce)
             fila = crear_iteracion(indice, estado.extremos(), (cruce, valor_cruce), previo)
             motivo = _motivo_parada(entrada, fila)
-            cierre = registrar_accion(fila, motivo, _CIERRES)
-            iteraciones.append(cierre)
             if motivo:
-                return construir_resultado(entrada, estado.intervalo, iteraciones, motivo, (cruce, valor_cruce))
-            estado.avanzar(cierre)
+                fila = replace(fila, motivo_parada=motivo)
+                iteraciones.append(fila)
+                return construir_resultado(entrada, motivo, iteraciones)
+            iteraciones.append(fila)
+            estado.avanzar(fila)
             previo = cruce
-        return construir_resultado(entrada, estado.intervalo, iteraciones, "limite_iteraciones", (muestra.c, muestra.valor_c))
+        return construir_resultado(entrada, "limite_iteraciones", iteraciones)
     except ValueError as error:
         return _error_contextual(error, contexto, iteraciones)
 
 
 def _cerrar_estancamiento(entrada, estado, iteraciones, indice, muestra) -> ResultadoReglaFalsa:
-    fila = crear_iteracion(indice, estado.extremos(), (muestra.c, muestra.valor_c), None)
-    cierre = registrar_accion(fila, "estancamiento", _CIERRES)
-    iteraciones.append(cierre)
-    return construir_resultado(entrada, estado.intervalo, iteraciones, "estancamiento", (muestra.c, muestra.valor_c))
+    fila = crear_iteracion_estancamiento(indice, estado.extremos(), (muestra.c, muestra.valor_c), estado.intervalo)
+    iteraciones.append(fila)
+    return construir_resultado(entrada, "estancamiento_numerico", iteraciones)
 
 
 def _motivo_parada(entrada: EntradaReglaFalsa, fila: IteracionReglaFalsa) -> str:
-    if fila.f_c == 0:
-        return "secante_exacta"
+    if fila.valor_aproximacion == 0:
+        return "raiz_en_aproximacion"
     if fila.residuo < entrada.tolerancia:
         return "tolerancia_residuo"
     if fila.i == entrada.limite_iteraciones:
@@ -187,31 +200,10 @@ def _motivo_parada(entrada: EntradaReglaFalsa, fila: IteracionReglaFalsa) -> str
     return ""
 
 
-def _completar_informe(resultado: ResultadoReglaFalsa, informe) -> ResultadoReglaFalsa:
-    if informe is None:
-        return resultado
-    return replace(resultado, informe_continuidad=informe)
-
-
-def _con_advertencias(entrada: EntradaReglaFalsa, resultado: ResultadoReglaFalsa) -> ResultadoReglaFalsa:
-    if not entrada.advertencias:
-        return resultado
-    return replace(
-        resultado,
-        advertencias=tuple(dict.fromkeys(entrada.advertencias + resultado.advertencias)),
-    )
-
-
 def _error_contextual(error: ValueError, contexto: dict, iteraciones) -> ResultadoReglaFalsa:
     resultado = construir_error(error, iteraciones)
-    diagnostico = {
-        "codigo": resultado.codigo_diagnostico,
-        "origen": contexto["etapa"],
-        "mensaje": resultado.mensaje,
-    }
     return replace(
         resultado,
-        diagnostico=diagnostico,
         contexto_fallo=contexto,
         intervalo_final=contexto.get("intervalo_valido"),
     )

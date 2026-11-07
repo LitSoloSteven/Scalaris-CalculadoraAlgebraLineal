@@ -8,7 +8,13 @@ from src.backend.resolutores.raices.preparacion_regla_falsa import (
 
 
 def _entrada(expresion="x**2-2", a=1.0, b=2.0, unidad="radianes"):
-    return EntradaReglaFalsa(expresion, a, b, 1e-6, unidad_angular=unidad)
+    return EntradaReglaFalsa(
+        expresion=expresion,
+        extremo_izquierdo=a,
+        extremo_derecho=b,
+        tolerancia=1e-6,
+        unidad_angular=unidad,
+    )
 
 
 def test_preparado_valido_pol_confirmado_por_cobertura():
@@ -84,7 +90,12 @@ def test_preparado_expresion_no_polinomica_advierte():
 
 def test_preparado_revalida_entrada_construida_directamente():
     """Una EntradaReglaFalsa con tolerancia invalida se rechaza antes de compilar."""
-    entrada = EntradaReglaFalsa("x-1", 0.0, 2.0, 0.0)
+    entrada = EntradaReglaFalsa(
+    expresion="x-1",
+    extremo_izquierdo=0.0,
+    extremo_derecho=2.0,
+    tolerancia=0.0,
+    )
     with pytest.raises(ValueError, match="tolerancia"):
         preparar_intervalo_regla_falsa(entrada)
 

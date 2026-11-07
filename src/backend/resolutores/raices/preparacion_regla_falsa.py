@@ -17,7 +17,7 @@ from .dominio_intervalo import comprobar_dominio_arbol
 from .evaluador_funcion import compilar
 from .gramatica_funcion import analizar_expresion
 from .informe_continuidad import crear_informe, observacion
-from .traza_biseccion import construir_error
+from .traza_regla_falsa import construir_error
 from .unidades_angulares import opciones_unidad
 from .validacion_regla_falsa import validar_entrada_regla_falsa
 
@@ -38,8 +38,7 @@ class IntervaloReglaFalsaPreparado:
 
 
 def preparar_intervalo_regla_falsa(entrada: EntradaReglaFalsa) -> IntervaloReglaFalsaPreparado:
-    """Compila una vez, evalua extremos y calcula continuidad; revalida la entrada.
-    Un fallo de sintaxis produce un preparado con `fallo`; el motor no debe iterar entonces."""
+    """Compila una vez, evalua extremos y calcula continuidad; revalida la entrada."""
     if not isinstance(entrada, EntradaReglaFalsa):
         raise ValueError("La entrada debe cumplir el contrato de regla falsa.")
     canonica = validar_entrada_regla_falsa(_datos_entrada(entrada))
@@ -70,7 +69,7 @@ def _construir_preparado(
         )
     evidencia = _evidencia_inicial(arbol, intervalo, evaluaciones, fallo_extremos, restriccion)
     informe = crear_informe(intervalo, entrada.unidad_angular, evidencia, admite_cero)
-    fallo = _error_extremos_regla_falsa(evaluaciones) if fallo_extremos else None
+    fallo = _error_extremos_regla_falsa(entrada, evaluaciones) if fallo_extremos else None
     return IntervaloReglaFalsaPreparado(
         entrada=entrada, funcion=funcion, arbol=arbol, intervalo=intervalo,
         evaluaciones=evaluaciones, fallo=fallo, restriccion=restriccion,
@@ -96,7 +95,7 @@ def _diagnosticar_arbol(
     try:
         comprobar_dominio_arbol(arbol, intervalo, unidad)
     except ValueError as error:
-        base = construir_error(error)
+        base = construir_error(error, ())
         return {"codigo": base.codigo_diagnostico, "origen": "estructura", "mensaje": base.mensaje}
     return None
 
@@ -156,20 +155,24 @@ def _funcion_nula(_valor: float) -> float:
 
 
 def _error_extremos_regla_falsa(
-    evaluaciones: tuple[EvaluacionExtremo, ...]
+    entrada: EntradaReglaFalsa, evaluaciones: tuple[EvaluacionExtremo, ...]
 ) -> ResultadoReglaFalsa | None:
     fallos = [evaluacion for evaluacion in evaluaciones if evaluacion["codigo"]]
     if not fallos:
         return None
     primero = fallos[0]
     return ResultadoReglaFalsa(
+        entrada=entrada,
         estado="ERROR",
         mensaje=primero["mensaje"],
         codigo_diagnostico=primero["codigo"],
         motivo_parada="evaluacion_invalida",
-        metricas={"iteraciones_totales": 0},
-        diagnostico={"codigo": primero["codigo"], "origen": "extremos",
-                     "mensaje": primero["mensaje"]},
+        aproximacion=None,
+        residuo=None,
+        intervalo_final=None,
+        iteraciones=(),
+        iteraciones_totales=0,
+        advertencias=entrada.advertencias,
         contexto_fallo={"etapa": "extremos", "x_fallo": primero["abscisa"],
                         "intervalo_valido": None, "extremos": evaluaciones},
     )
@@ -179,15 +182,17 @@ def _error_contextual_regla_falsa(
     error: ValueError, contexto: dict,
     iteraciones: tuple[IteracionReglaFalsa, ...] = (),
 ) -> ResultadoReglaFalsa:
-    base = construir_error(error, ())
-    diagnostico = {
-        "codigo": base.codigo_diagnostico,
-        "origen": contexto["etapa"],
-        "mensaje": base.mensaje,
-    }
+    base = construir_error(error, iteraciones)
     return ResultadoReglaFalsa(
-        estado=base.estado, mensaje=base.mensaje, iteraciones=iteraciones,
-        motivo_parada=base.motivo_parada, codigo_diagnostico=base.codigo_diagnostico,
-        metricas=dict(base.metricas), diagnostico=diagnostico,
-        contexto_fallo=contexto, intervalo_final=contexto.get("intervalo_valido"),
+        entrada=None,
+        estado=base.estado,
+        mensaje=base.mensaje,
+        codigo_diagnostico=base.codigo_diagnostico,
+        motivo_parada=base.motivo_parada,
+        aproximacion=None,
+        residuo=None,
+        intervalo_final=contexto.get("intervalo_valido"),
+        iteraciones=iteraciones,
+        iteraciones_totales=len(iteraciones),
+        contexto_fallo=contexto,
     )
