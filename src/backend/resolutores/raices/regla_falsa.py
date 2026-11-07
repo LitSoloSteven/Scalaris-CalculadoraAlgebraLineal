@@ -29,12 +29,14 @@ class _MuestraCruce:
 
 @dataclass
 class _EstadoIteracion:
-    """Intervalo y valores de los extremos que la secante esta usando."""
+    """Intervalo, valores de los extremos y aproximacion previa."""
 
     inferior: float
     superior: float
     valor_inferior: float
     valor_superior: float
+    previo: float | None = None
+    valor_previo: float | None = None
 
     @property
     def intervalo(self) -> tuple[float, float]:
@@ -46,11 +48,13 @@ class _EstadoIteracion:
         return (self.inferior, self.superior, self.valor_inferior, self.valor_superior)
 
     def avanzar(self, fila: IteracionReglaFalsa) -> None:
-        """Reemplaza el extremo indicado por el signo del producto."""
+        """Reemplaza el extremo indicado por el signo del producto y guarda el previo."""
         if fila.signo_producto == -1:
             self.superior, self.valor_superior = fila.aproximacion, fila.valor_aproximacion
         else:
             self.inferior, self.valor_inferior = fila.aproximacion, fila.valor_aproximacion
+        self.previo = fila.aproximacion
+        self.valor_previo = fila.valor_aproximacion
 
 
 def regla_falsa(entrada: EntradaReglaFalsa) -> ResultadoReglaFalsa:
@@ -110,6 +114,7 @@ def _resultado_restriccion(entrada, preparado) -> ResultadoReglaFalsa:
         informe_continuidad=preparado.informe,
     )
 
+
 def _iterar(entrada, preparado) -> ResultadoReglaFalsa:
     estado = _abrir_iteracion(preparado)
     if estado is None:
@@ -145,59 +150,60 @@ def _sin_cambio_signo(entrada: EntradaReglaFalsa, informe) -> ResultadoReglaFals
     )
 
 
-def _ciclo(entrada, preparado, estado: _EstadoIteracion, iteraciones) -> ResultadoReglaFalsa:
+def _ciclo(entrada, preparado, estado, iteraciones) -> ResultadoReglaFalsa:
+    """Itera delegando cada paso en `_paso` y conserva el contexto de fallo."""
     contexto = {"etapa": "iteracion", "x_fallo": None, "intervalo_valido": estado.intervalo}
-    previo = None
-    muestra = _MuestraCruce(estado.inferior, estado.valor_inferior)
-    try:
-        for indice in range(1, entrada.limite_iteraciones + 1):
-            try:
-                cruce = punto_cruce(
-                    estado.inferior, estado.superior, estado.valor_inferior, estado.valor_superior
-                )
-            except ValueError:
-                contexto["etapa"] = "capacidad"
-                raise
-            if cruce in (estado.inferior, estado.superior):
-                muestra = _MuestraCruce(
-                    cruce,
-                    estado.valor_inferior if cruce == estado.inferior else estado.valor_superior,
-                )
-                return _cerrar_estancamiento(entrada, estado, iteraciones, indice, muestra)
-            try:
-                valor_cruce = evaluar(preparado.funcion, cruce)
-            except ValueError:
+    for indice in range(1, entrada.limite_iteraciones + 1):
+        fila, motivo, cruce, error = _paso(entrada, preparado, estado, indice)
+        if error is not None:
+            if cruce is not None:
                 contexto["x_fallo"] = cruce
-                raise
-            muestra = _MuestraCruce(cruce, valor_cruce)
-            fila = crear_iteracion(indice, estado.extremos(), (cruce, valor_cruce), previo)
-            motivo = _motivo_parada(entrada, fila)
-            if motivo:
-                fila = replace(fila, motivo_parada=motivo)
-                iteraciones.append(fila)
-                return construir_resultado(entrada, motivo, iteraciones)
-            iteraciones.append(fila)
-            estado.avanzar(fila)
-            previo = cruce
-        return construir_resultado(entrada, "limite_iteraciones", iteraciones)
+            else:
+                contexto["etapa"] = "capacidad"
+            return _error_contextual(error, contexto, iteraciones)
+        iteraciones.append(fila)
+        if motivo:
+            return construir_resultado(entrada, motivo, iteraciones)
+        estado.avanzar(fila)
+    return construir_resultado(entrada, "limite_iteraciones", iteraciones)
+
+
+def _paso(
+    entrada, preparado, estado: _EstadoIteracion, indice: int
+) -> tuple[IteracionReglaFalsa | None, str, float | None, ValueError | None]:
+    """Ejecuta una iteracion y devuelve (fila, motivo, cruce, error) segun la prioridad de cierre."""
+    cruce = None
+    try:
+        cruce = punto_cruce(
+            estado.inferior, estado.superior, estado.valor_inferior, estado.valor_superior
+        )
+        valor_cruce = _valor_en_cruce(estado, cruce, preparado)
+        fila_base = crear_iteracion(indice, estado.extremos(), (cruce, valor_cruce), estado.previo)
+        if fila_base.valor_aproximacion == 0:
+            return fila_base, "raiz_en_aproximacion", cruce, None
+        if fila_base.residuo < entrada.tolerancia:
+            return fila_base, "tolerancia_residuo", cruce, None
+        if cruce in (estado.inferior, estado.superior) or cruce == estado.previo:
+            fila_estancamiento = crear_iteracion_estancamiento(
+                indice, estado.extremos(), (cruce, valor_cruce), estado.intervalo
+            )
+            return fila_estancamiento, "estancamiento_numerico", cruce, None
+        if indice == entrada.limite_iteraciones:
+            return fila_base, "limite_iteraciones", cruce, None
+        return fila_base, "", cruce, None
     except ValueError as error:
-        return _error_contextual(error, contexto, iteraciones)
+        return None, "", cruce, error
 
 
-def _cerrar_estancamiento(entrada, estado, iteraciones, indice, muestra) -> ResultadoReglaFalsa:
-    fila = crear_iteracion_estancamiento(indice, estado.extremos(), (muestra.c, muestra.valor_c), estado.intervalo)
-    iteraciones.append(fila)
-    return construir_resultado(entrada, "estancamiento_numerico", iteraciones)
-
-
-def _motivo_parada(entrada: EntradaReglaFalsa, fila: IteracionReglaFalsa) -> str:
-    if fila.valor_aproximacion == 0:
-        return "raiz_en_aproximacion"
-    if fila.residuo < entrada.tolerancia:
-        return "tolerancia_residuo"
-    if fila.i == entrada.limite_iteraciones:
-        return "limite_iteraciones"
-    return ""
+def _valor_en_cruce(estado: _EstadoIteracion, cruce: float, preparado) -> float:
+    """Devuelve el valor evaluado, reutilizando el cache si el cruce coincide con extremo o previo."""
+    if cruce == estado.inferior:
+        return estado.valor_inferior
+    if cruce == estado.superior:
+        return estado.valor_superior
+    if cruce == estado.previo:
+        return estado.valor_previo
+    return evaluar(preparado.funcion, cruce)
 
 
 def _error_contextual(error: ValueError, contexto: dict, iteraciones) -> ResultadoReglaFalsa:

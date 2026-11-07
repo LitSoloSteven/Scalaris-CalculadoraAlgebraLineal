@@ -132,3 +132,42 @@ def test_unidad_angular():
     ))
     assert resultado.estado == "EXITO"
     assert abs(resultado.aproximacion - 30.0) < 1e-3
+    
+def test_intervalo_final_con_limite():
+    """x^2-2 en [1,2], tol 1e-12, limite 1: intervalo_final debe ser (4/3, 2)."""
+    resultado = regla_falsa(_entrada(tol=1e-12, limite=1))
+    assert resultado.estado == "LIMITE_ITERACIONES"
+    assert resultado.intervalo_final[0] == pytest.approx(4 / 3)
+    assert resultado.intervalo_final[1] == 2.0
+
+
+def test_intervalo_final_en_secante_exacta():
+    """x-1 en [0,2]: intervalo_final debe colapsar a (1,1)."""
+    resultado = regla_falsa(_entrada("x-1", 0, 2))
+    assert resultado.estado == "EXITO"
+    assert resultado.motivo_parada == "raiz_en_aproximacion"
+    assert resultado.intervalo_final == (1.0, 1.0)
+
+
+def test_estancamiento_con_tolerancia_cumplida_es_exito():
+    """Si f(c) en el extremo cacheado ya cumple la tolerancia, el estado es EXITO."""
+    raiz = math.sqrt(2)
+    a = math.nextafter(raiz, -math.inf)
+    b = raiz
+    resultado = regla_falsa(_entrada(a=a, b=b, tol=1e-10))
+    assert resultado.estado == "EXITO"
+    assert resultado.motivo_parada == "tolerancia_residuo"
+
+
+def test_estancamiento_conserva_intervalo_y_accion():
+    """El estancamiento real mantiene el intervalo, la accion y el residuo finito."""
+    raiz = math.sqrt(2)
+    a = math.nextafter(raiz, -math.inf)
+    b = raiz
+    resultado = regla_falsa(_entrada(a=a, b=b, tol=1e-30))
+    assert resultado.estado == "ESTANCAMIENTO"
+    assert resultado.motivo_parada == "estancamiento_numerico"
+    ultima = resultado.iteraciones[-1]
+    assert ultima.accion == "sin_cambio"
+    assert ultima.intervalo_siguiente == resultado.intervalo_final
+    assert math.isfinite(ultima.residuo)
