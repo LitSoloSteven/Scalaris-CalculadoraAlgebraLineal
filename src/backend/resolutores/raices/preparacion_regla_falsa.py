@@ -104,9 +104,9 @@ def _evidencia_inicial(
     arbol: ast.Expression,
     intervalo: tuple[float, float],
     evaluaciones: tuple[EvaluacionExtremo, ...],
-    fallo_extremos,
+    fallo_extremos: ResultadoReglaFalsa | None,
     restriccion: DiagnosticoReglaFalsa | None,
-):
+) -> tuple:
     if fallo_extremos:
         fallos = tuple(
             observacion("FALLO_EXTREMO", evaluacion["codigo"], intervalo,

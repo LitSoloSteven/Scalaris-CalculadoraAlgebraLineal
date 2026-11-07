@@ -8,7 +8,7 @@ from .limites_raices import (
 )
 
 
-def validar_expresion(valor) -> str:
+def validar_expresion(valor: object) -> str:
     """Devuelve la expresión recortada o lanza ValueError si es vacía o excede el límite."""
     if not isinstance(valor, str) or not valor.strip():
         raise ValueError("La expresión f(x) es obligatoria y no puede estar vacía.")
@@ -17,7 +17,7 @@ def validar_expresion(valor) -> str:
     return valor.strip()
 
 
-def validar_extremo(valor, nombre: str) -> float:
+def validar_extremo(valor: object, nombre: str) -> float:
     """Devuelve el extremo finito como float o lanza ValueError con el nombre del campo."""
     if isinstance(valor, bool):
         raise ValueError(f"El extremo {nombre} no puede ser booleano.")
@@ -32,7 +32,7 @@ def validar_extremo(valor, nombre: str) -> float:
     return numero
 
 
-def validar_limite_iteraciones(valor) -> int:
+def validar_limite_iteraciones(valor: object) -> int:
     """Devuelve el límite entero o el predeterminado si es None; lanza ValueError fuera de rango."""
     if valor is None:
         return LIMITE_ITERACIONES_DEFECTO

@@ -41,13 +41,13 @@ def validar_entrada_regla_falsa(datos: Mapping[str, object]) -> EntradaReglaFals
     )
 
 
-def _validar_intercambio(valor) -> bool:
+def _validar_intercambio(valor: object) -> bool:
     if not isinstance(valor, bool):
         raise ValueError("La marca de intervalo invertido debe ser booleana.")
     return valor
 
 
-def _validar_tolerancia(valor) -> float:
+def _validar_tolerancia(valor: object) -> float:
     if isinstance(valor, bool) or not isinstance(valor, (int, float)):
         raise ValueError("La tolerancia de residuo debe ser un numero real positivo y finito.")
     try:
@@ -59,7 +59,7 @@ def _validar_tolerancia(valor) -> float:
     return numero
 
 
-def _validar_limite_regla_falsa(valor) -> int:
+def _validar_limite_regla_falsa(valor: object) -> int:
     if valor is None:
         raise ValueError(
             f"El limite de iteraciones es obligatorio y debe ser un entero entre 1 y {LIMITE_ITERACIONES_MAXIMO}."
