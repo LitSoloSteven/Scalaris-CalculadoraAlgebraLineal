@@ -1,5 +1,4 @@
 """Contrato de entrada y salida del motor de bisección con precisión entera."""
-import math
 from dataclasses import dataclass, field
 from fractions import Fraction
 from typing import NotRequired, TypedDict
@@ -7,8 +6,17 @@ from typing import NotRequired, TypedDict
 from .contrato_continuidad import InformeContinuidad
 from .criterios_biseccion import CriterioParada, tolerancia_decimal, validar_criterio, validar_entero_criterio
 from .decision_biseccion import AccionBiseccion, SignoProducto
-from .limites_biseccion import D_MAXIMO, LIMITE_ITERACIONES_DEFECTO, LIMITE_ITERACIONES_MAXIMO, LONGITUD_MAXIMA_EXPRESION
+from .limites_raices import (
+    D_MAXIMO,
+    LIMITE_ITERACIONES_DEFECTO,
+    LIMITE_ITERACIONES_MAXIMO,
+)
 from .unidades_angulares import validar_unidad_angular
+from .validacion_raices import (
+    validar_expresion,
+    validar_extremo,
+    validar_limite_iteraciones,
+)
 
 AVISO_INTERVALO_INVERTIDO = "Se intercambiaron los extremos para trabajar con a < b."
 CONTINUIDAD_CONDICIONAL = "La garantía requiere continuidad en todo el intervalo; el análisis estructural no es una certificación general."
@@ -163,9 +171,9 @@ def validar_entrada(datos: dict) -> EntradaBiseccion:
     """Valida una carga cruda y devuelve la entrada canónica; lanza ValueError granular."""
     if not isinstance(datos, dict):
         raise ValueError("La entrada debe ser un diccionario con la expresion y el intervalo.")
-    expresion = _validar_expresion(datos.get("expresion"))
-    extremo_izquierdo = _validar_extremo(datos.get("extremo_izquierdo"), "extremo_izquierdo")
-    extremo_derecho = _validar_extremo(datos.get("extremo_derecho"), "extremo_derecho")
+    expresion = validar_expresion(datos.get("expresion"))
+    extremo_izquierdo = validar_extremo(datos.get("extremo_izquierdo"), "extremo_izquierdo")
+    extremo_derecho = validar_extremo(datos.get("extremo_derecho"), "extremo_derecho")
     if extremo_izquierdo == extremo_derecho:
         raise ValueError(f"El intervalo es inválido: extremo_izquierdo ({extremo_izquierdo}) debe ser menor que extremo_derecho ({extremo_derecho}).")
     intercambio = _validar_intercambio(datos.get("intervalo_invertido", False))
@@ -173,7 +181,7 @@ def validar_entrada(datos: dict) -> EntradaBiseccion:
         extremo_izquierdo, extremo_derecho = extremo_derecho, extremo_izquierdo
         intercambio = True
     decimales = validar_precision(datos.get("decimales", 4) if datos.get("criterio") is not None else datos.get("decimales"))
-    limite = _validar_limite(datos.get("limite_iteraciones"))
+    limite = validar_limite_iteraciones(datos.get("limite_iteraciones"))
     criterio = validar_criterio(datos.get("criterio"), decimales, limite)
     return EntradaBiseccion(expresion=expresion, extremo_izquierdo=extremo_izquierdo,
                            extremo_derecho=extremo_derecho, decimales=decimales,
@@ -184,36 +192,4 @@ def validar_entrada(datos: dict) -> EntradaBiseccion:
 def _validar_intercambio(valor) -> bool:
     if not isinstance(valor, bool):
         raise ValueError("La marca de intervalo invertido debe ser booleana.")
-    return valor
-
-
-def _validar_expresion(valor) -> str:
-    if not isinstance(valor, str) or not valor.strip():
-        raise ValueError("La expresión f(x) es obligatoria y no puede estar vacía.")
-    if len(valor) > LONGITUD_MAXIMA_EXPRESION:
-        raise ValueError(f"La expresión excede {LONGITUD_MAXIMA_EXPRESION} caracteres.")
-    return valor.strip()
-
-
-def _validar_extremo(valor, nombre: str) -> float:
-    if isinstance(valor, bool):
-        raise ValueError(f"El extremo {nombre} no puede ser booleano.")
-    if not isinstance(valor, (int, float)):
-        raise ValueError(f"El extremo {nombre} debe ser numérico (recibido {valor!r}).")
-    try:
-        numero = float(valor)
-    except OverflowError as error:
-        raise ValueError(f"El extremo {nombre} excede la capacidad numérica.") from error
-    if not math.isfinite(numero):
-        raise ValueError(f"El extremo {nombre} debe ser finito (recibido {valor!r}).")
-    return numero
-
-
-def _validar_limite(valor) -> int:
-    if valor is None:
-        return LIMITE_ITERACIONES_DEFECTO
-    if isinstance(valor, bool) or not isinstance(valor, int) or not 1 <= valor <= LIMITE_ITERACIONES_MAXIMO:
-        raise ValueError(
-            f"El límite de iteraciones debe ser un entero entre 1 y {LIMITE_ITERACIONES_MAXIMO} (recibido {valor!r})."
-        )
     return valor
