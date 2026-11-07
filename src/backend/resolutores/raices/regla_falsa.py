@@ -2,6 +2,8 @@
 from dataclasses import asdict, dataclass, replace
 
 from .aritmetica_regla_falsa import punto_cruce
+from .contrato_biseccion import ContextoFallo
+from .contrato_continuidad import InformeContinuidad
 from .contrato_regla_falsa import (
     EntradaReglaFalsa,
     IteracionReglaFalsa,
@@ -9,7 +11,10 @@ from .contrato_regla_falsa import (
 )
 from .decision_biseccion import signo_producto
 from .evaluador_funcion import evaluar
-from .preparacion_regla_falsa import preparar_intervalo_regla_falsa
+from .preparacion_regla_falsa import (
+    IntervaloReglaFalsaPreparado,
+    preparar_intervalo_regla_falsa,
+)
 from .traza_regla_falsa import (
     construir_error,
     construir_resultado,
@@ -75,10 +80,12 @@ def regla_falsa(entrada: EntradaReglaFalsa) -> ResultadoReglaFalsa:
     return _iterar(entrada, preparado)
 
 
-def _resultado_raiz_extremo(entrada, preparado) -> ResultadoReglaFalsa:
+def _resultado_raiz_extremo(
+    entrada: EntradaReglaFalsa, preparado: IntervaloReglaFalsaPreparado
+) -> ResultadoReglaFalsa:
     ceros = [evaluacion for evaluacion in preparado.evaluaciones if evaluacion["valor"] == 0]
     extremo = ceros[0]["abscisa"] if ceros else preparado.intervalo[0]
-    extras = []
+    extras: list[str] = []
     if len(ceros) == 2:
         extras.append("Ambos extremos se evaluan como cero; no se infiere unicidad de la raiz.")
     if preparado.restriccion is not None:
@@ -100,7 +107,9 @@ def _resultado_raiz_extremo(entrada, preparado) -> ResultadoReglaFalsa:
     )
 
 
-def _resultado_restriccion(entrada, preparado) -> ResultadoReglaFalsa:
+def _resultado_restriccion(
+    entrada: EntradaReglaFalsa, preparado: IntervaloReglaFalsaPreparado
+) -> ResultadoReglaFalsa:
     advertencias = tuple(dict.fromkeys(
         entrada.advertencias + (preparado.restriccion["mensaje"],)
     ))
@@ -120,7 +129,10 @@ def _resultado_restriccion(entrada, preparado) -> ResultadoReglaFalsa:
         informe_continuidad=preparado.informe,
     )
 
-def _iterar(entrada, preparado) -> ResultadoReglaFalsa:
+
+def _iterar(
+    entrada: EntradaReglaFalsa, preparado: IntervaloReglaFalsaPreparado
+) -> ResultadoReglaFalsa:
     estado = _abrir_iteracion(preparado)
     if estado is None:
         return _sin_cambio_signo(entrada, preparado.informe)
@@ -129,7 +141,9 @@ def _iterar(entrada, preparado) -> ResultadoReglaFalsa:
     return replace(resultado, informe_continuidad=preparado.informe)
 
 
-def _abrir_iteracion(preparado) -> _EstadoIteracion | None:
+def _abrir_iteracion(
+    preparado: IntervaloReglaFalsaPreparado,
+) -> _EstadoIteracion | None:
     inferior, superior = preparado.intervalo
     valor_inferior = preparado.evaluaciones[0]["valor"]
     valor_superior = preparado.evaluaciones[1]["valor"]
@@ -138,7 +152,9 @@ def _abrir_iteracion(preparado) -> _EstadoIteracion | None:
     return _EstadoIteracion(inferior, superior, valor_inferior, valor_superior)
 
 
-def _sin_cambio_signo(entrada: EntradaReglaFalsa, informe) -> ResultadoReglaFalsa:
+def _sin_cambio_signo(
+    entrada: EntradaReglaFalsa, informe: InformeContinuidad
+) -> ResultadoReglaFalsa:
     return ResultadoReglaFalsa(
         entrada=entrada,
         estado="SIN_CAMBIO_DE_SIGNO",
@@ -155,9 +171,18 @@ def _sin_cambio_signo(entrada: EntradaReglaFalsa, informe) -> ResultadoReglaFals
     )
 
 
-def _ciclo(entrada, preparado, estado, iteraciones) -> ResultadoReglaFalsa:
+def _ciclo(
+    entrada: EntradaReglaFalsa,
+    preparado: IntervaloReglaFalsaPreparado,
+    estado: _EstadoIteracion,
+    iteraciones: list[IteracionReglaFalsa],
+) -> ResultadoReglaFalsa:
     """Itera delegando cada paso en `_paso` y conserva el contexto de fallo."""
-    contexto = {"etapa": "iteracion", "x_fallo": None, "intervalo_valido": estado.intervalo}
+    contexto: ContextoFallo = {
+        "etapa": "iteracion",
+        "x_fallo": None,
+        "intervalo_valido": estado.intervalo,
+    }
     for indice in range(1, entrada.limite_iteraciones + 1):
         fila, motivo, cruce, error = _paso(entrada, preparado, estado, indice)
         if error is not None:
@@ -174,10 +199,13 @@ def _ciclo(entrada, preparado, estado, iteraciones) -> ResultadoReglaFalsa:
 
 
 def _paso(
-    entrada, preparado, estado: _EstadoIteracion, indice: int
+    entrada: EntradaReglaFalsa,
+    preparado: IntervaloReglaFalsaPreparado,
+    estado: _EstadoIteracion,
+    indice: int,
 ) -> tuple[IteracionReglaFalsa | None, str, float | None, ValueError | None]:
     """Ejecuta una iteracion y devuelve (fila, motivo, cruce, error) segun la prioridad de cierre."""
-    cruce = None
+    cruce: float | None = None
     try:
         cruce = punto_cruce(
             estado.inferior, estado.superior, estado.valor_inferior, estado.valor_superior
@@ -200,7 +228,9 @@ def _paso(
         return None, "", cruce, error
 
 
-def _valor_en_cruce(estado: _EstadoIteracion, cruce: float, preparado) -> float:
+def _valor_en_cruce(
+    estado: _EstadoIteracion, cruce: float, preparado: IntervaloReglaFalsaPreparado
+) -> float:
     """Devuelve el valor evaluado, reutilizando el cache si el cruce coincide con extremo o previo."""
     if cruce == estado.inferior:
         return estado.valor_inferior
@@ -211,7 +241,11 @@ def _valor_en_cruce(estado: _EstadoIteracion, cruce: float, preparado) -> float:
     return evaluar(preparado.funcion, cruce)
 
 
-def _error_contextual(error: ValueError, contexto: dict, iteraciones) -> ResultadoReglaFalsa:
+def _error_contextual(
+    error: ValueError,
+    contexto: ContextoFallo,
+    iteraciones: list[IteracionReglaFalsa],
+) -> ResultadoReglaFalsa:
     resultado = construir_error(error, iteraciones)
     return replace(
         resultado,
