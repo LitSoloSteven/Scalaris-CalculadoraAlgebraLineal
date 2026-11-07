@@ -10,6 +10,7 @@ from .limites_raices import (
     D_MAXIMO,
     LIMITE_ITERACIONES_DEFECTO,
     LIMITE_ITERACIONES_MAXIMO,
+    LONGITUD_MAXIMA_EXPRESION,
 )
 from .unidades_angulares import validar_unidad_angular
 from .validacion_raices import (

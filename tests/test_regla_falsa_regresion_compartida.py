@@ -122,3 +122,16 @@ def test_validar_precision_conserva_limites_de_biseccion():
     assert validar_precision(D_MAXIMO) == D_MAXIMO
     with pytest.raises(ValueError):
         validar_precision(D_MAXIMO + 1)
+        
+def test_contrato_biseccion_reexporta_constantes_historicas():
+    """Los consumidores existentes siguen importando las constantes desde contrato_biseccion."""
+    import importlib
+
+    modulo = importlib.import_module("src.backend.resolutores.raices.contrato_biseccion")
+    for nombre in (
+        "D_MAXIMO",
+        "LIMITE_ITERACIONES_DEFECTO",
+        "LIMITE_ITERACIONES_MAXIMO",
+        "LONGITUD_MAXIMA_EXPRESION",
+    ):
+        assert hasattr(modulo, nombre), f"falta reexportar {nombre}"
