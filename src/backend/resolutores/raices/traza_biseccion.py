@@ -6,6 +6,7 @@ from src.backend.excepciones import ErrorDominio, ErrorNoFinito
 from .aritmetica_biseccion import ancho_intervalo, cota_intervalo, error_relativo_numerico
 from .contrato_biseccion import CONTINUIDAD_CONDICIONAL, EntradaBiseccion, IteracionBiseccion, ResultadoBiseccion
 from .decision_biseccion import signo_producto
+from .traza_comun_raices import registrar_accion, texto_error_relativo
 
 _CIERRES = {
     "ancho_menor_que_E": ("EXITO", "CONVERGENCIA_POR_ANCHO", "El ancho del intervalo es menor que la tolerancia solicitada."),
@@ -25,9 +26,7 @@ def crear_iteracion(indice: int, extremos: tuple[float, float, float, float], me
     inferior, superior, valor_inferior, valor_superior = extremos
     abscisa, valor_medio = medio
     relativo = error_relativo_numerico(abscisa, previo)
-    texto = "No aplica" if previo is None or abscisa == 0 else "No representable"
-    if relativo is not None:
-        texto = f"{relativo:.2f}%"
+    texto = texto_error_relativo(abscisa, previo, relativo)
     return IteracionBiseccion(
         i=indice, extremo_izquierdo=inferior, extremo_derecho=superior, c=abscisa,
         f_a=valor_inferior, f_b=valor_superior, f_c=valor_medio,
@@ -35,18 +34,6 @@ def crear_iteracion(indice: int, extremos: tuple[float, float, float, float], me
         residuo=abs(valor_medio), error_relativo=texto, error_relativo_valor=relativo,
         explicacion="", signo_producto=signo_producto(valor_inferior, valor_medio),
     )
-
-
-def registrar_accion(fila: IteracionBiseccion, motivo: str) -> IteracionBiseccion:
-    """Registra el cierre o el reemplazo de extremo que ejecutará el motor."""
-    if motivo:
-        return replace(fila, accion="detener", motivo_parada=motivo, explicacion=_CIERRES[motivo][2])
-    if fila.signo_producto == -1:
-        return replace(fila, accion="reemplazar_b",
-                       explicacion=f"Se conserva [{fila.extremo_izquierdo}, {fila.c}] porque f(a) y f(c) tienen signos opuestos.")
-    return replace(fila, accion="reemplazar_a",
-                   explicacion=f"Se conserva [{fila.c}, {fila.extremo_derecho}] porque f(c) y f(b) tienen signos opuestos.")
-
 
 def construir_resultado(entrada: EntradaBiseccion, intervalo: tuple[float, float], iteraciones: Sequence[IteracionBiseccion], motivo: str, muestra: tuple[float, float]) -> ResultadoBiseccion:
     """Devuelve un cierre coherente con la última muestra, sin reevaluar ni cambiar intervalo."""

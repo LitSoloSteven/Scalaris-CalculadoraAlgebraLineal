@@ -9,7 +9,8 @@ from .diagnostico_biseccion import IntervaloPreparado, completar_diagnostico, er
 from .evaluador_funcion import compilar, evaluar
 from .gramatica_funcion import analizar_expresion
 from .parada_biseccion import completar_criterio, motivo_criterio
-from .traza_biseccion import construir_error, construir_resultado, crear_iteracion, registrar_accion
+from .traza_biseccion import _CIERRES, construir_error, construir_resultado, crear_iteracion
+from .traza_comun_raices import registrar_accion
 from .unidades_angulares import opciones_unidad
 
 
@@ -84,7 +85,7 @@ def _iterar(entrada: EntradaBiseccion, funcion: Callable[[float], float], extrem
             contexto.update(etapa="capacidad", x_fallo=None)
             fila = crear_iteracion(indice, extremos, (abscisa, valor), previo)
             motivo = _motivo_parada(entrada, fila)
-            fila = registrar_accion(fila, motivo)
+            fila = registrar_accion(fila, motivo, _CIERRES)
             iteraciones.append(fila)
             if motivo:
                 break
