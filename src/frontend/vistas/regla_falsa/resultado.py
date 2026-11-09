@@ -12,7 +12,7 @@ from src.frontend.controladores.regla_falsa.salidas_regla_falsa import datos_cop
 
 
 def mostrar_resultado(vista, respuesta: dict) -> None:
-    """Presenta datos de U1 mediante texto escapado y conserva el estado real del motor."""
+    """Presenta el sobre mediante texto escapado y conserva el estado real del motor."""
     with vista.contenedor_resultados:
         ui.label(titulo_estado(respuesta)).classes("text-xl font-bold texto-principal").props(
             "role=status aria-live=polite")
