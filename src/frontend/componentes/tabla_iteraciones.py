@@ -9,10 +9,8 @@ type PreparadorPagina = Callable[[int, int], tuple[Sequence[tuple[str, str]], li
 
 
 class PaginacionIteraciones:
-    """Pagina una tabla sin conocer las métricas ni decisiones del método.
-
-    Recibe tabla, total, preparador de columnas/filas para [inicio, fin) y
-    controles de preferencias; construir monta la navegación y sus eventos.
+    """Recibe tabla, total, preparador de columnas/filas y preferencias para paginar.
+    Construir monta navegación y eventos sin interpretar las métricas del método.
     """
 
     def __init__(

@@ -23,9 +23,8 @@ def entero_capturado(valor: object, etiqueta: str) -> int:
 
 
 def real_capturado(valor: object, etiqueta: str) -> float:
-    """Convierte un campo con su etiqueta a float, sin bool; lanza ValueError.
-
-    La finitud y los límites se validan después mediante el contrato del dominio.
+    """Convierte campo y etiqueta a float sin bool; lanza ValueError si falla la conversión.
+    El dominio valida después la finitud y los límites del número devuelto.
     """
     try:
         if isinstance(valor, bool):

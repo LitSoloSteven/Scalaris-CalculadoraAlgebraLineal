@@ -23,10 +23,8 @@ async def resolver_calculo_raices(
     vista: Any, calcular: Callable[[dict], dict], configuracion: ConfiguracionCalculoRaices,
     *, puntero: bool = False,
 ) -> None:
-    """Coordina vista, controlador y mensajes; publica solo la solicitud vigente.
-
-    La vista aporta captura, retiro y publicación. Gestiona cancelación y errores
-    del trabajador sin exponerlos al usuario; conserva un solo envío por vista.
+    """Coordina vista, controlador y mensajes; devuelve None y gestiona errores/cancelación.
+    La vista aporta captura, retiro y publicación; solo publica la solicitud vigente.
     """
     if vista.ocupado or vista.contenedor_resultados.is_deleted:
         return
