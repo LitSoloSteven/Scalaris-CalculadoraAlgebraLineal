@@ -1,0 +1,37 @@
+.regla-falsa-vista { max-width: 1280px; }
+.regla-falsa-vista, .regla-falsa-vista * { min-width: 0; }
+.regla-falsa-campos {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-4);
+    width: 100%;
+}
+.regla-falsa-numero {
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+}
+.regla-falsa-aproximacion {
+    font-size: clamp(1.5rem, 4vw, 2.25rem);
+    font-weight: var(--fw-h2);
+}
+.regla-falsa-metricas {
+    display: grid;
+    gap: var(--space-3);
+    margin: 0;
+    width: 100%;
+}
+.regla-falsa-metricas dd { margin: 0; }
+.regla-falsa-desplegable { width: 100%; }
+.regla-falsa-desplegable summary { cursor: pointer; min-height: 44px; }
+.regla-falsa-desplegable summary > div { display: inline; }
+.regla-falsa-vista :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.regla-falsa-vista .q-btn { flex-shrink: 0; max-width: 100%; min-height: 44px; }
+.regla-falsa-vista .q-btn__content { white-space: normal; overflow-wrap: anywhere; }
+html[data-entrada="teclado"] .regla-falsa-vista .q-btn { transform: none; transition: none; }
+@media (max-width: 560px) {
+    .regla-falsa-campos { grid-template-columns: minmax(0, 1fr); }
+    .regla-falsa-vista .panel-tarjeta { padding: var(--space-4); max-width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .regla-falsa-vista .q-btn { transform: none; transition: none; }
+}
