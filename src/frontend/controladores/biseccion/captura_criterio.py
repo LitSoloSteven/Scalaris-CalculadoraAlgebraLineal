@@ -1,30 +1,9 @@
 """Conversión léxica de la captura y consulta de condiciones al dominio."""
-import math
-from decimal import Decimal, DecimalException
-
 from src.backend.resolutores.raices.contrato_biseccion import EntradaBiseccion, validar_entrada, validar_precision
 from src.backend.resolutores.raices.criterios_biseccion import validar_criterio
 from src.backend.resolutores.raices.estimacion_biseccion import estimar_iteraciones
+from src.frontend.controladores.captura_real import entero_capturado, real_capturado
 from .catalogo_criterios import CRITERIOS, DECIMALES_PRESENTACION_DEFECTO, condicion_criterio
-
-
-def entero_capturado(valor, etiqueta: str) -> int:
-    """Convierte un campo entero sin truncar decimales; lanza ValueError si es inválido."""
-    try:
-        numero = float(valor)
-    except (ValueError, TypeError, OverflowError) as error:
-        raise ValueError(f"{etiqueta} debe ser un entero.") from error
-    if isinstance(valor, bool) or not math.isfinite(numero) or not numero.is_integer():
-        raise ValueError(f"{etiqueta} debe ser un entero.")
-    if isinstance(valor, str):
-        try:
-            exacto = Decimal(valor.strip())
-            if exacto != exacto.to_integral_value():
-                raise ValueError(f"{etiqueta} debe ser un entero.")
-            return int(exacto)
-        except DecimalException as error:
-            raise ValueError(f"{etiqueta} debe ser un entero representable.") from error
-    return int(numero)
 
 
 def preparar_entrada(captura: dict) -> EntradaBiseccion:
@@ -76,13 +55,3 @@ def _criterio_capturado(valor):
     elif tipo in ("relativo", "ancho", "residuo"):
         parametro = real_capturado(parametro, CRITERIOS[tipo][1])
     return {"tipo": tipo, "parametro": parametro}
-
-
-def real_capturado(valor, etiqueta: str) -> float:
-    """Convierte una captura real sin aceptar booleanos; lanza ValueError orientativo."""
-    try:
-        if isinstance(valor, bool):
-            raise ValueError
-        return float(valor)
-    except (ValueError, TypeError, OverflowError) as error:
-        raise ValueError(f"{etiqueta} debe ser un número real. Usa un punto para los decimales.") from error
