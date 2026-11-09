@@ -24,7 +24,7 @@
 .regla-falsa-desplegable { width: 100%; }
 .regla-falsa-desplegable summary { cursor: pointer; min-height: 44px; }
 .regla-falsa-desplegable summary > div { display: inline; }
-.regla-falsa-vista :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.regla-falsa-vista :focus-visible { outline: 2px solid var(--accent) !important; outline-offset: 3px; }
 .regla-falsa-vista .q-btn { flex-shrink: 0; max-width: 100%; min-height: 44px; }
 .regla-falsa-vista .q-btn__content { white-space: normal; overflow-wrap: anywhere; }
 html[data-entrada="teclado"] .regla-falsa-vista .q-btn { transform: none; transition: none; }
