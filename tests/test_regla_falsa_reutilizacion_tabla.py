@@ -15,6 +15,7 @@ from tests.comun_construccion_vistas import preparar_transporte, cerrar_cliente
 
 def _ejecutar(monkeypatch, comprobar):
     async def ejecutar():
+        """Aísla el cliente NiceGUI y garantiza su cierre tras la comprobación."""
         monkeypatch.setattr(core, "script_mode", False)
         cliente = Client(ui.page("/prueba_paginacion_raices"))
         preparar_transporte(monkeypatch, cliente)
@@ -35,9 +36,11 @@ def _pulsar(boton):
 def test_componente_recibe_solo_las_filas_visibles(monkeypatch, total):
     """Pagina hasta el límite del motor y conserva botones/estado en extremos y vacío."""
     def comprobar(cliente):
+        """Recorre todas las páginas con el total indicado, incluida la traza vacía."""
         solicitudes = []
 
         def preparar(inicio, fin):
+            """Registra y materializa exclusivamente el segmento solicitado."""
             solicitudes.append((inicio, fin))
             return (("i", "Iteración"),), [{"i": indice + 1} for indice in range(inicio, fin)]
 
@@ -61,9 +64,11 @@ def test_componente_recibe_solo_las_filas_visibles(monkeypatch, total):
 def test_preferencias_actualizan_solo_pagina_actual_y_respetan_desmontaje(monkeypatch):
     """El formato no vuelve a la primera página ni escribe en una tabla eliminada."""
     def comprobar(cliente):
+        """Cambia la precisión en la segunda página y después elimina la tabla."""
         precision, solicitudes = ui.switch("Precisión"), []
 
         def preparar(inicio, fin):
+            """Aplica la preferencia actual a las filas visibles."""
             solicitudes.append((inicio, fin))
             return (("i", "Fila"),), [{"i": str(indice) if precision.value else indice}
                                        for indice in range(inicio, fin)]
@@ -93,6 +98,7 @@ def test_fachada_biseccion_conserva_columnas_examen_e_inspeccion(monkeypatch, ca
     respuesta = resolver_captura(captura)
 
     def comprobar(cliente):
+        """Confronta columnas y filas renderizadas contra los formateadores existentes."""
         examen = ui.switch("Modo examen")
         mostrar_tabla(respuesta, examen)
         tabla = next(elemento for elemento in cliente.elements.values() if isinstance(elemento, ui.table))

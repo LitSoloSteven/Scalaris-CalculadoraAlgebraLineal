@@ -45,11 +45,13 @@ def test_publica_respuesta_y_huella_con_configuracion_explicita(monkeypatch):
 def test_rechaza_respuestas_obsoletas_y_doble_envio(monkeypatch, cambio):
     """Cada revisión o contenedor revoca la publicación aunque el texto vuelva a ser A."""
     async def comprobar():
+        """Retiene el trabajador y revoca su publicación antes de liberarlo."""
         vista, inicio, liberar = _crear_vista(), asyncio.Event(), asyncio.Event()
         captura, solicitudes = {"ejercicio": "A"}, []
         vista.capturar = lambda: dict(captura)
 
         async def trabajar(calcular, datos):
+            """Espera la señal de la prueba sin producir resultados matemáticos."""
             solicitudes.append(datos)
             inicio.set()
             await liberar.wait()
@@ -90,6 +92,7 @@ def test_error_inesperado_solo_anuncia_en_solicitud_vigente(monkeypatch, revocar
     vista = _crear_vista()
 
     async def fallar(calcular, captura):
+        """Provoca un fallo vigente u obsoleto del trabajador."""
         if revocar:
             notificar_edicion(vista)
         raise RuntimeError("detalle interno de prueba")
@@ -105,9 +108,11 @@ def test_error_inesperado_solo_anuncia_en_solicitud_vigente(monkeypatch, revocar
 def test_cancelacion_libera_la_carga_sin_publicar(monkeypatch):
     """Cancelar una espera no convierte su resultado en éxito ni retiene el botón."""
     async def comprobar():
+        """Cancela la solicitud mientras espera al trabajador."""
         vista, inicio = _crear_vista(), asyncio.Event()
 
         async def esperar(calcular, captura):
+            """Mantiene la espera hasta recibir la cancelación."""
             inicio.set()
             await asyncio.Event().wait()
 
@@ -128,6 +133,7 @@ def test_no_interfiere_con_una_tarea_que_reemplazo_la_solicitud(monkeypatch):
     reemplazo = object()
 
     async def trabajar(calcular, captura):
+        """Reemplaza la identidad de solicitud antes de devolver los datos."""
         vista.tarea_calculo = reemplazo
         return calcular(captura)
 
