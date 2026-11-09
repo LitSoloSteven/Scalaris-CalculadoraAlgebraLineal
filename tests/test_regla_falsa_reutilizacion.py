@@ -17,6 +17,7 @@ _RUTAS = (
     "tests/test_regla_falsa_reutilizacion_calculo.py",
     "tests/test_regla_falsa_reutilizacion_tabla.py",
     "tests/test_regla_falsa_reutilizacion.py",
+    "tests/test_regla_falsa_dependencia_interfaz.py",
 )
 _COMPROBACIONES = (
     auditoria.test_limites_tamanio_y_complejidad,
