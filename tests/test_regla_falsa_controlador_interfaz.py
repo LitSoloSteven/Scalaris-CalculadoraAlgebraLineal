@@ -68,6 +68,7 @@ def test_controlador_no_expone_detalles_de_fallos_inesperados(monkeypatch, error
     modulo = importlib.import_module("src.frontend.controladores.regla_falsa.controlador")
 
     def fallar(_entrada):
+        """Simula un fallo interno para comprobar la salida pública del adaptador."""
         raise error("detalle privado del evaluador")
 
     monkeypatch.setattr(modulo, "regla_falsa", fallar)
@@ -84,7 +85,7 @@ def test_controlador_no_expone_detalles_de_fallos_inesperados(monkeypatch, error
     ("informe_continuidad", {"evidencia": ({"abscisa": math.inf},)}),
 ])
 def test_serializacion_rechaza_no_finitos_anidados(campo, valor):
-    """La salida verifica finitud en todo el sobre, incluidos diagnósticos y continuidad."""
+    """La salida verifica finitud del sobre completo, incluidos diagnósticos y continuidad."""
     with pytest.raises(ValueError, match="representar"):
         serializar_resultado(replace(ResultadoReglaFalsa(), **{campo: valor}))
 

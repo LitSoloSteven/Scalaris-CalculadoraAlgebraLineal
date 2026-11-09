@@ -71,6 +71,7 @@ def test_error_tras_filas_validas_conserva_contexto_sin_aproximacion_final(monke
     llamadas = []
 
     def evaluar_con_fallo(funcion, valor):
+        """Ejecuta el evaluador real salvo en la tercera llamada, que produce un error."""
         llamadas.append(valor)
         if len(llamadas) == 3:
             raise ErrorDominio("La evaluación no pertenece al dominio.", "DOMINIO_INVALIDO")
