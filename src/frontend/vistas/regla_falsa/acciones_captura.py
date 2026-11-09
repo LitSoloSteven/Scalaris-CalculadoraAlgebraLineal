@@ -26,9 +26,15 @@ def mostrar_recientes(vista) -> None:
         if not vista.historial:
             ui.label("Los cálculos con aproximación o filas válidas aparecerán aquí.").classes(
                 "text-sm texto-secundario")
-        for calculo in vista.historial:
+        for indice, calculo in enumerate(vista.historial, 1):
             captura = calculo["captura"]
-            ui.button(calculo["titulo"], color=None,
+            ui.button(_etiqueta_registro(indice, calculo), color=None,
                       on_click=lambda captura=captura: vista.cargar_captura(captura)).classes(
                           "boton-discreto").props("ripple=false").tooltip(
                               f"{captura['expresion']} · {captura['unidad_angular']} · tolerancia {captura['tolerancia']}")
+
+
+def _etiqueta_registro(indice: int, calculo: dict) -> str:
+    captura = calculo["captura"]
+    return (f"{indice} · {captura['expresion']} · [{captura['extremo_izquierdo']}, {captura['extremo_derecho']}] · "
+            f"tolerancia {captura['tolerancia']} · {captura['unidad_angular']} · {calculo['titulo']}")

@@ -18,6 +18,7 @@ _CONFIGURACION = ConfiguracionCalculoRaices(
     mensaje_error="No se pudo completar el cálculo. Revisa la función y vuelve a intentarlo.",
     mensaje_registro="No se pudo presentar el cálculo de regla falsa",
 )
+_MENSAJE_RECALCULAR = "No hay un resultado vigente. Calcula de nuevo para continuar."
 
 
 class VistaReglaFalsa:
@@ -65,6 +66,8 @@ class VistaReglaFalsa:
         """Coordina un trabajador por vista y publica únicamente la captura aún vigente."""
         if not self._cerrada:
             await resolver_calculo_raices(self, resolver_captura, _CONFIGURACION, puntero=puntero)
+            if not self.ocupado and not self.estado.is_deleted and self.estado.text == _CONFIGURACION.mensaje_carga:
+                self.estado.set_text(_MENSAJE_RECALCULAR)
 
     def _publicar(self, respuesta: dict, huella: str, *, puntero: bool = False) -> None:
         self._huella_resultado = reflejar_intervalo(self, respuesta, huella)
@@ -98,6 +101,8 @@ class VistaReglaFalsa:
         """Revoca resultados pendientes y publicados al perder el cliente o desmontar la vista."""
         self._cerrada = True
         self._retirar_resultado()
+        if not self.estado.is_deleted:
+            self.estado.set_text(_MENSAJE_RECALCULAR)
 
     def reabrir(self) -> None:
         """Permite nuevas solicitudes si el cliente vuelve a conectar con controles montados."""
