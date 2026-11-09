@@ -5,8 +5,8 @@ from nicegui import ui
 
 from src.backend.resolutores.raices.contrato_biseccion import D_MAXIMO
 from src.frontend.componentes.copia_resultado import renderizar_copia_resultado
+from src.frontend.componentes.precision_presentacion import leer_precision_presentacion
 from src.frontend.controladores.biseccion.catalogo_criterios import DECIMALES_PRESENTACION_DEFECTO
-from src.frontend.controladores.biseccion.captura_criterio import precision_presentacion
 from src.frontend.controladores.biseccion.presentacion import motivo
 from src.frontend.controladores.biseccion.presentacion_criterio import (
     aproximacion_presentada, avisos_resumen, datos_copia_biseccion, etiqueta_aproximacion, metricas_principales,
@@ -101,12 +101,9 @@ def _mostrar_metricas(metricas: tuple) -> None:
 def _actualizar_formato(vista, respuesta: dict, actualizar_copia: Callable[[], None]) -> None:
     if vista.detalle_resumen.is_deleted or vista.ultimo_resultado is not respuesta:
         return
-    try:
-        precision = precision_presentacion(vista.formato.value)
-    except ValueError as error:
-        vista.error_formato.set_text(str(error))
+    precision = leer_precision_presentacion(vista.formato, vista.error_formato)
+    if precision is None:
         return
-    vista.error_formato.set_text("")
     vista._precision_visual = precision
     vista.detalle_resumen.clear()
     with vista.detalle_resumen:

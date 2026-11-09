@@ -3,7 +3,7 @@ from nicegui import ui
 
 from src.backend.resolutores.raices.limites_raices import D_MAXIMO
 from src.frontend.componentes.copia_resultado import renderizar_copia_resultado
-from src.frontend.controladores.biseccion.captura_criterio import precision_presentacion
+from src.frontend.componentes.precision_presentacion import leer_precision_presentacion
 from src.frontend.controladores.regla_falsa.diagnostico import detalles_diagnostico
 from src.frontend.controladores.regla_falsa.presentacion import (
     aproximacion_presentada, avisos_resumen, etiqueta_aproximacion, metricas_resumen, titulo_estado,
@@ -45,13 +45,10 @@ def _montar_formato(vista, respuesta: dict) -> None:
 def _actualizar_formato(vista, respuesta: dict) -> None:
     if vista.ultimo_resultado is not respuesta or vista.valor_aproximacion.is_deleted:
         return
-    try:
-        precision = precision_presentacion(vista.formato.value)
-    except ValueError as error:
-        vista.error_formato.set_text(str(error))
+    precision = leer_precision_presentacion(vista.formato, vista.error_formato)
+    if precision is None:
         return
     vista._precision_visual = precision
-    vista.error_formato.set_text("")
     vista.valor_aproximacion.set_text(aproximacion_presentada(respuesta, precision))
 
 
