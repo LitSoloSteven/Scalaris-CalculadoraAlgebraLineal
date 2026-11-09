@@ -18,11 +18,15 @@ def componer_herramienta(vista) -> None:
                 vista.contenedor_acciones = ui.column().classes("w-full gap-3")
                 vista.recientes = ui.column().classes("w-full gap-2")
             with ui.column().classes("disposicion-panel panel-tarjeta p-6 gap-4"):
-                with ui.element("h2").classes("text-lg font-semibold texto-principal"):
-                    ui.label("Resultado")
-                vista.estado = ui.label("Ingresa una función y sus extremos o carga un ejemplo.").classes(
-                    "texto-secundario").props("role=status aria-live=polite aria-atomic=true")
-                vista.contenedor_resultados = ui.column().classes("w-full gap-4")
+                _montar_resultados(vista)
         with vista.contenedor_acciones:
             construir_acciones(vista)
         mostrar_recientes(vista)
+
+
+def _montar_resultados(vista) -> None:
+    with ui.element("h2").classes("text-lg font-semibold texto-principal"):
+        ui.label("Resultado")
+    vista.estado = ui.label("Ingresa una función y sus extremos o carga un ejemplo.").classes(
+        "texto-secundario").props("role=status aria-live=polite aria-atomic=true")
+    vista.contenedor_resultados = ui.column().classes("w-full gap-4")

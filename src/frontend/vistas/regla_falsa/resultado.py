@@ -58,8 +58,7 @@ def _actualizar_formato(vista, respuesta: dict) -> None:
 def _mostrar_datos(datos: tuple) -> None:
     with ui.element("dl").classes("regla-falsa-metricas"):
         for etiqueta, valor in datos:
-            with ui.element("div"):
-                with ui.element("dt"):
-                    ui.label(etiqueta).classes("text-sm texto-secundario")
-                with ui.element("dd"):
-                    ui.label(valor).classes("regla-falsa-numero texto-principal")
+            with ui.element("dt"):
+                ui.label(etiqueta).classes("text-sm texto-secundario")
+            with ui.element("dd"):
+                ui.label(valor).classes("regla-falsa-numero texto-principal")
