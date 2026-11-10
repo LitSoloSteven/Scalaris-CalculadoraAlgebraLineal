@@ -9,22 +9,24 @@ from src.frontend.controladores.regla_falsa.presentacion import (
     aproximacion_presentada, avisos_resumen, etiqueta_aproximacion, metricas_resumen, titulo_estado,
 )
 from src.frontend.controladores.regla_falsa.salidas_regla_falsa import (
-    datos_copia_regla_falsa, datos_copia_examen_regla_falsa,
+    datos_copia_regla_falsa, datos_copia_examen_regla_falsa, datos_copia_configurada,
 )
+from src.frontend.controladores.regla_falsa.presentacion_ampliada import metricas_configuradas, titulo_configurado
 from .modo_examen import crear_interruptor_examen
 
 
-def mostrar_resultado(vista, respuesta: dict) -> None:
+def mostrar_resultado(vista, respuesta: dict, ampliado: dict | None = None) -> None:
     """Presenta el sobre mediante texto escapado y conserva el estado real del motor."""
     with vista.contenedor_resultados:
-        ui.label(titulo_estado(respuesta)).classes("text-xl font-bold texto-principal").props(
+        ui.label(titulo_configurado(respuesta, ampliado)).classes("text-xl font-bold texto-principal").props(
             "role=status aria-live=polite")
-        ui.label(etiqueta_aproximacion(respuesta)).classes("texto-secundario")
+        etiqueta = "Aproximación provisional" if ampliado and ampliado["criterio"]["tipo"] == "iteraciones" else etiqueta_aproximacion(respuesta)
+        ui.label(etiqueta).classes("texto-secundario")
         if respuesta["aproximacion"] is not None:
             _montar_formato(vista, respuesta)
         ui.label(respuesta["mensaje"]).classes(
             "texto-acento" if respuesta["estado"] == "EXITO" else "texto-advertencia")
-        _mostrar_datos(metricas_resumen(respuesta))
+        _mostrar_datos(metricas_configuradas(respuesta, ampliado))
         for aviso in avisos_resumen(respuesta):
             ui.label(aviso).classes("text-sm texto-advertencia")
         with ui.element("details").classes("regla-falsa-desplegable"):
@@ -32,9 +34,14 @@ def mostrar_resultado(vista, respuesta: dict) -> None:
                 ui.label("Diagnóstico del cálculo")
             _mostrar_datos(detalles_diagnostico(respuesta))
         vista.interruptor_examen = crear_interruptor_examen(vista)
-        renderizar_copia_resultado(lambda: (
-            datos_copia_examen_regla_falsa if vista.modo_examen else datos_copia_regla_falsa
-        )(respuesta, vista._precision_visual))
+        renderizar_copia_resultado(lambda: _copia_visible(vista, respuesta, ampliado))
+
+
+def _copia_visible(vista, respuesta: dict, ampliado: dict | None) -> dict:
+    if ampliado is not None:
+        return datos_copia_configurada(respuesta, ampliado, vista._precision_visual, vista.modo_examen)
+    funcion = datos_copia_examen_regla_falsa if vista.modo_examen else datos_copia_regla_falsa
+    return funcion(respuesta, vista._precision_visual)
 
 
 def _montar_formato(vista, respuesta: dict) -> None:
