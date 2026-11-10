@@ -42,3 +42,11 @@ def metricas_configuradas(respuesta: dict, ampliado: dict | None) -> tuple:
     if ampliado is None:
         return datos
     return tuple(par for par in datos if par[0] != "Tolerancia de residuo") + datos_criterio(ampliado)
+
+
+def descripcion_captura(captura: dict) -> str:
+    """Describe el criterio guardado sin convertir los borradores de una captura histórica."""
+    criterio = captura.get("criterio")
+    if criterio is None:
+        return f"tolerancia {captura['tolerancia']}"
+    return condicion_criterio(criterio["tipo"], criterio["parametro"])

@@ -4,6 +4,7 @@ from nicegui import ui
 from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
 from src.frontend.vistas.biseccion.acciones_captura import desplegable
 from .ejemplos import EJEMPLOS
+from src.frontend.controladores.regla_falsa.presentacion_ampliada import descripcion_captura
 
 
 def construir_acciones(vista) -> None:
@@ -31,10 +32,10 @@ def mostrar_recientes(vista) -> None:
             ui.button(_etiqueta_registro(indice, calculo), color=None,
                       on_click=lambda captura=captura: vista.cargar_captura(captura)).classes(
                           "boton-discreto").props("ripple=false").tooltip(
-                              f"{captura['expresion']} · {captura['unidad_angular']} · tolerancia {captura['tolerancia']}")
+                              f"{captura['expresion']} · {captura['unidad_angular']} · {descripcion_captura(captura)}")
 
 
 def _etiqueta_registro(indice: int, calculo: dict) -> str:
     captura = calculo["captura"]
     return (f"{indice} · {captura['expresion']} · [{captura['extremo_izquierdo']}, {captura['extremo_derecho']}] · "
-            f"tolerancia {captura['tolerancia']} · {captura['unidad_angular']} · {calculo['titulo']}")
+            f"{descripcion_captura(captura)} · {captura['unidad_angular']} · {calculo['titulo']}")
