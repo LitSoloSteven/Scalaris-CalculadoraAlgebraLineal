@@ -37,7 +37,7 @@ def test_copia_nueva_preserva_contrato_clasico(cambios):
     assert examen.startswith(clasica + "\n\n")
     for fila in respuesta["iteraciones"]:
         assert f"Iteración {fila['i']}" in examen
-        assert all(f"{etiqueta}: {valor}" in examen for etiqueta, valor in datos_examen(fila))
+        assert all(f"{etiqueta}: {valor}" in examen for etiqueta, valor in datos_examen(fila, respuesta))
     if not respuesta["iteraciones"]:
         assert "No hay iteraciones registradas" in examen
     assert respuesta == original and texto_copia_regla_falsa(respuesta, 6) == clasica
@@ -64,3 +64,23 @@ def test_examen_tabla_secante_y_foco_comparten_fila(monkeypatch):
         vista.limpiar_todo()
         assert vista.modo_examen
     ejecutar_escenario(monkeypatch, comprobar)
+
+
+@pytest.mark.parametrize("cambios,motivo", [
+    ({}, "Residuo menor que la tolerancia."),
+    ({"limite_iteraciones": "1"}, "Límite de iteraciones alcanzado."),
+    ({"expresion": "x", "extremo_izquierdo": "-1", "extremo_derecho": "1"},
+     "Cero evaluado en la aproximación de la secante."),
+])
+def test_cierre_real_sin_motivo_local_en_la_fila(cambios, motivo):
+    """El motivo del resultado completa solo la última fila, incluso con motivo local vacío."""
+    respuesta = resolver_captura(captura_regla_falsa(**cambios))
+    original = deepcopy(respuesta)
+    ultima = respuesta["iteraciones"][-1]
+    assert ultima["motivo_parada"] == ""
+    assert dict(datos_examen(ultima, respuesta))["Motivo de parada"] == motivo
+    assert motivo in texto_copia_examen_regla_falsa(respuesta, 4)
+    if len(respuesta["iteraciones"]) > 1:
+        primera = respuesta["iteraciones"][0]
+        assert "Continúa" in dict(datos_examen(primera, respuesta))["Motivo de parada"]
+    assert respuesta == original
