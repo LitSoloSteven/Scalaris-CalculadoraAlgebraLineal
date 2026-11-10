@@ -13,6 +13,7 @@ from .composicion import componer_herramienta
 from .estado_captura import CAMPOS, CAMPOS_EJERCICIO, capturar, reflejar_intervalo, restaurar_captura, vaciar_captura
 from .resultado import mostrar_resultado
 from .procedimiento import PanelProcedimiento
+from .modos_captura import MODO_BUSQUEDA, MODO_INTERVALO
 
 _CONFIGURACION = ConfiguracionCalculoRaices(
     mensaje_carga="Calculando la raíz por regla falsa…",
@@ -38,7 +39,9 @@ class VistaReglaFalsa:
         componer_herramienta(self)
         for campo in self._campos_captura():
             campo.on_value_change(self._editar)
-            campo.on("keydown.enter", self.resolver)
+            campo.on("keydown.enter", self.enviar_captura)
+        for campo in (self.expresion, self.unidad_angular):
+            campo.on_value_change(self._editar_exploracion)
         cliente = ui.context.client
         cliente.on_disconnect(self.cerrar)
         cliente.on_delete(self.cerrar)
@@ -55,6 +58,22 @@ class VistaReglaFalsa:
         if not self._cargando_captura:
             self._retirar_resultado()
             self.estado.set_text("Datos editados. Calcula para obtener un resultado vigente.")
+
+    def _editar_exploracion(self) -> None:
+        if not self._cargando_captura:
+            self.exploracion.invalidar()
+
+    async def enviar_captura(self) -> None:
+        """Dirige Enter a la tarea activa sin validar parámetros de la otra tarea."""
+        if self.modos.value == MODO_BUSQUEDA:
+            await self.exploracion.enviar_busqueda()
+        else:
+            await self.resolver()
+
+    def cambiar_modo(self) -> None:
+        """Revoca candidatos al abandonar la búsqueda conservando los campos montados."""
+        if self.modos.value == MODO_INTERVALO:
+            self.exploracion.invalidar()
 
     def _retirar_resultado(self) -> None:
         if self.reproductor_pasos is not None:
@@ -96,22 +115,27 @@ class VistaReglaFalsa:
     def cargar_captura(self, captura: dict) -> None:
         """Restaura los campos indicados sin calcular y retira cualquier resultado anterior."""
         restaurar_captura(self, captura)
+        self.modos.set_value(MODO_INTERVALO)
+        self.exploracion.invalidar()
         self._editar()
 
     def esta_completamente_vacio(self) -> bool:
         """Indica si función y extremos están vacíos, independientemente de las preferencias."""
         captura = self.capturar()
-        return not any(captura[clave] is not None and str(captura[clave]).strip() for clave in CAMPOS_EJERCICIO)
+        return (not any(captura[clave] is not None and str(captura[clave]).strip() for clave in CAMPOS_EJERCICIO)
+                and not self.exploracion.hay_datos())
 
     def limpiar_todo(self) -> None:
         """Vacía el ejercicio y retira el resultado conservando preferencias y recientes de sesión."""
         vaciar_captura(self)
+        self.exploracion.restablecer()
         self._retirar_resultado()
         self.estado.set_text("Captura vacía. Ingresa una función o carga un ejemplo.")
 
     def cerrar(self) -> None:
         """Revoca resultados pendientes y publicados al perder el cliente o desmontar la vista."""
         self._cerrada = True
+        self.exploracion.cerrar()
         self._retirar_resultado()
         if not self.estado.is_deleted:
             self.estado.set_text(_MENSAJE_RECALCULAR)
@@ -119,6 +143,8 @@ class VistaReglaFalsa:
     def reabrir(self) -> None:
         """Permite nuevas solicitudes si el cliente vuelve a conectar con controles montados."""
         self._cerrada = self.contenedor_resultados.is_deleted
+        if not self._cerrada:
+            self.exploracion.reabrir()
 
     def obtener_contexto_ia(self) -> ContextoIA:
         """Devuelve captura y resumen vigente para Glosa sin incluir el historial completo."""

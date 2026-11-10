@@ -4,6 +4,8 @@ from nicegui import ui
 from src.frontend.vistas.biseccion.captura import GUIA_CONTINUIDAD
 from .acciones_captura import construir_acciones, mostrar_recientes
 from .captura import construir_captura
+from .exploracion import PanelExploracion
+from .modos_captura import MODO_BUSQUEDA, region_modo
 
 
 def componer_herramienta(vista) -> None:
@@ -15,6 +17,9 @@ def componer_herramienta(vista) -> None:
         with ui.element("div").classes("disposicion-dividida"):
             with ui.column().classes("disposicion-panel panel-tarjeta p-6 gap-4"):
                 construir_captura(vista)
+                with region_modo(vista, MODO_BUSQUEDA):
+                    vista.exploracion = PanelExploracion(vista)
+                    vista.exploracion.construir()
                 vista.contenedor_acciones = ui.column().classes("w-full gap-3")
                 vista.recientes = ui.column().classes("w-full gap-2")
             with ui.column().classes("disposicion-panel panel-tarjeta p-6 gap-4"):
@@ -28,6 +33,6 @@ def componer_herramienta(vista) -> None:
 def _montar_resultados(vista) -> None:
     with ui.element("h2").classes("text-lg font-semibold texto-principal"):
         ui.label("Resultado")
-    vista.estado = ui.label("Ingresa una función y sus extremos o carga un ejemplo.").classes(
+    vista.estado = ui.label("Ingresa una función y sus extremos, busca un intervalo o carga un ejemplo.").classes(
         "texto-secundario").props("role=status aria-live=polite aria-atomic=true")
     vista.contenedor_resultados = ui.column().classes("w-full gap-4")
