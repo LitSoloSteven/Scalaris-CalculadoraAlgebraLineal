@@ -2,7 +2,7 @@
 from src.frontend.controladores.biseccion.catalogo_criterios import CRITERIOS, condicion_criterio
 from src.backend.resolutores.raices.criterios_biseccion import CriterioParada
 from src.frontend.controladores.formato_numerico_raices import numero
-from .presentacion import metricas_resumen, titulo_estado
+from .presentacion import etiqueta_aproximacion, metricas_resumen, titulo_estado
 
 _CUMPLIMIENTOS = {"CUMPLIDO": "Condición cumplida", "NO_CUMPLIDO": "Condición no cumplida",
                   "CONTEO_COMPLETADO": "Conteo completado; no certifica precisión", "NO_APLICA": "No aplica"}
@@ -50,3 +50,10 @@ def descripcion_captura(captura: dict) -> str:
     if criterio is None:
         return f"tolerancia {captura['tolerancia']}"
     return condicion_criterio(criterio["tipo"], criterio["parametro"])
+
+
+def etiqueta_configurada(respuesta: dict, ampliado: dict | None) -> str:
+    """Distingue ausencia de valor y conteo provisional sin alterar el estado matemático."""
+    if respuesta.get("aproximacion") is not None and ampliado and ampliado["criterio"]["tipo"] == "iteraciones":
+        return "Aproximación provisional"
+    return etiqueta_aproximacion(respuesta)

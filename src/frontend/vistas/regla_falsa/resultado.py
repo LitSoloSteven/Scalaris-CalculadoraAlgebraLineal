@@ -6,12 +6,12 @@ from src.frontend.componentes.copia_resultado import renderizar_copia_resultado
 from src.frontend.componentes.precision_presentacion import leer_precision_presentacion
 from src.frontend.controladores.regla_falsa.diagnostico import detalles_diagnostico
 from src.frontend.controladores.regla_falsa.presentacion import (
-    aproximacion_presentada, avisos_resumen, etiqueta_aproximacion, metricas_resumen, titulo_estado,
+    aproximacion_presentada, avisos_resumen,
 )
 from src.frontend.controladores.regla_falsa.salidas_regla_falsa import (
     datos_copia_regla_falsa, datos_copia_examen_regla_falsa, datos_copia_configurada,
 )
-from src.frontend.controladores.regla_falsa.presentacion_ampliada import metricas_configuradas, titulo_configurado
+from src.frontend.controladores.regla_falsa.presentacion_ampliada import etiqueta_configurada, metricas_configuradas, titulo_configurado
 from .modo_examen import crear_interruptor_examen
 
 
@@ -20,8 +20,7 @@ def mostrar_resultado(vista, respuesta: dict, ampliado: dict | None = None) -> N
     with vista.contenedor_resultados:
         ui.label(titulo_configurado(respuesta, ampliado)).classes("text-xl font-bold texto-principal").props(
             "role=status aria-live=polite")
-        etiqueta = "Aproximación provisional" if ampliado and ampliado["criterio"]["tipo"] == "iteraciones" else etiqueta_aproximacion(respuesta)
-        ui.label(etiqueta).classes("texto-secundario")
+        ui.label(etiqueta_configurada(respuesta, ampliado)).classes("texto-secundario")
         if respuesta["aproximacion"] is not None:
             _montar_formato(vista, respuesta)
         ui.label(respuesta["mensaje"]).classes(
