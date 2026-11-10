@@ -85,3 +85,17 @@ def test_borrador_solo_envia_marcadores_finitos(monkeypatch):
         assert puntos[-1] == [2.1234567]
         assert vista.inferior.value == vista.superior.value == ""
     ejecutar_escenario(monkeypatch, comprobar)
+
+
+def test_cancelacion_enfoca_el_boton_dom(monkeypatch):
+    """El foco se devuelve al elemento DOM sin invocar un método inexistente de QBtn."""
+    async def comprobar(vista):
+        """Comprueba el destino real del foco emitido por una cancelación explícita."""
+        seleccion = vista.seleccion_grafico
+        llamadas = []
+        monkeypatch.setattr(seleccion.inicio.client, "run_javascript", lambda codigo: llamadas.append(codigo))
+        seleccion.iniciar()
+        seleccion.cancelar(devolver_foco=True)
+        assert llamadas[-1] == f"document.getElementById('{seleccion.inicio.html_id}')?.focus()"
+        assert not seleccion.activa and not seleccion.region.visible
+    ejecutar_escenario(monkeypatch, comprobar)

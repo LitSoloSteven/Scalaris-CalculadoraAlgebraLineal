@@ -84,7 +84,7 @@ class SeleccionGrafico:
         if not self.region.is_deleted:
             self.region.set_visibility(False)
         if devolver_foco and not self.inicio.is_deleted:
-            self.inicio.run_method("focus")
+            self.inicio.client.run_javascript(f"document.getElementById('{self.inicio.html_id}')?.focus()")
 
 
 def _abscisa_finita(valor) -> float | None:
