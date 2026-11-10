@@ -1,5 +1,5 @@
 """Proyección TeX de los valores finitos publicados por el motor de regla falsa."""
-from src.frontend.controladores.biseccion.formato_expresion import numero_tex
+from src.frontend.controladores.formato_funcion_real import numero_tex
 from src.frontend.controladores.biseccion.presentacion import numero
 
 
