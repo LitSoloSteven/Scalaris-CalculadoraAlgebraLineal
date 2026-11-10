@@ -18,7 +18,7 @@ def crear_figura(respuesta: dict, muestra: dict | None, fila: dict | None = None
     figura.update_layout(
         paper_bgcolor=COLOR_TRANSPARENTE, plot_bgcolor=COLOR_TRANSPARENTE,
         margin=dict(l=40, r=15, t=25, b=65), height=360,
-        legend=dict(orientation="h", y=-0.3), uirevision="regla_falsa", hovermode="closest",
+        legend=dict(orientation="h", y=-0.3), uirevision="regla_falsa", hovermode=False,
         xaxis_title="x", yaxis_title="f(x)", font_family="Space Grotesk, sans-serif",
     )
     aplicar_colores_figura(figura, "papel")

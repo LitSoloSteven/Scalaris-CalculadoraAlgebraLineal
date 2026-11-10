@@ -34,6 +34,7 @@ def test_cada_paso_conserva_tabla_secante_contexto_y_copia(monkeypatch, cambios)
             assert vista.obtener_contexto_ia().foco.captura.detalle["iteracion"] is fila
             seleccion = panel.tabla.tabla.selected[0]
             assert seleccion == {clave: valor_columna(fila, clave) for clave, _ in COLUMNAS}
+            assert panel.grafica.figure["layout"]["hovermode"] is False
             trazas = {traza["name"]: traza for traza in panel.grafica.figure["data"]}
             assert trazas["Cruce de secante (c, 0)"]["x"] == [fila["aproximacion"]]
             assert trazas["Cruce de secante (c, 0)"]["y"] == [0]
