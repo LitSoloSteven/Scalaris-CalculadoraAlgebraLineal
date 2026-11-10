@@ -8,7 +8,10 @@ from src.frontend.controladores.regla_falsa.diagnostico import detalles_diagnost
 from src.frontend.controladores.regla_falsa.presentacion import (
     aproximacion_presentada, avisos_resumen, etiqueta_aproximacion, metricas_resumen, titulo_estado,
 )
-from src.frontend.controladores.regla_falsa.salidas_regla_falsa import datos_copia_regla_falsa
+from src.frontend.controladores.regla_falsa.salidas_regla_falsa import (
+    datos_copia_regla_falsa, datos_copia_examen_regla_falsa,
+)
+from .modo_examen import crear_interruptor_examen
 
 
 def mostrar_resultado(vista, respuesta: dict) -> None:
@@ -28,7 +31,10 @@ def mostrar_resultado(vista, respuesta: dict) -> None:
             with ui.element("summary"):
                 ui.label("Diagnóstico del cálculo")
             _mostrar_datos(detalles_diagnostico(respuesta))
-        renderizar_copia_resultado(lambda: datos_copia_regla_falsa(respuesta, vista._precision_visual))
+        vista.interruptor_examen = crear_interruptor_examen(vista)
+        renderizar_copia_resultado(lambda: (
+            datos_copia_examen_regla_falsa if vista.modo_examen else datos_copia_regla_falsa
+        )(respuesta, vista._precision_visual))
 
 
 def _montar_formato(vista, respuesta: dict) -> None:

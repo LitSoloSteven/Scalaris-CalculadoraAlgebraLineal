@@ -9,6 +9,8 @@ from .exploracion import PanelExploracion
 from .modos_captura import MODO_BUSQUEDA, region_modo
 from .vista_previa import PanelVistaPrevia
 from .seleccion_grafico import SeleccionGrafico
+from .continuidad_intervalo import PanelContinuidad
+from .estados_entrada import EstadosEntrada
 
 
 def componer_herramienta(vista) -> None:
@@ -36,6 +38,10 @@ def componer_herramienta(vista) -> None:
 
 def _montar_captura(vista) -> None:
     construir_captura(vista)
+    vista.estados_entrada = EstadosEntrada(vista)
+    vista.estados_entrada.construir()
+    vista.continuidad = PanelContinuidad(vista)
+    vista.continuidad.construir()
     vista.previa_expresion = PreviaExpresion()
     with region_modo(vista, MODO_BUSQUEDA):
         vista.exploracion = PanelExploracion(vista)

@@ -32,6 +32,7 @@ class VistaReglaFalsa:
         self.ocupado = self._cargando_captura = self._cerrada = False
         self.historial = []
         self._precision_visual = DECIMALES_PRESENTACION_DEFECTO
+        self.modo_examen = False
         self.detalle_procedimiento = self._foco_procedimiento = self.velocidad_procedimiento = None
 
     def construir(self) -> None:
@@ -57,6 +58,8 @@ class VistaReglaFalsa:
     def _editar(self) -> None:
         if not self._cargando_captura:
             self._retirar_resultado()
+            self.estados_entrada.actualizar()
+            self.continuidad.programar()
             self.estado.set_text("Datos editados. Calcula para obtener un resultado vigente.")
 
     def _editar_exploracion(self) -> None:
@@ -97,6 +100,7 @@ class VistaReglaFalsa:
     async def resolver(self, *, puntero: bool = False) -> None:
         """Coordina un trabajador por vista y publica únicamente la captura aún vigente."""
         if not self._cerrada:
+            self.estados_entrada.validar()
             await resolver_calculo_raices(self, calcular_presentacion, _CONFIGURACION, puntero=puntero)
             if not self.ocupado and not self.estado.is_deleted and self.estado.text == _CONFIGURACION.mensaje_carga:
                 self.estado.set_text(_MENSAJE_RECALCULAR)
@@ -105,6 +109,7 @@ class VistaReglaFalsa:
         respuesta = datos["resultado"]
         self._huella_resultado = reflejar_intervalo(self, respuesta, huella)
         self.ultimo_resultado = respuesta
+        self.continuidad.region.set_visibility(False)
         mostrar_resultado(self, respuesta)
         self.detalle_procedimiento = PanelProcedimiento(self, datos)
         self.detalle_procedimiento.reproductor.velocidad = self.velocidad_procedimiento or "Normal"
@@ -139,6 +144,8 @@ class VistaReglaFalsa:
         self.vista_previa.sincronizar_busqueda()
         self.previa_expresion.programar("")
         self._retirar_resultado()
+        self.estados_entrada.limpiar()
+        self.continuidad.programar()
         self.estado.set_text("Captura vacía. Ingresa una función o carga un ejemplo.")
 
     def cerrar(self) -> None:
@@ -147,6 +154,7 @@ class VistaReglaFalsa:
         self.exploracion.cerrar()
         self.vista_previa.cerrar()
         self.previa_expresion.cerrar()
+        self.continuidad.cerrar()
         self._retirar_resultado()
         if not self.estado.is_deleted:
             self.estado.set_text(_MENSAJE_RECALCULAR)
@@ -158,6 +166,7 @@ class VistaReglaFalsa:
             self.exploracion.reabrir()
             self.vista_previa.reabrir()
             self.previa_expresion.reabrir(self.expresion.value or "")
+            self.continuidad.reabrir()
 
     def obtener_contexto_ia(self) -> ContextoIA:
         """Devuelve captura y resumen vigente para Glosa sin incluir el historial completo."""
