@@ -16,6 +16,10 @@ class EstadosEntrada:
             campo = getattr(self.vista, atributo)
             campo.without_auto_validation()
             campo.on("blur", lambda evento, clave=clave: self.revisar(clave))
+        for tipo, campo in self.vista.parametros_criterio.items():
+            if tipo != "residuo":
+                campo.without_auto_validation()
+                campo.on("blur", lambda evento: self.revisar("criterio"))
 
     def revisar(self, clave: str) -> None:
         """Revisa un campo visitado sin enfocar ni enviar un cálculo."""
@@ -29,12 +33,12 @@ class EstadosEntrada:
 
     def validar(self) -> bool:
         """Valida todos los campos y enfoca el primero inválido; devuelve si se puede enviar."""
-        self.revisados.update(CAMPOS)
+        self.revisados.update((*CAMPOS, "criterio"))
         errores = errores_captura(self.vista.capturar())
         self._mostrar(errores)
         if errores:
-            clave = next(clave for clave in CAMPOS if clave in errores)
-            getattr(self.vista, CAMPOS[clave]).run_method("focus")
+            clave = next(iter(errores))
+            self._campo(clave).run_method("focus")
             self.vista.estado.set_text("Revisa el campo señalado antes de calcular.")
         return not errores
 
@@ -44,8 +48,13 @@ class EstadosEntrada:
         self._mostrar({})
 
     def _mostrar(self, errores: dict) -> None:
-        for clave, atributo in CAMPOS.items():
+        for clave in (*CAMPOS, "criterio"):
             texto = errores.get(clave, "") if clave in self.revisados else ""
-            campo = getattr(self.vista, atributo)
+            campo = self._campo(clave)
             campo.error = texto or None
             campo.props(f'aria-invalid={str(bool(texto)).lower()}')
+
+    def _campo(self, clave: str):
+        if clave == "criterio":
+            return self.vista.parametros_criterio[self.vista.criterio.value]
+        return getattr(self.vista, CAMPOS[clave])
