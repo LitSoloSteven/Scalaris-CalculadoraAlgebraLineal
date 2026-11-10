@@ -62,6 +62,11 @@ class VistaReglaFalsa:
     def _editar_exploracion(self) -> None:
         if not self._cargando_captura:
             self.exploracion.invalidar()
+            self._actualizar_previas()
+
+    def _actualizar_previas(self) -> None:
+        self.vista_previa.programar()
+        self.previa_expresion.programar(self.expresion.value or "")
 
     async def enviar_captura(self) -> None:
         """Dirige Enter a la tarea activa sin validar parámetros de la otra tarea."""
@@ -74,6 +79,7 @@ class VistaReglaFalsa:
         """Revoca candidatos al abandonar la búsqueda conservando los campos montados."""
         if self.modos.value == MODO_INTERVALO:
             self.exploracion.invalidar()
+        self.seleccion_grafico.cancelar()
 
     def _retirar_resultado(self) -> None:
         if self.reproductor_pasos is not None:
@@ -117,6 +123,7 @@ class VistaReglaFalsa:
         restaurar_captura(self, captura)
         self.modos.set_value(MODO_INTERVALO)
         self.exploracion.invalidar()
+        self._actualizar_previas()
         self._editar()
 
     def esta_completamente_vacio(self) -> bool:
@@ -129,6 +136,8 @@ class VistaReglaFalsa:
         """Vacía el ejercicio y retira el resultado conservando preferencias y recientes de sesión."""
         vaciar_captura(self)
         self.exploracion.restablecer()
+        self.vista_previa.sincronizar_busqueda()
+        self.previa_expresion.programar("")
         self._retirar_resultado()
         self.estado.set_text("Captura vacía. Ingresa una función o carga un ejemplo.")
 
@@ -136,6 +145,8 @@ class VistaReglaFalsa:
         """Revoca resultados pendientes y publicados al perder el cliente o desmontar la vista."""
         self._cerrada = True
         self.exploracion.cerrar()
+        self.vista_previa.cerrar()
+        self.previa_expresion.cerrar()
         self._retirar_resultado()
         if not self.estado.is_deleted:
             self.estado.set_text(_MENSAJE_RECALCULAR)
@@ -145,6 +156,8 @@ class VistaReglaFalsa:
         self._cerrada = self.contenedor_resultados.is_deleted
         if not self._cerrada:
             self.exploracion.reabrir()
+            self.vista_previa.reabrir()
+            self.previa_expresion.reabrir(self.expresion.value or "")
 
     def obtener_contexto_ia(self) -> ContextoIA:
         """Devuelve captura y resumen vigente para Glosa sin incluir el historial completo."""

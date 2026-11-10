@@ -65,6 +65,8 @@ class PanelExploracion(PasoExploracion):
         if not self.vista._cargando_captura:
             self.invalidar()
             self.actualizar_paso()
+            if hasattr(self.vista, "vista_previa"):
+                self.vista.vista_previa.sincronizar_busqueda()
 
     def capturar(self) -> dict:
         """Entrega solo función, unidad, rango y paso; no consulta extremos ni parada."""

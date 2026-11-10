@@ -1,11 +1,14 @@
 """Orden de lectura y disposición adaptable de captura y resultados."""
 from nicegui import ui
+from src.frontend.componentes.previa_expresion_raices import PreviaExpresion
 
 from src.frontend.vistas.biseccion.captura import GUIA_CONTINUIDAD
 from .acciones_captura import construir_acciones, mostrar_recientes
 from .captura import construir_captura
 from .exploracion import PanelExploracion
 from .modos_captura import MODO_BUSQUEDA, region_modo
+from .vista_previa import PanelVistaPrevia
+from .seleccion_grafico import SeleccionGrafico
 
 
 def componer_herramienta(vista) -> None:
@@ -22,6 +25,10 @@ def componer_herramienta(vista) -> None:
             with ui.column().classes("disposicion-panel panel-tarjeta p-6 gap-4"):
                 _montar_resultados(vista)
         vista.contenedor_detalle = ui.column().classes("w-full gap-4 min-w-0")
+        vista.vista_previa = PanelVistaPrevia(vista)
+        vista.vista_previa.construir()
+        vista.seleccion_grafico = SeleccionGrafico(vista)
+        vista.seleccion_grafico.construir()
         with vista.contenedor_acciones:
             construir_acciones(vista)
         mostrar_recientes(vista)
@@ -29,6 +36,7 @@ def componer_herramienta(vista) -> None:
 
 def _montar_captura(vista) -> None:
     construir_captura(vista)
+    vista.previa_expresion = PreviaExpresion()
     with region_modo(vista, MODO_BUSQUEDA):
         vista.exploracion = PanelExploracion(vista)
         vista.exploracion.construir()
