@@ -47,6 +47,7 @@ def test_paso_automatico_no_desborda():
 def test_componente_conserva_la_seleccion_vigente(monkeypatch):
     """Un botón real carga el intervalo y una acción obsoleta no altera la vista."""
     async def comprobar(vista):
+        """Activa un candidato y conserva su acción para intentar usarla tras editar."""
         panel = preparar_exploracion(vista, "x^2-2")
         await panel.explorar()
         boton = acciones_exploracion(panel)[0]

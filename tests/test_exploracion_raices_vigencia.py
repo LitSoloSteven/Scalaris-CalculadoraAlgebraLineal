@@ -10,9 +10,11 @@ from src.frontend.controladores.coordinacion_trabajos_raices import CoordinadorT
 def test_cincuenta_ediciones_conservan_solo_el_ultimo_borrador(monkeypatch):
     """Cancelar esperas nunca libera la plaza del trabajador retenido."""
     async def comprobar():
+        """Retiene la primera solicitud y reemplaza cincuenta capturas pendientes."""
         inicio, liberar = asyncio.Event(), asyncio.Event()
         llamadas = []
         async def trabajar(calcular, captura):
+            """Conserva la plaza hasta que la prueba libera explícitamente el trabajo."""
             llamadas.append(captura["valor"])
             inicio.set()
             await liberar.wait()
@@ -38,9 +40,11 @@ def test_cincuenta_ediciones_conservan_solo_el_ultimo_borrador(monkeypatch):
 def test_desconexion_retira_borrador_y_no_publica_resultado(monkeypatch):
     """Cerrar no ejecuta el borrador ni publica el trabajo de una sesión anterior."""
     async def comprobar():
+        """Cierra con trabajo activo y pendiente antes de permitir la reconexión."""
         inicio, liberar = asyncio.Event(), asyncio.Event()
         llamadas = []
         async def trabajar(calcular, captura):
+            """Registra únicamente las capturas que obtienen una plaza real."""
             llamadas.append(captura)
             inicio.set()
             await liberar.wait()
@@ -67,7 +71,9 @@ def test_desconexion_retira_borrador_y_no_publica_resultado(monkeypatch):
 def test_error_vigente_se_propaga_y_la_plaza_se_recupera(monkeypatch):
     """Una excepción no conserva una plaza ocupada ni oculta el fallo al consumidor."""
     async def comprobar():
+        """Provoca un fallo vigente y comprueba la siguiente solicitud independiente."""
         async def trabajar(calcular, captura):
+            """Simula un error controlado en la primera captura solicitada."""
             if captura.get("fallar"):
                 raise ValueError("entrada rechazada")
             return calcular(captura)
