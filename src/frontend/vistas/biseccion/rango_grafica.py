@@ -2,6 +2,7 @@
 from nicegui import ui
 
 from src.frontend.componentes.captura_exploracion_raices import campos_rango as campos_rango_raices
+from src.frontend.componentes.sincronizacion_rango_raices import sincronizar_rango as sincronizar_paneles
 from .estado_captura import transaccion
 
 
@@ -19,11 +20,4 @@ def campos_rango(contexto: str) -> tuple:
 
 def sincronizar_rango(vista, valores: tuple) -> None:
     """Escribe ambos extremos en las dos tareas y emite un único cambio efectivo."""
-    previa, exploracion = vista.vista_previa, vista.exploracion
-    with transaccion(vista):
-        for panel in (previa, exploracion):
-            panel.minimo.set_value(valores[0])
-            panel.maximo.set_value(valores[1])
-    exploracion.actualizar_paso()
-    exploracion.invalidar()
-    previa.programar()
+    sincronizar_paneles(vista, valores, transaccion)

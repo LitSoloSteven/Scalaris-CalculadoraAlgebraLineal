@@ -2,6 +2,7 @@
 from nicegui import ui
 
 from src.frontend.componentes.captura_exploracion_raices import campos_rango
+from src.frontend.componentes.sincronizacion_rango_raices import sincronizar_rango as sincronizar_paneles
 from src.frontend.controladores.rango_exploracion_raices import rango_grafica
 from src.frontend.vistas.biseccion.estado_captura import transaccion
 
@@ -22,14 +23,7 @@ def sincronizar_rango(panel, origen) -> None:
     vista = panel.vista
     if vista._cargando_captura:
         return
-    valores = origen.minimo.value, origen.maximo.value
-    with transaccion(vista):
-        for destino in (panel, vista.exploracion):
-            destino.minimo.set_value(valores[0])
-            destino.maximo.set_value(valores[1])
-    vista.exploracion.actualizar_paso()
-    vista.exploracion.invalidar()
-    panel.programar()
+    sincronizar_paneles(vista, (origen.minimo.value, origen.maximo.value), transaccion)
 
 
 def usar_intervalo(panel) -> None:
