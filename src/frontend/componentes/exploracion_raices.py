@@ -18,6 +18,10 @@ class MontajeExploracion:
     vincular_envio: Callable
     clase_panel: str
     clase_resultados: str
+    enviar_desde_boton: Callable
+    campos_captura: Callable
+    editar_rango: Callable
+    crear_campo: Callable
 
 
 def construir_exploracion(panel, montaje: MontajeExploracion) -> None:
@@ -30,17 +34,17 @@ def construir_exploracion(panel, montaje: MontajeExploracion) -> None:
         _construir_paso(panel, montaje)
         with ui.row().classes("w-full gap-3"):
             panel.boton = ui.button("Explorar candidatos", color=None).classes("boton-principal").props("ripple=false")
-            montaje.vincular_envio(panel.boton, panel._enviar_desde_boton)
+            montaje.vincular_envio(panel.boton, montaje.enviar_desde_boton)
         panel.estado = ui.label(ESTADO_INICIAL).classes("texto-secundario").props("role=status aria-live=polite")
         panel.contenedor_resultados = ui.column().classes(f"{montaje.clase_resultados} w-full gap-4")
-    for campo in panel._campos_captura():
+    for campo in montaje.campos_captura():
         campo.on("keydown.enter", panel.enviar_busqueda)
-    panel.paso.on_value_change(panel._editar_rango)
+    panel.paso.on_value_change(montaje.editar_rango)
     panel.actualizar_paso()
 
 
 def _construir_paso(panel, montaje: MontajeExploracion) -> None:
     with montaje.desplegable("Avanzado"):
-        panel.paso = panel._campo("Paso h", PASO_EXPLORACION_DEFECTO)
+        panel.paso = montaje.crear_campo("Paso h", PASO_EXPLORACION_DEFECTO)
         panel.etiqueta_paso = ui.label().classes("text-sm texto-secundario")
         ui.button("Volver a automático", color=None, on_click=panel.restablecer_paso).classes("boton-discreto")

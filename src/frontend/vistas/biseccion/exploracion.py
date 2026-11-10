@@ -7,7 +7,7 @@ from src.backend.resolutores.raices.unidades_angulares import opciones_unidad
 
 from src.frontend.controladores.biseccion.vigencia_panel import invalidar_panel
 from src.frontend.controladores.biseccion.exploracion import (
-    LONGITUD_CAMPO_EXPLORACION, PASO_EXPLORACION_DEFECTO, presentar_candidato, resolver_exploracion, sugerir_paso,
+    LONGITUD_CAMPO_EXPLORACION, presentar_candidato, resolver_exploracion, sugerir_paso,
 )
 from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
 from src.frontend.componentes.exploracion_raices import ESTADO_INICIAL, MontajeExploracion, construir_exploracion
@@ -37,6 +37,7 @@ class PanelExploracion:
         """Monta campos con nombres accesibles y estados de carga, error y candidatos."""
         construir_exploracion(self, MontajeExploracion(
             campos_rango, desplegable, vincular_envio, "biseccion-panel-exploracion", "biseccion-candidatos",
+            self._enviar_desde_boton, self._campos_captura, self._editar_rango, self._campo,
         ))
 
     async def _enviar_desde_boton(self, evento) -> None:
