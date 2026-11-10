@@ -107,7 +107,7 @@ class PanelExploracion(PasoExploracion):
             return
         except Exception:
             _registro.exception("No se pudo presentar la exploración de regla falsa")
-            if revision == self._revision and not self.estado.is_deleted:
+            if self._sigue_vigente(revision, destino, huella) and not self.estado.is_deleted:
                 self.estado.set_text("No se pudo completar la exploración. Revisa la función y vuelve a intentarlo.")
         finally:
             if self.tarea is tarea:

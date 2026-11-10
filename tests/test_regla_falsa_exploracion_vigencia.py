@@ -131,3 +131,27 @@ def test_error_inesperado_se_recupera_sin_filtrar_detalles(monkeypatch):
         await panel.enviar_busqueda()
         assert panel.respuesta["estado"] == "EXITO"
     ejecutar_escenario(monkeypatch, comprobar)
+
+
+@pytest.mark.parametrize("eliminar", [False, True])
+def test_error_tardio_no_publica_en_un_destino_distinto(monkeypatch, eliminar):
+    """Sustituir o eliminar el destino también revoca los errores del trabajador anterior."""
+    async def comprobar(vista):
+        """Cambia el contenedor desde el trabajador y provoca después el fallo privado."""
+        panel = preparar_busqueda(vista)
+
+        async def fallar(calcular, captura):
+            """Deja obsoleto el destino antes de devolver un error inesperado."""
+            if eliminar:
+                panel.contenedor_resultados.delete()
+            else:
+                with vista.contenedor_resultados:
+                    panel.contenedor_resultados = ui.column()
+            raise RuntimeError("detalle privado")
+
+        monkeypatch.setattr(run, "io_bound", fallar)
+        await panel.enviar_busqueda()
+        assert "No se pudo completar" not in panel.estado.text
+        assert panel.respuesta is None and panel.boton.enabled
+        assert panel.coordinador.activos == 0
+    ejecutar_escenario(monkeypatch, comprobar)
