@@ -14,6 +14,11 @@ _MENSAJE_EVALUACION = (
 
 def resolver_captura(captura: Mapping[str, object]) -> dict:
     """Devuelve el sobre del motor o un error serializable de captura o adaptación."""
+    return serializar_resultado(resolver_captura_tipado(captura))
+
+
+def resolver_captura_tipado(captura: Mapping[str, object]) -> ResultadoReglaFalsa:
+    """Adapta y resuelve una vez conservando el resultado tipado para servicios del dominio."""
     try:
         entrada = preparar_entrada(captura)
     except ValueError as error:
@@ -23,12 +28,12 @@ def resolver_captura(captura: Mapping[str, object]) -> dict:
     try:
         resultado = regla_falsa(entrada)
         advertencias = tuple(dict.fromkeys(entrada.advertencias + resultado.advertencias))
-        return serializar_resultado(replace(resultado, advertencias=advertencias))
+        return replace(resultado, advertencias=advertencias)
     except (ValueError, TypeError, OverflowError, ZeroDivisionError, RecursionError):
         return _error_adaptacion(_MENSAJE_EVALUACION, "ERROR_ADAPTACION", "error_adaptacion")
 
 
-def _error_adaptacion(mensaje: str, codigo: str, motivo: str) -> dict:
-    return serializar_resultado(ResultadoReglaFalsa(
+def _error_adaptacion(mensaje: str, codigo: str, motivo: str) -> ResultadoReglaFalsa:
+    return ResultadoReglaFalsa(
         mensaje=mensaje, codigo_diagnostico=codigo, motivo_parada=motivo,
-    ))
+    )

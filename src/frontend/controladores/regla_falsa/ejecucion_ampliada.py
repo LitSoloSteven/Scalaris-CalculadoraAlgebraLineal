@@ -6,17 +6,17 @@ from src.backend.resolutores.raices.contrato_regla_falsa import ResultadoReglaFa
 from src.backend.resolutores.raices.regla_falsa_ampliada import resolver_regla_falsa_configurada
 from src.backend.resolutores.raices.sugerencias_regla_falsa import sugerir_acciones_regla_falsa
 from .configuracion_ampliada import preparar_configuracion
-from .controlador import resolver_captura
+from .controlador import resolver_captura_tipado
 from .serializacion import serializar_resultado
-from .captura import preparar_entrada
 
 
 def resolver_presentacion(captura: dict) -> dict:
     """Entrega resultado, criterio y sugerencias independientes; controla errores de adaptación."""
     try:
         if "criterio" not in captura and captura.get("cero_preferido") is None:
-            respuesta = resolver_captura(captura)
-            sugerencias = _sugerencias_clasicas(captura, respuesta)
+            resultado = resolver_captura_tipado(captura)
+            respuesta = serializar_resultado(resultado)
+            sugerencias = sugerir_acciones_regla_falsa(resultado.entrada, resultado) if resultado.entrada else ()
             return {"resultado": respuesta, "ampliado": None, "sugerencias": sugerencias}
         configuracion = preparar_configuracion(captura)
         ampliado = resolver_regla_falsa_configurada(configuracion)
@@ -35,12 +35,3 @@ def resolver_presentacion(captura: dict) -> dict:
     respuesta = serializar_resultado(ResultadoReglaFalsa(
         mensaje=mensaje, codigo_diagnostico="ENTRADA_INVALIDA", motivo_parada="entrada_invalida"))
     return {"resultado": respuesta, "ampliado": None, "sugerencias": ()}
-
-
-def _sugerencias_clasicas(captura: dict, respuesta: dict) -> tuple:
-    if respuesta["codigo_diagnostico"] != "DOMINIO_INVALIDO":
-        return ()
-    entrada = preparar_entrada(captura)
-    # El servicio requiere un resultado tipado; el sobre conserva sus estructuras anidadas.
-    resultado = ResultadoReglaFalsa(**{clave: valor for clave, valor in respuesta.items() if clave != "metodo"})
-    return sugerir_acciones_regla_falsa(entrada, resultado)
