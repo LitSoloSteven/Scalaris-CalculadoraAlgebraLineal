@@ -23,6 +23,7 @@ class TablaReglaFalsa:
                 'tabindex=0 role=region aria-label="Tabla de regla falsa con desplazamiento horizontal"'):
             self.tabla = ui.table(columns=[], rows=[], row_key="i", pagination=0, selection="single",
                                   on_select=self._elegir).classes("w-full").props("hide-bottom")
+            self.tabla.add_slot("body-selection", '<q-checkbox v-model="props.selected" :aria-label="\'Ver iteración \' + props.row.i" />')
         self.paginacion = PaginacionIteraciones(self.tabla, len(self.filas), self._preparar, (self.precision,))
         self.paginacion.construir()
 

@@ -34,6 +34,7 @@ class PanelProcedimiento:
                 "text-sm texto-secundario")
             self.grafica = ui.plotly(self._figura(None, True)).classes("regla-falsa-grafica w-full").props(
                 'role=img aria-label="Función, secante y evaluación del paso activo"')
+            self.grafica.on("plotly_afterplot", js_handler="() => window.scalaris?.sincronizarTemaPlotly?.()")
             if self.datos["aviso_grafica"]:
                 ui.label(self.datos["aviso_grafica"]).classes("texto-advertencia text-sm")
             self.estado_paso = ui.label().classes("texto-secundario").props("role=status aria-live=polite")
