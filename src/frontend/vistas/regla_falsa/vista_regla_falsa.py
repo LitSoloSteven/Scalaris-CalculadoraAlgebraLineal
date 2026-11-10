@@ -42,6 +42,8 @@ class VistaReglaFalsa:
         """Monta la herramienta y enlaza edición, Enter y revocación por desconexión o desmontaje."""
         componer_herramienta(self)
         for campo in self._campos_captura():
+            if campo in (self.expresion, self.inferior, self.superior, self.unidad_angular):
+                campo.on_value_change(self._revocar_cero)
             campo.on_value_change(self._editar)
             campo.on("keydown.enter", self.enviar_captura)
         for campo in (self.expresion, self.unidad_angular):
@@ -58,10 +60,12 @@ class VistaReglaFalsa:
         """Entrega campos crudos al controlador excluyendo la precisión visual."""
         return capturar(self)
 
-    def _editar(self, evento=None) -> None:
+    def _revocar_cero(self) -> None:
         if not self._cargando_captura:
-            if evento is not None and evento.sender in (self.expresion, self.inferior, self.superior, self.unidad_angular):
-                self._cero_preferido = None
+            self._cero_preferido = None
+
+    def _editar(self) -> None:
+        if not self._cargando_captura:
             actualizar_guia(self)
             self._retirar_resultado()
             self.estados_entrada.actualizar()
