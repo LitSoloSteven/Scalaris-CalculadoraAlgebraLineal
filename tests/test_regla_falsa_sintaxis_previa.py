@@ -1,6 +1,5 @@
 """Sintaxis parcial segura y auditoría explícita de los módulos compartidos."""
 import json
-import subprocess
 
 import pytest
 
@@ -9,6 +8,20 @@ from src.frontend.controladores.vista_previa_raices import preparar_vista_previa
 from tests import test_cumplimiento_reglas as reglas
 from tests.comun import RAIZ
 from tests.comun_regla_falsa_vista import ejecutar_escenario
+
+_MODULOS = (
+    "controladores/muestreo_raices.py", "controladores/formato_funcion_real.py",
+    "controladores/vista_previa_raices.py", "controladores/seleccion_muestra_raices.py",
+    "controladores/biseccion/muestreo.py", "controladores/biseccion/formato_expresion.py",
+    "controladores/biseccion/vista_previa.py", "controladores/regla_falsa/presentacion_grafica.py",
+    "controladores/regla_falsa/formulas_procedimiento.py", "componentes/previa_expresion_raices.py",
+    "componentes/borrador_intervalo_raices.py", "componentes/figura_funcion_real.py",
+    "vistas/biseccion/previa_expresion.py", "vistas/biseccion/seleccion_grafico.py", "vistas/biseccion/figura.py",
+    "vistas/regla_falsa/rango_previo.py", "vistas/regla_falsa/vista_previa.py",
+    "vistas/regla_falsa/seleccion_grafico.py", "vistas/regla_falsa/composicion.py",
+    "vistas/regla_falsa/exploracion.py", "vistas/regla_falsa/vista_regla_falsa.py",
+    "vistas/regla_falsa/procedimiento.py",
+)
 
 
 @pytest.mark.parametrize("expresion", ["x+", "desconocida(x)", "<img src=x onerror=alert(1)>", "x" * 10000])
@@ -43,7 +56,6 @@ def test_formula_cambia_y_no_publica_html_de_usuario(monkeypatch):
 ])
 def test_modulos_afectados_cumplen_reglas(monkeypatch, comprobar):
     """Audita todos los módulos de producción cambiados sin editar manifiestos existentes."""
-    rutas = subprocess.check_output(["git", "diff", "--name-only", "6741930", "--", "src/frontend"],
-                                    cwd=RAIZ, text=True).splitlines()
-    monkeypatch.setattr(reglas, "RUTAS_AUDITADAS", tuple(RAIZ / ruta for ruta in rutas))
+    rutas = tuple(RAIZ / "src/frontend" / ruta for ruta in _MODULOS)
+    monkeypatch.setattr(reglas, "RUTAS_AUDITADAS", rutas)
     comprobar()
