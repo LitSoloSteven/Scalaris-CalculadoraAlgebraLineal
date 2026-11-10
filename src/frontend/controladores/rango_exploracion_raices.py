@@ -23,3 +23,18 @@ def _extremo(valor, etiqueta: str) -> float:
     if not math.isfinite(numero):
         raise ValueError(f"{etiqueta} debe ser finito.")
     return numero
+
+
+def rango_evento(datos: object) -> tuple[float, float] | None:
+    """Valida un encuadre nativo de Plotly y descarta eventos ajenos a límites finitos."""
+    if not isinstance(datos, dict):
+        return None
+    if datos.get("xaxis.autorange") is True:
+        return RANGO_GRAFICA_DEFECTO
+    par = datos.get("xaxis.range") or (datos.get("xaxis.range[0]"), datos.get("xaxis.range[1]"))
+    if not isinstance(par, (tuple, list)) or len(par) != 2:
+        return None
+    try:
+        return rango_grafica({"x_min": par[0], "x_max": par[1]})
+    except ValueError:
+        return None

@@ -12,9 +12,10 @@ from src.frontend.componentes.colores_figuras import aplicar_colores_figura
 from src.frontend.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
 from src.frontend.controladores.actualizacion_cancelable import cancelar_actualizacion, programar_actualizacion
 from src.frontend.controladores.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
-from src.frontend.controladores.rango_exploracion_raices import RANGO_GRAFICA_DEFECTO
+from src.frontend.controladores.rango_exploracion_raices import RANGO_GRAFICA_DEFECTO, rango_evento, rango_grafica
 from src.frontend.controladores.vista_previa_raices import preparar_vista_previa
 from src.frontend.tema import PALETA_GRAFICOS
+from src.frontend.vistas.biseccion.estado_captura import transaccion
 from .rango_previo import construir_rango, sincronizar_rango
 
 _registro = logging.getLogger(__name__)
@@ -42,6 +43,7 @@ class PanelVistaPrevia:
             self.grafica = ui.plotly(self._figura()).classes("regla-falsa-grafica w-full").props(
                 'role=img aria-label="Gráfica previa de la función; selección alternativa en campos de texto"')
             self.grafica.on("plotly_afterplot", js_handler="() => window.scalaris?.sincronizarTemaPlotly?.()")
+            self.grafica.on("plotly_relayout", self._encuadrar)
             ui.label("El muestreo no certifica raíces ni continuidad. Los huecos no se conectan.").classes(
                 "text-sm texto-secundario")
 
@@ -53,6 +55,23 @@ class PanelVistaPrevia:
     def sincronizar_busqueda(self) -> None:
         """Recibe el rango de búsqueda conservando el resultado matemático."""
         sincronizar_rango(self, self.vista.exploracion)
+
+    def _encuadrar(self, evento) -> None:
+        if not self.disponible() or self.respuesta is None:
+            return
+        nuevo = rango_evento(evento.args)
+        if nuevo is None:
+            return
+        try:
+            if nuevo == rango_grafica(self.capturar()):
+                return
+        except ValueError:
+            pass
+        with self.vista.exploracion.minimo.client:
+            with transaccion(self.vista):
+                self.minimo.set_value(str(nuevo[0]))
+                self.maximo.set_value(str(nuevo[1]))
+            sincronizar_rango(self, self)
 
     def invalidar(self) -> None:
         """Revoca muestra, borrador y espera sin liberar un trabajador aún activo."""

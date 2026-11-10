@@ -8,6 +8,7 @@ from src.backend.resolutores.raices.unidades_angulares import opciones_unidad
 from src.frontend.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
 from src.frontend.controladores.actualizacion_cancelable import programar_actualizacion
 from src.frontend.controladores.biseccion.vista_previa import preparar_vista_previa, rango_grafica, RANGO_GRAFICA_DEFECTO
+from src.frontend.controladores.rango_exploracion_raices import rango_evento
 from src.frontend.controladores.biseccion.vigencia_panel import invalidar_panel
 from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
 from .captura import GUIA_CONTINUIDAD
@@ -169,14 +170,4 @@ class PanelVistaPrevia:
 
 
 def _rango_evento(datos) -> tuple[float, float] | None:
-    if not isinstance(datos, dict):
-        return None
-    if datos.get("xaxis.autorange") is True:
-        return RANGO_GRAFICA_DEFECTO
-    par = datos.get("xaxis.range") or (datos.get("xaxis.range[0]"), datos.get("xaxis.range[1]"))
-    if not isinstance(par, (tuple, list)) or len(par) != 2:
-        return None
-    try:
-        return rango_grafica({"x_min": par[0], "x_max": par[1]})
-    except ValueError:
-        return None
+    return rango_evento(datos)
