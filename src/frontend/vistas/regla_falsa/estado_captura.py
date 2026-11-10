@@ -5,6 +5,7 @@ from src.ai.huellas import calcular_huella
 from src.backend.resolutores.raices.contrato_regla_falsa import EntradaReglaFalsa
 from src.frontend.controladores.regla_falsa.captura import preparar_entrada
 from src.frontend.vistas.biseccion.estado_captura import transaccion
+from .selector_criterio import capturar_criterio, actualizar_guia
 
 CAMPOS = {
     "expresion": "expresion", "extremo_izquierdo": "inferior", "extremo_derecho": "superior",
@@ -20,7 +21,12 @@ CAMPOS_EJERCICIO = ("expresion", "extremo_izquierdo", "extremo_derecho")
 
 def capturar(vista) -> dict:
     """Devuelve los valores crudos de los controles sin incluir preferencias visuales."""
-    return {clave: getattr(vista, atributo).value for clave, atributo in CAMPOS.items()}
+    captura = {clave: getattr(vista, atributo).value for clave, atributo in CAMPOS.items()}
+    if vista.criterio.value != "residuo":
+        captura["criterio"] = capturar_criterio(vista)
+    if getattr(vista, "_cero_preferido", None) is not None:
+        captura["cero_preferido"] = vista._cero_preferido
+    return captura
 
 
 def restaurar_captura(vista, captura: dict) -> None:
@@ -29,6 +35,15 @@ def restaurar_captura(vista, captura: dict) -> None:
         for clave, atributo in CAMPOS.items():
             if clave in captura:
                 getattr(vista, atributo).set_value(captura[clave])
+        criterio = captura.get("criterio")
+        if criterio is not None:
+            vista.criterio.set_value(criterio["tipo"])
+            vista.parametros_criterio[criterio["tipo"]].set_value(criterio["parametro"])
+        elif "tolerancia" in captura:
+            vista.criterio.set_value("residuo")
+        if any(clave in captura for clave in (*CAMPOS_EJERCICIO, "unidad_angular", "cero_preferido")):
+            vista._cero_preferido = captura.get("cero_preferido")
+        actualizar_guia(vista)
 
 
 def reflejar_intervalo(vista, respuesta: dict, huella: str) -> str:
