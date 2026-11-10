@@ -13,6 +13,7 @@ from tests.comun_regla_falsa_vista import captura_regla_falsa, ejecutar_escenari
 @pytest.mark.parametrize("tipo,parametro", [("residuo", "1e-6"), ("ancho", ".7"), ("decimales", "0"),
                                              ("relativo", "1"), ("iteraciones", "1")])
 def test_canal_ampliado_conserva_sobre_y_metricas_del_backend(tipo, parametro):
+    """Contrasta el contrato separado y las métricas copiadas para cada criterio."""
     captura = captura_regla_falsa(criterio={"tipo": tipo, "parametro": parametro}, tolerancia="inactiva")
     configuracion = preparar_configuracion(captura)
     datos = calcular_presentacion(captura)
@@ -30,7 +31,9 @@ def test_canal_ampliado_conserva_sobre_y_metricas_del_backend(tipo, parametro):
 @pytest.mark.parametrize("tipo,parametro", [("ancho", ".7"), ("decimales", "0"),
                                              ("relativo", "1"), ("iteraciones", "1")])
 def test_vista_usa_condicion_real_sin_validar_tolerancia_inactiva(monkeypatch, tipo, parametro):
+    """La condición activa coincide en resumen, pasos, contexto y restauración."""
     async def comprobar(vista):
+        """Ejecuta controles reales con tolerancia inactiva inválida y cambia el formato visual."""
         vista.cargar_captura(captura_regla_falsa(criterio={"tipo": tipo, "parametro": parametro}, tolerancia="nan"))
         assert vista.estados_entrada.validar()
         await vista.resolver()
@@ -62,7 +65,9 @@ def test_vista_usa_condicion_real_sin_validar_tolerancia_inactiva(monkeypatch, t
 
 
 def test_parametro_visible_invalido_tiene_error_y_relativo_inicial_no_aplica(monkeypatch):
+    """Orienta sobre el parámetro visible y distingue porcentaje ausente en la primera fila."""
     async def comprobar(vista):
+        """Corrige un porcentaje inválido y comprueba el cierre con una sola iteración."""
         vista.cargar_captura(captura_regla_falsa(criterio={"tipo": "relativo", "parametro": "nan"}))
         assert not vista.estados_entrada.validar()
         assert vista.parametros_criterio["relativo"].error

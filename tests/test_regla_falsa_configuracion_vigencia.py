@@ -11,7 +11,9 @@ from tests.comun_regla_falsa_vista import captura_regla_falsa, ejecutar_escenari
 
 
 def test_normalizar_extremos_conserva_cero_y_reciente(monkeypatch):
+    """La normalización equivalente conserva el extremo elegido al guardar y recalcular."""
     async def comprobar(vista):
+        """Resuelve extremos invertidos y vuelve a ejecutar la captura reciente normalizada."""
         vista.cargar_captura(captura_regla_falsa(expresion="x*(x-1)", extremo_izquierdo="1",
                                                extremo_derecho="0", cero_preferido=1))
         await vista.resolver()
@@ -26,6 +28,7 @@ def test_normalizar_extremos_conserva_cero_y_reciente(monkeypatch):
 
 
 def test_conteo_sin_aproximacion_no_anuncia_valor_provisional():
+    """Copia y contexto respetan la ausencia de aproximación tras un error de sintaxis."""
     datos = calcular_presentacion(captura_regla_falsa(expresion="x+", criterio={"tipo": "iteraciones", "parametro": 1}))
     assert datos["resultado"]["estado"] == "ERROR"
     copia = next(iter(datos_copia_configurada(datos["resultado"], datos["ampliado"], 4).values()))
@@ -36,10 +39,13 @@ def test_conteo_sin_aproximacion_no_anuncia_valor_provisional():
 
 @pytest.mark.parametrize("cambio", ["criterio", "parametro", "ida_y_vuelta", "cerrar"])
 def test_configuracion_editada_no_publica_ejecucion_pendiente(monkeypatch, cambio):
+    """Revoca ejecuciones retenidas incluso tras volver a la configuración anterior."""
     async def comprobar(vista):
+        """Edita criterio o cliente antes de liberar la ejecución del motor real."""
         inicio, liberar = asyncio.Event(), asyncio.Event()
 
         async def trabajar(calcular, captura):
+            """Retiene la llamada al motor hasta que la captura haya sido revocada."""
             inicio.set()
             await liberar.wait()
             return calcular(captura)
