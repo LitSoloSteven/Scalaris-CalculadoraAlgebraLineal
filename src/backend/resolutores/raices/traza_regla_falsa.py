@@ -9,6 +9,22 @@ from .contrato_regla_falsa import EntradaReglaFalsa, IteracionReglaFalsa, Result
 from .decision_biseccion import signo_producto
 
 _CIERRES = {
+    "criterio_ancho_cumplido": (
+        "EXITO", "CRITERIO_ANCHO_CUMPLIDO",
+        "El ancho del intervalo posterior cumple el umbral; no certifica el error de la secante.",
+    ),
+    "criterio_decimales_cumplido": (
+        "EXITO", "CRITERIO_DECIMALES_CUMPLIDO",
+        "El ancho posterior cumple el umbral decimal; no garantiza cifras correctas de la aproximacion.",
+    ),
+    "criterio_relativo_cumplido": (
+        "EXITO", "CRITERIO_RELATIVO_CUMPLIDO",
+        "El cambio relativo entre aproximaciones cumple el porcentaje; no certifica exactitud.",
+    ),
+    "iteraciones_solicitadas_completadas": (
+        "EXITO", "ITERACIONES_SOLICITADAS_COMPLETADAS",
+        "Se completo el numero de iteraciones solicitado; no se certifica precision alcanzada.",
+    ),
     "raiz_en_extremo": (
         "EXITO", "RAIZ_EN_EXTREMO",
         "La funcion se evaluo como cero en un extremo; no se infiere unicidad.",
