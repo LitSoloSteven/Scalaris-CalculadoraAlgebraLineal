@@ -46,5 +46,5 @@ def construir_exploracion(panel, montaje: MontajeExploracion) -> None:
 def _construir_paso(panel, montaje: MontajeExploracion) -> None:
     with montaje.desplegable("Avanzado"):
         panel.paso = montaje.crear_campo("Paso h", PASO_EXPLORACION_DEFECTO)
-        panel.etiqueta_paso = ui.label().classes("text-sm texto-secundario")
         ui.button("Volver a automático", color=None, on_click=panel.restablecer_paso).classes("boton-discreto")
+    panel.etiqueta_paso = ui.label().classes("text-sm texto-secundario")
