@@ -1,14 +1,11 @@
 """Preparación acotada de una gráfica sin resolver ni validar criterios de parada."""
-import math
-
 from src.backend.resolutores.raices.limites_biseccion import LONGITUD_MAXIMA_EXPRESION
 from src.backend.resolutores.raices.normalizacion_funcion import normalizar_expresion
 from src.backend.resolutores.raices.unidades_angulares import opciones_unidad
-from .captura_criterio import real_capturado
+from src.frontend.controladores.rango_exploracion_raices import (
+    LONGITUD_CAMPO_GRAFICA, RANGO_GRAFICA_DEFECTO, rango_grafica,
+)
 from .muestreo import muestrear_funcion
-
-RANGO_GRAFICA_DEFECTO = (-10, 10)
-LONGITUD_CAMPO_GRAFICA = 64
 
 
 def preparar_vista_previa(captura: dict) -> dict:
@@ -28,24 +25,6 @@ def preparar_vista_previa(captura: dict) -> dict:
                 "entrada": entrada, "muestra": muestra}
     except ValueError as error:
         return {"estado": "ERROR", "mensaje": str(error)}
-
-
-def rango_grafica(captura: dict) -> tuple[float, float]:
-    """Devuelve un rango ascendente y finito; lanza ValueError si el borrador es inválido."""
-    inferior = _extremo(captura.get("x_min"), "El mínimo de la gráfica")
-    superior = _extremo(captura.get("x_max"), "El máximo de la gráfica")
-    if inferior >= superior:
-        raise ValueError("El rango de la gráfica requiere mínimo < máximo.")
-    return inferior, superior
-
-
-def _extremo(valor, etiqueta: str) -> float:
-    if isinstance(valor, str) and len(valor) > LONGITUD_CAMPO_GRAFICA:
-        raise ValueError("Un extremo de la gráfica es demasiado largo; usa notación científica.")
-    numero = real_capturado(valor, etiqueta)
-    if not math.isfinite(numero):
-        raise ValueError(f"{etiqueta} debe ser finito.")
-    return numero
 
 
 def _mensaje_muestra(muestra: dict) -> str:
