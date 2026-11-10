@@ -6,6 +6,10 @@ _EXTREMOS = {"reemplazar_a": "Se reemplaza a por c.", "reemplazar_b": "Se reempl
              "raiz": "Ambos extremos pasan a c, un cero evaluado.",
              "sin_cambio": "No se reemplaza ningún extremo."}
 _PARADAS = {
+    "criterio_ancho_cumplido": "Ancho del intervalo posterior menor que el umbral.",
+    "criterio_decimales_cumplido": "Ancho posterior menor que el umbral decimal; no certifica redondeo de la secante.",
+    "criterio_relativo_cumplido": "Cambio relativo entre aproximaciones menor que el porcentaje.",
+    "iteraciones_solicitadas_completadas": "Conteo solicitado completado; no certifica precisión.",
     "tolerancia_residuo": "Residuo menor que la tolerancia.",
     "raiz_en_aproximacion": "Cero evaluado en la aproximación de la secante.",
     "limite_iteraciones": "Límite de iteraciones alcanzado.",

@@ -48,7 +48,13 @@ class EstadosEntrada:
         self._mostrar({})
 
     def _mostrar(self, errores: dict) -> None:
-        for clave in (*CAMPOS, "criterio"):
+        activo = self.vista.criterio.value
+        claves = (*CAMPOS, "criterio") if activo != "residuo" else tuple(CAMPOS)
+        for tipo, campo in self.vista.parametros_criterio.items():
+            if tipo != activo:
+                campo.error = None
+                campo.props("aria-invalid=false")
+        for clave in claves:
             texto = errores.get(clave, "") if clave in self.revisados else ""
             campo = self._campo(clave)
             campo.error = texto or None
