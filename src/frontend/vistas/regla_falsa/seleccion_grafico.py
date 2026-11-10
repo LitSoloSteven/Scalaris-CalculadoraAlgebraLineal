@@ -1,8 +1,7 @@
 """Borrador accesible a partir de puntos reales de una muestra vigente."""
 from math import isfinite
-from src.frontend.componentes.borrador_intervalo_raices import construir_borrador
+from src.frontend.componentes.borrador_intervalo_raices import construir_borrador, confirmar_borrador
 from src.frontend.controladores.captura_real import real_capturado
-from src.frontend.controladores.rango_exploracion_raices import rango_grafica
 from src.frontend.controladores.seleccion_muestra_raices import abscisa_muestreada
 
 
@@ -70,14 +69,7 @@ class SeleccionGrafico:
         """Valida los campos y carga el intervalo sin iniciar un cálculo ni alterar el rango."""
         if not self.activa or not self.vista.vista_previa._montada():
             return
-        try:
-            inferior, superior = rango_grafica({"x_min": self.campos[0].value, "x_max": self.campos[1].value})
-        except ValueError as error:
-            self.estado.set_text(str(error))
-            return
-        self.cancelar()
-        self.vista.cargar_captura({"extremo_izquierdo": str(inferior), "extremo_derecho": str(superior)})
-        self.vista.inferior.run_method("focus")
+        confirmar_borrador(self)
 
     def cancelar(self, *, devolver_foco: bool = False) -> None:
         """Descarta los marcadores y devuelve el foco cuando la cancelación es explícita."""

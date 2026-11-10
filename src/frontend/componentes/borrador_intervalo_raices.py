@@ -1,6 +1,7 @@
 """Controles comunes para confirmar extremos sin ejecutar un método."""
 from collections.abc import Callable
 from nicegui import ui
+from src.frontend.controladores.rango_exploracion_raices import rango_grafica
 
 
 def construir_borrador(seleccion, instruccion: str, al_editar: Callable[[], None]) -> None:
@@ -21,3 +22,15 @@ def construir_borrador(seleccion, instruccion: str, al_editar: Callable[[], None
     for campo in seleccion.campos:
         campo.on_value_change(al_editar)
     seleccion.region.set_visibility(False)
+
+
+def confirmar_borrador(seleccion) -> None:
+    """Valida campos, carga extremos y enfoca la captura sin ejecutar ningún método."""
+    try:
+        inferior, superior = rango_grafica({"x_min": seleccion.campos[0].value, "x_max": seleccion.campos[1].value})
+    except ValueError as error:
+        seleccion.estado.set_text(str(error))
+        return
+    seleccion.cancelar()
+    seleccion.vista.cargar_captura({"extremo_izquierdo": str(inferior), "extremo_derecho": str(superior)})
+    seleccion.vista.inferior.run_method("focus")

@@ -1,10 +1,9 @@
 """Borrador editable para confirmar dos extremos elegidos en el gráfico."""
 from math import isfinite
 
-from src.frontend.componentes.borrador_intervalo_raices import construir_borrador
+from src.frontend.componentes.borrador_intervalo_raices import construir_borrador, confirmar_borrador
 
 from src.frontend.controladores.biseccion.captura_criterio import real_capturado
-from src.frontend.controladores.biseccion.vista_previa import rango_grafica
 from .modos_captura import MODO_BUSQUEDA
 
 
@@ -84,14 +83,7 @@ class SeleccionGrafico:
         """Valida el borrador y carga ambos extremos sin iniciar un cálculo."""
         if not self.activa or self.vista.modos.value != MODO_BUSQUEDA:
             return
-        try:
-            inferior, superior = rango_grafica({"x_min": self.campos[0].value, "x_max": self.campos[1].value})
-        except ValueError as error:
-            self.estado.set_text(str(error))
-            return
-        self.cancelar()
-        self.vista.cargar_captura({"extremo_izquierdo": str(inferior), "extremo_derecho": str(superior)})
-        self.vista.inferior.run_method("focus")
+        confirmar_borrador(self)
 
     def cancelar(self, *, devolver_foco: bool = False) -> None:
         """Descarta la selección sin modificar el rango ni la captura."""
