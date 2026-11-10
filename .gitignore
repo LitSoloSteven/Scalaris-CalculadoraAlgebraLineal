@@ -43,3 +43,5 @@ $RECYCLE.BIN/
 htmlcov/git add .
 
 .nicegui
+/.agents/
+/graphify-out/
