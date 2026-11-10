@@ -50,7 +50,7 @@ class PaginacionIteraciones:
         columnas, filas = self._preparar_pagina(inicio, fin)
         self.tabla.columns = [{"name": clave, "label": etiqueta, "field": clave, "align": "left"}
                               for clave, etiqueta in columnas]
-        self.tabla.update_rows(filas)
+        self.tabla.update_rows(filas, clear_selection=False)
         self.anterior.set_enabled(inicio > 0)
         self.siguiente.set_enabled(fin < self.total)
         self.estado.set_text(f"Filas {inicio + 1 if self.total else 0} a {fin} de {self.total}")
