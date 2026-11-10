@@ -12,6 +12,7 @@ from src.backend.resolutores.raices.sugerencias_regla_falsa import sugerir_accio
 @pytest.mark.parametrize("expresion,esperado", [("sqrt(x)-1", (0, 4)),
     ("1/(x-0.1234)", None), ("sqrt(x)/(x-0.1234)", None), ("x^2+1", None)])
 def test_sugerencia_estructural_no_atraviesa_polos_ni_muta_resultados(expresion, esperado):
+    """Propone solo recortes seguros y conserva idéntico el resultado de origen."""
     entrada = EntradaReglaFalsa(expresion=expresion, extremo_izquierdo=-1, extremo_derecho=4)
     resultado = regla_falsa(entrada)
     original = deepcopy(resultado)
@@ -25,6 +26,7 @@ def test_sugerencia_estructural_no_atraviesa_polos_ni_muta_resultados(expresion,
 
 
 def test_rechazar_resultado_ajeno_y_contratos_invalidos():
+    """Rechaza resultados de otra entrada y objetos ajenos al contrato de regla falsa."""
     entrada = EntradaReglaFalsa(expresion="sqrt(x)-1", extremo_izquierdo=-1, extremo_derecho=4)
     with pytest.raises(ValueError):
         sugerir_acciones_regla_falsa(replace(entrada, expresion="x"), regla_falsa(entrada))

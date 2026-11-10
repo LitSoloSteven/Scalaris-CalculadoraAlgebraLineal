@@ -18,7 +18,9 @@ def publicar_sugerencia(vista):
 
 
 def test_cargar_propuesta_no_calcula_y_permanece_el_resultado_original(monkeypatch):
+    """Cargar una sugerencia solo cambia extremos y retira el resultado publicado."""
     async def comprobar(vista):
+        """Carga el recorte real, contrasta inmutabilidad y calcula únicamente al solicitarlo."""
         datos = publicar_sugerencia(vista)
         original = deepcopy(datos["resultado"])
         assert len(datos["sugerencias"]) == 1
@@ -34,7 +36,9 @@ def test_cargar_propuesta_no_calcula_y_permanece_el_resultado_original(monkeypat
 
 @pytest.mark.parametrize("cambio", ["expresion", "criterio", "cerrar", "ocupada", "propuesta_ajena"])
 def test_sugerencia_antigua_o_ajena_no_carga_campos(monkeypatch, cambio):
+    """Callbacks obsoletos o propuestas sin identidad vigente no modifican la captura."""
     async def comprobar(vista):
+        """Revoca la respuesta por edición o ciclo de vida antes de reproducir la acción."""
         datos = publicar_sugerencia(vista)
         propuesta = datos["sugerencias"][0]
         if cambio == "expresion":
