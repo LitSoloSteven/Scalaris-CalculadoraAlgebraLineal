@@ -3,7 +3,7 @@ from nicegui import ui
 
 from src.frontend.componentes.glosa_foco import crear_accion_explicacion
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos, renderizar_latex
-from src.frontend.controladores.biseccion.formato_expresion import formatear_expresion
+from src.frontend.controladores.formato_funcion_real import formatear_expresion
 from src.frontend.controladores.regla_falsa.formulas_procedimiento import formulas_iteracion
 from src.frontend.controladores.regla_falsa.pasos import construir_pasos, referencia_paso
 from src.frontend.controladores.regla_falsa.tabla import COLUMNAS, valor_columna
