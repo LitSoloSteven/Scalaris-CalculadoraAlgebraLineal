@@ -4,6 +4,7 @@ from math import isfinite
 from src.frontend.componentes.borrador_intervalo_raices import construir_borrador, confirmar_borrador
 
 from src.frontend.controladores.biseccion.captura_criterio import real_capturado
+from src.frontend.controladores.seleccion_muestra_raices import puntos_borrador
 from .modos_captura import MODO_BUSQUEDA
 
 
@@ -69,14 +70,7 @@ class SeleccionGrafico:
     def _dibujar_borrador(self) -> None:
         if not self.activa:
             return
-        puntos = []
-        for campo in self.campos:
-            try:
-                punto = real_capturado(campo.value, "El extremo")
-            except ValueError:
-                continue
-            if isfinite(punto):
-                puntos.append(punto)
+        puntos = puntos_borrador(tuple(campo.value for campo in self.campos))
         self.vista.vista_previa.compartido.borrador(puntos)
 
     def confirmar(self) -> None:

@@ -1,5 +1,6 @@
 """Validación de eventos nativos contra la curva vigente del servidor."""
 from math import isfinite
+from src.frontend.controladores.captura_real import real_capturado
 
 
 def abscisa_muestreada(datos: object, muestra: dict, identidad: str) -> float | None:
@@ -32,3 +33,16 @@ def _numero_finito(valor: object) -> bool:
         return isfinite(valor)
     except OverflowError:
         return False
+
+
+def puntos_borrador(valores: tuple) -> list[float]:
+    """Convierte campos editables en coordenadas finitas sin exigir un intervalo completo."""
+    puntos = []
+    for valor in valores:
+        try:
+            punto = real_capturado(valor, "El extremo")
+        except ValueError:
+            continue
+        if isfinite(punto):
+            puntos.append(punto)
+    return puntos

@@ -1,8 +1,7 @@
 """Borrador accesible a partir de puntos reales de una muestra vigente."""
-from math import isfinite
 from src.frontend.componentes.borrador_intervalo_raices import construir_borrador, confirmar_borrador
 from src.frontend.controladores.captura_real import real_capturado
-from src.frontend.controladores.seleccion_muestra_raices import abscisa_muestreada
+from src.frontend.controladores.seleccion_muestra_raices import abscisa_muestreada, puntos_borrador
 
 
 class SeleccionGrafico:
@@ -55,14 +54,7 @@ class SeleccionGrafico:
     def _dibujar_borrador(self) -> None:
         if not self.activa:
             return
-        puntos = []
-        for campo in self.campos:
-            try:
-                punto = real_capturado(campo.value, "El extremo")
-            except ValueError:
-                continue
-            if isfinite(punto):
-                puntos.append(punto)
+        puntos = puntos_borrador(tuple(campo.value for campo in self.campos))
         self.vista.vista_previa.dibujar_borrador(puntos)
 
     def confirmar(self) -> None:
