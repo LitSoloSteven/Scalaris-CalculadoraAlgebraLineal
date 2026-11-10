@@ -2,6 +2,7 @@
 from math import isfinite
 
 from nicegui import ui
+from src.frontend.componentes.borrador_intervalo_raices import construir_borrador
 
 from src.frontend.controladores.biseccion.captura_criterio import real_capturado
 from src.frontend.controladores.biseccion.vista_previa import rango_grafica
@@ -17,20 +18,7 @@ class SeleccionGrafico:
 
     def construir(self) -> None:
         """Monta la acción de inicio, la alternativa editable y el estado del borrador."""
-        self.inicio = ui.button("Seleccionar en el gráfico", color=None, on_click=self.iniciar).classes("boton-discreto")
-        self.region = ui.column().classes("w-full gap-2")
-        with self.region:
-            ui.label("Marca dos puntos dentro de los ejes o escribe los extremos.").classes("text-sm texto-secundario")
-            self.campos = tuple(ui.input(etiqueta).classes("w-full matriz-entrada").props("inputmode=decimal maxlength=64")
-                                for etiqueta in ("Extremo a del borrador", "Extremo b del borrador"))
-            self.estado = ui.label().classes("texto-secundario").props("role=status")
-            with ui.row().classes("w-full gap-2"):
-                ui.button("Confirmar intervalo", color=None, on_click=self.confirmar).classes("boton-principal")
-                ui.button("Cancelar", color=None, on_click=lambda: self.cancelar(devolver_foco=True)).classes("boton-discreto")
-        self.region.on("keydown.escape", lambda: self.cancelar(devolver_foco=True))
-        for campo in self.campos:
-            campo.on_value_change(self._dibujar_borrador)
-        self.region.set_visibility(False)
+        construir_borrador(self, "Marca dos puntos dentro de los ejes o escribe los extremos.")
 
     def enlazar(self, grafico) -> None:
         """Proyecta pulsaciones del nodo estable y conserva la entrada manual como alternativa."""
