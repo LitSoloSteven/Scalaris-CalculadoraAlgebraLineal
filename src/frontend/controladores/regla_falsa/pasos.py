@@ -17,7 +17,8 @@ def construir_pasos(respuesta: dict) -> tuple[tuple[PasoReproductor, ...], tuple
     pasos = [PasoReproductor(0, "planteamiento", descripcion,
                             "La garantía requiere continuidad y encierro; el residuo no es una cota del error en x.")]
     pasos.extend(_paso_iteracion(fila, indice) for indice, fila in enumerate(respuesta["iteraciones"], 1))
-    pasos.append(PasoReproductor(len(pasos), "final", titulo_estado(respuesta), respuesta["mensaje"], 2))
+    ultima = respuesta["iteraciones"][-1] if respuesta["iteraciones"] else None
+    pasos.append(PasoReproductor(len(pasos), "final", titulo_estado(respuesta), respuesta["mensaje"], 2, ultima))
     pasos = tuple(replace(paso, meta_explicar={
         "indice": paso.indice + 1, "total": len(pasos), "tipo": paso.tipo,
         "operacion": paso.descripcion, "detalle": {"explicacion": paso.explicacion, "iteracion": paso.cuerpo},
