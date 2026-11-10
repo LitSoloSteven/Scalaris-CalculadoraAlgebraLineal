@@ -61,7 +61,9 @@ class PanelProcedimiento:
 
     def _mostrar_cuerpo(self, paso) -> None:
         if paso.cuerpo is not None:
-            mostrar_accion_examen(self.vista.interruptor_examen, paso.cuerpo, self.respuesta)
+            interruptor = getattr(self.vista, "interruptor_examen", None)
+            if interruptor is not None and not interruptor.is_deleted:
+                mostrar_accion_examen(interruptor, paso.cuerpo, self.respuesta)
             for formula in formulas_iteracion(paso.cuerpo):
                 renderizar_latex(formula, vigilar_region=True)
             for clave, etiqueta in COLUMNAS:
