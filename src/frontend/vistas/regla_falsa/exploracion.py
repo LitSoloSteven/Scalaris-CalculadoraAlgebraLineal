@@ -103,9 +103,7 @@ class PanelExploracion(PasoExploracion):
         self.estado.set_text("Explorando la malla de la función…")
         try:
             respuesta = await self.coordinador.ejecutar(captura)
-            if (respuesta is not None and revision == self._revision and not self._cerrado
-                    and destino is self.contenedor_resultados and not destino.is_deleted
-                    and huella == calcular_huella(self.capturar())):
+            if respuesta is not None and self._sigue_vigente(revision, destino, huella):
                 self._publicar(respuesta)
         except asyncio.CancelledError:
             return
@@ -117,6 +115,11 @@ class PanelExploracion(PasoExploracion):
             if self.tarea is tarea:
                 self.tarea = None
                 self._mostrar_carga(False)
+
+    def _sigue_vigente(self, revision: int, destino, huella: str) -> bool:
+        return (revision == self._revision and not self._cerrado
+                and destino is self.contenedor_resultados and not destino.is_deleted
+                and huella == calcular_huella(self.capturar()))
 
     def _mostrar_carga(self, ocupado: bool) -> None:
         if not self.boton.is_deleted:

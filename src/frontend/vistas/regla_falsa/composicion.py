@@ -16,10 +16,7 @@ def componer_herramienta(vista) -> None:
         ui.label(GUIA_CONTINUIDAD).classes("text-sm texto-secundario")
         with ui.element("div").classes("disposicion-dividida"):
             with ui.column().classes("disposicion-panel panel-tarjeta p-6 gap-4"):
-                construir_captura(vista)
-                with region_modo(vista, MODO_BUSQUEDA):
-                    vista.exploracion = PanelExploracion(vista)
-                    vista.exploracion.construir()
+                _montar_captura(vista)
                 vista.contenedor_acciones = ui.column().classes("w-full gap-3")
                 vista.recientes = ui.column().classes("w-full gap-2")
             with ui.column().classes("disposicion-panel panel-tarjeta p-6 gap-4"):
@@ -28,6 +25,13 @@ def componer_herramienta(vista) -> None:
         with vista.contenedor_acciones:
             construir_acciones(vista)
         mostrar_recientes(vista)
+
+
+def _montar_captura(vista) -> None:
+    construir_captura(vista)
+    with region_modo(vista, MODO_BUSQUEDA):
+        vista.exploracion = PanelExploracion(vista)
+        vista.exploracion.construir()
 
 
 def _montar_resultados(vista) -> None:
