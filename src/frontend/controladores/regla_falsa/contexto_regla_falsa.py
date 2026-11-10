@@ -2,7 +2,7 @@
 from copy import deepcopy
 
 from .presentacion import etiqueta_aproximacion, titulo_estado
-from .presentacion_ampliada import datos_criterio, titulo_configurado
+from .presentacion_ampliada import datos_criterio, etiqueta_configurada, titulo_configurado
 
 
 def resumir_contexto_regla_falsa(respuesta: dict | None, ampliado: dict | None = None) -> dict | None:
@@ -20,6 +20,5 @@ def resumir_contexto_regla_falsa(respuesta: dict | None, ampliado: dict | None =
         resumen["configuracion_aplicada"] = deepcopy(ampliado)
         resumen["condicion_aplicada"] = dict(datos_criterio(ampliado))
         resumen["titulo_estado"] = titulo_configurado(respuesta, ampliado)
-        if ampliado["criterio"]["tipo"] == "iteraciones":
-            resumen["etiqueta_aproximacion"] = "Aproximación provisional"
+        resumen["etiqueta_aproximacion"] = etiqueta_configurada(respuesta, ampliado)
     return resumen

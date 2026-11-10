@@ -3,9 +3,8 @@ from .diagnostico import detalles_diagnostico
 from .presentacion_examen import texto_filas_examen
 from .presentacion import (
     aproximacion_presentada, avisos_resumen, etiqueta_aproximacion,
-    metricas_resumen, titulo_estado,
 )
-from .presentacion_ampliada import metricas_configuradas, titulo_configurado
+from .presentacion_ampliada import etiqueta_configurada, metricas_configuradas, titulo_configurado
 
 
 def texto_copia_regla_falsa(respuesta: dict, decimales: int) -> str:
@@ -15,8 +14,7 @@ def texto_copia_regla_falsa(respuesta: dict, decimales: int) -> str:
 
 def _texto_copia(respuesta: dict, decimales: int, ampliado: dict | None = None) -> str:
     aproximacion = aproximacion_presentada(respuesta, decimales)
-    etiqueta = "Aproximación provisional" if ampliado and ampliado["criterio"]["tipo"] == "iteraciones" else etiqueta_aproximacion(respuesta)
-    lineas = ["Regla falsa", titulo_configurado(respuesta, ampliado), etiqueta]
+    lineas = ["Regla falsa", titulo_configurado(respuesta, ampliado), etiqueta_configurada(respuesta, ampliado)]
     if respuesta.get("aproximacion") is not None:
         lineas.append(aproximacion)
     lineas.append(respuesta["mensaje"])
