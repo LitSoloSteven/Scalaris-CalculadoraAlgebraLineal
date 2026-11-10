@@ -28,7 +28,7 @@ def datos_copia_regla_falsa(respuesta: dict, decimales: int) -> dict[str, str]:
 
 def texto_copia_examen_regla_falsa(respuesta: dict, decimales: int) -> str:
     """Añade razonamiento por fila a una copia nueva y conserva la firma y salida clásicas."""
-    return texto_copia_regla_falsa(respuesta, decimales) + "\n\n" + texto_filas_examen(respuesta["iteraciones"])
+    return texto_copia_regla_falsa(respuesta, decimales) + "\n\n" + texto_filas_examen(respuesta)
 
 
 def datos_copia_examen_regla_falsa(respuesta: dict, decimales: int) -> dict[str, str]:
