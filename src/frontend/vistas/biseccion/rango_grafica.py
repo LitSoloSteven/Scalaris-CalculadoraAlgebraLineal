@@ -1,7 +1,7 @@
 """Controles del rango visual independiente de los extremos del método."""
 from nicegui import ui
 
-from src.frontend.controladores.biseccion.vista_previa import LONGITUD_CAMPO_GRAFICA, RANGO_GRAFICA_DEFECTO
+from src.frontend.componentes.captura_exploracion_raices import campos_rango as campos_rango_raices
 from .estado_captura import transaccion
 
 
@@ -14,10 +14,7 @@ def construir_rango(panel) -> None:
 
 def campos_rango(contexto: str) -> tuple:
     """Monta los dos campos que representan el rango compartido en una tarea."""
-    with ui.element("div").classes("biseccion-campos"):
-        minimo = _campo(f"Mínimo del {contexto}", RANGO_GRAFICA_DEFECTO[0])
-        maximo = _campo(f"Máximo del {contexto}", RANGO_GRAFICA_DEFECTO[1])
-    return minimo, maximo
+    return campos_rango_raices(contexto, "biseccion-campos")
 
 
 def sincronizar_rango(vista, valores: tuple) -> None:
@@ -32,6 +29,3 @@ def sincronizar_rango(vista, valores: tuple) -> None:
     previa.programar()
 
 
-def _campo(etiqueta: str, valor: int):
-    return ui.input(etiqueta, value=str(valor)).classes("w-full matriz-entrada").props(
-        f"inputmode=decimal maxlength={LONGITUD_CAMPO_GRAFICA} autocomplete=off")
