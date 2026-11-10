@@ -1,6 +1,7 @@
 """Previa independiente, rango compartido y descarte de muestreos antiguos."""
 import asyncio
 import json
+from types import SimpleNamespace
 
 import pytest
 from nicegui import run
@@ -27,6 +28,7 @@ def test_previa_sin_extremos_ni_parada(monkeypatch, expresion):
         assert figura["layout"]["hovermode"] == "closest"
         assert figura["data"][0]["hoverinfo"] == "none"
         assert figura["data"][0]["connectgaps"] is False
+        assert figura["data"][1]["meta"]["scalaris_colores"]["marker.color"] == "serie:1"
         if expresion.startswith(("sqrt", "1/")):
             assert panel.respuesta["muestra"]["huecos"]
         json.dumps(panel.respuesta, allow_nan=False)
@@ -98,3 +100,21 @@ def test_unidades_y_limites_reutilizan_el_dominio():
     radianes = preparar_vista_previa(captura)
     assert grados["muestra"]["y"][-1] == pytest.approx(1)
     assert grados["muestra"]["y"][-1] != radianes["muestra"]["y"][-1]
+
+
+def test_encuadre_sincroniza_sin_cargar_extremos(monkeypatch):
+    """El encuadre nativo valida límites y no convierte el rango visual en intervalo matemático."""
+    async def comprobar(vista):
+        """Envía zoom y eventos ajenos a límites con la curva ya publicada."""
+        panel = vista.vista_previa
+        vista.expresion.set_value("x^2-2")
+        await panel.tarea
+        panel._encuadrar(SimpleNamespace(args={"xaxis.range[0]": -2, "xaxis.range[1]": 3}))
+        await panel.tarea
+        assert panel.minimo.value == vista.exploracion.minimo.value == "-2.0"
+        assert panel.maximo.value == vista.exploracion.maximo.value == "3.0"
+        for datos in ({"xaxis.range": [0, float("inf")]}, {"xaxis.range": [2, 1]}, None):
+            panel._encuadrar(SimpleNamespace(args=datos))
+        assert panel.tarea is None and panel.minimo.value == "-2.0"
+        assert vista.inferior.value == vista.superior.value == "" and vista.ultimo_resultado is None
+    ejecutar_escenario(monkeypatch, comprobar)

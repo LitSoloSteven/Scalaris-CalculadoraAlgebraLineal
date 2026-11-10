@@ -68,3 +68,20 @@ def test_confirmacion_invalida_conserva_captura(monkeypatch, valores):
         vista.expresion.set_value("x")
         assert not seleccion.activa
     ejecutar_escenario(monkeypatch, comprobar)
+
+
+def test_borrador_solo_envia_marcadores_finitos(monkeypatch):
+    """Nan e infinitos nunca se envían como coordenadas a Plotly durante una edición."""
+    async def comprobar(vista):
+        """Captura las actualizaciones de marcadores y conserva valores manuales válidos."""
+        puntos = []
+        monkeypatch.setattr(vista.vista_previa, "dibujar_borrador", lambda valores: puntos.append(valores))
+        seleccion = vista.seleccion_grafico
+        seleccion.iniciar()
+        for valor in ("nan", "inf", "-inf", "1e999"):
+            seleccion.campos[0].set_value(valor)
+            assert puntos[-1] == []
+        seleccion.campos[1].set_value("2.1234567")
+        assert puntos[-1] == [2.1234567]
+        assert vista.inferior.value == vista.superior.value == ""
+    ejecutar_escenario(monkeypatch, comprobar)
