@@ -5,8 +5,7 @@ from src.backend.resolutores.raices.contrato_exploracion import EntradaExploraci
 from src.backend.resolutores.raices.exploracion_intervalos import explorar_intervalos
 from src.backend.resolutores.raices.limites_exploracion import MAXIMO_EVALUACIONES_REFINAMIENTO
 from src.frontend.controladores.captura_real import real_capturado
-from src.frontend.controladores.biseccion.presentacion import numero
-from src.frontend.controladores.biseccion.presentacion_diagnostico import texto_intervalo
+from src.frontend.controladores.formato_numerico_raices import numero, texto_intervalo
 from src.frontend.controladores.rango_exploracion_raices import RANGO_GRAFICA_DEFECTO, rango_grafica
 
 LONGITUD_CAMPO_EXPLORACION = 64

@@ -1,5 +1,6 @@
 """Textos compartidos de diagnósticos y sugerencias para vista, copia y explicación."""
 from .presentacion import numero
+from src.frontend.controladores.formato_numerico_raices import texto_intervalo
 
 _ETAPAS = {"sintaxis": "Análisis de sintaxis", "extremos": "Evaluación de extremos",
            "estructura": "Análisis estructural", "iteracion": "Evaluación de punto medio",
@@ -48,11 +49,6 @@ def _detalles_discontinuidad(respuesta: dict) -> tuple[tuple[str, str], ...]:
             ("Menor magnitud vecinal de referencia", numero(evidencia["magnitud_vecinal_referencia"], True)),
             ("Menor magnitud de los extremos finales", numero(evidencia["magnitud_vecinal_final"], True)),
             ("Menor residuo reciente", numero(evidencia["residuo_reciente_minimo"], True)))
-
-
-def texto_intervalo(intervalo) -> str:
-    """Formatea dos extremos del dominio con sus cifras internas, sin truncar valores."""
-    return f"[{numero(intervalo[0], True)}, {numero(intervalo[1], True)}]"
 
 
 def texto_sugerencia(sugerencia: dict) -> str:
