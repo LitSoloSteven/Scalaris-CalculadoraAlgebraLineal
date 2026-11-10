@@ -2,13 +2,13 @@
 import asyncio
 
 from nicegui import ui
+from src.frontend.componentes.informe_continuidad_raices import mostrar_informe_continuidad
 
 from src.frontend.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
 from src.frontend.controladores.actualizacion_cancelable import cancelar_actualizacion, programar_actualizacion
 from src.frontend.controladores.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
 from src.frontend.controladores.regla_falsa.continuidad_intervalo import CLAVES_CONTINUIDAD, consultar_continuidad
 from src.frontend.controladores.biseccion.presentacion import numero
-from src.frontend.vistas.biseccion.continuidad_intervalo import mostrar_informe
 
 
 class PanelContinuidad:
@@ -44,7 +44,8 @@ class PanelContinuidad:
         self.coordinador.invalidar()
         cancelar_actualizacion(self.tarea)
         self.tarea = self.respuesta = None
-        completo = all(str(captura[clave] or "").strip() for clave in CLAVES_CONTINUIDAD[:3])
+        completo = all(captura[clave] is not None and str(captura[clave]).strip()
+                       for clave in CLAVES_CONTINUIDAD[:3])
         if not completo:
             self._mostrar("Completa la función y ambos extremos para consultar la continuidad.")
             return
@@ -81,7 +82,7 @@ class PanelContinuidad:
                 "text-sm texto-secundario")
             respuesta = self.respuesta or {}
             if respuesta.get("informe") is not None:
-                mostrar_informe(respuesta["informe"])
+                mostrar_informe_continuidad(respuesta["informe"], "regla-falsa-numero texto-principal")
                 for evaluacion in respuesta["evaluaciones"]:
                     valor = evaluacion["mensaje"] if evaluacion["codigo"] else numero(evaluacion["valor"], True)
                     ui.label(f"f({numero(evaluacion['abscisa'], True)}) = {valor}").classes(
