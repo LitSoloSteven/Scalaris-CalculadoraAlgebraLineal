@@ -82,6 +82,7 @@ _CABECERA_HTML = Template((_PLANTILLAS / "cabecera.html").read_text(encoding="ut
     etiquetas_captura=_etiquetas_recursos_cliente("catalogo_captura.json"),
 )
 _CABECERA_GLOSA_HTML = (_PLANTILLAS / "cabecera_glosa.html").read_text(encoding="utf-8")
+_CABECERA_REGLA_FALSA_HTML = (_PLANTILLAS / "cabecera_regla_falsa.html").read_text(encoding="utf-8")
 
 
 def configurar_tema(vista: str = "") -> None:
@@ -92,5 +93,7 @@ def configurar_tema(vista: str = "") -> None:
         ui.add_head_html(versionar_html(seleccion) if vista else seleccion)
 
     agregar(_CABECERA_HTML)
+    if vista == "regla_falsa":
+        agregar(_CABECERA_REGLA_FALSA_HTML)
     if banderas.panel_lateral_habilitado():
         agregar(_CABECERA_GLOSA_HTML)
