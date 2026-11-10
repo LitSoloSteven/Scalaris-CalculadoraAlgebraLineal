@@ -12,7 +12,7 @@ from src.frontend.componentes.colores_figuras import aplicar_colores_figura
 from src.frontend.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
 from src.frontend.controladores.actualizacion_cancelable import cancelar_actualizacion, programar_actualizacion
 from src.frontend.controladores.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
-from src.frontend.controladores.rango_exploracion_raices import RANGO_GRAFICA_DEFECTO, rango_evento, rango_grafica
+from src.frontend.controladores.rango_exploracion_raices import RANGO_GRAFICA_DEFECTO, rango_evento_distinto
 from src.frontend.controladores.vista_previa_raices import preparar_vista_previa
 from src.frontend.tema import PALETA_GRAFICOS
 from src.frontend.vistas.biseccion.estado_captura import transaccion
@@ -59,14 +59,9 @@ class PanelVistaPrevia:
     def _encuadrar(self, evento) -> None:
         if not self.disponible() or self.respuesta is None:
             return
-        nuevo = rango_evento(evento.args)
+        nuevo = rango_evento_distinto(evento.args, self.capturar())
         if nuevo is None:
             return
-        try:
-            if nuevo == rango_grafica(self.capturar()):
-                return
-        except ValueError:
-            pass
         with self.vista.exploracion.minimo.client:
             with transaccion(self.vista):
                 self.minimo.set_value(str(nuevo[0]))

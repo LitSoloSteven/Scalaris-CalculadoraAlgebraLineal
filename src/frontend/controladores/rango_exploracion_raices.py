@@ -38,3 +38,14 @@ def rango_evento(datos: object) -> tuple[float, float] | None:
         return rango_grafica({"x_min": par[0], "x_max": par[1]})
     except ValueError:
         return None
+
+
+def rango_evento_distinto(datos: object, captura: dict) -> tuple[float, float] | None:
+    """Entrega solo encuadres válidos diferentes del rango capturado para evitar realimentación."""
+    nuevo = rango_evento(datos)
+    if nuevo is None:
+        return None
+    try:
+        return None if nuevo == rango_grafica(captura) else nuevo
+    except ValueError:
+        return nuevo
