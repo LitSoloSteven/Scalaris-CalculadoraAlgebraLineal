@@ -20,7 +20,7 @@ class SeleccionGrafico:
 
     def iniciar(self) -> None:
         """Abre un borrador vacío sin modificar los extremos capturados."""
-        if not self.vista.vista_previa._montada():
+        if not self.vista.vista_previa.disponible():
             return
         self.activa = True
         for campo in self.campos:
@@ -31,7 +31,7 @@ class SeleccionGrafico:
 
     def _marcar(self, evento) -> None:
         panel = self.vista.vista_previa
-        if not self.activa or not panel._montada() or not panel.respuesta or panel.respuesta["estado"] != "EXITO":
+        if not self.activa or not panel.disponible() or not panel.respuesta or panel.respuesta["estado"] != "EXITO":
             return
         abscisa = abscisa_muestreada(evento.args, panel.respuesta["muestra"], panel.identidad)
         if abscisa is None:
@@ -67,7 +67,7 @@ class SeleccionGrafico:
 
     def confirmar(self) -> None:
         """Valida los campos y carga el intervalo sin iniciar un cálculo ni alterar el rango."""
-        if not self.activa or not self.vista.vista_previa._montada():
+        if not self.activa or not self.vista.vista_previa.disponible():
             return
         confirmar_borrador(self)
 

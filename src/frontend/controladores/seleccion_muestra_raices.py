@@ -14,9 +14,7 @@ def abscisa_muestreada(datos: object, muestra: dict, identidad: str) -> float | 
         return None
     indice = punto["pointIndex"]
     abscisa, ordenada = muestra["x"][indice], muestra["y"][indice]
-    if not _numero_finito(ordenada) or not _numero_finito(punto.get("x")):
-        return None
-    if not _numero_finito(punto.get("y")):
+    if not all(map(_numero_finito, (ordenada, punto.get("x"), punto.get("y")))):
         return None
     return abscisa if punto["x"] == abscisa and punto["y"] == ordenada else None
 

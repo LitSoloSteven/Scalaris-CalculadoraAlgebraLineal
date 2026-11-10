@@ -8,6 +8,7 @@ from nicegui import ui
 
 from src.ai.huellas import calcular_huella
 from src.frontend.componentes.figura_funcion_real import crear_figura_previa
+from src.frontend.componentes.colores_figuras import aplicar_colores_figura
 from src.frontend.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
 from src.frontend.controladores.actualizacion_cancelable import cancelar_actualizacion, programar_actualizacion
 from src.frontend.controladores.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
@@ -69,18 +70,18 @@ class PanelVistaPrevia:
     def programar(self) -> None:
         """Retira la curva anterior y sustituye el borrador pendiente tras una pausa de edición."""
         self.invalidar()
-        if not self._montada():
+        if not self.disponible():
             return
         if not str(self.vista.expresion.value or "").strip():
             self.estado.set_text(_ESTADO_INICIAL)
             return
         self.estado.set_text("Preparando la gráfica de los datos actuales…")
-        self.tarea = programar_actualizacion(None, self._actualizar, self._montada,
+        self.tarea = programar_actualizacion(None, self._actualizar, self.disponible,
                                             ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS)
 
     async def actualizar(self) -> None:
         """Solicita inmediatamente una curva y cancela solo la espera sustituida."""
-        if self._montada():
+        if self.disponible():
             self.invalidar()
             self.tarea = asyncio.current_task()
             await self._actualizar()
@@ -109,11 +110,12 @@ class PanelVistaPrevia:
                 self.tarea = None
                 self._mostrar_carga(False)
 
-    def _montada(self) -> bool:
+    def disponible(self) -> bool:
+        """Indica si el cliente y los nodos todavía aceptan acciones o publicaciones."""
         return not self._cerrado and not self.grafica.is_deleted and not self.estado.is_deleted
 
     def _vigente(self, revision: int, destino, huella: str) -> bool:
-        return (self._montada() and revision == self._revision and destino is self.grafica
+        return (self.disponible() and revision == self._revision and destino is self.grafica
                 and huella == calcular_huella(self.capturar()))
 
     def _mostrar_carga(self, ocupada: bool) -> None:
@@ -130,6 +132,7 @@ class PanelVistaPrevia:
         figura.data[0].update(hoverinfo="none", customdata=[self.identidad] * len(respuesta["muestra"]["x"]))
         figura.add_trace(go.Scatter(x=[], y=[], mode="markers+text", textposition="top center",
                                    hoverinfo="skip", marker=dict(color=PALETA_GRAFICOS[1], size=12)))
+        aplicar_colores_figura(figura, "papel")
         return {**figura.to_plotly_json(), "config": {"displayModeBar": False, "responsive": True}}
 
     def dibujar_borrador(self, puntos: list[float]) -> None:
