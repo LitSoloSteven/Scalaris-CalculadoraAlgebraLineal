@@ -5,11 +5,11 @@ import logging
 from nicegui import ui
 
 from src.ai.huellas import calcular_huella
-from src.backend.resolutores.raices.unidades_angulares import opciones_unidad
 from src.frontend.componentes.captura_exploracion_raices import campos_rango
 from src.frontend.componentes.exploracion_raices import ESTADO_INICIAL, MontajeExploracion, construir_exploracion
 from src.frontend.componentes.paso_exploracion_raices import PasoExploracion
 from src.frontend.controladores.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
+from src.frontend.controladores.captura_exploratoria_raices import capturar_exploracion
 from src.frontend.controladores.exploracion_raices import (
     LONGITUD_CAMPO_EXPLORACION, PASO_EXPLORACION_DEFECTO, resolver_exploracion,
 )
@@ -68,9 +68,7 @@ class PanelExploracion(PasoExploracion):
 
     def capturar(self) -> dict:
         """Entrega solo función, unidad, rango y paso; no consulta extremos ni parada."""
-        return {"expresion": self.vista.expresion.value, "x_min": self.minimo.value,
-                "x_max": self.maximo.value, "paso": self._capturar_paso(),
-                **opciones_unidad(self.vista.unidad_angular.value)}
+        return capturar_exploracion(self)
 
     async def enviar_busqueda(self) -> None:
         """Atiende Enter y el botón únicamente en la tarea de búsqueda."""
