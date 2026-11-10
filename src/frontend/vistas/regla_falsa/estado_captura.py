@@ -55,7 +55,8 @@ def reflejar_intervalo(vista, respuesta: dict, huella: str) -> str:
         except ValueError:
             return huella
     if entrada["intervalo_invertido"]:
-        restaurar_captura(vista, {clave: str(entrada[clave]) for clave in CAMPOS_EJERCICIO[1:]})
+        extremos = {clave: str(entrada[clave]) for clave in CAMPOS_EJERCICIO[1:]}
+        restaurar_captura(vista, {**extremos, "cero_preferido": getattr(vista, "_cero_preferido", None)})
         return calcular_huella(capturar(vista))
     return huella
 

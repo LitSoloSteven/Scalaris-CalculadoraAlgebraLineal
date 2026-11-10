@@ -6,7 +6,7 @@ from src.frontend.controladores.biseccion.catalogo_criterios import DECIMALES_PR
 from src.frontend.controladores.calculo_raices import ConfiguracionCalculoRaices, resolver_calculo_raices
 from src.frontend.controladores.regla_falsa.contexto_regla_falsa import resumir_contexto_regla_falsa
 from src.frontend.controladores.regla_falsa.presentacion_grafica import calcular_presentacion
-from src.frontend.controladores.regla_falsa.presentacion import titulo_estado
+from src.frontend.controladores.regla_falsa.presentacion_ampliada import titulo_configurado
 from src.frontend.controladores.sesion_matricial import actualizar_contexto, invalidar_resultado, registrar_calculo
 from .acciones_captura import mostrar_recientes
 from .composicion import componer_herramienta
@@ -128,10 +128,11 @@ class VistaReglaFalsa:
         self.detalle_procedimiento.reproductor.velocidad = self.velocidad_procedimiento or "Normal"
         self.detalle_procedimiento.construir()
         self.reproductor_pasos = self.detalle_procedimiento.reproductor
-        self.estado.set_text(titulo_estado(respuesta))
+        titulo = titulo_configurado(respuesta, self.ultimo_ampliado)
+        self.estado.set_text(titulo)
         if respuesta["aproximacion"] is not None or respuesta["iteraciones"]:
             registrar_calculo(self.historial, {
-                "captura": self.capturar(), "estado": respuesta["estado"], "titulo": titulo_estado(respuesta),
+                "captura": self.capturar(), "estado": respuesta["estado"], "titulo": titulo,
             })
             mostrar_recientes(self)
         actualizar_contexto(self)
