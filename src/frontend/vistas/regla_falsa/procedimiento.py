@@ -6,6 +6,7 @@ from src.frontend.componentes.reproductor_pasos import ReproductorPasos, renderi
 from src.frontend.controladores.formato_funcion_real import formatear_expresion
 from src.frontend.controladores.regla_falsa.formulas_procedimiento import formulas_iteracion
 from src.frontend.controladores.regla_falsa.pasos import construir_pasos, referencia_paso
+from src.frontend.controladores.regla_falsa.pasos_ampliados import construir_pasos_configurados
 from src.frontend.controladores.regla_falsa.tabla import COLUMNAS, valor_columna
 from src.frontend.controladores.sesion_matricial import actualizar_contexto
 from .figura import crear_figura
@@ -20,7 +21,8 @@ class PanelProcedimiento:
         self.vista, self.datos = vista, datos
         self.respuesta = datos["resultado"]
         self.fila_activa = None
-        pasos, grupos = construir_pasos(self.respuesta)
+        ampliado = datos.get("ampliado")
+        pasos, grupos = construir_pasos_configurados({**ampliado, "resultado": self.respuesta}) if ampliado else construir_pasos(self.respuesta)
         opciones = {"sin_movimiento": True, "titulo": "Procedimiento de regla falsa"}
         if vista.panel_ia is not None:
             opciones.update(al_explicar=crear_accion_explicacion(vista.panel_ia, pasos),
