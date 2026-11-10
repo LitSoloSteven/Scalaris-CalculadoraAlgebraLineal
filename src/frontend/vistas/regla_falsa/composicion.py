@@ -19,6 +19,7 @@ def componer_herramienta(vista) -> None:
                 vista.recientes = ui.column().classes("w-full gap-2")
             with ui.column().classes("disposicion-panel panel-tarjeta p-6 gap-4"):
                 _montar_resultados(vista)
+        vista.contenedor_detalle = ui.column().classes("w-full gap-4 min-w-0")
         with vista.contenedor_acciones:
             construir_acciones(vista)
         mostrar_recientes(vista)

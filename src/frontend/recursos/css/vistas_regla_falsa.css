@@ -21,6 +21,12 @@
     width: 100%;
 }
 .regla-falsa-metricas dd { margin: 0; }
+.regla-falsa-grafica { min-height: 360px; }
+.regla-falsa-tabla { overflow-x: auto; max-width: 100%; }
+.regla-falsa-tabla .q-table { min-width: 1500px; font-variant-numeric: tabular-nums; }
+.regla-falsa-tabla .q-table__middle { overflow: visible; }
+.regla-falsa-tabla .q-table__container { background: var(--bg-panel); color: var(--text-main); }
+.regla-falsa-vista .matematicas-desplazamiento { overflow-x: auto; max-width: 100%; }
 .regla-falsa-desplegable { width: 100%; }
 .regla-falsa-desplegable summary { cursor: pointer; min-height: 44px; }
 .regla-falsa-desplegable summary > div { display: inline; }

@@ -5,13 +5,14 @@ from src.ai.contexto import ContextoIA, EstadoContexto
 from src.frontend.controladores.biseccion.catalogo_criterios import DECIMALES_PRESENTACION_DEFECTO
 from src.frontend.controladores.calculo_raices import ConfiguracionCalculoRaices, resolver_calculo_raices
 from src.frontend.controladores.regla_falsa.contexto_regla_falsa import resumir_contexto_regla_falsa
-from src.frontend.controladores.regla_falsa.controlador import resolver_captura
+from src.frontend.controladores.regla_falsa.presentacion_grafica import calcular_presentacion
 from src.frontend.controladores.regla_falsa.presentacion import titulo_estado
 from src.frontend.controladores.sesion_matricial import actualizar_contexto, invalidar_resultado, registrar_calculo
 from .acciones_captura import mostrar_recientes
 from .composicion import componer_herramienta
 from .estado_captura import CAMPOS, CAMPOS_EJERCICIO, capturar, reflejar_intervalo, restaurar_captura, vaciar_captura
 from .resultado import mostrar_resultado
+from .procedimiento import PanelProcedimiento
 
 _CONFIGURACION = ConfiguracionCalculoRaices(
     mensaje_carga="Calculando la raíz por regla falsa…",
@@ -30,6 +31,7 @@ class VistaReglaFalsa:
         self.ocupado = self._cargando_captura = self._cerrada = False
         self.historial = []
         self._precision_visual = DECIMALES_PRESENTACION_DEFECTO
+        self.detalle_procedimiento = self._foco_procedimiento = self.velocidad_procedimiento = None
 
     def construir(self) -> None:
         """Monta la herramienta y enlaza edición, Enter y revocación por desconexión o desmontaje."""
@@ -55,9 +57,14 @@ class VistaReglaFalsa:
             self.estado.set_text("Datos editados. Calcula para obtener un resultado vigente.")
 
     def _retirar_resultado(self) -> None:
+        if self.reproductor_pasos is not None:
+            self.velocidad_procedimiento = self.reproductor_pasos.velocidad
         invalidar_resultado(self)
+        self.detalle_procedimiento = self._foco_procedimiento = None
         if not self.contenedor_resultados.is_deleted:
             self.contenedor_resultados.clear()
+        if not self.contenedor_detalle.is_deleted:
+            self.contenedor_detalle.clear()
         if self.panel_ia is not None:
             self.panel_ia.limpiar_foco_explicacion()
         actualizar_contexto(self)
@@ -65,14 +72,19 @@ class VistaReglaFalsa:
     async def resolver(self, *, puntero: bool = False) -> None:
         """Coordina un trabajador por vista y publica únicamente la captura aún vigente."""
         if not self._cerrada:
-            await resolver_calculo_raices(self, resolver_captura, _CONFIGURACION, puntero=puntero)
+            await resolver_calculo_raices(self, calcular_presentacion, _CONFIGURACION, puntero=puntero)
             if not self.ocupado and not self.estado.is_deleted and self.estado.text == _CONFIGURACION.mensaje_carga:
                 self.estado.set_text(_MENSAJE_RECALCULAR)
 
-    def _publicar(self, respuesta: dict, huella: str, *, puntero: bool = False) -> None:
+    def _publicar(self, datos: dict, huella: str, *, puntero: bool = False) -> None:
+        respuesta = datos["resultado"]
         self._huella_resultado = reflejar_intervalo(self, respuesta, huella)
         self.ultimo_resultado = respuesta
         mostrar_resultado(self, respuesta)
+        self.detalle_procedimiento = PanelProcedimiento(self, datos)
+        self.detalle_procedimiento.reproductor.velocidad = self.velocidad_procedimiento or "Normal"
+        self.detalle_procedimiento.construir()
+        self.reproductor_pasos = self.detalle_procedimiento.reproductor
         self.estado.set_text(titulo_estado(respuesta))
         if respuesta["aproximacion"] is not None or respuesta["iteraciones"]:
             registrar_calculo(self.historial, {
@@ -113,6 +125,7 @@ class VistaReglaFalsa:
         return ContextoIA(
             "regla_falsa", "Método de regla falsa", "Búsqueda de raíces", self.capturar(),
             EstadoContexto(resultado=resumir_contexto_regla_falsa(self.ultimo_resultado),
+                           foco=self._foco_procedimiento,
                            vacio=not bool(self.expresion.value),
                            nota_ventana="El residuo no es una cota del error en x. La garantía requiere continuidad."),
         )
