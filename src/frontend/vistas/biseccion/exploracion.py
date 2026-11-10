@@ -7,10 +7,11 @@ from src.backend.resolutores.raices.unidades_angulares import opciones_unidad
 
 from src.frontend.controladores.biseccion.vigencia_panel import invalidar_panel
 from src.frontend.controladores.biseccion.exploracion import (
-    LONGITUD_CAMPO_EXPLORACION, presentar_candidato, resolver_exploracion, sugerir_paso,
+    LONGITUD_CAMPO_EXPLORACION, presentar_candidato, resolver_exploracion,
 )
 from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
 from src.frontend.componentes.exploracion_raices import ESTADO_INICIAL, MontajeExploracion, construir_exploracion
+from src.frontend.componentes.paso_exploracion_raices import PasoExploracion
 from .acciones_captura import desplegable
 from .candidatos import mostrar_candidatos
 from .modos_captura import MODO_BUSQUEDA
@@ -21,7 +22,7 @@ registro = logging.getLogger(__name__)
 _ESTADO_INICIAL = ESTADO_INICIAL
 
 
-class PanelExploracion:
+class PanelExploracion(PasoExploracion):
     """Gestiona solo el rango exploratorio, sus tareas y la carga explícita de un candidato."""
 
     def __init__(self, vista):
@@ -53,32 +54,6 @@ class PanelExploracion:
             self._paso_automatico = False
             self.invalidar()
             self.actualizar_paso()
-
-    def restablecer_paso(self) -> None:
-        """Recupera la sugerencia de paso y retira el escaneo hecho con el paso anterior."""
-        self._paso_automatico = True
-        self.actualizar_paso()
-        self.invalidar()
-
-    def actualizar_paso(self) -> None:
-        """Publica la sugerencia visible de paso o la orientación ante un rango inválido."""
-        if not self._paso_automatico:
-            self.etiqueta_paso.set_text("Paso manual.")
-            return
-        try:
-            valor = sugerir_paso({"x_min": self.minimo.value, "x_max": self.maximo.value})
-            texto = f"Paso automático efectivo · {valor:.9g}"
-        except ValueError as error:
-            texto = str(error)
-        self.etiqueta_paso.set_text(texto)
-
-    def _capturar_paso(self):
-        if not self._paso_automatico:
-            return self.paso.value
-        try:
-            return sugerir_paso({"x_min": self.minimo.value, "x_max": self.maximo.value})
-        except ValueError:
-            return None
 
     def _campo(self, etiqueta: str, valor: str = ""):
         return ui.input(etiqueta, value=valor).classes("w-full matriz-entrada").props(
