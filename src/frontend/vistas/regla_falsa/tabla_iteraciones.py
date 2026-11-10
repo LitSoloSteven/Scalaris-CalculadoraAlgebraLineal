@@ -1,4 +1,6 @@
 """Tabla paginada con selección explícita vinculada al paso del procedimiento."""
+import json
+
 from nicegui import ui
 
 from src.frontend.componentes.tabla_iteraciones import PaginacionIteraciones
@@ -30,11 +32,14 @@ class TablaReglaFalsa:
     def seleccionar(self, fila: dict | None) -> None:
         """Sigue la fila del paso activo sin disparar un nuevo cálculo matemático."""
         self.fila_activa = None if fila is None else str(fila["i"])
-        if fila is None:
-            self.tabla.selected = []
+        visibles = [registro for registro in self.tabla.rows if registro["i"] == self.fila_activa]
+        if fila is None or visibles:
+            claves = [str(registro.get("i")) for registro in self.tabla.selected if isinstance(registro, dict)]
+            if claves != [registro["i"] for registro in visibles]:
+                self.tabla.selected = visibles
+                self.tabla.update()
         else:
             self.paginacion.mostrar_indice(self._indices[self.fila_activa] - 1)
-        self.tabla.update()
 
     def _preparar(self, inicio: int, fin: int) -> tuple:
         filas = filas_tabla(self.filas[inicio:fin], self.precision.value)
@@ -43,10 +48,22 @@ class TablaReglaFalsa:
 
     def _elegir(self, evento) -> None:
         if not evento.selection:
+            anterior = self.fila_activa
             self.al_elegir(0)
+            self._devolver_foco(anterior)
             return
         if not isinstance(evento.selection[0], dict):
             return
         indice = self._indices.get(str(evento.selection[0].get("i")))
         if indice is not None:
             self.al_elegir(indice)
+            self._devolver_foco(str(evento.selection[0]["i"]))
+
+    def _devolver_foco(self, clave: str | None) -> None:
+        if clave is None or self.tabla.is_deleted:
+            return
+        selector = json.dumps(f'[aria-label="Ver iteración {clave}"]')
+        identificador = json.dumps(self.tabla.html_id)
+        ui.run_javascript(
+            f"requestAnimationFrame(() => document.getElementById({identificador})?.querySelector({selector})?.focus({{preventScroll:true}}))"
+        )

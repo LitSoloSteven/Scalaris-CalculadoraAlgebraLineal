@@ -1,11 +1,33 @@
 """Paginación y selección de filas reales del método de regla falsa."""
 from types import SimpleNamespace
+from unittest.mock import Mock
 
 from nicegui import ui
 
 from src.frontend.controladores.regla_falsa.controlador import resolver_captura
 from src.frontend.vistas.regla_falsa.tabla_iteraciones import TablaReglaFalsa
 from tests.comun_regla_falsa_vista import captura_regla_falsa, ejecutar_escenario
+
+
+def test_seleccionar_fila_visible_conserva_la_pagina_sin_reconstruir(monkeypatch):
+    """Seleccionar dentro de la página actual no reenvía las filas ni reconstruye el control enfocado."""
+    async def comprobar(vista):
+        """Conserva la ventana existente mientras cambia la selección del procedimiento."""
+        respuesta = resolver_captura(captura_regla_falsa())
+        with ui.column():
+            tabla = TablaReglaFalsa(respuesta["iteraciones"], lambda indice: None)
+            tabla.construir()
+        actualizar = Mock(wraps=tabla.tabla.update_rows)
+        monkeypatch.setattr(tabla.tabla, "update_rows", actualizar)
+        tabla.seleccionar(respuesta["iteraciones"][3])
+        assert tabla.tabla.selected[0]["i"] == "4"
+        actualizar.assert_not_called()
+        tabla.tabla.selected = [{**tabla.tabla.selected[0], "__index": 3}]
+        refrescar = Mock(wraps=tabla.tabla.update)
+        monkeypatch.setattr(tabla.tabla, "update", refrescar)
+        tabla.seleccionar(respuesta["iteraciones"][3])
+        refrescar.assert_not_called()
+    ejecutar_escenario(monkeypatch, comprobar)
 
 
 def test_tabla_sigue_fila_de_otra_pagina_y_conserva_inspeccion(monkeypatch):
