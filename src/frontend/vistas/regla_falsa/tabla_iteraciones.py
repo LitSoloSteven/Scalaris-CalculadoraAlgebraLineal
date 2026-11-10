@@ -42,7 +42,10 @@ class TablaReglaFalsa:
         return COLUMNAS, filas
 
     def _elegir(self, evento) -> None:
-        if not evento.selection or not isinstance(evento.selection[0], dict):
+        if not evento.selection:
+            self.al_elegir(0)
+            return
+        if not isinstance(evento.selection[0], dict):
             return
         indice = self._indices.get(str(evento.selection[0].get("i")))
         if indice is not None:

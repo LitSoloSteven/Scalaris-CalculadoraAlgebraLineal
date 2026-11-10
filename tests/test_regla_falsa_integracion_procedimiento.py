@@ -6,6 +6,25 @@ import pytest
 from tests.comun_regla_falsa_vista import captura_regla_falsa, ejecutar_escenario
 
 
+def test_desmarcar_fila_vuelve_al_planteamiento_sin_secante(monkeypatch):
+    """El evento real de deselección retira la fila de tabla, gráfico, fórmula y foco al mismo tiempo."""
+    async def comprobar(vista):
+        """Ejecuta el manejador de selección de NiceGUI con una deselección del usuario."""
+        vista.cargar_captura(captura_regla_falsa())
+        await vista.resolver()
+        panel = vista.detalle_procedimiento
+        panel.reproductor.ir_a(4)
+        tabla = panel.tabla.tabla
+        fila = tabla.selected[0]
+        evento = next(evento for evento in tabla._event_listeners.values() if evento.type == "selection")
+        evento.handler(SimpleNamespace(args={"added": False, "rows": [fila], "keys": [fila["i"]]}))
+        assert not tabla.selected and panel.tabla.fila_activa is None
+        assert panel.reproductor.indice_actual == 0 and panel.fila_activa is None
+        assert vista.obtener_contexto_ia().foco.captura.detalle["iteracion"] is None
+        assert not any("Secante por" in traza.get("name", "") for traza in panel.grafica.figure["data"])
+    ejecutar_escenario(monkeypatch, comprobar)
+
+
 def test_seleccion_sincroniza_formula_grafico_y_contexto(monkeypatch):
     """El resultado conserva su identidad mientras la selección cambia el foco y la secante."""
     async def comprobar(vista):
