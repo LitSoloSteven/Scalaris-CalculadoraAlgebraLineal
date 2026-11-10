@@ -77,7 +77,7 @@ def test_carga_es_transaccional_y_no_promete_cero_preferido(monkeypatch):
         assert panel.respuesta is respuesta
         panel.seleccionar(respuesta, candidato)
         assert observaciones == [True, True]
-        assert "cero_preferido" not in vista.capturar()
+        assert vista.capturar()["cero_preferido"] == candidato["abscisa"]
         assert vista.tolerancia.value == "invalida" and not vista.historial
         assert vista.modos.value == "intervalo" and panel.respuesta is None
     ejecutar_escenario(monkeypatch, comprobar)

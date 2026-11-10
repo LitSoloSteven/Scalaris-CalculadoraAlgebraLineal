@@ -4,7 +4,7 @@ from src.frontend.controladores.captura_exploratoria_raices import intervalo_sel
 
 _PRESENTACION = PresentacionCandidatos(
     "Carga un intervalo y pulsa Calcular raíz. La búsqueda es acotada y no garantiza encontrar todas las raíces. "
-    "En un cero evaluado se carga su intervalo: si ambos extremos son ceros, el cálculo clásico puede devolver el otro extremo.",
+    "Al cargar un cero evaluado se conserva el extremo elegido y se comprueba de nuevo al calcular.",
     "regla-falsa-numero",
 )
 
@@ -15,10 +15,11 @@ def presentar_candidatos(panel, respuesta: dict) -> None:
 
 
 def seleccionar_candidato(panel, respuesta: dict, candidato: dict) -> None:
-    """Carga dos extremos vigentes en una transacción, sin resolver ni prometer un cero elegido."""
+    """Carga extremos y cero elegido de un candidato vigente sin ejecutar el motor."""
     intervalo = intervalo_seleccionable(panel, respuesta, candidato)
     if intervalo is None:
         return
     inferior, superior = intervalo
-    panel.vista.cargar_captura({"extremo_izquierdo": str(inferior), "extremo_derecho": str(superior)})
+    panel.vista.cargar_captura({"extremo_izquierdo": str(inferior), "extremo_derecho": str(superior),
+                               "cero_preferido": candidato["abscisa"] if candidato["tipo"] == "cero_evaluado" else None})
     panel.vista.inferior.run_method("focus")
