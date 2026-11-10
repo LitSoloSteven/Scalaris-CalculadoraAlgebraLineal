@@ -3,12 +3,12 @@ import asyncio
 import logging
 
 from nicegui import ui
-from src.backend.resolutores.raices.unidades_angulares import opciones_unidad
 
 from src.frontend.controladores.biseccion.vigencia_panel import invalidar_panel
 from src.frontend.controladores.biseccion.exploracion import (
-    LONGITUD_CAMPO_EXPLORACION, presentar_candidato, resolver_exploracion,
+    LONGITUD_CAMPO_EXPLORACION, resolver_exploracion,
 )
+from src.frontend.controladores.captura_exploratoria_raices import capturar_exploracion, intervalo_seleccionable
 from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
 from src.frontend.componentes.exploracion_raices import ESTADO_INICIAL, MontajeExploracion, construir_exploracion
 from src.frontend.componentes.paso_exploracion_raices import PasoExploracion
@@ -64,9 +64,7 @@ class PanelExploracion(PasoExploracion):
 
     def capturar(self) -> dict:
         """Entrega función y rango sin exigir un criterio de parada válido."""
-        return {"expresion": self.vista.expresion.value, "x_min": self.minimo.value,
-                "x_max": self.maximo.value, "paso": self._capturar_paso(),
-                **opciones_unidad(self.vista.unidad_angular.value)}
+        return capturar_exploracion(self)
 
     def invalidar(self) -> None:
         """Cancela la espera y retira acciones antiguas sin tocar el resultado matemático."""
@@ -132,13 +130,10 @@ class PanelExploracion(PasoExploracion):
 
     def seleccionar(self, respuesta: dict, candidato: dict) -> None:
         """Carga un intervalo apto actual y deja el cálculo posterior a una acción explícita."""
-        if self._cerrado or self.contenedor_resultados.is_deleted or self.vista.ocupado:
+        intervalo = intervalo_seleccionable(self, respuesta, candidato)
+        if intervalo is None:
             return
-        if self.respuesta is not respuesta or not any(candidato is actual for actual in respuesta["candidatos"]):
-            return
-        if not presentar_candidato(candidato)["seleccionable"]:
-            return
-        inferior, superior = candidato["intervalo"]
+        inferior, superior = intervalo
         captura = {"extremo_izquierdo": str(inferior), "extremo_derecho": str(superior)}
         if candidato["tipo"] == "cero_evaluado":
             captura["cero_preferido"] = candidato["abscisa"]
