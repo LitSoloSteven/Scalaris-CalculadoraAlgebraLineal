@@ -27,5 +27,3 @@ def sincronizar_rango(vista, valores: tuple) -> None:
     exploracion.actualizar_paso()
     exploracion.invalidar()
     previa.programar()
-
-
