@@ -28,7 +28,7 @@ def construir_exploracion(panel, montaje: MontajeExploracion) -> None:
     """Construye controles y conecta las acciones públicas del panel recibido."""
     with ui.column().classes(f"panel-tarjeta {montaje.clase_panel} w-full gap-4 p-6"):
         ui.label("Explorar intervalos").classes("text-xl font-semibold texto-principal")
-        ui.label("Busca candidatos en el rango del gráfico. Los extremos del cálculo cambian al cargar un intervalo.").classes(
+        ui.label("Busca candidatos en el rango indicado. Los extremos del cálculo cambian al cargar un intervalo.").classes(
             "text-sm texto-secundario")
         panel.minimo, panel.maximo = montaje.campos_rango("rango de búsqueda")
         _construir_paso(panel, montaje)
