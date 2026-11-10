@@ -37,6 +37,11 @@ class PaginacionIteraciones:
         self.pagina = min(ultima, max(0, self.pagina + direccion))
         self._actualizar()
 
+    def mostrar_indice(self, indice: int) -> None:
+        """Muestra la página que contiene el índice de fila indicado, acotándolo al total."""
+        self.pagina = max(0, min(indice, self.total - 1)) // FILAS_POR_PAGINA
+        self._actualizar()
+
     def _actualizar(self) -> None:
         if self.tabla.is_deleted:
             return
