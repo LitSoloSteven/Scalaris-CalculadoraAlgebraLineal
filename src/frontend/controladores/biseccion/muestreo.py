@@ -1,5 +1,6 @@
-"""Compatibilidad del muestreo de bisección con el servicio compartido."""
-from src.frontend.controladores.muestreo_raices import (
-    FACTOR_SALTO_SOSPECHOSO, MUESTRAS_GRAFICA,
-    muestrear_funcion, separar_intervalo_sospechoso,
-)
+"""Alias compatible del módulo de muestreo, incluido su punto de evaluación."""
+import sys
+
+from src.frontend.controladores import muestreo_raices
+
+sys.modules[__name__] = muestreo_raices

@@ -2,7 +2,7 @@
 import plotly.graph_objects as go
 
 from src.backend.resolutores.raices.contrato_biseccion import ESTADO_DISCONTINUIDAD
-from src.frontend.tema import COLOR_TRANSPARENTE, PALETA_GRAFICOS, COLOR_SOLUCION
+from src.frontend.tema import PALETA_GRAFICOS, COLOR_SOLUCION
 from src.frontend.vistas.geometria._colores_figuras import aplicar_colores_figura
 from src.frontend.componentes.figura_funcion_real import crear_base as _crear_base, crear_figura_previa
 
@@ -33,5 +33,3 @@ def _ordenada_marcador(respuesta: dict, fila: dict | None) -> tuple[float | None
         filas = respuesta.get("iteraciones") or ()
         return (filas[-1]["f_c"] if filas else None), "Muestra provisional"
     return 0, "Aproximación en x"
-
-

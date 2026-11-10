@@ -1,6 +1,4 @@
 """Controles comunes para confirmar extremos sin ejecutar un método."""
-from collections.abc import Callable
-
 from nicegui import ui
 
 
