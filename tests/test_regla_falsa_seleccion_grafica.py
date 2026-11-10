@@ -93,7 +93,7 @@ def test_cancelacion_enfoca_el_boton_dom(monkeypatch):
         """Comprueba el destino real del foco emitido por una cancelación explícita."""
         seleccion = vista.seleccion_grafico
         llamadas = []
-        monkeypatch.setattr(seleccion.inicio.client, "run_javascript", lambda codigo: llamadas.append(codigo))
+        monkeypatch.setattr(seleccion.inicio.client, "run_javascript", lambda codigo, **opciones: llamadas.append(codigo))
         seleccion.iniciar()
         seleccion.cancelar(devolver_foco=True)
         assert llamadas[-1] == f"document.getElementById('{seleccion.inicio.html_id}')?.focus()"
