@@ -1,6 +1,4 @@
 """Errores junto al campo y foco de la primera corrección pendiente."""
-from nicegui import ui
-
 from src.frontend.controladores.regla_falsa.validacion_contextual import errores_captura
 from .estado_captura import CAMPOS
 
@@ -11,15 +9,12 @@ class EstadosEntrada:
     def __init__(self, vista):
         self.vista = vista
         self.revisados = set()
-        self.mensajes = {}
 
     def construir(self) -> None:
         """Enlaza salida de cada campo con revisión y un mensaje accesible local."""
         for clave, atributo in CAMPOS.items():
             campo = getattr(self.vista, atributo)
-            with campo:
-                self.mensajes[clave] = ui.label().classes("text-sm texto-advertencia break-all").props(
-                    "role=alert")
+            campo.without_auto_validation()
             campo.on("blur", lambda evento, clave=clave: self.revisar(clave))
 
     def revisar(self, clave: str) -> None:
@@ -49,9 +44,8 @@ class EstadosEntrada:
         self._mostrar({})
 
     def _mostrar(self, errores: dict) -> None:
-        for clave, mensaje in self.mensajes.items():
+        for clave, atributo in CAMPOS.items():
             texto = errores.get(clave, "") if clave in self.revisados else ""
-            mensaje.set_text(texto)
-            mensaje.set_visibility(bool(texto))
-            campo = getattr(self.vista, CAMPOS[clave])
-            campo.props(f'aria-invalid={str(bool(texto)).lower()} aria-describedby={mensaje.html_id}')
+            campo = getattr(self.vista, atributo)
+            campo.error = texto or None
+            campo.props(f'aria-invalid={str(bool(texto)).lower()}')
