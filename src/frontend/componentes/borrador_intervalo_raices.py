@@ -1,8 +1,9 @@
 """Controles comunes para confirmar extremos sin ejecutar un método."""
+from collections.abc import Callable
 from nicegui import ui
 
 
-def construir_borrador(seleccion, instruccion: str) -> None:
+def construir_borrador(seleccion, instruccion: str, al_editar: Callable[[], None]) -> None:
     """Monta inicio, campos, estado y acciones usando callbacks de la selección."""
     seleccion.inicio = ui.button("Seleccionar en el gráfico", color=None, on_click=seleccion.iniciar).classes(
         "boton-discreto")
@@ -18,5 +19,5 @@ def construir_borrador(seleccion, instruccion: str) -> None:
                 "boton-discreto")
     seleccion.region.on("keydown.escape", lambda: seleccion.cancelar(devolver_foco=True))
     for campo in seleccion.campos:
-        campo.on_value_change(seleccion._dibujar_borrador)
+        campo.on_value_change(al_editar)
     seleccion.region.set_visibility(False)

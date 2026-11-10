@@ -1,4 +1,5 @@
 """Borrador accesible a partir de puntos reales de una muestra vigente."""
+from math import isfinite
 from src.frontend.componentes.borrador_intervalo_raices import construir_borrador
 from src.frontend.controladores.captura_real import real_capturado
 from src.frontend.controladores.rango_exploracion_raices import rango_grafica
@@ -14,7 +15,8 @@ class SeleccionGrafico:
 
     def construir(self) -> None:
         """Monta campos equivalentes al puntero, confirmación, cancelación y Escape."""
-        construir_borrador(self, "Selecciona dos puntos de la curva, no el fondo del gráfico, o escribe los extremos.")
+        construir_borrador(self, "Selecciona dos puntos de la curva, no el fondo del gráfico, o escribe los extremos.",
+                           self._dibujar_borrador)
         self.vista.vista_previa.grafica.on("plotly_click", self._marcar)
 
     def iniciar(self) -> None:
@@ -57,9 +59,11 @@ class SeleccionGrafico:
         puntos = []
         for campo in self.campos:
             try:
-                puntos.append(real_capturado(campo.value, "El extremo"))
+                punto = real_capturado(campo.value, "El extremo")
             except ValueError:
                 continue
+            if isfinite(punto):
+                puntos.append(punto)
         self.vista.vista_previa.dibujar_borrador(puntos)
 
     def confirmar(self) -> None:

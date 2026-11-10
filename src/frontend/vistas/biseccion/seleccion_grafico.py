@@ -1,7 +1,6 @@
 """Borrador editable para confirmar dos extremos elegidos en el gráfico."""
 from math import isfinite
 
-from nicegui import ui
 from src.frontend.componentes.borrador_intervalo_raices import construir_borrador
 
 from src.frontend.controladores.biseccion.captura_criterio import real_capturado
@@ -18,7 +17,7 @@ class SeleccionGrafico:
 
     def construir(self) -> None:
         """Monta la acción de inicio, la alternativa editable y el estado del borrador."""
-        construir_borrador(self, "Marca dos puntos dentro de los ejes o escribe los extremos.")
+        construir_borrador(self, "Marca dos puntos dentro de los ejes o escribe los extremos.", self._dibujar_borrador)
 
     def enlazar(self, grafico) -> None:
         """Proyecta pulsaciones del nodo estable y conserva la entrada manual como alternativa."""
