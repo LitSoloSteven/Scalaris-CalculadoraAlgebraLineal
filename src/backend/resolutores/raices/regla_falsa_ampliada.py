@@ -1,6 +1,6 @@
 """Ejecución configurada sobre el mismo motor de secantes del contrato clásico."""
 import math
-from dataclasses import asdict
+from dataclasses import asdict, replace
 
 from .contrato_regla_falsa import EntradaReglaFalsa
 from .contrato_regla_falsa_ampliada import ConfiguracionReglaFalsa, ResultadoReglaFalsaAmpliado
@@ -24,7 +24,6 @@ def resolver_regla_falsa_configurada(configuracion: ConfiguracionReglaFalsa) -> 
     if resultado.motivo_parada == MOTIVOS_CRITERIO[criterio.tipo]:
         cumplimiento = "CONTEO_COMPLETADO" if criterio.tipo == "iteraciones" else "CUMPLIDO"
     if resultado.codigo_diagnostico == "LIMITE_ITERACIONES":
-        from dataclasses import replace
         resultado = replace(resultado, mensaje="Se alcanzo el limite global sin cumplir el criterio solicitado.")
     umbral = criterio.parametro if criterio.tipo == "iteraciones" else float(criterio.umbral)
     return ResultadoReglaFalsaAmpliado(resultado, criterio, cumplimiento, metrica, umbral)
@@ -41,9 +40,13 @@ def _validar_cero(valor: object, preparado: IntervaloReglaFalsaPreparado) -> flo
         raise ValueError("El cero elegido excede la capacidad numérica.") from error
     if not math.isfinite(numero) or numero not in preparado.intervalo:
         raise ValueError("El cero elegido debe pertenecer a los extremos actuales.")
-    if not preparado.admite_cero or not any(
-        evaluacion["abscisa"] == numero and evaluacion["valor"] == 0
-        for evaluacion in preparado.evaluaciones
-    ):
+    if not _es_cero_admisible(numero, preparado):
         raise ValueError("El extremo elegido ya no se evalúa como cero.")
     return numero
+
+
+def _es_cero_admisible(numero: float, preparado: IntervaloReglaFalsaPreparado) -> bool:
+    return preparado.admite_cero and any(
+        evaluacion["abscisa"] == numero and evaluacion["valor"] == 0
+        for evaluacion in preparado.evaluaciones
+    )
