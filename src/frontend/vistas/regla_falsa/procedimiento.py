@@ -10,6 +10,7 @@ from src.frontend.controladores.regla_falsa.tabla import COLUMNAS, valor_columna
 from src.frontend.controladores.sesion_matricial import actualizar_contexto
 from .figura import crear_figura
 from .tabla_iteraciones import TablaReglaFalsa
+from .modo_examen import mostrar_accion_examen
 
 
 class PanelProcedimiento:
@@ -60,6 +61,7 @@ class PanelProcedimiento:
 
     def _mostrar_cuerpo(self, paso) -> None:
         if paso.cuerpo is not None:
+            mostrar_accion_examen(self.vista.interruptor_examen, paso.cuerpo)
             for formula in formulas_iteracion(paso.cuerpo):
                 renderizar_latex(formula, vigilar_region=True)
             for clave, etiqueta in COLUMNAS:
