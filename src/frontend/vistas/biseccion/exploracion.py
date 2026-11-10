@@ -10,6 +10,7 @@ from src.frontend.controladores.biseccion.exploracion import (
     LONGITUD_CAMPO_EXPLORACION, PASO_EXPLORACION_DEFECTO, presentar_candidato, resolver_exploracion, sugerir_paso,
 )
 from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
+from src.frontend.componentes.exploracion_raices import ESTADO_INICIAL, MontajeExploracion, construir_exploracion
 from .acciones_captura import desplegable
 from .candidatos import mostrar_candidatos
 from .modos_captura import MODO_BUSQUEDA
@@ -17,7 +18,7 @@ from .movimiento import animar_entrada, cancelar_entrada, modalidad_puntero, vin
 from .rango_grafica import campos_rango
 
 registro = logging.getLogger(__name__)
-_ESTADO_INICIAL = "Define un rango y un paso para explorar la función."
+_ESTADO_INICIAL = ESTADO_INICIAL
 
 
 class PanelExploracion:
@@ -34,26 +35,9 @@ class PanelExploracion:
 
     def construir(self) -> None:
         """Monta campos con nombres accesibles y estados de carga, error y candidatos."""
-        with ui.column().classes("panel-tarjeta biseccion-panel-exploracion w-full gap-4 p-6"):
-            ui.label("Explorar intervalos").classes("text-xl font-semibold texto-principal")
-            ui.label("Busca candidatos en el rango del gráfico. Los extremos del cálculo cambian al cargar un intervalo.").classes(
-                "text-sm texto-secundario")
-            self.minimo, self.maximo = campos_rango("rango de búsqueda")
-            with desplegable("Avanzado"):
-                self.paso = self._campo("Paso h", PASO_EXPLORACION_DEFECTO)
-                self.etiqueta_paso = ui.label().classes("text-sm texto-secundario")
-                ui.button("Volver a automático", color=None, on_click=self.restablecer_paso).classes("boton-discreto")
-            with ui.row().classes("w-full gap-3"):
-                self.boton = ui.button("Explorar candidatos", color=None).classes(
-                    "boton-principal").props("ripple=false")
-                vincular_envio(self.boton, self._enviar_desde_boton)
-            self.estado = ui.label(_ESTADO_INICIAL).classes(
-                "texto-secundario").props("role=status aria-live=polite")
-            self.contenedor_resultados = ui.column().classes("biseccion-candidatos w-full gap-4")
-        for campo in self._campos_captura():
-            campo.on("keydown.enter", self.enviar_busqueda)
-        self.paso.on_value_change(self._editar_rango)
-        self.actualizar_paso()
+        construir_exploracion(self, MontajeExploracion(
+            campos_rango, desplegable, vincular_envio, "biseccion-panel-exploracion", "biseccion-candidatos",
+        ))
 
     async def _enviar_desde_boton(self, evento) -> None:
         await self.enviar_busqueda(puntero=modalidad_puntero(evento) is True)
