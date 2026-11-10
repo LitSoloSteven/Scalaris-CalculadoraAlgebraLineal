@@ -2,7 +2,7 @@
 from .diagnostico import detalles_diagnostico
 from .presentacion_examen import texto_filas_examen
 from .presentacion import (
-    aproximacion_presentada, avisos_resumen, etiqueta_aproximacion,
+    aproximacion_presentada, avisos_resumen,
 )
 from .presentacion_ampliada import etiqueta_configurada, metricas_configuradas, titulo_configurado
 
