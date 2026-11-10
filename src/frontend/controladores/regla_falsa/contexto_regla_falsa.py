@@ -2,9 +2,10 @@
 from copy import deepcopy
 
 from .presentacion import etiqueta_aproximacion, titulo_estado
+from .presentacion_ampliada import datos_criterio, titulo_configurado
 
 
-def resumir_contexto_regla_falsa(respuesta: dict | None) -> dict | None:
+def resumir_contexto_regla_falsa(respuesta: dict | None, ampliado: dict | None = None) -> dict | None:
     """Copia el sobre sin el historial completo y conserva solo la última fila válida para Glosa."""
     if respuesta is None:
         return None
@@ -15,4 +16,10 @@ def resumir_contexto_regla_falsa(respuesta: dict | None) -> dict | None:
     filas = respuesta["iteraciones"]
     if filas:
         resumen["ultima_fila_valida"] = deepcopy(filas[-1])
+    if ampliado is not None:
+        resumen["configuracion_aplicada"] = deepcopy(ampliado)
+        resumen["condicion_aplicada"] = dict(datos_criterio(ampliado))
+        resumen["titulo_estado"] = titulo_configurado(respuesta, ampliado)
+        if ampliado["criterio"]["tipo"] == "iteraciones":
+            resumen["etiqueta_aproximacion"] = "Aproximación provisional"
     return resumen

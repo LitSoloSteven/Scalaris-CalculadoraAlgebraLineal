@@ -14,6 +14,8 @@ from .estado_captura import CAMPOS, CAMPOS_EJERCICIO, capturar, reflejar_interva
 from .resultado import mostrar_resultado
 from .procedimiento import PanelProcedimiento
 from .modos_captura import MODO_BUSQUEDA, MODO_INTERVALO
+from .selector_criterio import actualizar_guia
+from .sugerencias import mostrar_sugerencias
 
 _CONFIGURACION = ConfiguracionCalculoRaices(
     mensaje_carga="Calculando la raíz por regla falsa…",
@@ -33,6 +35,7 @@ class VistaReglaFalsa:
         self.historial = []
         self._precision_visual = DECIMALES_PRESENTACION_DEFECTO
         self.modo_examen = False
+        self.ultimo_ampliado = self._cero_preferido = None
         self.detalle_procedimiento = self._foco_procedimiento = self.velocidad_procedimiento = None
 
     def construir(self) -> None:
@@ -55,8 +58,11 @@ class VistaReglaFalsa:
         """Entrega campos crudos al controlador excluyendo la precisión visual."""
         return capturar(self)
 
-    def _editar(self) -> None:
+    def _editar(self, evento=None) -> None:
         if not self._cargando_captura:
+            if evento is not None and evento.sender in (self.expresion, self.inferior, self.superior, self.unidad_angular):
+                self._cero_preferido = None
+            actualizar_guia(self)
             self._retirar_resultado()
             self.estados_entrada.actualizar()
             self.continuidad.programar()
@@ -88,6 +94,7 @@ class VistaReglaFalsa:
         if self.reproductor_pasos is not None:
             self.velocidad_procedimiento = self.reproductor_pasos.velocidad
         invalidar_resultado(self)
+        self.ultimo_ampliado = None
         self.detalle_procedimiento = self._foco_procedimiento = None
         if not self.contenedor_resultados.is_deleted:
             self.contenedor_resultados.clear()
@@ -109,8 +116,10 @@ class VistaReglaFalsa:
         respuesta = datos["resultado"]
         self._huella_resultado = reflejar_intervalo(self, respuesta, huella)
         self.ultimo_resultado = respuesta
+        self.ultimo_ampliado = datos.get("ampliado")
         self.continuidad.region.set_visibility(False)
-        mostrar_resultado(self, respuesta)
+        mostrar_resultado(self, respuesta, self.ultimo_ampliado)
+        mostrar_sugerencias(self, datos)
         self.detalle_procedimiento = PanelProcedimiento(self, datos)
         self.detalle_procedimiento.reproductor.velocidad = self.velocidad_procedimiento or "Normal"
         self.detalle_procedimiento.construir()
@@ -172,7 +181,7 @@ class VistaReglaFalsa:
         """Devuelve captura y resumen vigente para Glosa sin incluir el historial completo."""
         return ContextoIA(
             "regla_falsa", "Método de regla falsa", "Búsqueda de raíces", self.capturar(),
-            EstadoContexto(resultado=resumir_contexto_regla_falsa(self.ultimo_resultado),
+            EstadoContexto(resultado=resumir_contexto_regla_falsa(self.ultimo_resultado, self.ultimo_ampliado),
                            foco=self._foco_procedimiento,
                            vacio=not bool(self.expresion.value),
                            nota_ventana="El residuo no es una cota del error en x. La garantía requiere continuidad."),
