@@ -97,3 +97,17 @@ def test_rafaga_desconexion_y_reconexion(monkeypatch):
         await panel.tarea
         assert panel.respuesta["informe"]["intervalo"] == (0, 11)
     ejecutar_escenario(monkeypatch, comprobar)
+
+
+def test_cero_numerico_restaurado_es_un_extremo_completo(monkeypatch):
+    """Las capturas serializadas con cero numérico conservan diagnóstico y evaluaciones."""
+    async def comprobar(vista):
+        """Restaura valores numéricos, espera el panel y comprueba el cero original."""
+        vista.cargar_captura(captura_regla_falsa(expresion="x", extremo_izquierdo=0, extremo_derecho=2))
+        panel = vista.continuidad
+        assert panel.tarea is not None
+        await panel.tarea
+        assert panel.respuesta["informe"]["intervalo"] == (0, 2)
+        assert panel.respuesta["evaluaciones"][0]["valor"] == 0
+        assert vista.ultimo_resultado is None
+    ejecutar_escenario(monkeypatch, comprobar)

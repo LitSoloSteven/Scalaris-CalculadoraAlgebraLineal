@@ -10,6 +10,7 @@ _PARADAS = {
     "raiz_en_aproximacion": "Cero evaluado en la aproximación de la secante.",
     "limite_iteraciones": "Límite de iteraciones alcanzado.",
     "estancamiento_numerico": "Estancamiento numérico.",
+    "evaluacion_invalida": "El cálculo terminó por una evaluación inválida; se conserva la última fila válida.",
 }
 
 
