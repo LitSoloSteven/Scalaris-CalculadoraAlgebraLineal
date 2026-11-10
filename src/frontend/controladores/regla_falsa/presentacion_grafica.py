@@ -1,5 +1,5 @@
 """Resolución real y muestreo orientativo separados del sobre matemático."""
-from src.frontend.controladores.biseccion.muestreo import muestrear_funcion
+from src.frontend.controladores.muestreo_raices import muestrear_funcion
 from .controlador import resolver_captura
 
 
