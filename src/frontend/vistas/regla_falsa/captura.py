@@ -5,6 +5,7 @@ from src.backend.resolutores.raices.limites_raices import LONGITUD_MAXIMA_EXPRES
 from src.backend.resolutores.raices.unidades_angulares import UNIDADES_ANGULARES
 from .estado_captura import PREFERENCIAS_INICIALES
 from .modos_captura import MODO_INTERVALO, construir_modos, region_modo
+from .selector_criterio import construir_selector
 
 
 def construir_captura(vista) -> None:
@@ -22,8 +23,7 @@ def construir_captura(vista) -> None:
             vista.superior = _campo("Extremo b")
             vista.tolerancia = _campo("Tolerancia de residuo", PREFERENCIAS_INICIALES["tolerancia"])
             vista.limite = _campo("Límite de iteraciones", PREFERENCIAS_INICIALES["limite_iteraciones"])
-        ui.label("Parada por residuo: |f(c)| < tolerancia. El residuo no es una cota del error en x.").classes(
-            "text-sm texto-secundario")
+        construir_selector(vista)
         vista.boton_resolver = ui.button("Calcular raíz", icon="calculate", color=None,
                                         on_click=vista.resolver).classes("boton-principal").props("ripple=false")
 
