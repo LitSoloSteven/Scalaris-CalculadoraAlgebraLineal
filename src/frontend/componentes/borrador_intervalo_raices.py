@@ -34,3 +34,12 @@ def confirmar_borrador(seleccion) -> None:
     seleccion.cancelar()
     seleccion.vista.cargar_captura({"extremo_izquierdo": str(inferior), "extremo_derecho": str(superior)})
     seleccion.vista.inferior.run_method("focus")
+
+
+def siguiente_extremo(campos: tuple):
+    """Devuelve el campo a marcar y reinicia el borrador cuando ya contiene dos extremos."""
+    primero, segundo = campos
+    if segundo.value:
+        primero.set_value("")
+        segundo.set_value("")
+    return segundo if primero.value else primero

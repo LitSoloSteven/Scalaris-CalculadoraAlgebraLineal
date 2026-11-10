@@ -1,5 +1,5 @@
 """Borrador accesible a partir de puntos reales de una muestra vigente."""
-from src.frontend.componentes.borrador_intervalo_raices import construir_borrador, confirmar_borrador
+from src.frontend.componentes.borrador_intervalo_raices import construir_borrador, confirmar_borrador, siguiente_extremo
 from src.frontend.controladores.captura_real import real_capturado
 from src.frontend.controladores.seleccion_muestra_raices import abscisa_muestreada, puntos_borrador
 
@@ -36,10 +36,7 @@ class SeleccionGrafico:
         if abscisa is None:
             return
         primero, segundo = self.campos
-        if segundo.value:
-            primero.set_value("")
-            segundo.set_value("")
-        if not primero.value:
+        if siguiente_extremo(self.campos) is primero:
             primero.set_value(str(abscisa))
             return
         try:

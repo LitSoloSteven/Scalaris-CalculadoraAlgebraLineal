@@ -1,7 +1,7 @@
 """Borrador editable para confirmar dos extremos elegidos en el gráfico."""
 from math import isfinite
 
-from src.frontend.componentes.borrador_intervalo_raices import construir_borrador, confirmar_borrador
+from src.frontend.componentes.borrador_intervalo_raices import construir_borrador, confirmar_borrador, siguiente_extremo
 
 from src.frontend.controladores.biseccion.captura_criterio import real_capturado
 from src.frontend.controladores.seleccion_muestra_raices import puntos_borrador
@@ -46,13 +46,9 @@ class SeleccionGrafico:
         abscisa = _abscisa_finita(evento.args.get("detail"))
         if abscisa is None:
             return
-        primero, segundo = self.campos
-        if segundo.value:
-            primero.set_value("")
-            segundo.set_value("")
-        campo = segundo if primero.value else primero
+        campo = siguiente_extremo(self.campos)
         campo.set_value(str(abscisa))
-        if segundo.value:
+        if self.campos[1].value:
             self._ordenar_extremos(abscisa)
 
     def _ordenar_extremos(self, abscisa: float) -> None:
