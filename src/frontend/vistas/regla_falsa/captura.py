@@ -17,12 +17,11 @@ def construir_captura(vista) -> None:
         value=PREFERENCIAS_INICIALES["unidad_angular"], label="Unidad trigonométrica",
     ).classes("w-full matriz-entrada")
     construir_modos(vista)
+    _construir_parada(vista)
     with region_modo(vista, MODO_INTERVALO):
         with ui.element("div").classes("regla-falsa-campos"):
             vista.inferior = _campo("Extremo a")
             vista.superior = _campo("Extremo b")
-    _construir_parada(vista)
-    with region_modo(vista, MODO_INTERVALO):
         vista.boton_resolver = ui.button("Calcular raíz", icon="calculate", color=None,
                                         on_click=vista.resolver).classes("boton-principal").props("ripple=false")
 

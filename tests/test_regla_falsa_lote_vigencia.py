@@ -64,7 +64,21 @@ def test_boton_obsoleto_no_abre_detalle_de_un_lote_nuevo(monkeypatch):
         manejador(None)
         assert panel.activo is None and vista.ultimo_resultado is None
         panel.abrir(panel.respuesta["resultados"][0]["identificador"], panel.respuesta)
-        assert vista.ultimo_resultado is not None
+        assert vista.ultimo_resultado is not None and not vista.continuidad.region.visible
         vista.exploracion.minimo.set_value("-2")
         assert panel.activo is None and vista.obtener_contexto_ia().foco is None
+        assert vista.continuidad.region.visible
+    ejecutar_escenario(monkeypatch, comprobar)
+
+
+def test_exploracion_nueva_renueva_nodo_de_seleccion(monkeypatch):
+    """Retira el nodo cuyos índices correspondían a una malla anterior."""
+    async def comprobar(vista):
+        """El mismo rango explorado de nuevo no conserva eventos ni selección del nodo previo."""
+        panel = await preparar_lote_vista(vista)
+        selector = panel.selector
+        selector.set_value([next(iter(panel.candidatos))])
+        await vista.exploracion.enviar_busqueda()
+        assert selector.is_deleted and panel.selector is not selector
+        assert not panel.selector.value and not panel.boton.enabled
     ejecutar_escenario(monkeypatch, comprobar)
