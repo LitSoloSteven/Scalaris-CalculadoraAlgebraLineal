@@ -1,5 +1,6 @@
 """Navegación de la traza más larga admitida en la captura."""
 from src.backend.resolutores.raices.limites_raices import LIMITE_ITERACIONES_MAXIMO
+from src.frontend.componentes.tabla_iteraciones import FILAS_POR_PAGINA
 from tests.comun_regla_falsa_vista import captura_regla_falsa, ejecutar_escenario
 
 
@@ -15,13 +16,13 @@ def test_ultima_fila_del_limite_conserva_precision_paso_y_nodo(monkeypatch):
         detalle = vista.detalle_procedimiento
         filas = vista.ultimo_resultado["iteraciones"]
         grafica = detalle.grafica
-        assert len(filas) == maximo and len(detalle.tabla.tabla.rows) == 15
+        assert len(filas) == maximo and len(detalle.tabla.tabla.rows) == FILAS_POR_PAGINA
 
         detalle.reproductor.ir_a(maximo)
         corta = detalle.tabla.tabla.rows[-1]["aproximacion"]
         detalle.tabla.precision.set_value(True)
         ultima = detalle.tabla.tabla.rows[-1]
-        assert 0 < len(detalle.tabla.tabla.rows) <= 15
+        assert 0 < len(detalle.tabla.tabla.rows) <= FILAS_POR_PAGINA
         assert ultima["i"] == str(maximo) and ultima["aproximacion"] != corta
         assert float(ultima["aproximacion"]) == filas[-1]["aproximacion"]
         assert detalle.tabla.tabla.selected == [ultima]
