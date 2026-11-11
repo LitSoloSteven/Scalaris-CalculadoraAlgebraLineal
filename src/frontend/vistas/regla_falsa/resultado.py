@@ -19,7 +19,7 @@ def mostrar_resultado(vista, respuesta: dict, ampliado: dict | None = None) -> N
     """Presenta el sobre mediante texto escapado y conserva el estado real del motor."""
     with vista.contenedor_resultados:
         ui.label(titulo_configurado(respuesta, ampliado)).classes("text-xl font-bold texto-principal").props(
-            "role=status aria-live=polite")
+            "role=heading aria-level=3")
         ui.label(etiqueta_configurada(respuesta, ampliado)).classes("texto-secundario")
         if respuesta["aproximacion"] is not None:
             _montar_formato(vista, respuesta)
