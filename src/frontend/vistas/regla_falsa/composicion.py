@@ -6,6 +6,7 @@ from src.frontend.vistas.biseccion.captura import GUIA_CONTINUIDAD
 from .acciones_captura import construir_acciones, mostrar_recientes
 from .captura import construir_captura
 from .exploracion import PanelExploracion
+from .resolucion_multiple import PanelResolucionMultiple
 from .modos_captura import MODO_BUSQUEDA, region_modo
 from .vista_previa import PanelVistaPrevia
 from .seleccion_grafico import SeleccionGrafico
@@ -46,6 +47,8 @@ def _montar_captura(vista) -> None:
     with region_modo(vista, MODO_BUSQUEDA):
         vista.exploracion = PanelExploracion(vista)
         vista.exploracion.construir()
+        vista.resolucion_multiple = PanelResolucionMultiple(vista)
+        vista.resolucion_multiple.construir()
 
 
 def _montar_resultados(vista) -> None:

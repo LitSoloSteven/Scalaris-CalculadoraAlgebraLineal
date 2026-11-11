@@ -85,6 +85,7 @@ class PanelExploracion(PasoExploracion):
             self.tarea.cancel()
             self.tarea = None
         self.respuesta = None
+        self.vista.resolucion_multiple.retirar_candidatos()
         if not self.contenedor_resultados.is_deleted:
             self.contenedor_resultados.clear()
             self.estado.set_text("Datos editados. Explora para obtener candidatos vigentes.")
@@ -132,6 +133,7 @@ class PanelExploracion(PasoExploracion):
         with self.contenedor_resultados:
             if respuesta["estado"] == "EXITO":
                 presentar_candidatos(self, respuesta)
+                self.vista.resolucion_multiple.actualizar_candidatos(respuesta)
             else:
                 ui.label(respuesta["mensaje"]).classes("texto-secundario")
 

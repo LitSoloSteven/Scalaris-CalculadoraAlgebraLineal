@@ -11,8 +11,7 @@ from src.frontend.controladores.sesion_matricial import actualizar_contexto, inv
 from .acciones_captura import mostrar_recientes
 from .composicion import componer_herramienta
 from .estado_captura import CAMPOS, CAMPOS_EJERCICIO, capturar, reflejar_intervalo, restaurar_captura, vaciar_captura
-from .resultado import mostrar_resultado
-from .procedimiento import PanelProcedimiento
+from .detalle_resultado import captura_contexto, presentar_detalle
 from .modos_captura import MODO_BUSQUEDA, MODO_INTERVALO
 from .selector_criterio import actualizar_guia
 from .sugerencias import mostrar_sugerencias
@@ -67,6 +66,7 @@ class VistaReglaFalsa:
     def _editar(self) -> None:
         if not self._cargando_captura:
             actualizar_guia(self)
+            self.resolucion_multiple.invalidar()
             self._retirar_resultado()
             self.estados_entrada.actualizar()
             self.continuidad.programar()
@@ -111,6 +111,7 @@ class VistaReglaFalsa:
     async def resolver(self, *, puntero: bool = False) -> None:
         """Coordina un trabajador por vista y publica únicamente la captura aún vigente."""
         if not self._cerrada:
+            self.resolucion_multiple.invalidar()
             self.estados_entrada.validar()
             await resolver_calculo_raices(self, calcular_presentacion, _CONFIGURACION, puntero=puntero)
             if not self.ocupado and not self.estado.is_deleted and self.estado.text == _CONFIGURACION.mensaje_carga:
@@ -119,15 +120,8 @@ class VistaReglaFalsa:
     def _publicar(self, datos: dict, huella: str, *, puntero: bool = False) -> None:
         respuesta = datos["resultado"]
         self._huella_resultado = reflejar_intervalo(self, respuesta, huella)
-        self.ultimo_resultado = respuesta
-        self.ultimo_ampliado = datos.get("ampliado")
-        self.continuidad.region.set_visibility(False)
-        mostrar_resultado(self, respuesta, self.ultimo_ampliado)
+        presentar_detalle(self, datos)
         mostrar_sugerencias(self, datos)
-        self.detalle_procedimiento = PanelProcedimiento(self, datos)
-        self.detalle_procedimiento.reproductor.velocidad = self.velocidad_procedimiento or "Normal"
-        self.detalle_procedimiento.construir()
-        self.reproductor_pasos = self.detalle_procedimiento.reproductor
         titulo = titulo_configurado(respuesta, self.ultimo_ampliado)
         self.estado.set_text(titulo)
         if respuesta["aproximacion"] is not None or respuesta["iteraciones"]:
@@ -166,6 +160,7 @@ class VistaReglaFalsa:
         """Revoca resultados pendientes y publicados al perder el cliente o desmontar la vista."""
         self._cerrada = True
         self.exploracion.cerrar()
+        self.resolucion_multiple.cerrar()
         self.vista_previa.cerrar()
         self.previa_expresion.cerrar()
         self.continuidad.cerrar()
@@ -178,6 +173,7 @@ class VistaReglaFalsa:
         self._cerrada = self.contenedor_resultados.is_deleted
         if not self._cerrada:
             self.exploracion.reabrir()
+            self.resolucion_multiple.reabrir()
             self.vista_previa.reabrir()
             self.previa_expresion.reabrir(self.expresion.value or "")
             self.continuidad.reabrir()
@@ -185,7 +181,7 @@ class VistaReglaFalsa:
     def obtener_contexto_ia(self) -> ContextoIA:
         """Devuelve captura y resumen vigente para Glosa sin incluir el historial completo."""
         return ContextoIA(
-            "regla_falsa", "Método de regla falsa", "Búsqueda de raíces", self.capturar(),
+            "regla_falsa", "Método de regla falsa", "Búsqueda de raíces", captura_contexto(self),
             EstadoContexto(resultado=resumir_contexto_regla_falsa(self.ultimo_resultado, self.ultimo_ampliado),
                            foco=self._foco_procedimiento,
                            vacio=not bool(self.expresion.value),
