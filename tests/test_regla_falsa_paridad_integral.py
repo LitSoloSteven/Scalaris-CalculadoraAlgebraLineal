@@ -12,6 +12,7 @@ from tests.comun_regla_falsa_vista import ejecutar_escenario
 def test_busqueda_trigonometrica_conserva_unidad_hasta_restaurar_el_reciente(monkeypatch, unidad, maximo, raiz):
     """El intervalo hallado y la traza mantienen el significado angular de la captura."""
     async def comprobar(vista):
+        """Recorre el flujo con un cruce real en la unidad parametrizada."""
         vista.expresion.set_value("2sin(x)-1")
         vista.unidad_angular.set_value(unidad)
         vista.criterio.set_value("ancho")

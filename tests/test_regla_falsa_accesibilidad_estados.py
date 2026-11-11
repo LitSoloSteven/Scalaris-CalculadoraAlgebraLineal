@@ -5,6 +5,7 @@ from tests.comun_regla_falsa_vista import captura_regla_falsa, ejecutar_escenari
 def test_error_contextual_enlaza_su_mensaje_hasta_corregir_el_campo(monkeypatch):
     """El destino existe en el campo y se desvincula al retirar el error."""
     async def comprobar(vista):
+        """Inspecciona la ranura de error y corrige la expresión en el mismo control."""
         vista.cargar_captura(captura_regla_falsa(expresion="x+"))
         campo = vista.expresion
         assert not vista.estados_entrada.validar()
@@ -25,6 +26,7 @@ def test_error_contextual_enlaza_su_mensaje_hasta_corregir_el_campo(monkeypatch)
 def test_cambio_de_criterio_retira_la_asociacion_del_parametro_oculto(monkeypatch):
     """El mensaje de un borrador inválido no queda asociado a un control oculto."""
     async def comprobar(vista):
+        """Alterna de ancho a residuo con un error activo en el borrador de ancho."""
         vista.cargar_captura(captura_regla_falsa(criterio={"tipo": "ancho", "parametro": "0"}))
         ancho = vista.parametros_criterio["ancho"]
         vista.estados_entrada.revisar("criterio")
@@ -40,6 +42,7 @@ def test_cambio_de_criterio_retira_la_asociacion_del_parametro_oculto(monkeypatc
 def test_resultado_anuncia_su_estado_en_una_sola_region_viva(monkeypatch):
     """El título sigue disponible como encabezado y solo el estado persistente anuncia el cambio."""
     async def comprobar(vista):
+        """Contrasta el título del detalle con el estado vivo de la captura."""
         vista.cargar_captura(captura_regla_falsa())
         await vista.resolver()
         titulo = next(e for e in vista.contenedor_resultados if getattr(e, "text", None) == vista.estado.text)
