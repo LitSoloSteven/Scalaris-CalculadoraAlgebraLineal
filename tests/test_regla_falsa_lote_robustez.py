@@ -80,8 +80,10 @@ def test_coste_real_no_supera_la_reserva_de_dos_extremos_mas_limite(monkeypatch,
     compilar_original = preparacion.compilar
     evaluaciones = []
     def compilar_contando(*argumentos, **opciones):
+        """Envuelve la función compilada con un contador de intentos de evaluación."""
         funcion = compilar_original(*argumentos, **opciones)
         def contar(abscisa):
+            """Cuenta la invocación incluso cuando la evaluación falla."""
             evaluaciones.append(abscisa)
             return funcion(abscisa)
         return contar
@@ -96,6 +98,7 @@ def test_coste_real_no_supera_la_reserva_de_dos_extremos_mas_limite(monkeypatch,
 def test_lote_nunca_invoca_los_resolutores_de_biseccion(monkeypatch):
     """Una llamada al motor o lote de bisección hace fallar la comprobación de exclusividad."""
     def prohibir(*_argumentos, **_opciones):
+        """Hace visible cualquier dependencia accidental del motor de bisección."""
         pytest.fail("Regla falsa no debe ejecutar bisección")
     biseccion = import_module("src.backend.resolutores.raices.biseccion")
     multiple = import_module("src.backend.resolutores.raices.resolucion_multiple")
@@ -126,6 +129,7 @@ def test_fallo_interno_no_filtra_detalles_ni_aborta_el_lote(monkeypatch):
     original = modulo.resolver_regla_falsa_configurada
     llamadas = []
     def fallar_primero(configuracion):
+        """Simula un fallo interno en la primera solicitud sin alterar las siguientes."""
         llamadas.append(configuracion)
         if len(llamadas) == 1:
             raise RuntimeError("detalle privado")
