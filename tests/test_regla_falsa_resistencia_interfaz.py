@@ -7,6 +7,7 @@ from tests.comun_regla_falsa_vista import captura_regla_falsa, ejecutar_escenari
 def test_ultima_fila_del_limite_conserva_precision_paso_y_nodo(monkeypatch):
     """Muestra solo la última página y mantiene su fila al inspeccionar cifras completas."""
     async def comprobar(vista):
+        """Salta a la última iteración y contrasta la celda con el valor del motor."""
         maximo = LIMITE_ITERACIONES_MAXIMO
         vista.cargar_captura(captura_regla_falsa(
             expresion="x^10-1", extremo_izquierdo="0", limite_iteraciones=str(maximo),
