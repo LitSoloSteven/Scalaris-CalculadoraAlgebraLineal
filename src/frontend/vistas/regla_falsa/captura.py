@@ -21,11 +21,17 @@ def construir_captura(vista) -> None:
         with ui.element("div").classes("regla-falsa-campos"):
             vista.inferior = _campo("Extremo a")
             vista.superior = _campo("Extremo b")
-            vista.tolerancia = _campo("Tolerancia de residuo", PREFERENCIAS_INICIALES["tolerancia"])
-            vista.limite = _campo("Límite de iteraciones", PREFERENCIAS_INICIALES["limite_iteraciones"])
-        construir_selector(vista)
+    _construir_parada(vista)
+    with region_modo(vista, MODO_INTERVALO):
         vista.boton_resolver = ui.button("Calcular raíz", icon="calculate", color=None,
                                         on_click=vista.resolver).classes("boton-principal").props("ripple=false")
+
+
+def _construir_parada(vista) -> None:
+    with ui.element("div").classes("regla-falsa-campos"):
+        vista.tolerancia = _campo("Tolerancia de residuo", PREFERENCIAS_INICIALES["tolerancia"])
+        vista.limite = _campo("Límite de iteraciones", PREFERENCIAS_INICIALES["limite_iteraciones"])
+    construir_selector(vista)
 
 
 def _campo(etiqueta: str, valor: str = ""):

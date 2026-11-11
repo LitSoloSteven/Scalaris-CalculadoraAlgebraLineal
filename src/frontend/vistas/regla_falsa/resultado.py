@@ -33,12 +33,14 @@ def mostrar_resultado(vista, respuesta: dict, ampliado: dict | None = None) -> N
                 ui.label("Diagnóstico del cálculo")
             _mostrar_datos(detalles_diagnostico(respuesta))
         vista.interruptor_examen = crear_interruptor_examen(vista)
-        renderizar_copia_resultado(lambda: _copia_visible(vista, respuesta, ampliado))
+        candidato = getattr(getattr(vista, "resolucion_multiple", None), "activo", None)
+        renderizar_copia_resultado(lambda: _copia_visible(vista, respuesta, ampliado, candidato))
 
 
-def _copia_visible(vista, respuesta: dict, ampliado: dict | None) -> dict:
+def _copia_visible(vista, respuesta: dict, ampliado: dict | None, candidato: str | None = None) -> dict:
     if ampliado is not None:
-        return datos_copia_configurada(respuesta, ampliado, vista._precision_visual, vista.modo_examen)
+        datos = datos_copia_configurada(respuesta, ampliado, vista._precision_visual, vista.modo_examen)
+        return {campo: f"{candidato}\n{valor}" for campo, valor in datos.items()} if candidato else datos
     funcion = datos_copia_examen_regla_falsa if vista.modo_examen else datos_copia_regla_falsa
     return funcion(respuesta, vista._precision_visual)
 
