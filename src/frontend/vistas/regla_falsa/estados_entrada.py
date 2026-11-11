@@ -1,4 +1,6 @@
 """Errores junto al campo y foco de la primera corrección pendiente."""
+from nicegui import ui
+
 from src.frontend.controladores.regla_falsa.validacion_contextual import errores_captura
 from .estado_captura import CAMPOS
 
@@ -9,17 +11,21 @@ class EstadosEntrada:
     def __init__(self, vista):
         self.vista = vista
         self.revisados = set()
+        self.mensajes = {}
 
     def construir(self) -> None:
         """Enlaza salida de cada campo con revisión y un mensaje accesible local."""
         for clave, atributo in CAMPOS.items():
-            campo = getattr(self.vista, atributo)
-            campo.without_auto_validation()
-            campo.on("blur", lambda evento, clave=clave: self.revisar(clave))
+            self._vincular(getattr(self.vista, atributo), clave)
         for tipo, campo in self.vista.parametros_criterio.items():
             if tipo != "residuo":
-                campo.without_auto_validation()
-                campo.on("blur", lambda evento: self.revisar("criterio"))
+                self._vincular(campo, "criterio")
+
+    def _vincular(self, campo, clave: str) -> None:
+        campo.without_auto_validation()
+        campo.on("blur", lambda: self.revisar(clave))
+        with campo.add_slot("error"):
+            self.mensajes[campo] = ui.label().props("role=alert")
 
     def revisar(self, clave: str) -> None:
         """Revisa un campo visitado sin enfocar ni enviar un cálculo."""
@@ -52,13 +58,20 @@ class EstadosEntrada:
         claves = (*CAMPOS, "criterio") if activo != "residuo" else tuple(CAMPOS)
         for tipo, campo in self.vista.parametros_criterio.items():
             if tipo != activo:
-                campo.error = None
-                campo.props("aria-invalid=false")
+                self._mostrar_campo(campo, "")
         for clave in claves:
             texto = errores.get(clave, "") if clave in self.revisados else ""
-            campo = self._campo(clave)
-            campo.error = texto or None
-            campo.props(f'aria-invalid={str(bool(texto)).lower()}')
+            self._mostrar_campo(self._campo(clave), texto)
+
+    def _mostrar_campo(self, campo, texto: str) -> None:
+        mensaje = self.mensajes[campo]
+        mensaje.set_text(texto)
+        campo.error = texto or None
+        if texto:
+            # Quasar da prioridad a error-message sobre la ranura con el ID accesible.
+            campo.props(f"aria-invalid=true aria-describedby={mensaje.html_id}", remove="error-message")
+        else:
+            campo.props("aria-invalid=false", remove="aria-describedby")
 
     def _campo(self, clave: str):
         if clave == "criterio":
