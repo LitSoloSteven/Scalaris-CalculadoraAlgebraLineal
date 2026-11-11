@@ -4,7 +4,6 @@ import logging
 
 from nicegui import ui
 
-from src.ai.huellas import calcular_huella
 from src.frontend.componentes.captura_exploracion_raices import campos_rango
 from src.frontend.componentes.exploracion_raices import ESTADO_INICIAL, MontajeExploracion, construir_exploracion
 from src.frontend.componentes.paso_exploracion_raices import PasoExploracion
@@ -18,6 +17,7 @@ from src.frontend.vistas.biseccion.acciones_captura import desplegable
 from src.frontend.vistas.biseccion.estado_captura import transaccion
 from .modos_captura import MODO_BUSQUEDA
 from .seleccion_candidato import presentar_candidatos, seleccionar_candidato
+from .vigencia_solicitud import iniciar_solicitud, revocar_solicitud
 
 _registro = logging.getLogger(__name__)
 
@@ -79,11 +79,7 @@ class PanelExploracion(PasoExploracion):
 
     def invalidar(self) -> None:
         """Retira acciones y espera antigua conservando la plaza hasta el cierre real."""
-        self._revision += 1
-        self.coordinador.invalidar()
-        if self.tarea is not None:
-            self.tarea.cancel()
-            self.tarea = None
+        revocar_solicitud(self)
         self.respuesta = None
         self.vista.resolucion_multiple.retirar_candidatos()
         if not self.contenedor_resultados.is_deleted:
@@ -96,31 +92,22 @@ class PanelExploracion(PasoExploracion):
         if self._cerrado or self.contenedor_resultados.is_deleted:
             return
         self.invalidar()
-        tarea = self.tarea = asyncio.current_task()
-        revision, destino = self._revision, self.contenedor_resultados
-        captura = self.capturar()
-        huella = calcular_huella(captura)
-        self._mostrar_carga(True)
+        solicitud = iniciar_solicitud(self)
         self.estado.set_text("Explorando la malla de la función…")
         try:
-            respuesta = await self.coordinador.ejecutar(captura)
-            if respuesta is not None and self._sigue_vigente(revision, destino, huella):
+            respuesta = await self.coordinador.ejecutar(solicitud.captura)
+            if respuesta is not None and solicitud.corresponde(self):
                 self._publicar(respuesta)
         except asyncio.CancelledError:
             return
         except Exception:
             _registro.exception("No se pudo presentar la exploración de regla falsa")
-            if self._sigue_vigente(revision, destino, huella) and not self.estado.is_deleted:
+            if solicitud.corresponde(self) and not self.estado.is_deleted:
                 self.estado.set_text("No se pudo completar la exploración. Revisa la función y vuelve a intentarlo.")
         finally:
-            if self.tarea is tarea:
+            if self.tarea is solicitud.tarea:
                 self.tarea = None
                 self._mostrar_carga(False)
-
-    def _sigue_vigente(self, revision: int, destino, huella: str) -> bool:
-        return (revision == self._revision and not self._cerrado
-                and destino is self.contenedor_resultados and not destino.is_deleted
-                and huella == calcular_huella(self.capturar()))
 
     def _mostrar_carga(self, ocupado: bool) -> None:
         if not self.boton.is_deleted:
