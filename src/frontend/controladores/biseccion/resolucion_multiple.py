@@ -1,8 +1,8 @@
 """Adaptación del lote a capturas de interfaz y resultados serializables independientes."""
-from src.backend.resolutores.raices.contrato_exploracion import CandidatoExploracion
-from src.backend.resolutores.raices.contrato_resolucion_multiple import CandidatoResolucion, EntradaResolucionMultiple
+from src.backend.resolutores.raices.contrato_resolucion_multiple import EntradaResolucionMultiple
 from src.backend.resolutores.raices.limites_resolucion_multiple import MAXIMO_CANDIDATOS_MULTIPLE
 from src.backend.resolutores.raices.resolucion_multiple import resolver_candidatos
+from src.frontend.controladores.candidatos_lote_raices import convertir_candidato as _convertir_candidato
 from .captura_criterio import preparar_entrada
 from .controlador import serializar_resultado
 
@@ -38,17 +38,6 @@ def _preparar_lote(captura: dict) -> EntradaResolucionMultiple:
                     "extremo_izquierdo": inferior, "extremo_derecho": superior})
     return EntradaResolucionMultiple(configuracion, candidatos,
                                      unidad_angular=captura.get("unidad_angular", configuracion.unidad_angular))
-
-
-def _convertir_candidato(registro: dict) -> CandidatoResolucion:
-    if not isinstance(registro, dict) or not isinstance(registro.get("candidato"), dict):
-        raise ValueError("El candidato no tiene la forma esperada.")
-    datos = registro["candidato"]
-    intervalo = datos.get("intervalo")
-    if not isinstance(intervalo, (tuple, list)) or len(intervalo) != 2:
-        raise ValueError("El candidato requiere dos extremos.")
-    candidato = CandidatoExploracion(datos.get("tipo"), tuple(intervalo), datos.get("abscisa"), datos.get("valor"))
-    return CandidatoResolucion(registro.get("identificador"), candidato)
 
 
 def _serializar_registro(registro) -> dict:
