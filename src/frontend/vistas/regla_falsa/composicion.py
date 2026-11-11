@@ -55,5 +55,5 @@ def _montar_resultados(vista) -> None:
     with ui.element("h2").classes("text-lg font-semibold texto-principal"):
         ui.label("Resultado")
     vista.estado = ui.label("Ingresa una función y sus extremos, busca un intervalo o carga un ejemplo.").classes(
-        "texto-secundario").props("role=status aria-live=polite aria-atomic=true")
+        "texto-secundario").props("role=status aria-live=polite aria-atomic=true tabindex=-1")
     vista.contenedor_resultados = ui.column().classes("w-full gap-4")

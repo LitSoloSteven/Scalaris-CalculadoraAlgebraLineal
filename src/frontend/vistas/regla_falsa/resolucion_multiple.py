@@ -119,13 +119,13 @@ class PanelResolucionMultiple:
         self.estado.set_text("Resolviendo la selección por regla falsa…")
         try:
             respuesta = await self.coordinador.ejecutar(solicitud.captura)
-            if respuesta is not None and self._puede_resolver() and solicitud.corresponde(self):
+            if respuesta is not None and self._solicitud_vigente(solicitud):
                 self._publicar(respuesta)
         except asyncio.CancelledError:
             return
         except Exception:
             _registro.exception("No se pudo presentar el lote de regla falsa")
-            if self._puede_resolver() and solicitud.corresponde(self):
+            if self._solicitud_vigente(solicitud):
                 self.respuesta = None
                 solicitud.destino.clear()
                 self.estado.set_text("No se pudo completar el lote. Revisa los datos y vuelve a resolver.")
@@ -139,6 +139,9 @@ class PanelResolucionMultiple:
                 and self.vista.modos.value == MODO_BUSQUEDA and bool(self.candidatos)
                 and self._fuente is self.vista.exploracion.respuesta
                 and 1 <= len(self.selector.value or []) <= MAXIMO_CANDIDATOS_MULTIPLE)
+
+    def _solicitud_vigente(self, solicitud) -> bool:
+        return self._puede_resolver() and solicitud.corresponde(self)
 
     def _mostrar_carga(self, ocupado: bool) -> None:
         if not self.boton.is_deleted:
@@ -161,11 +164,12 @@ class PanelResolucionMultiple:
             return
         self.vista._retirar_resultado()
         self.activo = identificador
-        with self.vista.contenedor_resultados, ui.element("h3").props("tabindex=-1") as titulo:
+        with self.vista.contenedor_resultados, ui.element("h3"):
             ui.label(f"Detalle de {identificador}").classes("font-semibold texto-principal")
         presentar_detalle(self.vista, registro["datos"])
-        self.vista.estado.set_text(f"Detalle de {identificador}. La tabla, secante y copia corresponden a este candidato.")
-        titulo.client.run_javascript(f"document.getElementById('{titulo.html_id}')?.focus()")
+        estado = self.vista.estado
+        estado.set_text(f"Detalle de {identificador}. La tabla, secante y copia corresponden a este candidato.")
+        estado.client.run_javascript(f"document.getElementById('{estado.html_id}')?.focus()")
         actualizar_contexto(self.vista)
 
     def cerrar(self) -> None:
