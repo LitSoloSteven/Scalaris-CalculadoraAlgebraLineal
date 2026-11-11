@@ -57,17 +57,22 @@ def validar_resolucion_multiple(entrada: EntradaResolucionMultiple) -> EntradaRe
     """Devuelve configuración canónica o lanza ValueError por forma, recursos o identificadores."""
     if not isinstance(entrada, EntradaResolucionMultiple) or not isinstance(entrada.configuracion, EntradaBiseccion):
         raise ValueError("El lote requiere una configuración de bisección válida.")
-    if not isinstance(entrada.candidatos, tuple) or not 1 <= len(entrada.candidatos) <= MAXIMO_CANDIDATOS_MULTIPLE:
-        raise ValueError(f"Selecciona entre 1 y {MAXIMO_CANDIDATOS_MULTIPLE} candidatos; reduce la exploración o resuelve uno.")
+    validar_seleccion_multiple(entrada.candidatos, entrada.presupuesto_evaluaciones)
     presupuesto = entrada.presupuesto_evaluaciones
-    if type(presupuesto) is not int or not 1 <= presupuesto <= MAXIMO_EVALUACIONES_MULTIPLE:
-        raise ValueError(f"El presupuesto del lote debe ser un entero entre 1 y {MAXIMO_EVALUACIONES_MULTIPLE}.")
-    _validar_identificadores(entrada.candidatos)
     configuracion = validar_entrada(asdict(entrada.configuracion))
     unidad = validar_unidad_angular(entrada.unidad_angular)
     if unidad != configuracion.unidad_angular:
         raise ValueError("La unidad angular del lote debe coincidir con su configuración de bisección.")
     return EntradaResolucionMultiple(configuracion, entrada.candidatos, presupuesto, unidad)
+
+
+def validar_seleccion_multiple(candidatos: tuple[CandidatoResolucion, ...], presupuesto: int) -> None:
+    """Comprueba cantidad, presupuesto e identificadores; lanza ValueError sin evaluar funciones."""
+    if not isinstance(candidatos, tuple) or not 1 <= len(candidatos) <= MAXIMO_CANDIDATOS_MULTIPLE:
+        raise ValueError(f"Selecciona entre 1 y {MAXIMO_CANDIDATOS_MULTIPLE} candidatos; reduce la exploración o resuelve uno.")
+    if type(presupuesto) is not int or not 1 <= presupuesto <= MAXIMO_EVALUACIONES_MULTIPLE:
+        raise ValueError(f"El presupuesto del lote debe ser un entero entre 1 y {MAXIMO_EVALUACIONES_MULTIPLE}.")
+    _validar_identificadores(candidatos)
 
 
 def _validar_identificadores(candidatos: tuple[CandidatoResolucion, ...]) -> None:
