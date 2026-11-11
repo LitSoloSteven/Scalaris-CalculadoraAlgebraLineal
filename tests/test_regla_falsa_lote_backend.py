@@ -59,6 +59,7 @@ def test_reserva_estricta_sin_ejecutar_candidatos_fuera_de_presupuesto(monkeypat
     modulo = import_module("src.backend.resolutores.raices.resolucion_multiple_regla_falsa")
     llamadas = []
     def resolver(configuracion):
+        """Registra cada solicitud real antes de delegar al motor configurado."""
         llamadas.append(configuracion)
         return resolver_regla_falsa_configurada(configuracion)
     monkeypatch.setattr(modulo, "resolver_regla_falsa_configurada", resolver)
@@ -104,6 +105,7 @@ def test_configuracion_global_invalida_falla_antes_de_evaluar(monkeypatch):
     """Sintaxis, unidad, entrada y criterio inválidos impiden iniciar cualquier candidato."""
     modulo = import_module("src.backend.resolutores.raices.resolucion_multiple_regla_falsa")
     def prohibir(_configuracion):
+        """Impide evaluar candidatos con una configuración global inválida."""
         pytest.fail("No debe resolver con una configuración global inválida")
     monkeypatch.setattr(modulo, "resolver_regla_falsa_configurada", prohibir)
     entrada = _entrada()
