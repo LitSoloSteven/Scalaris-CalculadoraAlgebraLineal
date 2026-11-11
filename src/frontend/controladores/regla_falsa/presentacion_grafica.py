@@ -5,7 +5,11 @@ from .ejecucion_ampliada import resolver_presentacion
 
 def calcular_presentacion(captura: dict) -> dict:
     """Devuelve resultado y curva orientativa sin alterar el contrato ni los estados del motor."""
-    datos = resolver_presentacion(captura)
+    return agregar_grafica(resolver_presentacion(captura))
+
+
+def agregar_grafica(datos: dict) -> dict:
+    """Muestrea un resultado ya calculado sin repetir sus iteraciones ni certificar continuidad."""
     respuesta = datos["resultado"]
     muestra, aviso = None, ""
     if respuesta["estado"] == "ERROR":
