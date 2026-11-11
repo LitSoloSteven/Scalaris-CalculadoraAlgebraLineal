@@ -43,11 +43,12 @@ def test_adaptador_usa_una_sola_solicitud_y_preserva_el_resultado_por_criterio(m
 
 @pytest.mark.parametrize("intervalo,limite,esperado", [((1, 2), "1", "LIMITE_ITERACIONES"),
     ((math.nextafter(math.sqrt(2), 0), math.sqrt(2)), "100", "ESTANCAMIENTO")])
-def test_candidato_invalido_no_oculta_resultado_provisional(intervalo, limite, esperado):
+@pytest.mark.parametrize("invalido", [None, (2, 1), (1,)])
+def test_candidato_invalido_no_oculta_resultado_provisional(intervalo, limite, esperado, invalido):
     """Distingue un fallo individual de una aproximación provisional disponible para abrir."""
     configuracion = captura_regla_falsa(limite_iteraciones=limite, criterio={"tipo": "relativo", "parametro": "1e-30"})
     lote = resolucion_multiple.resolver_lote({"configuracion": configuracion,
-        "candidatos": (_registro("invalido", (2, 1)), _registro("provisional", intervalo))})
+        "candidatos": (_registro("invalido", invalido), _registro("provisional", intervalo))})
     invalido, provisional = lote["resultados"]
     assert invalido["estado"] == "NO_APTO" and invalido["datos"] is None
     assert provisional["estado"] == esperado

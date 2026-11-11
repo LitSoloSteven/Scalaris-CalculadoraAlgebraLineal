@@ -7,6 +7,7 @@ from src.backend.resolutores.raices.limites_resolucion_multiple import MAXIMO_CA
 from src.backend.resolutores.raices.resolucion_multiple_regla_falsa import resolver_candidatos_regla_falsa
 from src.frontend.controladores.candidatos_lote_raices import convertir_candidato
 from src.frontend.controladores.captura_real import entero_capturado
+from src.frontend.controladores.exploracion_raices import LONGITUD_CAMPO_EXPLORACION
 from src.frontend.controladores.rango_exploracion_raices import RANGO_GRAFICA_DEFECTO
 from .configuracion_ampliada import preparar_configuracion
 from .presentacion_grafica import agregar_grafica
@@ -42,12 +43,15 @@ def _preparar_lote(captura: dict) -> EntradaLoteReglaFalsa:
     registros = captura.get("candidatos")
     if not isinstance(registros, (tuple, list)) or not 1 <= len(registros) <= MAXIMO_CANDIDATOS_MULTIPLE:
         raise ValueError(_ERROR_CAPTURA)
-    candidatos = tuple(convertir_candidato(registro) for registro in registros)
+    candidatos = tuple(convertir_candidato(registro, validar_forma=False) for registro in registros)
     inferior, superior = RANGO_GRAFICA_DEFECTO
     # El servicio sustituye este intervalo de configuración por el propio de cada candidato.
     configuracion = preparar_configuracion({**captura["configuracion"], "extremo_izquierdo": inferior,
                                             "extremo_derecho": superior, "cero_preferido": None})
-    presupuesto = entero_capturado(captura.get("presupuesto_evaluaciones", MAXIMO_EVALUACIONES_MULTIPLE), "El presupuesto")
+    valor = captura.get("presupuesto_evaluaciones", MAXIMO_EVALUACIONES_MULTIPLE)
+    if isinstance(valor, str) and len(valor) > LONGITUD_CAMPO_EXPLORACION:
+        raise ValueError(_ERROR_CAPTURA)
+    presupuesto = entero_capturado(valor, "El presupuesto")
     return EntradaLoteReglaFalsa(configuracion, candidatos, presupuesto)
 
 
