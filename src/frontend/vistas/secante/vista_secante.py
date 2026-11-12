@@ -134,6 +134,9 @@ class VistaSecante:
     def _actualizar_grafica(self) -> None:
         """Dibuja la curva y la última secante del resultado vigente."""
         self.contenedor_grafica.clear()
+        if not self.opcion_grafica.value:
+            self.estado_grafica.set_text("Activa «Mostrar gráfica» para visualizar la curva.")
+            return
         if self.ultimo_resultado is None:
             self.estado_grafica.set_text("Calcula una raíz para generar la gráfica.")
             return
