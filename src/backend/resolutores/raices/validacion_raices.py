@@ -41,3 +41,16 @@ def validar_limite_iteraciones(valor: object) -> int:
             f"El límite de iteraciones debe ser un entero entre 1 y {LIMITE_ITERACIONES_MAXIMO} (recibido {valor!r})."
         )
     return valor
+
+
+def validar_tolerancia_positiva(valor: object) -> float:
+    """Devuelve una tolerancia positiva finita; lanza ValueError con mensaje de campo."""
+    if isinstance(valor, bool) or not isinstance(valor, (int, float)):
+        raise ValueError("La tolerancia debe ser un número real positivo y finito.")
+    try:
+        numero = float(valor)
+    except OverflowError as error:
+        raise ValueError("La tolerancia excede la capacidad numérica.") from error
+    if not math.isfinite(numero) or numero <= 0:
+        raise ValueError("La tolerancia debe ser positiva, finita y representable.")
+    return numero

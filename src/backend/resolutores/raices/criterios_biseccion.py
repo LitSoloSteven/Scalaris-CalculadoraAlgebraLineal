@@ -1,9 +1,9 @@
 """Configuración y validación de criterios independientes de bisección."""
-import math
 from dataclasses import dataclass
 from fractions import Fraction
 
 from .limites_biseccion import D_MAXIMO
+from .validacion_raices import validar_tolerancia_positiva
 
 _UNIDADES = {"relativo": "%", "ancho": "unidades de x", "decimales": "unidades de x",
              "residuo": "unidades de f(x)", "iteraciones": "iteraciones"}
@@ -63,13 +63,4 @@ def _validar_parametro(criterio: CriterioParada, limite: int) -> int | float:
         return validar_entero_criterio(criterio.parametro, "La precisión decimales", D_MAXIMO)
     if criterio.tipo == "iteraciones":
         return validar_entero_criterio(criterio.parametro, "El número fijo de iteraciones", limite, 1)
-    valor = criterio.parametro
-    if isinstance(valor, bool) or not isinstance(valor, (int, float)):
-        raise ValueError("La tolerancia debe ser un número real positivo y finito.")
-    try:
-        numero = float(valor)
-    except OverflowError as error:
-        raise ValueError("La tolerancia excede la capacidad numérica.") from error
-    if not math.isfinite(numero) or numero <= 0:
-        raise ValueError("La tolerancia debe ser positiva, finita y representable.")
-    return numero
+    return validar_tolerancia_positiva(criterio.parametro)
