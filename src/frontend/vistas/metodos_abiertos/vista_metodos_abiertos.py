@@ -107,14 +107,16 @@ class VistaMetodosAbiertos:
 
     def _construir_grafica_y_salida(self) -> None:
         with ui.column().classes(
-                "metodos-abiertos-previa w-full min-w-0 metodos-abiertos-entrada metodos-abiertos-entrada-3"):
-            self.previa = PanelVistaPrevia(
-                lambda: self.expresion.value, self._actualizar_figura_previa,
-            )
-            self.previa.construir()
-        self.grafica = self.previa.grafica
-        self.resultados = ui.column().classes("metodos-abiertos-resultados w-full min-w-0")
-        self.contenedor_reproductor = ui.column().classes("w-full min-w-0")
+                "metodos-abiertos-vista vista-raiz w-full max-w-6xl mx-auto p-4 gap-4"):
+            with ui.column().classes(
+                    "metodos-abiertos-previa w-full min-w-0 metodos-abiertos-entrada metodos-abiertos-entrada-3"):
+                self.previa = PanelVistaPrevia(
+                    lambda: self.expresion.value, self._actualizar_figura_previa,
+                )
+                self.previa.construir()
+            self.grafica = self.previa.grafica
+            self.resultados = ui.column().classes("metodos-abiertos-resultados w-full min-w-0")
+            self.contenedor_reproductor = ui.column().classes("w-full min-w-0")
 
     def _conectar_eventos(self) -> None:
         self.x1.set_visibility(False)
