@@ -25,7 +25,7 @@ def test_elementos_por_pilar_en_orden():
     elementos_visualizador = elementos_navegacion("visualizador")
     assert [elemento.clave for elemento in elementos_visualizador] == ["vis:rectas-planos", "vis:vectores", "vis:combinacion"]
     elementos_utilidades = elementos_navegacion("utilidades")
-    assert [elemento.clave for elemento in elementos_utilidades] == ["bases", "romanos", "biseccion", "regla_falsa", "secante"]
+    assert [elemento.clave for elemento in elementos_utilidades] == ["bases", "romanos", "biseccion", "regla_falsa", "secante", "newton_raphson"]
     assert elementos_navegacion("desconocido") == ()
 
 
@@ -35,8 +35,8 @@ def test_claves_unicas_entre_pilares():
     for pilar in ("algebra", "visualizador", "utilidades"):
         for elemento in elementos_navegacion(pilar):
             claves.append(elemento.clave)
-    assert len(claves) == 16
-    assert len(set(claves)) == 16
+    assert len(claves) == 17
+    assert len(set(claves)) == 17
 
 
 def test_enlaces_validos_y_etiquetas_completas():
@@ -62,6 +62,7 @@ def test_clave_predeterminada_por_ruta():
     assert predeterminado_elemento_clave("/utilidades/bases") == "bases"
     assert predeterminado_elemento_clave("/utilidades/romanos") == "romanos"
     assert predeterminado_elemento_clave("/utilidades/secante") == "secante"
+    assert predeterminado_elemento_clave("/utilidades/newton-raphson") == "newton_raphson"
     assert predeterminado_elemento_clave("/visualizador") == "vis:rectas-planos"
     assert predeterminado_elemento_clave("/ruta/inexistente") is None
     assert predeterminado_elemento_clave("") is None
