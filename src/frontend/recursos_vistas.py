@@ -7,7 +7,8 @@ _NUMERICAS = frozenset({"bases", "romanos"})
 _BISECCION = frozenset({"biseccion"})
 _REGLA_FALSA = frozenset({"regla_falsa"})
 _SECANTE = frozenset({"secante"})
-_RAICES = _BISECCION | _REGLA_FALSA | _SECANTE
+_NEWTON_RAPHSON = frozenset({"newton_raphson"})
+_RAICES = _BISECCION | _REGLA_FALSA | _SECANTE | _NEWTON_RAPHSON
 _ALGEBRA = frozenset({"sistemas", "vectores", "matrices", "inversa", "determinantes", "factorizacion_lu",
                        "visualizador", "leontief", "transformaciones"})
 _VISTAS = _INICIO | _NUMERICAS | _ALGEBRA | _RAICES
