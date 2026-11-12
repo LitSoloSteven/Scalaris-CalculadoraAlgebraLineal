@@ -76,8 +76,11 @@ def test_entrada_inicial_no_finita_se_rechaza():
     assert resultado.codigo_diagnostico == "ENTRADA_INVALIDA"
 
 
-def test_denominador_derivada_cero_despues_de_iterar():
-    """El motor conserva filas previas si la derivada se anula en una aproximación posterior."""
-    resultado = newton_raphson(_entrada("x^3 - 2*x + 2", "3*x^2 - 2", 0, tolerancia=1e-15, limite=4))
-    assert resultado.estado in {"ERROR", "ESTANCAMIENTO", "LIMITE_ITERACIONES", "EXITO"}
-    assert resultado.iteraciones_totales == len(resultado.iteraciones)
+def test_derivada_cero_despues_de_una_iteracion_conserva_la_traza():
+    """Si la derivada se anula en el nuevo punto, conserva la iteración anterior."""
+    resultado = newton_raphson(_entrada("x^2 + 1", "2*x", 1, tolerancia=1e-15))
+    assert resultado.estado == "ERROR"
+    assert resultado.codigo_diagnostico == "DERIVADA_CERO"
+    assert resultado.iteraciones_totales == 1
+    assert resultado.aproximacion == 0
+    assert resultado.iteraciones[0].x_siguiente == 0
