@@ -165,10 +165,8 @@ def _validar_entrada(entrada: EntradaSecante) -> EntradaSecante:
     if x_anterior == x_actual:
         raise ValueError("Las dos aproximaciones iniciales deben ser diferentes.")
 
-    if isinstance(entrada.tolerancia, bool) or not isinstance(entrada.tolerancia, (int, float)):
-        raise ValueError("La tolerancia debe ser un número real positivo.")
-    tolerancia = float(entrada.tolerancia)
-    if not math.isfinite(tolerancia) or tolerancia <= 0:
+    tolerancia = validar_extremo(entrada.tolerancia, "La tolerancia")
+    if tolerancia <= 0:
         raise ValueError("La tolerancia debe ser un número real positivo.")
 
     limite = validar_limite_iteraciones(entrada.limite_iteraciones)
