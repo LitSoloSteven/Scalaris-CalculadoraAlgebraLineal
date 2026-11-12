@@ -1,0 +1,50 @@
+"""Salida copiable de los resultados y diagnósticos de regla falsa."""
+from .diagnostico import detalles_diagnostico
+from .presentacion_examen import texto_filas_examen
+from .presentacion import (
+    aproximacion_presentada, avisos_resumen,
+)
+from .presentacion_ampliada import etiqueta_configurada, metricas_configuradas, titulo_configurado
+
+
+def texto_copia_regla_falsa(respuesta: dict, decimales: int) -> str:
+    """Compone la salida desde el sobre; propaga ValueError por precisión visual inválida."""
+    return _texto_copia(respuesta, decimales)
+
+
+def _texto_copia(respuesta: dict, decimales: int, ampliado: dict | None = None) -> str:
+    aproximacion = aproximacion_presentada(respuesta, decimales)
+    lineas = ["Regla falsa", titulo_configurado(respuesta, ampliado), etiqueta_configurada(respuesta, ampliado)]
+    if respuesta.get("aproximacion") is not None:
+        lineas.append(aproximacion)
+    lineas.append(respuesta["mensaje"])
+    detalles = metricas_configuradas(respuesta, ampliado) + detalles_diagnostico(respuesta)
+    lineas.extend(f"{etiqueta}: {valor}" for etiqueta, valor in detalles)
+    lineas.extend(avisos_resumen(respuesta))
+    return "\n".join(lineas)
+
+
+def datos_copia_regla_falsa(respuesta: dict, decimales: int) -> dict[str, str]:
+    """Entrega el campo de copia existente; los estados sin éxito se publican como resultado."""
+    campo = "solucion" if respuesta["estado"] == "EXITO" else "matriz_resultado"
+    return {campo: texto_copia_regla_falsa(respuesta, decimales)}
+
+
+def texto_copia_examen_regla_falsa(respuesta: dict, decimales: int) -> str:
+    """Añade razonamiento por fila a una copia nueva y conserva la firma y salida clásicas."""
+    return texto_copia_regla_falsa(respuesta, decimales) + "\n\n" + texto_filas_examen(respuesta)
+
+
+def datos_copia_examen_regla_falsa(respuesta: dict, decimales: int) -> dict[str, str]:
+    """Entrega una copia didáctica del mismo resultado, con precisión exclusivamente visual."""
+    campo = "solucion" if respuesta["estado"] == "EXITO" else "matriz_resultado"
+    return {campo: texto_copia_examen_regla_falsa(respuesta, decimales)}
+
+
+def datos_copia_configurada(respuesta: dict, ampliado: dict, decimales: int, examen: bool = False) -> dict[str, str]:
+    """Copia condición y cumplimiento por separado, preservando la función clásica y sus firmas."""
+    texto = _texto_copia(respuesta, decimales, ampliado)
+    if examen:
+        texto += "\n\n" + texto_filas_examen(respuesta)
+    campo = "solucion" if ampliado["cumplimiento"] == "CUMPLIDO" else "matriz_resultado"
+    return {campo: texto}

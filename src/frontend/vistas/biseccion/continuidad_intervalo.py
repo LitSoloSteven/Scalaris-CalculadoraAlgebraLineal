@@ -2,6 +2,7 @@
 import asyncio
 
 from nicegui import ui
+from src.frontend.componentes.informe_continuidad_raices import mostrar_informe_continuidad
 
 from src.frontend.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
 from src.frontend.controladores.actualizacion_cancelable import programar_actualizacion
@@ -14,13 +15,7 @@ _CLAVES = ("expresion", "extremo_izquierdo", "extremo_derecho", "unidad_angular"
 
 def mostrar_informe(informe: dict) -> None:
     """Presenta el estado y la evidencia que el dominio asoció al intervalo."""
-    inferior, superior = informe["intervalo"]
-    ui.label(f'{informe["mensaje"]} [{inferior:.17g}, {superior:.17g}]').classes("biseccion-numero texto-principal")
-    if informe["politica"] == "RECHAZAR":
-        ui.label("Revisa la función o los extremos del intervalo.").classes("texto-advertencia")
-    for dato in informe["evidencia"]:
-        ubicacion = f' En x = {dato["abscisa"]:.17g}.' if dato["abscisa"] is not None else ""
-        ui.label(dato["detalle"] + ubicacion).classes("text-sm texto-secundario")
+    mostrar_informe_continuidad(informe, "biseccion-numero texto-principal")
 
 
 class PanelContinuidad:

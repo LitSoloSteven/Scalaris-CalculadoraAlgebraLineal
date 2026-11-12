@@ -10,6 +10,8 @@ from .contrato_regla_falsa import (
     ResultadoReglaFalsa,
 )
 from .decision_biseccion import signo_producto
+from .criterios_biseccion import CriterioParada
+from .parada_regla_falsa import decidir_parada_regla_falsa
 from .evaluador_funcion import evaluar
 from .preparacion_regla_falsa import (
     IntervaloReglaFalsaPreparado,
@@ -19,7 +21,6 @@ from .traza_regla_falsa import (
     construir_error,
     construir_resultado,
     crear_iteracion,
-    crear_iteracion_estancamiento,
 )
 from .validacion_regla_falsa import validar_entrada_regla_falsa
 
@@ -71,13 +72,26 @@ def regla_falsa(entrada: EntradaReglaFalsa) -> ResultadoReglaFalsa:
     except ValueError as error:
         return construir_error(error, codigo="ENTRADA_INVALIDA", motivo="entrada_invalida")
     preparado = preparar_intervalo_regla_falsa(entrada)
+    return resolver_intervalo_regla_falsa(preparado)
+
+
+def resolver_intervalo_regla_falsa(
+    preparado: IntervaloReglaFalsaPreparado, criterio: CriterioParada | None = None,
+    cero_preferido: float | None = None,
+) -> ResultadoReglaFalsa:
+    """Ejecuta un intervalo preparado con política opcional ya validada por el llamador."""
+    entrada = preparado.entrada
     if preparado.fallo is not None:
         return preparado.fallo
     if preparado.admite_cero:
-        return _resultado_raiz_extremo(entrada, preparado)
+        resultado = _resultado_raiz_extremo(entrada, preparado)
+        if cero_preferido is not None:
+            resultado = replace(resultado, aproximacion=cero_preferido,
+                                intervalo_final=(cero_preferido, cero_preferido))
+        return resultado
     if preparado.restriccion is not None:
         return _resultado_restriccion(entrada, preparado)
-    return _iterar(entrada, preparado)
+    return _iterar(entrada, preparado, criterio)
 
 
 def _resultado_raiz_extremo(
@@ -131,13 +145,14 @@ def _resultado_restriccion(
 
 
 def _iterar(
-    entrada: EntradaReglaFalsa, preparado: IntervaloReglaFalsaPreparado
+    entrada: EntradaReglaFalsa, preparado: IntervaloReglaFalsaPreparado,
+    criterio: CriterioParada | None = None,
 ) -> ResultadoReglaFalsa:
     estado = _abrir_iteracion(preparado)
     if estado is None:
         return _sin_cambio_signo(entrada, preparado.informe)
     iteraciones: list[IteracionReglaFalsa] = []
-    resultado = _ciclo(entrada, preparado, estado, iteraciones)
+    resultado = _ciclo(entrada, preparado, estado, iteraciones, criterio)
     return replace(resultado, informe_continuidad=preparado.informe)
 
 
@@ -176,6 +191,7 @@ def _ciclo(
     preparado: IntervaloReglaFalsaPreparado,
     estado: _EstadoIteracion,
     iteraciones: list[IteracionReglaFalsa],
+    criterio: CriterioParada | None = None,
 ) -> ResultadoReglaFalsa:
     """Itera delegando cada paso en `_paso` y conserva el contexto de fallo."""
     contexto: ContextoFallo = {
@@ -184,7 +200,7 @@ def _ciclo(
         "intervalo_valido": estado.intervalo,
     }
     for indice in range(1, entrada.limite_iteraciones + 1):
-        fila, motivo, cruce, error = _paso(entrada, preparado, estado, indice)
+        fila, motivo, cruce, error = _paso(entrada, preparado, estado, indice, criterio)
         if error is not None:
             if cruce is not None:
                 contexto["x_fallo"] = cruce
@@ -204,6 +220,7 @@ def _paso(
     preparado: IntervaloReglaFalsaPreparado,
     estado: _EstadoIteracion,
     indice: int,
+    criterio: CriterioParada | None = None,
 ) -> tuple[IteracionReglaFalsa | None, str, float | None, ValueError | None]:
     """Ejecuta una iteracion y devuelve (fila, motivo, cruce, error) segun la prioridad de cierre."""
     cruce: float | None = None
@@ -213,18 +230,8 @@ def _paso(
         )
         valor_cruce = _valor_en_cruce(estado, cruce, preparado)
         fila_base = crear_iteracion(indice, estado.extremos(), (cruce, valor_cruce), estado.previo)
-        if fila_base.valor_aproximacion == 0:
-            return fila_base, "raiz_en_aproximacion", cruce, None
-        if fila_base.residuo < entrada.tolerancia:
-            return fila_base, "tolerancia_residuo", cruce, None
-        if cruce in (estado.inferior, estado.superior) or cruce == estado.previo:
-            fila_estancamiento = crear_iteracion_estancamiento(
-                indice, estado.extremos(), (cruce, valor_cruce), estado.intervalo
-            )
-            return fila_estancamiento, "estancamiento_numerico", cruce, None
-        if indice == entrada.limite_iteraciones:
-            return fila_base, "limite_iteraciones", cruce, None
-        return fila_base, "", cruce, None
+        fila, motivo = decidir_parada_regla_falsa(entrada, fila_base, estado.previo, criterio)
+        return fila, motivo, cruce, None
     except ValueError as error:
         return None, "", cruce, error
 

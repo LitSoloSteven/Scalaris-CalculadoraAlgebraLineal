@@ -4,7 +4,9 @@ from functools import lru_cache
 
 _INICIO = frozenset({"inicio"})
 _NUMERICAS = frozenset({"bases", "romanos"})
-_RAICES = frozenset({"biseccion"})
+_BISECCION = frozenset({"biseccion"})
+_REGLA_FALSA = frozenset({"regla_falsa"})
+_RAICES = _BISECCION | _REGLA_FALSA
 _ALGEBRA = frozenset({"sistemas", "vectores", "matrices", "inversa", "determinantes", "factorizacion_lu",
                        "visualizador", "leontief", "transformaciones"})
 _VISTAS = _INICIO | _NUMERICAS | _ALGEBRA | _RAICES
@@ -28,15 +30,16 @@ _POR_RECURSO = {
     "vistas_numericos.css": _NUMERICAS,
     "pasos_numericos.css": _NUMERICAS,
     "vistas_inversa.css": _ALGEBRA | _NUMERICAS | _RAICES,
-    "vistas_biseccion.css": _RAICES,
+    "vistas_biseccion.css": _BISECCION,
+    "vistas_regla_falsa.css": _REGLA_FALSA,
     "inicio_entrada.js": _INICIO,
     "inicio.js": _INICIO,
     "sistemas_metodo.js": frozenset({"sistemas"}),
     "tema_graficos.js": frozenset({"visualizador"}) | _RAICES,
-    "grafico_biseccion.js": _RAICES,
-    "movimiento_biseccion.js": _RAICES,
-    "banda_biseccion.js": _RAICES,
-    "paso_biseccion.js": _RAICES,
+    "grafico_biseccion.js": _BISECCION,
+    "movimiento_biseccion.js": _BISECCION,
+    "banda_biseccion.js": _BISECCION,
+    "paso_biseccion.js": _BISECCION,
     "sincronizacion_diseno.js": frozenset({"visualizador"}),
 }
 _ETIQUETAS = re.compile(

@@ -2,6 +2,7 @@
 from src.backend.resolutores.raices.contrato_biseccion import ESTADO_DISCONTINUIDAD
 from src.frontend.componentes.reproductor_pasos.modelo import GrupoReproductor, PasoReproductor
 from .catalogo_criterios import condicion_criterio
+from src.frontend.controladores.formato_numerico_raices import numero
 
 COLUMNAS = (
     ("i", "i"), ("extremo_izquierdo", "a"), ("extremo_derecho", "b"),
@@ -15,13 +16,6 @@ MOTIVOS = {
     "limite_iteraciones": "Límite de iteraciones; precisión no alcanzada",
     "estancamiento": "Límite de representación numérica; precisión no alcanzada",
 }
-
-
-def numero(valor, completo: bool = False) -> str:
-    """Formatea números con hasta 17 cifras para inspección, sin alterar el cálculo."""
-    if valor is None:
-        return "No disponible"
-    return format(valor, ".17g" if completo else ".9g") if isinstance(valor, float) else str(valor)
 
 
 def filas_tabla(respuesta: dict, completo: bool = False) -> list[dict]:

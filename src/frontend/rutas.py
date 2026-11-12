@@ -151,6 +151,17 @@ def _registrar_paginas_utilidades() -> None:
         VistaCalculadoraRomana().construir()
 
 
+def _registrar_pagina_regla_falsa() -> None:
+    """Registra la herramienta de secantes con los recursos propios de su página."""
+    @ui.page(ruta_de("regla_falsa"), title=herramienta_por_identificador("regla_falsa").titulo_pagina)
+    def pagina_regla_falsa():
+        """Construye captura, procedimiento y navegación con el motor real de regla falsa."""
+        from src.frontend.vistas.regla_falsa.pagina import construir_pagina_regla_falsa
+
+        configurar_tema("regla_falsa")
+        construir_pagina_regla_falsa()
+
+
 def _registrar_pagina_inicio() -> None:
     """Registra la página de inicio (inicio) si está habilitada."""
     if not navegacion.INICIO_HABILITADO:
@@ -172,4 +183,5 @@ def registrar_rutas() -> None:
     _registrar_pagina_factorizacion_lu()
     _registrar_paginas_avanzadas()
     _registrar_paginas_utilidades()
+    _registrar_pagina_regla_falsa()
     _registrar_pagina_inicio()
