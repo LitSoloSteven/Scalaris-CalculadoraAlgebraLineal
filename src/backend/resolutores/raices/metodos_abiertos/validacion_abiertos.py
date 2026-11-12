@@ -34,6 +34,32 @@ def validar_entrada_abierta(datos: Mapping[str, object]) -> EntradaMetodoAbierto
     )
 
 
+def preparar_entrada_abierta(
+    entrada: EntradaMetodoAbierto | Mapping[str, object], metodo: MetodoAbierto
+) -> EntradaMetodoAbierto:
+    """Convierte una captura cruda o revalida la entrada tipada para el método."""
+    if isinstance(entrada, Mapping):
+        tipada = validar_entrada_abierta(entrada)
+    elif isinstance(entrada, EntradaMetodoAbierto):
+        tipada = validar_entrada_abierta(_datos_de_entrada(entrada))
+    else:
+        raise ValueError("La entrada debe ser una captura o una EntradaMetodoAbierto.")
+    if tipada.metodo != metodo:
+        raise ValueError(f"La entrada debe corresponder al método {metodo}.")
+    return tipada
+
+
+def _datos_de_entrada(entrada: EntradaMetodoAbierto) -> dict[str, object]:
+    return {
+        "metodo": entrada.metodo,
+        "expresion": entrada.expresion,
+        "x0": entrada.x0,
+        "x1": entrada.x1,
+        "tolerancia": entrada.tolerancia,
+        "limite_iteraciones": entrada.limite_iteraciones,
+    }
+
+
 def _validar_metodo(valor: object) -> MetodoAbierto:
     if valor not in METODOS_ABIERTOS:
         raise ValueError(

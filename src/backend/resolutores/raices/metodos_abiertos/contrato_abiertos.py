@@ -12,6 +12,10 @@ EstadoAbierto = Literal[
     "ERROR",
 ]
 CriterioParada = Literal["", "residuo", "cambio"]
+AVISO_CAMBIO_SIN_RESIDUO = (
+    "La aproximación se estabilizó, pero el residuo todavía supera la tolerancia. "
+    "Revisa el resultado."
+)
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -60,3 +64,119 @@ class ResultadoMetodoAbierto:
     derivada_expresion: str | None = None
     advertencias: tuple[str, ...] = ()
     contexto_fallo: dict | None = None
+
+
+def resultado_metodo(
+    metodo: MetodoAbierto,
+    iteraciones: tuple[IteracionMetodoAbierto, ...] = (),
+    **datos: object,
+) -> ResultadoMetodoAbierto:
+    """Construye un resultado y deriva el total de iteraciones de la tupla recibida."""
+    return ResultadoMetodoAbierto(
+        metodo=metodo,
+        iteraciones=iteraciones,
+        iteraciones_totales=len(iteraciones),
+        **datos,
+    )
+
+
+def resultado_error(
+    metodo: MetodoAbierto, codigo: str, mensaje: str, **datos: object
+) -> ResultadoMetodoAbierto:
+    """Construye un resultado en estado ERROR con el código de diagnóstico indicado."""
+    return resultado_fallo(metodo, "ERROR", codigo, mensaje, **datos)
+
+
+def resultado_fallo(
+    metodo: MetodoAbierto, estado: EstadoAbierto, codigo: str, mensaje: str, **datos: object
+) -> ResultadoMetodoAbierto:
+    """Construye un resultado fallido conservando el estado específico del motor."""
+    return resultado_metodo(
+        metodo,
+        estado=estado,
+        codigo_diagnostico=codigo,
+        mensaje=mensaje,
+        **datos,
+    )
+
+
+def resultado_evaluacion(
+    metodo: MetodoAbierto, abscisa: float, detalle: str, **datos: object
+) -> ResultadoMetodoAbierto:
+    """Construye un error de evaluación localizado en una abscisa concreta."""
+    return resultado_error(
+        metodo,
+        "EVALUACION",
+        f"No se pudo evaluar la función en x = {abscisa:g}: {detalle}",
+        contexto_fallo={"x": abscisa, "detalle": detalle},
+        **datos,
+    )
+
+
+def resultado_inicial(
+    metodo: MetodoAbierto,
+    entrada: EntradaMetodoAbierto,
+    abscisa: float,
+    f_x: float,
+    **datos: object,
+) -> ResultadoMetodoAbierto:
+    """Construye el éxito inmediato de un punto inicial que ya cumple la tolerancia."""
+    codigo = "PUNTO_INICIAL_RAIZ" if f_x == 0 else "PUNTO_INICIAL_TOLERANCIA"
+    mensaje = (
+        "El punto inicial ya es una raíz exacta."
+        if f_x == 0
+        else "El punto inicial ya cumple la tolerancia de residuo."
+    )
+    return resultado_metodo(
+        metodo,
+        entrada=entrada,
+        estado="EXITO",
+        codigo_diagnostico=codigo,
+        mensaje=mensaje,
+        raiz=abscisa,
+        residuo=abs(f_x),
+        **datos,
+    )
+
+
+def resultado_convergencia(
+    metodo: MetodoAbierto,
+    entrada: EntradaMetodoAbierto,
+    iteraciones: tuple[IteracionMetodoAbierto, ...],
+    criterio: Literal["residuo", "cambio"],
+    **datos: object,
+) -> ResultadoMetodoAbierto:
+    """Construye el éxito por residuo o por cambio de aproximación."""
+    codigo = "TOLERANCIA_RESIDUO" if criterio == "residuo" else "TOLERANCIA_CAMBIO"
+    mensaje = (
+        "Convergió por tolerancia de residuo."
+        if criterio == "residuo"
+        else "Convergió por cambio de aproximación."
+    )
+    return resultado_metodo(
+        metodo,
+        iteraciones,
+        entrada=entrada,
+        estado="EXITO",
+        codigo_diagnostico=codigo,
+        mensaje=mensaje,
+        **datos,
+    )
+
+
+def resultado_limite(
+    metodo: MetodoAbierto,
+    entrada: EntradaMetodoAbierto,
+    iteraciones: tuple[IteracionMetodoAbierto, ...],
+    **datos: object,
+) -> ResultadoMetodoAbierto:
+    """Construye el resultado de límite de iteraciones sin tolerancia alcanzada."""
+    return resultado_metodo(
+        metodo,
+        iteraciones,
+        entrada=entrada,
+        estado="LIMITE_ITERACIONES",
+        codigo_diagnostico="LIMITE_ITERACIONES",
+        mensaje="No se alcanzó la tolerancia en el máximo de iteraciones.",
+        **datos,
+    )
