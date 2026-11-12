@@ -39,7 +39,14 @@ class _PasoNewton:
 
 
 def newton(entrada: EntradaMetodoAbierto | Mapping[str, object]) -> ResultadoMetodoAbierto:
-    """Ejecuta Newton-Raphson y devuelve el resultado sin propagar errores de dominio."""
+    """Ejecuta Newton-Raphson con una captura o entrada tipada.
+
+    Args:
+        entrada: Datos del método, incluidos expresión, punto inicial y límites.
+
+    Returns:
+        Resultado con estado, diagnóstico y traza; una entrada inválida produce ERROR.
+    """
     try:
         tipada = preparar_entrada_abierta(entrada, "newton")
     except ValueError as error:

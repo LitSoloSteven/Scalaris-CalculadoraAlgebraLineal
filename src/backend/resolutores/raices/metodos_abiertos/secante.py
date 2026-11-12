@@ -37,7 +37,14 @@ class _PasoSecante:
 
 
 def secante(entrada: EntradaMetodoAbierto | Mapping[str, object]) -> ResultadoMetodoAbierto:
-    """Ejecuta la secante y devuelve el resultado sin propagar errores de dominio."""
+    """Ejecuta la secante con una captura o entrada tipada.
+
+    Args:
+        entrada: Datos del método, incluidos expresión, dos puntos iniciales y límites.
+
+    Returns:
+        Resultado con estado, diagnóstico y traza; una entrada inválida produce ERROR.
+    """
     try:
         tipada = preparar_entrada_abierta(entrada, "secante")
     except ValueError as error:
