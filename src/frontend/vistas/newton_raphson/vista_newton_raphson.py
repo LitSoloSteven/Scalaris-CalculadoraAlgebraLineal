@@ -9,6 +9,7 @@ from src.backend.resolutores.raices.newton_raphson import (
 from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.panel_ia import PanelIA
 from src.frontend.controladores.captura_real import entero_capturado, real_capturado
+from src.frontend.controladores.graficas_metodos_abiertos import crear_figura_newton_raphson
 from src.frontend.navegacion import ruta_de
 
 
@@ -77,6 +78,21 @@ class VistaNewtonRaphson:
                     ).classes("text-sm texto-secundario")
 
             with ui.column().classes("panel-tarjeta w-full p-6 gap-4"):
+                with ui.row().classes("w-full items-center justify-between"):
+                    ui.label("Gráfica de la función").classes("text-lg font-semibold texto-principal")
+                    self.opcion_grafica = ui.switch("Mostrar gráfica", value=True)
+                self.estado_grafica = ui.label(
+                    "La gráfica aparecerá después de realizar el cálculo."
+                ).classes("text-sm texto-secundario").props("role=status aria-live=polite")
+                self.contenedor_grafica = ui.column().classes("w-full min-w-0")
+                self.contenedor_grafica.bind_visibility_from(self.opcion_grafica, "value")
+                self.opcion_grafica.on_value_change(self._alternar_grafica)
+                ui.label(
+                    "La curva muestra f(x), las aproximaciones y la última recta tangente. "
+                    "Los huecos del dominio no se conectan."
+                ).classes("text-xs texto-secundario")
+
+            with ui.column().classes("panel-tarjeta w-full p-6 gap-4"):
                 ui.label("Procedimiento e iteraciones").classes("text-lg font-semibold texto-principal")
                 ui.label(
                     "En cada fila se muestra f(xₙ), f'(xₙ), la nueva aproximación y el error absoluto."
@@ -101,7 +117,32 @@ class VistaNewtonRaphson:
         self.ultimo_resultado = None
         self.contenedor_resultado.clear()
         self.contenedor_tabla.clear()
+        self.contenedor_grafica.clear()
+        self.estado_grafica.set_text("La gráfica aparecerá después de realizar el cálculo.")
         self.estado.set_text("Datos modificados. Calcula de nuevo para obtener un resultado vigente.")
+
+    def _alternar_grafica(self, evento=None) -> None:
+        """Muestra u oculta la gráfica sin volver a ejecutar Newton-Raphson."""
+        if self.opcion_grafica.value:
+            self._actualizar_grafica()
+
+    def _actualizar_grafica(self) -> None:
+        """Dibuja la curva y la última recta tangente del resultado vigente."""
+        self.contenedor_grafica.clear()
+        if self.ultimo_resultado is None:
+            self.estado_grafica.set_text("Calcula una raíz para generar la gráfica.")
+            return
+        try:
+            figura = crear_figura_newton_raphson(self.ultimo_resultado)
+        except (ValueError, TypeError, OverflowError, ZeroDivisionError, RecursionError):
+            self.estado_grafica.set_text("No se pudo dibujar la función con el rango actual.")
+            return
+        self.estado_grafica.set_text(
+            "Curva de la función, puntos de aproximación y última recta tangente."
+        )
+        with self.contenedor_grafica:
+            ui.plotly(figura).classes("w-full")
+
 
     def cargar_ejemplo(self) -> None:
         """Carga f(x)=x²−2, f'(x)=2x y x₀=1.5."""
@@ -181,6 +222,7 @@ class VistaNewtonRaphson:
                 ui.label("No se necesitaron iteraciones: la aproximación inicial ya era una raíz.").classes(
                     "texto-secundario"
                 )
+        self._actualizar_grafica()
 
 
 def _metrica(etiqueta: str, valor: str) -> None:
