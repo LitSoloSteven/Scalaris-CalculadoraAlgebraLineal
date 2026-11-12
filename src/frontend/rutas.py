@@ -173,6 +173,17 @@ def _registrar_pagina_secante() -> None:
         VistaSecante().construir()
 
 
+def _registrar_pagina_newton_raphson() -> None:
+    """Registra la página del método abierto de Newton-Raphson."""
+    @ui.page(ruta_de("newton_raphson"), title=herramienta_por_identificador("newton_raphson").titulo_pagina)
+    def pagina_newton_raphson():
+        """Construye la captura, el procedimiento y los resultados de Newton-Raphson."""
+        from src.frontend.vistas.newton_raphson.vista_newton_raphson import VistaNewtonRaphson
+
+        configurar_tema("newton_raphson")
+        VistaNewtonRaphson().construir()
+
+
 def _registrar_pagina_inicio() -> None:
     """Registra la página de inicio (inicio) si está habilitada."""
     if not navegacion.INICIO_HABILITADO:
@@ -196,4 +207,5 @@ def registrar_rutas() -> None:
     _registrar_paginas_utilidades()
     _registrar_pagina_regla_falsa()
     _registrar_pagina_secante()
+    _registrar_pagina_newton_raphson()
     _registrar_pagina_inicio()
