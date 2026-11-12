@@ -74,7 +74,7 @@ def crear_figura_secante(resultado) -> go.Figure:
             hovertemplate="x = %{x:.10g}<br>y = 0<extra>%{fullData.name}</extra>",
         ))
 
-    _finalizar(figura, "secante")
+    _finalizar(figura)
     return figura
 
 
@@ -138,7 +138,7 @@ def crear_figura_newton_raphson(resultado) -> go.Figure:
             hovertemplate="x = %{x:.10g}<br>y = 0<extra>%{fullData.name}</extra>",
         ))
 
-    _finalizar(figura, "newton_raphson")
+    _finalizar(figura)
     return figura
 
 
@@ -165,7 +165,7 @@ def _muestrear(expresion: str, abscisas: list[float], unidad_angular: str) -> di
     })
 
 
-def _finalizar(figura: go.Figure, identificador: str) -> None:
+def _finalizar(figura: go.Figure) -> None:
     """Aplica la paleta temática y garantiza ejes y=0 y x=0 visibles."""
     figura.update_xaxes(title_text="x", zeroline=True)
     figura.update_yaxes(title_text="f(x)", zeroline=True)
