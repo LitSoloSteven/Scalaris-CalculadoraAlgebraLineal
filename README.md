@@ -38,6 +38,7 @@ Las herramientas compatibles permiten transferir datos al visualizador sin volve
 | --- | --- | --- |
 | Conversor de bases | Conversión de enteros entre decimal, binario, octal y hexadecimal. | `/utilidades/bases` |
 | Números romanos | Suma, resta y multiplicación con presentación del procedimiento. | `/utilidades/romanos` |
+| Método de la secante | Método abierto para aproximar raíces de ecuaciones no lineales con dos valores iniciales. | `/utilidades/secante` |
 
 ## Captura y resultados
 
