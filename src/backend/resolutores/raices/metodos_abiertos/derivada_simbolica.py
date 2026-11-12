@@ -10,6 +10,14 @@ _MENSAJE_POTENCIA_VARIABLE = (
 )
 
 
+class ErrorDerivadaNoDisponible(ValueError):
+    """Indica que la regla de derivación requerida no está soportada en esta versión."""
+
+
+class ErrorDerivadaDemasiadoGrande(ValueError):
+    """Indica que la derivada excede los límites de la gramática."""
+
+
 def derivar_expresion(expresion: str) -> str:
     """Devuelve f'(x) normalizada y validada; lanza ValueError si no se puede derivar."""
     arbol = analizar_expresion(expresion)
@@ -17,13 +25,13 @@ def derivar_expresion(expresion: str) -> str:
     try:
         texto = ast.unparse(ast.Expression(body=derivada))
     except (ValueError, RecursionError) as error:
-        raise ValueError("No se pudo construir la expresión de la derivada.") from error
+        raise ErrorDerivadaNoDisponible("No se pudo construir la expresión de la derivada.") from error
     normalizada = None
     try:
         normalizada = normalizar_expresion(texto)
         analizar_expresion(normalizada)
     except ValueError as error:
-        raise ValueError(
+        raise ErrorDerivadaDemasiadoGrande(
             "La derivada simbólica excede los límites de la gramática "
             "(512 caracteres, 256 nodos o 32 niveles)."
         ) from error
@@ -41,7 +49,7 @@ def _derivar(nodo: ast.AST) -> ast.AST:
         return _derivar_binario(nodo)
     if isinstance(nodo, ast.Call):
         return _derivar_llamada(nodo)
-    raise ValueError("La expresión contiene un nodo que no se puede derivar.")
+    raise ErrorDerivadaNoDisponible("La expresión contiene un nodo que no se puede derivar.")
 
 
 def _derivar_unario(nodo: ast.UnaryOp) -> ast.AST:
@@ -63,7 +71,7 @@ def _derivar_binario(nodo: ast.BinOp) -> ast.AST:
         return _cociente(numerador, _potencia(nodo.right, _constante(2)))
     if isinstance(nodo.op, ast.Pow):
         return _derivar_potencia(nodo)
-    raise ValueError("La expresión contiene un operador que no se puede derivar.")
+    raise ErrorDerivadaNoDisponible("La expresión contiene un operador que no se puede derivar.")
 
 
 def _producto_regla(
@@ -82,7 +90,7 @@ def _derivar_potencia(nodo: ast.BinOp) -> ast.AST:
     exponente_depende = _depende_de_x(nodo.right)
     base_depende = _depende_de_x(nodo.left)
     if exponente_depende and base_depende:
-        raise ValueError(_MENSAJE_POTENCIA_VARIABLE)
+        raise ErrorDerivadaNoDisponible(_MENSAJE_POTENCIA_VARIABLE)
     if not exponente_depende:
         derivada_base = _derivar(nodo.left)
         factor = _producto(nodo.right, _potencia(nodo.left, _resta(nodo.right, _constante(1))))
@@ -99,7 +107,7 @@ def _derivar_llamada(nodo: ast.Call) -> ast.AST:
     nombre = nodo.func.id
     regla = _REGLAS_LLAMADA.get(nombre)
     if regla is None:
-        raise ValueError(f"La función {nombre} no tiene regla de derivación disponible.")
+        raise ErrorDerivadaNoDisponible(f"La función {nombre} no tiene regla de derivación disponible.")
     argumento = nodo.args[0]
     return regla(argumento, _derivar(argumento))
 
