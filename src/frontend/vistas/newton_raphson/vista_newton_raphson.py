@@ -41,6 +41,9 @@ class VistaNewtonRaphson:
                     self.derivada = ui.input(
                         "Derivada f'(x)", value="2*x", placeholder="Ejemplo: 3*x^2 - 1"
                     ).classes("w-full matriz-entrada").props("maxlength=512 autocomplete=off spellcheck=false")
+                    ui.label(
+                        "Introduce la derivada correcta de la función; el programa evalúa f'(x), no la obtiene automáticamente."
+                    ).classes("text-xs texto-secundario")
                     self.inicial = ui.input(
                         "Aproximación inicial x₀", value="1.5"
                     ).classes("w-full matriz-entrada").props("inputmode=decimal")
