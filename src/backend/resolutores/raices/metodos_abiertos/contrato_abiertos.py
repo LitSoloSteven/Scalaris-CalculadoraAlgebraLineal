@@ -71,16 +71,7 @@ def resultado_metodo(
     iteraciones: tuple[IteracionMetodoAbierto, ...] = (),
     **datos: object,
 ) -> ResultadoMetodoAbierto:
-    """Construye el resultado y calcula su total de iteraciones.
-
-    Args:
-        metodo: Método que produjo el resultado.
-        iteraciones: Traza que se conservará en el resultado.
-        **datos: Campos adicionales del contrato de salida.
-
-    Returns:
-        Resultado con total de iteraciones igual a la longitud de la traza.
-    """
+    """Recibe método, iteraciones y campos; devuelve el resultado con el total derivado de la traza."""
     return ResultadoMetodoAbierto(
         metodo=metodo,
         iteraciones=iteraciones,
@@ -92,35 +83,14 @@ def resultado_metodo(
 def resultado_error(
     metodo: MetodoAbierto, codigo: str, mensaje: str, **datos: object
 ) -> ResultadoMetodoAbierto:
-    """Construye un resultado de error general.
-
-    Args:
-        metodo: Método que produjo el error.
-        codigo: Código estable del diagnóstico.
-        mensaje: Explicación legible del error.
-        **datos: Campos adicionales del contrato de salida.
-
-    Returns:
-        Resultado en estado ERROR.
-    """
+    """Recibe método, código, mensaje y campos opcionales; devuelve un resultado en estado ERROR."""
     return resultado_fallo(metodo, "ERROR", codigo, mensaje, **datos)
 
 
 def resultado_fallo(
     metodo: MetodoAbierto, estado: EstadoAbierto, codigo: str, mensaje: str, **datos: object
 ) -> ResultadoMetodoAbierto:
-    """Construye un resultado fallido con el estado específico del motor.
-
-    Args:
-        metodo: Método que produjo el fallo.
-        estado: Estado terminal del método.
-        codigo: Código estable del diagnóstico.
-        mensaje: Explicación legible del fallo.
-        **datos: Campos adicionales del contrato de salida.
-
-    Returns:
-        Resultado con el estado y el diagnóstico indicados.
-    """
+    """Recibe método, estado, código, mensaje y campos; devuelve el resultado fallido indicado."""
     return resultado_metodo(
         metodo,
         estado=estado,
@@ -133,17 +103,7 @@ def resultado_fallo(
 def resultado_evaluacion(
     metodo: MetodoAbierto, abscisa: float, detalle: str, **datos: object
 ) -> ResultadoMetodoAbierto:
-    """Construye un error de evaluación asociado a una abscisa.
-
-    Args:
-        metodo: Método que encontró el error.
-        abscisa: Punto donde falló la evaluación.
-        detalle: Motivo informado por el evaluador.
-        **datos: Campos adicionales del contrato de salida.
-
-    Returns:
-        Resultado ERROR con el punto y el detalle en el contexto de fallo.
-    """
+    """Recibe método, abscisa y detalle; devuelve un ERROR localizado con el contexto de evaluación."""
     return resultado_error(
         metodo,
         "EVALUACION",
@@ -160,18 +120,7 @@ def resultado_inicial(
     f_x: float,
     **datos: object,
 ) -> ResultadoMetodoAbierto:
-    """Construye el éxito inmediato de un punto inicial que cumple tolerancia.
-
-    Args:
-        metodo: Método que evaluó el punto.
-        entrada: Entrada validada usada por el método.
-        abscisa: Punto inicial evaluado.
-        f_x: Valor de la función en el punto.
-        **datos: Campos adicionales del contrato de salida.
-
-    Returns:
-        Resultado EXITO con diagnóstico de raíz exacta o tolerancia cumplida.
-    """
+    """Recibe método, entrada, abscisa y f_x; devuelve EXITO si el punto cumple tolerancia."""
     codigo = "PUNTO_INICIAL_RAIZ" if f_x == 0 else "PUNTO_INICIAL_TOLERANCIA"
     mensaje = (
         "El punto inicial ya es una raíz exacta."
@@ -197,18 +146,7 @@ def resultado_convergencia(
     criterio: Literal["residuo", "cambio"],
     **datos: object,
 ) -> ResultadoMetodoAbierto:
-    """Construye el éxito por residuo o por cambio de aproximación.
-
-    Args:
-        metodo: Método que convergió.
-        entrada: Entrada validada usada por el método.
-        iteraciones: Traza hasta la aproximación aceptada.
-        criterio: Criterio de parada que se cumplió.
-        **datos: Campos adicionales del contrato de salida.
-
-    Returns:
-        Resultado EXITO con código correspondiente al criterio de parada.
-    """
+    """Recibe método, entrada, traza y criterio; devuelve EXITO con el diagnóstico de convergencia."""
     codigo = "TOLERANCIA_RESIDUO" if criterio == "residuo" else "TOLERANCIA_CAMBIO"
     mensaje = (
         "Convergió por tolerancia de residuo."
@@ -232,17 +170,7 @@ def resultado_limite(
     iteraciones: tuple[IteracionMetodoAbierto, ...],
     **datos: object,
 ) -> ResultadoMetodoAbierto:
-    """Construye el resultado de límite sin tolerancia alcanzada.
-
-    Args:
-        metodo: Método que alcanzó el máximo.
-        entrada: Entrada validada usada por el método.
-        iteraciones: Traza calculada antes de alcanzar el máximo.
-        **datos: Campos adicionales del contrato de salida.
-
-    Returns:
-        Resultado LIMITE_ITERACIONES con su traza.
-    """
+    """Recibe método, entrada y traza; devuelve LIMITE_ITERACIONES con el contexto adicional."""
     return resultado_metodo(
         metodo,
         iteraciones,

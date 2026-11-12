@@ -39,13 +39,8 @@ class _PasoNewton:
 
 
 def newton(entrada: EntradaMetodoAbierto | Mapping[str, object]) -> ResultadoMetodoAbierto:
-    """Ejecuta Newton-Raphson con una captura o entrada tipada.
-
-    Args:
-        entrada: Datos del método, incluidos expresión, punto inicial y límites.
-
-    Returns:
-        Resultado con estado, diagnóstico y traza; una entrada inválida produce ERROR.
+    """Recibe una captura o entrada tipada y devuelve el resultado serializable de Newton.
+    Las entradas inválidas se representan en estado ERROR.
     """
     try:
         tipada = preparar_entrada_abierta(entrada, "newton")
@@ -122,12 +117,7 @@ def _paso_newton(
             f"La iteración produjo una aproximación no representable en x = {x_siguiente!r}.",
             entrada=entrada,
             derivada_expresion=derivada_texto,
-            contexto_fallo={
-                "x": actual,
-                "x_siguiente": repr(x_siguiente),
-                "f_x": f_x,
-                "derivada": derivada,
-            },
+            contexto_fallo={"x": actual, "x_siguiente": repr(x_siguiente), "f_x": f_x, "derivada": derivada},
         )
     f_siguiente, detalle = evaluar_con_guarda(funcion, x_siguiente)
     if detalle is not None:
