@@ -162,6 +162,17 @@ def _registrar_pagina_regla_falsa() -> None:
         construir_pagina_regla_falsa()
 
 
+def _registrar_pagina_secante() -> None:
+    """Registra la herramienta de método abierto de la secante."""
+    @ui.page(ruta_de("secante"), title=herramienta_por_identificador("secante").titulo_pagina)
+    def pagina_secante():
+        """Construye la captura y la tabla de iteraciones del método de la secante."""
+        from src.frontend.vistas.secante.vista_secante import VistaSecante
+
+        configurar_tema("secante")
+        VistaSecante().construir()
+
+
 def _registrar_pagina_inicio() -> None:
     """Registra la página de inicio (inicio) si está habilitada."""
     if not navegacion.INICIO_HABILITADO:
@@ -184,4 +195,5 @@ def registrar_rutas() -> None:
     _registrar_paginas_avanzadas()
     _registrar_paginas_utilidades()
     _registrar_pagina_regla_falsa()
+    _registrar_pagina_secante()
     _registrar_pagina_inicio()
