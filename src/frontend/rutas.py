@@ -162,6 +162,17 @@ def _registrar_pagina_regla_falsa() -> None:
         construir_pagina_regla_falsa()
 
 
+def _registrar_pagina_metodos_abiertos() -> None:
+    """Registra la página de Newton-Raphson y secante."""
+    @ui.page(ruta_de("metodos_abiertos"), title=herramienta_por_identificador("metodos_abiertos").titulo_pagina)
+    def pagina_metodos_abiertos():
+        """Construye la vista de métodos abiertos y configura su tema."""
+        from src.frontend.vistas.metodos_abiertos.vista_metodos_abiertos import VistaMetodosAbiertos
+
+        configurar_tema("metodos_abiertos")
+        VistaMetodosAbiertos().construir()
+
+
 def _registrar_pagina_inicio() -> None:
     """Registra la página de inicio (inicio) si está habilitada."""
     if not navegacion.INICIO_HABILITADO:
@@ -184,4 +195,5 @@ def registrar_rutas() -> None:
     _registrar_paginas_avanzadas()
     _registrar_paginas_utilidades()
     _registrar_pagina_regla_falsa()
+    _registrar_pagina_metodos_abiertos()
     _registrar_pagina_inicio()
