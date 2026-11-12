@@ -33,8 +33,8 @@ def test_estructura_areas_inicio():
 
     assert p_util.identificador == "utilidades"
     assert p_util.nombre_corto == "Utilidades"
-    assert len(p_util.tarjetas) == 4
-    assert [t.clave for t in p_util.tarjetas] == ["bases", "romanos", "biseccion", "regla_falsa"]
+    assert len(p_util.tarjetas) == 5
+    assert [t.clave for t in p_util.tarjetas] == ["bases", "romanos", "biseccion", "regla_falsa", "metodos_abiertos"]
 
 
 def test_celdas_identidad_segun_dimension():

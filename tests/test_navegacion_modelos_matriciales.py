@@ -44,7 +44,7 @@ def test_inicio_monta_enlaces_para_ambos_modelos(monkeypatch):
                     for elemento in cliente.elements.values() if "inicio-tarjeta" in elemento._classes}
         for identificador in MODELOS_MATRICIALES:
             assert tarjetas[identificador]._props["href"] == ruta_de(identificador)
-        assert len(tarjetas) == 15
+        assert len(tarjetas) == 16
     asyncio.run(construir_pagina(monkeypatch, "inicio", comprobar))
 
 
