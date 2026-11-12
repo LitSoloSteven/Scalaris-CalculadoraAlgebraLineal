@@ -22,6 +22,7 @@ _ETIQUETAS_CORTAS: dict[str, str] = {
     "romanos": "Romanos",
     "biseccion": "Bisección",
     "regla_falsa": "Regla falsa",
+    "secante": "Secante",
     "leontief": "Leontief",
     "transformaciones": "Transformaciones",
 }
@@ -175,6 +176,17 @@ HERRAMIENTAS: tuple[Herramienta, ...] = (
         habilitada=True,
     ),
     Herramienta(
+        identificador="secante",
+        nombre="Método de la secante",
+        descriptor="Método abierto para ecuaciones no lineales",
+        ruta="/utilidades/secante",
+        identificador_pilar="utilidades",
+        icono="utilidades",
+        titulo_pagina="Método de la secante | Scalaris",
+        ejemplo_latex=r"x_{n+1}=x_n-\frac{f(x_n)(x_n-x_{n-1})}{f(x_n)-f(x_{n-1})}",
+        habilitada=True,
+    ),
+    Herramienta(
         identificador="leontief",
         nombre="Modelo de Leontief",
         descriptor="Insumo-producto: x = (I - C)^(-1) d",
@@ -214,4 +226,5 @@ ORDEN_NAVEGACION_PLANA: tuple[str, ...] = (
     "romanos",
     "biseccion",
     "regla_falsa",
+    "secante",
 )
