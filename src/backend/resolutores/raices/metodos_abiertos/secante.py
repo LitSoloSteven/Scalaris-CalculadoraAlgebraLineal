@@ -114,7 +114,7 @@ def _paso_secante(
             "DIVERGENCIA",
             f"La iteración produjo una aproximación no representable en x = {x_siguiente!r}.",
             entrada=entrada,
-            contexto_fallo={"x0": x0, "x1": x1, "x_siguiente": x_siguiente},
+            contexto_fallo={"x0": x0, "x1": x1, "x_siguiente": repr(x_siguiente)},
         )
     f_siguiente, detalle = evaluar_con_guarda(funcion, x_siguiente)
     if detalle is not None:

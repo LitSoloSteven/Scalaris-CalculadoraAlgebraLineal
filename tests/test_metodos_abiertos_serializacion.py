@@ -79,3 +79,16 @@ def test_error_de_entrada_tambien_es_serializable():
     datos, texto = _serializar(resultado)
     assert datos["contexto_fallo"]["x"] == -1
     assert "NaN" not in texto and "Infinity" not in texto
+
+
+def test_divergencias_con_valores_no_finitos_son_serializables():
+    """Los contextos de divergencia conservan inf y nan como texto."""
+    resultados = (
+        newton({"metodo": "newton", "expresion": "1e300 + 2e-12*x", "x0": 0}),
+        secante({"metodo": "secante", "expresion": "1e308*x", "x0": -1, "x1": 1}),
+    )
+
+    for resultado in resultados:
+        datos, _ = _serializar(resultado)
+        assert datos["estado"] == "DIVERGENCIA"
+        assert isinstance(datos["contexto_fallo"]["x_siguiente"], str)

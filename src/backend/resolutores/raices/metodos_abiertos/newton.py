@@ -115,7 +115,12 @@ def _paso_newton(
             f"La iteración produjo una aproximación no representable en x = {x_siguiente!r}.",
             entrada=entrada,
             derivada_expresion=derivada_texto,
-            contexto_fallo={"x": actual, "x_siguiente": x_siguiente, "f_x": f_x, "derivada": derivada},
+            contexto_fallo={
+                "x": actual,
+                "x_siguiente": repr(x_siguiente),
+                "f_x": f_x,
+                "derivada": derivada,
+            },
         )
     f_siguiente, detalle = evaluar_con_guarda(funcion, x_siguiente)
     if detalle is not None:
