@@ -149,6 +149,13 @@ def _registrar_paginas_utilidades() -> None:
 
         configurar_tema("romanos")
         VistaCalculadoraRomana().construir()
+        
+    @ui.page(ruta_de("metodos_abiertos"), title=herramienta_por_identificador("metodos_abiertos").titulo_pagina)
+    def pagina_metodos_abiertos():
+        """Construye la herramienta de Newton-Raphson y secante."""
+        from src.frontend.vistas.metodos_abiertos.vista_metodos_abiertos import VistaMetodosAbiertos
+        configurar_tema("metodos_abiertos")
+        VistaMetodosAbiertos().construir()
 
 
 def _registrar_pagina_regla_falsa() -> None:

@@ -24,6 +24,7 @@ _ETIQUETAS_CORTAS: dict[str, str] = {
     "regla_falsa": "Regla falsa",
     "leontief": "Leontief",
     "transformaciones": "Transformaciones",
+    "metodos_abiertos": "Abiertos",
 }
 
 PILARES: tuple[Pilar, ...] = (
@@ -196,6 +197,17 @@ HERRAMIENTAS: tuple[Herramienta, ...] = (
         ejemplo_latex=r"T: \mathbb{R}^n \to \mathbb{R}^m",
         habilitada=True,
     ),
+    Herramienta(
+    identificador="metodos_abiertos",
+    nombre="Métodos abiertos",
+    descriptor="Newton-Raphson y secante",
+    ruta="/utilidades/metodos-abiertos",
+    identificador_pilar="utilidades",
+    icono="utilidades",
+    titulo_pagina="Métodos abiertos | Scalaris",
+    ejemplo_latex=r"x_{n+1}=x_n-\frac{f(x_n)}{f'(x_n)}",
+    habilitada=True,
+),
 )
 
 _HERRAMIENTAS_POR_IDENTIFICADOR: dict[str, Herramienta] = {herramienta.identificador: herramienta for herramienta in HERRAMIENTAS}
@@ -214,4 +226,5 @@ ORDEN_NAVEGACION_PLANA: tuple[str, ...] = (
     "romanos",
     "biseccion",
     "regla_falsa",
+    "metodos_abiertos"
 )
