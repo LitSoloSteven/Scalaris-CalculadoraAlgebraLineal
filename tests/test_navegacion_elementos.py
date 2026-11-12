@@ -25,18 +25,18 @@ def test_elementos_por_pilar_en_orden():
     elementos_visualizador = elementos_navegacion("visualizador")
     assert [elemento.clave for elemento in elementos_visualizador] == ["vis:rectas-planos", "vis:vectores", "vis:combinacion"]
     elementos_utilidades = elementos_navegacion("utilidades")
-    assert [elemento.clave for elemento in elementos_utilidades] == ["bases", "romanos", "biseccion", "regla_falsa"]
+    assert [elemento.clave for elemento in elementos_utilidades] == ["bases", "romanos", "biseccion", "regla_falsa", "secante"]
     assert elementos_navegacion("desconocido") == ()
 
 
 def test_claves_unicas_entre_pilares():
-    """Los diez elementos tienen claves distintas entre todos los pilares."""
+    """Los elementos de todos los pilares tienen claves distintas."""
     claves = []
     for pilar in ("algebra", "visualizador", "utilidades"):
         for elemento in elementos_navegacion(pilar):
             claves.append(elemento.clave)
-    assert len(claves) == 15
-    assert len(set(claves)) == 15
+    assert len(claves) == 16
+    assert len(set(claves)) == 16
 
 
 def test_enlaces_validos_y_etiquetas_completas():
@@ -61,6 +61,7 @@ def test_clave_predeterminada_por_ruta():
     assert predeterminado_elemento_clave("/algebra-lineal/matrices?operacion=determinante") == "determinantes"
     assert predeterminado_elemento_clave("/utilidades/bases") == "bases"
     assert predeterminado_elemento_clave("/utilidades/romanos") == "romanos"
+    assert predeterminado_elemento_clave("/utilidades/secante") == "secante"
     assert predeterminado_elemento_clave("/visualizador") == "vis:rectas-planos"
     assert predeterminado_elemento_clave("/ruta/inexistente") is None
     assert predeterminado_elemento_clave("") is None
