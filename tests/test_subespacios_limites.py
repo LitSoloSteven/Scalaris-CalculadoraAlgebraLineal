@@ -96,6 +96,22 @@ def test_matriz_con_booleano_se_rechaza_aunque_el_modelo_lo_almacene():
     assert resultado["codigo"] == "ENTRADA_INVALIDA"
 
 
+@pytest.mark.parametrize("etiqueta", ["x" * 65, "v\x00", "v\u200b"])
+def test_entrada_tipada_rechaza_etiquetas_largas_o_invisibles(etiqueta):
+    """El contrato revalida las etiquetas aunque la entrada no pase por la captura JSON."""
+    resultado = analizar_subespacio(_generadores([(1,)], [etiqueta]))
+    assert resultado["estado"] == "ERROR"
+    assert resultado["codigo"] == "ENTRADA_INVALIDA"
+    assert resultado["base"] is None
+
+
+def test_entrada_tipada_admite_una_etiqueta_de_longitud_maxima():
+    """El limite de 64 caracteres es inclusivo y no rechaza etiquetas legitimas."""
+    resultado = analizar_subespacio(_generadores([(1,)], ["v" * 64]))
+    assert resultado["estado"] == "EXITO"
+    assert resultado["etiquetas_generadores_base"] == ("v" * 64,)
+
+
 def test_limites_de_dimension_uno_y_diez():
     """La dimension ambiente admite los extremos uno y diez en ambos modos."""
     uno = analizar_subespacio(_generadores([(1,), (2,)]))
