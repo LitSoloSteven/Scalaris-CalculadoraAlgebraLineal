@@ -2,11 +2,13 @@
 from collections.abc import Mapping
 from fractions import Fraction
 from typing import Literal, TypedDict, Union
+import unicodedata
 
 from src.backend.constantes import (
     DIMENSION_MAXIMA_SISTEMAS,
     DIMENSION_MAXIMA_VECTORES,
     DIMENSION_MINIMA,
+    LONGITUD_MAXIMA_CELDA,
 )
 from src.backend.modelos.matriz import Matriz
 
@@ -102,6 +104,27 @@ def validar_dimension_ambiente(valor: object) -> int:
     return valor
 
 
+def validar_etiqueta(etiqueta: object, ubicacion: str = "etiquetas") -> str:
+    """Devuelve una etiqueta breve y visible o lanza error de captura con su ubicacion."""
+    if (
+        not isinstance(etiqueta, str)
+        or not etiqueta.strip()
+        or len(etiqueta) > LONGITUD_MAXIMA_CELDA
+    ):
+        raise ErrorCapturaSubespacio(
+            "ETIQUETA_INVALIDA",
+            f"Cada etiqueta debe ser texto no vacio de hasta {LONGITUD_MAXIMA_CELDA} caracteres.",
+            ubicacion,
+        )
+    if any(unicodedata.category(caracter).startswith("C") for caracter in etiqueta):
+        raise ErrorCapturaSubespacio(
+            "ETIQUETA_INVALIDA",
+            "Las etiquetas no admiten caracteres de control ni de formato invisible.",
+            ubicacion,
+        )
+    return etiqueta
+
+
 def validar_entrada_subespacio(entrada: object) -> None:
     """Revalida una entrada tipada antes de analizarla y lanza error de captura si no encaja."""
     if not isinstance(entrada, Mapping):
@@ -136,10 +159,7 @@ def _validar_generadores(entrada: Mapping) -> None:
     for indice, generador in enumerate(generadores):
         _validar_vector_columna(generador, dimension, f"generadores[{indice}]")
     for indice, etiqueta in enumerate(etiquetas):
-        if not isinstance(etiqueta, str) or not etiqueta.strip():
-            raise ErrorCapturaSubespacio(
-                "ETIQUETA_INVALIDA", "Las etiquetas deben ser texto no vacio.", f"etiquetas[{indice}]"
-            )
+        validar_etiqueta(etiqueta, f"etiquetas[{indice}]")
 
 
 def _validar_restricciones(entrada: Mapping) -> None:
@@ -191,9 +211,10 @@ def _validar_escalar_exacto(valor: object, ubicacion: str) -> None:
         )
 
 
-def _secuencia(valor: object, ubicacion: str) -> tuple:
+def _secuencia(valor: object, ubicacion: str) -> tuple | list:
+    """Devuelve la secuencia original ya validada, sin copiarla."""
     if not isinstance(valor, (tuple, list)):
         raise ErrorCapturaSubespacio(
             "SECUENCIA_INVALIDA", "Se esperaba una secuencia de elementos.", ubicacion
         )
-    return tuple(valor)
+    return valor

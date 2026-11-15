@@ -126,3 +126,69 @@ def test_restricciones_rechazan_campos_ajenos_y_dimension_excesiva():
             "matriz_a": [[1] * 11], "vector_b": [0],
         })
     assert error.value.codigo == "DIMENSION_INVALIDA"
+
+
+def test_generadores_rechazan_flotantes_aunque_sean_casi_cero():
+    """Un flotante no se redondea en silencio: el dominio exige enteros o fracciones."""
+    for celda in (0.0, 1e-7, 1.5):
+        with pytest.raises(ErrorCapturaSubespacio) as error:
+            capturar_generadores({
+                "modo": "generadores", "dimension_ambiente": 1,
+                "vectores": {"v_1": {"datos": [celda]}},
+            })
+        assert error.value.codigo == "VALOR_NO_EXACTO"
+        assert error.value.ubicacion == "vectores.v_1.datos[0]"
+
+
+def test_restricciones_rechazan_flotantes_aunque_sean_casi_cero():
+    """La misma politica exacta se aplica a A y b en el modo de restricciones."""
+    with pytest.raises(ErrorCapturaSubespacio) as error:
+        capturar_restricciones({
+            "modo": "restricciones", "dimension_ambiente": 1,
+            "matriz_a": [[1e-7]], "vector_b": [0],
+        })
+    assert error.value.codigo == "VALOR_NO_EXACTO"
+    with pytest.raises(ErrorCapturaSubespacio) as error:
+        capturar_restricciones({
+            "modo": "restricciones", "dimension_ambiente": 1,
+            "matriz_a": [[0]], "vector_b": [0.5],
+        })
+    assert error.value.codigo == "VALOR_NO_EXACTO"
+
+
+def test_captura_rechaza_un_modo_distinto_al_de_la_funcion():
+    """Cada funcion de captura exige el modo que declara para no analizar otra forma."""
+    with pytest.raises(ErrorCapturaSubespacio) as error:
+        capturar_generadores({
+            "modo": "restricciones", "dimension_ambiente": 1,
+            "vectores": {"v_1": {"datos": [1]}},
+        })
+    assert error.value.codigo == "MODO_INVALIDO"
+    with pytest.raises(ErrorCapturaSubespacio) as error:
+        capturar_restricciones({
+            "modo": "generadores", "dimension_ambiente": 1,
+            "matriz_a": [[1]], "vector_b": [0],
+        })
+    assert error.value.codigo == "MODO_INVALIDO"
+
+
+@pytest.mark.parametrize("etiqueta", ["x" * 65, "a\x00b", "a\u200bb", "   "])
+def test_generadores_rechazan_etiquetas_largas_vacias_o_invisibles(etiqueta):
+    """Las etiquetas se acotan a 64 caracteres visibles para no inflar el resultado."""
+    with pytest.raises(ErrorCapturaSubespacio) as error:
+        capturar_generadores({
+            "modo": "generadores", "dimension_ambiente": 1,
+            "vectores": {etiqueta: {"datos": [1]}},
+        })
+    assert error.value.codigo == "ETIQUETA_INVALIDA"
+
+
+def test_campos_ajenos_resumen_las_claves_sin_volcarlas_todas():
+    """Un mapa con muchas claves ajenas produce un mensaje acotado y determinista."""
+    captura = {"modo": "generadores", "dimension_ambiente": 1,
+               "vectores": {"v_1": {"datos": [1]}}}
+    captura.update({f"extra_{indice}": indice for indice in range(20)})
+    with pytest.raises(ErrorCapturaSubespacio) as error:
+        capturar_generadores(captura)
+    assert error.value.codigo == "CAMPOS_AJENOS"
+    assert "y 15 mas" in str(error.value)
