@@ -1,0 +1,132 @@
+.metodos-abiertos-captura {
+  background: var(--bg-panel) !important;
+  color: var(--text-main);
+  border-radius: var(--radius-card) !important;
+}
+.metodos-abiertos-acciones.limpieza-acciones { flex-wrap: wrap; align-items: center; }
+.metodos-abiertos-calcular { min-height: 44px; padding-inline: var(--space-4); }
+.metodos-abiertos-boton-limpieza {
+  flex: 0 0 44px !important;
+  width: 44px !important;
+  min-width: 44px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  padding: 0 !important;
+  border-radius: var(--radius-btn) !important;
+}
+.metodos-abiertos-ejemplos { align-self: center; }
+.metodos-abiertos-ejemplos .q-field__control,
+.metodos-abiertos-ejemplos .q-field__marginal,
+.metodos-abiertos-ejemplos .q-field__native {
+  height: 44px;
+  min-height: 44px;
+}
+.metodos-abiertos-ejemplos .q-field__label { margin-inline-start: var(--space-2); }
+.metodos-abiertos-campos { flex-wrap: wrap; }
+.metodos-abiertos-campos .q-field { flex: 1 1 12rem; }
+.metodos-abiertos-vista { font-family: inherit; }
+.metodos-abiertos-resultados { gap: var(--space-5); }
+.metodos-abiertos-resumen {
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-5) !important;
+}
+.metodos-abiertos-resumen-cabecera { min-width: 0; }
+.metodos-abiertos-resumen-cuerpo { justify-content: space-between; }
+.metodos-abiertos-raiz-bloque { flex: 1 1 12rem; }
+.metodos-abiertos-raiz {
+  color: var(--accent) !important;
+  font-size: clamp(2rem, 6vw, 3rem);
+  font-weight: var(--fw-display);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+.metodos-abiertos-metricas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+  gap: var(--space-3);
+  min-width: min(100%, 15rem);
+}
+.metodos-abiertos-metrica {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+  padding: var(--space-3);
+  border-radius: var(--radius-input);
+  background: var(--bg-elevated);
+}
+.metodos-abiertos-metrica-valor {
+  font-size: 1.125rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.metodos-abiertos-mensaje { font-weight: 600; }
+.metodos-abiertos-derivada {
+  padding-top: var(--space-3);
+  border-top: 1px solid color-mix(in srgb, var(--text-sec) 18%, transparent);
+  overflow-x: auto;
+}
+.metodos-abiertos-grafica { min-width: 0; }
+.q-table__container { max-width: 100%; }
+.metodos-abiertos-tabla {
+  background: var(--bg-panel) !important;
+  color: var(--text-main) !important;
+  border-radius: var(--radius-card) !important;
+  overflow: hidden;
+}
+.metodos-abiertos-tabla.q-table__container,
+.metodos-abiertos-tabla .q-table__container {
+  border-radius: var(--radius-card) !important;
+  overflow: hidden;
+}
+.metodos-abiertos-tabla .q-table,
+.metodos-abiertos-tabla .q-table__bottom { background: var(--bg-panel) !important; color: var(--text-main) !important; }
+.metodos-abiertos-tabla .q-table { border-collapse: separate; border-spacing: 0; }
+.metodos-abiertos-tabla .q-table thead tr { background: var(--bg-elevated); }
+.metodos-abiertos-tabla .q-table th {
+  color: var(--text-main);
+  font-weight: 600;
+  border-bottom: 2px solid color-mix(in srgb, var(--accent) 38%, transparent);
+}
+.metodos-abiertos-tabla .q-table th,
+.metodos-abiertos-tabla .q-table td {
+  border-right: 1px solid color-mix(in srgb, var(--text-sec) 16%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--text-sec) 16%, transparent);
+  padding: var(--space-3);
+}
+.metodos-abiertos-tabla .q-table th:last-child,
+.metodos-abiertos-tabla .q-table td:last-child { border-right: 0; }
+.metodos-abiertos-tabla .q-table tbody tr { transition: background-color var(--dur-state) var(--ease-std); }
+.metodos-abiertos-tabla .q-table tbody tr:nth-child(even) { background: var(--bg-elevated); }
+.metodos-abiertos-fila { cursor: pointer; }
+.metodos-abiertos-fila:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: -2px; }
+.metodos-abiertos-tabla .q-table tbody tr.q-tr--selected,
+.metodos-abiertos-tabla .q-table tbody tr[aria-selected="true"] {
+  background: color-mix(in srgb, var(--accent) 16%, var(--bg-panel));
+}
+.q-table th, .q-table td { white-space: nowrap; }
+.q-table__middle { overflow-x: auto; }
+.metodos-abiertos-entrada { animation: entradaSuave var(--dur-press) var(--ease-std) both; }
+.metodos-abiertos-entrada-2 { animation-delay: var(--stagger-step); }
+.metodos-abiertos-entrada-3 { animation-delay: calc(2 * var(--stagger-step)); }
+.metodos-abiertos-entrada-4 { animation-delay: calc(3 * var(--stagger-step)); }
+@media (hover: hover) and (pointer: fine) {
+  .metodos-abiertos-fila:not(.q-tr--selected):hover { background: var(--hub-card-active-bg); }
+}
+@media (max-width: 700px) {
+  .metodos-abiertos-campos .q-field { flex-basis: 100%; }
+  .metodos-abiertos-resumen { padding: var(--space-4) !important; }
+  .metodos-abiertos-resumen-cuerpo { align-items: stretch; }
+  .metodos-abiertos-metricas { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .metodos-abiertos-entrada { animation: none !important; opacity: 1; transform: none; }
+}
+html[data-entrada="teclado"] .metodos-abiertos-entrada {
+  animation: none !important;
+  opacity: 1;
+  transform: none;
+}

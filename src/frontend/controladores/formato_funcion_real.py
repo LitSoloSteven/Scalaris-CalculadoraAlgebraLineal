@@ -14,11 +14,11 @@ _FUNCIONES = {
 _ATOMO = 5
 
 
-def formatear_expresion(expresion: str) -> dict[str, str]:
+def formatear_expresion(expresion: str, etiqueta: str = "f(x)") -> dict[str, str]:
     """Devuelve TeX de vocabulario fijo y texto normalizado; propaga ValueError."""
     arbol = analizar_expresion(expresion)
     formula, _ = _proyectar(arbol.body)
-    return {"latex": f"f(x) = {formula}", "texto": f"f(x) = {normalizar_expresion(expresion)}"}
+    return {"latex": f"{etiqueta} = {formula}", "texto": f"{etiqueta} = {normalizar_expresion(expresion)}"}
 
 
 def numero_tex(texto: str) -> str:

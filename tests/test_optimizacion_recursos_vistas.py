@@ -31,7 +31,7 @@ def test_paginas_versionan_cabecera_sin_cambiar_recursos_de_componentes(monkeypa
         assert cabecera.index("interacciones_globales.js") < cabecera.index("cuadricula_compartida.js")
         assert cabecera.index("escritura_progresiva.js") < cabecera.index("reproductor_pasos.js")
         assert ("inicio.js" in cabecera) == (vista == "inicio")
-        assert ("tema_graficos.js" in cabecera) == (vista == "visualizador")
+        assert ("tema_graficos.js" in cabecera) == (vista in {"visualizador", "biseccion", "regla_falsa", "metodos_abiertos"})
         assert ("sincronizacion_diseno.js" in cabecera) == (vista == "visualizador")
         assert ("sistemas_metodo.js" in cabecera) == (vista == "sistemas")
         assert "MathJax-script" in cabecera

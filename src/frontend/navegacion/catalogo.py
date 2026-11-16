@@ -22,6 +22,7 @@ _ETIQUETAS_CORTAS: dict[str, str] = {
     "romanos": "Romanos",
     "biseccion": "Bisección",
     "regla_falsa": "Regla falsa",
+    "metodos_abiertos": "Abiertos",
     "leontief": "Leontief",
     "transformaciones": "Transformaciones",
 }
@@ -175,6 +176,17 @@ HERRAMIENTAS: tuple[Herramienta, ...] = (
         habilitada=True,
     ),
     Herramienta(
+        identificador="metodos_abiertos",
+        nombre="Métodos abiertos",
+        descriptor="Newton-Raphson y secante",
+        ruta="/utilidades/metodos-abiertos",
+        identificador_pilar="utilidades",
+        icono="utilidades",
+        titulo_pagina="Métodos abiertos | Scalaris",
+        ejemplo_latex=r"x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}",
+        habilitada=True,
+    ),
+    Herramienta(
         identificador="leontief",
         nombre="Modelo de Leontief",
         descriptor="Insumo-producto: x = (I - C)^(-1) d",
@@ -214,4 +226,5 @@ ORDEN_NAVEGACION_PLANA: tuple[str, ...] = (
     "romanos",
     "biseccion",
     "regla_falsa",
+    "metodos_abiertos",
 )
