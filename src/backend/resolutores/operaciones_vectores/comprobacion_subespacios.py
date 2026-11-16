@@ -20,6 +20,14 @@ def verificar_base_generadores(
     indices: tuple[int, ...],
 ) -> tuple[dict, ...]:
     """Confirma que cada vector base es una columna original y que la familia es independiente."""
+    if len(indices) != len(base) or len(set(indices)) != len(indices):
+        raise ErrorVerificacionSubespacio(
+            "Los indices de la base no son unicos ni corresponden uno a uno con sus vectores."
+        )
+    if any(not 0 <= indice < len(generadores) for indice in indices):
+        raise ErrorVerificacionSubespacio(
+            "La base referencia una columna de generador fuera de rango."
+        )
     comprobaciones = []
     for indice, vector in zip(indices, base):
         columna = tuple(Fraction(generadores[indice].obtener(fila, 0))

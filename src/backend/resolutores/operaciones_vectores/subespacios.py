@@ -23,8 +23,10 @@ from .comprobacion_subespacios import (
 from .contrato_subespacios import (
     MODO_GENERADORES,
     MODO_RESTRICCIONES,
+    ContextoRestricciones,
     EntradaGeneradores,
     EntradaRestricciones,
+    EntradaSubespacio,
     ErrorCapturaSubespacio,
     ErrorVerificacionSubespacio,
     ResultadoSubespacio,
@@ -41,7 +43,7 @@ CLASIFICACION_VACIO = "VACIO_NO_SUBESPACIO"
 
 
 def analizar_subespacio(
-    entrada: EntradaGeneradores | EntradaRestricciones,
+    entrada: EntradaSubespacio,
 ) -> ResultadoSubespacio:
     """Analiza generadores o restricciones con racionales exactos y devuelve el contrato completo."""
     try:
@@ -102,7 +104,7 @@ def _analizar_restricciones(entrada: EntradaRestricciones) -> ResultadoSubespaci
     reduccion, pasos = _reducir(aumentada, matriz_a.columnas)
     rango = reduccion["rango"]
     pivotes = tuple(reduccion["columnas_pivote"])
-    contexto = {
+    contexto: ContextoRestricciones = {
         "entrada": entrada,
         "matriz_a": matriz_a,
         "vector_b": vector_b,
@@ -152,7 +154,7 @@ def _aumentada(matriz_a: Matriz, vector_b: tuple[Fraction, ...]) -> Matriz:
     )
 
 
-def _resultado_incompatible(contexto: dict) -> ResultadoSubespacio:
+def _resultado_incompatible(contexto: ContextoRestricciones) -> ResultadoSubespacio:
     rango = contexto["rango"]
     testigo = construir_testigo_contradictorio(
         contexto["reduccion"]["matriz_reducida"], contexto["matriz_a"].columnas
@@ -187,7 +189,7 @@ def _resultado_incompatible(contexto: dict) -> ResultadoSubespacio:
 
 
 def _resultado_homogeneo(
-    contexto: dict, parametros: dict, comprobaciones: tuple[dict, ...]
+    contexto: ContextoRestricciones, parametros: dict, comprobaciones: tuple[dict, ...]
 ) -> ResultadoSubespacio:
     direcciones = _direcciones(parametros)
     numero_variables = contexto["matriz_a"].columnas
@@ -218,7 +220,7 @@ def _resultado_homogeneo(
 
 
 def _resultado_afin(
-    contexto: dict, parametros: dict, comprobaciones: tuple[dict, ...]
+    contexto: ContextoRestricciones, parametros: dict, comprobaciones: tuple[dict, ...]
 ) -> ResultadoSubespacio:
     numero_variables = contexto["matriz_a"].columnas
     resultado = resultado_inicial(

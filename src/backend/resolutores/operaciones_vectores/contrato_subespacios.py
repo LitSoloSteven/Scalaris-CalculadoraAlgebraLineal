@@ -37,6 +37,20 @@ class EntradaRestricciones(TypedDict):
 EntradaSubespacio = Union[EntradaGeneradores, EntradaRestricciones]
 
 
+class ContextoRestricciones(TypedDict):
+    """Datos intermedios exactos de la reduccion de un sistema de restricciones."""
+
+    entrada: EntradaRestricciones
+    matriz_a: Matriz
+    vector_b: tuple[Fraction, ...]
+    aumentada: Matriz
+    reduccion: dict
+    pasos: tuple[dict, ...]
+    rango: int
+    pivotes: tuple[int, ...]
+    libres: tuple[int, ...]
+
+
 class TestigoSubespacio(TypedDict):
     """Razon exacta por la que un conjunto no es un subespacio vectorial."""
 
