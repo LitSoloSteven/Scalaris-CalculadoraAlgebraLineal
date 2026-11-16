@@ -2,6 +2,7 @@
 from nicegui import ui
 
 from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
+from src.frontend.componentes.estructura_metodos_raices import montar_estructura_metodos_raices
 from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
 from src.frontend.componentes.selector_opciones import SelectorOpciones
 from src.frontend.controladores.metodos_abiertos import LONGITUD_MAXIMA_NUMERICA, resolver_captura
@@ -47,36 +48,30 @@ class VistaMetodosAbiertos:
     def construir(self) -> None:
         """Monta la página y conecta sus controles de entrada."""
         crear_estructura_aplicacion(self, ruta_activa=ruta_de("metodos_abiertos"))
-        self._construir_captura()
-        self._construir_grafica_y_salida()
+        regiones = montar_estructura_metodos_raices(
+            "Métodos abiertos",
+            "Resuelve f(x) = 0 con Newton-Raphson o el método de la secante.",
+            self._construir_captura,
+            self._construir_grafica,
+        )
+        self.resultados = regiones.resultados
+        self.contenedor_reproductor = regiones.procedimiento
         self._conectar_eventos()
         self.previa.programar()
 
     def _construir_captura(self) -> None:
-        with ui.column().classes(
-                "metodos-abiertos-vista vista-raiz w-full max-w-6xl mx-auto p-4 gap-4"):
-            self._construir_encabezado()
-            with ui.card().classes(
-                    "metodos-abiertos-captura panel-tarjeta w-full metodos-abiertos-entrada metodos-abiertos-entrada-2"):
-                self.metodo = SelectorOpciones(
-                    (("newton", "Newton-Raphson", "Newton-Raphson"),
-                     ("secante", "Secante", "Secante")),
-                    "newton", self._cambio_metodo, "Método de resolución",
-                ).classes("metodos-abiertos-metodo")
-                self.expresion = ui.input("Función f(x)", value="x^3 - x - 2").props(
-                    "maxlength=512 autocomplete=off").classes("matriz-entrada w-full")
-                self._construir_campos()
-                self._construir_acciones()
-
-    def _construir_encabezado(self) -> None:
-        with ui.column().classes(
-                "metodos-abiertos-encabezado metodos-abiertos-entrada metodos-abiertos-entrada-1"):
-            ui.label("Métodos abiertos").classes("text-2xl font-bold texto-principal")
-            ui.label("Resuelve f(x) = 0 con Newton-Raphson o el método de la secante.").classes(
-                "text-sm texto-secundario")
+        self.metodo = SelectorOpciones(
+            (("newton", "Newton-Raphson", "Newton-Raphson"),
+             ("secante", "Secante", "Secante")),
+            "newton", self._cambio_metodo, "Método de resolución",
+        ).classes("metodos-abiertos-metodo")
+        self.expresion = ui.input("Función f(x)", value="x^3 - x - 2").props(
+            "maxlength=512 autocomplete=off").classes("matriz-entrada w-full")
+        self._construir_campos()
+        self._construir_acciones()
 
     def _construir_campos(self) -> None:
-        with ui.row().classes("metodos-abiertos-campos w-full"):
+        with ui.row().classes("metodos-raices-campos w-full"):
             self.x0 = self._crear_campo_numerico("Punto inicial x0", "1.5")
             self.x1 = self._crear_campo_numerico("Segundo punto x1", "2")
             self.tolerancia = self._crear_campo_numerico(
@@ -91,32 +86,26 @@ class VistaMetodosAbiertos:
             "matriz-entrada min-w-0 flex-1")
 
     def _construir_acciones(self) -> None:
-        with ui.row().classes("metodos-abiertos-acciones w-full flex-wrap items-center"):
+        with ui.row().classes("metodos-raices-acciones w-full flex-wrap items-center"):
             ui.button("Calcular raíz", on_click=self.calcular).classes(
-                "boton-principal metodos-abiertos-calcular").props("ripple=false")
+                "boton-principal metodos-raices-calcular").props("ripple=false")
             self.limpieza = crear_boton_limpieza(
                 self, lambda: not self.resultados.is_deleted,
                 lambda: [self.expresion, self.x0, self.x1, self.tolerancia, self.limite],
                 campo_foco=self.expresion,
             )
             self.limpieza.boton.classes(remove="flex-1 py-3")
-            self.limpieza.boton.classes(add="metodos-abiertos-boton-limpieza")
+            self.limpieza.boton.classes(add="metodos-raices-limpieza")
             self.selector_ejemplos = ui.select(
                 _EJEMPLOS, label="Ejemplos", on_change=self.cargar_ejemplo,
-            ).classes("selector-controles metodos-abiertos-ejemplos min-w-56")
+            ).classes("selector-controles metodos-raices-ejemplos min-w-56")
 
-    def _construir_grafica_y_salida(self) -> None:
-        with ui.column().classes(
-                "metodos-abiertos-vista vista-raiz w-full max-w-6xl mx-auto p-4 gap-4"):
-            with ui.column().classes(
-                    "metodos-abiertos-previa w-full min-w-0 metodos-abiertos-entrada metodos-abiertos-entrada-3"):
-                self.previa = PanelVistaPrevia(
-                    lambda: self.expresion.value, self._actualizar_figura_previa,
-                )
-                self.previa.construir()
-            self.grafica = self.previa.grafica
-            self.resultados = ui.column().classes("metodos-abiertos-resultados w-full min-w-0")
-            self.contenedor_reproductor = ui.column().classes("w-full min-w-0")
+    def _construir_grafica(self) -> None:
+        self.previa = PanelVistaPrevia(
+            lambda: self.expresion.value, self._actualizar_figura_previa,
+        )
+        self.previa.construir()
+        self.grafica = self.previa.grafica
 
     def _conectar_eventos(self) -> None:
         self.x1.set_visibility(False)
