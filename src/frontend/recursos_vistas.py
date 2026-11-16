@@ -33,6 +33,7 @@ _POR_RECURSO = {
     "vistas_inversa.css": _ALGEBRA | _NUMERICAS | _RAICES,
     "vistas_biseccion.css": _BISECCION,
     "vistas_regla_falsa.css": _REGLA_FALSA,
+    "estructura_metodos_raices.css": _METODOS_ABIERTOS,
     "vistas_metodos_abiertos.css": _METODOS_ABIERTOS,
     "inicio_entrada.js": _INICIO,
     "inicio.js": _INICIO,
