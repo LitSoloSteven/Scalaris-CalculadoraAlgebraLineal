@@ -1,6 +1,6 @@
 """Ejecución en trabajador con comprobación de la captura antes de publicar."""
 import asyncio
-from collections.abc import Callable
+from collections.abc import Awaitable, Callable
 from typing import Any
 from nicegui import run
 from src.ai.huellas import calcular_huella
@@ -28,6 +28,7 @@ def _vigilar_campos(vista: Any) -> None:
 
 async def ejecutar_calculo_vigente(
     vista: Any, capturar: Callable[[], dict], calcular: Callable[[dict], Any],
+    *, ejecutar: Callable[[dict], Awaitable[Any]] | None = None,
 ) -> tuple[Any, str] | None:
     """Recibe vista, captura y controlador; devuelve respuesta y huella si siguen vigentes.
     Ejecuta en trabajador y propaga los errores vigentes y la cancelación."""
@@ -37,7 +38,7 @@ async def ejecutar_calculo_vigente(
     captura = capturar()
     huella = calcular_huella(captura)
     try:
-        respuesta = await run.io_bound(calcular, captura)
+        respuesta = await (ejecutar(captura) if ejecutar is not None else run.io_bound(calcular, captura))
     except Exception:
         if not _sigue_vigente(vista, contenedor, revision, huella, capturar):
             return None
