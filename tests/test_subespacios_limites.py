@@ -1,6 +1,7 @@
 """Limites, estados de error y contrato serializable del analisis de subespacios."""
 import json
 import math
+from fractions import Fraction
 
 import pytest
 
@@ -9,8 +10,12 @@ from src.backend.resolutores.operaciones_vectores.captura_subespacios import (
     capturar_generadores,
     capturar_restricciones,
 )
+from src.backend.resolutores.operaciones_vectores.comprobacion_subespacios import (
+    verificar_base_generadores,
+)
 from src.backend.resolutores.operaciones_vectores.contrato_subespacios import (
     ErrorCapturaSubespacio,
+    ErrorVerificacionSubespacio,
 )
 from src.backend.resolutores.operaciones_vectores.subespacios import analizar_subespacio
 from src.frontend.controladores.operaciones_matrices.codificador import CodificadorMatriz
@@ -110,6 +115,15 @@ def test_entrada_tipada_admite_una_etiqueta_de_longitud_maxima():
     resultado = analizar_subespacio(_generadores([(1,)], ["v" * 64]))
     assert resultado["estado"] == "EXITO"
     assert resultado["etiquetas_generadores_base"] == ("v" * 64,)
+
+
+def test_verificador_de_base_rechaza_indices_fuera_de_rango_o_desalineados():
+    """El oraculo de base no puede truncar indices: longitudes, unicidad y rango coinciden."""
+    generadores = (Matriz(1, 1, [[1]]), Matriz(1, 1, [[2]]))
+    base = ((Fraction(1),),)
+    for indices in ((0, 1), (0, 0), (2,)):
+        with pytest.raises(ErrorVerificacionSubespacio):
+            verificar_base_generadores(generadores, base, indices)
 
 
 def test_limites_de_dimension_uno_y_diez():
