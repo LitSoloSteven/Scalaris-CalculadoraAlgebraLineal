@@ -63,7 +63,7 @@ class TestigoSubespacio(TypedDict):
 
 
 class ResultadoSubespacio(TypedDict):
-    """Resultado completo del analisis, con todas las claves en todos los estados."""
+    """Resultado completo con todas las claves; en restricciones las matrices son [A|b]."""
 
     estado: str
     modo: str | None
@@ -107,12 +107,14 @@ class ErrorVerificacionSubespacio(ValueError):
     """Error interno cuando una comprobacion exacta del resultado no se cumple."""
 
 
-def validar_dimension_ambiente(valor: object) -> int:
-    """Devuelve la dimension ambiente acotada o lanza error de captura con su ubicacion."""
-    if type(valor) is not int or not DIMENSION_MINIMA <= valor <= DIMENSION_MAXIMA_VECTORES:
+def validar_dimension_ambiente(
+    valor: object, maximo: int = DIMENSION_MAXIMA_VECTORES
+) -> int:
+    """Devuelve la dimension ambiente acotada al maximo del modo o lanza error de captura."""
+    if type(valor) is not int or not DIMENSION_MINIMA <= valor <= maximo:
         raise ErrorCapturaSubespacio(
             "DIMENSION_INVALIDA",
-            f"La dimension ambiente debe ser un entero entre {DIMENSION_MINIMA} y {DIMENSION_MAXIMA_VECTORES}.",
+            f"La dimension ambiente debe ser un entero entre {DIMENSION_MINIMA} y {maximo}.",
             "dimension_ambiente",
         )
     return valor
@@ -177,7 +179,9 @@ def _validar_generadores(entrada: Mapping) -> None:
 
 
 def _validar_restricciones(entrada: Mapping) -> None:
-    dimension = validar_dimension_ambiente(entrada.get("dimension_ambiente"))
+    dimension = validar_dimension_ambiente(
+        entrada.get("dimension_ambiente"), DIMENSION_MAXIMA_SISTEMAS
+    )
     matriz_a = entrada.get("matriz_a")
     if not isinstance(matriz_a, Matriz) or matriz_a.columnas != dimension:
         raise ErrorCapturaSubespacio(

@@ -61,7 +61,9 @@ def capturar_restricciones(captura: object) -> EntradaRestricciones:
     """Convierte A y b exactos; lanza error con ubicacion ante forma, tipo o limite invalido."""
     datos = _validar_mapa(captura, CLAVES_RESTRICCIONES, "captura")
     _validar_modo(datos, MODO_RESTRICCIONES)
-    dimension = validar_dimension_ambiente(datos["dimension_ambiente"])
+    dimension = validar_dimension_ambiente(
+        datos["dimension_ambiente"], DIMENSION_MAXIMA_SISTEMAS
+    )
     filas = _filas_exactas(datos["matriz_a"], dimension)
     vector_b = _vector_exacto(datos["vector_b"], len(filas))
     return {

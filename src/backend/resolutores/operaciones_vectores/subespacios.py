@@ -37,6 +37,7 @@ from .resultado_subespacios import resultado_error, resultado_inicial
 CONFIGURACION_EXACTA = ConfiguracionReduccion(reduccion_completa=True, tolerancia_cero=0)
 CODIGO_ENTRADA_INVALIDA = "ENTRADA_INVALIDA"
 CODIGO_VERIFICACION = "VERIFICACION_INCONSISTENTE"
+CODIGO_ERROR_INTERNO = "ERROR_INTERNO"
 CLASIFICACION_SUBESPACIO = "SUBESPACIO"
 CLASIFICACION_AFIN = "AFIN_NO_SUBESPACIO"
 CLASIFICACION_VACIO = "VACIO_NO_SUBESPACIO"
@@ -54,13 +55,15 @@ def analizar_subespacio(
         if entrada["modo"] == MODO_GENERADORES:
             return _analizar_generadores(entrada)
         return _analizar_restricciones(entrada)
+    except ErrorCapturaSubespacio as error:
+        return resultado_error(entrada, CODIGO_ENTRADA_INVALIDA, str(error))
     except ErrorVerificacionSubespacio as error:
         return resultado_error(entrada, CODIGO_VERIFICACION, str(error))
     except (AssertionError, ValueError, ArithmeticError) as error:
         return resultado_error(
             entrada,
-            CODIGO_VERIFICACION,
-            f"No se pudo completar la verificacion exacta: {error}",
+            CODIGO_ERROR_INTERNO,
+            f"Error interno al analizar el conjunto: {type(error).__name__}: {error}",
         )
 
 
@@ -156,6 +159,12 @@ def _aumentada(matriz_a: Matriz, vector_b: tuple[Fraction, ...]) -> Matriz:
 
 def _resultado_incompatible(contexto: ContextoRestricciones) -> ResultadoSubespacio:
     rango = contexto["rango"]
+    rango_aumentada = _medir_rango_aumentado(contexto["aumentada"])
+    coincide = rango_aumentada == rango + 1
+    if not coincide:
+        raise ErrorVerificacionSubespacio(
+            "El rango aumentado medido no supera en uno al rango de A en un sistema incompatible."
+        )
     testigo = construir_testigo_contradictorio(
         contexto["reduccion"]["matriz_reducida"], contexto["matriz_a"].columnas
     )
@@ -170,7 +179,7 @@ def _resultado_incompatible(contexto: ContextoRestricciones) -> ResultadoSubespa
         "contiene_origen": False,
         "es_vacio": True,
         "rango": rango,
-        "rango_aumentada": rango + 1,
+        "rango_aumentada": rango_aumentada,
         "columnas_pivote": contexto["pivotes"],
         "columnas_libres": contexto["libres"],
         "testigo": testigo,
@@ -179,13 +188,21 @@ def _resultado_incompatible(contexto: ContextoRestricciones) -> ResultadoSubespa
         "pasos": contexto["pasos"],
         "comprobaciones": ({
             "tipo": "rango_aumentado",
-            "coincide": True,
+            "coincide": coincide,
             "detalle": (
-                f"El rango aumentado es {rango + 1} y supera en uno al rango de A."
+                f"El rango aumentado medido es {rango_aumentada} y supera en uno al rango de A."
             ),
         },),
     })
     return resultado
+
+
+def _medir_rango_aumentado(aumentada: Matriz) -> int:
+    """Mide el rango de [A|b] permitiendo que la columna de terminos sea pivote."""
+    reduccion = ReductorFilas(
+        aumentada, aumentada.columnas, CONFIGURACION_EXACTA
+    ).reducir()
+    return reduccion["rango"]
 
 
 def _resultado_homogeneo(
