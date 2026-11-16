@@ -18,6 +18,26 @@ def _analizar(matriz_a, vector_b):
     }))
 
 
+def _rango_exacto(filas):
+    """Calcula el rango con una eliminacion propia, independiente del motor auditado."""
+    matriz = [[Fraction(valor) for valor in fila] for fila in filas]
+    rango = 0
+    for columna in range(len(matriz[0])):
+        candidatos = [indice for indice in range(rango, len(matriz)) if matriz[indice][columna]]
+        if not candidatos:
+            continue
+        matriz[rango], matriz[candidatos[0]] = matriz[candidatos[0]], matriz[rango]
+        for indice in range(rango + 1, len(matriz)):
+            factor = matriz[indice][columna]
+            if factor:
+                matriz[indice] = [
+                    valor - factor * base / matriz[rango][columna]
+                    for valor, base in zip(matriz[indice], matriz[rango])
+                ]
+        rango += 1
+    return rango
+
+
 def test_sistema_homogeneo_describe_el_nucleo_con_base_exacta():
     """A x = 0 con A = [1 1 1] tiene rango uno, nulidad dos y la base esperada."""
     resultado = _analizar([[1, 1, 1]], [0])
@@ -157,6 +177,40 @@ def test_varias_filas_contradictorias_mantienen_rango_aumentado_una_unidad_mayor
     assert resultado["testigo"]["termino_independiente"] == 1
 
 
+def test_rango_aumentado_se_mide_y_coincide_con_un_rango_independiente():
+    """El rango de [A|b] se calcula permitiendo pivote en b, no asumiendo rango(A)+1."""
+    matriz = [[1, 0], [0, 1], [1, 1]]
+    vector = [1, 1, 5]
+    resultado = _analizar(matriz, vector)
+    aumentada = [fila + [termino] for fila, termino in zip(matriz, vector)]
+    assert resultado["rango"] == 2
+    assert resultado["rango_aumentada"] == 3
+    assert resultado["rango_aumentada"] == _rango_exacto(aumentada)
+    assert resultado["rango_aumentada"] == resultado["rango"] + 1
+    assert resultado["comprobaciones"][0]["coincide"] is True
+    assert resultado["testigo"]["indice_fila"] == 2
+
+
+def test_pasos_conservan_instantaneas_independientes_de_la_matriz_final():
+    """Cada evento de la traza clona su matriz y no comparte filas con el resultado."""
+    resultado = _analizar([[1, 1], [0, 0]], [0, 0])
+    pasos = resultado["pasos"]
+    assert pasos
+    assert all(paso["matriz"] is not resultado["matriz_reducida"] for paso in pasos)
+    primera = pasos[0]["matriz"]
+    copia = [fila[:] for fila in primera.datos]
+    resultado["matriz_reducida"].datos[0][0] = Fraction(99)
+    assert primera.datos == copia
+
+
+def test_restricciones_admiten_dimension_diez_en_el_limite():
+    """El limite superior de columnas tambien se prueba como calculo valido, no solo como rechazo."""
+    resultado = _analizar([[0] * 10 for _ in range(10)], [0] * 10)
+    assert resultado["rango"] == 0
+    assert resultado["dimension"] == 10
+    assert len(resultado["base"]) == 10
+
+
 def test_restricciones_no_mutan_la_matriz_de_entrada():
     """La construccion de la matriz aumentada y la reduccion usan copias."""
     matriz = Matriz(1, 2, [[1, 1]])
@@ -169,4 +223,21 @@ def test_restricciones_no_mutan_la_matriz_de_entrada():
     antes = [fila[:] for fila in matriz.datos]
     resultado = analizar_subespacio(entrada)
     assert resultado["estado"] == "EXITO"
+    assert matriz.datos == antes
+
+
+def test_sistema_incompatible_tampoco_muta_ni_alia_la_matriz_de_entrada():
+    """El estado vacio tambien construye [A|b] sobre copias y publica una matriz propia."""
+    matriz = Matriz(2, 2, [[1, 0], [1, 0]])
+    entrada = {
+        "modo": "restricciones",
+        "dimension_ambiente": 2,
+        "matriz_a": matriz,
+        "vector_b": (Fraction(1), Fraction(2)),
+    }
+    antes = [fila[:] for fila in matriz.datos]
+    resultado = analizar_subespacio(entrada)
+    assert resultado["codigo"] == "SISTEMA_INCOMPATIBLE"
+    assert resultado["matriz_original"].columnas == 3
+    resultado["matriz_original"].datos[0][0] = Fraction(99)
     assert matriz.datos == antes

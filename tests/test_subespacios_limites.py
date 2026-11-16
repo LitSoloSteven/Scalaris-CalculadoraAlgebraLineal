@@ -117,6 +117,37 @@ def test_entrada_tipada_admite_una_etiqueta_de_longitud_maxima():
     assert resultado["etiquetas_generadores_base"] == ("v" * 64,)
 
 
+def test_error_estructural_conserva_modo_y_dimension_legibles():
+    """Un rechazo de cantidad no pierde el contexto que el resultado puede reconstruir."""
+    resultado = analizar_subespacio({
+        "modo": "generadores",
+        "dimension_ambiente": 3,
+        "generadores": [],
+        "etiquetas": (),
+    })
+    assert resultado["estado"] == "ERROR"
+    assert resultado["codigo"] == "ENTRADA_INVALIDA"
+    assert resultado["modo"] == "generadores"
+    assert resultado["dimension_ambiente"] == 3
+
+
+def test_fallo_interno_no_se_presenta_como_verificacion_matematica(monkeypatch):
+    """Un error inesperado de calculo usa un codigo propio y no simula una comprobacion fallida."""
+    def _fallar(*argumentos, **opciones):
+        raise ZeroDivisionError("fallo interno simulado")
+
+    modulo = "src.backend.resolutores.operaciones_vectores.subespacios"
+    monkeypatch.setattr(f"{modulo}.calcular_solucion_parametrica", _fallar)
+    resultado = analizar_subespacio(capturar_restricciones({
+        "modo": "restricciones", "dimension_ambiente": 2,
+        "matriz_a": [[1, 1]], "vector_b": [1],
+    }))
+    assert resultado["estado"] == "ERROR"
+    assert resultado["codigo"] == "ERROR_INTERNO"
+    assert "ZeroDivisionError" in resultado["mensaje"]
+    assert resultado["base"] is None
+
+
 def test_verificador_de_base_rechaza_indices_fuera_de_rango_o_desalineados():
     """El oraculo de base no puede truncar indices: longitudes, unicidad y rango coinciden."""
     generadores = (Matriz(1, 1, [[1]]), Matriz(1, 1, [[2]]))
