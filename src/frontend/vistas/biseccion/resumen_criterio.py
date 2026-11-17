@@ -18,7 +18,8 @@ from .continuidad_intervalo import mostrar_informe
 from .movimiento import animar_entrada
 
 
-def mostrar_resumen(vista, respuesta: dict, examen: ui.switch | None = None, *, puntero: bool = False) -> None:
+def mostrar_resumen(vista, respuesta: dict, examen: ui.switch | None = None, *,
+                    puntero: bool = False, candidato: str | None = None) -> None:
     """Monta estado y magnitudes, con un control de formato que no invalida el resultado."""
     with ui.column().classes("panel-tarjeta p-6 w-full gap-3") as resumen:
         with ui.row().classes("items-center gap-2"):
@@ -37,7 +38,7 @@ def mostrar_resumen(vista, respuesta: dict, examen: ui.switch | None = None, *, 
         for aviso in avisos_resumen(respuesta):
             ui.label(aviso).classes("text-sm texto-advertencia").props("role=status aria-live=polite")
         mostrar_avisos_diagnostico(vista, respuesta)
-        actualizar_copia = _montar_copia(vista, respuesta, examen)
+        actualizar_copia = _montar_copia(vista, respuesta, examen, candidato)
         if hay_aproximacion:
             vista.formato.on_value_change(lambda: _actualizar_formato(vista, respuesta, actualizar_copia))
     animar_entrada(resumen, puntero)
@@ -53,14 +54,16 @@ def _montar_formato(vista, respuesta: dict) -> None:
     vista.error_formato = ui.label().classes("text-sm texto-advertencia").props("role=alert")
 
 
-def _montar_copia(vista, respuesta: dict, examen: ui.switch | None) -> Callable[[], None]:
+def _montar_copia(vista, respuesta: dict, examen: ui.switch | None, candidato: str | None) -> Callable[[], None]:
     contenedor = ui.column().classes("w-full")
 
     def _generar() -> dict:
         precision = getattr(vista, "_precision_visual", DECIMALES_PRESENTACION_DEFECTO)
         modo_activo = examen is not None and examen.value
         texto = texto_copia_biseccion(respuesta, precision, modo_activo)
-        return datos_copia_biseccion(respuesta["estado"], texto, examen=modo_activo)
+        if candidato is not None:
+            texto = f"{candidato}\n{texto}"
+        return datos_copia_biseccion(respuesta["estado"], texto, examen=modo_activo, lote=candidato is not None)
 
     def _actualizar() -> None:
         if contenedor.is_deleted:

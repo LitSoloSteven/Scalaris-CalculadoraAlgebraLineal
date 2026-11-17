@@ -7,7 +7,8 @@ _NUMERICAS = frozenset({"bases", "romanos"})
 _BISECCION = frozenset({"biseccion"})
 _REGLA_FALSA = frozenset({"regla_falsa"})
 _METODOS_ABIERTOS = frozenset({"metodos_abiertos"})
-_RAICES = _BISECCION | _REGLA_FALSA | _METODOS_ABIERTOS
+_METODOS_CERRADOS = frozenset({"metodos_cerrados"})
+_RAICES = _BISECCION | _REGLA_FALSA | _METODOS_ABIERTOS | _METODOS_CERRADOS
 _ALGEBRA = frozenset({"sistemas", "vectores", "matrices", "inversa", "determinantes", "factorizacion_lu",
                        "visualizador", "leontief", "transformaciones"})
 _VISTAS = _INICIO | _NUMERICAS | _ALGEBRA | _RAICES
@@ -33,7 +34,9 @@ _POR_RECURSO = {
     "vistas_inversa.css": _ALGEBRA | _NUMERICAS | _RAICES,
     "vistas_biseccion.css": _BISECCION,
     "vistas_regla_falsa.css": _REGLA_FALSA,
+    "estructura_metodos_raices.css": _METODOS_ABIERTOS | _METODOS_CERRADOS,
     "vistas_metodos_abiertos.css": _METODOS_ABIERTOS,
+    "vistas_metodos_cerrados.css": _METODOS_CERRADOS,
     "inicio_entrada.js": _INICIO,
     "inicio.js": _INICIO,
     "sistemas_metodo.js": frozenset({"sistemas"}),

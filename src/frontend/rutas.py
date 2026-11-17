@@ -126,14 +126,6 @@ def _registrar_paginas_avanzadas() -> None:
 def _registrar_paginas_utilidades() -> None:
     """Registra las páginas del pilar de utilidades numéricas."""
 
-    @ui.page(ruta_de("biseccion"), title=herramienta_por_identificador("biseccion").titulo_pagina)
-    def pagina_biseccion():
-        """Construye el módulo de búsqueda de raíces con precisión configurable."""
-        from src.frontend.vistas.biseccion.vista_biseccion import VistaBiseccion
-
-        configurar_tema("biseccion")
-        VistaBiseccion().construir()
-
     @ui.page(ruta_de("bases"), title=herramienta_por_identificador("bases").titulo_pagina)
     def pagina_bases():
         """Construye la página de bases con sus controles y contexto."""
@@ -151,14 +143,23 @@ def _registrar_paginas_utilidades() -> None:
         VistaCalculadoraRomana().construir()
 
 
-def _registrar_pagina_regla_falsa() -> None:
-    """Registra la herramienta de secantes con los recursos propios de su página."""
-    @ui.page(ruta_de("regla_falsa"), title=herramienta_por_identificador("regla_falsa").titulo_pagina)
+def _registrar_pagina_metodos_cerrados() -> None:
+    """Registra la página de raíces por intervalo y sus enlaces anteriores."""
+    titulo = herramienta_por_identificador("metodos_cerrados").titulo_pagina
+
+    @ui.page(ruta_de("metodos_cerrados"), title=titulo)
+    @ui.page(ruta_de("biseccion"), title=titulo)
+    def pagina_metodos_cerrados():
+        """Construye la vista común con Bisección preseleccionada."""
+        from src.frontend.vistas.metodos_cerrados.vista_metodos_cerrados import VistaMetodosCerrados, montar_pagina
+
+        montar_pagina(VistaMetodosCerrados())
+
+    @ui.page(ruta_de("regla_falsa"), title=titulo)
     def pagina_regla_falsa():
-        """Construye captura, procedimiento y navegación con el motor real de regla falsa."""
+        """Construye la vista común con Regla falsa preseleccionada."""
         from src.frontend.vistas.regla_falsa.pagina import construir_pagina_regla_falsa
 
-        configurar_tema("regla_falsa")
         construir_pagina_regla_falsa()
 
 
@@ -194,6 +195,6 @@ def registrar_rutas() -> None:
     _registrar_pagina_factorizacion_lu()
     _registrar_paginas_avanzadas()
     _registrar_paginas_utilidades()
-    _registrar_pagina_regla_falsa()
+    _registrar_pagina_metodos_cerrados()
     _registrar_pagina_metodos_abiertos()
     _registrar_pagina_inicio()

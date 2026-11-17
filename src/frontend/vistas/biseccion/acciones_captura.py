@@ -22,7 +22,7 @@ def construir_acciones(vista) -> None:
     with desplegable("Ejemplos"):
         _construir_ejemplos(vista)
     with desplegable("Ayuda"):
-        _construir_ayuda()
+        construir_ayuda()
     with ui.row().classes("w-full gap-3"):
         crear_boton_limpieza(vista, lambda: not vista.contenedor_resultados.is_deleted,
                              animar=False, campo_foco=vista.expresion)
@@ -57,7 +57,8 @@ def mostrar_recientes(vista) -> None:
                           "boton-discreto").tooltip(str(captura["expresion"]))
 
 
-def _construir_ayuda() -> None:
+def construir_ayuda() -> None:
+    """Muestra la gramática, la continuidad y la interpretación de resultados."""
     textos = (
         "Usa x, +, −, *, /, ^ o ** y paréntesis. Se admiten 2x, 3sin(x), 2(x+1), (x+1)(x-1), x² y x³. "
         "La potencia precede al signo: -x² = -(x²).",
@@ -69,10 +70,10 @@ def _construir_ayuda() -> None:
         "La precisión alcanzable depende del intervalo. Las iteraciones usan los valores internos.",
         "El criterio solicita una condición de parada. El motivo de parada indica qué ocurrió. "
         "Un cero evaluado en un extremo produce cero filas. El conteo fijo y los límites pueden dejar una aproximación provisional.",
-        "Interpreta como provisional el punto medio ante una sospecha de discontinuidad. "
+        "En Bisección, interpreta como provisional el punto medio ante una sospecha de discontinuidad. "
         "Si una evaluación falla, la tabla conserva las filas válidas anteriores.",
-        "En Modo examen puedes ver el signo de f(a)·f(c) y el extremo actualizado en cada fila. "
-        "El lote tiene su propio control.",
+        "En Modo examen puedes ver las decisiones del método en cada fila. "
+        "En Bisección, el lote tiene su propio control.",
         "La exploración evalúa la función en una malla con separación h. Un paso menor toma más muestras.",
         GUIA_CONTINUIDAD,
         "Los ejemplos y los recientes cargan los datos. Pulsa Calcular raíz para obtener un resultado.",
