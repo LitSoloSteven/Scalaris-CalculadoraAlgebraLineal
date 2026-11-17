@@ -51,6 +51,7 @@ class LoteMetodosCerrados:
 
     @modo_examen.setter
     def modo_examen(self, activo: bool) -> None:
+        """Sincroniza el modo examen del detalle con la preferencia del lote."""
         self.control_examen.set_value(activo)
 
     def construir(self) -> None:
@@ -188,16 +189,8 @@ class LoteMetodosCerrados:
             clave in self._candidatos for clave in seleccion)
 
     def _mostrar_carga(self, ocupado: bool) -> None:
-        if self.contenedor_resultados.is_deleted:
-            return
-        metodo = self.vista.capturar()["metodo"]
-        biseccion = metodo == BISECCION
-        self.campos_biseccion.set_visibility(biseccion)
-        self.campos_regla_falsa.set_visibility(not biseccion)
-        self.boton_todos.set_visibility(2 <= len(self._candidatos) <= MAXIMO_CANDIDATOS_MULTIPLE)
-        for boton, todos in ((self.boton_uno, False), (self.boton_todos, True), (self.boton_seleccion, False)):
-            boton.set_enabled(not ocupado and self._puede_resolver(metodo, todos))
-            boton.props("loading" if ocupado else "", remove="" if ocupado else "loading")
+        if not self.contenedor_resultados.is_deleted:
+            _configurar_controles(self, ocupado)
 
     def _publicar(self, respuesta: dict, metodo: str) -> None:
         self.respuesta = respuesta
@@ -242,6 +235,17 @@ def _montar_controles(lote: LoteMetodosCerrados) -> None:
         lote.boton_seleccion = _boton("Resolver selección", partial(lote._resolver, False, False))
     for campo in (lote.selector_uno, lote.selector_multiple, lote.presupuesto):
         campo.on_value_change(lote.invalidar)
+
+
+def _configurar_controles(lote: LoteMetodosCerrados, ocupado: bool) -> None:
+    metodo = lote.vista.capturar()["metodo"]
+    biseccion = metodo == BISECCION
+    lote.campos_biseccion.set_visibility(biseccion)
+    lote.campos_regla_falsa.set_visibility(not biseccion)
+    lote.boton_todos.set_visibility(2 <= len(lote._candidatos) <= MAXIMO_CANDIDATOS_MULTIPLE)
+    for boton, todos in ((lote.boton_uno, False), (lote.boton_todos, True), (lote.boton_seleccion, False)):
+        boton.set_enabled(not ocupado and lote._puede_resolver(metodo, todos))
+        boton.props("loading" if ocupado else "", remove="" if ocupado else "loading")
 
 
 def _enfocar(boton) -> None:
