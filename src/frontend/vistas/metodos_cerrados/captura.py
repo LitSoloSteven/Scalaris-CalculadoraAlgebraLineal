@@ -4,6 +4,7 @@ from nicegui import ui
 from src.backend.resolutores.raices.limites_raices import LIMITE_ITERACIONES_DEFECTO, LONGITUD_MAXIMA_EXPRESION
 from src.backend.resolutores.raices.unidades_angulares import UNIDADES_ANGULARES, UNIDAD_ANGULAR_DEFECTO
 from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
+from src.frontend.componentes.modos_captura_raices import MODO_BUSQUEDA, MODO_INTERVALO, construir_modos, region_modo
 from src.frontend.componentes.previa_expresion_raices import PreviaExpresion
 from src.frontend.componentes.selector_opciones import SelectorOpciones
 from src.frontend.controladores.biseccion.captura_criterio import texto_estimacion
@@ -11,7 +12,7 @@ from src.frontend.controladores.biseccion.catalogo_criterios import CRITERIOS
 from src.frontend.controladores.metodos_cerrados.adaptadores import (
     BISECCION, METODOS, REGLA_FALSA, captura_del_metodo, criterio_inicial, guia_parada, parametros_iniciales,
 )
-from src.frontend.controladores.rango_exploracion_raices import LONGITUD_CAMPO_GRAFICA, RANGO_GRAFICA_DEFECTO
+from src.frontend.controladores.rango_exploracion_raices import LONGITUD_CAMPO_GRAFICA, RANGO_GRAFICA_DEFECTO, rango_grafica
 from src.frontend.vistas.biseccion.ejemplos import EJEMPLOS as EJEMPLOS_BISECCION
 from src.frontend.vistas.biseccion.estado_captura import transaccion
 from src.frontend.vistas.regla_falsa.ejemplos import EJEMPLOS as EJEMPLOS_REGLA_FALSA
@@ -39,23 +40,35 @@ class CapturaMetodosCerrados:
 
     def construir(self) -> None:
         """Monta campos, acciones y ayuda con un único destino para el envío."""
-        with ui.element("form").classes("w-full column gap-3").on("submit.prevent", self.vista.resolver):
+        with ui.element("form").classes("w-full column gap-3").on("submit.prevent", self.vista.enviar):
             opciones = tuple((metodo, nombre, nombre) for metodo, nombre in METODOS.items())
             self.metodo = SelectorOpciones(opciones, self._metodo, self._cambiar_metodo, "Método de resolución")
             self.expresion = ui.input("Función f(x)", placeholder="Ejemplo: x^2 - 2").classes(
                 "matriz-entrada w-full").props(f"maxlength={LONGITUD_MAXIMA_EXPRESION} autocomplete=off spellcheck=false")
             self.previa_expresion = PreviaExpresion()
-            with ui.row().classes("metodos-raices-campos w-full"):
-                self.inferior = _campo("Extremo inferior a")
-                self.superior = _campo("Extremo superior b")
-                self.unidad = ui.select({valor: valor.capitalize() for valor in UNIDADES_ANGULARES},
-                                        value=UNIDAD_ANGULAR_DEFECTO,
-                                        label="Unidad trigonométrica").classes("matriz-entrada min-w-0")
+            self.unidad = ui.select({valor: valor.capitalize() for valor in UNIDADES_ANGULARES},
+                                    value=UNIDAD_ANGULAR_DEFECTO,
+                                    label="Unidad trigonométrica").classes("matriz-entrada min-w-0 w-full")
+            construir_modos(self.vista, "Tarea de métodos cerrados")
+            with region_modo(self.vista, MODO_INTERVALO):
+                self._construir_extremos()
+            with region_modo(self.vista, MODO_BUSQUEDA):
+                self.vista.exploracion.construir_campos()
             self._construir_parada()
             self._construir_acciones()
             self._construir_opciones()
         self._conectar()
         self.actualizar_guia()
+
+    @property
+    def metodo_activo(self) -> str:
+        """Identifica el método cuya captura y preferencias están visibles."""
+        return self._metodo
+
+    def _construir_extremos(self) -> None:
+        with ui.row().classes("metodos-raices-campos w-full"):
+            self.inferior = _campo("Extremo inferior a")
+            self.superior = _campo("Extremo superior b")
 
     def _construir_parada(self) -> None:
         with ui.row().classes("metodos-raices-campos w-full"):
@@ -74,6 +87,10 @@ class CapturaMetodosCerrados:
         with ui.row().classes("metodos-raices-acciones w-full flex-wrap items-center"):
             self.boton_resolver = ui.button("Calcular raíz", icon="calculate", color=None).classes(
                 "boton-principal metodos-raices-calcular").props("type=submit ripple=false")
+            self.boton_resolver.bind_visibility_from(self.vista.modos, "value", backward=lambda modo: modo == MODO_INTERVALO)
+            self.boton_buscar = ui.button("Buscar intervalos", icon="search", color=None).classes(
+                "boton-principal metodos-raices-calcular").props("type=submit ripple=false")
+            self.boton_buscar.bind_visibility_from(self.vista.modos, "value", backward=lambda modo: modo == MODO_BUSQUEDA)
             limpieza = crear_boton_limpieza(self.vista, lambda: not self.expresion.is_deleted,
                                             animar=False, campo_foco=self.expresion)
             limpieza.boton.classes(add="metodos-raices-limpieza", remove="flex-1 py-3")
@@ -111,21 +128,31 @@ class CapturaMetodosCerrados:
             datos["cero_preferido"] = self._cero_preferido
         return datos
 
+    def mostrar_carga_busqueda(self, ocupada: bool) -> None:
+        """Refleja cuando el formulario espera la búsqueda vigente."""
+        if not self.boton_buscar.is_deleted:
+            self.boton_buscar.set_enabled(not ocupada)
+            self.boton_buscar.props("loading" if ocupada else "", remove="" if ocupada else "loading")
+
     def captura_grafica(self) -> dict:
         """Obtiene solo los campos que determinan el muestreo de la curva."""
         return {"expresion": self.expresion.value, "unidad_angular": self.unidad.value,
                 "x_min": self.minimo.value, "x_max": self.maximo.value}
 
-    def definir_rango(self, rango: tuple[float, float]) -> None:
+    def definir_rango(self, rango: tuple[float, float], *, sincronizar: bool = True) -> None:
         """Actualiza ambos extremos visuales sin cambiar la solicitud matemática."""
         with transaccion(self):
             for campo, valor in zip((self.minimo, self.maximo), rango):
                 campo.set_value(str(valor))
-        self._editar_rango()
+        if sincronizar:
+            self._editar_rango()
 
     def restaurar(self, captura: dict) -> None:
         """Restaura los campos presentes sin ejecutar el cálculo."""
         with transaccion(self):
+            metodo = captura.get("metodo", self._metodo)
+            if metodo != self._metodo:
+                self.metodo.set_value(metodo)
             for clave, atributo in _CAMPOS.items():
                 if clave in captura:
                     getattr(self, atributo).set_value(captura[clave])
@@ -184,8 +211,32 @@ class CapturaMetodosCerrados:
             self.vista.editar_captura()
 
     def _editar_rango(self) -> None:
-        if not self._cargando_captura:
-            self.vista.actualizar_grafica()
+        if self._cargando_captura:
+            return
+        self.vista.grafica.cancelar_seleccion()
+        self.vista.actualizar_grafica()
+        try:
+            rango = rango_grafica(self.captura_grafica())
+        except ValueError:
+            return
+        self.vista.exploracion.definir_rango(rango)
+
+
+def captura_vacia(captura: CapturaMetodosCerrados) -> bool:
+    """Indica si el ejercicio y la gráfica conservan los valores iniciales."""
+    try:
+        rango = rango_grafica(captura.captura_grafica())
+    except ValueError:
+        return False
+    return (rango == RANGO_GRAFICA_DEFECTO
+            and not any(str(campo.value or "").strip() for campo in (captura.expresion, captura.inferior, captura.superior)))
+
+
+def limpiar_captura(captura: CapturaMetodosCerrados) -> None:
+    """Retira la función y los extremos sin modificar las preferencias de parada."""
+    captura.ejemplos.set_value(None)
+    captura.restaurar(dict.fromkeys(("expresion", "extremo_izquierdo", "extremo_derecho"), ""))
+    captura.definir_rango(RANGO_GRAFICA_DEFECTO, sincronizar=False)
 
 
 def _campo(etiqueta: str, valor: str = ""):
