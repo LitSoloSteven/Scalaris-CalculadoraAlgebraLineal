@@ -6,16 +6,18 @@ from nicegui import ui
 from src.frontend.componentes.glosa_sugerencias import renderizar_capsula_foco
 
 
-def crear_accion_explicacion(panel: Any, pasos: Any):
+def crear_accion_explicacion(panel: Any, pasos: Any, *, sigue_vigente=None):
     """Crea una acción que envía al panel la captura y posición del paso seleccionado."""
     if not panel:
         return None
 
     def explicar(paso):
         """Transmite los metadatos del reproductor con su índice y total actuales."""
-        panel.disparar_explicacion_paso({
-            **(paso.meta_explicar or {}), "indice": paso.indice + 1, "total": len(pasos),
-        })
+        datos = {**(paso.meta_explicar or {}), "indice": paso.indice + 1, "total": len(pasos)}
+        if sigue_vigente is None:
+            panel.disparar_explicacion_paso(datos)
+        elif sigue_vigente(paso):
+            panel.disparar_explicacion_paso(datos, sigue_vigente=lambda: sigue_vigente(paso))
     return explicar
 
 
