@@ -15,7 +15,7 @@ from src.frontend.controladores.regla_falsa.presentacion_ampliada import etiquet
 from .modo_examen import crear_interruptor_examen
 
 
-def mostrar_resultado(vista, respuesta: dict, ampliado: dict | None = None) -> None:
+def mostrar_resultado(vista, respuesta: dict, ampliado: dict | None = None, *, candidato: str | None = None) -> None:
     """Presenta el sobre mediante texto escapado y conserva el estado real del motor."""
     with vista.contenedor_resultados:
         ui.label(titulo_configurado(respuesta, ampliado)).classes("text-xl font-bold texto-principal").props(
@@ -33,16 +33,18 @@ def mostrar_resultado(vista, respuesta: dict, ampliado: dict | None = None) -> N
                 ui.label("Diagnóstico del cálculo")
             _mostrar_datos(detalles_diagnostico(respuesta))
         vista.interruptor_examen = crear_interruptor_examen(vista)
-        candidato = getattr(getattr(vista, "resolucion_multiple", None), "activo", None)
+        if candidato is None:
+            candidato = getattr(getattr(vista, "resolucion_multiple", None), "activo", None)
         renderizar_copia_resultado(lambda: _copia_visible(vista, respuesta, ampliado, candidato))
 
 
 def _copia_visible(vista, respuesta: dict, ampliado: dict | None, candidato: str | None = None) -> dict:
     if ampliado is not None:
         datos = datos_copia_configurada(respuesta, ampliado, vista._precision_visual, vista.modo_examen)
-        return {campo: f"{candidato}\n{valor}" for campo, valor in datos.items()} if candidato else datos
-    funcion = datos_copia_examen_regla_falsa if vista.modo_examen else datos_copia_regla_falsa
-    return funcion(respuesta, vista._precision_visual)
+    else:
+        funcion = datos_copia_examen_regla_falsa if vista.modo_examen else datos_copia_regla_falsa
+        datos = funcion(respuesta, vista._precision_visual)
+    return {campo: f"{candidato}\n{valor}" for campo, valor in datos.items()} if candidato else datos
 
 
 def _montar_formato(vista, respuesta: dict) -> None:
