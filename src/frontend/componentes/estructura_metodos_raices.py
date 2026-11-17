@@ -25,7 +25,7 @@ def montar_estructura_metodos_raices(
     """Muestra el encabezado, monta la captura y la gráfica, y devuelve las regiones de salida."""
     with ui.column().classes(_CLASE_CONTENEDOR):
         with ui.column().classes("metodos-raices-encabezado"):
-            ui.label(titulo).classes("text-2xl font-bold texto-principal")
+            ui.label(titulo).classes("text-2xl font-bold texto-principal").props("role=heading aria-level=1")
             ui.label(descripcion).classes("text-sm texto-secundario")
         with ui.card().classes("metodos-raices-captura panel-tarjeta w-full"):
             montar_captura()

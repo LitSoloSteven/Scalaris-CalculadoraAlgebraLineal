@@ -9,10 +9,12 @@ from src.frontend.componentes.previa_expresion_raices import PreviaExpresion
 from src.frontend.componentes.selector_opciones import SelectorOpciones
 from src.frontend.controladores.biseccion.captura_criterio import texto_estimacion
 from src.frontend.controladores.biseccion.catalogo_criterios import CRITERIOS
+from src.frontend.controladores.biseccion.metadatos_expresion import sensible_a_unidad
 from src.frontend.controladores.metodos_cerrados.adaptadores import (
     BISECCION, METODOS, REGLA_FALSA, captura_del_metodo, criterio_inicial, guia_parada, parametros_iniciales,
 )
 from src.frontend.controladores.rango_exploracion_raices import LONGITUD_CAMPO_GRAFICA, RANGO_GRAFICA_DEFECTO, rango_grafica
+from src.frontend.vistas.biseccion.acciones_captura import construir_ayuda
 from src.frontend.vistas.biseccion.ejemplos import EJEMPLOS as EJEMPLOS_BISECCION
 from src.frontend.vistas.biseccion.estado_captura import transaccion
 from src.frontend.vistas.regla_falsa.ejemplos import EJEMPLOS as EJEMPLOS_REGLA_FALSA
@@ -49,6 +51,7 @@ class CapturaMetodosCerrados:
             self.unidad = ui.select({valor: valor.capitalize() for valor in UNIDADES_ANGULARES},
                                     value=UNIDAD_ANGULAR_DEFECTO,
                                     label="Unidad trigonométrica").classes("matriz-entrada min-w-0 w-full")
+            self.unidad.set_visibility(False)
             construir_modos(self.vista, "Tarea de métodos cerrados")
             with region_modo(self.vista, MODO_INTERVALO):
                 self._construir_extremos()
@@ -106,10 +109,10 @@ class CapturaMetodosCerrados:
                 self.minimo = _campo("Mínimo de la gráfica", str(minimo))
                 self.maximo = _campo("Máximo de la gráfica", str(maximo))
         with ui.expansion("Sintaxis y continuidad").classes("w-full"):
-            ui.label("Usa x como variable, ^ para potencias y paréntesis en funciones como sin(x) o ln(x).")
-            ui.label("La garantía requiere continuidad en todo [a, b]. El muestreo no demuestra continuidad.")
+            construir_ayuda()
 
     def _conectar(self) -> None:
+        self.expresion.on_value_change(self._actualizar_unidad)
         for campo in (self.expresion, self.inferior, self.superior, self.unidad):
             campo.on_value_change(self._editar_ejercicio)
         for campo in (self.criterio, self.limite):
@@ -118,6 +121,13 @@ class CapturaMetodosCerrados:
             campo.on_value_change(lambda tipo=tipo: self._editar() if self.criterio.value == tipo else None)
         for campo in (self.minimo, self.maximo):
             campo.on_value_change(self._editar_rango)
+
+    def _actualizar_unidad(self) -> None:
+        try:
+            visible = bool(self.expresion.value) and sensible_a_unidad(self.expresion.value)
+        except ValueError:
+            visible = False
+        self.unidad.set_visibility(visible)
 
     def capturar(self) -> dict:
         """Devuelve el ejercicio y exclusivamente el criterio seleccionado."""
@@ -199,7 +209,7 @@ class CapturaMetodosCerrados:
     def _cargar_ejemplo(self, evento) -> None:
         datos = _EJEMPLOS[self._metodo].get(evento.value)
         if datos is not None:
-            self.vista.cargar_captura(datos)
+            self.vista.aplicar_intervalo(datos)
 
     def _editar_ejercicio(self) -> None:
         if not self._cargando_captura:
