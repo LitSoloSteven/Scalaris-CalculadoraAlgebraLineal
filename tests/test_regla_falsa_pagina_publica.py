@@ -21,7 +21,7 @@ def test_ruta_publica_con_cabecera_y_motor_real(monkeypatch, navegacion):
         assert vista.panel_ia is not None
         activos = [elemento for elemento in cliente.elements.values()
                    if elemento._props.get("aria-current") == "page"]
-        assert activos and any(elemento._props.get("href") == "/utilidades/regla-falsa" for elemento in activos)
+        assert activos and any(elemento._props.get("href") == "/utilidades/metodos-cerrados" for elemento in activos)
         vista.cargar_captura(captura_regla_falsa())
         await vista.resolver()
         assert vista.ultimo_resultado["estado"] == "EXITO"
