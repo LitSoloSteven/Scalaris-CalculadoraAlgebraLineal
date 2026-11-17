@@ -11,6 +11,10 @@
   overflow-wrap: anywhere;
   font-variant-numeric: tabular-nums;
 }
+.metodos-raices-resultados :is(.biseccion-aproximacion, .regla-falsa-aproximacion) {
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  font-weight: var(--fw-h2);
+}
 .metodos-raices-resultados :is(.biseccion-metricas, .regla-falsa-metricas) {
   display: grid;
   width: 100%;
