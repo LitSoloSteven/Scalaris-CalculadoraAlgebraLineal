@@ -1,15 +1,27 @@
-"""Composición de la página pública con navegación y contexto de Glosa."""
-from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
-from src.frontend.componentes.panel_ia import PanelIA
-from src.frontend.navegacion import ruta_de
-from .vista_regla_falsa import VistaReglaFalsa
+"""Montaje del enlace anterior de Regla falsa."""
+from src.frontend.controladores.metodos_cerrados.adaptadores import REGLA_FALSA
+from src.frontend.vistas.metodos_cerrados.vista_metodos_cerrados import VistaMetodosCerrados, montar_pagina
+
+
+class VistaReglaFalsa(VistaMetodosCerrados):
+    """Conserva el acceso al procedimiento para integraciones del enlace anterior."""
+
+    def __init__(self):
+        super().__init__(REGLA_FALSA)
+
+    @property
+    def reproductor_pasos(self):
+        """Devuelve el reproductor del procedimiento visible."""
+        return self.salida.reproductor
+
+    @property
+    def detalle_procedimiento(self):
+        """Expone la traza compartida mientras hay un procedimiento vigente."""
+        return self.salida if self.reproductor_pasos is not None else None
 
 
 def construir_pagina_regla_falsa() -> VistaReglaFalsa:
-    """Monta la herramienta en la estructura común y devuelve su instancia por cliente."""
+    """Monta Métodos cerrados con Regla falsa y devuelve la instancia del cliente."""
     vista = VistaReglaFalsa()
-    vista.panel_ia = PanelIA(vista)
-    crear_estructura_aplicacion(vista, ruta_activa=ruta_de("regla_falsa"))
-    vista.construir()
-    vista.panel_ia.construir()
+    montar_pagina(vista)
     return vista

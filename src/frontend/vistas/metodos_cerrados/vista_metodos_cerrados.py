@@ -1,10 +1,13 @@
 """Composición interna de Bisección y Regla falsa."""
 from nicegui import ui
 
+from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.modos_captura_raices import MODO_BUSQUEDA, MODO_INTERVALO
 from src.frontend.componentes.panel_ia import PanelIA
 from src.frontend.controladores.actualizacion_cancelable import cancelar_actualizacion
 from src.frontend.controladores.metodos_cerrados.adaptadores import BISECCION
+from src.frontend.navegacion import ruta_de
+from src.frontend.tema import configurar_tema
 from .acciones import AccionesMetodosCerrados
 from .calculo import CalculoIndividual
 from .captura import CapturaMetodosCerrados, captura_vacia, limpiar_captura
@@ -108,7 +111,7 @@ class VistaMetodosCerrados:
         """Envía exclusivamente la tarea seleccionada en el formulario."""
         if self.en_busqueda:
             await self.exploracion.buscar()
-        else:
+        elif self.estados_entrada.validar():
             await self.resolver()
 
     def cambiar_modo(self, _evento) -> None:
@@ -139,8 +142,9 @@ class VistaMetodosCerrados:
         self.actualizar_grafica()
 
     def actualizar_grafica(self) -> None:
-        """Programa la fórmula y la curva para los campos visibles."""
+        """Actualiza la orientación, la fórmula y la curva de la captura visible."""
         if not self._cerrada:
+            self.estados_entrada.actualizar()
             self.captura.previa_expresion.programar(self.captura.expresion.value or "")
             self.grafica.actualizar()
 
@@ -167,6 +171,7 @@ class VistaMetodosCerrados:
 
     def limpiar_todo(self) -> None:
         """Vacía el ejercicio y el encuadre, y conserva las preferencias del método."""
+        self.estados_entrada.limpiar()
         limpiar_captura(self.captura)
         self.exploracion.restablecer()
         self.editar_captura()
@@ -214,3 +219,10 @@ class VistaMetodosCerrados:
         self.estado.set_text("Resultado disponible." if respuesta["estado"] != "ERROR" else "Revisa el diagnóstico del cálculo.")
         self.presentacion.publicar(datos, puntero=puntero)
         self.acciones.registrar(self.capturar(), respuesta, datos.get("ampliado"))
+
+
+def montar_pagina(vista: VistaMetodosCerrados) -> None:
+    """Monta la vista y sus recursos con la identidad de navegación canónica."""
+    configurar_tema("metodos_cerrados")
+    crear_estructura_aplicacion(vista, ruta_activa=ruta_de("metodos_cerrados"))
+    vista.construir()
