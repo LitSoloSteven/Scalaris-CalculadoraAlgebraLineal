@@ -46,7 +46,7 @@ class SalidaMetodosCerrados:
                     mostrar_sugerencias(self.vista, datos)
             if datos["aviso_grafica"]:
                 ui.label(datos["aviso_grafica"]).classes("text-sm texto-advertencia")
-        if respuesta.get("entrada"):
+        if respuesta.get("entrada") or not biseccion:
             self._montar_traza(datos, velocidad)
         else:
             self.vista.grafica.mostrar(datos)
@@ -79,7 +79,7 @@ class SalidaMetodosCerrados:
         )
         if velocidad is not None:
             self.reproductor.velocidad = velocidad
-        if respuesta.get("iteraciones"):
+        if respuesta.get("iteraciones") or datos["metodo"] != BISECCION:
             self._montar_tabla(datos)
         with self.vista.contenedor_procedimiento:
             self.reproductor.construir()
@@ -137,8 +137,9 @@ def _pasos(datos: dict) -> tuple:
 
 def _renderizar_paso(datos: dict, paso, examen) -> None:
     if paso.cuerpo is None:
-        if paso.tipo == "planteamiento":
-            _renderizar_expresion(datos["resultado"]["entrada"]["expresion"])
+        entrada = datos["resultado"].get("entrada")
+        if paso.tipo == "planteamiento" and entrada:
+            _renderizar_expresion(entrada["expresion"])
         return
     biseccion = datos["metodo"] == BISECCION
     formulas = formulas_biseccion if biseccion else formulas_regla_falsa
