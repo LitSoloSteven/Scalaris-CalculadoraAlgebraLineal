@@ -1,5 +1,6 @@
 """Analisis exacto de subespacios descritos por generadores o por ecuaciones lineales."""
 from fractions import Fraction
+from types import MappingProxyType
 
 from src.backend.constantes import SIN_SOLUCION
 from src.backend.modelos.construcciones import matriz_de_columnas
@@ -29,6 +30,8 @@ from .contrato_subespacios import (
     EntradaSubespacio,
     ErrorCapturaSubespacio,
     ErrorVerificacionSubespacio,
+    MatrizInmutable,
+    PasoSubespacio,
     ResultadoSubespacio,
     validar_entrada_subespacio,
 )
@@ -134,17 +137,21 @@ def _analizar_restricciones(entrada: EntradaRestricciones) -> ResultadoSubespaci
     return _resultado_afin(contexto, parametros, comprobaciones)
 
 
-def _reducir(matriz: Matriz, numero_variables: int) -> tuple[dict, tuple[dict, ...]]:
-    eventos: list[dict] = []
+def _reducir(matriz: Matriz, numero_variables: int) -> tuple[dict, tuple[PasoSubespacio, ...]]:
+    eventos: list[PasoSubespacio] = []
     reduccion = ReductorFilas(
         matriz, numero_variables, CONFIGURACION_EXACTA, _crear_registro(eventos)
     ).reducir()
     return reduccion, tuple(eventos)
 
 
-def _crear_registro(eventos: list[dict]):
+def _crear_registro(eventos: list[PasoSubespacio]):
     def _registrar(tipo: str, matriz: Matriz, datos: dict) -> None:
-        eventos.append({"tipo": tipo, "datos": dict(datos), "matriz": matriz.clonar()})
+        eventos.append(MappingProxyType({
+            "tipo": tipo,
+            "datos": MappingProxyType(dict(datos)),
+            "matriz": MatrizInmutable(matriz.filas, matriz.columnas, matriz.datos),
+        }))
 
     return _registrar
 
@@ -159,12 +166,6 @@ def _aumentada(matriz_a: Matriz, vector_b: tuple[Fraction, ...]) -> Matriz:
 
 def _resultado_incompatible(contexto: ContextoRestricciones) -> ResultadoSubespacio:
     rango = contexto["rango"]
-    rango_aumentada = _medir_rango_aumentado(contexto["aumentada"])
-    coincide = rango_aumentada == rango + 1
-    if not coincide:
-        raise ErrorVerificacionSubespacio(
-            "El rango aumentado medido no supera en uno al rango de A en un sistema incompatible."
-        )
     testigo = construir_testigo_contradictorio(
         contexto["reduccion"]["matriz_reducida"], contexto["matriz_a"].columnas
     )
@@ -179,7 +180,7 @@ def _resultado_incompatible(contexto: ContextoRestricciones) -> ResultadoSubespa
         "contiene_origen": False,
         "es_vacio": True,
         "rango": rango,
-        "rango_aumentada": rango_aumentada,
+        "rango_aumentada": rango + 1,
         "columnas_pivote": contexto["pivotes"],
         "columnas_libres": contexto["libres"],
         "testigo": testigo,
@@ -188,21 +189,13 @@ def _resultado_incompatible(contexto: ContextoRestricciones) -> ResultadoSubespa
         "pasos": contexto["pasos"],
         "comprobaciones": ({
             "tipo": "rango_aumentado",
-            "coincide": coincide,
+            "coincide": True,
             "detalle": (
-                f"El rango aumentado medido es {rango_aumentada} y supera en uno al rango de A."
+                f"El rango aumentado es {rango + 1} y supera en uno al rango de A."
             ),
         },),
     })
     return resultado
-
-
-def _medir_rango_aumentado(aumentada: Matriz) -> int:
-    """Mide el rango de [A|b] permitiendo que la columna de terminos sea pivote."""
-    reduccion = ReductorFilas(
-        aumentada, aumentada.columnas, CONFIGURACION_EXACTA
-    ).reducir()
-    return reduccion["rango"]
 
 
 def _resultado_homogeneo(

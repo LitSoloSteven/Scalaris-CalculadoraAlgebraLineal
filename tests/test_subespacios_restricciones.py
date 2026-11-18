@@ -5,6 +5,7 @@ from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_vectores.captura_subespacios import (
     capturar_restricciones,
 )
+from src.backend.resolutores.operaciones_vectores import subespacios as motor
 from src.backend.resolutores.operaciones_vectores.subespacios import analizar_subespacio
 
 
@@ -177,8 +178,8 @@ def test_varias_filas_contradictorias_mantienen_rango_aumentado_una_unidad_mayor
     assert resultado["testigo"]["termino_independiente"] == 1
 
 
-def test_rango_aumentado_se_mide_y_coincide_con_un_rango_independiente():
-    """El rango de [A|b] se calcula permitiendo pivote en b, no asumiendo rango(A)+1."""
+def test_rango_aumentado_coincide_con_un_rango_independiente():
+    """El rango aumentado devuelto coincide con una eliminacion externa a la implementacion."""
     matriz = [[1, 0], [0, 1], [1, 1]]
     vector = [1, 1, 5]
     resultado = _analizar(matriz, vector)
@@ -191,6 +192,39 @@ def test_rango_aumentado_se_mide_y_coincide_con_un_rango_independiente():
     assert resultado["testigo"]["indice_fila"] == 2
 
 
+def test_incompatible_usa_una_sola_reduccion_sobre_la_aumentada(monkeypatch):
+    """El estado incompatible reutiliza la reduccion ya hecha y no reduce una segunda vez."""
+    llamadas = []
+    original = motor.ReductorFilas
+
+    def espia(matriz, numero_variables, configuracion, registrar=None):
+        """Registra cada reduccion y delega en el reductor real."""
+        llamadas.append((matriz.columnas, numero_variables))
+        return original(matriz, numero_variables, configuracion, registrar)
+
+    monkeypatch.setattr(motor, "ReductorFilas", espia)
+    resultado = _analizar([[1], [1]], [1, 2])
+    assert resultado["rango"] == 1
+    assert resultado["rango_aumentada"] == 2
+    assert resultado["testigo"]["tipo"] == "fila_contradictoria"
+    assert llamadas == [(2, 1)]
+
+
+def test_restricciones_rechazan_matriz_con_forma_irregular_sin_propagar_indice():
+    """Una matriz manipulada devuelve error de entrada con la ubicacion de la fila irregular."""
+    matriz = Matriz(1, 2, [[1, 2]])
+    matriz.datos[0].pop()
+    resultado = analizar_subespacio({
+        "modo": "restricciones",
+        "dimension_ambiente": 2,
+        "matriz_a": matriz,
+        "vector_b": (0,),
+    })
+    assert resultado["estado"] == "ERROR"
+    assert resultado["codigo"] == "ENTRADA_INVALIDA"
+    assert "matriz_a.datos[0]" in resultado["mensaje"]
+
+
 def test_pasos_conservan_instantaneas_independientes_de_la_matriz_final():
     """Cada evento de la traza clona su matriz y no comparte filas con el resultado."""
     resultado = _analizar([[1, 1], [0, 0]], [0, 0])
@@ -198,7 +232,7 @@ def test_pasos_conservan_instantaneas_independientes_de_la_matriz_final():
     assert pasos
     assert all(paso["matriz"] is not resultado["matriz_reducida"] for paso in pasos)
     primera = pasos[0]["matriz"]
-    copia = [fila[:] for fila in primera.datos]
+    copia = tuple(tuple(fila) for fila in primera.datos)
     resultado["matriz_reducida"].datos[0][0] = Fraction(99)
     assert primera.datos == copia
 

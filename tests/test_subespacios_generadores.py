@@ -108,6 +108,21 @@ def test_generadores_no_mutan_las_matrices_de_entrada():
     assert [vector.datos for vector in originales] == antes
 
 
+def test_generadores_rechazan_vector_con_forma_irregular():
+    """Un vector columna manipulado produce error de entrada con la ubicacion de su fila."""
+    vector = Matriz(3, 1, [[1], [2], [3]])
+    vector.datos.pop()
+    resultado = analizar_subespacio({
+        "modo": "generadores",
+        "dimension_ambiente": 3,
+        "generadores": (vector,),
+        "etiquetas": ("v_1",),
+    })
+    assert resultado["estado"] == "ERROR"
+    assert resultado["codigo"] == "ENTRADA_INVALIDA"
+    assert "generadores[0].datos" in resultado["mensaje"]
+
+
 def test_generadores_dejan_traza_y_comprobaciones_exactas():
     """La traza es inmutable y cada comprobacion confirma columnas originales e independencia."""
     resultado = _analizar([(1, 2, 3), (2, 4, 6), (0, 1, 1)])
