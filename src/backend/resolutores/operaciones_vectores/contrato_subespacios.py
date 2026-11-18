@@ -37,20 +37,6 @@ class EntradaRestricciones(TypedDict):
 EntradaSubespacio = Union[EntradaGeneradores, EntradaRestricciones]
 
 
-class ContextoRestricciones(TypedDict):
-    """Datos intermedios exactos de la reduccion de un sistema de restricciones."""
-
-    entrada: EntradaRestricciones
-    matriz_a: Matriz
-    vector_b: tuple[Fraction, ...]
-    aumentada: Matriz
-    reduccion: dict
-    pasos: tuple[dict, ...]
-    rango: int
-    pivotes: tuple[int, ...]
-    libres: tuple[int, ...]
-
-
 class TestigoSubespacio(TypedDict):
     """Razon exacta por la que un conjunto no es un subespacio vectorial."""
 
@@ -60,6 +46,49 @@ class TestigoSubespacio(TypedDict):
     termino_independiente: Fraction
     valor_izquierdo: Fraction
     descripcion: str
+
+
+class MatrizInmutable(Matriz):
+    """Instantanea matricial de solo lectura usada por los pasos de la traza."""
+
+    def __init__(self, filas: int, columnas: int, datos: list) -> None:
+        """Construye la matriz y congela atributos y celdas al terminar."""
+        object.__setattr__(self, "_bloqueada", False)
+        super().__init__(filas, columnas, datos)
+        object.__setattr__(self, "datos", tuple(tuple(fila) for fila in self.datos))
+        object.__setattr__(self, "_bloqueada", True)
+
+    def __setattr__(self, nombre: str, valor: object) -> None:
+        """Impide modificar la instantanea una vez construida."""
+        if getattr(self, "_bloqueada", False):
+            raise AttributeError("La instantanea de la traza es de solo lectura.")
+        object.__setattr__(self, nombre, valor)
+
+    def __delattr__(self, nombre: str) -> None:
+        """Impide eliminar atributos de la instantanea."""
+        raise AttributeError("La instantanea de la traza es de solo lectura.")
+
+
+class PasoSubespacio(TypedDict):
+    """Paso de reduccion con tipo, metadatos y matriz de solo lectura."""
+
+    tipo: str
+    datos: Mapping[str, object]
+    matriz: MatrizInmutable
+
+
+class ContextoRestricciones(TypedDict):
+    """Datos intermedios exactos de la reduccion de un sistema de restricciones."""
+
+    entrada: EntradaRestricciones
+    matriz_a: Matriz
+    vector_b: tuple[Fraction, ...]
+    aumentada: Matriz
+    reduccion: dict
+    pasos: tuple[PasoSubespacio, ...]
+    rango: int
+    pivotes: tuple[int, ...]
+    libres: tuple[int, ...]
 
 
 class ResultadoSubespacio(TypedDict):
@@ -88,7 +117,7 @@ class ResultadoSubespacio(TypedDict):
     testigo: TestigoSubespacio | None
     matriz_original: Matriz | None
     matriz_reducida: Matriz | None
-    pasos: tuple[dict, ...]
+    pasos: tuple[PasoSubespacio, ...]
     comprobaciones: tuple[dict, ...]
 
 
@@ -193,6 +222,7 @@ def _validar_restricciones(entrada: Mapping) -> None:
             f"La matriz A admite entre {DIMENSION_MINIMA} y {DIMENSION_MAXIMA_SISTEMAS} filas.",
             "matriz_a",
         )
+    _validar_forma_matriz(matriz_a, "matriz_a")
     for fila in range(matriz_a.filas):
         for columna in range(matriz_a.columnas):
             _validar_escalar_exacto(
@@ -216,8 +246,27 @@ def _validar_vector_columna(valor: object, dimension: int, ubicacion: str) -> No
             f"Se esperaba un vector columna de dimension {dimension}.",
             ubicacion,
         )
+    _validar_forma_matriz(valor, ubicacion)
     for fila in range(dimension):
         _validar_escalar_exacto(valor.obtener(fila, 0), f"{ubicacion}[{fila}]")
+
+
+def _validar_forma_matriz(matriz: Matriz, ubicacion: str) -> None:
+    """Comprueba que las celdas almacenadas coincidan con las dimensiones declaradas."""
+    datos = getattr(matriz, "datos", None)
+    if not isinstance(datos, (list, tuple)) or len(datos) != matriz.filas:
+        raise ErrorCapturaSubespacio(
+            "MATRIZ_INVALIDA",
+            f"La matriz declara {matriz.filas} filas pero no las contiene.",
+            f"{ubicacion}.datos",
+        )
+    for indice, fila in enumerate(datos):
+        if not isinstance(fila, (list, tuple)) or len(fila) != matriz.columnas:
+            raise ErrorCapturaSubespacio(
+                "MATRIZ_INVALIDA",
+                f"La fila {indice + 1} no tiene {matriz.columnas} columnas.",
+                f"{ubicacion}.datos[{indice}]",
+            )
 
 
 def _validar_escalar_exacto(valor: object, ubicacion: str) -> None:

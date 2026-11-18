@@ -192,3 +192,31 @@ def test_campos_ajenos_resumen_las_claves_sin_volcarlas_todas():
         capturar_generadores(captura)
     assert error.value.codigo == "CAMPOS_AJENOS"
     assert "y 15 mas" in str(error.value)
+
+
+def test_captura_rechaza_celdas_de_texto_excesivas_antes_de_interpretarlas():
+    """El limite se aplica al texto crudo, aunque solo contenga espacios."""
+    with pytest.raises(ErrorCapturaSubespacio) as error:
+        capturar_restricciones({
+            "modo": "restricciones", "dimension_ambiente": 1,
+            "matriz_a": [[" " * 10_000]], "vector_b": [0],
+        })
+    assert error.value.codigo == "VALOR_INVALIDO"
+    assert error.value.ubicacion == "matriz_a[0][0]"
+    with pytest.raises(ErrorCapturaSubespacio) as error:
+        capturar_generadores({
+            "modo": "generadores", "dimension_ambiente": 1,
+            "vectores": {"v_1": {"datos": [" " * 10_000]}},
+        })
+    assert error.value.codigo == "VALOR_INVALIDO"
+    assert error.value.ubicacion == "vectores.v_1.datos[0]"
+
+
+def test_celdas_breves_en_blanco_siguen_valiendo_cero():
+    """Una celda vacia o de espacios cortos dentro de un ejercicio explicito es cero."""
+    entrada = capturar_restricciones({
+        "modo": "restricciones", "dimension_ambiente": 1,
+        "matriz_a": [["   "]], "vector_b": [""],
+    })
+    assert entrada["matriz_a"].datos == [[Fraction(0)]]
+    assert entrada["vector_b"] == (Fraction(0),)

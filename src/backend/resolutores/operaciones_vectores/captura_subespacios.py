@@ -6,6 +6,8 @@ from src.backend.constantes import (
     DIMENSION_MAXIMA_SISTEMAS,
     DIMENSION_MAXIMA_VECTORES,
     DIMENSION_MINIMA,
+    LONGITUD_MAXIMA_CADENA_NUMERO,
+    MENSAJE_NUMERO_DEMASIADO_LARGO,
 )
 from src.backend.modelos.entrada_numerica import convertir_numero_exacto
 from src.backend.modelos.matriz import Matriz
@@ -201,6 +203,8 @@ def _convertir_celda(celda: object, ubicacion: str) -> Fraction:
             "Los valores no admiten flotantes; usa enteros o fracciones exactas.",
             ubicacion,
         )
+    if isinstance(celda, str) and len(celda) > LONGITUD_MAXIMA_CADENA_NUMERO:
+        raise ErrorCapturaSubespacio("VALOR_INVALIDO", MENSAJE_NUMERO_DEMASIADO_LARGO, ubicacion)
     if isinstance(celda, str) and not celda.strip():
         return Fraction(0)
     exito, fraccion, mensaje = convertir_numero_exacto(celda)
