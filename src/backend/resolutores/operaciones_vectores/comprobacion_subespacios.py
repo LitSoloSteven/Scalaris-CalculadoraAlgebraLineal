@@ -13,6 +13,8 @@ from .contrato_subespacios import (
     TestigoSubespacio,
 )
 
+MAXIMO_BITS_FORMATO_LATEX = 4096
+
 
 def verificar_base_generadores(
     generadores: tuple[Matriz, ...],
@@ -51,7 +53,12 @@ def comprobar_familia_exacta(
     vector_b: tuple[Fraction, ...],
     parametros: dict,
 ) -> tuple[dict, ...]:
-    """Verifica A·p=b y A·d=0 para toda direccion; lanza error si alguna fila no coincide."""
+    """Verifica A·p=b y A·d=0; resume el desarrollo cuando excede el formato seguro."""
+    valores = list(parametros["particular"]) + [
+        valor for direccion in parametros["direcciones"] for valor in direccion
+    ]
+    if _requiere_resumen(valores):
+        return _comprobar_familia_resumida(matriz_a, vector_b, parametros)
     parametros_con_nombres = {
         **parametros,
         "nombres_parametros": [
@@ -69,6 +76,55 @@ def comprobar_familia_exacta(
         "coincide": fila["coincide"],
         "detalle_latex": fila["detalle_latex"],
     } for indice, fila in enumerate(verificacion["filas"]))
+
+
+def _requiere_resumen(valores: list[Fraction]) -> bool:
+    """Detecta racionales cuyos enteros exceden el tamano seguro para texto."""
+    return any(
+        abs(Fraction(valor).numerator).bit_length() > MAXIMO_BITS_FORMATO_LATEX
+        or Fraction(valor).denominator.bit_length() > MAXIMO_BITS_FORMATO_LATEX
+        for valor in valores
+    )
+
+
+def _comprobar_familia_resumida(
+    matriz_a: Matriz,
+    vector_b: tuple[Fraction, ...],
+    parametros: dict,
+) -> tuple[dict, ...]:
+    """Comprueba exactamente las ecuaciones y omite el desarrollo textual desmesurado."""
+    particular = tuple(Fraction(valor) for valor in parametros["particular"])
+    direcciones = tuple(
+        tuple(Fraction(valor) for valor in direccion)
+        for direccion in parametros["direcciones"]
+    )
+    comprobaciones = []
+    for indice, (fila, termino) in enumerate(zip(matriz_a.datos, vector_b)):
+        izquierda = sum(
+            (Fraction(coeficiente) * valor for coeficiente, valor in zip(fila, particular)),
+            Fraction(0),
+        )
+        pesos = [
+            sum(
+                (Fraction(coeficiente) * valor for coeficiente, valor in zip(fila, direccion)),
+                Fraction(0),
+            )
+            for direccion in direcciones
+        ]
+        if izquierda != Fraction(termino) or any(pesos):
+            raise ErrorVerificacionSubespacio(
+                f"La fila {indice + 1} no satisface la ecuacion original."
+            )
+        comprobaciones.append({
+            "tipo": "familia",
+            "fila": indice + 1,
+            "coincide": True,
+            "detalle_latex": (
+                f"La fila {indice + 1} se verifica exactamente; "
+                "desarrollo omitido por tamano."
+            ),
+        })
+    return tuple(comprobaciones)
 
 
 def construir_testigo_contradictorio(
