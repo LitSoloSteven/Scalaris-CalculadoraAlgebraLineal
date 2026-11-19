@@ -1,8 +1,8 @@
 """Controles etiquetados para la captura cruda del método de regla falsa."""
 from nicegui import ui
 
-from src.backend.resolutores.raices.limites_raices import LONGITUD_MAXIMA_EXPRESION
 from src.backend.resolutores.raices.unidades_angulares import UNIDADES_ANGULARES
+from src.frontend.componentes.campo_funcion_real import crear_campo_funcion
 from .estado_captura import PREFERENCIAS_INICIALES
 from .modos_captura import MODO_INTERVALO, construir_modos, region_modo
 from .selector_criterio import construir_selector
@@ -10,8 +10,7 @@ from .selector_criterio import construir_selector
 
 def construir_captura(vista) -> None:
     """Monta expresión, extremos y preferencias sin interpretar los valores introducidos."""
-    vista.expresion = ui.input("Función f(x)", placeholder="Ejemplo: x^2 - 2").classes(
-        "w-full matriz-entrada").props(f"maxlength={LONGITUD_MAXIMA_EXPRESION} autocomplete=off spellcheck=false")
+    vista.expresion = crear_campo_funcion()
     vista.unidad_angular = ui.select(
         {unidad: unidad.capitalize() for unidad in UNIDADES_ANGULARES},
         value=PREFERENCIAS_INICIALES["unidad_angular"], label="Unidad trigonométrica",
