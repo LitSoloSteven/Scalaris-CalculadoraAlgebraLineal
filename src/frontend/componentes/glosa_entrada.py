@@ -22,7 +22,7 @@ def construir_entrada_glosa(instancia: Any, estilo: EstiloEntradaGlosa) -> None:
     with ui.row().classes(estilo.clases_contenedor):
         instancia.campo_entrada = ui.textarea(placeholder=estilo.texto_ayuda).classes(
             estilo.clases_campo
-        ).props(f"borderless autogrow maxlength={MAXIMO_CARACTERES_MENSAJE}")
+        ).props(f"borderless autogrow maxlength={MAXIMO_CARACTERES_MENSAJE} data-simbolos=texto")
         instancia.campo_entrada.on("keydown.enter.prevent.exact", instancia.enviar_mensaje)
         ui.button(icon="send", on_click=instancia.enviar_mensaje, color=None).classes(
             estilo.clases_boton
