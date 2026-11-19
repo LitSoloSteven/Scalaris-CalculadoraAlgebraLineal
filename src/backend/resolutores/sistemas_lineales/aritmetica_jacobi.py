@@ -2,7 +2,8 @@
 from fractions import Fraction
 
 from .limites_jacobi import (
-    MAXIMO_BITS_CALCULO_JACOBI, MAXIMO_OPERACIONES_JACOBI, fraccion_admitida,
+    MAXIMO_BITS_ACUMULACION_JACOBI, MAXIMO_BITS_CALCULO_JACOBI,
+    MAXIMO_OPERACIONES_JACOBI, fraccion_admitida,
 )
 
 
@@ -47,7 +48,7 @@ def producto_fila(
     total = Fraction(0)
     for coeficiente, componente in zip(fila, vector):
         presupuesto.consumir(2)
-        total = presupuesto.registrar(total + coeficiente * componente)
+        total = presupuesto.registrar(total + coeficiente * componente, MAXIMO_BITS_ACUMULACION_JACOBI)
     return total
 
 
@@ -65,7 +66,9 @@ def producto_fila_sin_diagonal(
         if posicion == indice:
             continue
         presupuesto.consumir(2)
-        total = presupuesto.registrar(total + coeficiente * vector[posicion])
+        total = presupuesto.registrar(
+            total + coeficiente * vector[posicion], MAXIMO_BITS_ACUMULACION_JACOBI,
+        )
     return total
 
 
