@@ -1,5 +1,6 @@
 """Regresiones de cancelación exacta en los productos escalares de Jacobi."""
 from fractions import Fraction
+from math import prod
 
 import pytest
 
@@ -47,9 +48,7 @@ def test_cancelacion_de_fracciones_capturadas(cancelar_primero: bool) -> None:
     matriz = [[coeficientes[indice] for indice in indices]] + [
         [int(fila == columna) for columna in range(orden)] for fila in range(1, orden)
     ]
-    parcial = sum(Fraction(coeficiente) * Fraction(inicial)
-                  for coeficiente, inicial in zip(positivos, iniciales))
-    assert parcial.denominator.bit_length() > MAXIMO_BITS_CALCULO_JACOBI
+    assert prod(denominadores).bit_length() > MAXIMO_BITS_CALCULO_JACOBI
 
     resultado = resolver_jacobi_desde_captura({
         "matriz_a": matriz, "vector_b": [0, *inicio[1:]], "vector_inicial": inicio,
