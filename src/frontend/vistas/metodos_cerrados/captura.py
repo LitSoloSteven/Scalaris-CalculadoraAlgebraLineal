@@ -1,8 +1,9 @@
 """Controles y borradores de los métodos cerrados."""
 from nicegui import ui
 
-from src.backend.resolutores.raices.limites_raices import LIMITE_ITERACIONES_DEFECTO, LONGITUD_MAXIMA_EXPRESION
+from src.backend.resolutores.raices.limites_raices import LIMITE_ITERACIONES_DEFECTO
 from src.backend.resolutores.raices.unidades_angulares import UNIDADES_ANGULARES, UNIDAD_ANGULAR_DEFECTO
+from src.frontend.componentes.campo_funcion_real import crear_campo_funcion
 from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
 from src.frontend.componentes.modos_captura_raices import MODO_BUSQUEDA, MODO_INTERVALO, construir_modos, region_modo
 from src.frontend.componentes.previa_expresion_raices import PreviaExpresion
@@ -45,8 +46,7 @@ class CapturaMetodosCerrados:
         with ui.element("form").classes("w-full column gap-3").on("submit.prevent", self.vista.enviar):
             opciones = tuple((metodo, nombre, nombre) for metodo, nombre in METODOS.items())
             self.metodo = SelectorOpciones(opciones, self._metodo, self._cambiar_metodo, "Método de resolución")
-            self.expresion = ui.input("Función f(x)", placeholder="Ejemplo: x^2 - 2").classes(
-                "matriz-entrada w-full").props(f"maxlength={LONGITUD_MAXIMA_EXPRESION} autocomplete=off spellcheck=false")
+            self.expresion = crear_campo_funcion()
             self.previa_expresion = PreviaExpresion()
             self.unidad = ui.select({valor: valor.capitalize() for valor in UNIDADES_ANGULARES},
                                     value=UNIDAD_ANGULAR_DEFECTO,

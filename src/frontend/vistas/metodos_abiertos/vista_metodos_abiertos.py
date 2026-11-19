@@ -1,6 +1,7 @@
 """Composición de la captura, la gráfica previa y la solución de raíces."""
 from nicegui import ui
 
+from src.frontend.componentes.campo_funcion_real import crear_campo_funcion
 from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.estructura_metodos_raices import montar_estructura_metodos_raices
 from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
@@ -65,8 +66,7 @@ class VistaMetodosAbiertos:
              ("secante", "Secante", "Secante")),
             "newton", self._cambio_metodo, "Método de resolución",
         ).classes("metodos-abiertos-metodo")
-        self.expresion = ui.input("Función f(x)", value="x^3 - x - 2").props(
-            "maxlength=512 autocomplete=off").classes("matriz-entrada w-full")
+        self.expresion = crear_campo_funcion(valor="x^3 - x - 2", ejemplo=None)
         self._construir_campos()
         self._construir_acciones()
 
