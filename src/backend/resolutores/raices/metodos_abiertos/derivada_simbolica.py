@@ -1,8 +1,11 @@
 """Derivación simbólica sobre el AST acotado de la gramática de funciones reales."""
 import ast
 
-from ..gramatica_funcion import CONSTANTES_REALES, analizar_expresion
+from ..gramatica_funcion import analizar_expresion
 from ..normalizacion_funcion import normalizar_expresion
+from .nodos_derivada import (
+    constante as _constante, depende_de_x as _depende_de_x, llamada as _llamada, valor_constante as _valor_constante,
+)
 
 _MENSAJE_POTENCIA_VARIABLE = (
     "La derivada de una potencia con base y exponente variables no está disponible "
@@ -169,6 +172,16 @@ def _regla_raiz_cuadrada(argumento: ast.AST, derivada: ast.AST) -> ast.AST:
     return _cociente(derivada, _producto(_constante(2), _llamada("sqrt", argumento)))
 
 
+def _regla_raiz_cubica(argumento: ast.AST, derivada: ast.AST) -> ast.AST:
+    cuadrado = _potencia(_llamada("cbrt", argumento), _constante(2))
+    return _cociente(derivada, _producto(_constante(3), cuadrado))
+
+
+def _regla_raiz_cuarta(argumento: ast.AST, derivada: ast.AST) -> ast.AST:
+    cubo = _potencia(_llamada("raiz4", argumento), _constante(3))
+    return _cociente(derivada, _producto(_constante(4), cubo))
+
+
 def _regla_valor_absoluto(argumento: ast.AST, derivada: ast.AST) -> ast.AST:
     return _cociente(_producto(argumento, derivada), _llamada("abs", argumento))
 
@@ -189,30 +202,10 @@ _REGLAS_LLAMADA = {
     "log10": _regla_logaritmo_decimal,
     "log2": _regla_logaritmo_binario,
     "sqrt": _regla_raiz_cuadrada,
+    "cbrt": _regla_raiz_cubica,
+    "raiz4": _regla_raiz_cuarta,
     "abs": _regla_valor_absoluto,
 }
-
-
-def _depende_de_x(nodo: ast.AST) -> bool:
-    return any(isinstance(hijo, ast.Name) and hijo.id == "x" for hijo in ast.walk(nodo))
-
-
-def _constante(valor: int | float) -> ast.Constant:
-    if isinstance(valor, float) and valor.is_integer():
-        return ast.Constant(value=int(valor))
-    return ast.Constant(value=valor)
-
-
-def _llamada(nombre: str, argumento: ast.AST) -> ast.Call:
-    return ast.Call(func=ast.Name(id=nombre, ctx=ast.Load()), args=[argumento], keywords=[])
-
-
-def _valor_constante(nodo: ast.AST) -> int | float | None:
-    if isinstance(nodo, ast.Constant) and type(nodo.value) in (int, float):
-        return nodo.value
-    if isinstance(nodo, ast.Name) and nodo.id in CONSTANTES_REALES:
-        return CONSTANTES_REALES[nodo.id]
-    return None
 
 
 def _es_cero(nodo: ast.AST) -> bool:
