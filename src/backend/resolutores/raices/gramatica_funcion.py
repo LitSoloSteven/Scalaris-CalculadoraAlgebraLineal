@@ -10,7 +10,8 @@ FUNCIONES_REALES = {"sin": math.sin, "cos": math.cos, "tan": math.tan, "exp": ma
                    "log": math.log, "ln": math.log, "log10": math.log10, "log2": math.log2,
                    "asin": math.asin, "acos": math.acos, "atan": math.atan,
                    "sinh": math.sinh, "cosh": math.cosh, "tanh": math.tanh,
-                   "sqrt": math.sqrt, "abs": abs}
+                   "sqrt": math.sqrt, "cbrt": math.cbrt, "raiz4": lambda valor: math.sqrt(math.sqrt(valor)),
+                   "abs": abs}
 CONSTANTES_REALES = {"pi": math.pi, "e": math.e}
 MAXIMO_NODOS_EXPRESION = 256
 MAXIMA_PROFUNDIDAD_EXPRESION = 32
