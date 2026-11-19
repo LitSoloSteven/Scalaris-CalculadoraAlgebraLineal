@@ -16,9 +16,8 @@ from .validacion_jacobi import (
 
 
 def resolver_jacobi(entrada: EntradaJacobi) -> ResultadoJacobi:
-    """Resuelve Ax=b por Jacobi con tolerancia absoluta sobre la norma infinito del residuo.
-    Cada iteración usa solo el vector anterior y un fallo de entrada se devuelve diagnosticado.
-    """
+    """Resuelve Ax=b desde una Matriz ya exacta, con tolerancia sobre la norma infinito del residuo.
+    Para coeficientes ingresados por el usuario, usa resolver_jacobi_desde_captura."""
     return _resolver_validacion(preparar_entrada(entrada))
 
 
@@ -117,16 +116,12 @@ def _norma_cambio(
     nuevo: tuple[Fraction, ...],
     presupuesto: PresupuestoAritmetico,
 ) -> Fraction:
-    """Devuelve la norma infinito de la diferencia usando el presupuesto."""
-    diferencias = []
-    for componente, previo in zip(nuevo, anterior):
-        presupuesto.consumir()
-        diferencias.append(
-            presupuesto.registrar(componente - previo, MAXIMO_BITS_CAMBIO_JACOBI)
-        )
-    return presupuesto.registrar(
-        norma_infinito(tuple(diferencias)), MAXIMO_BITS_CAMBIO_JACOBI,
+    """Devuelve la norma infinito de la diferencia con la cota de tamaño de la traza."""
+    diferencias = tuple(
+        presupuesto.registrar(componente - previo, MAXIMO_BITS_CAMBIO_JACOBI)
+        for componente, previo in zip(nuevo, anterior, strict=True)
     )
+    return norma_infinito(diferencias)
 
 
 def _resultado_con_vector(

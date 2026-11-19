@@ -22,7 +22,7 @@ CampoJacobi = Literal[
 
 @dataclass(frozen=True, kw_only=True)
 class EntradaJacobi:
-    """Recibe A como Matriz y admite texto racional en los vectores y la tolerancia.
+    """Recibe una Matriz exacta desde su origen y admite texto racional en vectores y tolerancia.
     La tolerancia positiva acota la norma infinito de b - A·x. El máximo cuenta actualizaciones completas."""
 
     matriz_a: Matriz
