@@ -11,6 +11,7 @@ from src.frontend import banderas
 from src.frontend.componentes.iconos import icono_svg
 from src.frontend.componentes.selector_tema import renderizar_boton_tema
 from src.frontend.navegacion import (
+    ESCENAS_VISUALIZADOR,
     RUTA_INICIO,
     ORDEN_NAVEGACION_PLANA,
     predeterminado_elemento_clave,
@@ -21,21 +22,23 @@ from src.frontend.navegacion import (
     herramienta_por_ruta,
 )
 
+_CLAVES_ESCENAS = frozenset(f"vis:{escena}" for escena, *_ in ESCENAS_VISUALIZADOR)
+
 
 def crear_barra_navegacion(interfaz_activa=None, ruta_activa: str = "/", clave_activa: str | None = None, al_alternar_ia=None):
     """Genera la barra de navegación contextual plana o por pilares según banderas."""
     clave_activa = predeterminado_elemento_clave(ruta_activa) if clave_activa is None else clave_activa
+    contextual = banderas.navegacion_actualizada()
 
     with ui.header().classes("navegacion-cabecera").props("reveal"):
         _renderizar_logotipo()
         with ui.element("div").classes("panel-tarjeta navegacion-capsula pointer-events-auto"):
-            if not banderas.navegacion_actualizada():
+            if not contextual:
                 _renderizar_barra_plana(interfaz_activa, ruta_activa, al_alternar_ia)
             else:
                 _renderizar_barra_pilares(ruta_activa, clave_activa)
 
-    if banderas.navegacion_actualizada():
-        _registrar_navegacion_reciente(ruta_activa)
+    _registrar_navegacion_reciente(ruta_activa, clave_activa=clave_activa, centrar=contextual)
 
 
 def _renderizar_logotipo() -> None:
@@ -125,19 +128,34 @@ def _renderizar_elemento_pilar(elemento: Any, clave_activa: str) -> None:
         ui.html(html.escape(elemento.etiqueta), tag="span").classes("navegacion-etiqueta-completa")
 
 
-def _registrar_navegacion_reciente(ruta_activa: str) -> None:
+def _clave_reciente_valida(ruta_activa: str, clave_activa: str | None) -> str | None:
+    """Devuelve el identificador o la clave de escena validada para el historial."""
+    herramienta_activa = herramienta_por_ruta(ruta_activa)
+    if herramienta_activa is None or not herramienta_activa.habilitada:
+        return None
+    if herramienta_activa.identificador == "visualizador":
+        if clave_activa in _CLAVES_ESCENAS:
+            return clave_activa
+        return predeterminado_elemento_clave(ruta_activa)
+    return herramienta_activa.identificador
+
+
+def _registrar_navegacion_reciente(
+    ruta_activa: str, clave_activa: str | None = None, centrar: bool = True
+) -> None:
     """Registra la herramienta reciente y deja visible su enlace sin mover el foco."""
     from nicegui import context
     cliente = context.client
-    herramienta_activa = herramienta_por_ruta(ruta_activa)
+    clave_reciente = _clave_reciente_valida(ruta_activa, clave_activa)
 
     def registrar():
         """Espera la conexión inicial antes de enviar el registro al navegador."""
-        if herramienta_activa is not None:
+        if clave_reciente is not None:
             cliente.run_javascript(
-                f"window.scalaris?.recientes?.registrar?.({json.dumps(herramienta_activa.identificador)});"
+                f"window.scalaris?.recientes?.registrar?.({json.dumps(clave_reciente)});"
             )
-        cliente.run_javascript("window.scalaris?.navegacion?.centrarActivo?.();")
+        if centrar:
+            cliente.run_javascript("window.scalaris?.navegacion?.centrarActivo?.();")
 
     if cliente.has_socket_connection:
         registrar()
