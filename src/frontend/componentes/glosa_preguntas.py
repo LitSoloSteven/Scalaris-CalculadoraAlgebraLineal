@@ -1,4 +1,5 @@
 """Preguntas contextuales, seguimientos y reintentos del asistente Glosa."""
+from collections.abc import Callable
 from typing import Any
 from nicegui import ui
 from src.frontend.componentes.sonido import notificar
@@ -37,7 +38,7 @@ class PreguntasGlosaMixin:
 
         self._lanzar_tarea(self._enviar_consulta(seguimiento.pregunta, almacenable_en_cache=False, mas_simple=seguimiento.mas_simple))
 
-    def disparar_explicacion_paso(self, meta_paso: dict[str, Any]) -> None:
+    def disparar_explicacion_paso(self, meta_paso: dict[str, Any], *, sigue_vigente: Callable[[], bool] | None = None) -> None:
         """Inicia la explicacion didactica de un paso procedimental."""
         if self._rechazar_si_ocupado():
             return
@@ -54,7 +55,12 @@ class PreguntasGlosaMixin:
             meta_paso.get("total", 1),
             meta_paso.get("operacion", ""),
         )
-        self._lanzar_tarea(self._enviar_consulta(pregunta, almacenable_en_cache=True, mas_simple=True))
+        self._lanzar_tarea(self._enviar_explicacion(pregunta, sigue_vigente))
+
+    async def _enviar_explicacion(self, pregunta: str, sigue_vigente: Callable[[], bool] | None) -> None:
+        if sigue_vigente is None or sigue_vigente():
+            await self._enviar_consulta(pregunta, almacenable_en_cache=True, mas_simple=True,
+                                        permitir_reintento=sigue_vigente is None)
 
     def _rechazar_si_ocupado(self) -> bool:
         if not getattr(self, "_esta_enviando", False):
@@ -67,6 +73,8 @@ class PreguntasGlosaMixin:
 
     def _reintentar_ultimo_mensaje(self) -> None:
         """Reintenta el ultimo mensaje enviado tras un fallo recuperable."""
+        if not self.historial_chat or not self.historial_chat[-1].get("reintentar"):
+            return
         ultimo_usuario = next((mensaje for mensaje in reversed(self.historial_chat) if mensaje.get("enviado")), None)
         if self.historial_chat and self.historial_chat[-1].get("error"):
             self.historial_chat.pop()

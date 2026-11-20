@@ -12,6 +12,7 @@ class PresentacionCandidatos:
 
     indicacion: str
     clase_numero: str
+    mensaje_vacio: str = "No se detectaron candidatos en este rango. Cambia el rango o ajusta el paso en Avanzado."
 
 
 def mostrar_candidatos(respuesta: dict, seleccionar: Callable, presentacion: PresentacionCandidatos) -> None:
@@ -22,8 +23,7 @@ def mostrar_candidatos(respuesta: dict, seleccionar: Callable, presentacion: Pre
         f"{presentacion.clase_numero} texto-secundario")
     total = len(respuesta["candidatos"])
     if not total:
-        ui.label("No se detectaron candidatos en este rango. Cambia el rango o ajusta el paso en Avanzado.").classes(
-            "texto-secundario")
+        ui.label(presentacion.mensaje_vacio).classes("texto-secundario")
         return
     ui.label(f"{total} candidato" + ("s" if total != 1 else "")).classes("font-semibold texto-principal")
     ui.label(presentacion.indicacion).classes(

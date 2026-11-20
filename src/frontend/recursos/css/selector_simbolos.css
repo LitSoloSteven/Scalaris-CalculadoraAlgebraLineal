@@ -1,0 +1,117 @@
+.simbolos-dialogo {
+    width: min(42rem, calc(100% - var(--space-6)));
+    max-height: calc(100dvh - var(--space-6));
+    margin: auto;
+    padding: var(--space-5);
+    border: 1px solid var(--border-input);
+    border-radius: var(--radius-card);
+    color: var(--text-main);
+    background: var(--bg-elevated);
+    overscroll-behavior: contain;
+}
+
+.simbolos-dialogo::backdrop {
+    background: var(--scrim);
+}
+
+.simbolos-cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-2);
+    margin-block-end: var(--space-4);
+}
+
+.simbolos-cabecera h2 {
+    font-size: var(--fs-h2);
+    line-height: 1.3;
+    font-weight: var(--fw-h2);
+}
+
+.simbolos-filtros,
+.simbolos-lista {
+    display: grid;
+    gap: var(--space-2);
+}
+
+.simbolos-filtros {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+}
+
+.simbolos-filtros label,
+.simbolos-copia {
+    min-width: 0;
+    color: var(--text-sec);
+    font-size: var(--fs-small);
+}
+
+.simbolos-filtros :is(input, select),
+.simbolos-copia input {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 44px;
+    margin-top: var(--space-1);
+    padding: var(--space-2);
+    border: 1px solid var(--border-input);
+    border-radius: var(--radius-input);
+    color: var(--input-text);
+    background: var(--input-bg);
+}
+
+.simbolos-estado {
+    margin-block: var(--space-3);
+    color: var(--text-sec);
+    font-size: var(--fs-small);
+}
+
+.simbolos-lista {
+    grid-template-columns: repeat(auto-fill, minmax(min(7.5rem, 100%), 1fr));
+}
+
+.simbolos-opcion,
+.simbolos-boton {
+    min-height: 44px;
+    padding: var(--space-2);
+    border: 1px solid var(--border-input);
+    border-radius: var(--radius-btn);
+    color: var(--text-main);
+    background: var(--bg-calc-btn);
+    cursor: pointer;
+}
+
+.simbolos-opcion {
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: var(--space-1);
+    font-size: var(--fs-small);
+    overflow-wrap: anywhere;
+}
+
+.simbolos-signo {
+    font-size: var(--fs-h1);
+    line-height: 1.2;
+}
+
+.simbolos-opcion small {
+    font-size: var(--fs-small);
+    color: var(--text-sec);
+}
+
+.simbolos-dialogo [data-mas-simbolos],
+.simbolos-copia {
+    margin-block-start: var(--space-3);
+}
+
+.simbolos-dialogo :focus-visible,
+.simbolos-boton:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+}
+
+@media (max-width: 480px) {
+    .simbolos-filtros {
+        grid-template-columns: 1fr;
+    }
+}

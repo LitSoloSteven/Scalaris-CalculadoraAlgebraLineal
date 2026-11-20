@@ -60,6 +60,7 @@ class EnvioGlosaMixin(PreguntasGlosaMixin):
         almacenable_en_cache: bool = False,
         mas_simple: bool = False,
         es_reintento: bool = False,
+        permitir_reintento: bool = True,
     ) -> None:
         """Coordina la validacion, llamada a la IA y renderizado de la respuesta."""
         if getattr(self, "_esta_enviando", False):
@@ -87,7 +88,7 @@ class EnvioGlosaMixin(PreguntasGlosaMixin):
             if self._contador_solicitudes == identificador_solicitud:
                 finalizar_envio(self, indicadores)
         if self._contador_solicitudes == identificador_solicitud and resultado.tipo_error != TipoErrorIA.CANCELADO:
-            self._procesar_resultado(resultado)
+            self._procesar_resultado(resultado, permitir_reintento=permitir_reintento)
 
     def _preparar_interfaz_envio(
         self, texto: str, *, almacenable_en_cache: bool, mas_simple: bool, es_reintento: bool
@@ -153,14 +154,16 @@ class EnvioGlosaMixin(PreguntasGlosaMixin):
             registro.error("Error inesperado en consulta de Glosa")
             return ResultadoIA(False, ERROR_SERVICIO, tipo_error=TipoErrorIA.SERVICIO)
 
-    def _procesar_resultado(self, resultado: ResultadoIA) -> None:
+    def _procesar_resultado(self, resultado: ResultadoIA, *, permitir_reintento: bool = True) -> None:
         """Inserta la respuesta exitosa o de error en la bitacora y la presenta."""
         try:
             validar_longitud_mensaje(resultado.texto)
         except ValueError:
             resultado = ResultadoIA(False, RESPUESTA_DEMASIADO_EXTENSA, TipoErrorIA.SERVICIO)
         if not resultado.exito:
-            puede_reintentar = resultado.tipo_error not in (TipoErrorIA.SIN_CLAVE, TipoErrorIA.AUTENTICACION)
+            puede_reintentar = permitir_reintento and resultado.tipo_error not in (
+                TipoErrorIA.SIN_CLAVE, TipoErrorIA.AUTENTICACION,
+            )
             mensaje = {"texto": resultado.texto, "enviado": False, "error": True, "reintentar": puede_reintentar}
         else:
             mensaje = {"texto": resultado.texto, "enviado": False, "error": False, "animar": True}

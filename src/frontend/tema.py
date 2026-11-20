@@ -78,6 +78,7 @@ _CABECERA_HTML = Template((_PLANTILLAS / "cabecera.html").read_text(encoding="ut
     configuracion_numerica=json.dumps({"caracteres": CARACTERES_ENTRADA_NUMERICA,
                                       "mensaje": MENSAJE_ENTRADA_NUMERICA}).replace("<", "\\u003c"),
     plantilla_presentacion=(_PLANTILLAS / "presentacion.html").read_text(encoding="utf-8"),
+    plantilla_simbolos=(_PLANTILLAS / "simbolos.html").read_text(encoding="utf-8"),
     etiquetas_interacciones=_etiquetas_recursos_cliente("catalogo_interacciones.json"),
     etiquetas_captura=_etiquetas_recursos_cliente("catalogo_captura.json"),
 )

@@ -1,7 +1,7 @@
 """Carga y finalización compartidas de solicitudes individuales de raíces."""
 import asyncio
 import logging
-from collections.abc import Callable
+from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 from typing import Any
 
@@ -21,7 +21,7 @@ class ConfiguracionCalculoRaices:
 
 async def resolver_calculo_raices(
     vista: Any, calcular: Callable[[dict], dict], configuracion: ConfiguracionCalculoRaices,
-    *, puntero: bool = False,
+    *, puntero: bool = False, ejecutar: Callable[[dict], Awaitable[Any]] | None = None,
 ) -> None:
     """Coordina vista, controlador y mensajes; devuelve None y gestiona errores/cancelación.
     La vista aporta captura, retiro y publicación; solo publica la solicitud vigente.
@@ -33,7 +33,7 @@ async def resolver_calculo_raices(
     _mostrar_carga(vista, True)
     vista.estado.set_text(configuracion.mensaje_carga)
     try:
-        vigente = await ejecutar_calculo_vigente(vista, vista.capturar, calcular)
+        vigente = await ejecutar_calculo_vigente(vista, vista.capturar, calcular, ejecutar=ejecutar)
         if vigente is not None and vista.tarea_calculo is tarea:
             vista._publicar(*vigente, puntero=puntero)
     except asyncio.CancelledError:

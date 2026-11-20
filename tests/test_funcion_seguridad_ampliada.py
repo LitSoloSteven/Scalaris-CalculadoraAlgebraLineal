@@ -15,7 +15,7 @@ from src.backend.resolutores.raices.normalizacion_funcion import normalizar_expr
     "sin(x=1)", "sin(x,1)", "sin(*x)", "sin(**x)", "sin()", "sin", "pi(1)",
     "e(1)", "funcion(x)", "sinx", "xx", "xp i", "True", "None", "1j",
     "x//2", "x%2", "x<2", "x|2", "x&2", "x # comentario", "ｘ+1", "sіn(x)",
-    "1 2", "x 2", "x**", "²x", "x⁴", "sin(x", "x)", "x\n+1",
+    "1 2", "x 2", "x**", "²x", "x₄", "sin(x", "x)", "x\n+1",
     "x* *2", "1 .2", "log 10(x)",
 ])
 def test_codigo_y_tokens_no_admitidos(expresion):

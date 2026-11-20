@@ -6,6 +6,7 @@ from nicegui import ui
 from src.frontend.componentes.sonido import notificar
 from src.backend.utilidades.estado_captura import captura_vacia
 from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
+from src.frontend.componentes.simbolos import habilitar_simbolos
 
 from src.frontend.componentes.panel_ia import PanelIA
 from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
@@ -98,6 +99,7 @@ class VistaOperacionesMatrices(MixinResultadosOperacionesMatrices, MixinContexto
             ).classes('matriz-entrada w-full text-xl py-2').props(
                 'borderless autocomplete="new-password" aria-label="Expresión matemática"'
             )
+            habilitar_simbolos(self.entrada_expresion, "matriz")
             self.entrada_expresion.on_value_change(lambda _: self._al_cambiar_matriz())
 
             with ui.row().classes('w-full gap-4'):

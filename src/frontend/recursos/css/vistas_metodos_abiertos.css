@@ -1,31 +1,3 @@
-.metodos-abiertos-captura {
-  background: var(--bg-panel) !important;
-  color: var(--text-main);
-  border-radius: var(--radius-card) !important;
-}
-.metodos-abiertos-acciones.limpieza-acciones { flex-wrap: wrap; align-items: center; }
-.metodos-abiertos-calcular { min-height: 44px; padding-inline: var(--space-4); }
-.metodos-abiertos-boton-limpieza {
-  flex: 0 0 44px !important;
-  width: 44px !important;
-  min-width: 44px !important;
-  height: 44px !important;
-  min-height: 44px !important;
-  padding: 0 !important;
-  border-radius: var(--radius-btn) !important;
-}
-.metodos-abiertos-ejemplos { align-self: center; }
-.metodos-abiertos-ejemplos .q-field__control,
-.metodos-abiertos-ejemplos .q-field__marginal,
-.metodos-abiertos-ejemplos .q-field__native {
-  height: 44px;
-  min-height: 44px;
-}
-.metodos-abiertos-ejemplos .q-field__label { margin-inline-start: var(--space-2); }
-.metodos-abiertos-campos { flex-wrap: wrap; }
-.metodos-abiertos-campos .q-field { flex: 1 1 12rem; }
-.metodos-abiertos-vista { font-family: inherit; }
-.metodos-abiertos-resultados { gap: var(--space-5); }
 .metodos-abiertos-resumen {
   display: grid;
   gap: var(--space-4);
@@ -109,23 +81,30 @@
 }
 .q-table th, .q-table td { white-space: nowrap; }
 .q-table__middle { overflow-x: auto; }
-.metodos-abiertos-entrada { animation: entradaSuave var(--dur-press) var(--ease-std) both; }
-.metodos-abiertos-entrada-2 { animation-delay: var(--stagger-step); }
-.metodos-abiertos-entrada-3 { animation-delay: calc(2 * var(--stagger-step)); }
+:is(.metodos-abiertos-entrada, .metodos-raices-encabezado, .metodos-raices-captura, .metodos-raices-previa) {
+  animation: entradaSuave var(--dur-press) var(--ease-std) both;
+}
+.metodos-abiertos-entrada-2,
+.metodos-raices-captura { animation-delay: var(--stagger-step); }
+.metodos-abiertos-entrada-3,
+.metodos-raices-previa { animation-delay: calc(2 * var(--stagger-step)); }
 .metodos-abiertos-entrada-4 { animation-delay: calc(3 * var(--stagger-step)); }
 @media (hover: hover) and (pointer: fine) {
   .metodos-abiertos-fila:not(.q-tr--selected):hover { background: var(--hub-card-active-bg); }
 }
 @media (max-width: 700px) {
-  .metodos-abiertos-campos .q-field { flex-basis: 100%; }
   .metodos-abiertos-resumen { padding: var(--space-4) !important; }
   .metodos-abiertos-resumen-cuerpo { align-items: stretch; }
   .metodos-abiertos-metricas { width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .metodos-abiertos-entrada { animation: none !important; opacity: 1; transform: none; }
+  :is(.metodos-abiertos-entrada, .metodos-raices-encabezado, .metodos-raices-captura, .metodos-raices-previa) {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
 }
-html[data-entrada="teclado"] .metodos-abiertos-entrada {
+html[data-entrada="teclado"] :is(.metodos-abiertos-entrada, .metodos-raices-encabezado, .metodos-raices-captura, .metodos-raices-previa) {
   animation: none !important;
   opacity: 1;
   transform: none;

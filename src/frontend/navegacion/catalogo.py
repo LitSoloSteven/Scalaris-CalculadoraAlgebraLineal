@@ -20,8 +20,7 @@ _ETIQUETAS_CORTAS: dict[str, str] = {
     "factorizacion_lu": "LU",
     "bases": "Bases",
     "romanos": "Romanos",
-    "biseccion": "Bisección",
-    "regla_falsa": "Regla falsa",
+    "metodos_cerrados": "Cerrados",
     "metodos_abiertos": "Abiertos",
     "leontief": "Leontief",
     "transformaciones": "Transformaciones",
@@ -154,25 +153,14 @@ HERRAMIENTAS: tuple[Herramienta, ...] = (
         habilitada=True,
     ),
     Herramienta(
-        identificador="biseccion",
-        nombre="Método de bisección",
-        descriptor="Raíces con precisión configurable",
-        ruta="/utilidades/biseccion",
+        identificador="metodos_cerrados",
+        nombre="Métodos cerrados",
+        descriptor="Bisección y regla falsa",
+        ruta="/utilidades/metodos-cerrados",
         identificador_pilar="utilidades",
         icono="utilidades",
-        titulo_pagina="Método de bisección | Scalaris",
+        titulo_pagina="Métodos cerrados | Scalaris",
         ejemplo_latex=r"c = \frac{a+b}{2}",
-        habilitada=True,
-    ),
-    Herramienta(
-        identificador="regla_falsa",
-        nombre="Método de regla falsa",
-        descriptor="Raíces por secantes con control de residuo",
-        ruta="/utilidades/regla-falsa",
-        identificador_pilar="utilidades",
-        icono="utilidades",
-        titulo_pagina="Método de regla falsa | Scalaris",
-        ejemplo_latex=r"c = a - f(a)\frac{b-a}{f(b)-f(a)}",
         habilitada=True,
     ),
     Herramienta(
@@ -210,7 +198,33 @@ HERRAMIENTAS: tuple[Herramienta, ...] = (
     ),
 )
 
-_HERRAMIENTAS_POR_IDENTIFICADOR: dict[str, Herramienta] = {herramienta.identificador: herramienta for herramienta in HERRAMIENTAS}
+_ALIAS_METODOS_CERRADOS: tuple[Herramienta, ...] = (
+    Herramienta(
+        identificador="biseccion",
+        nombre="Método de bisección",
+        descriptor="Raíces con precisión configurable",
+        ruta="/utilidades/biseccion",
+        identificador_pilar="utilidades",
+        icono="utilidades",
+        titulo_pagina="Método de bisección | Scalaris",
+        ejemplo_latex=r"c = \frac{a+b}{2}",
+        habilitada=False,
+    ),
+    Herramienta(
+        identificador="regla_falsa",
+        nombre="Método de regla falsa",
+        descriptor="Raíces por secantes con control de residuo",
+        ruta="/utilidades/regla-falsa",
+        identificador_pilar="utilidades",
+        icono="utilidades",
+        titulo_pagina="Método de regla falsa | Scalaris",
+        ejemplo_latex=r"c = a - f(a)\frac{b-a}{f(b)-f(a)}",
+        habilitada=False,
+    ),
+)
+_HERRAMIENTAS_POR_IDENTIFICADOR: dict[str, Herramienta] = {
+    herramienta.identificador: herramienta for herramienta in (*HERRAMIENTAS, *_ALIAS_METODOS_CERRADOS)
+}
 
 ORDEN_NAVEGACION_PLANA: tuple[str, ...] = (
     "sistemas",
@@ -224,7 +238,6 @@ ORDEN_NAVEGACION_PLANA: tuple[str, ...] = (
     "visualizador",
     "bases",
     "romanos",
-    "biseccion",
-    "regla_falsa",
+    "metodos_cerrados",
     "metodos_abiertos",
 )

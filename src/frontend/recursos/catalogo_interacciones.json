@@ -1,5 +1,7 @@
 [
     "foco_modal.js",
+    "catalogo_simbolos.js",
+    "selector_simbolos.js",
     "interacciones_globales.js",
     "observacion_dom.js",
     "catalogo_sonidos.js",

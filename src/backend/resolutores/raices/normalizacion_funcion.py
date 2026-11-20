@@ -2,19 +2,29 @@
 import io
 import re
 import tokenize
+from unicodedata import normalize
 
 from .limites_biseccion import LONGITUD_MAXIMA_EXPRESION
 
 _OPERADORES = {"+", "-", "*", "/", "**", "^", "(", ")"}
 _OMITIDOS = {tokenize.NL, tokenize.NEWLINE, tokenize.ENDMARKER}
-_SUPERINDICES = str.maketrans({"²": "2", "³": "3"})
+_DIGITOS_SUPERIORES = "⁰¹²³⁴⁵⁶⁷⁸⁹"
+_SUPERINDICES = str.maketrans(_DIGITOS_SUPERIORES + "⁺⁻", "0123456789+-")
+_POTENCIA_TIPOGRAFICA = re.compile(rf"[⁺⁻]?[{_DIGITOS_SUPERIORES}]+")
+_FRACCIONES = "¼½¾⅐⅑⅒⅓⅔⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞↉"
+_SIMBOLOS = str.maketrans({
+    "−": "-", "×": "*", "·": "*", "⋅": "*", "∙": "*",
+    "÷": "/", "⁄": "/", "∕": "/", "√": " sqrt", "∛": " cbrt", "∜": " raiz4",
+    "π": " pi ", "ℯ": " e ",
+    **{fraccion: "(" + normalize("NFKC", fraccion).replace("⁄", "/") + ")" for fraccion in _FRACCIONES},
+})
 
 
 def normalizar_expresion(expresion: str) -> str:
     """Devuelve sintaxis explícita; lanza ValueError ante símbolos o longitud inválidos."""
     _comprobar_longitud(expresion)
-    texto = expresion.strip().replace("−", "-")
-    texto = re.sub(r"[²³]+", lambda grupo: "**" + grupo[0].translate(_SUPERINDICES), texto)
+    texto = expresion.translate(_SIMBOLOS).strip()
+    texto = _POTENCIA_TIPOGRAFICA.sub(lambda grupo: "**" + grupo[0].translate(_SUPERINDICES), texto)
     _comprobar_longitud(texto)
     tokens = _obtener_tokens(texto)
     partes = []

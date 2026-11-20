@@ -2,13 +2,12 @@
 import asyncio
 
 from nicegui import ui
-from src.frontend.componentes.informe_continuidad_raices import mostrar_informe_continuidad
+from src.frontend.componentes.informe_continuidad_raices import mostrar_consulta_continuidad
 
 from src.frontend.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
 from src.frontend.controladores.actualizacion_cancelable import cancelar_actualizacion, programar_actualizacion
 from src.frontend.controladores.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
 from src.frontend.controladores.regla_falsa.continuidad_intervalo import CLAVES_CONTINUIDAD, consultar_continuidad
-from src.frontend.controladores.biseccion.presentacion import numero
 
 
 class PanelContinuidad:
@@ -80,15 +79,8 @@ class PanelContinuidad:
         with self.region:
             ui.label("Continuidad previa; el diagnóstico del cálculo será la referencia final.").classes(
                 "text-sm texto-secundario")
-            respuesta = self.respuesta or {}
-            if respuesta.get("informe") is not None:
-                mostrar_informe_continuidad(respuesta["informe"], "regla-falsa-numero texto-principal")
-                for evaluacion in respuesta["evaluaciones"]:
-                    valor = evaluacion["mensaje"] if evaluacion["codigo"] else numero(evaluacion["valor"], True)
-                    ui.label(f"f({numero(evaluacion['abscisa'], True)}) = {valor}").classes(
-                        "regla-falsa-numero text-sm texto-secundario")
-            if mensaje or respuesta.get("fallo"):
-                ui.label(mensaje or respuesta["fallo"]["mensaje"]).classes("texto-advertencia text-sm")
+            mostrar_consulta_continuidad(self.respuesta or {}, "regla-falsa-numero texto-principal",
+                                        "regla-falsa-numero text-sm texto-secundario", mensaje)
 
     def disponible(self) -> bool:
         """Indica si los nodos y el cliente admiten publicaciones."""

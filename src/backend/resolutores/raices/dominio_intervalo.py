@@ -9,6 +9,7 @@ from .polos_trigonometricos import comprobar_polos_tangente
 from .unidades_angulares import validar_unidad_angular
 
 Afin = tuple[Fraction, Fraction]
+_RAICES_PARES = {"sqrt": "cuadrada", "raiz4": "cuarta"}
 
 
 def argumento_afin(nodo: ast.AST) -> Afin | None:
@@ -58,8 +59,8 @@ def _comprobar_funcion(nodo: ast.Call, extremos: tuple, unidad: str) -> None:
         comprobar_polos_tangente(rango, unidad)
     if nombre in ("log", "ln", "log10", "log2") and rango[0] <= 0:
         raise ErrorDominio("El logaritmo no es real o no está definido en todo el intervalo.")
-    if nombre == "sqrt" and rango[0] < 0:
-        raise ErrorDominio("La raíz cuadrada no es real en todo el intervalo.")
+    if nombre in _RAICES_PARES and rango[0] < 0:
+        raise ErrorDominio(f"La raíz {_RAICES_PARES[nombre]} no es real en todo el intervalo.")
     if nombre in ("asin", "acos") and (rango[0] < -1 or rango[1] > 1):
         raise ErrorDominio("El argumento de la función trigonométrica inversa debe estar entre -1 y 1.")
 
@@ -72,7 +73,7 @@ def _contiene_cero(nodo: ast.AST, extremos: tuple) -> bool:
         return _contiene_cero(nodo.left, extremos) or _contiene_cero(nodo.right, extremos)
     if isinstance(nodo, ast.BinOp) and isinstance(nodo.op, ast.Pow):
         return _potencia_contiene_cero(nodo, extremos)
-    if isinstance(nodo, ast.Call) and nodo.func.id == "abs":
+    if isinstance(nodo, ast.Call) and nodo.func.id in ("abs", "cbrt", "raiz4"):
         return _contiene_cero(nodo.args[0], extremos)
     return False
 

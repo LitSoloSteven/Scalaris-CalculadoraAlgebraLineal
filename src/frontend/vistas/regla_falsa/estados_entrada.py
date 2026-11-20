@@ -8,8 +8,9 @@ from .estado_captura import CAMPOS
 class EstadosEntrada:
     """Conserva validación contextual en controles existentes sin publicar HTML de usuario."""
 
-    def __init__(self, vista):
+    def __init__(self, vista, activo=lambda: True):
         self.vista = vista
+        self.activo = activo
         self.revisados = set()
         self.mensajes = {}
 
@@ -29,16 +30,23 @@ class EstadosEntrada:
 
     def revisar(self, clave: str) -> None:
         """Revisa un campo visitado sin enfocar ni enviar un cálculo."""
+        if not self.activo():
+            return
         self.revisados.add(clave)
         self.actualizar()
 
     def actualizar(self) -> None:
         """Actualiza solo campos visitados tras una edición de la captura."""
         if self.revisados:
-            self._mostrar(errores_captura(self.vista.capturar()))
+            if self.activo():
+                self._mostrar(errores_captura(self.vista.capturar()))
+            else:
+                self.limpiar()
 
     def validar(self) -> bool:
         """Valida todos los campos y enfoca el primero inválido; devuelve si se puede enviar."""
+        if not self.activo():
+            return True
         self.revisados.update((*CAMPOS, "criterio"))
         errores = errores_captura(self.vista.capturar())
         self._mostrar(errores)

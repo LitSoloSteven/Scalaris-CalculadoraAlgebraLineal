@@ -8,6 +8,7 @@ from src.frontend.navegacion.catalogo import (
     _PILARES_POR_IDENTIFICADOR,
     _ETIQUETAS_CORTAS,
     _HERRAMIENTAS_POR_IDENTIFICADOR,
+    _ALIAS_METODOS_CERRADOS,
 )
 from src.frontend.navegacion.modelo import ElementoNavegacion, Pilar, Herramienta
 
@@ -20,7 +21,7 @@ def herramienta_por_identificador(identificador_herramienta: str) -> Herramienta
 
 
 def ruta_de(identificador_herramienta: str) -> str:
-    """Devuelve la ruta canónica asociada a la herramienta."""
+    """Devuelve la ruta registrada para un identificador canónico o anterior."""
     return herramienta_por_identificador(identificador_herramienta).ruta
 
 
@@ -30,6 +31,8 @@ def herramienta_por_ruta(ruta: str) -> Herramienta | None:
     consulta = urllib.parse.parse_qs(urllib.parse.urlsplit(ruta).query)
     if ruta_limpia == ruta_de("matrices") and consulta.get("operacion") == ["determinante"]:
         return herramienta_por_identificador("determinantes")
+    if ruta_limpia in {alias.ruta for alias in _ALIAS_METODOS_CERRADOS}:
+        return herramienta_por_identificador("metodos_cerrados")
     for herramienta in HERRAMIENTAS:
         if herramienta.ruta.rstrip("/") == ruta_limpia:
             return herramienta

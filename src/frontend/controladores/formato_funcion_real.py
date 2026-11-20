@@ -12,6 +12,7 @@ _FUNCIONES = {
     "sinh": r"\sinh", "cosh": r"\cosh", "tanh": r"\tanh",
 }
 _ATOMO = 5
+_INDICES_RAIZ = {"sqrt": "", "cbrt": "[3]", "raiz4": "[4]"}
 
 
 def formatear_expresion(expresion: str, etiqueta: str = "f(x)") -> dict[str, str]:
@@ -58,8 +59,8 @@ def _agrupar(proyeccion: tuple[str, int], minima: int) -> str:
 def _proyectar_llamada(nodo: ast.Call) -> str:
     nombre = nodo.func.id
     argumento, _ = _proyectar(nodo.args[0])
-    if nombre == "sqrt":
-        return rf"\sqrt{{{argumento}}}"
+    if nombre in _INDICES_RAIZ:
+        return rf"\sqrt{_INDICES_RAIZ[nombre]}{{{argumento}}}"
     if nombre == "abs":
         return rf"\left|{argumento}\right|"
     return rf"{_FUNCIONES[nombre]}\left({argumento}\right)"
