@@ -4,6 +4,7 @@ from concurrent.futures import ThreadPoolExecutor
 from decimal import Decimal, localcontext
 from fractions import Fraction
 from math import factorial
+from threading import Barrier
 import json
 import sys
 
@@ -34,11 +35,11 @@ def test_generadores_largos_reutilizan_la_reduccion_para_certificar_la_base(matr
     reducciones = []
     reducir = motor.ReductorFilas.reducir
 
-    def contar_reduccion(reductor):
+    def _contar_reduccion(reductor):
         reducciones.append(reductor.matriz.columnas)
         return reducir(reductor)
 
-    monkeypatch.setattr(motor.ReductorFilas, "reducir", contar_reduccion)
+    monkeypatch.setattr(motor.ReductorFilas, "reducir", _contar_reduccion)
     columnas = list(zip(*matriz_de_cauchy))
     entrada = capturar_generadores({
         "modo": "generadores", "dimension_ambiente": 10,
@@ -122,23 +123,25 @@ def test_restricciones_rechazan_una_base_incompleta_o_dependiente(coeficiente, d
 def test_conversion_concurrente_de_enteros_largos_preserva_el_limite_global(monkeypatch):
     """Fuerza la conversión larga en paralelo y verifica que el intérprete no se reconfigure."""
     limite = sys.get_int_max_str_digits()
+    barrera = Barrier(2, timeout=5)
 
-    def exceder_limite(_):
+    def _exceder_limite(_):
         raise ValueError("Entero fuera del límite decimal")
 
-    def rechazar_cambio(_):
+    def _rechazar_cambio(_):
         pytest.fail("La conversión no debe modificar el límite del intérprete.")
 
-    def convertir(entero):
+    def _convertir(entero):
         with localcontext() as contexto:
             contexto.prec = 2
+            barrera.wait()
             return conversion_fracciones.texto_entero_exacto(entero)
 
-    monkeypatch.setattr(conversion_fracciones, "str", exceder_limite, raising=False)
-    monkeypatch.setattr(sys, "set_int_max_str_digits", rechazar_cambio)
+    monkeypatch.setattr(conversion_fracciones, "str", _exceder_limite, raising=False)
+    monkeypatch.setattr(sys, "set_int_max_str_digits", _rechazar_cambio)
     enteros = (10**4500 + 19, -(10**5000 + 23))
     with ThreadPoolExecutor(max_workers=2) as ejecutor:
-        resultados = list(ejecutor.map(convertir, enteros))
+        resultados = list(ejecutor.map(_convertir, enteros))
 
     assert resultados == ["1" + "0" * 4498 + "19", "-1" + "0" * 4998 + "23"]
     assert sys.get_int_max_str_digits() == limite
