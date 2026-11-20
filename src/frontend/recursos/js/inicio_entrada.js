@@ -1,4 +1,4 @@
-/** Libera la entrada del inicio después de la presentación y de montar las tarjetas. */
+/** Libera la entrada del inicio después de la presentación y de montar el directorio. */
 'use strict';
 {
   if (location.pathname === '/' && !window.scalaris.entradaInicio) {
@@ -22,7 +22,7 @@
     }
 
     function comprobarContenido() {
-      if (completada || !document.querySelector('.inicio-raiz .inicio-fila')) return;
+      if (completada || !document.querySelector('.inicio-directorio[data-directorio-listo] .inicio-enlace[href]')) return;
       observador?.disconnect();
       if (document.body) document.body.classList.add('inicio-pagina');
       fotograma = requestAnimationFrame(() => { fotograma = requestAnimationFrame(finalizar); });
@@ -37,7 +37,7 @@
 
     window.addEventListener('pagehide', finalizar);
     const presentacion = window.scalaris.presentacion;
-    if (presentacion?.activa) presentacion.terminada.then(esperarContenido);
+    if (presentacion?.activa) presentacion.terminada.then(esperarContenido, esperarContenido);
     else esperarContenido();
   }
 }
