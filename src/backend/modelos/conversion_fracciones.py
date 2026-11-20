@@ -1,6 +1,6 @@
-"""Conversión exacta para operaciones de filas sin reconstruir racionales canónicos."""
+"""Conversión exacta de racionales para operaciones de filas y serialización."""
+from decimal import Decimal
 from fractions import Fraction
-import sys
 
 
 def convertir_fraccion(valor: int | float | Fraction) -> Fraction:
@@ -18,18 +18,7 @@ def texto_entero_exacto(valor: int) -> str:
     try:
         return str(valor)
     except ValueError:
-        return _convertir_entero_largo(valor)
-
-
-def _convertir_entero_largo(valor: int) -> str:
-    """Amplía temporalmente el límite justo hasta los dígitos estimados del entero."""
-    limite_anterior = sys.get_int_max_str_digits()
-    digitos = int(abs(valor).bit_length() * 0.302) + 2
-    sys.set_int_max_str_digits(max(640, digitos))
-    try:
-        return str(valor)
-    finally:
-        sys.set_int_max_str_digits(limite_anterior)
+        return format(Decimal(valor), "f")
 
 
 def texto_fraccion_exacta(valor: int | Fraction) -> str:
