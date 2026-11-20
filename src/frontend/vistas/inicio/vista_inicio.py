@@ -64,7 +64,7 @@ def _renderizar_grupo(grupo: GrupoInicio) -> None:
 
 def _renderizar_seccion(seccion: SeccionInicio, indice: int) -> None:
     identificador_titulo = f"inicio-titulo-{seccion.identificador}"
-    gesto = f"seccion-{seccion.identificador}"
+    gesto = seccion.icono
     with ui.element("section").classes("inicio-seccion").classes(
         add="inicio-seccion-numeracion" if seccion.identificador == "sistemas-numeracion" else ""
     ).props(f'aria-labelledby="{identificador_titulo}"').style(f"--inicio-indice: {indice}"):
