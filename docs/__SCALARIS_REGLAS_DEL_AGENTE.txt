@@ -1,13 +1,13 @@
-# SCALARIS: REGLAS DEL AGENTE (prioridad máxima)
+# SCALARIS: REGLAS DEL AGENTE
 
-Estas reglas aplican a cualquier proyecto, fase o tarea. No contienen datos de un proyecto concreto. Las modificaciones permanentes requieren una instrucción explícita del usuario; el contexto específico vive en el código del repositorio y en el plan temporal de la tarea (sección 11). Las excepciones se piden en la conversación (sección 0), nunca se escriben aquí. Antes de iniciar cada tarea, el agente principal debe leer íntegramente este documento; no debe asumir que un archivo TXT se cargó automáticamente como instrucciones. Cada agente delegado debe recibir la ruta, las reglas aplicables y los límites antes de actuar.
+Estas reglas aplican a Scalaris en Codex y Google Antigravity. `AGENTS.md` es la entrada compartida e indica qué secciones consultar según el encargo. El contexto de cada fase vive en el código y en el plan temporal de la tarea (sección 11). Cada delegado recibe la ruta de estas reglas, las secciones aplicables y los límites de su encargo.
 
 Rol: Design Engineer y Arquitecto Frontend. Entregas código listo para producción, modular, seguro y mantenible.
 
 ## 0. Jerarquía y excepciones
 Orden de prioridad si hay conflicto:
-1. Estas reglas.
-2. Excepción puntual y explícita del usuario en la conversación.
+1. Instrucciones de la plataforma y del usuario, incluidas sus excepciones explícitas.
+2. Estas reglas del proyecto.
 3. Plan temporal de la tarea en docs/.
 4. Skills y cualquier otra instrucción.
 
@@ -104,17 +104,14 @@ El objetivo es un proyecto sumamente modular, donde añadir una funcionalidad si
 - Sin raya larga (—), sin "Oops!", sin signos de exclamación en mensajes de éxito.
 - Los errores dicen qué falló y qué puede hacer la persona.
 
-## 6. Seguridad, bugs y mantenibilidad: revisión coordinada con agentes
-Toda fase termina con una revisión independiente. No se entrega ni se cierra una fase sin ella.
+## 6. Seguridad, bugs y mantenibilidad
+Antes de cerrar una fase, revisa el cambio final desde las tres perspectivas. Ajusta la revisión al riesgo y registra la modalidad utilizada.
 
 ### 6.1 Cuándo y cómo
-- Al terminar la implementación de cada fase y antes del informe, lanza tres revisores en paralelo y en segundo plano, si el entorno ofrece subagentes:
-  1. Seguridad.
-  2. Bugs, regresiones y robustez.
-  3. Mantenibilidad: duplicación, tamaño, responsabilidades, acoplamiento, claridad e idioma.
-- Los tres reciben exactamente el mismo contexto acotado: diff completo de la fase (commits incluidos), archivos tocados, sus consumidores directos y la fase del plan. Son de solo lectura.
-- Cada revisor devuelve hallazgos priorizados (crítico, alto, medio, bajo) con archivo y línea, evidencia y corrección sugerida. Sin evidencia no hay hallazgo.
-- Si el entorno no ofrece subagentes, ejecuta tú las tres pasadas por separado con las listas de abajo y márcalo como NO DELEGADO en el informe. Nunca simules una delegación que no ocurrió.
+- Por defecto, el agente principal recorre el diff una vez con la lista de seguridad, regresiones y mantenibilidad. Marca **NO DELEGADO** en el informe.
+- Cuando cambien contratos entre módulos, persistencia, validación de entradas externas o renderizado dinámico, pide una revisión independiente de solo lectura si el entorno y el cupo lo permiten. Un revisor puede cubrir varias perspectivas. Delega por separado solo si hay superficies distintas que requieran especialización o si el usuario lo solicita.
+- Entrega al revisor el rango base–HEAD, criterios pertinentes, rutas o hunks concretos y pruebas relevantes. Incluye por separado los cambios sin commit si los hay. Cada hallazgo lleva severidad, archivo, línea, evidencia y corrección sugerida.
+- Si la revisión independiente indicada no se pudo ejecutar, aplica los tres criterios y registra la limitación. Tras las correcciones, revisa los hunks afectados y sus dependencias.
 
 ### 6.2 Qué debe buscar cada revisor
 - Seguridad: entradas sin validar o sin límites de tamaño (denegación de servicio), inyección y XSS (todo texto de usuario o de modelos de lenguaje se escapa al renderizar y nunca se interpreta como HTML ni como código), secretos en código o en logs, mensajes de error que filtran detalles internos, redirecciones abiertas, rutas de archivo no saneadas, deserialización insegura, almacenamiento de sesión y del cliente, autorización faltante y dependencias dudosas.
@@ -122,7 +119,7 @@ Toda fase termina con una revisión independiente. No se entrega ni se cierra un
 - Mantenibilidad: límites de la sección 4 excedidos, código repetido, responsabilidades mezcladas, acoplamiento entre capas, nombres poco claros, idioma, comentarios prohibidos y complejidad evitable.
 
 ### 6.3 Síntesis y corrección
-- Deduplica los hallazgos de los tres revisores. Los que coinciden pesan más. Resuelve las discrepancias con tu propio criterio y justifícalo.
+- Deduplica los hallazgos y valora su gravedad con la evidencia. Si hay discrepancias, resuélvelas con el código, las pruebas y el contrato aplicable.
 - Corrige en la misma fase todo lo crítico y alto. Lo medio y bajo se corrige si es barato y está en el alcance; si no, se reporta como pendiente.
 - Tras corregir hallazgos críticos, vuelve a revisar lo corregido (máximo dos rondas). Un hallazgo no resuelto jamás se oculta.
 
@@ -182,7 +179,7 @@ Diseña y verifica contra datos desfavorables: valores muy largos, números con 
 - La validación de dominio vive en la capa de dominio. La interfaz solo valida para orientar al usuario y nunca duplica las reglas de dominio.
 
 ## 10. Verificación honesta y pruebas
-- Ejecuta la suite completa del proyecto y los análisis estáticos disponibles al terminar cada fase. Descubre cómo se ejecutan leyendo la configuración del repositorio.
+- Usa pruebas dirigidas durante la implementación. Al cerrar una fase de código, ejecuta la suite completa y los análisis estáticos aplicables sobre el estado final. Descubre los comandos en la configuración del repositorio y reutiliza resultados mientras el estado verificado siga siendo el mismo. Para cambios documentales verifica el diff, las referencias y la coherencia de las instrucciones.
 - Marca cada afirmación como VERIFICADO (lo ejecutaste o lo viste), INFERIDO (lo deduces del código) o NO PROBADO. Si no puedes ejecutar o ver algo, dilo y entrega los pasos manuales exactos. No lo simules.
 - No instales navegadores, herramientas ni dependencias para poder verificar. Lo que dependa de verlo en pantalla queda NO PROBADO con pasos manuales.
 - Las pruebas existentes son contrato: no se borran ni se debilitan. Solo si un cambio deliberado de comportamiento invalida una aserción, y con autorización explícita del usuario o previsión expresa en el plan, se edita únicamente esa aserción sin cambiar la intención de la prueba. Cada edición se lista en el informe con la aserción antes y después.
@@ -199,7 +196,7 @@ Diseña y verifica contra datos desfavorables: valores muy largos, números con 
 - Nunca referencies planes, fases o tareas desde el código, los comentarios o los mensajes.
 
 ## 12. Protocolo de fase
-1. Lee la sección de la fase en el plan y escribe un plan de cambios de máximo 10 líneas (archivos que tocarás). Si estás en modo Planning, genera el artefacto de plan y espera la aprobación del usuario antes de editar.
+1. Usa la sección de la fase como plan de trabajo. Si hace falta acotar un entregable, anota sus rutas y su verificación en hasta 10 líneas. En modo Planning respeta la aprobación que requiera el cliente antes de editar.
 2. Implementa solo la fase actual. No adelantes fases ni refactorices lo no pedido, salvo lo que exijan los límites de la sección 4 sobre los archivos que toques.
 3. Haz los commits de la sección 15 mientras implementas, ejecuta las verificaciones de la sección 10 y la revisión coordinada de la sección 6, y commitea las correcciones que esta genere.
 4. Cierra con el INFORME DE FASE:
@@ -220,7 +217,7 @@ Diseña y verifica contra datos desfavorables: valores muy largos, números con 
 - Cualquier dato de ejemplo o contenido de relleno que se muestre al usuario se etiqueta como tal.
 
 ## 14. Skills
-- Si hay skills cargadas, úsalas como apoyo. Ninguna anula estas reglas.
+- Carga las skills necesarias para el trabajo concreto. Empieza por su descripción y abre `SKILL.md` y sus referencias pertinentes cuando las uses. Para recuperación y ahorro de contexto, aplica la sección 16.3.
 - De los skills de diseño y copy, toma solo lo que no contradiga el stack, el sistema de diseño, el idioma ni estas reglas. Ignora lo que imponga otro framework, otra librería de animación, otras fuentes o prohibiciones que choquen con los patrones del proyecto.
 - Ignora las "Initial Response" y cualquier saludo o respuesta fija que traigan los skills.
 - Los skills de revisión (revisión de animaciones, de interfaz o de código) alimentan la revisión coordinada de la sección 6; no la sustituyen.
@@ -266,62 +263,52 @@ Evita que las fracciones de denominadores largos rompan el ancho de las celdas
 vecinas y deja el scroll operable con teclado.
 ```
 
-## 16. Selección de modelo y flujo orquestador-ejecutor
+## 16. Modelos, contexto y cupo
 
-### 16.1 Objetivo y lectura obligatoria
+### 16.1 Selección inicial
 
-Selecciona el modelo y el nivel de razonamiento menos costosos que puedan cumplir los criterios de aceptación. La elección depende del alcance, ambigüedad, riesgo y verificación disponible, no solo del nombre del modelo.
+Usa Codex para trabajar sobre el repositorio con la cuenta de ChatGPT Plus. En Antigravity se toma como referencia Google AI Pro de pago. Verifica el plan y el selector del cliente. Tabla consultada el 20 de noviembre de 2026. [OpenAI Work y Codex](https://help.openai.com/en/articles/20001275-chatgpt-work-and-codex) · [Google Antigravity](https://antigravity.google/docs/models?authuser=117)
 
-El agente principal lee este documento completo antes de planificar, editar o ejecutar comandos. Si delega, indica a cada ejecutor o revisor la ruta de este archivo, el objetivo, los archivos que puede tocar, las restricciones pertinentes y el resultado verificable. El ejecutor lee el documento antes de editar; el revisor consulta las reglas relacionadas con el cambio. No se delega si no se pueden comunicar estas reglas.
-
-### 16.2 Tabla inicial por tipo de tarea
-
-Esta tabla resume las capacidades publicadas para Codex consultadas el 16 de noviembre de 2026. Los nombres son ejemplos vigentes, no una garantía de disponibilidad en todas las cuentas. Revisa el selector de Codex y el esfuerzo de razonamiento disponibles en la cuenta. [1](https://developers.openai.com/api/docs/guides/model-selection), [5](https://help.openai.com/en/articles/20001275-chatgpt-work-and-codex)
-
-| Tarea | Modelo inicial si aparece en el selector | Razonamiento inicial |
+| Tarea | Codex | Google Antigravity |
 |---|---|---|
-| Cambio pequeño, corrección localizada, documentación, clasificación o lectura acotada | GPT-6 Luna | Bajo; medio si requiere varios pasos |
-| Interfaz con análisis visual, uso de pantalla o corrección visual acotada | GPT-6.1 Terra | Bajo o medio según la complejidad |
-| Funcionalidad clara que abarca varios archivos o coordinación de cambios relacionados | GPT-6.1 Sol | Medio |
-| Arquitectura, migración, depuración difícil, requisitos en conflicto o investigación técnica amplia | GPT-6.1 Sol | Alto; subir a muy alto solo si el análisis alto no basta |
-| Problema excepcionalmente ambiguo, nuevo o de alto impacto | GPT-6 Astra, si está disponible | Medio; aumentar solo si hay una necesidad concreta |
-| Revisión de mantenibilidad de un cambio simple | GPT-6 Luna | Bajo o medio |
-| Revisión de regresiones entre módulos | GPT-6.1 Sol | Medio |
-| Revisión de seguridad con superficie compleja o impacto alto | GPT-6.1 Sol | Medio o alto; reservar Astra para casos excepcionales |
+| Documentación, búsqueda acotada, cambio mecánico o prueba dirigida | GPT-6 Luna · bajo | Gemini 4 Hydrogen · Low |
+| Inspección visual o corrección puntual de UI | GPT-6.1 Terra · bajo o medio | Gemini 4 Hydrogen · Medium. Neon · Medium si hay varios estados o interacción compleja |
+| Funcionalidad, integración o regresión en varios archivos | GPT-6.2 Sol · medio | Gemini 4 Neon · Medium |
+| Depuración difícil, diseño transversal o contrato delicado | GPT-6.2 Sol · alto, con hipótesis y prueba concreta | Gemini 4 Neon · High, con hipótesis y prueba concreta |
+| Bloqueo comprobado que exige mayor capacidad | GPT-6.2 Astra · medio al comenzar | Gemini 4 Argon · Medium si se ofrece |
 
-Si un modelo no aparece, elige el disponible que tenga la capacidad equivalente. No deduzcas disponibilidad en Codex a partir del catálogo o precio de la API. Terra se orienta a trabajo visual y correcciones acotadas; Luna a tareas concretas; Sol a trabajo complejo con equilibrio entre capacidad y consumo; Astra a los casos más exigentes. [1](https://developers.openai.com/api/docs/guides/model-selection), [5](https://help.openai.com/en/articles/20001275-chatgpt-work-and-codex)
+- En Codex usa velocidad Standard. Si 6.2 Sol falta, usa 6.1 Sol. Si Luna o Terra faltan, usa Sol en bajo para el trabajo acotado. Astra se reserva para el bloqueo puntual. Los modelos de Work y Codex pueden diferir de los de Chat. [Selección de modelos de OpenAI](https://developers.openai.com/api/docs/guides/model-selection) · [Cupo y velocidad de Codex](https://learn.chatgpt.com/docs/pricing)
+- En Antigravity cambia el esfuerzo antes de enviar el turno. Hydrogen y Neon pueden aparecer en High por defecto. Si faltan, usa Gemini 3.8 Flash con el menor esfuerzo que cumpla el criterio. Orchestrator (Neon) combina Neon y Hydrogen con esfuerzo fijo. Úsalo en un piloto con planificación compleja y ejecución repetible; comprueba su consumo antes de adoptarlo. [Modelos de Antigravity](https://antigravity.google/docs/models?authuser=117) · [Anuncio de Gemini 4 Neon](https://antigravity.google/blog/gemini-4-neon-in-google-antigravity)
 
-El nivel bajo o medio es el punto de partida para tareas definidas. Aumenta el razonamiento cuando la dificultad observada lo justifique: el nivel más alto puede consumir más cupo y no garantiza un resultado mejor. [6](https://help.openai.com/en/articles/20001516-managing-usage-with-gpt-6-astra-in-work-and-codex)
+### 16.2 Flujo por entregables
 
-### 16.3 Orquestador y ejecutor
+1. Delimita el resultado comprobable, las rutas permitidas, la revisión base y la validación prevista. Lee el tramo vigente del plan, el cierre previo solo si aporta una dependencia y las reglas aplicables.
+2. Usa un agente principal para implementar y verificar. Divide las fases grandes en entregables comprobables y ejecuta un turno por entregable. Mantén el hilo para unidades dependientes mientras el contexto siga centrado.
+3. Explora con la sección 16.3. Reutiliza el código y el diagnóstico ya comprobado. Durante el cambio ejecuta pruebas dirigidas y conserva reportes voluminosos localmente. Abre solo el resumen y los fallos relevantes, con el código de salida del comando.
+4. Si dos intentos no aportan evidencia nueva, cambia la hipótesis, acota el cambio o escala solo la decisión pendiente. Delega cuando el trabajo sea independiente y aporte especialización o paralelismo real. Asigna al delegado rutas, criterio, base, límites y verificación. Aplica la revisión de la sección 6 sobre el resultado integrado.
+5. Para cambiar de cliente o retomar tras una pausa, usa el mismo workspace y pasa rama, hash base y actual, cambios pendientes, archivos relevantes, pruebas y siguiente criterio. Comprueba primero el estado de Git y los resultados disponibles. Un solo agente edita cada archivo a la vez. Puedes iniciar un hilo limpio para una unidad independiente. En Codex usa `/compact` cuando necesites liberar contexto dentro del mismo objetivo y el comando esté disponible. [Comandos de Codex](https://learn.chatgpt.com/docs/developer-commands)
 
-El orquestador es una responsabilidad, no una instancia de modelo obligatoria. Para una tarea pequeña o una cadena de pasos dependientes, el agente principal planifica, implementa e integra con una sola instancia. Para una descomposición compleja puede usar GPT-6.1 Sol en razonamiento medio como orquestador; para tareas directas, usa el modelo de la tabla y conserva esa misma instancia como ejecutor.
+### 16.3 Recuperación de código con poco contexto
 
-Crea un ejecutor independiente solo cuando exista una parte paralela, delimitada y verificable. Antes de delegar, define:
-- Resultado esperado y criterio de aceptación.
-- Archivos o responsabilidad exclusivos del ejecutor.
-- Restricciones de arquitectura y secciones aplicables de este documento.
-- Verificación necesaria y forma de devolver hallazgos.
+- Para símbolos, consumidores, dependencias o impacto, sigue la skill **Codebase Memory** si su MCP está disponible e indexado. Empieza con `search_graph` acotado, `trace_path` a profundidad 1 si hay relaciones y `get_code_snippet` por símbolo. Ejecuta `check_index_coverage` en lote para los archivos usados. Lee fuente directamente si hay huecos, resultado dudoso o señal de desactualización. Amplía solo si falta evidencia.
+- Si el MCP no está disponible o no resuelve la pregunta, consulta **Graphify** sobre `graphify-out/graph.json` si existe. Para símbolos conocidos, usa `graphify query "simbolo" --seed "simbolo" --context call --budget 600 --depth 1` cuando buscas llamadas, o `graphify explain "simbolo"` para una definición. Trata `--budget` como guía de salida y coteja la fuente. Para literales, configuración, documentación o evidencia insuficiente usa `rg -n` con rutas concretas y abre los rangos encontrados.
+- Usa un solo grafo por consulta. Mantén las búsquedas sobre índices existentes. En esta política, las sugerencias de actualizar Graphify al editar se aplican cuando necesitas un índice fresco para próximas consultas. En ese caso usa actualización incremental estructural con alcance acotado. Reserva la reconstrucción completa y la extracción semántica para tareas que las pidan. Consulta por CLI si Antigravity no tiene el MCP. Las skills y los índices locales pueden faltar en una copia nueva. [MCP en Antigravity](https://antigravity.google/docs/mcp) · [Skills bajo demanda en Codex](https://learn.chatgpt.com/docs/build-skills) · [Descubrimiento en Antigravity](https://antigravity.google/docs/customization-discovery/)
 
-Asigna al ejecutor el modelo de menor capacidad que pueda realizar su parte. El orquestador resume el contexto necesario, evita reenviar material irrelevante, integra el resultado y verifica el cambio en el repositorio. No crees agentes para repetir el plan, rehacer una tarea secuencial ni producir una segunda respuesta equivalente.
+### 16.4 Medición y control de cupo
 
-**Inferencia de economía:** cada instancia y paso adicional puede procesar más contexto y aumentar el uso; por eso la delegación se reserva para paralelismo o especialización que pueda mejorar el resultado. El uso depende también del modelo, tarea, contexto, razonamiento, herramientas y duración. [4](https://help.openai.com/en/articles/11369540-using-codex-with-your-chatgpt-plan)
+- **Codex Plus.** Usa la sesión de ChatGPT y verifica Configuración → Uso o `/status` en clientes compatibles. Usar una clave API tiene facturación separada. [Cupo y facturación de Codex](https://learn.chatgpt.com/docs/pricing)
+- **Google AI Pro.** Consulta el uso en Configuración o con `/usage` en Antigravity CLI. Distingue grupo de modelos, ventana de cinco horas y semanal según la cuenta. Mantén `AI Credit Overages` en `Never` si trabajas solo con el cupo incluido. En ambos servicios, los créditos de pago y la API requieren autorización del usuario. [Planes de Antigravity](https://antigravity.google/docs/plans) · [Comando de cuota](https://antigravity.google/docs/cli/commands/usage)
+- Para fases amplias registra al inicio y al terminar cada entregable: cliente, modelo, esfuerzo, grupo y ventana, cupo restante antes y después, duración, entregable aprobado y tareas concurrentes. Registra también entrada, salida, razonamiento y caché si el cliente los expone. Calcula el cambio en puntos porcentuales solo para la misma ventana sin reinicio. `/context` en Antigravity CLI muestra ocupación de contexto por categoría y sirve para ubicar salidas, instrucciones o herramientas voluminosas. [Comando de contexto](https://antigravity.google/docs/cli/commands/context) · [Historial de versiones de Antigravity CLI](https://antigravity.google/docs/changelog?tab=cli)
+- Si un entregable consume una parte inesperada del cupo, compara su resultado con los turnos, búsquedas, reintentos y revisiones ejecutados. Acota el siguiente turno o entrega el estado al otro cliente con la sección 16.2. Distingue porcentaje restante, porcentaje de contexto y tokens medidos. Un porcentaje aislado es insuficiente para atribuir el consumo de la fase 3 o calcular dólares.
 
-Esta sección no elimina las revisiones independientes ni las pruebas que exige la sección 6 y la sección 10. Selecciona el modelo de cada revisor según la tabla y el riesgo, pero conserva el alcance y la evidencia requeridos por esas secciones. La revisión automatizada complementa pruebas, linters y protecciones, no los sustituye. [2](https://developers.openai.com/blog/custom-code-review-rules-for-codex)
+### 16.5 Skills y herramientas evaluadas
 
-### 16.4 Uso del plan ChatGPT Plus
+Los estudios sustentan pilotos con criterios de aceptación y medición local. Sus resultados corresponden a tareas, modelos y métricas concretos.
 
-El plan indicado para esta política es la suscripción personal ChatGPT Plus de US$20 al mes señalada por el usuario. El cupo de Codex no representa una cantidad fija de mensajes o tareas. Varía según el modelo, la tarea, el contexto, el esfuerzo de razonamiento, las herramientas y el lugar de ejecución; los límites exactos se consultan en Configuración → Uso. Antes de una tarea extensa, verifica el cupo y el siguiente reinicio. Astra tiene uso limitado en Plus, por lo que no debe ser el modelo predeterminado. [4](https://help.openai.com/en/articles/11369540-using-codex-with-your-chatgpt-plan), [5](https://help.openai.com/en/articles/20001275-chatgpt-work-and-codex), [6](https://help.openai.com/en/articles/20001516-managing-usage-with-gpt-6-astra-in-work-and-codex)
+| Opción | Evidencia medida | Uso en Scalaris |
+|---|---|---|
+| Graphify y Serena (MCP) | Un benchmark guionado de ocho tareas en Python midió 65,5 % y 66,1 % menos tokens respectivamente. Otro ensayo de comprensión en Django con Codex midió 8,9 % y 14,8 % menos tokens de salida. Este segundo ensayo lo publicó el autor de Repowise. [Benchmark guionado](https://github.com/vagkaratzas/token-consumption-benchmark/blob/main/REPORT.md) · [Ensayo con Codex](https://repowise.dev/benchmarks) | Reutiliza Graphify instalado. Prueba [Serena](https://github.com/oraios/serena) como alternativa para símbolos si faltan o fallan los grafos existentes, con un solo recuperador activo. |
+| Caveman (skill y proxy opcional) | Un benchmark reproducible de terceros con Claude Sonnet 4.6 y 100 tareas midió 19 % menos tokens de entrada y coste, con 58 tareas resueltas frente a 57 de la base. El publicador ofrece un producto competidor. [Benchmark de compresión](https://github.com/daseinlabs/code-compression-bench) · [Compatibilidad de la skill](https://docs.caveman.so/caveman/installation) | Aplica ya la concisión en informes. Si la skill está disponible, prueba su modo moderado en informes repetitivos. Conserva diagnósticos, trazabilidad, legibilidad y criterios de aceptación. |
+| RTK (CLI) | Redujo la salida de comandos en el ensayo guionado. En el benchmark de compresión, su integración aumentó 16 % los tokens de entrada y 13 % el coste, con 54 tareas resueltas frente a 57. [Benchmark guionado](https://github.com/vagkaratzas/token-consumption-benchmark/blob/main/REPORT.md) · [Benchmark de compresión](https://github.com/daseinlabs/code-compression-bench) | Si está disponible, piloto para comandos verbosos. Compara primero con el modo breve nativo y guarda la salida completa si se necesita diagnosticar. Evita hooks automáticos. |
 
-Inicia sesión con la cuenta ChatGPT para usar el cupo del plan. Una clave API se cobra por separado y no está incluida en los US$20. No uses API, créditos adicionales ni compras para continuar una tarea salvo que el usuario autorice ese gasto. [5](https://help.openai.com/en/articles/20001275-chatgpt-work-and-codex)
-
-Para reducir consumo sin sacrificar calidad:
-- Ajusta el tamaño de la tarea al cambio y comunica criterios de aceptación claros.
-- Lee el contexto necesario antes de editar y agrupa cambios relacionados; evita ciclos de microediciones repetidas. [3](https://developers.openai.com/cookbook/examples/gpt-5/codex_prompting_guide)
-- Empieza con el nivel de razonamiento indicado en la tabla y escala si la evidencia muestra dificultad o un resultado incompleto.
-- No repitas una solicitud sin corregir la falta de contexto, el criterio o el enfoque que causó el fallo.
-- Mantén las verificaciones obligatorias aunque consuman cupo; el modelo no reemplaza pruebas ni revisión.
-
-### 16.5 Vigencia de la selección
-
-Los nombres, límites y disponibilidad cambian. Antes de elegir un modelo, usa el selector del cliente donde se ejecutará la tarea y, si el acceso o la equivalencia no están claros, comprueba la documentación oficial de Work y Codex. Conserva las recomendaciones por capacidad de la sección 16.2, no como dependencia permanente de identificadores. Vuelve a revisar esta tabla cuando cambien los modelos disponibles o las reglas del plan. [1](https://developers.openai.com/api/docs/guides/model-selection), [4](https://help.openai.com/en/articles/11369540-using-codex-with-your-chatgpt-plan), [5](https://help.openai.com/en/articles/20001275-chatgpt-work-and-codex)
+Para cada piloto, compara tareas equivalentes con la misma base, modelo, esfuerzo, instrucciones y verificación. Conserva la herramienta si pasa los mismos criterios y reduce de forma repetible los tokens observables o el cupo por entregable. Registra esas medidas por separado. Limita `AGENTS.md` a decisiones del repositorio y carga las skills y sus referencias por demanda. Los estudios de instrucciones persistentes miden efectos distintos sobre coste y tokens de salida. [Evaluación de archivos de contexto](https://arxiv.org/abs/2602.11988) · [Eficiencia de AGENTS.md](https://arxiv.org/abs/2601.20404) · [Evaluación de skills](https://arxiv.org/html/2603.15401v2)
