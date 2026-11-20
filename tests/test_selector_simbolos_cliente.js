@@ -373,6 +373,7 @@ prueba("excluye campos ocultos, inert y el buscador interno; respalda portapapel
     entorno.emitirDocumento("focusin", { target: campoOculto });
     entorno.emitirDocumento("focusin", { target: campoInerte });
     entorno.emitirDocumento("focusin", { target: entorno.busqueda });
+    entorno.emitirDocumento("focusin", { target: { matches: () => true } });
 
     const boton = crearNodoSimulado("button", entorno.documento);
     entorno.emitirDocumento("keydown", {

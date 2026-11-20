@@ -11,15 +11,20 @@
     let posicionPendiente = null;
     let cantidad;
 
-    function perfil(campo) {
-        if (!campo?.matches?.(selectorCampo) || campo.disabled || campo.readOnly) return '';
-        if (campo.closest?.('.simbolos-dialogo')) return '';
-        if (campo.dataset.simbolos) return campo.dataset.simbolos;
-        if (campo.dataset.soloNumerico === 'true') return 'numero';
-        if (campo.hasAttribute('data-ecuaciones-indice') || campo.hasAttribute('data-ecuaciones-fila')) {
+    function tipoDesdeAtributos(campo) {
+        const datos = campo.dataset;
+        if (datos?.simbolos) return datos.simbolos;
+        if (datos?.soloNumerico === 'true') return 'numero';
+        if (campo.hasAttribute?.('data-ecuaciones-indice') || campo.hasAttribute?.('data-ecuaciones-fila')) {
             return 'ecuacion';
         }
         return 'texto';
+    }
+
+    function perfil(campo) {
+        if (!campo?.matches?.(selectorCampo) || campo.disabled || campo.readOnly) return '';
+        if (campo.closest?.('.simbolos-dialogo')) return '';
+        return tipoDesdeAtributos(campo);
     }
 
     function esCampoVisible(campo) {
