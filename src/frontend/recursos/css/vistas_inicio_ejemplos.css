@@ -1,0 +1,205 @@
+.inicio-ejemplo-contenedor {
+    container-type: inline-size;
+    inline-size: 100%;
+    min-inline-size: 0;
+}
+
+.inicio-ejemplo {
+    position: relative;
+    margin: 0;
+    padding: var(--space-3) var(--space-3) var(--space-1);
+    border: 1px solid var(--border-input);
+    border-radius: var(--radius-badge);
+    background: var(--bg-elevated);
+    color: var(--text-main);
+}
+
+.inicio-ejemplo-cabecera {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--space-2);
+    padding-block-end: var(--space-2);
+    border-block-end: 1px solid var(--border-input);
+}
+
+.inicio-ejemplo-cabecera h2 {
+    margin: 0;
+    font-size: var(--fs-body);
+    font-weight: var(--fw-h2);
+    line-height: 1.3;
+}
+
+.inicio-ejemplo-etiqueta {
+    margin: 0;
+    font-size: var(--fs-small);
+    color: var(--text-sec);
+}
+
+.inicio-ejemplo :is(.inicio-ejemplo-operacion, .inicio-ejemplo-matriz, .inicio-ejemplo-ecuaciones) {
+    font-family: ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+}
+
+.inicio-ejemplo-operacion {
+    color: var(--accent);
+    font-size: var(--fs-small);
+}
+
+.inicio-ejemplo-etapas {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: var(--space-2);
+    padding-block: var(--space-2) var(--space-3);
+}
+
+.inicio-ejemplo-etapa {
+    display: grid;
+    align-self: stretch;
+    align-content: start;
+    justify-items: center;
+    gap: var(--space-2);
+    min-inline-size: 0;
+    text-align: center;
+}
+
+.inicio-ejemplo-etapa .inicio-ejemplo-etiqueta {
+    min-block-size: 2.5em;
+    display: grid;
+    align-content: center;
+    line-height: 1.25;
+}
+
+.inicio-ejemplo-matriz {
+    inline-size: min(100%, 7.25rem);
+    table-layout: fixed;
+    border: 1px solid var(--accent);
+    border-block: 0;
+    border-radius: var(--space-1);
+    border-spacing: 0;
+    font-size: var(--fs-mono-math);
+    line-height: 1.4;
+}
+
+.inicio-ejemplo-matriz td {
+    padding: 0;
+    text-align: center;
+}
+
+.inicio-ejemplo-matriz td:last-child {
+    border-inline-start: 1px solid var(--border-input);
+}
+
+.inicio-ejemplo-cero {
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: var(--fw-h2);
+}
+
+.inicio-ejemplo-flecha {
+    color: var(--accent);
+    font-size: var(--fs-h2);
+}
+
+.inicio-ejemplo-ecuaciones {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-1);
+    font-size: var(--fs-small);
+    overflow-wrap: anywhere;
+}
+
+.inicio-ejemplo-resultado {
+    padding-inline: var(--space-1);
+    border-radius: var(--space-1);
+    color: var(--accent);
+    font-weight: var(--fw-h2);
+}
+
+.inicio-ejemplo[data-ejemplo-completado] .inicio-ejemplo-resultado {
+    background: var(--accent-soft);
+}
+
+.inicio-ejemplo-acciones {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0 var(--space-2);
+    border-block-start: 1px solid var(--border-input);
+}
+
+.inicio-ejemplo-accion {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-1);
+    min-block-size: 44px;
+    padding-inline: var(--space-1);
+    border: 0;
+    border-radius: var(--radius-badge);
+    background: transparent;
+    color: var(--accent);
+    font: inherit;
+    font-weight: var(--fw-h2);
+    text-align: start;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform var(--dur-release) var(--ease-std);
+}
+
+html[data-entrada="puntero"] .inicio-ejemplo-accion:active {
+    transform: scale(0.98);
+    transition-duration: var(--dur-press);
+}
+
+.inicio-ejemplo-icono {
+    flex-shrink: 0;
+    font-size: var(--fs-h2);
+    line-height: 1;
+}
+
+.inicio-ejemplo-estado {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    clip-path: inset(50%);
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .inicio-ejemplo-accion:hover {
+        text-decoration: underline;
+    }
+}
+
+@container (max-width: 15rem) {
+    .inicio-ejemplo-etapas {
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: center;
+    }
+
+    .inicio-ejemplo-etapa {
+        justify-self: stretch;
+    }
+
+    .inicio-ejemplo-etapa .inicio-ejemplo-etiqueta {
+        min-block-size: auto;
+    }
+
+    .inicio-ejemplo-flecha {
+        rotate: 90deg;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .inicio-ejemplo-accion {
+        transition: opacity var(--dur-reduced) var(--ease-std);
+    }
+
+    html[data-entrada="puntero"] .inicio-ejemplo-accion:active {
+        transform: none;
+    }
+}
