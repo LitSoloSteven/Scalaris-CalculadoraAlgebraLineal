@@ -23,6 +23,24 @@ def quitar_comentarios(css: str) -> str:
     return re.sub(r"/\*.*?\*/", "", css, flags=re.DOTALL)
 
 
+def _comprobar_secciones(secciones):
+    assert len(secciones) == 5
+    assert [seccion.style.get("--inicio-indice") for seccion in secciones] == ["0", "1", "2", "3", "4"]
+    for seccion in secciones:
+        assert seccion.tag == "section"
+        titulo = next(elemento for elemento in seccion.descendants()
+                      if elemento._props.get("tag", elemento.tag) in {"h2", "h3"})
+        assert seccion._props["aria-labelledby"] == titulo._props["id"]
+
+
+def _comprobar_enlaces(enlaces):
+    assert len(enlaces) == 15
+    for enlace in enlaces:
+        assert enlace.tag == "a"
+        assert enlace._props.get("href")
+        assert enlace._props.get("data-clave")
+
+
 def test_contrato_dom_secciones_y_enlaces_nativos(monkeypatch):
     """El directorio monta secciones con título y enlaces nativos con destino."""
     async def comprobar(vista, cliente):
@@ -33,18 +51,10 @@ def test_contrato_dom_secciones_y_enlaces_nativos(monkeypatch):
         contenido = tuple(directorio.descendants())
         secciones = [elemento for elemento in contenido if "inicio-seccion" in elemento.classes]
         enlaces = [elemento for elemento in contenido if "inicio-enlace" in elemento.classes]
-        assert len(secciones) == 5
         assert directorio.tag == "nav"
         assert directorio._props["aria-labelledby"] == "inicio-herramientas"
-        assert [seccion.style.get("--inicio-indice") for seccion in secciones] == ["0", "1", "2", "3", "4"]
-        assert all(seccion.tag == "section" for seccion in secciones)
-        for seccion in secciones:
-            titulo = next(elemento for elemento in seccion.descendants()
-                          if elemento._props.get("tag", elemento.tag) in {"h2", "h3"})
-            assert seccion._props["aria-labelledby"] == titulo._props["id"]
-        assert len(enlaces) == 15
-        assert all(enlace.tag == "a" and enlace._props.get("href") for enlace in enlaces)
-        assert all(enlace._props.get("data-clave") for enlace in enlaces)
+        _comprobar_secciones(secciones)
+        _comprobar_enlaces(enlaces)
         assert not any(elemento.tag == "dialog" for elemento in contenido)
 
     asyncio.run(construir_pagina(monkeypatch, "inicio", comprobar))

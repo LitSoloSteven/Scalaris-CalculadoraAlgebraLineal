@@ -107,6 +107,15 @@
         animacion.finished.then(retirar, retirar);
     }
 
+    function animarGesto(simbolo, gesto, reducido, opciones) {
+        for (const [indice, posturas] of gesto) {
+            const pieza = simbolo.children[indice];
+            if (!pieza?.animate) continue;
+            const fotogramas = reducido ? opacidadReducida : posturas.map(transform => ({ transform }));
+            animarPieza(pieza, fotogramas, opciones);
+        }
+    }
+
     function reproducir(control) {
         const gesto = gestos.get(control?.dataset.gestoInicio);
         if (!gesto) return;
@@ -125,12 +134,7 @@
 
         cancelarGestos();
         try {
-            for (const [indice, posturas] of gesto) {
-                const pieza = simbolo.children[indice];
-                if (!pieza?.animate) continue;
-                const fotogramas = reducido ? opacidadReducida : posturas.map(transform => ({ transform }));
-                animarPieza(pieza, fotogramas, opciones);
-            }
+            animarGesto(simbolo, gesto, reducido, opciones);
         } catch {
             cancelarGestos();
         }
