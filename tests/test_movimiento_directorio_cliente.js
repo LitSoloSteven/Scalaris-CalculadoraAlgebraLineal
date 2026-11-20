@@ -78,6 +78,57 @@ function tocar(cliente, objetivo, esPrimario = true) {
     return emitir(cliente.documento, "pointerdown", { target: objetivo, pointerType: "touch", isPrimary: esPrimario });
 }
 
+function crearEjemplo() {
+    const documento = new EventTarget();
+    const reduccion = Object.assign(new EventTarget(), { matches: false });
+    const lecturas = [];
+    const animaciones = [];
+    const movimiento = {
+        permitido: () => !reduccion.matches,
+        duracion: token => { lecturas.push(token); return 900; },
+        curva: () => { lecturas.push("--ease-std"); return CURVA; },
+    };
+    const ventana = Object.assign(new EventTarget(), { matchMedia: () => reduccion, scalaris: { movimiento } });
+    const contexto = maquinaVirtual.createContext({ window: ventana, document: documento });
+    cargarAssetCliente("ejemplos_inicio.js", contexto);
+
+    const atributos = new Set();
+    const estado = { textContent: "" };
+    const nodos = { "[data-ejemplo-fila]": simularPieza(0, animaciones), "[data-ejemplo-estado]": estado };
+    const panel = {
+        isConnected: true,
+        querySelector: selector => nodos[selector],
+        setAttribute: nombre => atributos.add(nombre),
+        removeAttribute: nombre => atributos.delete(nombre),
+    };
+    const boton = { closest: selector => selector === "[data-ejemplo-inicio]" ? panel : null };
+    const objetivo = { closest: selector => selector === "[data-ejemplo-reproducir]" ? boton : null };
+    return { documento, reduccion, lecturas, animaciones, estado, objetivo };
+}
+
+prueba("el ejemplo prepara su duración antes del clic y cancela al repetir", async () => {
+    const ejemplo = crearEjemplo();
+    afirmar.deepEqual(ejemplo.lecturas, ["--dur-didactic", "--ease-std"]);
+    emitir(ejemplo.documento, "click", { target: ejemplo.objetivo, detail: 1 });
+    emitir(ejemplo.documento, "click", { target: ejemplo.objetivo, detail: 1 });
+    afirmar.equal(ejemplo.lecturas.length, 2);
+    afirmar.equal(ejemplo.animaciones[0].cancelaciones, 1);
+    afirmar.equal(ejemplo.animaciones[1].opciones.duration, 900);
+    ejemplo.animaciones[1].completar();
+    await new Promise(setImmediate);
+    afirmar.match(ejemplo.estado.textContent, /Se eliminó x/);
+});
+
+prueba("teclado y movimiento reducido muestran de inmediato el resultado del ejemplo", () => {
+    const ejemplo = crearEjemplo();
+    emitir(ejemplo.documento, "click", { target: ejemplo.objetivo, detail: 0 });
+    afirmar.match(ejemplo.estado.textContent, /Se eliminó x/);
+    ejemplo.reduccion.matches = true;
+    emitir(ejemplo.documento, "click", { target: ejemplo.objetivo, detail: 1 });
+    afirmar.equal(ejemplo.animaciones.length, 0);
+    afirmar.match(ejemplo.estado.textContent, /Se eliminó x/);
+});
+
 prueba("los veinte gestos del directorio son distintos y animan solo piezas SVG", () => {
     const cliente = crearCliente();
     const recorridos = new Set();

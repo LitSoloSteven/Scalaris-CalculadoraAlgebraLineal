@@ -3,6 +3,11 @@
     'use strict';
     const selectorPanel = '[data-ejemplo-inicio]';
     const preferencia = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const movimiento = window.scalaris?.movimiento;
+    const opciones = movimiento && {
+        duration: movimiento.duracion('--dur-didactic'),
+        easing: movimiento.curva(),
+    };
     let reproduccion = null;
 
     function mostrarResultado(panel) {
@@ -17,15 +22,12 @@
         if (mostrar && estado.panel.isConnected) mostrarResultado(estado.panel);
     }
 
-    function iniciar(panel, fila, movimiento) {
+    function iniciar(panel, fila) {
         try {
             const animacion = fila.animate([
                 { opacity: 0, transform: 'translateY(-14px) scale(0.95)' },
                 { opacity: 1, transform: 'translateY(0) scale(1)' },
-            ], {
-                duration: movimiento.duracion('--dur-didactic'),
-                easing: movimiento.curva(),
-            });
+            ], opciones);
             const estado = { panel, animacion };
             reproduccion = estado;
             const finalizar = () => detener(estado, true);
@@ -40,7 +42,6 @@
         const panel = boton?.closest(selectorPanel);
         if (!panel || evento.defaultPrevented) return;
         detener(reproduccion);
-        const movimiento = window.scalaris?.movimiento;
         const fila = panel.querySelector('[data-ejemplo-fila]');
         if (evento.detail === 0 || preferencia.matches || !movimiento?.permitido() || !fila?.animate) {
             mostrarResultado(panel);
@@ -49,7 +50,7 @@
 
         panel.removeAttribute('data-ejemplo-completado');
         panel.querySelector('[data-ejemplo-estado]').textContent = '';
-        iniciar(panel, fila, movimiento);
+        iniciar(panel, fila);
     }
 
     document.addEventListener('click', reproducir);
