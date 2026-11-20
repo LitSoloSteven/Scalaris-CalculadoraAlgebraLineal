@@ -1,193 +1,118 @@
-"""Vista principal de inicio: matriz de areas con dialogos por pilar."""
-from __future__ import annotations
-
+"""Portada y directorio de herramientas de Scalaris."""
 import html
-from nicegui import ui
 
-from src.frontend.componentes.panel_ia import PanelIA
+from nicegui import Client, ui
+
 from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.iconos import icono_svg
-from src.frontend.navegacion import RUTA_INICIO
-from src.frontend.controladores.inicio._modelo import (
-    ModeloTarjeta, formatear_cantidad_elementos, pilares_inicio, seleccion_inicial,
-)
+from src.frontend.componentes.panel_ia import PanelIA
+from src.frontend.componentes.selector_tema import renderizar_boton_tema
+from src.frontend.controladores.inicio._modelo import acceso_destacado
+from src.frontend.navegacion import ElementoNavegacion, RUTA_INICIO, enlace_elemento_navegacion
+from src.frontend.navegacion.secciones_inicio import GrupoInicio, SeccionInicio, secciones_inicio
+from .panel_ejemplo import renderizar_panel_ejemplo
 
-_CLASES_ORDEN = ('inicio-orden-0', 'inicio-orden-1', 'inicio-orden-2', 'inicio-orden-3')
+
+def _texto(etiqueta: str, texto: str, clases: str = "") -> ui.html:
+    return ui.html(html.escape(texto), tag=etiqueta).classes(clases)
 
 
-def _elemento_texto(etiqueta: str, texto: str, clases: str, titulo: str | None = None) -> ui.html:
-    """Crea un elemento semantico con texto escapado para prevenir inyecciones."""
-    elemento = ui.html(html.escape(texto), tag=etiqueta, sanitize=False).classes(clases)
-    if titulo:
-        elemento.props(f'title="{html.escape(titulo)}"')
-    return elemento
+def _simbolo(nombre: str) -> None:
+    ui.html(icono_svg(nombre), tag="span").classes("inicio-simbolo").props('aria-hidden="true"')
+
+
+def _flecha() -> None:
+    _texto("span", "→", "inicio-flecha").props('aria-hidden="true"')
+
+
+def _renderizar_cabecera() -> None:
+    with ui.element("header").classes("inicio-cabecera"):
+        with ui.element("div").classes("inicio-marca"):
+            with ui.element("span").classes("inicio-logotipo marca-contenedor-logotipo"):
+                ui.element("img").classes("marca-logotipo marca-logotipo-oscuro").props(
+                    'src="/assets/LogoOscuro.png" alt="" width=40 height=40'
+                )
+                ui.element("img").classes("marca-logotipo marca-logotipo-claro").props(
+                    'src="/assets/LogoClaro.png" alt="" width=40 height=40'
+                )
+            _texto("span", "Scalaris")
+            _texto("abbr", "UAM", "inicio-universidad").props('title="Universidad Americana"')
+        with ui.element("div").classes("inicio-tema"):
+            renderizar_boton_tema(mostrar_nombre=True)
+
+
+def _renderizar_presentacion() -> None:
+    enlace = enlace_elemento_navegacion(acceso_destacado())
+    with ui.element("section").classes("inicio-presentacion").props('aria-labelledby="inicio-titulo"'):
+        with ui.element("div").classes("inicio-presentacion-texto"):
+            ui.html("Álgebra lineal,<br><em>paso a paso.</em>", tag="h1").classes("inicio-titulo").props(
+                'id="inicio-titulo"'
+            )
+            _texto("p", "Resuelve ejercicios y visualiza qué ocurre en cada paso.", "inicio-descripcion")
+            with ui.element("a").classes("inicio-destacado").props(f'href="{enlace}"'):
+                _texto("span", "Resolver un sistema")
+                _flecha()
+        renderizar_panel_ejemplo(enlace)
+
+
+def _renderizar_acceso(acceso: ElementoNavegacion) -> None:
+    enlace = enlace_elemento_navegacion(acceso)
+    with ui.element("a").classes("inicio-enlace").props(
+        f'href="{enlace}" data-clave="{acceso.clave}" data-gesto-inicio="{acceso.clave}"'
+    ):
+        _simbolo(acceso.icono)
+        _texto("span", acceso.etiqueta)
+        _flecha()
+
+
+def _renderizar_grupo(grupo: GrupoInicio) -> None:
+    if grupo.subtitulo:
+        _texto("h4", grupo.subtitulo, "inicio-subtitulo")
+    with ui.element("ul").classes("inicio-lista"):
+        for acceso in grupo.accesos:
+            with ui.element("li"):
+                _renderizar_acceso(acceso)
+
+
+def _renderizar_seccion(seccion: SeccionInicio, indice: int) -> None:
+    identificador_titulo = f"inicio-titulo-{seccion.identificador}"
+    gesto = f"seccion-{seccion.identificador}"
+    with ui.element("section").classes("inicio-seccion").classes(
+        add="inicio-seccion-numeracion" if seccion.identificador == "sistemas-numeracion" else ""
+    ).props(f'aria-labelledby="{identificador_titulo}"').style(f"--inicio-indice: {indice}"):
+        with ui.element("header").classes("inicio-seccion-cabecera").props(f'data-gesto-inicio="{gesto}"'):
+            _simbolo(gesto)
+            _texto("h3", seccion.titulo, "inicio-seccion-titulo").props(f'id="{identificador_titulo}"')
+        for grupo in seccion.grupos:
+            _renderizar_grupo(grupo)
+
+
+def _renderizar_directorio() -> None:
+    with ui.element("nav").classes("inicio-directorio").props('aria-labelledby="inicio-herramientas"') as directorio:
+        _texto("h2", "Herramientas", "inicio-directorio-titulo").props('id="inicio-herramientas"')
+        with ui.element("div").classes("inicio-secciones"):
+            for indice, seccion in enumerate(secciones_inicio()):
+                _renderizar_seccion(seccion, indice)
+    directorio.props("data-directorio-listo")
 
 
 class VistaInicio:
-    """Compone las áreas y herramientas de la página de inicio."""
+    """Compone la portada y conserva el acceso directo a Glosa."""
 
     def __init__(self, glosa_abierta: bool = False):
         self.glosa_abierta = glosa_abierta
         self.panel_ia = None
-        self.tarjetas: dict[str, ui.element] = {}
-        self.marcas: dict[str, ui.html] = {}
-        self.filas: dict[str, ui.element] = {}
-        self.marcas_filas: dict[str, ui.html] = {}
 
-    def _construir_tarjeta(self, modelo_tarjeta: ModeloTarjeta):
-        """Compone una tarjeta de herramienta como enlace accesible."""
-        with ui.element('a').classes('inicio-tarjeta').props(f'href="{modelo_tarjeta.enlace}" data-clave="{modelo_tarjeta.clave}"') as tarjeta:
-            with ui.element('span').classes('inicio-tarjeta-icono').props('aria-hidden="true"'):
-                ui.html(icono_svg(modelo_tarjeta.icono))
-            _elemento_texto('span', modelo_tarjeta.nombre, 'inicio-tarjeta-nombre')
-            _elemento_texto('span', modelo_tarjeta.descripcion, 'inicio-tarjeta-descripcion')
-            marca = _elemento_texto('span', '', 'inicio-tarjeta-marca')
-
-        self.tarjetas[modelo_tarjeta.clave] = tarjeta
-        self.marcas[modelo_tarjeta.clave] = marca
-        return tarjeta
-
-    async def _aplicar_destacada(self, cliente):
-        """Marca la tarjeta reciente y su fila, o Sistemas de ecuaciones como inicio."""
-        identificadores = None
-        try:
-            await cliente.connected()
-            respuesta = await cliente.run_javascript(
-                "return (window.scalaris && window.scalaris.recientes) ? window.scalaris.recientes.leer() : {valido: false, identificadores: []};",
-                timeout=3.0,
-            )
-            if isinstance(respuesta, dict) and respuesta.get('valido'):
-                identificadores = respuesta.get('identificadores')
-        except Exception:
-            identificadores = None
-
-        if getattr(cliente, 'is_deleted', False):
-            return
-
-        seleccion = seleccion_inicial(identificadores)
-        self._marcar_seleccion(seleccion)
-
-    def _marcar_seleccion(self, seleccion) -> None:
-        """Aplica las clases y textos correspondientes a la seleccion destacada."""
-        tarjeta = self.tarjetas.get(seleccion.clave_tarjeta)
-        marca = self.marcas.get(seleccion.clave_tarjeta)
-        fila = self.filas.get(seleccion.identificador_pilar)
-        marca_fila = self.marcas_filas.get(seleccion.identificador_pilar)
-        texto_marca = 'Sigue aquí' if seleccion.hay_historial else 'Empieza aquí'
-
-        if tarjeta is not None:
-            tarjeta.classes(add='esta-destacada')
-        if marca is not None:
-            marca.set_content(html.escape(texto_marca))
-        if fila is not None:
-            fila.classes(add='esta-destacada')
-        if marca_fila is not None:
-            marca_fila.set_content(html.escape(texto_marca))
-
-    async def construir(self, cliente):
-        """Construye la matriz, los dialogos nativos y activa Glosa si corresponde."""
-        ui.query('body').classes('inicio-pagina')
+    async def construir(self, cliente: Client) -> None:
+        """Monta la portada en el cliente y abre Glosa cuando lo pide la ruta."""
+        ui.query("body").classes("inicio-pagina")
         self.panel_ia = PanelIA(self)
         crear_estructura_aplicacion(self, ruta_activa=RUTA_INICIO)
-
-        pilares = pilares_inicio()
-
-        with ui.element('main').classes('inicio-raiz vista-raiz'):
-            self._renderizar_cabecera()
-            self._renderizar_matriz(pilares)
-            self._renderizar_dialogos(pilares)
-
+        with ui.element("main").classes("inicio-raiz vista-raiz"):
+            _renderizar_cabecera()
+            _renderizar_presentacion()
+            _renderizar_directorio()
         self.panel_ia.construir()
-        await self._aplicar_destacada(cliente)
         if self.glosa_abierta:
-            ui.query('body').classes(add='inicio-glosa-disponible')
+            ui.query("body").classes(add="inicio-glosa-disponible")
             self.panel_ia.abrir()
-
-    def _renderizar_cabecera(self) -> None:
-        """Renderiza el encabezado y logo de Scalaris."""
-        with ui.element('header').classes('inicio-cabecera'):
-            with ui.element('div').classes('inicio-marca'):
-                with ui.element('div').classes('inicio-logotipo marca-contenedor-logotipo'):
-                    ui.html('''
-                        <img src="/assets/LogoOscuro.png" alt="" class="marca-logotipo marca-logotipo-oscuro" />
-                        <img src="/assets/LogoClaro.png" alt="" class="marca-logotipo marca-logotipo-claro" />
-                    ''')
-                _elemento_texto('h1', 'Scalaris', 'inicio-titulo')
-            _elemento_texto('p', 'Álgebra lineal y utilidades numéricas, con cada paso a la vista.', 'inicio-descripcion')
-
-    def _renderizar_matriz(self, pilares: list) -> None:
-        """Renderiza los botones de áreas en la matriz de inicio."""
-        with ui.element('div').classes('inicio-matriz').props('role="group" aria-label="Áreas de Scalaris"'):
-            indice_fila = 0
-            for indice_fila, pilar in enumerate(pilares):
-                self._renderizar_fila(pilar, indice_fila)
-
-
-    def _renderizar_fila(self, pilar, indice_fila):
-        """Compone las herramientas de un área en el orden del catálogo."""
-        atributos_fila = (
-            f'type="button" id="inicio-fila-{pilar.identificador}" '
-            f'aria-haspopup="dialog" aria-expanded="false" '
-            f'aria-controls="inicio-dialogo-{pilar.identificador}"'
-        )
-        with (
-            ui.element('button').classes('inicio-fila ' + _CLASES_ORDEN[indice_fila]).props(atributos_fila) as fila,
-            ui.element('span').classes('inicio-cuerpo-fila'),
-        ):
-            with ui.element('span').classes('inicio-capa-destacada').props('aria-hidden="true"'):
-                ui.element('span').classes('inicio-destacada')
-            with ui.element('span').classes('inicio-celda inicio-icono-celda').props('aria-hidden="true"'):
-                ui.html(icono_svg(pilar.icono))
-            with ui.element('span').classes('inicio-celda inicio-nombre-celda'):
-                _elemento_texto('span', pilar.nombre_corto, 'inicio-titulo-fila', titulo=pilar.nombre_corto)
-                _elemento_texto('span', pilar.descripcion, 'inicio-descripcion-fila', titulo=pilar.descripcion)
-            with ui.element('span').classes('inicio-celda inicio-detalle-celda'):
-                texto_conteo = formatear_cantidad_elementos(len(pilar.tarjetas), pilar.unidad_singular, pilar.unidad_plural)
-                _elemento_texto('span', texto_conteo, 'inicio-conteo-fila')
-                marca_fila = _elemento_texto('span', '', 'inicio-marca-fila')
-                with ui.element('span').classes('inicio-indicador-fila').props('aria-hidden="true"'):
-                    ui.html(icono_svg('abrir'))
-        self.filas[pilar.identificador] = fila
-        self.marcas_filas[pilar.identificador] = marca_fila
-
-    def _renderizar_dialogos(self, pilares: list) -> None:
-        """Renderiza los modales popovers para cada area."""
-        for pilar in pilares:
-            atributos_dialogo = (
-                f'id="inicio-dialogo-{pilar.identificador}" '
-                f'aria-labelledby="inicio-dialogo-titulo-{pilar.identificador}"'
-            )
-            with (
-                ui.element('dialog').classes('inicio-dialogo').props(atributos_dialogo),
-                ui.element('div').classes('inicio-dialogo-tarjeta'),
-            ):
-                self._renderizar_cabecera_dialogo(pilar)
-                self._renderizar_cuerpo_dialogo(pilar)
-
-    def _renderizar_cabecera_dialogo(self, pilar) -> None:
-        """Encabezado de la tarjeta popover."""
-        with ui.element('header').classes('inicio-dialogo-cabecera'):
-            with ui.element('span').classes('inicio-dialogo-icono').props('aria-hidden="true"'):
-                ui.html(icono_svg(pilar.icono))
-            titulo = _elemento_texto('h2', pilar.nombre_corto, 'inicio-dialogo-titulo', titulo=pilar.nombre_corto)
-            titulo.props(f'id="inicio-dialogo-titulo-{pilar.identificador}"')
-            texto_conteo = formatear_cantidad_elementos(len(pilar.tarjetas), pilar.unidad_singular, pilar.unidad_plural)
-            _elemento_texto('span', texto_conteo, 'inicio-dialogo-conteo')
-            with (
-                ui.element('button').classes('inicio-dialogo-cerrar').props('type="button" aria-label="Cerrar"'),
-                ui.element('span').classes('inicio-dialogo-icono-cerrar').props('aria-hidden="true"'),
-            ):
-                ui.html(icono_svg('cerrar'))
-
-    def _renderizar_cuerpo_dialogo(self, pilar) -> None:
-        """Lista de herramientas del area."""
-        if len(pilar.tarjetas) == 0:
-            with ui.element('div').classes('inicio-area-vacia'):
-                _elemento_texto('p', 'Esta área aún no tiene herramientas.', 'inicio-mensaje-vacio')
-            return
-        with ui.element('ul').classes('inicio-lista-herramientas'):
-            indice_tarjeta = 0
-            for modelo_tarjeta in pilar.tarjetas:
-                with ui.element('li').classes(_CLASES_ORDEN[min(indice_tarjeta, 3)]):
-                    self._construir_tarjeta(modelo_tarjeta)
-                indice_tarjeta += 1
