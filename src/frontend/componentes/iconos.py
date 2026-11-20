@@ -84,6 +84,25 @@ CATALOGO_ICONOS: dict[str, str] = {
         '<path d="M6 10v9h12v-9"></path>'
         '<path d="M10 19v-5h4v5"></path>'
     ),
+    "seccion-sistemas-lineales": (
+        '<path d="M9 4H7a2 2 0 0 0-2 2v3c0 2-1 3-3 3 2 0 3 1 3 3v3a2 2 0 0 0 2 2h2"></path>'
+        '<path d="M15 4h2a2 2 0 0 1 2 2v3c0 2 1 3 3 3-2 0-3 1-3 3v3a2 2 0 0 1-2 2h-2"></path>'
+    ),
+    "seccion-matrices": (
+        '<path d="M8 4H5v16h3m1-12h.01M9 12h.01M9 16h.01"></path>'
+        '<path d="M16 4h3v16h-3M15 8h.01M15 12h.01M15 16h.01"></path>'
+    ),
+    "seccion-vectores-geometria": (
+        '<path d="M4 19 19 5m-8 0h8v8"></path>'
+    ),
+    "seccion-metodos-numericos": (
+        '<path d="M3 14h18M4 20c8 0 9-8 16-15"></path>'
+        '<circle cx="17" cy="8" r="1.8" fill="currentColor" stroke="none"></circle>'
+    ),
+    "seccion-sistemas-numeracion": (
+        '<path d="M3 9h6v8H3z"></path>'
+        '<path d="m14 11 4-3v9m-3 0h6"></path>'
+    ),
     "algebra_lineal": (
         '<path d="M7 4H5v16h2"></path>'
         '<path d="M17 4h2v16h-2"></path>'
