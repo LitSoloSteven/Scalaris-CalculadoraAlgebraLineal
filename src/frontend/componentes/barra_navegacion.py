@@ -147,6 +147,8 @@ def _registrar_navegacion_reciente(
     from nicegui import context
     cliente = context.client
     clave_reciente = _clave_reciente_valida(ruta_activa, clave_activa)
+    if clave_reciente is None and not centrar:
+        return
 
     def registrar():
         """Espera la conexión inicial antes de enviar el registro al navegador."""
