@@ -186,7 +186,7 @@ html[data-inicio-pendiente]:not([data-entrada="teclado"]) .inicio-seccion:not(:f
 .inicio-simbolo svg > * { transform-box: fill-box; transform-origin: center; }
 [data-gesto-inicio="inversa"] .inicio-simbolo svg > * { transform-box: view-box; }
 
-.inicio-enlace:active .inicio-simbolo {
+html:not([data-entrada="teclado"]) .inicio-enlace:active .inicio-simbolo {
     transform: scale(.97);
     transition-duration: var(--dur-press);
 }
@@ -230,7 +230,7 @@ html[data-entrada="teclado"] :is(.inicio-seccion, .inicio-simbolo),
     .inicio-seccion,
     .inicio-simbolo,
     html[data-inicio-pendiente]:not([data-entrada="teclado"]) .inicio-seccion:not(:focus-within),
-    .inicio-enlace:active .inicio-simbolo {
+    html:not([data-entrada="teclado"]) .inicio-enlace:active .inicio-simbolo {
         transform: none;
         transition: opacity var(--dur-reduced) var(--ease-std);
     }
