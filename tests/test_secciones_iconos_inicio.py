@@ -101,12 +101,12 @@ def test_inicio_publico_muestra_los_svg_del_catalogo(monkeypatch):
     asyncio.run(construir_pagina(monkeypatch, "inicio", comprobar))
 
 
-@pytest.mark.parametrize("contextual,ruta", [(False, "/algebra-lineal/leontief"),
-                                           (True, "/algebra-lineal/leontief"),
-                                           (True, "/utilidades/metodos-abiertos")])
-def test_barra_comparte_svg_de_herramientas(monkeypatch, contextual, ruta):
+@pytest.mark.parametrize("claves,ruta", [(None, "/algebra-lineal/leontief"),
+                                         ({"sistemas", "leontief"}, "/algebra-lineal/leontief"),
+                                         ({"metodos_cerrados", "metodos_abiertos"}, "/utilidades/metodos-abiertos")])
+def test_barra_comparte_svg_de_herramientas(monkeypatch, claves, ruta):
     """Cada barra construye sus accesos desde los símbolos del directorio."""
-    monkeypatch.setenv("SCALARIS_NAV", "1" if contextual else "0")
+    monkeypatch.setenv("SCALARIS_NAV", "0" if claves is None else "1")
     monkeypatch.setattr(core, "script_mode", False)
     cliente = Client(ui.page("/prueba-iconos-barra"))
     try:
@@ -114,9 +114,8 @@ def test_barra_comparte_svg_de_herramientas(monkeypatch, contextual, ruta):
             crear_barra_navegacion(ruta_activa=ruta)
         destinos = {elemento._props["href"]: elemento for elemento in cliente.elements.values()
                     if "href" in elemento._props}
-        prefijo = ruta.rsplit("/", 1)[0] + "/"
         for clave, destino, icono in _DESTINOS:
-            if not clave.startswith("vis:") and (not contextual or destino.startswith(prefijo)):
+            if not clave.startswith("vis:") and (claves is None or clave in claves):
                 enlace = destinos[destino]
                 assert enlace._props["aria-label"] == herramienta_por_ruta(destino).nombre
                 assert _contiene_svg(enlace, icono)
@@ -138,9 +137,10 @@ def test_barra_contextual_marca_y_revela_cada_escena(monkeypatch, escena):
             crear_barra_navegacion(ruta_activa="/visualizador", clave_activa=f"vis:{escena}")
         enlaces = {elemento._props["href"]: elemento for elemento in cliente.elements.values()
                    if "navegacion-elemento" in elemento.classes}
-        destinos_escenas = {destino: icono for clave, destino, icono in _DESTINOS if clave.startswith("vis:")}
-        assert enlaces.keys() == destinos_escenas.keys()
-        for destino, icono in destinos_escenas.items():
+        destinos_seccion = {destino: icono for clave, destino, icono in _DESTINOS
+                            if clave in {"vectores", "transformaciones"} or clave.startswith("vis:")}
+        assert enlaces.keys() == destinos_seccion.keys()
+        for destino, icono in destinos_seccion.items():
             assert enlaces[destino]._props["aria-label"]
             assert _contiene_svg(enlaces[destino], icono)
         activos = [destino for destino, enlace in enlaces.items() if enlace._props.get("aria-current") == "page"]

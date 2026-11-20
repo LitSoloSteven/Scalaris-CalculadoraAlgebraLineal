@@ -49,17 +49,21 @@ def test_inicio_monta_enlaces_para_ambos_modelos(monkeypatch):
     asyncio.run(construir_pagina(monkeypatch, "inicio", comprobar))
 
 
-@pytest.mark.parametrize("identificador", ["sistemas", *MODELOS_MATRICIALES])
-def test_barra_ofrece_modelos_y_marca_solo_la_vista_actual(monkeypatch, identificador):
-    """Los modelos aparecen en las vistas de Álgebra y tienen estado activo al abrirlos."""
+@pytest.mark.parametrize("identificador,seccion,total", [
+    ("sistemas", ("sistemas", "leontief"), 2),
+    ("leontief", ("sistemas", "leontief"), 2),
+    ("transformaciones", ("vectores", "transformaciones"), 5),
+])
+def test_barra_ofrece_modelos_y_marca_solo_la_vista_actual(monkeypatch, identificador, seccion, total):
+    """Cada modelo aparece en su sección y tiene estado activo al abrirlo."""
     monkeypatch.setenv("SCALARIS_NAV", "1")
 
     async def comprobar(vista, cliente):
-        """Verifica rutas de ambos modelos y la selección exclusiva en la barra montada."""
+        """Verifica los destinos de la sección y su selección exclusiva."""
         enlaces = [elemento for elemento in cliente.elements.values() if "navegacion-elemento" in elemento._classes]
-        assert len(enlaces) == 8
+        assert len(enlaces) == total
         destinos = {elemento._props["href"] for elemento in enlaces}
-        assert {ruta_de(modelo) for modelo in MODELOS_MATRICIALES} <= destinos
+        assert {ruta_de(clave) for clave in seccion} <= destinos
         activos = [elemento._props["href"] for elemento in enlaces if elemento._props.get("aria-current") == "page"]
         assert activos == [ruta_de(identificador)]
     asyncio.run(construir_pagina(monkeypatch, identificador, comprobar))
