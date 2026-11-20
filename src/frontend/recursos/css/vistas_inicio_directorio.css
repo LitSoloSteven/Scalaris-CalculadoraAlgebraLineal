@@ -1,4 +1,4 @@
-.inicio-raiz {
+.inicio-raiz { container-type: inline-size;
     width: 100%;
     max-width: 71rem;
     min-width: 0;
@@ -54,8 +54,7 @@
 .inicio-tema .q-btn__content { gap: var(--space-1); flex-wrap: nowrap; }
 .inicio-tema .icono-svg { width: 1.125rem; height: 1.125rem; }
 .inicio-tema [data-inicio-nombre-tema] { display: none; }
-html:not([data-tema]) .inicio-tema [data-inicio-nombre-tema="papel"],
-html[data-tema="papel"] .inicio-tema [data-inicio-nombre-tema="papel"],
+html:not([data-tema="marea"], [data-tema="medianoche"]) .inicio-tema [data-inicio-nombre-tema="papel"],
 html[data-tema="marea"] .inicio-tema [data-inicio-nombre-tema="marea"],
 html[data-tema="medianoche"] .inicio-tema [data-inicio-nombre-tema="medianoche"] { display: inline; }
 
@@ -169,14 +168,6 @@ html[data-inicio-pendiente]:not([data-entrada="teclado"]) .inicio-seccion:not(:f
 
 .inicio-lista-escenas > li { min-width: 0; max-width: 100%; }
 
-.inicio-lista-escenas .inicio-enlace {
-    grid-template-columns: 1.625rem minmax(0, 1fr) auto;
-    gap: var(--space-1);
-    font-size: var(--fs-small);
-}
-
-.inicio-lista-escenas .inicio-simbolo { width: 1.625rem; }
-
 .inicio-enlace {
     display: grid;
     grid-template-columns: 2.5rem minmax(0, 1fr) auto;
@@ -200,6 +191,14 @@ html[data-inicio-pendiente]:not([data-entrada="teclado"]) .inicio-seccion:not(:f
     color: var(--accent);
     transition: transform var(--dur-release) var(--ease-std);
 }
+
+.inicio-lista-escenas .inicio-enlace {
+    grid-template-columns: 1.625rem minmax(0, 1fr) auto;
+    gap: var(--space-1);
+    font-size: var(--fs-small);
+}
+
+.inicio-lista-escenas .inicio-simbolo { width: 1.625rem; }
 
 .inicio-simbolo svg { width: 1.625rem; height: 1.625rem; overflow: visible; }
 .inicio-simbolo svg > * { transform-box: fill-box; transform-origin: center; }

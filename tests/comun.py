@@ -18,6 +18,7 @@ ARCHIVOS_CSS = [
     RAIZ / "src" / "frontend" / "recursos" / "css" / "selector_simbolos.css",
     RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_navegacion.css",
     RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_inicio_directorio.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_inicio_ejemplos.css",
     RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_inicio_adaptable.css",
     RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_glosa_panel_lateral.css",
     RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_glosa_componentes.css",

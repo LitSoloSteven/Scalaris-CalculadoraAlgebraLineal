@@ -1,5 +1,5 @@
 .inicio-ejemplo-contenedor {
-    container-type: inline-size;
+    container: ejemplo-inicio / inline-size;
     inline-size: 100%;
     min-inline-size: 0;
 }
@@ -175,7 +175,7 @@ html[data-entrada="puntero"] .inicio-ejemplo-accion:active {
     }
 }
 
-@container (max-width: 15rem) {
+@container ejemplo-inicio (max-width: 15rem) {
     .inicio-ejemplo-etapas {
         grid-template-columns: minmax(0, 1fr);
         justify-items: center;
