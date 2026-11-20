@@ -3,12 +3,11 @@ from fractions import Fraction
 
 import pytest
 
-from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.sistemas_lineales.aritmetica_jacobi import (
     LimiteAritmeticoJacobi, PresupuestoAritmetico,
 )
 from src.backend.resolutores.sistemas_lineales.contrato_jacobi import (
-    EntradaJacobi, ResultadoJacobi,
+    EntradaJacobi, MatrizCrudaJacobi, ResultadoJacobi,
 )
 from src.backend.resolutores.sistemas_lineales.jacobi import resolver_jacobi
 from src.backend.resolutores.sistemas_lineales.limites_jacobi import (
@@ -17,19 +16,19 @@ from src.backend.resolutores.sistemas_lineales.limites_jacobi import (
 import src.backend.resolutores.sistemas_lineales.jacobi as motor
 
 
-def _matriz(datos: list[list[int]]) -> Matriz:
-    return Matriz(len(datos), len(datos[0]), datos)
+def _matriz(datos: list[list[int]]) -> MatrizCrudaJacobi:
+    return tuple(tuple(fila) for fila in datos)
 
 
 def _ejecutar(
-    matriz: Matriz,
+    matriz: MatrizCrudaJacobi,
     vector_b: tuple | list,
     vector_inicial: tuple | list | None = None,
     tolerancia: Fraction | int | str = Fraction(1, 100),
     maximo: int = 5,
 ) -> ResultadoJacobi:
     inicio = (
-        tuple(Fraction(0) for _ in range(matriz.filas))
+        (0,) * len(matriz)
         if vector_inicial is None
         else vector_inicial
     )
@@ -228,7 +227,7 @@ def test_limite_aritmetico_real_durante_la_iteracion() -> None:
 def test_la_solucion_exacta_prevalece_sobre_la_norma_del_cambio() -> None:
     """Una diferencia grande no descarta un residuo ya certificado."""
     grande = 2 ** (MAXIMO_BITS_CALCULO_JACOBI - 1)
-    matriz = Matriz(1, 1, [[Fraction(1, 2)]])
+    matriz = ((Fraction(1, 2),),)
     resultado = _ejecutar(matriz, [Fraction(-grande, 2)], [grande])
 
     assert resultado.codigo == "SOLUCION_EXACTA"

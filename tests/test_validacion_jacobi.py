@@ -3,13 +3,12 @@ from fractions import Fraction
 
 import pytest
 
-from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.sistemas_lineales.contrato_jacobi import EntradaJacobi
+from src.backend.resolutores.sistemas_lineales.contrato_jacobi import EntradaJacobi, MatrizCrudaJacobi
 from src.backend.resolutores.sistemas_lineales.jacobi import resolver_jacobi
 
 
 def _entrada(
-    matriz: Matriz,
+    matriz: MatrizCrudaJacobi,
     vector_b: tuple | list,
     vector_inicial: tuple | list,
     tolerancia: Fraction | int | str = Fraction(1, 100),
@@ -24,16 +23,15 @@ def _entrada(
     )
 
 
-def _matriz_cuadrada(datos: list[list[int]]) -> Matriz:
-    return Matriz(len(datos), len(datos[0]), datos)
+def _matriz_cuadrada(datos: list[list[int]]) -> MatrizCrudaJacobi:
+    return tuple(tuple(fila) for fila in datos)
 
 
 def test_dimension_diez_resuelve_y_once_se_rechaza() -> None:
     """El tope de sistemas admite diez variables y rechaza la once."""
-    matriz = Matriz(10, 10, [[10 if fila == columna else 0 for columna in range(10)]
-                            for fila in range(10)])
+    matriz = [[10 if fila == columna else 0 for columna in range(10)] for fila in range(10)]
     valido = resolver_jacobi(_entrada(matriz, [10] * 10, [0] * 10))
-    excesivo = resolver_jacobi(_entrada(Matriz(11, 11), [0] * 11, [0] * 11))
+    excesivo = resolver_jacobi(_entrada([[0] * 11 for _ in range(11)], [0] * 11, [0] * 11))
 
     assert valido.codigo == "SOLUCION_EXACTA"
     assert valido.aproximacion == (Fraction(1),) * 10
@@ -43,10 +41,8 @@ def test_dimension_diez_resuelve_y_once_se_rechaza() -> None:
 
 def test_matriz_rectangular_o_vacia_se_rechaza() -> None:
     """La forma se comprueba antes de convertir celdas."""
-    rectangular = resolver_jacobi(_entrada(Matriz(2, 3), [0, 0], [0, 0]))
-    vacia = Matriz(1, 1, [[1]])
-    vacia.datos = []
-    sin_datos = resolver_jacobi(_entrada(vacia, [0], [0]))
+    rectangular = resolver_jacobi(_entrada([[0, 0, 0], [0, 0, 0]], [0, 0], [0, 0]))
+    sin_datos = resolver_jacobi(_entrada([], [0], [0]))
 
     assert rectangular.codigo == "ENTRADA_INVALIDA"
     assert rectangular.diagnostico.campo == "matriz_a"
@@ -55,9 +51,8 @@ def test_matriz_rectangular_o_vacia_se_rechaza() -> None:
 
 
 def test_filas_irregulares_se_rechazan_antes_de_leer_celdas() -> None:
-    """Una matriz manipulada con filas desiguales no llega al cálculo."""
-    irregular = Matriz(2, 2, [[1, 0], [0, 1]])
-    irregular.datos = [[1], [0, 1]]
+    """Una cuadrícula con filas desiguales no llega al cálculo."""
+    irregular = [[1], [0, 1]]
     resultado = resolver_jacobi(_entrada(irregular, [1, 1], [0, 0]))
 
     assert resultado.codigo == "ENTRADA_INVALIDA"
@@ -117,7 +112,7 @@ def test_division_por_cero_y_booleano_se_ubican() -> None:
     division = resolver_jacobi(
         _entrada(_matriz_cuadrada([[4, 1], [1, 3]]), ["1/0", 2], [0, 0])
     )
-    booleano = resolver_jacobi(_entrada(Matriz(1, 1, [[True]]), [1], [0]))
+    booleano = resolver_jacobi(_entrada([[True]], [1], [0]))
 
     assert division.codigo == "ENTRADA_INVALIDA"
     assert division.diagnostico.fila == 1
@@ -164,14 +159,14 @@ def test_dominancia_estricta_se_informa_sin_bloquear() -> None:
 
 def test_las_entradas_no_se_modifican() -> None:
     """El cálculo usa una instantánea y conserva A, b y el vector inicial."""
-    matriz = _matriz_cuadrada([[4, 1], [1, 3]])
+    matriz = [[4, 1], [1, 3]]
     vector_b = [Fraction(2), Fraction(2)]
     vector_inicial = [Fraction(0), Fraction(0)]
-    datos_originales = [fila[:] for fila in matriz.datos]
+    datos_originales = [fila[:] for fila in matriz]
 
     resolver_jacobi(_entrada(matriz, vector_b, vector_inicial, maximo=2))
 
-    assert matriz.datos == datos_originales
+    assert matriz == datos_originales
     assert vector_b == [Fraction(2), Fraction(2)]
     assert vector_inicial == [Fraction(0), Fraction(0)]
 
@@ -230,8 +225,7 @@ def test_vector_que_cambia_al_copiarse_se_rechaza() -> None:
 
 def test_la_matriz_inmutable_es_admisible() -> None:
     """El resolutor admite datos matriciales almacenados en tuplas de solo lectura."""
-    matriz = Matriz(2, 2)
-    matriz.datos = ((2, 0), (0, 2))
+    matriz = ((2, 0), (0, 2))
     resultado = resolver_jacobi(_entrada(matriz, [4, 4], [0, 0]))
 
     assert resultado.codigo == "SOLUCION_EXACTA"
@@ -248,28 +242,19 @@ def test_la_dominancia_se_informa_en_fallos_posteriores() -> None:
 
 
 def test_la_matriz_se_lee_una_sola_vez() -> None:
-    """Una matriz cuyo atributo datos cambia después no altera la instantánea."""
-    class MatrizInestable(Matriz):
-        """Matriz de prueba que devuelve ceros a partir de la segunda lectura."""
+    """Los cambios tras recorrer una cuadrícula no alteran la instantánea."""
+    class _CuadriculaInestable(list):
+        """Lista que devuelve ceros después del primer recorrido."""
 
-        def __init__(self) -> None:
-            super().__init__(2, 2, [[2, 0], [0, 2]])
-            self.lecturas = 0
+        lecturas = 0
 
-        @property
-        def datos(self):
-            """Devuelve datos válidos solo en la primera lectura."""
+        def __iter__(self):
             self.lecturas += 1
             if self.lecturas == 1:
-                return self._datos
-            return [[0, 0], [0, 0]]
+                return super().__iter__()
+            return iter([[0, 0], [0, 0]])
 
-        @datos.setter
-        def datos(self, valor) -> None:
-            """Conserva los datos recibidos durante la construcción."""
-            self._datos = valor
-
-    matriz = MatrizInestable()
+    matriz = _CuadriculaInestable([[2, 0], [0, 2]])
     resultado = resolver_jacobi(_entrada(matriz, [4, 4], [0, 0]))
 
     assert matriz.lecturas == 1
