@@ -155,7 +155,7 @@ def test_contrato_estatico_cliente_inicio():
     entrada = Path("src/frontend/recursos/js/inicio_entrada.js").read_text(encoding="utf-8")
     assert "data-inicio-pendiente" in entrada
     assert ".inicio-directorio[data-directorio-listo]" in entrada
-    assert "presentacion.terminada.then(esperarContenido, esperarContenido)" in entrada
+    assert "{ directorioListo, finalizar }" in entrada
     assert "hub-carousel" not in contenido
     assert "ResizeObserver" not in contenido
     assert "onPointerDown" not in contenido

@@ -60,9 +60,9 @@ def test_secciones_inicio_limitan_retardos():
 
     entrada = RUTA_JS_ENTRADA.read_text(encoding="utf-8")
     assert ".inicio-directorio[data-directorio-listo]" in entrada
-    assert "presentacion.terminada.then(esperarContenido, esperarContenido)" in entrada
+    assert "{ directorioListo, finalizar }" in entrada
     assert "new MutationObserver" in entrada
-    assert "requestAnimationFrame(finalizar)" in entrada
+    assert "requestAnimationFrame(confirmarMontaje)" in entrada
 
 
 def test_gesto_puntero_solo_mueve_los_trazos_del_simbolo():
