@@ -87,7 +87,10 @@
 
     function prepararAbertura(imagen) {
       const abertura = fondo.querySelector('#presentacion-abertura');
+      const superficie = fondo.querySelector('#presentacion-superficie-mascara');
       const { x, y, radio } = revelado.medir(revelado.centroDe(imagen));
+      superficie.setAttribute('width', window.innerWidth);
+      superficie.setAttribute('height', window.innerHeight);
       abertura.setAttribute('cx', x);
       abertura.setAttribute('cy', y);
       abertura.setAttribute('r', radio);

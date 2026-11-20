@@ -46,6 +46,9 @@ prueba('la geometría a 320 px se mide antes de elevar el logotipo en cada tema'
         };
         await cliente.reloj.avanzar(900);
         const { propiedades } = cliente.nodos.get(ABERTURA);
+        const superficie = cliente.nodos.get('#presentacion-superficie-mascara').propiedades;
+        afirmar.equal(superficie.get('width'), 320);
+        afirmar.equal(superficie.get('height'), 600);
         afirmar.deepEqual(mediciones, [4]);
         afirmar.equal(propiedades.get('cx'), 160);
         afirmar.equal(propiedades.get('cy'), 220);
