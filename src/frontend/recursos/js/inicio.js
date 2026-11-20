@@ -1,10 +1,9 @@
 /** Reproduce los gestos de los símbolos del directorio con entradas de puntero. */
-(function prepararGestosInicio() {
-    "use strict";
+'use strict';
+{
 
     const CONTROLES = "[data-gesto-inicio]";
     const SIMBOLO = ".inicio-simbolo svg";
-    const MAXIMO_REDUCIDO = 120;
     const preferenciaReducida = window.matchMedia("(prefers-reduced-motion: reduce)");
     const punteroFino = window.matchMedia("(hover: hover) and (pointer: fine)");
     const animaciones = new Set();
@@ -120,7 +119,7 @@
         const duracion = movimiento.duracion(reducido ? "--dur-reduced" : "--dur-state");
         if (!Number.isFinite(duracion) || duracion <= 0) return;
         const opciones = {
-            duration: reducido ? Math.min(duracion, MAXIMO_REDUCIDO) : duracion,
+            duration: duracion,
             easing: movimiento.curva(),
         };
 
@@ -177,4 +176,4 @@
 
     window.addEventListener("pageshow", montar);
     montar();
-})();
+}

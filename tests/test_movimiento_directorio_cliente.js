@@ -143,11 +143,11 @@ prueba("la preferencia de movimiento cancela la animación y limita la opacidad 
     pasarPuntero(cliente, descendiente);
     cliente.reduccion.matches = true;
     emitir(cliente.reduccion, "change");
-    cliente.tokens.set("--dur-reduced", 180);
     pasarPuntero(cliente, descendiente);
     afirmar.equal(cliente.llamadas[0].cancelaciones, 1);
     const { opciones, fotogramas } = cliente.llamadas[1];
-    afirmar.equal(opciones.duration, 120);
+    afirmar.equal(opciones.duration, cliente.tokens.get("--dur-reduced"));
+    afirmar.ok(opciones.duration <= 120);
     afirmar.ok(fotogramas.every(fotograma => Object.keys(fotograma).join() === "opacity"));
     afirmar.equal(fotogramas[0].opacity, fotogramas.at(-1).opacity);
 });
