@@ -1,0 +1,35 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "openrouter/deepseek/deepseek-v4.1-flash",
+  "default_agent": "revisor-scalaris",
+  "policies": [
+    { "action": "provider.use", "resource": "*", "effect": "deny" },
+    { "action": "provider.use", "resource": "openrouter", "effect": "allow" }
+  ],
+  "providers": {
+    "openrouter": {
+      "models": {
+        "deepseek/deepseek-v4.1-flash": {
+          "limit": { "output": 2048 }
+        }
+      }
+    }
+  },
+  "agents": {
+    "revisor-scalaris": {
+      "description": "Revisa el diff de Scalaris con el contrato y los resultados de pruebas entregados por Codex.",
+      "mode": "primary",
+      "model": "openrouter/deepseek/deepseek-v4.1-flash",
+      "steps": 8,
+      "system": "Revisa solo el diff adjunto y los criterios de aceptación asignados. Consulta código o pruebas por rango únicamente para verificar un hallazgo concreto. Reutiliza los resultados de pruebas que recibiste. Devuelve hallazgos de seguridad defensiva, regresiones o mantenibilidad con severidad, ruta, línea, evidencia y corrección sugerida. Señala las comprobaciones pendientes. Conserva el repositorio en solo lectura.",
+      "permissions": [
+        { "action": "*", "resource": "*", "effect": "deny" },
+        { "action": "read", "resource": "AGENTS.md", "effect": "allow" },
+        { "action": "read", "resource": "docs/__SCALARIS_REGLAS_DEL_AGENTE.txt", "effect": "allow" },
+        { "action": "read", "resource": "src/**", "effect": "allow" },
+        { "action": "read", "resource": "tests/**", "effect": "allow" },
+        { "action": "read", "resource": "**/.env*", "effect": "deny" }
+      ]
+    }
+  }
+}
