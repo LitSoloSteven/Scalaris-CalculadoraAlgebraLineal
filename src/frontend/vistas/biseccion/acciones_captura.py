@@ -62,7 +62,7 @@ def construir_ayuda() -> None:
     textos = (
         "Usa x, +, −, *, /, ^ o ** y paréntesis. Se admiten 2x, 3sin(x), 2(x+1), (x+1)(x-1), x² y x³. "
         "La potencia precede al signo: -x² = -(x²).",
-        "Funciones: sin, cos, tan, asin, acos, atan, sinh, cosh, tanh, exp, sqrt y abs. "
+        "Funciones: sin, cos, tan, asin, acos, atan, sinh, cosh, tanh, exp, abs, sqrt (√), cbrt (∛) y raiz4 (∜). "
         "ln y log son naturales; log10 y log2 usan base 10 y 2. Constantes: pi y e.",
         "La unidad se aplica a sin, cos y tan, y a los resultados de asin, acos y atan. "
         "Las funciones hiperbólicas y la constante pi conservan su valor.",

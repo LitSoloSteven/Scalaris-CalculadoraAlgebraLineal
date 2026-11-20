@@ -2,10 +2,13 @@
 
 import re
 
+_OPERADORES_TIPOGRAFICOS = str.maketrans({"−": "-", "×": "*", "·": "*", "⋅": "*", "∙": "*"})
+
 
 def tokenizar_expresion(expresion: str) -> list[str]:
     """Convierte la cadena en tokens e inserta multiplicaciones implícitas."""
-    expresion_limpia = expresion.replace(" ", "").replace("^T", "ᵀ").replace("^t", "ᵀ")
+    expresion_limpia = expresion.translate(_OPERADORES_TIPOGRAFICOS).replace(" ", "")
+    expresion_limpia = expresion_limpia.replace("^T", "ᵀ").replace("^t", "ᵀ")
     patron = re.compile(
         r"\d+\.\d+|\d+|[A-Za-z][A-Za-z0-9]*_[A-Za-z0-9_]*|[A-Za-z][0-9]+|[A-Za-z]|ᵀ|[\+\-\*\(\)]"
     )

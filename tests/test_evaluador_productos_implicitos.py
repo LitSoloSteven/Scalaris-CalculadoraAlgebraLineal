@@ -85,7 +85,7 @@ def test_expresion_anidada_con_transpuesta():
     matriz_c = Matriz(2, 2, [[1, 0], [0, 1]])
     matriz_d = Matriz(2, 2, [[2, 1], [0, 3]])
     matrices = {"A": matriz_a, "B": matriz_b, "C": matriz_c, "D": matriz_d}
-    for expresion in ("2A - B(C - Dᵀ)", "2A - B*(C - D^T)", "2A - B*(C - D^t)"):
+    for expresion in ("2A - B(C - Dᵀ)", "2A - B*(C - D^T)", "2A - B*(C - D^t)", "2×A−B·(C−Dᵀ)"):
         resultado = _evaluar(expresion, matrices)
         assert resultado["estado"] == "EXITO"
         assert resultado["matriz_resultado"].datos == [

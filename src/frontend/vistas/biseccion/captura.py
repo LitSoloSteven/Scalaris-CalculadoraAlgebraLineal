@@ -1,7 +1,7 @@
 """Función compartida y captura del intervalo individual."""
 from nicegui import ui
 
-from src.backend.resolutores.raices.contrato_biseccion import LONGITUD_MAXIMA_EXPRESION
+from src.frontend.componentes.campo_funcion_real import crear_campo_funcion
 from .movimiento import modalidad_puntero, vincular_envio
 from .selector_criterio import construir_selector
 from .selector_unidad import construir_selector_unidad
@@ -12,8 +12,7 @@ GUIA_CONTINUIDAD = "La garantía requiere continuidad en todo [a, b]. Un cambio 
 def construir_captura(vista) -> None:
     """Monta la función y su unidad en una fila adaptable."""
     with ui.element("div").classes("biseccion-funcion w-full"):
-        vista.expresion = ui.input("Función f(x)", placeholder="Ejemplo: x^2 - 2").classes(
-            "w-full matriz-entrada").props(f"maxlength={LONGITUD_MAXIMA_EXPRESION} autocomplete=off spellcheck=false")
+        vista.expresion = crear_campo_funcion()
         construir_selector_unidad(vista)
     vista.estado_expresion = _region_estado()
 

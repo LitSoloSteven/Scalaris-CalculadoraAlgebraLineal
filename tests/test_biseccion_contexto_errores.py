@@ -78,9 +78,10 @@ def test_cero_extremo_conserva_advertencia_interior(expresion):
         comprobar_dominio_intervalo(expresion, (-1, 1))
 
 
-def test_singularidad_estructural_no_inventa_abscisa_evaluada():
+@pytest.mark.parametrize("expresion", ["1/(x-0.1234)", "1/∛(x-0.1234)"])
+def test_singularidad_estructural_no_inventa_abscisa_evaluada(expresion):
     """La detección analítica no se presenta como un fallo de evaluación puntual."""
-    resultado = _resolver("1/(x-0.1234)", (-1, 1))
+    resultado = _resolver(expresion, (-1, 1))
     assert resultado.estado == "ERROR"
     assert resultado.codigo_diagnostico == "SINGULARIDAD_DETECTADA"
     assert resultado.contexto_fallo == {

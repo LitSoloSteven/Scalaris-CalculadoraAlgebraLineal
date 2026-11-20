@@ -17,6 +17,18 @@ def test_funciones_permitidas():
     assert math.isclose(evaluar(f, 0), 1.0, rel_tol=1e-9)
 
 
+@pytest.mark.parametrize("expresion,valor,esperado", [
+    ("√(x)", 9, 3),
+    ("∛(x)", -8, -2),
+    ("cbrt(x)", 27, 3),
+    ("2∛(x) + x√(4)", -8, -20),
+    ("√(∛(x))", 64, 2),
+])
+def test_radicales_en_funciones_reales(expresion, valor, esperado):
+    """Evalúa radicales solos, anidados y en productos implícitos reales."""
+    assert evaluar(compilar(expresion), valor) == pytest.approx(esperado)
+
+
 def test_division_por_cero():
     """Rechaza la evaluación en una singularidad conocida."""
     f = compilar("1/x")

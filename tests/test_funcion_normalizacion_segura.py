@@ -21,6 +21,8 @@ from src.backend.resolutores.raices.normalizacion_funcion import normalizar_expr
     ("1e-200(x-1)", "1e-200*(x-1)"), ("1e−200x", "1e-200*x"),
     (".5x+2.5E+1", ".5*x+2.5E+1"), ("2**-x", "2**(-x)"),
     ("(x\n+1)", "x+1"),
+    ("πx×½−ℯ÷2", "pi*x*(1/2)-e/2"), ("∜(16)⋅x⁴", "raiz4(16)*x**4"),
+    ("(x²+1)⁻²+⅝", "(x**2+1)**-2+(5/8)"), ("π⁄2+2∙x∕4", "pi/2+2*x/4"),
 ])
 def test_equivalencia_y_precedencia(expresion, explicita):
     """La notación ampliada equivale a operadores explícitos en puntos positivos y negativos."""

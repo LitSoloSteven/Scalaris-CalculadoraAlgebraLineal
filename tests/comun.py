@@ -15,6 +15,7 @@ ARCHIVOS_CSS = [
     RAIZ / "src" / "frontend" / "recursos" / "css" / "componentes_entradas.css",
     RAIZ / "src" / "frontend" / "recursos" / "css" / "componentes_controles.css",
     RAIZ / "src" / "frontend" / "recursos" / "css" / "exportacion_pdf.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "selector_simbolos.css",
     RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_navegacion.css",
     RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_inicio_matriz.css",
     RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_inicio_ventanas_emergentes.css",

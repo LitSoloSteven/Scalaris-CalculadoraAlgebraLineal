@@ -14,6 +14,11 @@ def test_precedencia_y_fracciones():
     assert formatear_expresion("x/(1/(x+1))")["latex"] == r"f(x) = \frac{x}{\frac{1}{x + 1}}"
 
 
+def test_vista_previa_proyecta_radicales_con_su_indice():
+    """Cada radical se proyecta al índice correspondiente en la vista previa."""
+    assert formatear_expresion("√(x)+∛(x)+∜(x)")["latex"] == r"f(x) = \sqrt{x} + \sqrt[3]{x} + \sqrt[4]{x}"
+
+
 @pytest.mark.parametrize("nombre", FUNCIONES_REALES)
 def test_proyecta_catalogo_real(nombre):
     """Todas las llamadas aceptadas disponen de una representación definida."""
