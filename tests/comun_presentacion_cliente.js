@@ -24,7 +24,7 @@ function crearReloj() {
         }
         tiempo = destino;
     }
-    return { programar, cancelar: identificador => tareas.delete(identificador), avanzar, tareas };
+    return { ahora: () => tiempo, programar, cancelar: identificador => tareas.delete(identificador), avanzar, tareas };
 }
 
 /** Registra oyentes y permite cancelarlos igual que las superficies del navegador. */
@@ -49,20 +49,31 @@ function crearDocumento(reloj, opciones) {
     const animaciones = [], atributos = new Map(), observadores = [];
     if (opciones.teclado) atributos.set('data-entrada', 'teclado');
     let montado = false, contenido = opciones.contenido !== false;
-    const fondo = { toggleAttribute() {}, remove: () => { montado = false; } };
-    function animar(fotogramas, tiempos) {
+    function animar(selector, fotogramas, tiempos) {
         if (opciones.animacionFallida) throw new Error("Animación no disponible");
         let resolver, rechazar;
         const finished = new Promise((exito, fallo) => { resolver = exito; rechazar = fallo; });
         const tarea = opciones.animacionCongelada ? null : reloj.programar(resolver, (tiempos.delay || 0) + tiempos.duration);
-        const animacion = { fotogramas, tiempos, finished, cancelada: false,
+        const animacion = { selector, inicio: reloj.ahora(), fotogramas, tiempos, finished, rechazar, cancelada: false,
             cancel() { this.cancelada = true; reloj.cancelar(tarea); rechazar(new Error("Cancelada")); } };
         animaciones.push(animacion);
         return animacion;
     }
-    const imagen = { animate: animar, decode: () => opciones.imagenFallida ? Promise.reject(new Error("Imagen")) : Promise.resolve() };
-    fondo.animate = animar;
-    fondo.querySelector = selector => selector === "#presentacion-logotipo" ? imagen : { animate: animar };
+    const nodos = new Map();
+    function seleccionar(selector) {
+        if (!nodos.has(selector)) {
+            const propiedades = new Map();
+            nodos.set(selector, { propiedades, setAttribute: (nombre, valor) => propiedades.set(nombre, valor),
+                animate: opciones.sinAnimacion ? undefined : animar.bind(null, selector) });
+        }
+        return nodos.get(selector);
+    }
+    const fondo = Object.assign(seleccionar('#aplicacion-presentacion-fondo'), {
+        toggleAttribute() {}, remove: () => { montado = false; }, querySelector: seleccionar,
+    });
+    const imagen = seleccionar('#presentacion-logotipo');
+    imagen.decode = () => opciones.imagenFallida ? Promise.reject(new Error('Imagen')) : Promise.resolve();
+    imagen.getBoundingClientRect = () => opciones.cajaLogo || { left: 360, top: 210, width: 80, height: 80 };
     const raiz = { setAttribute: (nombre, valor) => atributos.set(nombre, valor),
         getAttribute: nombre => nombre === "data-tema" ? (opciones.tema || "papel") : atributos.get(nombre),
         removeAttribute: nombre => atributos.delete(nombre), appendChild: () => { montado = true; } };
@@ -70,7 +81,7 @@ function crearDocumento(reloj, opciones) {
         getElementById: nombre => nombre === "presentacion-plantilla"
             ? { content: { firstElementChild: { cloneNode: () => fondo } } } : (montado ? fondo : null),
         querySelector: () => contenido ? {} : null };
-    return { documento, animaciones, atributos, fondo, imagen, observadores,
+    return { documento, animaciones, atributos, fondo, imagen, observadores, nodos,
         montado: () => montado,
         montarContenido: () => { contenido = true; observadores.filter(o => o.activo).forEach(o => o.accion()); } };
 }
@@ -80,7 +91,8 @@ function crearPresentacion(opciones = {}) {
     const reloj = crearReloj(), dom = crearDocumento(reloj, opciones);
     const almacen = opciones.almacen || new Map();
     const preferencia = { ...crearEventos(), matches: opciones.reducido || false };
-    const ventana = { ...crearEventos(), scalaris: {}, matchMedia: () => preferencia };
+    const ventana = { ...crearEventos(), scalaris: {}, matchMedia: () => preferencia,
+        CSS: { supports: () => !opciones.sinMascara }, innerWidth: opciones.ancho || 800, innerHeight: 600 };
     const contexto = maquinaVirtual.createContext({
         window: ventana, document: dom.documento,
         location: { pathname: opciones.ruta || "/", search: opciones.consulta || "" },
@@ -89,6 +101,7 @@ function crearPresentacion(opciones = {}) {
             setItem: (nombre, valor) => almacen.set(nombre, valor),
         },
         getComputedStyle: estilosMovimiento,
+        performance: { now: reloj.ahora },
         setTimeout: reloj.programar, clearTimeout: reloj.cancelar,
         requestAnimationFrame: accion => reloj.programar(accion, 16), cancelAnimationFrame: reloj.cancelar,
         MutationObserver: class {
@@ -99,6 +112,7 @@ function crearPresentacion(opciones = {}) {
     });
     function cargar(nombre) { cargarAssetCliente(nombre, contexto); }
     cargar("interacciones_globales.js");
+    cargar("revelado_circular.js");
     if (!opciones.sinPresentacion) cargar("presentacion.js");
     if (!opciones.sinEntrada) cargar("inicio_entrada.js");
     return { ...dom, reloj, almacen, preferencia, ventana, contexto, cargar };

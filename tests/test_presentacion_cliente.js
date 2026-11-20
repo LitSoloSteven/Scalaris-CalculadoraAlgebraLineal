@@ -5,12 +5,12 @@ const { crearPresentacion } = require("./comun_presentacion_cliente.js");
 
 prueba("la primera visita encadena las animaciones y después libera el inicio", async () => {
     const cliente = crearPresentacion({ tema: "medianoche" });
-    await cliente.reloj.avanzar(1949);
-    afirmar.equal(cliente.animaciones.length, 7);
+    await cliente.reloj.avanzar(2289);
+    afirmar.equal(cliente.animaciones.length, 8);
     afirmar.equal(cliente.montado(), true);
-    afirmar.equal(cliente.atributos.has("data-inicio-pendiente"), true);
+    afirmar.equal(cliente.atributos.has("data-inicio-pendiente"), false);
     afirmar.equal(cliente.imagen.src, "/assets/LogoClaro.png");
-    await cliente.reloj.avanzar(1982);
+    await cliente.reloj.avanzar(2290);
     afirmar.equal(cliente.montado(), false);
     afirmar.equal(cliente.atributos.has("data-inicio-pendiente"), false);
     afirmar.equal(cliente.reloj.tareas.size, 0);
@@ -22,8 +22,8 @@ prueba("la primera visita encadena las animaciones y después libera el inicio",
 prueba("reinyectar, recargar o regresar al inicio no reproduce otra presentación", async () => {
     const cliente = crearPresentacion();
     cliente.cargar("presentacion.js");
-    await cliente.reloj.avanzar(1982);
-    afirmar.equal(cliente.animaciones.length, 7);
+    await cliente.reloj.avanzar(2290);
+    afirmar.equal(cliente.animaciones.length, 8);
     const recarga = crearPresentacion({ almacen: cliente.almacen });
     await recarga.reloj.avanzar(32);
     afirmar.equal(recarga.animaciones.length, 0);
@@ -54,11 +54,12 @@ prueba("la alternativa reducida solo anima opacidad y termina a los 120 ms", asy
 
 prueba("contenido tardío espera al montaje y a dos fotogramas visibles", async () => {
     const cliente = crearPresentacion({ contenido: false });
-    await cliente.reloj.avanzar(3100);
-    afirmar.equal(cliente.montado(), false);
-    afirmar.equal(cliente.atributos.has("data-inicio-pendiente"), true);
+    await cliente.reloj.avanzar(1000);
+    afirmar.equal(cliente.montado(), true);
+    afirmar.equal(cliente.animaciones.length, 4);
     cliente.montarContenido();
-    await cliente.reloj.avanzar(3132);
+    await cliente.reloj.avanzar(1032);
+    afirmar.equal(cliente.animaciones.length, 6);
     afirmar.equal(cliente.atributos.has("data-inicio-pendiente"), false);
     afirmar(cliente.observadores.every(observador => !observador.activo));
 });
@@ -86,7 +87,7 @@ prueba("abandonar la página cancela la escena y la entrada pendiente", async ()
 
 prueba("la salida de emergencia retira animaciones que no resuelven", async () => {
     const cliente = crearPresentacion({ animacionCongelada: true });
-    await cliente.reloj.avanzar(3832);
+    await cliente.reloj.avanzar(2890);
     afirmar.equal(cliente.montado(), false);
     afirmar.equal(cliente.atributos.has("data-inicio-pendiente"), false);
     afirmar.equal(cliente.reloj.tareas.size, 0);
