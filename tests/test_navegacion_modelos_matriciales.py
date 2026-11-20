@@ -37,14 +37,15 @@ def test_modelo_deshabilitado_se_omite_del_menu(monkeypatch, identificador):
 
 
 def test_inicio_monta_enlaces_para_ambos_modelos(monkeypatch):
-    """El inicio real permite abrir los dos modelos desde sus tarjetas de Álgebra."""
+    """El directorio permite abrir ambos modelos en sus respectivos grupos."""
     async def comprobar(vista, cliente):
         """Inspecciona los enlaces construidos por la página pública de inicio."""
-        tarjetas = {elemento._props.get("data-clave"): elemento
-                    for elemento in cliente.elements.values() if "inicio-tarjeta" in elemento._classes}
+        enlaces = {elemento._props["data-clave"]: elemento
+                   for elemento in cliente.elements.values()
+                   if "inicio-enlace" in elemento.classes and "data-clave" in elemento._props}
         for identificador in MODELOS_MATRICIALES:
-            assert tarjetas[identificador]._props["href"] == ruta_de(identificador)
-        assert len(tarjetas) == 15
+            assert enlaces[identificador]._props["href"] == ruta_de(identificador)
+        assert len(enlaces) == 15
     asyncio.run(construir_pagina(monkeypatch, "inicio", comprobar))
 
 
