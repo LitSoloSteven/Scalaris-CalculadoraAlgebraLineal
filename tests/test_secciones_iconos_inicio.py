@@ -93,6 +93,7 @@ def test_directorio_omite_grupos_y_secciones_sin_accesos(monkeypatch):
 def test_inicio_publico_muestra_los_svg_del_catalogo(monkeypatch):
     """La portada usa los mismos destinos y símbolos que la proyección."""
     async def comprobar(vista, cliente):
+        """Inspecciona los enlaces generados por la página pública de inicio."""
         for _, destino, icono in _DESTINOS:
             enlaces = [elemento for elemento in cliente.elements.values() if elemento._props.get("href") == destino]
             assert any(_contiene_svg(enlace, icono) for enlace in enlaces), destino

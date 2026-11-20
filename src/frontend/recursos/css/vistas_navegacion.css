@@ -244,6 +244,19 @@ html[data-entrada="teclado"] .navegacion-accion::after {
     .navegacion-capsula {
         padding-inline: var(--space-2);
     }
+
+    .navegacion-elemento {
+        max-inline-size: 100%;
+        gap: var(--space-1);
+        padding-inline: var(--space-2);
+        font-size: var(--fs-small);
+    }
+
+    .navegacion-etiqueta-completa {
+        white-space: normal;
+        overflow-wrap: anywhere;
+        line-height: 1.15;
+    }
 }
 
 @media (max-width: 280px) {
