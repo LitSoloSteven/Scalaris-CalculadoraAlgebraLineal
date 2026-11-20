@@ -9,7 +9,6 @@ from src.backend.constantes import (
     MENSAJE_NUMERO_DEMASIADO_LARGO,
 )
 from src.backend.modelos.entrada_numerica import convertir_numero_exacto
-from src.backend.modelos.matriz import Matriz
 
 from .contrato_jacobi import (
     CampoJacobi, CodigoJacobi, DiagnosticoJacobi, EntradaJacobi,
@@ -46,10 +45,8 @@ def preparar_entrada(
     """Valida la entrada completa y devuelve una instantánea o el fallo ubicado."""
     if not isinstance(entrada, EntradaJacobi):
         return _fallo("entrada", "La entrada debe cumplir el contrato del método de Jacobi.")
-    datos = entrada.matriz_a
-    matriz = _validar_matriz(datos) if isinstance(datos, Matriz) else _preparar_cuadricula(datos)
     return _preparar_sistema(
-        matriz, entrada.vector_b, entrada.vector_inicial,
+        _preparar_cuadricula(entrada.matriz_a), entrada.vector_b, entrada.vector_inicial,
         entrada.tolerancia, entrada.maximo_iteraciones,
     )
 
@@ -70,13 +67,18 @@ def preparar_captura(captura: object) -> EntradaPreparadaJacobi | FalloValidacio
 
 def _preparar_cuadricula(datos: object) -> tuple[tuple[Fraction, ...], ...] | FalloValidacionJacobi:
     if not isinstance(datos, (list, tuple)):
-        return _fallo("matriz_a", "La matriz A debe ser una cuadrícula de coeficientes crudos.")
+        return _fallo("matriz_a", "La matriz A debe ser una lista o tupla de filas con los coeficientes originales.")
     filas = tuple(islice(datos, DIMENSION_MAXIMA_SISTEMAS + 1))
-    if not filas:
+    dimension = len(filas)
+    if dimension == 0:
         return _fallo("matriz_a", "La matriz A no puede estar vacía.")
-    if len(filas) > DIMENSION_MAXIMA_SISTEMAS:
+    if dimension > DIMENSION_MAXIMA_SISTEMAS:
         return _fallo("matriz_a", f"El orden de A debe estar entre 1 y {DIMENSION_MAXIMA_SISTEMAS}.")
-    return _validar_cuadricula(filas, len(filas))
+    copia = tuple(
+        tuple(islice(fila, dimension + 1)) if isinstance(fila, (list, tuple)) else fila
+        for fila in filas
+    )
+    return _convertir_matriz(copia, dimension)
 
 
 def _preparar_sistema(
@@ -110,47 +112,6 @@ def _preparar_sistema(
         maximo_iteraciones=maximo,
         dominancia_estricta=dominancia,
     )
-
-
-def _validar_matriz(
-    matriz_a: object,
-) -> tuple[tuple[Fraction, ...], ...] | FalloValidacionJacobi:
-    """Comprueba tipo, forma cuadrada, tamaño y celdas exactas de A."""
-    if not isinstance(matriz_a, Matriz):
-        return _fallo("matriz_a", "La matriz A no tiene un formato admitido.")
-    dimension = _orden_matriz(getattr(matriz_a, "filas", None), getattr(matriz_a, "columnas", None))
-    if isinstance(dimension, FalloValidacionJacobi):
-        return dimension
-    return _validar_cuadricula(getattr(matriz_a, "datos", None), dimension)
-
-
-def _orden_matriz(filas: object, columnas: object) -> int | FalloValidacionJacobi:
-    if (not isinstance(filas, int) or not isinstance(columnas, int)
-            or isinstance(filas, bool) or isinstance(columnas, bool)):
-        return _fallo("matriz_a", "La matriz A no tiene dimensiones válidas.")
-    if (not 1 <= filas <= DIMENSION_MAXIMA_SISTEMAS
-            or not 1 <= columnas <= DIMENSION_MAXIMA_SISTEMAS):
-        return _fallo("matriz_a", f"El orden de A debe estar entre 1 y {DIMENSION_MAXIMA_SISTEMAS}.")
-    if filas != columnas:
-        return _fallo("matriz_a", "La matriz A debe ser cuadrada.")
-    return filas
-
-
-def _validar_cuadricula(
-    datos: object, dimension: int,
-) -> tuple[tuple[Fraction, ...], ...] | FalloValidacionJacobi:
-    if not isinstance(datos, (list, tuple)):
-        return _fallo("matriz_a", "La matriz A no tiene datos válidos.")
-    copia = tuple(
-        tuple(islice(fila, dimension + 1))
-        if isinstance(fila, (list, tuple)) else fila
-        for fila in islice(datos, dimension + 1)
-    )
-    if not copia:
-        return _fallo("matriz_a", "La matriz A no puede estar vacía.")
-    if len(copia) != dimension:
-        return _fallo("matriz_a", "La matriz A no tiene la cantidad de filas declarada.")
-    return _convertir_matriz(copia, dimension)
 
 
 def _convertir_matriz(

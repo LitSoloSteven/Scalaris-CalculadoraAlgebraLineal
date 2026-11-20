@@ -4,7 +4,6 @@ from math import prod
 
 import pytest
 
-from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.sistemas_lineales.contrato_jacobi import EntradaJacobi
 from src.backend.resolutores.sistemas_lineales.jacobi import (
     resolver_jacobi, resolver_jacobi_desde_captura,
@@ -20,9 +19,7 @@ def test_cancelacion_entera_respeta_la_solucion_exacta(
     """El orden de los términos conserva el resultado al verificar o calcular un paso."""
     grande = 2 ** (MAXIMO_BITS_CALCULO_JACOBI - 1)
     fuera_diagonal = (grande, -grande, grande) if cancelar_primero else (grande, grande, -grande)
-    matriz = Matriz(4, 4, [
-        [1, *fuera_diagonal], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1],
-    ])
+    matriz = ((1, *fuera_diagonal), (0, 1, 0, 0), (0, 0, 1, 0), (0, 0, 0, 1))
     resultado = resolver_jacobi(EntradaJacobi(
         matriz_a=matriz, vector_b=(grande + pasos_esperados, 1, 1, 1),
         vector_inicial=(0, 1, 1, 1), tolerancia=Fraction(1, 100), maximo_iteraciones=1,

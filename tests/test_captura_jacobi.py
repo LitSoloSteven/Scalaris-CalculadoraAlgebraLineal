@@ -20,6 +20,10 @@ def _captura(**campos: object) -> dict[str, object]:
     return {**datos, **campos}
 
 
+def _resolver_tipado(captura):
+    return resolver_jacobi(EntradaJacobi(**captura))
+
+
 def test_captura_omitida_empieza_en_cero() -> None:
     """El inicio omitido genera un cero por variable para la iteración simultánea."""
     resultado = resolver_jacobi_desde_captura(_captura())
@@ -38,19 +42,21 @@ def test_captura_con_inicio_invalido_devuelve_el_campo(inicio: object) -> None:
     assert resultado.diagnostico.campo == "vector_inicial"
 
 
-@pytest.mark.parametrize("coeficiente", [1.0000000001, True, "1/0", " " * 256 + "1"])
-def test_captura_rechaza_coeficientes_crudos_invalidos(coeficiente: object) -> None:
+@pytest.mark.parametrize("coeficiente", [1.0000000001, True, "", "1/0", " " * 256 + "1"])
+@pytest.mark.parametrize("resolver", [resolver_jacobi_desde_captura, _resolver_tipado])
+def test_captura_rechaza_coeficientes_crudos_invalidos(resolver, coeficiente: object) -> None:
     """La celda inválida se ubica antes de que Matriz pueda normalizarla."""
-    resultado = resolver_jacobi_desde_captura(_captura(matriz_a=[[coeficiente]], vector_b=[1]))
+    resultado = resolver(_captura(matriz_a=[[coeficiente]], vector_b=[1], vector_inicial=[0]))
 
     assert resultado.codigo == "ENTRADA_INVALIDA"
     assert resultado.diagnostico.campo == "matriz_a"
     assert (resultado.diagnostico.fila, resultado.diagnostico.columna) == (1, 1)
 
 
-def test_captura_conserva_el_decimal_exacto_de_la_matriz() -> None:
+@pytest.mark.parametrize("resolver", [resolver_jacobi_desde_captura, _resolver_tipado])
+def test_captura_conserva_el_decimal_exacto_de_la_matriz(resolver) -> None:
     """El decimal textual conserva los dígitos que distinguen su solución de uno."""
-    resultado = resolver_jacobi_desde_captura(_captura(
+    resultado = resolver(_captura(
         matriz_a=[["1.0000000001"]], vector_b=[1], vector_inicial=[1],
         tolerancia="0.000000000001",
     ))
@@ -70,14 +76,15 @@ def test_captura_con_fila_larga_informa_la_dimension_esperada() -> None:
     assert resultado.diagnostico.mensaje == "La fila 1 de A debe tener exactamente 1 columna."
 
 
-def test_matriz_sin_datos_devuelve_un_diagnostico() -> None:
-    """El punto de entrada tipado informa un atributo de datos ausente."""
-    matriz = Matriz(1, 1)
-    del matriz.datos
-    resultado = resolver_jacobi(EntradaJacobi(
-        matriz_a=matriz, vector_b=(1,), vector_inicial=(0,),
-        tolerancia=Fraction(1, 100), maximo_iteraciones=1,
+@pytest.mark.parametrize("resolver", [resolver_jacobi_desde_captura, _resolver_tipado])
+def test_rechaza_una_matriz_que_ya_redondeo_un_coeficiente(resolver) -> None:
+    """La normalización previa de un flotante no puede producir una certificación."""
+    matriz = Matriz(1, 1, [[1.0000000001]])
+    assert matriz.obtener(0, 0) == 1
+    resultado = resolver(_captura(
+        matriz_a=matriz, vector_b=[1], vector_inicial=[1], tolerancia=Fraction(1, 10 ** 12),
     ))
 
     assert resultado.codigo == "ENTRADA_INVALIDA"
     assert resultado.diagnostico.campo == "matriz_a"
+    assert resultado.aproximacion is None
