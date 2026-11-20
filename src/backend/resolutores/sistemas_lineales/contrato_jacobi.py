@@ -3,9 +3,9 @@ from dataclasses import dataclass
 from fractions import Fraction
 from typing import Literal
 
-from src.backend.modelos.matriz import Matriz
-
 EscalarJacobi = Fraction | int | str
+FilaCapturaJacobi = list[EscalarJacobi] | tuple[EscalarJacobi, ...]
+MatrizCrudaJacobi = list[FilaCapturaJacobi] | tuple[FilaCapturaJacobi, ...]
 VectorJacobi = tuple[Fraction, ...]
 CodigoJacobi = Literal[
     "SOLUCION_EXACTA",
@@ -22,10 +22,10 @@ CampoJacobi = Literal[
 
 @dataclass(frozen=True, kw_only=True)
 class EntradaJacobi:
-    """Recibe una Matriz exacta desde su origen y admite texto racional en vectores y tolerancia.
+    """Recibe la cuadrícula original de coeficientes y admite texto racional en todos los escalares.
     La tolerancia positiva acota la norma infinito de b - A·x. El máximo cuenta actualizaciones completas."""
 
-    matriz_a: Matriz
+    matriz_a: MatrizCrudaJacobi
     vector_b: tuple[EscalarJacobi, ...]
     vector_inicial: tuple[EscalarJacobi, ...]
     tolerancia: EscalarJacobi

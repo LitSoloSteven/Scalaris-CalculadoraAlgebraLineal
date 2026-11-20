@@ -46,8 +46,10 @@ def preparar_entrada(
     """Valida la entrada completa y devuelve una instantánea o el fallo ubicado."""
     if not isinstance(entrada, EntradaJacobi):
         return _fallo("entrada", "La entrada debe cumplir el contrato del método de Jacobi.")
+    datos = entrada.matriz_a
+    matriz = _validar_matriz(datos) if isinstance(datos, Matriz) else _preparar_cuadricula(datos)
     return _preparar_sistema(
-        _validar_matriz(entrada.matriz_a), entrada.vector_b, entrada.vector_inicial,
+        matriz, entrada.vector_b, entrada.vector_inicial,
         entrada.tolerancia, entrada.maximo_iteraciones,
     )
 
@@ -56,18 +58,25 @@ def preparar_captura(captura: object) -> EntradaPreparadaJacobi | FalloValidacio
     """Valida las celdas crudas de A y usa un inicio cero cuando se omite el campo."""
     if not isinstance(captura, Mapping):
         return _fallo("entrada", "La captura de Jacobi debe contener campos con nombre.")
-    datos = captura.get("matriz_a")
-    if not isinstance(datos, (list, tuple)):
-        return _fallo("matriz_a", "La matriz A debe ser una cuadrícula de coeficientes.")
-    filas = tuple(islice(datos, DIMENSION_MAXIMA_SISTEMAS + 1))
-    dimension = _orden_matriz(len(filas), len(filas))
-    if isinstance(dimension, FalloValidacionJacobi):
-        return dimension
+    matriz = _preparar_cuadricula(captura.get("matriz_a"))
+    if isinstance(matriz, FalloValidacionJacobi):
+        return matriz
     return _preparar_sistema(
-        _validar_cuadricula(filas, dimension), captura.get("vector_b"),
-        captura.get("vector_inicial", (0,) * dimension),
+        matriz, captura.get("vector_b"),
+        captura.get("vector_inicial", (0,) * len(matriz)),
         captura.get("tolerancia"), captura.get("maximo_iteraciones"),
     )
+
+
+def _preparar_cuadricula(datos: object) -> tuple[tuple[Fraction, ...], ...] | FalloValidacionJacobi:
+    if not isinstance(datos, (list, tuple)):
+        return _fallo("matriz_a", "La matriz A debe ser una cuadrícula de coeficientes crudos.")
+    filas = tuple(islice(datos, DIMENSION_MAXIMA_SISTEMAS + 1))
+    if not filas:
+        return _fallo("matriz_a", "La matriz A no puede estar vacía.")
+    if len(filas) > DIMENSION_MAXIMA_SISTEMAS:
+        return _fallo("matriz_a", f"El orden de A debe estar entre 1 y {DIMENSION_MAXIMA_SISTEMAS}.")
+    return _validar_cuadricula(filas, len(filas))
 
 
 def _preparar_sistema(

@@ -16,8 +16,8 @@ from .validacion_jacobi import (
 
 
 def resolver_jacobi(entrada: EntradaJacobi) -> ResultadoJacobi:
-    """Resuelve Ax=b desde una Matriz ya exacta, con tolerancia sobre la norma infinito del residuo.
-    Para coeficientes ingresados por el usuario, usa resolver_jacobi_desde_captura."""
+    """Resuelve Ax=b desde una cuadrícula de coeficientes crudos y parámetros tipados.
+    La tolerancia se aplica a la norma infinito del residuo."""
     return _resolver_validacion(preparar_entrada(entrada))
 
 
