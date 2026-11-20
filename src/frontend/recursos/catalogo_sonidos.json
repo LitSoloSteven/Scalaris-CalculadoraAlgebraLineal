@@ -67,8 +67,6 @@
       {"selector": "[data-tema-opcion=marea]", "sonido": "tema_marea"},
       {"selector": "[data-tema-opcion=medianoche]", "sonido": "tema_medianoche"},
       {"selector": "[data-destino-matriz]", "sonido": "transferencia"},
-      {"selector": ".inicio-dialogo-cerrar", "sonido": "cierre"},
-      {"selector": ".inicio-fila", "sonido": "apertura"},
       {"selector": "[data-glosa-cerrar], [data-glosa-alternar]", "sonido": null},
       {"selector": ".glosa-boton-enviar", "sonido": null},
       {"selector": ".calculadora-boton-limpiar", "sonido": "borrado"},

@@ -24,11 +24,6 @@
         return evento.ctrlKey || evento.metaKey || evento.altKey || evento.shiftKey;
     }
 
-    function reproducirEscape(evento) {
-        if (!evento?.isTrusted || evento.key !== 'Escape' || evento.repeat || evento.defaultPrevented) return;
-        if (document.querySelector('dialog.inicio-dialogo[open]')) window.scalaris.sonido.reproducir('cierre');
-    }
-
     function reproducirSeleccionTeclado(evento) {
         if (!evento?.isTrusted || evento.defaultPrevented || evento.repeat || activacionModificada(evento)) return;
         const desplazamiento = { ArrowLeft: -1, ArrowRight: 1 }[evento.key];
@@ -57,14 +52,12 @@
 
     function destruir() {
         document.removeEventListener('click', reproducirActivacion, true);
-        document.removeEventListener('keydown', reproducirEscape);
         document.removeEventListener('keydown', reproducirSeleccionTeclado, true);
         document.removeEventListener('keydown', reproducirControlTeclado, true);
         document.removeEventListener('keyup', reproducirControlTeclado, true);
     }
 
     document.addEventListener('click', reproducirActivacion, true);
-    document.addEventListener('keydown', reproducirEscape);
     document.addEventListener('keydown', reproducirSeleccionTeclado, true);
     document.addEventListener('keydown', reproducirControlTeclado, true);
     document.addEventListener('keyup', reproducirControlTeclado, true);
