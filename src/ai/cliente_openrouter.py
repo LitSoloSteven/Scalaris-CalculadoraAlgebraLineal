@@ -9,13 +9,13 @@ import requests
 
 from src.ai.cache_respuestas import calcular_hash_cache, guardar_en_cache, leer_cache
 from src.ai.clasificador_respuestas import (
-    ContextoIntento, clasificar_error_http, clasificar_excepcion_red,
-    procesar_respuesta_exitosa,
+    ContextoIntento, clasificar_excepcion_red, clasificar_respuesta,
 )
 from src.ai.constantes import (
     LIMITE_TIEMPO_TOTAL_SEGUNDOS, MODELO_PRIMARIO_DEFECTO,
     TIEMPO_ESPERA_REINTENTO_SEGUNDOS, TIEMPO_MINIMO_RESTANTE_SEGUNDOS,
     TIEMPO_MAXIMO_CONEXION_SEGUNDOS, TIEMPO_MAXIMO_LECTURA_SEGUNDOS, URL_OPENROUTER,
+    TIEMPO_RESERVADO_POR_MODELO_SEGUNDOS,
 )
 from src.ai.mensajes import construir_mensajes
 from src.ai.presupuesto_mensajes import validar_longitud_mensaje
@@ -56,8 +56,8 @@ class ClienteOpenRouter:
     def _ejecutar_llamada_red(
         self, modelo: str, mensajes: list, tiempo_restante: float
     ) -> requests.Response:
-        tiempo_conexion = min(TIEMPO_MAXIMO_CONEXION_SEGUNDOS, tiempo_restante)
-        tiempo_lectura = min(TIEMPO_MAXIMO_LECTURA_SEGUNDOS, tiempo_restante)
+        tiempo_conexion = min(TIEMPO_MAXIMO_CONEXION_SEGUNDOS, tiempo_restante / 2)
+        tiempo_lectura = min(TIEMPO_MAXIMO_LECTURA_SEGUNDOS, tiempo_restante - tiempo_conexion)
         cabeceras = {
             "Authorization": f"Bearer {self.clave_api}",
             "Content-Type": "application/json",
@@ -70,13 +70,6 @@ class ClienteOpenRouter:
             timeout=(tiempo_conexion, tiempo_lectura),
         )
 
-    def _procesar_respuesta_intento(
-        self, respuesta: requests.Response, modelo: str, contexto: ContextoIntento
-    ) -> tuple[ResultadoIA | None, str]:
-        if respuesta.status_code == 200:
-            return procesar_respuesta_exitosa(respuesta, modelo), "exito"
-        return clasificar_error_http(respuesta.status_code, modelo, contexto)
-
     def _ejecutar_un_intento(
         self, modelo: str, mensajes: list, tiempo_restante: float,
         cancelar: threading.Event | None, contexto: ContextoIntento,
@@ -85,7 +78,7 @@ class ClienteOpenRouter:
             respuesta = self._ejecutar_llamada_red(modelo, mensajes, tiempo_restante)
             if cancelar and cancelar.is_set():
                 return ResultadoIA(False, CONSULTA_CANCELADA, TipoErrorIA.CANCELADO), "terminar"
-            return self._procesar_respuesta_intento(respuesta, modelo, contexto)
+            return clasificar_respuesta(respuesta, modelo, contexto)
         except requests.exceptions.RequestException as error:
             resultado, terminar = clasificar_excepcion_red(
                 error, modelo, contexto.indice_modelo, contexto.total_modelos
@@ -113,28 +106,36 @@ class ClienteOpenRouter:
             if accion == "reintentar":
                 self._tiempo_dormir(TIEMPO_ESPERA_REINTENTO_SEGUNDOS)
                 continue
-            break
+            return resultado, False
         return None, False
 
     def _paso_cache(self, mensajes: list, modelos: list[str]) -> tuple[str, ResultadoIA | None]:
         clave = calcular_hash_cache(mensajes, modelos, self._espacio_cache)
         return clave, leer_cache(clave, self._tiempo_monotonico())
 
+    def _plazo_modelo(self, fecha_limite: float, restantes: int) -> float:
+        disponible = max(0.0, fecha_limite - self._tiempo_monotonico())
+        cuota = min(TIEMPO_RESERVADO_POR_MODELO_SEGUNDOS, disponible / (restantes + 1))
+        return fecha_limite - cuota * restantes
+
     def _paso_cascada_modelos(
         self, modelos: list[str], mensajes: list, cancelar: threading.Event | None,
         clave_cache: str,
     ) -> ResultadoIA:
         fecha_limite = self._tiempo_monotonico() + LIMITE_TIEMPO_TOTAL_SEGUNDOS
+        ultimo_error = None
         for indice, modelo in enumerate(modelos):
             maximo_intentos = 2 if indice == 0 else 1
+            plazo_modelo = self._plazo_modelo(fecha_limite, len(modelos) - indice - 1)
             resultado, terminar = self._intentar_modelo(
-                modelo, mensajes, fecha_limite, cancelar, (maximo_intentos, indice, len(modelos))
+                modelo, mensajes, plazo_modelo, cancelar, (maximo_intentos, indice, len(modelos))
             )
             if terminar and resultado:
                 if resultado.exito and clave_cache:
                     guardar_en_cache(clave_cache, resultado, self._tiempo_monotonico())
                 return resultado
-        return ResultadoIA(False, ERROR_SERVICIO, TipoErrorIA.SERVICIO)
+            ultimo_error = resultado or ultimo_error
+        return ultimo_error or ResultadoIA(False, ERROR_SERVICIO, TipoErrorIA.SERVICIO)
 
     def preguntar(
         self, pregunta: str, historial: list | None = None, *, contexto: str | None = None,
@@ -148,9 +149,7 @@ class ClienteOpenRouter:
         resultado_validacion = self._validar_precondiciones(cancelar)
         if resultado_validacion:
             return resultado_validacion
-        modelos = [self.MODELO_PRIMARIO]
-        if self.MODELOS_RESERVA:
-            modelos.append(self.MODELOS_RESERVA[0])
+        modelos = list(dict.fromkeys([self.MODELO_PRIMARIO, *self.MODELOS_RESERVA]))
         mensajes = construir_mensajes(
             historial or [], pregunta, contexto, respuesta_simple=opciones.respuesta_simple
         )
