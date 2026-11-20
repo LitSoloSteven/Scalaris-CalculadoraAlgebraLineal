@@ -1,48 +1,22 @@
-<figure class="inicio-ejemplo" aria-labelledby="inicio-ejemplo-titulo" data-ejemplo-inicio>
+<figure class="inicio-ejemplo" aria-labelledby="inicio-ejemplo-titulo" data-ejemplo-inicio data-ejemplo-clave="$clave" data-ejemplo-mensaje="$mensaje">
   <figcaption class="inicio-ejemplo-cabecera">
     <div>
       <span class="inicio-ejemplo-etiqueta">Ejemplo</span>
-      <h2 id="inicio-ejemplo-titulo">Sistemas de ecuaciones</h2>
+      <h2 id="inicio-ejemplo-titulo">$titulo</h2>
     </div>
-    <span class="inicio-ejemplo-operacion" role="math" aria-label="Resta la primera fila de la segunda">
-      F₂ ← F₂ − F₁
+    <span class="inicio-ejemplo-operacion" role="math" aria-label="$etiqueta_operacion">
+      $operacion
     </span>
   </figcaption>
   <div class="inicio-ejemplo-etapas">
-    <div class="inicio-ejemplo-etapa">
-      <p class="inicio-ejemplo-etiqueta">Matriz aumentada</p>
-      <table class="inicio-ejemplo-matriz" aria-hidden="true">
-        <tbody>
-          <tr><td>1</td><td>1</td><td>5</td></tr>
-          <tr><td>1</td><td>−1</td><td>1</td></tr>
-        </tbody>
-      </table>
-      <div class="inicio-ejemplo-ecuaciones">
-        <span role="math" aria-label="x más y igual a cinco">x + y = 5</span>
-        <span role="math" aria-label="x menos y igual a uno">x − y = 1</span>
-      </div>
-    </div>
-    <span class="inicio-ejemplo-flecha" aria-hidden="true">→</span>
-    <div class="inicio-ejemplo-etapa">
-      <p class="inicio-ejemplo-etiqueta">Sin x en la segunda fila</p>
-      <table class="inicio-ejemplo-matriz" aria-hidden="true">
-        <tbody>
-          <tr><td>1</td><td>1</td><td>5</td></tr>
-          <tr data-ejemplo-fila><td class="inicio-ejemplo-cero">0</td><td>−2</td><td>−4</td></tr>
-        </tbody>
-      </table>
-      <div class="inicio-ejemplo-ecuaciones">
-        <span role="math" aria-label="x más y igual a cinco">x + y = 5</span>
-        <strong class="inicio-ejemplo-resultado" role="math" aria-label="menos dos y igual a menos cuatro">−2y = −4</strong>
-      </div>
-    </div>
+    $etapas
   </div>
   <div class="inicio-ejemplo-acciones">
     <button class="inicio-ejemplo-accion" type="button" data-ejemplo-reproducir>
       <span class="inicio-ejemplo-icono" aria-hidden="true">⟲</span>
       Reproducir
     </button>
-    <a class="inicio-ejemplo-accion inicio-ejemplo-enlace" href="$enlace" aria-label="Ver módulo de Sistemas de ecuaciones">
+    <a class="inicio-ejemplo-accion inicio-ejemplo-enlace" href="$enlace" aria-label="$etiqueta_enlace">
       Ver módulo
       <span class="inicio-ejemplo-icono" aria-hidden="true">→</span>
     </a>
