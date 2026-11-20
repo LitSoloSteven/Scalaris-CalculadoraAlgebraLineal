@@ -33,6 +33,21 @@ def _comprobar_titulo_e_icono(cliente, identificador, titulo):
     assert lista._props["aria-label"] == f"Herramientas de {titulo}"
 
 
+def _svg_del_enlace(enlace):
+    """Recupera el SVG que se monta dentro del enlace."""
+    return next(hijo.content for hijo in enlace.descendants() if hijo.content.startswith("<svg"))
+
+
+def _comprobar_enlaces(cliente, seccion, activo):
+    """Comprueba destinos, símbolos y selección de la lista renderizada."""
+    enlaces = _enlaces(cliente)
+    assert [enlace._props["href"] for enlace in enlaces] == [enlace_elemento_navegacion(acceso) for acceso in seccion.accesos]
+    assert [enlace._props["href"] for enlace in enlaces if enlace._props.get("aria-current") == "page"] == [
+        enlace_elemento_navegacion(activo)
+    ]
+    assert [_svg_del_enlace(enlace) for enlace in enlaces] == [icono_svg(acceso.icono) for acceso in seccion.accesos]
+
+
 @pytest.fixture
 def cliente_contextual(monkeypatch):
     """Prepara una barra contextual y registra las acciones de conexión."""
@@ -62,13 +77,7 @@ def test_cada_acceso_activa_su_seccion_del_directorio(cliente_contextual, identi
         crear_barra_navegacion(ruta_activa=activo.ruta, clave_activa=clave)
 
     _comprobar_titulo_e_icono(cliente, identificador, titulo)
-    enlaces = _enlaces(cliente)
-    assert [enlace._props["href"] for enlace in enlaces] == [enlace_elemento_navegacion(acceso) for acceso in seccion.accesos]
-    assert [enlace._props["href"] for enlace in enlaces if enlace._props.get("aria-current") == "page"] == [
-        enlace_elemento_navegacion(activo)
-    ]
-    assert [next(hijo.content for hijo in enlace.descendants() if hijo.content.startswith("<svg"))
-            for enlace in enlaces] == [icono_svg(acceso.icono) for acceso in seccion.accesos]
+    _comprobar_enlaces(cliente, seccion, activo)
     cliente.connect_handlers[0]()
     enviar.assert_any_call(f'window.scalaris?.recientes?.registrar?.("{clave}");')
     enviar.assert_any_call("window.scalaris?.navegacion?.centrarActivo?.();")
