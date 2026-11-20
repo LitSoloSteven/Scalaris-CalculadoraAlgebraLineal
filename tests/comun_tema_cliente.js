@@ -55,10 +55,11 @@ function crearTemaSimulado(temaInicial = null, ancho = 1200) {
     };
 }
 
-/** Carga los dos momentos de inicialización en el orden de la cabecera real. */
+/** Carga la inicialización y sus recursos en el orden de la cabecera real. */
 function cargarTemaCompleto(cliente) {
     cargarAssetCliente("inicializacion_tema.js", cliente.contexto);
     cargarAssetCliente("interacciones_globales.js", cliente.contexto);
+    cargarAssetCliente("revelado_circular.js", cliente.contexto);
     cargarAssetCliente("tema.js", cliente.contexto);
 }
 

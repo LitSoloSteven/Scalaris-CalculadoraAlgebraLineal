@@ -3,6 +3,7 @@
 {
   window.scalaris.tema.preparar();
   const raiz = document.documentElement;
+  const revelado = window.scalaris.reveladoCircular;
   let seleccionActual;
 
   function limpiar(seleccion) {
@@ -44,12 +45,8 @@
   }
 
   function origenDelControl(origen) {
-    const control = document.querySelector('[aria-label="Seleccionar Tema"]');
-    const caja = control?.getBoundingClientRect();
-    const centro = caja ? { x: caja.left + caja.width / 2, y: caja.top + caja.height / 2 } :
-      { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-    const punto = origen && Number.isFinite(origen.x) && Number.isFinite(origen.y) ? origen : centro;
-    return { x: Math.max(0, Math.min(punto.x, window.innerWidth)), y: Math.max(0, Math.min(punto.y, window.innerHeight)) };
+    if (Number.isFinite(origen?.x) && Number.isFinite(origen?.y)) return origen;
+    return revelado.centroDe(document.querySelector('[aria-label="Seleccionar Tema"]'));
   }
 
   function movimientoDisponible() {
@@ -61,12 +58,7 @@
 
   function animarCirculo(seleccion, origen) {
     if (seleccion !== seleccionActual || seleccion.cancelada) return;
-    const radio = Math.hypot(Math.max(origen.x, window.innerWidth - origen.x), Math.max(origen.y, window.innerHeight - origen.y));
-    const centro = `at ${origen.x}px ${origen.y}px`;
-    seleccion.animacion = raiz.animate(
-      { clipPath: [`circle(0px ${centro})`, `circle(${radio}px ${centro})`] },
-      { duration: window.scalaris.movimiento.duracion('--dur-view'), easing: window.scalaris.movimiento.curva(), pseudoElement: '::view-transition-new(root)' },
-    );
+    seleccion.animacion = revelado.animarCaptura(raiz, origen);
     seleccion.animacion.finished.catch(() => {});
   }
 
