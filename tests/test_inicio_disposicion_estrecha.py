@@ -1,40 +1,25 @@
-"""Disposición de filas y encabezados del inicio en pantallas estrechas."""
-from pathlib import Path
-
-from tests.comun_estilos import buscar_cierre_bloque
+"""Contención y lectura del directorio de inicio en pantallas estrechas."""
+from tests.comun_estilos import bloque_css, leer_css_inicio
 
 
-RUTA_CSS_TEMAS = Path("src/frontend/recursos/css/vistas_inicio_adaptable.css")
+def test_disposicion_estrecha_contiene_enlaces_y_encabezados():
+    """Los encabezados y las secciones admiten el ancho disponible en un carril."""
+    css = leer_css_inicio()
+    estrecho = bloque_css(css, "@container (max-width: 40rem)")
+    seccion = bloque_css(css, ".inicio-seccion {")
+    assert ".inicio-presentacion" in estrecho
+    assert ".inicio-secciones" in estrecho
+    assert "grid-template-columns: minmax(0, 1fr)" in estrecho
+    assert "min-width: 0" in seccion
 
 
-def bloque_inicio_estrecho() -> str:
-    """Lee las reglas que se aplican hasta 359 píxeles de ancho."""
-    css = RUTA_CSS_TEMAS.read_text(encoding="utf-8")
-    inicio = css.index("@media (max-width: 359px) {")
-    indice_apertura = css.index("{", inicio)
-    return css[inicio:buscar_cierre_bloque(css, indice_apertura) + 1]
-
-
-def test_disposicion_estrecha_contiene_tarjetas_y_encabezado():
-    """Conserva las áreas de cuadrícula y el ancho mínimo de las tarjetas."""
-    css = bloque_inicio_estrecho()
-
-    assert ".inicio-dialogo-cabecera" in css
-    assert '"titulo cerrar"' in css
-    assert '"conteo conteo"' in css
-    assert ".inicio-dialogo-icono" in css
-    assert "display: none" in css
-    assert ".inicio-tarjeta" in css
-    assert '"icono nombre"' in css
-    assert '"icono descripcion"' in css
-    assert '"marca marca"' in css
-    assert ".inicio-tarjeta-marca" in css
-    assert "min-width: 0" in css
-
-
-def test_marca_de_fila_reserva_dos_lineas():
-    """La selección destacada dispone de espacio sin desplazar la fila."""
-    css = bloque_inicio_estrecho()
-
-    assert ".inicio-marca-fila" in css
-    assert "min-height: 2.4em" in css
+def test_franja_y_enlaces_admiten_saltos_de_linea():
+    """La franja puede pasar a otra línea y las etiquetas largas siguen visibles."""
+    css = leer_css_inicio()
+    franja = bloque_css(css, ".inicio-seccion-numeracion {")
+    enlaces = bloque_css(css, ".inicio-enlace {")
+    assert "flex-wrap: wrap" in franja
+    assert "grid-column: 1 / -1" in franja
+    assert "grid-template-columns: 2.5rem minmax(0, 1fr) auto" in enlaces
+    assert "overflow-wrap: anywhere" in enlaces
+    assert "min-height: 2.75rem" in enlaces

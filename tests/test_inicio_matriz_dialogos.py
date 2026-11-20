@@ -1,17 +1,21 @@
-"""Contratos estáticos de la matriz, los diálogos y el contraste del inicio."""
+"""Semántica, estados, disposición y contraste del inicio."""
+import asyncio
+from dataclasses import replace
 from pathlib import Path
 import re
 
-from src.frontend.controladores.inicio._modelo import pilares_inicio, seleccion_inicial
+from src.frontend.controladores.inicio._modelo import acceso_destacado
+from src.frontend.navegacion import consultas
+from src.frontend.navegacion.secciones_inicio import secciones_inicio
+from tests.comun_construccion_vistas import construir_pagina
 from tests.comun_estilos import (
     analizar_tokens, hexadecimal_a_rgb, razon_contraste,
-    leer_css_inicio, buscar_cierre_bloque,
+    leer_css_inicio, buscar_cierre_bloque, bloque_css,
 )
 
 
 RUTA_CSS_TEMAS = Path("src/frontend/recursos/css/tokens.css")
 RUTA_JS_INICIO = Path("src/frontend/recursos/js/inicio.js")
-RUTA_VISTA_INICIO = Path("src/frontend/vistas/inicio/vista_inicio.py")
 
 
 def quitar_comentarios(css: str) -> str:
@@ -19,31 +23,35 @@ def quitar_comentarios(css: str) -> str:
     return re.sub(r"/\*.*?\*/", "", css, flags=re.DOTALL)
 
 
-def test_contrato_dom_matriz_y_dialogos_nativos():
-    """Las filas controlan diálogos nativos con nombres y relaciones accesibles."""
-    fuente = RUTA_VISTA_INICIO.read_text(encoding="utf-8")
-    pilares = pilares_inicio()
+def test_contrato_dom_secciones_y_enlaces_nativos(monkeypatch):
+    """El directorio monta secciones con título y enlaces nativos con destino."""
+    async def comprobar(vista, cliente):
+        """Inspecciona la semántica y los destinos montados por la portada."""
+        elementos = tuple(cliente.elements.values())
+        directorio = next(elemento for elemento in elementos if "inicio-directorio" in elemento.classes)
+        assert "data-directorio-listo" in directorio._props
+        contenido = tuple(directorio.descendants())
+        secciones = [elemento for elemento in contenido if "inicio-seccion" in elemento.classes]
+        enlaces = [elemento for elemento in contenido if "inicio-enlace" in elemento.classes]
+        assert len(secciones) == 5
+        assert directorio.tag == "nav"
+        assert directorio._props["aria-labelledby"] == "inicio-herramientas"
+        assert [seccion.style.get("--inicio-indice") for seccion in secciones] == ["0", "1", "2", "3", "4"]
+        assert all(seccion.tag == "section" for seccion in secciones)
+        for seccion in secciones:
+            titulo = next(elemento for elemento in seccion.descendants()
+                          if elemento._props.get("tag", elemento.tag) in {"h2", "h3"})
+            assert seccion._props["aria-labelledby"] == titulo._props["id"]
+        assert len(enlaces) == 15
+        assert all(enlace.tag == "a" and enlace._props.get("href") for enlace in enlaces)
+        assert all(enlace._props.get("data-clave") for enlace in enlaces)
+        assert not any(elemento.tag == "dialog" for elemento in contenido)
 
-    assert len(pilares) == 3
-    assert fuente.count("for pilar in pilares:") == 1
-    assert "for indice_fila, pilar in enumerate(pilares):" in fuente
-    assert 'role="group" aria-label="Áreas de Scalaris"' in fuente
-    assert 'type="button" id="inicio-fila-{pilar.identificador}"' in fuente
-    assert 'aria-haspopup="dialog" aria-expanded="false"' in fuente
-    assert 'aria-controls="inicio-dialogo-{pilar.identificador}"' in fuente
-    assert "ui.element('dialog').classes('inicio-dialogo').props(atributos_dialogo)," in fuente
-    assert 'aria-labelledby="inicio-dialogo-titulo-{pilar.identificador}"' in fuente
-    assert "titulo.props(f'id=\"inicio-dialogo-titulo-{pilar.identificador}\"')" in fuente
-    assert "ui.element('dialog')" in fuente
-
-    fuente_filas = fuente.split("ui.element('button').classes('inicio-fila ' + _CLASES_ORDEN[indice_fila])", 1)[1]
-    fuente_filas = fuente_filas.split("self.filas[pilar.identificador]", 1)[0]
-    assert "'h2'" not in fuente_filas
-    assert "inicio-titulo-fila" in fuente_filas
+    asyncio.run(construir_pagina(monkeypatch, "inicio", comprobar))
 
 
-def test_contrato_cliente_matriz_y_dialogos():
-    """El cliente conserva apertura, cierre, foco y delegación de eventos."""
+def test_contrato_cliente_directorio():
+    """El cliente añade gestos a los enlaces sin sustituir su activación nativa."""
     fuente = RUTA_JS_INICIO.read_text(encoding="utf-8")
 
     fuente_recientes = Path("src/frontend/recursos/js/inicio_recientes.js").read_text(encoding="utf-8")
@@ -51,15 +59,11 @@ def test_contrato_cliente_matriz_y_dialogos():
     assert "leer: leerRecientes" in fuente_recientes
     assert "registrar: registrarVisita" in fuente_recientes
     assert "window.scalarisHubSelect" not in fuente
-    assert "function abrir(" in fuente
-    assert "function cerrar(" in fuente
-    assert "dialogo.showModal()" in fuente
-    assert "setAttribute('data-abierto'" in fuente
-    assert "removeAttribute('data-abierto'" in fuente
-    assert "evento.detail === 0" in fuente
-    assert "addEventListener('cancel'" in fuente
-    assert "objetivo === dialogo" in fuente
-    assert "window.__scalarisInicioDelegado" in fuente
+    assert "data-gesto-inicio" in fuente
+    assert ".inicio-simbolo" in fuente
+    assert "showModal(" not in fuente
+    assert "preventDefault(" not in fuente
+    assert ".focus(" not in fuente
     assert "addEventListener('popstate'" not in fuente
 
     assert not re.search(r"addEventListener\s*\(\s*['\"]scroll['\"]", fuente)
@@ -78,38 +82,36 @@ def test_contrato_cliente_matriz_y_dialogos():
     ):
         assert retirados not in fuente
 
-    llamadas_foco = re.findall(r"\.focus\(([^)]*)\)", fuente)
-    assert llamadas_foco
-    assert all("preventScroll" in argumentos and "true" in argumentos for argumentos in llamadas_foco)
+
+def test_acceso_predeterminado_destaca_sistemas(monkeypatch):
+    """El vínculo destacado abre Sistemas durante el montaje."""
+    seleccionado = acceso_destacado()
+    assert seleccionado.identificador == "sistemas"
+    assert "catch (_) { return { valido: false, identificadores: [] }; }" in Path(
+        "src/frontend/recursos/js/inicio_recientes.js"
+    ).read_text(encoding="utf-8")
+
+    async def comprobar(vista, cliente):
+        """Comprueba el destino del enlace destacado en la portada montada."""
+        destacado = next(elemento for elemento in cliente.elements.values()
+                         if "inicio-destacado" in elemento.classes)
+        assert destacado.tag == "a"
+        assert destacado._props["href"] == seleccionado.ruta
+
+    asyncio.run(construir_pagina(monkeypatch, "inicio", comprobar))
 
 
-def test_seleccion_predeterminada_marca_fila_y_tarjeta():
-    """La selección sin historial destaca sistemas en el área de álgebra."""
-    fuente = RUTA_VISTA_INICIO.read_text(encoding="utf-8")
-    seleccion = seleccion_inicial(None)
-
-    assert seleccion.identificador_pilar == "algebra"
-    assert seleccion.clave_tarjeta == "sistemas"
-    assert seleccion.hay_historial is False
-    assert "tarjeta.classes(add='esta-destacada')" in fuente
-    assert "fila.classes(add='esta-destacada')" in fuente
-    assert "'Sigue aquí' if seleccion.hay_historial else 'Empieza aquí'" in fuente
-    assert "scalarisHubSelect" not in fuente
-    assert "catch (_) { return { valido: false, identificadores: [] }; }" in Path("src/frontend/recursos/js/inicio_recientes.js").read_text(encoding="utf-8")
-
-
-def test_renderizado_herramientas_vacias_y_cantidades_variables():
-    """El área vacía explica su estado y las listas admiten desplazamiento."""
-    fuente = RUTA_VISTA_INICIO.read_text(encoding="utf-8")
+def test_renderizado_herramientas_vacias_y_cantidades_variables(monkeypatch):
+    """Los grupos vacíos se omiten y los accesos con textos largos permiten saltos."""
+    catalogo = tuple(replace(herramienta, habilitada=False)
+                     if herramienta.identificador_pilar == "utilidades" else herramienta
+                     for herramienta in consultas.HERRAMIENTAS)
+    monkeypatch.setattr(consultas, "HERRAMIENTAS", catalogo)
+    assert [seccion.identificador for seccion in secciones_inicio()] == [
+        "sistemas-lineales", "matrices", "vectores-geometria",
+    ]
     css = leer_css_inicio()
-
-    assert "if len(pilar.tarjetas) == 0:" in fuente
-    assert "for modelo_tarjeta in pilar.tarjetas:" in fuente
-    assert "Esta área aún no tiene herramientas." in fuente
-    assert ".inicio-lista-herramientas" in css
-    assert "overflow-y: auto" in css
-    assert "overscroll-behavior: contain" in css
-    assert "overflow-wrap: anywhere" in css
+    assert "overflow-wrap: anywhere" in bloque_css(css, ".inicio-enlace {")
     assert "-webkit-line-clamp:" not in css
     assert "line-clamp:" not in css
 
@@ -132,7 +134,8 @@ def test_css_inicio_usa_tokens_y_efectos_permitidos():
 
     tokens_definidos = set(re.findall(r"(--[a-zA-Z0-9_-]+)\s*:", quitar_comentarios(css_completo)))
     tokens_usados = set(re.findall(r"var\(\s*(--[a-zA-Z0-9_-]+)", css))
-    assert tokens_usados <= tokens_definidos
+    assert tokens_usados - tokens_definidos <= {"--inicio-indice"}
+    assert "var(--inicio-indice, 0)" in css
 
     indices_elevacion = [
         int(valor)
@@ -203,16 +206,17 @@ def test_fondo_activo_conserva_contraste_en_todos_los_temas():
             )
 
 
-def test_disposicion_dialogo_y_bloqueo_desplazamiento():
-    """El diálogo contiene su lista y bloquea el desplazamiento de la página."""
+def test_disposicion_directorio_y_foco_visible():
+    """El directorio se apila, ajusta los textos y conserva el foco visible."""
     css = leer_css_inicio()
-
-    assert "width: min(92vw, 42rem)" in css
-    assert "max-height: min(82dvh, 44rem)" in css
-    assert ".inicio-dialogo::backdrop" in css
-    assert "background: var(--scrim)" in css
-    assert "html[data-inicio-dialogo-abierto]" in css
-    assert "@media (max-width: 639px)" in css
-    assert "max-height: 85dvh" in css
-    assert "@media (max-width: 479px)" in css
-    assert "grid-template-areas:\n            \"icono nombre\"\n            \"icono detalle\"" in css
+    raiz = bloque_css(css, ".inicio-raiz {")
+    assert "width: 100%" in raiz and "max-width: 71rem" in raiz
+    assert "min-width: 0" in raiz
+    assert "grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr)" in css
+    estrecho = bloque_css(css, "@container (max-width: 40rem)")
+    assert ".inicio-secciones" in estrecho
+    assert "grid-template-columns: minmax(0, 1fr)" in estrecho
+    assert not re.search(r"data-inicio-dialogo-abierto|\.inicio-dialogo::backdrop", css)
+    foco = bloque_css(css, ".inicio-tema button):focus-visible")
+    assert "outline: 2px solid var(--focus-ring)" in foco
+    assert "outline-offset: 2px" in foco
