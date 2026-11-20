@@ -160,6 +160,89 @@ html[data-entrada="puntero"] .inicio-ejemplo-accion:active {
     line-height: 1;
 }
 
+.inicio-ejemplo-barras {
+    display: grid;
+    gap: var(--space-1);
+    inline-size: min(100%, 11rem);
+}
+
+.inicio-ejemplo-barra-fila {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: ui-monospace, monospace;
+    font-size: var(--fs-small);
+    font-variant-numeric: tabular-nums;
+}
+
+.inicio-ejemplo-barra-pista {
+    block-size: 0.5rem;
+    border-radius: var(--radius-pill);
+    background: var(--input-bg);
+    overflow: hidden;
+}
+
+.inicio-ejemplo-barra-relleno {
+    display: block;
+    block-size: 100%;
+    border-radius: var(--radius-pill);
+    background: var(--text-sec);
+}
+
+.inicio-ejemplo-barra-activa { background: var(--accent); }
+.inicio-ejemplo-barra-d1 { inline-size: 50%; }
+.inicio-ejemplo-barra-d2 { inline-size: 30%; }
+.inicio-ejemplo-barra-x1 { inline-size: 100%; }
+.inicio-ejemplo-barra-x2 { inline-size: 40%; }
+
+.inicio-ejemplo-matrices-par,
+.inicio-ejemplo-fichas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-1);
+}
+
+.inicio-ejemplo-fichas {
+    font-family: ui-monospace, monospace;
+    font-size: var(--fs-small);
+    font-variant-numeric: tabular-nums;
+}
+
+.inicio-ejemplo-ficha {
+    padding: 2px var(--space-2);
+    border: 1px solid var(--border-input);
+    border-radius: var(--space-1);
+    background: var(--bg-panel);
+}
+
+.inicio-ejemplo-matriz-compacta { inline-size: auto; min-inline-size: 4.5rem; }
+.inicio-ejemplo-matriz-compacta td { padding-inline: var(--space-2); }
+.inicio-ejemplo-matriz-compacta td:last-child,
+.inicio-ejemplo-matriz-cuatro td:last-child { border-inline-start: 0; }
+.inicio-ejemplo-matriz-cuatro { inline-size: min(100%, 9.5rem); }
+.inicio-ejemplo-matriz-cuatro:not(:has(th)) td:nth-child(3) { border-inline-start: 1px solid var(--border-input); }
+.inicio-ejemplo-matriz th { font-size: var(--fs-small); color: var(--text-sec); font-weight: var(--fw-small); }
+.inicio-ejemplo-resaltado td { background: var(--accent-soft); color: var(--accent); font-weight: var(--fw-h2); }
+.inicio-ejemplo-operador { color: var(--text-sec); font-weight: var(--fw-h2); }
+
+.inicio-ejemplo-lienzo { inline-size: min(100%, 7.5rem); block-size: auto; overflow: visible; }
+.inicio-ejemplo-eje { stroke: var(--text-sec); stroke-width: 1.1; opacity: 0.65; }
+.inicio-ejemplo-forma-base { fill: var(--accent-soft); stroke: var(--text-sec); stroke-width: 1.5; }
+.inicio-ejemplo-forma-activa { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2; }
+.inicio-ejemplo-trazo-base { fill: none; stroke: var(--text-sec); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.inicio-ejemplo-trazo-acento { fill: none; stroke: var(--accent); stroke-width: 2.25; stroke-linecap: round; stroke-linejoin: round; }
+.inicio-ejemplo-trazo-discontinuo { fill: none; stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 4 3; stroke-linecap: round; }
+.inicio-ejemplo-punto { fill: var(--accent); stroke: var(--bg-elevated); stroke-width: 1.5; }
+.inicio-ejemplo-punto-base { fill: var(--text-sec); }
+.inicio-ejemplo-etiqueta-svg { fill: var(--text-main); font-size: 10px; font-family: ui-monospace, monospace; }
+.inicio-ejemplo-etiqueta-acento { fill: var(--accent); font-size: 10px; font-weight: 600; font-family: ui-monospace, monospace; }
+.inicio-ejemplo-lienzo [data-ejemplo-marca] { transform-box: fill-box; transform-origin: center; }
+.inicio-ejemplo-lienzo [data-ejemplo-marca="crecer-x"] { transform-origin: bottom left; }
+.inicio-ejemplo-barra-relleno[data-ejemplo-marca="crecer-x"] { transform-origin: left center; }
+
 .inicio-ejemplo-estado {
     position: absolute;
     inline-size: 1px;
