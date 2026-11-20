@@ -2,6 +2,7 @@
 {
     'use strict';
     const raiz = document.documentElement;
+    const revelado = window.scalaris.reveladoCircular;
     const clave = 'scalaris:origen-navegacion';
     const claveTeclado = 'scalaris:navegacion-teclado';
     const preferencia = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -62,11 +63,11 @@
         const destino = destinoInterno(evento);
         if (!destino) return;
         registrarTeclado(evento, destino.url);
-        const caja = destino.enlace.getBoundingClientRect();
+        const origen = evento.detail === 0 ? revelado.centroDe(destino.enlace) :
+            { x: evento.clientX, y: evento.clientY };
         intencion = {
             evento, destino: destino.url.href, instante: Date.now(),
-            x: evento.detail === 0 ? caja.left + caja.width / 2 : evento.clientX,
-            y: evento.detail === 0 ? caja.top + caja.height / 2 : evento.clientY,
+            ...origen,
         };
     }
 
@@ -94,7 +95,8 @@
     }
 
     function omitirMovimiento(elegida) {
-        return preferencia.matches || elegida?.evento.detail === 0 || !window.scalaris.movimiento.permitido();
+        return preferencia.matches || elegida?.evento.detail === 0 ||
+            window.scalaris.presentacion?.activa || !window.scalaris.movimiento.permitido();
     }
 
     function limpiar(transicion) {
@@ -130,25 +132,23 @@
         const navegacion = performance.getEntriesByType('navigation')[0];
         const normal = ['push', 'replace'].includes(activacion?.navigationType);
         const valido = normal && registroVigente(registro, activacion) && navegacion?.type !== 'reload';
-        const x = valido && Number.isFinite(registro.x) ? registro.x : window.innerWidth / 2;
-        const y = valido && Number.isFinite(registro.y) ? registro.y : window.innerHeight / 2;
-        return { x: Math.max(0, Math.min(x, window.innerWidth)), y: Math.max(0, Math.min(y, window.innerHeight)) };
+        return valido ? registro : null;
     }
 
     function animarEntrada(estado, origen) {
         if (activa !== estado) return;
-        const radio = Math.hypot(
-            Math.max(origen.x, window.innerWidth - origen.x),
-            Math.max(origen.y, window.innerHeight - origen.y),
-        );
-        const centro = `at ${origen.x}px ${origen.y}px`;
-        estado.animacion = raiz.animate(
-            { clipPath: [`circle(0px ${centro})`, `circle(${radio}px ${centro})`] },
-            { duration: window.scalaris.movimiento.duracion('--dur-view'), fill: 'both', easing: window.scalaris.movimiento.curva(), pseudoElement: '::view-transition-new(root)' },
-        );
+        estado.animacion = revelado.animarCaptura(raiz, origen, { fill: 'both' });
         estado.animacion.pause();
         estado.animacion.finished.catch(() => {});
         esperarContenido(estado);
+    }
+
+    function contenidoMontado() {
+        if (window.location.pathname === '/') {
+            return document.querySelector('.inicio-cabecera') &&
+                document.querySelector('.inicio-directorio[data-directorio-listo] .inicio-enlace[href]');
+        }
+        return document.querySelector('.navegacion-cabecera') && document.querySelector('main');
     }
 
     function esperarContenido(estado) {
@@ -169,13 +169,13 @@
             }
         }
         function comprobar() {
-            if (!document.querySelector('.navegacion-cabecera') || !document.querySelector('main')) return;
+            if (!contenidoMontado()) return;
             observador.disconnect();
             fotograma = requestAnimationFrame(() => {
                 fotograma = requestAnimationFrame(terminar);
             });
         }
-        observador.observe(raiz, { childList: true, subtree: true });
+        observador.observe(raiz, { childList: true, subtree: true, attributes: true, attributeFilter: ['data-directorio-listo'] });
         comprobar();
     }
 
@@ -187,7 +187,7 @@
             limpiar(activa);
         }
         if (!evento.viewTransition) return;
-        if (!window.scalaris.movimiento.permitido() || typeof raiz.animate !== 'function') {
+        if (omitirMovimiento() || typeof raiz.animate !== 'function') {
             evento.viewTransition.skipTransition();
             return;
         }

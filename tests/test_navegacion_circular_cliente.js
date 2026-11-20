@@ -73,6 +73,7 @@ function crearCliente(almacen = new Map(), url = DESTINO) {
         cancelAnimationFrame: id => cuadros.delete(id),
     });
     cargarAssetCliente('interacciones_globales.js', contexto);
+    cargarAssetCliente('revelado_circular.js', contexto);
     cargarAssetCliente('navegacion_circular.js', contexto);
     return { eventos, clics, atributos, animaciones, cuadros, temporizadores, observadores,
         preferencia, ventana, documento, contexto, raiz, almacen };
@@ -217,6 +218,27 @@ prueba('el plazo de montaje evita retener la transición si falta contenido', as
     [...cliente.temporizadores.values()][0]();
     afirmar.equal(cliente.animaciones[0].reproducida, true);
     afirmar.equal(cliente.observadores[0].desconectado, true);
+});
+
+prueba('al volver al inicio el directorio libera la captura antes del vencimiento', async () => {
+    const cliente = crearCliente(new Map(), 'https://scalaris.test/');
+    const encontrados = new Set(['.inicio-cabecera', 'main']);
+    cliente.documento.querySelector = selector => encontrados.has(selector);
+    await revelar(cliente);
+    afirmar.equal(cliente.cuadros.size, 0);
+    encontrados.add('.inicio-directorio[data-directorio-listo] .inicio-enlace[href]');
+    cliente.observadores[0].funcion();
+    avanzarCuadro(cliente); avanzarCuadro(cliente);
+    afirmar.equal(cliente.animaciones[0].reproducida, true);
+    afirmar.equal(cliente.temporizadores.size, 0);
+});
+
+prueba('la presentación activa tiene prioridad sobre la captura de navegación', async () => {
+    const cliente = crearCliente(new Map(), 'https://scalaris.test/');
+    cliente.ventana.scalaris.presentacion = { activa: true };
+    const control = await revelar(cliente);
+    afirmar.equal(control.transicion.omitida, true);
+    afirmar.equal(cliente.animaciones.length, 0);
 });
 
 prueba('navegaciones rápidas cancelan la espera anterior sin limpiar la nueva', async () => {
