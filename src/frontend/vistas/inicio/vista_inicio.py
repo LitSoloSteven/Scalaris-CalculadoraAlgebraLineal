@@ -68,7 +68,8 @@ def _renderizar_acceso(acceso: ElementoNavegacion) -> None:
 def _renderizar_grupo(grupo: GrupoInicio) -> None:
     if grupo.subtitulo:
         _texto("h4", grupo.subtitulo, "inicio-subtitulo")
-    with ui.element("ul").classes("inicio-lista"):
+    clases = "inicio-lista inicio-lista-escenas" if grupo.accesos[0].identificador_herramienta == "visualizador" else "inicio-lista"
+    with ui.element("ul").classes(clases):
         for acceso in grupo.accesos:
             with ui.element("li"):
                 _renderizar_acceso(acceso)

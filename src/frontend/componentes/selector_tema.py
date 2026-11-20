@@ -11,7 +11,8 @@ _TEMAS = (("Papel", "papel"), ("Marea", "marea"), ("Medianoche", "medianoche"))
 
 def renderizar_boton_tema(mostrar_nombre: bool = False):
     """Renderiza el selector de tema y muestra su nombre si se solicita."""
-    boton_tema = ui.button(color=None).classes("boton-icono p-0 texto-principal").props(
+    clases = "selector-tema-textual" if mostrar_nombre else "boton-icono p-0 texto-principal"
+    boton_tema = ui.button(color=None).classes(clases).props(
         'flat ripple=false data-sonido="apertura" aria-haspopup="menu" aria-expanded="false"'
     )
     if not mostrar_nombre:
