@@ -1,0 +1,186 @@
+<template data-ejemplo="determinantes">
+  <div class="inicio-ejemplo-etapa">
+    <p class="inicio-ejemplo-etiqueta">Cuadrado de área 1</p>
+    <svg class="inicio-ejemplo-lienzo" viewBox="0 0 120 88" role="img" aria-label="Cuadrado de lado 1 y área 1">
+      <line class="inicio-ejemplo-eje" x1="12" y1="72" x2="108" y2="72" />
+      <line class="inicio-ejemplo-eje" x1="20" y1="80" x2="20" y2="12" />
+      <polygon class="inicio-ejemplo-forma-base" points="20,72 44,72 44,48 20,48" />
+      <text class="inicio-ejemplo-etiqueta-svg" x="26" y="63">1</text>
+    </svg>
+    <div class="inicio-ejemplo-ecuaciones">
+      <span role="math" aria-label="Área inicial igual a uno">Área = 1</span>
+    </div>
+  </div>
+  <span class="inicio-ejemplo-flecha" aria-hidden="true">→</span>
+  <div class="inicio-ejemplo-etapa">
+    <p class="inicio-ejemplo-etiqueta">Paralelogramo de área 3</p>
+    <svg class="inicio-ejemplo-lienzo" viewBox="0 0 120 88" role="img" aria-label="Paralelogramo de base 2 y altura 1,5 con área 3">
+      <line class="inicio-ejemplo-eje" x1="12" y1="72" x2="108" y2="72" />
+      <line class="inicio-ejemplo-eje" x1="20" y1="80" x2="20" y2="12" />
+      <polygon class="inicio-ejemplo-forma-activa" data-ejemplo-marca="cizalla" points="20,72 68,72 82,36 34,36" />
+      <text class="inicio-ejemplo-etiqueta-acento" x="40" y="83">b=2</text>
+      <text class="inicio-ejemplo-etiqueta-acento" x="85" y="56">h=1,5</text>
+    </svg>
+    <div class="inicio-ejemplo-ecuaciones">
+      <strong class="inicio-ejemplo-resultado" role="math" aria-label="Base dos por altura uno coma cinco igual a tres">Área = 3</strong>
+    </div>
+  </div>
+</template>
+
+<template data-ejemplo="vectores">
+  <div class="inicio-ejemplo-etapa">
+    <p class="inicio-ejemplo-etiqueta">Vector u</p>
+    <svg class="inicio-ejemplo-lienzo" viewBox="0 0 120 88" role="img" aria-label="Vector u igual a (1, 1)">
+      <line class="inicio-ejemplo-eje" x1="12" y1="72" x2="108" y2="72" />
+      <line class="inicio-ejemplo-eje" x1="20" y1="80" x2="20" y2="12" />
+      <line class="inicio-ejemplo-trazo-base" x1="20" y1="72" x2="42" y2="50" />
+      <polyline class="inicio-ejemplo-trazo-base" points="35,50 42,50 42,57" />
+      <text class="inicio-ejemplo-etiqueta-svg" x="46" y="52">u</text>
+    </svg>
+    <div class="inicio-ejemplo-ecuaciones">
+      <span role="math" aria-label="u igual a uno coma uno">u = (1, 1)</span>
+    </div>
+  </div>
+  <span class="inicio-ejemplo-flecha" aria-hidden="true">→</span>
+  <div class="inicio-ejemplo-etapa">
+    <p class="inicio-ejemplo-etiqueta">Escalamiento v = 2u</p>
+    <svg class="inicio-ejemplo-lienzo" viewBox="0 0 120 88" role="img" aria-label="Vector v igual a 2u igual a (2, 2)">
+      <line class="inicio-ejemplo-eje" x1="12" y1="72" x2="108" y2="72" />
+      <line class="inicio-ejemplo-eje" x1="20" y1="80" x2="20" y2="12" />
+      <line class="inicio-ejemplo-trazo-base" x1="20" y1="72" x2="42" y2="50" />
+      <g data-ejemplo-marca="crecer-x">
+        <line class="inicio-ejemplo-trazo-acento" x1="20" y1="72" x2="64" y2="28" />
+        <polyline class="inicio-ejemplo-trazo-acento" points="57,28 64,28 64,35" />
+      </g>
+      <text class="inicio-ejemplo-etiqueta-acento" x="68" y="30">v = 2u</text>
+    </svg>
+    <div class="inicio-ejemplo-ecuaciones">
+      <strong class="inicio-ejemplo-resultado" role="math" aria-label="v igual a dos coma dos">v = (2, 2)</strong>
+    </div>
+  </div>
+</template>
+
+<template data-ejemplo="transformaciones">
+  <div class="inicio-ejemplo-etapa">
+    <p class="inicio-ejemplo-etiqueta">Cuadrado unitario</p>
+    <svg class="inicio-ejemplo-lienzo" viewBox="0 0 120 88" role="img" aria-label="Cuadrado unitario en el primer cuadrante">
+      <line class="inicio-ejemplo-eje" x1="12" y1="72" x2="108" y2="72" />
+      <line class="inicio-ejemplo-eje" x1="18" y1="80" x2="18" y2="14" />
+      <polygon class="inicio-ejemplo-forma-base" points="18,72 46,72 46,44 18,44" />
+    </svg>
+    <div class="inicio-ejemplo-ecuaciones">
+      <span role="math" aria-label="Vértice superior derecho en uno coma uno">(1, 1)</span>
+    </div>
+  </div>
+  <span class="inicio-ejemplo-flecha" aria-hidden="true">→</span>
+  <div class="inicio-ejemplo-etapa">
+    <p class="inicio-ejemplo-etiqueta">Imagen por T</p>
+    <svg class="inicio-ejemplo-lienzo" viewBox="0 0 120 88" role="img" aria-label="Paralelogramo inclinado horizontalmente hasta (2, 1)">
+      <line class="inicio-ejemplo-eje" x1="12" y1="72" x2="108" y2="72" />
+      <line class="inicio-ejemplo-eje" x1="18" y1="80" x2="18" y2="14" />
+      <polygon class="inicio-ejemplo-forma-activa" data-ejemplo-marca="cizalla" points="18,72 46,72 74,44 46,44" />
+      <text class="inicio-ejemplo-etiqueta-acento" x="76" y="42">(2, 1)</text>
+    </svg>
+    <div class="inicio-ejemplo-ecuaciones">
+      <strong class="inicio-ejemplo-resultado" role="math" aria-label="Vértice transformado a dos coma uno">T(1, 1) = (2, 1)</strong>
+    </div>
+  </div>
+</template>
+
+<template data-ejemplo="vis:rectas-planos">
+  <div class="inicio-ejemplo-etapa">
+    <p class="inicio-ejemplo-etiqueta">Dos rectas</p>
+    <svg class="inicio-ejemplo-lienzo" viewBox="0 0 120 88" role="img" aria-label="Rectas y igual a 3 menos x e y igual a x menos 1">
+      <line class="inicio-ejemplo-eje" x1="12" y1="66" x2="106" y2="66" />
+      <line class="inicio-ejemplo-eje" x1="18" y1="82" x2="18" y2="10" />
+      <line class="inicio-ejemplo-trazo-base" x1="18" y1="12" x2="90" y2="84" />
+      <line class="inicio-ejemplo-trazo-acento" x1="18" y1="84" x2="90" y2="12" />
+    </svg>
+    <div class="inicio-ejemplo-ecuaciones">
+      <span role="math" aria-label="y igual a tres menos x">y = 3 − x</span>
+    </div>
+  </div>
+  <span class="inicio-ejemplo-flecha" aria-hidden="true">→</span>
+  <div class="inicio-ejemplo-etapa">
+    <p class="inicio-ejemplo-etiqueta">Cruce único</p>
+    <svg class="inicio-ejemplo-lienzo" viewBox="0 0 120 88" role="img" aria-label="Intersección de las rectas en el punto (2, 1)">
+      <line class="inicio-ejemplo-eje" x1="12" y1="66" x2="106" y2="66" />
+      <line class="inicio-ejemplo-eje" x1="18" y1="82" x2="18" y2="10" />
+      <line class="inicio-ejemplo-trazo-base" x1="18" y1="12" x2="90" y2="84" />
+      <line class="inicio-ejemplo-trazo-acento" x1="18" y1="84" x2="90" y2="12" />
+      <g data-ejemplo-marca="punto">
+        <circle class="inicio-ejemplo-punto" cx="54" cy="48" r="4" />
+      </g>
+      <text class="inicio-ejemplo-etiqueta-acento" x="62" y="49">(2, 1)</text>
+    </svg>
+    <div class="inicio-ejemplo-ecuaciones">
+      <strong class="inicio-ejemplo-resultado" role="math" aria-label="Intersección en dos coma uno">Cruce en (2, 1)</strong>
+    </div>
+  </div>
+</template>
+
+<template data-ejemplo="vis:vectores">
+  <div class="inicio-ejemplo-etapa">
+    <p class="inicio-ejemplo-etiqueta">Vectores iniciales</p>
+    <svg class="inicio-ejemplo-lienzo" viewBox="0 0 120 88" role="img" aria-label="Vectores (2, 1) y (1, 2) desde el origen">
+      <line class="inicio-ejemplo-eje" x1="12" y1="76" x2="106" y2="76" />
+      <line class="inicio-ejemplo-eje" x1="18" y1="82" x2="18" y2="10" />
+      <line class="inicio-ejemplo-trazo-base" x1="18" y1="76" x2="58" y2="56" />
+      <line class="inicio-ejemplo-trazo-base" x1="18" y1="76" x2="38" y2="36" />
+      <text class="inicio-ejemplo-etiqueta-svg" x="61" y="59">(2,1)</text>
+      <text class="inicio-ejemplo-etiqueta-svg" x="39" y="33">(1,2)</text>
+    </svg>
+    <div class="inicio-ejemplo-ecuaciones">
+      <span role="math" aria-label="Vectores dos coma uno y uno coma dos">(2, 1), (1, 2)</span>
+    </div>
+  </div>
+  <span class="inicio-ejemplo-flecha" aria-hidden="true">→</span>
+  <div class="inicio-ejemplo-etapa">
+    <p class="inicio-ejemplo-etiqueta">Punta con cola</p>
+    <svg class="inicio-ejemplo-lienzo" viewBox="0 0 120 88" role="img" aria-label="Método punta-cola sumando en el punto (3, 3)">
+      <line class="inicio-ejemplo-eje" x1="12" y1="76" x2="106" y2="76" />
+      <line class="inicio-ejemplo-eje" x1="18" y1="82" x2="18" y2="10" />
+      <line class="inicio-ejemplo-trazo-base" x1="18" y1="76" x2="58" y2="56" />
+      <line class="inicio-ejemplo-trazo-discontinuo" data-ejemplo-marca="punta-cola" x1="58" y1="56" x2="78" y2="16" />
+      <line class="inicio-ejemplo-trazo-acento" x1="18" y1="76" x2="78" y2="16" />
+      <circle class="inicio-ejemplo-punto" cx="78" cy="16" r="3.5" />
+      <text class="inicio-ejemplo-etiqueta-acento" x="82" y="19">(3,3)</text>
+    </svg>
+    <div class="inicio-ejemplo-ecuaciones">
+      <strong class="inicio-ejemplo-resultado" role="math" aria-label="Suma igual a tres coma tres">Suma = (3, 3)</strong>
+    </div>
+  </div>
+</template>
+
+<template data-ejemplo="vis:combinacion">
+  <div class="inicio-ejemplo-etapa">
+    <p class="inicio-ejemplo-etiqueta">Vectores base</p>
+    <svg class="inicio-ejemplo-lienzo" viewBox="0 0 120 88" role="img" aria-label="Vectores canónicos e1 y e2">
+      <line class="inicio-ejemplo-eje" x1="12" y1="76" x2="106" y2="76" />
+      <line class="inicio-ejemplo-eje" x1="18" y1="82" x2="18" y2="10" />
+      <line class="inicio-ejemplo-trazo-base" x1="18" y1="76" x2="38" y2="76" />
+      <line class="inicio-ejemplo-trazo-base" x1="18" y1="76" x2="18" y2="56" />
+      <text class="inicio-ejemplo-etiqueta-svg" x="38" y="69">e₁</text>
+      <text class="inicio-ejemplo-etiqueta-svg" x="23" y="55">e₂</text>
+    </svg>
+    <div class="inicio-ejemplo-ecuaciones">
+      <span role="math" aria-label="Base e sub uno y e sub dos">e₁, e₂</span>
+    </div>
+  </div>
+  <span class="inicio-ejemplo-flecha" aria-hidden="true">→</span>
+  <div class="inicio-ejemplo-etapa">
+    <p class="inicio-ejemplo-etiqueta">Combinación 2e₁ + 3e₂</p>
+    <svg class="inicio-ejemplo-lienzo" viewBox="0 0 120 88" role="img" aria-label="Combinación lineal 2e1 más 3e2 en (2, 3)">
+      <line class="inicio-ejemplo-eje" x1="12" y1="76" x2="106" y2="76" />
+      <line class="inicio-ejemplo-eje" x1="18" y1="82" x2="18" y2="10" />
+      <line class="inicio-ejemplo-trazo-base" x1="18" y1="76" x2="58" y2="76" />
+      <line class="inicio-ejemplo-trazo-discontinuo" data-ejemplo-marca="punta-cola" x1="58" y1="76" x2="58" y2="16" />
+      <line class="inicio-ejemplo-trazo-acento" x1="18" y1="76" x2="58" y2="16" />
+      <circle class="inicio-ejemplo-punto" cx="58" cy="16" r="3.5" />
+      <text class="inicio-ejemplo-etiqueta-acento" x="64" y="19">(2,3)</text>
+    </svg>
+    <div class="inicio-ejemplo-ecuaciones">
+      <strong class="inicio-ejemplo-resultado" role="math" aria-label="Vector resultante dos coma tres">b = (2, 3)</strong>
+    </div>
+  </div>
+</template>
