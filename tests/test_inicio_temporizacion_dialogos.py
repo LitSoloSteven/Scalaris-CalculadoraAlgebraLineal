@@ -1,10 +1,9 @@
-"""Duración de entrada y salida de los diálogos del inicio."""
+"""Duraciones de entrada, gesto y pulsación del directorio de inicio."""
 from pathlib import Path
 import re
 from tests.comun_estilos import leer_css_inicio, bloque_css
 
 
-RUTA_CSS_TEMAS = Path("src/frontend/recursos/css/theme.css")
 RUTA_JS_INICIO = Path("src/frontend/recursos/js/inicio.js")
 
 
@@ -23,14 +22,14 @@ def duracion_milisegundos(bloque: str, nombre_propiedad: str) -> int:
     return int(duracion.group(1))
 
 
-def test_temporizacion_dialogos_y_accesibilidad():
-    """Conserva duraciones de diálogos, tarjetas, teclado y movimiento reducido."""
+def test_temporizacion_directorio_y_accesibilidad():
+    """El directorio conserva tiempos de entrada, pulsación, gesto y accesibilidad."""
     css = leer_css_inicio()
     js = RUTA_JS_INICIO.read_text(encoding="utf-8")
     _comprobar_duraciones_permitidas(css)
-    _comprobar_duraciones_dialogos(css)
-    _comprobar_duraciones_tarjetas(css)
-    _comprobar_cierre_y_accesibilidad(js, css)
+    _comprobar_duraciones_entrada_y_gesto(css, js)
+    _comprobar_duraciones_pulsacion(css)
+    _comprobar_accesibilidad(css)
 
 
 def _comprobar_duraciones_permitidas(css):
@@ -57,43 +56,27 @@ def _comprobar_duraciones_permitidas(css):
     assert not re.search(r"(?<![\w-])ease-in(?![\w-])", css, re.IGNORECASE)
 
 
-def _comprobar_duraciones_dialogos(css):
-    salida_tarjeta = bloque_css(css, ".inicio-dialogo-tarjeta")
-    entrada_tarjeta = bloque_css(css, ".inicio-dialogo[open][data-abierto] .inicio-dialogo-tarjeta")
-    assert "opacity: 0" in salida_tarjeta
-    assert duracion_milisegundos(salida_tarjeta, "transition") == 450
-    assert duracion_milisegundos(entrada_tarjeta, "transition-duration") == 600
-    assert duracion_milisegundos(entrada_tarjeta, "transition-duration") > duracion_milisegundos(salida_tarjeta, "transition")
-
-    movil = bloque_css(css, "@media (max-width: 639px)")
-    salida_movil = bloque_css(movil, ".inicio-dialogo-tarjeta")
-    entrada_movil = bloque_css(movil, ".inicio-dialogo[open][data-abierto] .inicio-dialogo-tarjeta")
-    assert duracion_milisegundos(salida_movil, "transition-duration") == 450
-    assert duracion_milisegundos(entrada_movil, "transition-duration") == 600
-    assert duracion_milisegundos(entrada_movil, "transition-duration") > duracion_milisegundos(salida_movil, "transition-duration")
+def _comprobar_duraciones_entrada_y_gesto(css, js):
+    seccion = bloque_css(css, ".inicio-seccion {")
+    assert duracion_milisegundos(seccion, "transition") == 600
+    assert "opacity: 0" in bloque_css(css, ".inicio-seccion:not(:focus-within)")
+    assert "var(--stagger-step)" in seccion and "var(--stagger-max)" in seccion
+    assert "--dur-state" in js
+    assert ".animate(" in js
 
 
-def _comprobar_duraciones_tarjetas(css):
-    entrada_fondo = bloque_css(css, ".inicio-dialogo[open][data-abierto]::backdrop")
-    assert duracion_milisegundos(entrada_fondo, "transition-duration") == 600
-    entrada_ficha = bloque_css(css, ".inicio-dialogo[data-abierto] .inicio-tarjeta")
-    assert duracion_milisegundos(entrada_ficha, "transition-duration") == 600
-    assert "var(--stagger-step)" in entrada_ficha and "var(--stagger-max)" in entrada_ficha
+def _comprobar_duraciones_pulsacion(css):
+    reposo = bloque_css(css, ".inicio-simbolo {")
+    pulsacion = bloque_css(css, ".inicio-enlace:active .inicio-simbolo")
+    assert duracion_milisegundos(reposo, "transition") == 320
+    assert duracion_milisegundos(pulsacion, "transition-duration") == 200
+    assert duracion_milisegundos(reposo, "transition") > duracion_milisegundos(pulsacion, "transition-duration")
 
 
-def _comprobar_cierre_y_accesibilidad(js, css):
-    respaldo = re.search(
-        r"temporizadorCierre = setTimeout\(function \(\) \{ finalizar_cierre\(dialogo\); \}, window.scalaris.movimiento.duracion\('--dur-view-exit'\) \+ 50\)",
-        js,
-    )
-    assert respaldo is not None
-    assert "tarjeta.addEventListener('transitionend', manejar_transicion_cierre);" in js
-    assert "evento.target === tarjeta && evento.propertyName === 'opacity'" in js
-    assert "cancelar_espera_cierre();" in js
-    assert "if (temporizadorCierre && dialogoCerrandose === dialogo) return;" in js
-    assert js.count("temporizadorCierre = setTimeout(") == 1
-
-    teclado = bloque_css(css, 'html[data-entrada="teclado"] .inicio-fila,')
+def _comprobar_accesibilidad(css):
+    teclado = bloque_css(css, 'html[data-entrada="teclado"] :is(.inicio-seccion, .inicio-simbolo)')
     movimiento_reducido = bloque_css(css, "@media (prefers-reduced-motion: reduce)")
-    assert "transition: none !important" in teclado
+    assert "transition: none" in teclado
+    assert "transform: none" in movimiento_reducido
     assert "transition: opacity var(--dur-reduced) var(--ease-std)" in movimiento_reducido
+    assert duracion_milisegundos(movimiento_reducido, "transition") == 120
