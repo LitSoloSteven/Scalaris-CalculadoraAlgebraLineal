@@ -23,11 +23,11 @@ def test_componentes_quasar_leen_sus_tokens(monkeypatch):
         assert token in recibidas[componente]
 
 
-def test_dialogo_inicio_y_aviso_utilizan_tokens():
-    """Los diálogos y avisos distinguen entrada y salida."""
-    inicio = leer_estilos("vistas_inicio_ventanas_emergentes.css")
+def test_entrada_inicio_y_aviso_utilizan_tokens():
+    """El directorio usa los tokens de entrada y los avisos distinguen entrada y salida."""
+    inicio = leer_estilos("vistas_inicio_directorio.css")
     base = leer_estilos("base.css")
-    assert "var(--dur-view-exit)" in bloque_css(inicio, ".inicio-dialogo-tarjeta {")
-    assert "var(--dur-view)" in bloque_css(inicio, ".inicio-dialogo[open][data-abierto] .inicio-dialogo-tarjeta {")
+    assert "var(--dur-view)" in bloque_css(inicio, ".inicio-seccion {")
+    assert "var(--dur-reduced)" in bloque_css(inicio, "@media (prefers-reduced-motion: reduce)")
     assert "var(--dur-panel)" in bloque_css(base, ".q-notification {")
     assert "var(--dur-panel-exit)" in bloque_css(base, '.q-notification[class*="-leave-active"]')
