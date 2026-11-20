@@ -1,41 +1,11 @@
 """Contratos del selector de símbolos sin botón visible y diálogo con cabecera fija."""
 import re
-from html.parser import HTMLParser
 
 from nicegui import ui
 
 from src.frontend.componentes.campo_funcion_real import crear_campo_funcion
 from src.frontend.componentes.simbolos import habilitar_simbolos
 from tests.comun import RAIZ
-
-
-class _AnalizadorPlantillaSimbolos(HTMLParser):
-    """Recorre etiquetas, atributos y jerarquía de la plantilla del selector."""
-
-    def __init__(self) -> None:
-        super().__init__()
-        self.pila: list[str] = []
-        self.dialogo_attrs: dict[str, str | None] | None = None
-        self.cabecera_en_cuerpo = False
-        self.boton_cerrar: dict[str, str | None] | None = None
-        self.cuerpo_presente = False
-
-    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
-        diccionario = dict(attrs)
-        clases = (diccionario.get("class") or "").split()
-        if tag == "dialog" and "simbolos-dialogo" in clases:
-            self.dialogo_attrs = diccionario
-        if tag == "div" and "simbolos-cuerpo" in clases:
-            self.cuerpo_presente = True
-        if tag == "header" and "simbolos-cabecera" in clases and "simbolos-cuerpo" in self.pila:
-            self.cabecera_en_cuerpo = True
-        if tag == "button" and diccionario.get("type") == "submit" and "form" in self.pila:
-            self.boton_cerrar = diccionario
-        self.pila.append("simbolos-cuerpo" if "simbolos-cuerpo" in clases else tag)
-
-    def handle_endtag(self, tag: str) -> None:
-        if self.pila:
-            self.pila.pop()
 
 
 def _bloque_css(texto_css: str, selector: str) -> str:
@@ -78,18 +48,14 @@ def test_crear_campo_funcion_conserva_aviso_teclado_sin_boton_visible():
 def test_plantilla_simbolos_mantiene_cabecera_fija_y_dialogo_nativo():
     """La plantilla usa dialog nativo con closedby, cabecera separada y cierre etiquetado."""
     ruta_plantilla = RAIZ / "src/frontend/recursos/plantillas/simbolos.html"
-    analizador = _AnalizadorPlantillaSimbolos()
-    analizador.feed(ruta_plantilla.read_text(encoding="utf-8"))
+    html = ruta_plantilla.read_text(encoding="utf-8")
 
-    assert analizador.dialogo_attrs is not None
-    assert analizador.dialogo_attrs.get("aria-labelledby") == "titulo-simbolos"
-    assert analizador.dialogo_attrs.get("closedby") == "any"
-    assert "role" not in analizador.dialogo_attrs
-    assert "aria-modal" not in analizador.dialogo_attrs
-    assert analizador.cuerpo_presente is True
-    assert analizador.cabecera_en_cuerpo is False
-    assert analizador.boton_cerrar is not None
-    assert bool((analizador.boton_cerrar.get("aria-label") or "").strip())
+    assert '<dialog class="simbolos-dialogo" aria-labelledby="titulo-simbolos" closedby="any">' in html
+    assert 'role="dialog"' not in html
+    assert "aria-modal" not in html
+    assert html.index('<header class="simbolos-cabecera">') < html.index("</header>")
+    assert html.index("</header>") < html.index('<div class="simbolos-cuerpo">')
+    assert 'aria-label="Cerrar selector de símbolos"' in html
 
 
 def test_estilos_selector_simbolos_acotan_flex_y_scroll_interno():
