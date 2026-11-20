@@ -32,16 +32,16 @@ function leerPlantillas() {
     return bloques;
 }
 
-function crearMarca(preset, animaciones, falla = false) {
+function crearMarca(trazo, animaciones, falla = false) {
     return {
-        dataset: preset ? { ejemploMarca: preset } : {},
+        dataset: trazo ? { ejemploMarca: trazo } : {},
         style: { willChange: "" },
         animate(fotogramas, opciones) {
             if (falla) throw new Error("WAAPI no disponible");
             let completar;
             let rechazar;
             const finished = new Promise((res, rej) => { completar = res; rechazar = rej; });
-            const entrada = { preset, fotogramas, opciones, cancelaciones: 0, completar, rechazar };
+            const entrada = { trazo, fotogramas, opciones, cancelaciones: 0, completar, rechazar };
             animaciones.push(entrada);
             return {
                 finished,
@@ -90,7 +90,7 @@ function crearEntorno(opciones = {}) {
     });
     const contexto = maquinaVirtual.createContext({ window: ventana, document: documento });
     cargarAssetCliente("ejemplos_inicio.js", contexto);
-    return { documento, ventana, reduccion, lecturas, recargas };
+    return { documento, ventana, reduccion, lecturas, recargas, contexto };
 }
 
 function emitir(objetivo, tipo, propiedades = {}) {
@@ -115,94 +115,97 @@ prueba("las quince plantillas conservan dos etapas, marca animable y accesibilid
     }
 });
 
-prueba("cada preset de marca anima solo transform y opacity sin scale cero y limpia willChange", async () => {
-    const presets = ["fila", "crecer-x", "deslizar-derecha", "deslizar-izquierda", "expandir", "cizalla", "punta-cola", "punto"];
+prueba("cada trazo de marca anima solo transform y opacity sin scale cero y limpia willChange", async () => {
+    const trazos = ["fila", "crecer-x", "deslizar-derecha", "deslizar-izquierda", "expandir", "cizalla", "punta-cola", "punto", "__proto__"];
     const entorno = crearEntorno();
     afirmar.deepEqual(entorno.lecturas, ["--dur-didactic", "--ease-std"]);
-    for (const preset of presets) {
+    for (const trazo of trazos) {
         const animaciones = [];
-        const marca = crearMarca(preset, animaciones);
-        const { objetivo, estado, atributos } = crearPanel([marca], `Mensaje de ${preset}`);
+        const marca = crearMarca(trazo, animaciones);
+        const { objetivo, estado, atributos } = crearPanel([marca], `Mensaje de ${trazo}`);
         emitir(entorno.documento, "click", { target: objetivo, detail: 1 });
-        afirmar.equal(marca.style.willChange, "transform, opacity", preset);
+        afirmar.equal(marca.style.willChange, "transform, opacity", trazo);
         for (const fotograma of animaciones[0].fotogramas) {
-            afirmar.ok(
-                Object.keys(fotograma).every(prop => prop === "transform" || prop === "opacity" || prop === "offset"),
-                preset,
-            );
-            afirmar.equal(/scale\(\s*0\s*\)/.test(fotograma.transform || ""), false, preset);
+            afirmar.ok(Object.keys(fotograma).every(prop => prop === "transform" || prop === "opacity" || prop === "offset"), trazo);
+            afirmar.equal(/scale\(\s*0\s*\)/.test(fotograma.transform || ""), false, trazo);
         }
         animaciones[0].completar();
         await new Promise(setImmediate);
-        afirmar.equal(marca.style.willChange, "", preset);
-        afirmar.equal(estado.textContent, `Mensaje de ${preset}`);
+        afirmar.equal(marca.style.willChange, "", trazo);
+        afirmar.equal(estado.textContent, `Mensaje de ${trazo}`);
         afirmar.ok(atributos.has("data-ejemplo-completado"));
     }
     afirmar.equal(entorno.lecturas.length, 2);
 });
 
-prueba("preparar, teclado, reducido, visibilidad, pagehide y fallos WAAPI dejan el panel limpio", async () => {
+prueba("preparar, teclado, reducido, visibilidad, desmontaje y fallos WAAPI dejan el panel limpio", async () => {
     const entorno = crearEntorno();
     const animaciones = [];
     const marcas = [crearMarca("deslizar-izquierda", animaciones), crearMarca("deslizar-derecha", animaciones)];
     const { panel, estado, objetivo } = crearPanel(marcas, "Factores L y U listos.");
 
     emitir(entorno.documento, "click", { target: objetivo, detail: 1 });
-    afirmar.equal(animaciones.length, 2);
     entorno.ventana.scalaris.ejemplosInicio.preparar(panel);
+    afirmar.equal(animaciones.length, 2);
     afirmar.ok(animaciones.every(entrada => entrada.cancelaciones === 1));
     afirmar.ok(marcas.every(marca => marca.style.willChange === ""));
 
-    emitir(entorno.documento, "click", { target: objetivo, detail: 0 });
-    afirmar.equal(animaciones.length, 2);
+    emitir(entorno.documento, "click", { target: objetivo, detail: 1 });
+    emitir(entorno.documento, "keydown", { key: "Escape" });
+    afirmar.ok(marcas.every(marca => marca.style.willChange === ""));
     afirmar.equal(estado.textContent, "Factores L y U listos.");
+
+    emitir(entorno.documento, "click", { target: objetivo, detail: 0 });
+    afirmar.equal(animaciones.length, 4);
 
     const falla = crearPanel([crearMarca("punto", animaciones, true)], "Fallo controlado.");
     emitir(entorno.documento, "click", { target: falla.objetivo, detail: 1 });
     afirmar.equal(falla.estado.textContent, "Fallo controlado.");
 
+    cargarAssetCliente("ejemplos_inicio.js", entorno.contexto);
     emitir(entorno.documento, "click", { target: objetivo, detail: 1 });
+    afirmar.equal(animaciones.length, 6);
     entorno.documento.hidden = true;
     emitir(entorno.documento, "visibilitychange");
     afirmar.ok(marcas.every(marca => marca.style.willChange === ""));
-    afirmar.equal(estado.textContent, "Factores L y U listos.");
+    entorno.ventana.scalaris.ejemplosInicio.destruir();
     await Promise.resolve();
 });
 
-prueba("pageshow recarga solo cuando el historial cambió desde bfcache", () => {
+prueba("pageshow normaliza alias heredados y recarga si cambia el historial o falla el almacen", () => {
     const recientes = { leer: () => ({ valido: true, identificadores: ["vis:combinacion"] }) };
-    const entorno = crearEntorno({
-        recientes,
-        nodos: { ".inicio-destacado": { dataset: { accesoReciente: "bases" } } },
-    });
+    const entorno = crearEntorno({ recientes, nodos: { ".inicio-destacado": { dataset: { accesoReciente: "bases" } } } });
     emitir(entorno.ventana, "pageshow", { persisted: false });
     afirmar.equal(entorno.recargas.length, 0);
     emitir(entorno.ventana, "pageshow", { persisted: true });
     afirmar.equal(entorno.recargas.length, 1);
 
-    const sinCambio = crearEntorno({
-        recientes,
-        nodos: { ".inicio-destacado": { dataset: { accesoReciente: "vis:combinacion" } } },
+    const heredado = crearEntorno({
+        recientes: { leer: () => ({ valido: true, identificadores: ["visualizador"] }) },
+        nodos: { ".inicio-destacado": { dataset: { accesoReciente: "vis:rectas-planos" } } },
     });
-    emitir(sinCambio.ventana, "pageshow", { persisted: true });
-    afirmar.equal(sinCambio.recargas.length, 0);
+    emitir(heredado.ventana, "pageshow", { persisted: true });
+    afirmar.equal(heredado.recargas.length, 0);
+
+    const bloqueado = crearEntorno({
+        recientes: { leer: () => ({ valido: false, identificadores: [] }) },
+        nodos: { ".inicio-destacado": { dataset: { accesoReciente: "bases" } } },
+    });
+    emitir(bloqueado.ventana, "pageshow", { persisted: true });
+    afirmar.equal(bloqueado.recargas.length, 1);
 });
 
-prueba("inicio_recientes conserva escenas, rechaza blancos o exceso y resiste bloqueo", () => {
+prueba("inicio_recientes conserva escenas, rechaza blancos o formato ajeno y resiste bloqueo", () => {
     const almacen = new Map();
     const contexto = maquinaVirtual.createContext({
         window: {},
-        localStorage: {
-            getItem: clave => almacen.get(clave) ?? null,
-            setItem: (clave, valor) => almacen.set(clave, valor),
-        },
+        localStorage: { getItem: clave => almacen.get(clave) ?? null, setItem: (clave, valor) => almacen.set(clave, valor) },
     });
     cargarAssetCliente("inicio_recientes.js", contexto);
     const recientes = contexto.window.scalaris.recientes;
-    recientes.registrar("vis:rectas-planos");
-    recientes.registrar("vis:vectores");
-    recientes.registrar("   ");
-    recientes.registrar("x".repeat(65));
+    for (const visita of ["vis:rectas-planos", "vis:vectores", "   ", "__proto__", "<script>", "a b", "x".repeat(65)]) {
+        recientes.registrar(visita);
+    }
     afirmar.deepEqual(Array.from(recientes.leer().identificadores), ["vis:vectores", "vis:rectas-planos"]);
 
     almacen.set("scalaris:recientes", "a".repeat(2049));
@@ -210,10 +213,7 @@ prueba("inicio_recientes conserva escenas, rechaza blancos o exceso y resiste bl
 
     const bloqueado = maquinaVirtual.createContext({
         window: {},
-        localStorage: {
-            getItem: () => { throw new Error("Bloqueado"); },
-            setItem: () => { throw new Error("Bloqueado"); },
-        },
+        localStorage: { getItem: () => { throw new Error("Bloqueado"); }, setItem: () => { throw new Error("Bloqueado"); } },
     });
     cargarAssetCliente("inicio_recientes.js", bloqueado);
     afirmar.equal(bloqueado.window.scalaris.recientes.leer().valido, false);

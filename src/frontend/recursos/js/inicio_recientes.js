@@ -8,9 +8,10 @@
   const LIMITE_LECTURA = 16;
   const LIMITE_IDENTIFICADOR = 64;
   const LIMITE_ALMACENAMIENTO = 2048;
+  const PATRON_IDENTIFICADOR = /^[a-z0-9][a-z0-9_:-]{0,63}$/;
 
   function esIdentificadorValido(elemento) {
-    return typeof elemento === 'string' && elemento.trim().length > 0 && elemento.length <= LIMITE_IDENTIFICADOR;
+    return typeof elemento === 'string' && elemento.length <= LIMITE_IDENTIFICADOR && PATRON_IDENTIFICADOR.test(elemento);
   }
 
   function leerRecientes() {

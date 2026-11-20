@@ -10,7 +10,7 @@
         duration: movimiento.duracion('--dur-didactic'),
         easing: movimiento.curva(),
     };
-    const trazos = {
+    const trazos = new Map(Object.entries({
         fila: [{ opacity: 0, transform: 'translateY(-14px) scale(0.95)' }, { opacity: 1, transform: 'translateY(0) scale(1)' }],
         'crecer-x': [{ opacity: 0.4, transform: 'scaleX(0.35)' }, { opacity: 1, transform: 'scaleX(1)' }],
         'deslizar-derecha': [{ opacity: 0, transform: 'translateX(-16px) scale(0.95)' }, { opacity: 1, transform: 'translateX(0) scale(1)' }],
@@ -19,8 +19,14 @@
         cizalla: [{ opacity: 0.4, transform: 'skewX(16deg) scale(0.95)' }, { opacity: 1, transform: 'skewX(0deg) scale(1)' }],
         'punta-cola': [{ opacity: 0, transform: 'translate(-18px, 14px) scale(0.95)' }, { opacity: 1, transform: 'translate(0, 0) scale(1)' }],
         punto: [{ opacity: 0, transform: 'scale(0.95)' }, { opacity: 1, transform: 'scale(1.18)', offset: 0.6 }, { opacity: 1, transform: 'scale(1)' }],
-    };
+    }));
+    const aliasHeredados = new Map([
+        ['visualizador', 'vis:rectas-planos'],
+        ['biseccion', 'metodos_cerrados'],
+        ['regla_falsa', 'metodos_cerrados'],
+    ]);
     let reproduccion = null;
+    let montado = false;
 
     function marcasPanel(panel) {
         if (panel.querySelectorAll) return Array.from(panel.querySelectorAll(selectorMarcas));
@@ -45,7 +51,7 @@
         if (!estado || reproduccion !== estado) return;
         reproduccion = null;
         cambiarVoluntad(estado.marcas, '');
-        for (const animacion of estado.animaciones) animacion.cancel();
+        for (const animacion of estado.animaciones) animacion?.cancel?.();
         if (mostrar && estado.panel.isConnected) mostrarResultado(estado.panel);
     }
 
@@ -64,8 +70,10 @@
         try {
             cambiarVoluntad(marcas, 'transform, opacity');
             for (const marca of marcas) {
-                const fotogramas = trazos[marca.dataset?.ejemploMarca] || trazos.fila;
-                activas.push(marca.animate(fotogramas, opciones));
+                const fotogramas = trazos.get(marca.dataset?.ejemploMarca) || trazos.get('fila');
+                const animacion = marca.animate(fotogramas, opciones);
+                if (!animacion) throw new Error('Sin animacion');
+                activas.push(animacion);
             }
             const estado = { panel, marcas, animaciones: activas };
             reproduccion = estado;
@@ -73,7 +81,7 @@
             Promise.all(activas.map(animacion => animacion.finished)).then(finalizar, finalizar);
         } catch {
             cambiarVoluntad(marcas, '');
-            for (const animacion of activas) animacion.cancel();
+            for (const animacion of activas) animacion?.cancel?.();
             mostrarResultado(panel);
         }
     }
@@ -94,24 +102,76 @@
         iniciar(panel, marcas);
     }
 
-    function alVolverPagina(evento) {
-        if (!evento.persisted) return;
-        const recientes = window.scalaris?.recientes?.leer?.();
-        if (!recientes?.valido) return;
-        const primero = recientes.identificadores?.[0] || '';
-        const activo = document.querySelector?.('.inicio-destacado')?.dataset?.accesoReciente || '';
-        if (primero !== activo) window.location?.reload?.();
+    function resolverClave(elemento, conocidas) {
+        const clave = aliasHeredados.get(elemento) || elemento;
+        return !conocidas || conocidas.has(clave) ? clave : '';
     }
 
-    document.addEventListener('click', reproducir);
-    document.addEventListener('visibilitychange', () => {
-        if (document.hidden) detener(reproduccion, true);
-    });
-    window.addEventListener('pagehide', () => detener(reproduccion, true));
-    window.addEventListener('pageshow', alVolverPagina);
-    preferencia.addEventListener('change', () => {
-        if (preferencia.matches) detener(reproduccion, true);
-    });
+    function claveEsperada(recientes) {
+        if (!recientes || !recientes.valido) return '';
+        const enlaces = document.querySelectorAll ? document.querySelectorAll('.inicio-directorio [data-clave]') : [];
+        const conocidas = enlaces.length ? new Set(Array.from(enlaces, nodo => nodo.dataset.clave)) : null;
+        for (const elemento of recientes.identificadores || []) {
+            const clave = resolverClave(elemento, conocidas);
+            if (clave) return clave;
+        }
+        return '';
+    }
 
-    window.scalaris.ejemplosInicio = { preparar: prepararPanel, cancelar: cancelarActual };
+    function alVolverPagina(evento) {
+        montar();
+        if (!evento.persisted) return;
+        const recientes = window.scalaris?.recientes?.leer?.();
+        const esperada = claveEsperada(recientes);
+        const activa = document.querySelector?.('.inicio-destacado')?.dataset?.accesoReciente || '';
+        if (esperada !== activa) window.location?.reload?.();
+    }
+
+    function alCambiarVisibilidad() {
+        if (document.hidden) detener(reproduccion, true);
+    }
+
+    function alOcultarPagina() {
+        detener(reproduccion, true);
+        desmontar();
+    }
+
+    function alCambiarPreferencia() {
+        if (preferencia.matches) detener(reproduccion, true);
+    }
+
+    function alPresionarTecla() {
+        detener(reproduccion, true);
+    }
+
+    function desmontar() {
+        if (!montado) return;
+        montado = false;
+        detener(reproduccion, false);
+        document.removeEventListener('click', reproducir);
+        document.removeEventListener('keydown', alPresionarTecla);
+        document.removeEventListener('visibilitychange', alCambiarVisibilidad);
+        window.removeEventListener('pagehide', alOcultarPagina);
+        preferencia.removeEventListener('change', alCambiarPreferencia);
+    }
+
+    function montar() {
+        if (montado) return;
+        montado = true;
+        document.addEventListener('click', reproducir);
+        document.addEventListener('keydown', alPresionarTecla);
+        document.addEventListener('visibilitychange', alCambiarVisibilidad);
+        window.addEventListener('pagehide', alOcultarPagina);
+        preferencia.addEventListener('change', alCambiarPreferencia);
+    }
+
+    function destruir() {
+        desmontar();
+        window.removeEventListener('pageshow', alVolverPagina);
+    }
+
+    window.scalaris.ejemplosInicio?.destruir?.();
+    window.addEventListener('pageshow', alVolverPagina);
+    montar();
+    window.scalaris.ejemplosInicio = { preparar: prepararPanel, cancelar: cancelarActual, destruir };
 }
