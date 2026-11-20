@@ -37,15 +37,13 @@
     color: var(--text-sec);
 }
 
-.inicio-ejemplo :is(.inicio-ejemplo-operacion, .inicio-ejemplo-matriz, .inicio-ejemplo-ecuaciones) {
+.inicio-ejemplo :is(.inicio-ejemplo-operacion, .inicio-ejemplo-matriz, .inicio-ejemplo-ecuaciones, .inicio-ejemplo-barra-fila, .inicio-ejemplo-fichas, .inicio-ejemplo-etiqueta-svg, .inicio-ejemplo-etiqueta-acento) {
     font-family: ui-monospace, monospace;
     font-variant-numeric: tabular-nums;
 }
 
-.inicio-ejemplo-operacion {
-    color: var(--accent);
-    font-size: var(--fs-small);
-}
+.inicio-ejemplo :is(.inicio-ejemplo-operacion, .inicio-ejemplo-barra-fila, .inicio-ejemplo-fichas) { font-size: var(--fs-small); }
+.inicio-ejemplo-operacion { color: var(--accent); }
 
 .inicio-ejemplo-etapas {
     display: grid;
@@ -65,6 +63,11 @@
     text-align: center;
 }
 
+.inicio-ejemplo-etapa:has(.inicio-ejemplo-matriz) {
+    max-inline-size: 100%;
+    overflow-x: auto;
+}
+
 .inicio-ejemplo-etapa .inicio-ejemplo-etiqueta {
     min-block-size: 2.5em;
     display: grid;
@@ -77,7 +80,7 @@
     table-layout: fixed;
     border: 1px solid var(--accent);
     border-block: 0;
-    border-radius: var(--space-1);
+    border-radius: calc(var(--radius-badge) / 2);
     border-spacing: 0;
     font-size: var(--fs-mono-math);
     line-height: 1.4;
@@ -113,7 +116,7 @@
 
 .inicio-ejemplo-resultado {
     padding-inline: var(--space-1);
-    border-radius: var(--space-1);
+    border-radius: calc(var(--radius-badge) / 2);
     color: var(--accent);
     font-weight: var(--fw-h2);
 }
@@ -154,6 +157,10 @@ html[data-entrada="puntero"] .inicio-ejemplo-accion:active {
     transition-duration: var(--dur-press);
 }
 
+html[data-entrada="teclado"] .inicio-ejemplo-accion {
+    transition: none;
+}
+
 .inicio-ejemplo-icono {
     flex-shrink: 0;
     font-size: var(--fs-h2);
@@ -171,9 +178,6 @@ html[data-entrada="puntero"] .inicio-ejemplo-accion:active {
     grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
     gap: var(--space-2);
-    font-family: ui-monospace, monospace;
-    font-size: var(--fs-small);
-    font-variant-numeric: tabular-nums;
 }
 
 .inicio-ejemplo-barra-pista {
@@ -205,16 +209,10 @@ html[data-entrada="puntero"] .inicio-ejemplo-accion:active {
     gap: var(--space-1);
 }
 
-.inicio-ejemplo-fichas {
-    font-family: ui-monospace, monospace;
-    font-size: var(--fs-small);
-    font-variant-numeric: tabular-nums;
-}
-
 .inicio-ejemplo-ficha {
     padding: 2px var(--space-2);
     border: 1px solid var(--border-input);
-    border-radius: var(--space-1);
+    border-radius: calc(var(--radius-badge) / 2);
     background: var(--bg-panel);
 }
 
@@ -237,8 +235,9 @@ html[data-entrada="puntero"] .inicio-ejemplo-accion:active {
 .inicio-ejemplo-trazo-discontinuo { fill: none; stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 4 3; stroke-linecap: round; }
 .inicio-ejemplo-punto { fill: var(--accent); stroke: var(--bg-elevated); stroke-width: 1.5; }
 .inicio-ejemplo-punto-base { fill: var(--text-sec); }
-.inicio-ejemplo-etiqueta-svg { fill: var(--text-main); font-size: 10px; font-family: ui-monospace, monospace; }
-.inicio-ejemplo-etiqueta-acento { fill: var(--accent); font-size: 10px; font-weight: 600; font-family: ui-monospace, monospace; }
+.inicio-ejemplo :is(.inicio-ejemplo-etiqueta-svg, .inicio-ejemplo-etiqueta-acento) { font-size: 10px; }
+.inicio-ejemplo-etiqueta-svg { fill: var(--text-main); }
+.inicio-ejemplo-etiqueta-acento { fill: var(--accent); font-weight: var(--fw-h2); }
 .inicio-ejemplo-lienzo [data-ejemplo-marca] { transform-box: fill-box; transform-origin: center; }
 .inicio-ejemplo-lienzo [data-ejemplo-marca="crecer-x"] { transform-origin: bottom left; }
 .inicio-ejemplo-barra-relleno[data-ejemplo-marca="crecer-x"] { transform-origin: left center; }
@@ -258,7 +257,7 @@ html[data-entrada="puntero"] .inicio-ejemplo-accion:active {
     }
 }
 
-@container ejemplo-inicio (max-width: 15rem) {
+@container ejemplo-inicio (max-width: 22rem) {
     .inicio-ejemplo-etapas {
         grid-template-columns: minmax(0, 1fr);
         justify-items: center;
