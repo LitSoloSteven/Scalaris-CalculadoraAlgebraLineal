@@ -42,7 +42,7 @@ def _renderizar_cabecera() -> None:
 
 
 def _renderizar_presentacion() -> None:
-    enlace = enlace_elemento_navegacion(acceso_destacado())
+    enlace = acceso_destacado().ruta
     with ui.element("section").classes("inicio-presentacion").props('aria-labelledby="inicio-titulo"'):
         with ui.element("div").classes("inicio-presentacion-texto"):
             ui.html("Álgebra lineal,<br><em>paso a paso.</em>", tag="h1").classes("inicio-titulo").props(

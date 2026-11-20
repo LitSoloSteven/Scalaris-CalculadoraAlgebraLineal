@@ -15,6 +15,13 @@ def _leer_plantilla() -> Template:
 
 
 def renderizar_panel_ejemplo(enlace: str) -> None:
-    """Monta el ejemplo inicial y el enlace interno a su módulo."""
+    """Monta el ejemplo y lanza ValueError si el enlace no apunta a una ruta interna."""
+    if (
+        not enlace.startswith("/")
+        or enlace.startswith(("//", "/\\"))
+        or any(ord(caracter) < 32 for caracter in enlace)
+    ):
+        raise ValueError("El enlace del ejemplo debe apuntar a una ruta interna.")
     contenido = _leer_plantilla().substitute(enlace=escape(enlace, quote=True))
-    ui.html(contenido).classes("inicio-ejemplo-contenedor")
+    # El sanitizador estricto del navegador suprime los controles del fragmento local.
+    ui.html(contenido, sanitize=False).classes("inicio-ejemplo-contenedor")
