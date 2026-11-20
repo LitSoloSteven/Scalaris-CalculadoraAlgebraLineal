@@ -12,21 +12,24 @@ CATALOGO_ICONOS: dict[str, str] = {
         '<path d="m16 9 6 6m0-6-6 6"></path>'
     ),
     "factorizacion_lu": (
-        '<rect x="4" y="4" width="16" height="16" rx="1"></rect>'
-        '<path d="M4 20 20 4M7 16h3v-3M14 8h3v3"></path>'
+        '<path d="M4 7v12h5"></path>'
+        '<path d="M13 5v8a3.5 3.5 0 0 0 7 0V5"></path>'
     ),
     "determinantes": (
-        '<path d="M5 4v16M19 4v16M9 7l6 10"></path>'
+        '<path d="M5 4v16"></path>'
+        '<path d="M19 4v16"></path>'
+        '<path d="M9 9h.01m6 0h.01M9 15h.01m6 0h.01"></path>'
     ),
     "sistemas_lineales": (
-        '<line x1="4" y1="20" x2="20" y2="4"></line>'
-        '<line x1="4" y1="8" x2="20" y2="16"></line>'
-        '<circle cx="12" cy="12" r="2.5" fill="currentColor" stroke="none"></circle>'
+        '<path d="m2 15 3-7 3 7m-5-2h4"></path>'
+        '<path d="m10 11 3 4m0-4-3 4"></path>'
+        '<path d="M15.5 11H18m-2.5 3H18"></path>'
+        '<path d="M20.5 8v7h1a2 2 0 0 0 0-4h-1"></path>'
     ),
     "operaciones_matrices": (
-        '<path d="M7 4H5v16h2"></path>'
-        '<path d="M17 4h2v16h-2"></path>'
-        '<path d="M9.5 9.5l5 5m0-5l-5 5"></path>'
+        '<path d="M4 6H2v12h2m3 0h2V6H7M5.5 10h.01m-.01 4h.01"></path>'
+        '<path d="M10.5 12h3m-1.5-1.5v3"></path>'
+        '<path d="M17 6h-2v12h2m3 0h2V6h-2m-1.5 4h.01m-.01 4h.01"></path>'
     ),
     "conversor_bases": (
         '<rect x="3" y="4" width="3" height="5" rx="1"></rect>'
@@ -44,20 +47,37 @@ CATALOGO_ICONOS: dict[str, str] = {
         '<path d="M19 2l1 2 2 1-2 1-1 2-1-2-2-1 2-1z" fill="currentColor" stroke="none"></path>'
     ),
     "vectores": (
-        '<line x1="5" y1="19" x2="17" y2="7"></line>'
-        '<polyline points="9,7 17,7 17,15"></polyline>'
+        '<path d="M5 7h14m-3-3 3 3-3 3"></path>'
+        '<path d="m8 13 4 7 4-7"></path>'
     ),
     "temas": (
         '<circle cx="12" cy="12" r="8"></circle>'
         '<path d="M17.65 6.35A8 8 0 0 0 6.35 17.65Z" fill="currentColor" stroke="none"></path>'
     ),
     "matriz_inversa": (
-        '<path d="M6 4H4v16h2"></path>'
-        '<path d="M12 4h2v16h-2"></path>'
-        '<circle cx="7" cy="9" r="1" fill="currentColor" stroke="none"></circle>'
-        '<circle cx="11" cy="15" r="1" fill="currentColor" stroke="none"></circle>'
-        '<path d="M16.5 7h3"></path>'
-        '<path d="M22 4.5v5"></path>'
+        '<path d="m3 19 5-13 5 13m-8-4h6"></path>'
+        '<path d="M14 7h3m2-1 2-2v6"></path>'
+    ),
+    "leontief": (
+        '<path d="M2 6h5M4.5 6v12M2 18h5"></path>'
+        '<path d="M10 12h4"></path>'
+        '<path d="M21 7c-6-3-6 13 0 10"></path>'
+    ),
+    "transformaciones": (
+        '<path d="M3 6h9m-4.5 0v12"></path>'
+        '<path d="M13 12h8m-3-3 3 3-3 3"></path>'
+    ),
+    "metodos_cerrados": (
+        '<path d="M4 12h16"></path>'
+        '<path d="M4 8v8"></path>'
+        '<path d="M20 8v8"></path>'
+        '<circle cx="12" cy="12" r="1.8" fill="currentColor" stroke="none"></circle>'
+    ),
+    "metodos_abiertos": (
+        '<path d="M3 19c8 0 12-4 17-14"></path>'
+        '<path d="m10 21 10-16"></path>'
+        '<circle cx="20" cy="5" r="1.8" fill="currentColor" stroke="none"></circle>'
+        '<circle cx="10" cy="21" r="1.4" fill="currentColor" stroke="none"></circle>'
     ),
     "inicio": (
         '<path d="M4 11.5 12 5l8 6.5"></path>'
@@ -85,7 +105,9 @@ CATALOGO_ICONOS: dict[str, str] = {
         '<path d="M12 12v9"></path>'
     ),
     "romanos": (
-        '<path d="M4 6h4M6 6v12M4 18h4M13 6l3.5 12 3.5-12"/>'
+        '<path d="M3 6l6 12M9 6 3 18"></path>'
+        '<path d="m12 6 3 12 3-12"></path>'
+        '<path d="M21 6v12"></path>'
     ),
     "glosa": (
         '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>'
@@ -100,18 +122,17 @@ CATALOGO_ICONOS: dict[str, str] = {
         '<path d="M12 13v4"></path>'
     ),
     "escena_rectas_planos": (
-        '<polygon points="3 17 9 7 21 7 15 17"></polygon>'
-        '<line x1="4" y1="18" x2="18" y2="6"></line>'
-        '<line x1="6" y1="6" x2="16" y2="18"></line>'
+        '<path d="m4 18 16-12"></path>'
+        '<path d="m5 6 14 12"></path>'
+    ),
+    "escena_vectores": (
+        '<path d="M4 19 10 5m-5 3 5-3 2 5"></path>'
+        '<path d="m4 19 16-6m-6-2 6 2-3 5"></path>'
     ),
     "escena_combinacion": (
-        '<line x1="4" y1="19" x2="13" y2="19"></line>'
-        '<polyline points="10 17 13 19 10 21"></polyline>'
-        '<line x1="4" y1="19" x2="9" y2="10"></line>'
-        '<polyline points="6 11 9 10 10 13"></polyline>'
-        '<path d="M9 10h9l-5 9" stroke-dasharray="2 2"></path>'
-        '<line x1="4" y1="19" x2="18" y2="10"></line>'
-        '<polyline points="14 10 18 10 18 14"></polyline>'
+        '<path d="M4 19V6M2 8l2-2 2 2"></path>'
+        '<path d="m10 19 11-8m-5 0h5v5"></path>'
+        '<path d="M8 12h5m-2.5-2.5v5"></path>'
     ),
     "abrir": (
         '<polyline points="7 10 12 15 17 10"></polyline>'

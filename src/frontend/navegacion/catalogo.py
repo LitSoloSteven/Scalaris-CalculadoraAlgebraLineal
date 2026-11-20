@@ -7,7 +7,7 @@ TITULO_PAGINA_INICIO: str = "Inicio | Scalaris"
 
 ESCENAS_VISUALIZADOR: tuple[tuple[str, str, str, str, str], ...] = (
     ("rectas-planos", "Rectas y planos", "Rectas", "Sistemas de 2 y 3 variables", "escena_rectas_planos"),
-    ("vectores", "Vectores", "Vectores", "Suma y escalamiento de u y v", "vectores"),
+    ("vectores", "Vectores", "Vectores", "Suma y escalamiento de u y v", "escena_vectores"),
     ("combinacion", "Combinación lineal", "Combinación", "Cómo se forma b con tus vectores", "escena_combinacion"),
 )
 
@@ -158,7 +158,7 @@ HERRAMIENTAS: tuple[Herramienta, ...] = (
         descriptor="Bisección y regla falsa",
         ruta="/utilidades/metodos-cerrados",
         identificador_pilar="utilidades",
-        icono="utilidades",
+        icono="metodos_cerrados",
         titulo_pagina="Métodos cerrados | Scalaris",
         ejemplo_latex=r"c = \frac{a+b}{2}",
         habilitada=True,
@@ -169,7 +169,7 @@ HERRAMIENTAS: tuple[Herramienta, ...] = (
         descriptor="Newton-Raphson y secante",
         ruta="/utilidades/metodos-abiertos",
         identificador_pilar="utilidades",
-        icono="utilidades",
+        icono="metodos_abiertos",
         titulo_pagina="Métodos abiertos | Scalaris",
         ejemplo_latex=r"x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}",
         habilitada=True,
@@ -180,7 +180,7 @@ HERRAMIENTAS: tuple[Herramienta, ...] = (
         descriptor="Insumo-producto: x = (I - C)^(-1) d",
         ruta="/algebra-lineal/leontief",
         identificador_pilar="algebra",
-        icono="matriz_inversa",
+        icono="leontief",
         titulo_pagina="Modelo de Leontief | Scalaris",
         ejemplo_latex=r"x = (I - C)^{-1}\,d",
         habilitada=True,
@@ -191,7 +191,7 @@ HERRAMIENTAS: tuple[Herramienta, ...] = (
         descriptor="ker(T), Im(T), rango y nulidad",
         ruta="/algebra-lineal/transformaciones",
         identificador_pilar="algebra",
-        icono="operaciones_matrices",
+        icono="transformaciones",
         titulo_pagina="Transformaciones Lineales | Scalaris",
         ejemplo_latex=r"T: \mathbb{R}^n \to \mathbb{R}^m",
         habilitada=True,
