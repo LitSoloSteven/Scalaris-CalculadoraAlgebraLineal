@@ -11,7 +11,6 @@ from src.frontend import banderas
 from src.frontend.componentes.iconos import icono_svg
 from src.frontend.componentes.selector_tema import renderizar_boton_tema
 from src.frontend.navegacion import (
-    ESCENAS_VISUALIZADOR,
     RUTA_INICIO,
     ORDEN_NAVEGACION_PLANA,
     predeterminado_elemento_clave,
@@ -22,7 +21,7 @@ from src.frontend.navegacion import (
     herramienta_por_ruta,
 )
 
-_CLAVES_ESCENAS = frozenset(f"vis:{escena}" for escena, *_ in ESCENAS_VISUALIZADOR)
+_CLAVES_ESCENAS = frozenset(elemento.clave for elemento in elementos_navegacion("visualizador"))
 
 
 def crear_barra_navegacion(interfaz_activa=None, ruta_activa: str = "/", clave_activa: str | None = None, al_alternar_ia=None):

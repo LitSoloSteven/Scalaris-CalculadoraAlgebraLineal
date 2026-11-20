@@ -1,4 +1,5 @@
 """Portada y directorio de herramientas de Scalaris."""
+import asyncio
 import html
 
 from nicegui import Client, ui
@@ -109,16 +110,19 @@ class VistaInicio:
 
     async def _leer_recientes_cliente(self, cliente: Client):
         try:
-            await cliente.connected()
+            await asyncio.wait_for(cliente.connected(timeout=3.0), timeout=3.0)
+            if getattr(cliente, "is_deleted", False):
+                return None
             respuesta = await cliente.run_javascript(
                 "return window.scalaris?.recientes?.leer?.() ?? { valido: false, identificadores: [] };",
                 timeout=3.0,
             )
-            if isinstance(respuesta, dict) and respuesta.get("valido"):
-                return respuesta.get("identificadores")
+            if not isinstance(respuesta, dict) or respuesta.get("valido") is not True:
+                return None
+            identificadores = respuesta.get("identificadores")
+            return identificadores if isinstance(identificadores, list) else None
         except Exception:
             return None
-        return None
 
     def _actualizar_destacado(self, estado_inicial: EstadoPortada, estado: EstadoPortada) -> None:
         if self._enlace_destacado is not None:
@@ -134,7 +138,11 @@ class VistaInicio:
 
     async def _aplicar_ultimo_acceso(self, cliente: Client, estado_inicial: EstadoPortada) -> None:
         identificadores = await self._leer_recientes_cliente(cliente)
-        if getattr(cliente, "is_deleted", False) or not identificadores:
+        if (
+            getattr(cliente, "is_deleted", False)
+            or getattr(self._panel_ejemplo, "is_deleted", False)
+            or not identificadores
+        ):
             return
         estado = estado_portada(identificadores)
         if estado == estado_inicial:
