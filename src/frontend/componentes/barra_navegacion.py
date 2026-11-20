@@ -16,16 +16,18 @@ from src.frontend.navegacion import (
     predeterminado_elemento_clave,
     enlace_elemento_navegacion,
     elementos_navegacion,
-    pilar_por_ruta,
     herramienta_por_identificador,
     herramienta_por_ruta,
 )
+from src.frontend.navegacion.modelo import ElementoNavegacion
+from src.frontend.navegacion.secciones_inicio import SeccionInicio, seccion_por_clave
 
 _CLAVES_ESCENAS = frozenset(elemento.clave for elemento in elementos_navegacion("visualizador"))
+_ETIQUETAS_CONTEXTUALES = {"vis:vectores": "Vectores del Visualizador"}
 
 
 def crear_barra_navegacion(interfaz_activa=None, ruta_activa: str = "/", clave_activa: str | None = None, al_alternar_ia=None):
-    """Genera la barra de navegación contextual plana o por pilares según banderas."""
+    """Genera la barra plana o contextual por secciones según banderas."""
     clave_activa = predeterminado_elemento_clave(ruta_activa) if clave_activa is None else clave_activa
     contextual = banderas.navegacion_actualizada()
 
@@ -35,7 +37,7 @@ def crear_barra_navegacion(interfaz_activa=None, ruta_activa: str = "/", clave_a
             if not contextual:
                 _renderizar_barra_plana(interfaz_activa, ruta_activa, al_alternar_ia)
             else:
-                _renderizar_barra_pilares(ruta_activa, clave_activa)
+                _renderizar_barra_contextual(clave_activa)
 
     _registrar_navegacion_reciente(ruta_activa, clave_activa=clave_activa, centrar=contextual)
 
@@ -80,51 +82,49 @@ def _renderizar_barra_plana(interfaz_activa: Any, ruta_activa: str, al_alternar_
         renderizar_boton_tema()
 
 
-def _renderizar_barra_pilares(ruta_activa: str, clave_activa: str) -> None:
-    """Renderiza la botonera contextual por pilares temáticos (v2)."""
+def _renderizar_barra_contextual(clave_activa: str | None) -> None:
+    """Renderiza la botonera contextual con la sección del acceso activo."""
     with ui.element("a").classes("navegacion-accion navegacion-inicio").props(
         f'href="{RUTA_INICIO}" aria-label="Inicio" title="Inicio"'
     ).tooltip("Inicio"):
         ui.html(icono_svg("inicio"))
 
-    pilar = pilar_por_ruta(ruta_activa)
-    elementos = elementos_navegacion(pilar.identificador) if pilar is not None else ()
+    seccion = seccion_por_clave(clave_activa)
     with ui.element("div").classes("navegacion-centro"):
-        _renderizar_elementos_centro(pilar, elementos, clave_activa)
+        if seccion is not None:
+            _renderizar_seccion(seccion, clave_activa)
 
     with ui.element("div").classes("tema-boton-selector navegacion-tema"):
         renderizar_boton_tema()
 
 
-def _renderizar_elementos_centro(pilar: Any, elementos: Any, clave_activa: str) -> None:
-    """Renderiza el distintivo del pilar y los accesos a sus herramientas."""
-    if pilar is None or len(elementos) == 0:
-        return
-    with ui.element("span").classes("navegacion-pilar"):
-        ui.html(icono_svg(pilar.icono))
-        ui.html(html.escape(pilar.nombre_corto), tag="span").classes("navegacion-nombre-pilar")
+def _renderizar_seccion(seccion: SeccionInicio, clave_activa: str | None) -> None:
+    """Renderiza el símbolo, el título y los accesos de una sección del directorio."""
+    with ui.element("span").classes("navegacion-seccion"):
+        ui.html(icono_svg(seccion.icono), tag="span")
+        ui.html(html.escape(seccion.titulo), tag="span")
 
     with ui.element("div").classes("navegacion-recorrido"):
         ui.html("‹", tag="span").classes("navegacion-indicio navegacion-indicio-antes").props('aria-hidden="true"')
         with ui.element("nav").classes("navegacion-elementos").props(
-            f'aria-label="Herramientas de {pilar.nombre_corto}"'
+            f'aria-label="Herramientas de {seccion.titulo}"'
         ):
-            for elemento in elementos:
-                _renderizar_elemento_pilar(elemento, clave_activa)
+            for elemento in seccion.accesos:
+                _renderizar_acceso(elemento, clave_activa)
         ui.html("›", tag="span").classes("navegacion-indicio navegacion-indicio-despues").props('aria-hidden="true"')
 
 
-
-def _renderizar_elemento_pilar(elemento: Any, clave_activa: str) -> None:
-    """Renderiza un elemento de navegación individual dentro de un pilar."""
+def _renderizar_acceso(elemento: ElementoNavegacion, clave_activa: str | None) -> None:
+    """Renderiza un acceso y distingue la escena de Vectores de la herramienta."""
     esta_activa = (elemento.clave == clave_activa)
+    etiqueta = _ETIQUETAS_CONTEXTUALES.get(elemento.clave, elemento.etiqueta)
     clases_elemento = "navegacion-accion navegacion-elemento" + (" navegacion-activa" if esta_activa else "")
-    propiedades_elemento = f'href="{enlace_elemento_navegacion(elemento)}" aria-label="{elemento.etiqueta}" title="{elemento.etiqueta}"'
+    propiedades_elemento = f'href="{enlace_elemento_navegacion(elemento)}" aria-label="{etiqueta}" title="{etiqueta}"'
     if esta_activa:
         propiedades_elemento += ' aria-current="page"'
-    with ui.element("a").classes(clases_elemento).props(propiedades_elemento).tooltip(elemento.etiqueta):
+    with ui.element("a").classes(clases_elemento).props(propiedades_elemento).tooltip(etiqueta):
         ui.html(icono_svg(elemento.icono))
-        ui.html(html.escape(elemento.etiqueta), tag="span").classes("navegacion-etiqueta-completa")
+        ui.html(html.escape(etiqueta), tag="span").classes("navegacion-etiqueta-completa")
 
 
 def _clave_reciente_valida(ruta_activa: str, clave_activa: str | None) -> str | None:

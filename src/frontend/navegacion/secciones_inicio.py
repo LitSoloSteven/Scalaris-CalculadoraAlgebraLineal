@@ -22,6 +22,16 @@ class SeccionInicio:
     titulo: str
     grupos: tuple[GrupoInicio, ...]
 
+    @property
+    def icono(self) -> str:
+        """Identifica el símbolo que comparten la portada y la barra."""
+        return f"seccion-{self.identificador}"
+
+    @property
+    def accesos(self) -> tuple[ElementoNavegacion, ...]:
+        """Devuelve los accesos en orden, incluidos los subgrupos."""
+        return tuple(acceso for grupo in self.grupos for acceso in grupo.accesos)
+
 
 _GruposPorClave = tuple[tuple[str | None, tuple[str, ...]], ...]
 
@@ -72,3 +82,11 @@ def secciones_inicio() -> tuple[SeccionInicio, ...]:
         if grupos_resueltos:
             secciones.append(SeccionInicio(identificador, titulo, grupos_resueltos))
     return tuple(secciones)
+
+
+def seccion_por_clave(clave: str | None) -> SeccionInicio | None:
+    """Resuelve la sección de un acceso habilitado por su clave de herramienta o escena."""
+    if clave is None:
+        return None
+    return next((seccion for seccion in secciones_inicio()
+                 if any(acceso.clave == clave for acceso in seccion.accesos)), None)
