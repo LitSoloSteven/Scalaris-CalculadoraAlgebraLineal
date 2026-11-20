@@ -1,6 +1,7 @@
 """Contratos tipados y validacion de entradas para el analisis de subespacios."""
 from collections.abc import Mapping
 from fractions import Fraction
+from types import MappingProxyType
 from typing import Literal, TypedDict, Union
 import unicodedata
 
@@ -51,18 +52,27 @@ class TestigoSubespacio(TypedDict):
 class MatrizInmutable(Matriz):
     """Instantanea matricial de solo lectura usada por los pasos de la traza."""
 
+    __slots__ = ("filas", "columnas", "datos")
+
     def __init__(self, filas: int, columnas: int, datos: list) -> None:
-        """Construye la matriz y congela atributos y celdas al terminar."""
-        object.__setattr__(self, "_bloqueada", False)
-        super().__init__(filas, columnas, datos)
-        object.__setattr__(self, "datos", tuple(tuple(fila) for fila in self.datos))
-        object.__setattr__(self, "_bloqueada", True)
+        """Fija dimensiones y celdas una sola vez, o lanza AttributeError al reinicializar."""
+        if hasattr(self, "datos"):
+            raise AttributeError("La instantanea de la traza ya fue construida.")
+        self._validar_dimensiones_modelo(filas, columnas)
+        self._validar_forma_datos(datos, filas, columnas)
+        celdas = tuple(tuple(self._normalizar_valor(valor) for valor in fila) for fila in datos)
+        object.__setattr__(self, "filas", filas)
+        object.__setattr__(self, "columnas", columnas)
+        object.__setattr__(self, "datos", celdas)
+
+    @property
+    def __dict__(self) -> Mapping[str, object]:
+        """Expone una vista vacía de solo lectura del diccionario heredado."""
+        return MappingProxyType({})
 
     def __setattr__(self, nombre: str, valor: object) -> None:
         """Impide modificar la instantanea una vez construida."""
-        if getattr(self, "_bloqueada", False):
-            raise AttributeError("La instantanea de la traza es de solo lectura.")
-        object.__setattr__(self, nombre, valor)
+        raise AttributeError("La instantanea de la traza es de solo lectura.")
 
     def __delattr__(self, nombre: str) -> None:
         """Impide eliminar atributos de la instantanea."""

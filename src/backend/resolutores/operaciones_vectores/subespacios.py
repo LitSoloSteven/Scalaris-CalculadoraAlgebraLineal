@@ -4,6 +4,7 @@ from types import MappingProxyType
 
 from src.backend.constantes import SIN_SOLUCION
 from src.backend.modelos.construcciones import matriz_de_columnas
+from src.backend.modelos.conversion_fracciones import convertir_fila_fracciones
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.sistemas_lineales.calculo_solucion import (
     calcular_solucion_parametrica,
@@ -11,11 +12,9 @@ from src.backend.resolutores.sistemas_lineales.calculo_solucion import (
 from src.backend.resolutores.sistemas_lineales.clasificacion_sistema import (
     clasificar_sistema,
 )
-from src.backend.resolutores.sistemas_lineales.configuracion_reduccion import (
-    ConfiguracionReduccion,
-)
 from src.backend.resolutores.sistemas_lineales.reduccion import ReductorFilas
 from .comprobacion_subespacios import (
+    CONFIGURACION_EXACTA,
     comprobar_familia_exacta,
     construir_testigo_contradictorio,
     construir_testigo_origen,
@@ -37,7 +36,6 @@ from .contrato_subespacios import (
 )
 from .resultado_subespacios import resultado_error, resultado_inicial
 
-CONFIGURACION_EXACTA = ConfiguracionReduccion(reduccion_completa=True, tolerancia_cero=0)
 CODIGO_ENTRADA_INVALIDA = "ENTRADA_INVALIDA"
 CODIGO_VERIFICACION = "VERIFICACION_INCONSISTENTE"
 CODIGO_ERROR_INTERNO = "ERROR_INTERNO"
@@ -72,7 +70,7 @@ def analizar_subespacio(
 
 def _analizar_generadores(entrada: EntradaGeneradores) -> ResultadoSubespacio:
     generadores = tuple(entrada["generadores"])
-    matriz = matriz_de_columnas(list(generadores))
+    matriz = _matriz_exacta(matriz_de_columnas(list(generadores)))
     reduccion, pasos = _reducir(matriz, matriz.columnas)
     rango = reduccion["rango"]
     pivotes = tuple(reduccion["columnas_pivote"])
@@ -98,13 +96,15 @@ def _analizar_generadores(entrada: EntradaGeneradores) -> ResultadoSubespacio:
         "matriz_original": matriz,
         "matriz_reducida": reduccion["matriz_reducida"],
         "pasos": pasos,
-        "comprobaciones": verificar_base_generadores(generadores, base, pivotes),
+        "comprobaciones": verificar_base_generadores(
+            generadores, base, pivotes, reduccion["matriz_reducida"]
+        ),
     })
     return resultado
 
 
 def _analizar_restricciones(entrada: EntradaRestricciones) -> ResultadoSubespacio:
-    matriz_a = entrada["matriz_a"]
+    matriz_a = _matriz_exacta(entrada["matriz_a"])
     vector_b = tuple(Fraction(valor) for valor in entrada["vector_b"])
     aumentada = _aumentada(matriz_a, vector_b)
     reduccion, pasos = _reducir(aumentada, matriz_a.columnas)
@@ -131,7 +131,7 @@ def _analizar_restricciones(entrada: EntradaRestricciones) -> ResultadoSubespaci
     parametros = calcular_solucion_parametrica(
         reduccion["matriz_reducida"], list(pivotes), matriz_a.columnas
     )
-    comprobaciones = comprobar_familia_exacta(matriz_a, vector_b, parametros)
+    comprobaciones = comprobar_familia_exacta(matriz_a, vector_b, parametros, contexto["libres"])
     if all(valor == 0 for valor in vector_b):
         return _resultado_homogeneo(contexto, parametros, comprobaciones)
     return _resultado_afin(contexto, parametros, comprobaciones)
@@ -161,6 +161,13 @@ def _aumentada(matriz_a: Matriz, vector_b: tuple[Fraction, ...]) -> Matriz:
         matriz_a.filas,
         matriz_a.columnas + 1,
         [list(fila) + [termino] for fila, termino in zip(matriz_a.datos, vector_b)],
+    )
+
+
+def _matriz_exacta(matriz: Matriz) -> Matriz:
+    return Matriz(
+        matriz.filas, matriz.columnas,
+        [convertir_fila_fracciones(fila) for fila in matriz.datos],
     )
 
 

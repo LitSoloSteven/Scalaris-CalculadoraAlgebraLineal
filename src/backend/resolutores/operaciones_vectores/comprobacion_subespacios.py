@@ -1,27 +1,33 @@
 """Comprobaciones exactas y testigos del analisis de subespacios."""
+from collections.abc import Iterable
 from fractions import Fraction
+from itertools import chain
 
+from src.backend.modelos.conversion_fracciones import convertir_fraccion, texto_fraccion_exacta
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_vectores.independencia import (
-    analizar_independencia,
-)
 from src.backend.resolutores.sistemas_lineales.comprobacion_sistemas import (
     comprobar_familia,
 )
+from src.backend.resolutores.sistemas_lineales.configuracion_reduccion import ConfiguracionReduccion
+from src.backend.resolutores.sistemas_lineales.modelo_solucion import ParametrosSolucion
+from src.backend.resolutores.sistemas_lineales.reduccion import ReductorFilas
 from .contrato_subespacios import (
     ErrorVerificacionSubespacio,
     TestigoSubespacio,
 )
 
-MAXIMO_BITS_FORMATO_LATEX = 4096
+CONFIGURACION_EXACTA = ConfiguracionReduccion(reduccion_completa=True, tolerancia_cero=0)
+# 2048 bits caben en el límite decimal mínimo configurable de CPython.
+MAXIMO_BITS_DESARROLLO = 2048
 
 
 def verificar_base_generadores(
     generadores: tuple[Matriz, ...],
     base: tuple[tuple[Fraction, ...], ...],
     indices: tuple[int, ...],
+    matriz_reducida: Matriz | None = None,
 ) -> tuple[dict, ...]:
-    """Confirma que cada vector base es una columna original y que la familia es independiente."""
+    """Verifica las columnas originales y su independencia con los pivotes si se aporta la reducción."""
     if len(indices) != len(base) or len(set(indices)) != len(indices):
         raise ErrorVerificacionSubespacio(
             "Los indices de la base no son unicos ni corresponden uno a uno con sus vectores."
@@ -44,28 +50,31 @@ def verificar_base_generadores(
             "coincide": True,
             "detalle": f"La base usa la columna original {indice}.",
         })
-    comprobaciones.append(_comprobacion_independencia(base))
+    comprobaciones.append(_comprobacion_independencia(base, indices, matriz_reducida))
     return tuple(comprobaciones)
 
 
 def comprobar_familia_exacta(
     matriz_a: Matriz,
     vector_b: tuple[Fraction, ...],
-    parametros: dict,
+    parametros: ParametrosSolucion,
+    columnas_libres: tuple[int, ...] | None = None,
 ) -> tuple[dict, ...]:
-    """Verifica A·p=b y A·d=0; resume el desarrollo cuando excede el formato seguro."""
-    valores = list(parametros["particular"]) + [
-        valor for direccion in parametros["direcciones"] for valor in direccion
-    ]
-    if _requiere_resumen(valores):
-        return _comprobar_familia_resumida(matriz_a, vector_b, parametros)
+    """Verifica A·p=b y A·d=0, y comprueba la base si se indican las columnas libres."""
+    if columnas_libres is not None:
+        _validar_base_nucleo(parametros, columnas_libres, matriz_a.columnas)
+    direcciones = parametros["direcciones"]
+    filas = [*matriz_a.datos, vector_b, parametros["particular"], *direcciones]
+    detallar = not _requiere_resumen(chain.from_iterable(filas))
     parametros_con_nombres = {
         **parametros,
         "nombres_parametros": [
-            f"t_{indice + 1}" for indice in range(len(parametros["direcciones"]))
+            f"t_{indice + 1}" for indice in range(len(direcciones))
         ],
     }
-    verificacion = comprobar_familia(matriz_a.datos, list(vector_b), parametros_con_nombres)
+    verificacion = comprobar_familia(
+        matriz_a.datos, list(vector_b), parametros_con_nombres, None, detallar
+    )
     if not verificacion["coincide"]:
         raise ErrorVerificacionSubespacio(
             "La familia propuesta no satisface todas las ecuaciones originales."
@@ -74,57 +83,41 @@ def comprobar_familia_exacta(
         "tipo": "familia",
         "fila": indice + 1,
         "coincide": fila["coincide"],
-        "detalle_latex": fila["detalle_latex"],
+        "detalle_latex": fila["detalle_latex"] if detallar else (
+            rf"\text{{Fila {indice + 1} verificada exactamente. Desarrollo omitido por tamaño.}}"
+        ),
     } for indice, fila in enumerate(verificacion["filas"]))
 
 
-def _requiere_resumen(valores: list[Fraction]) -> bool:
-    """Detecta racionales cuyos enteros exceden el tamano seguro para texto."""
-    return any(
-        abs(Fraction(valor).numerator).bit_length() > MAXIMO_BITS_FORMATO_LATEX
-        or Fraction(valor).denominator.bit_length() > MAXIMO_BITS_FORMATO_LATEX
-        for valor in valores
-    )
-
-
-def _comprobar_familia_resumida(
-    matriz_a: Matriz,
-    vector_b: tuple[Fraction, ...],
-    parametros: dict,
-) -> tuple[dict, ...]:
-    """Comprueba exactamente las ecuaciones y omite el desarrollo textual desmesurado."""
-    particular = tuple(Fraction(valor) for valor in parametros["particular"])
-    direcciones = tuple(
-        tuple(Fraction(valor) for valor in direccion)
-        for direccion in parametros["direcciones"]
-    )
-    comprobaciones = []
-    for indice, (fila, termino) in enumerate(zip(matriz_a.datos, vector_b)):
-        izquierda = sum(
-            (Fraction(coeficiente) * valor for coeficiente, valor in zip(fila, particular)),
-            Fraction(0),
+def _validar_base_nucleo(
+    parametros: ParametrosSolucion, columnas_libres: tuple[int, ...], dimension: int
+) -> None:
+    particular = parametros["particular"]
+    direcciones = parametros["direcciones"]
+    if (
+        len(particular) != dimension
+        or len(direcciones) != len(columnas_libres)
+        or any(len(direccion) != dimension for direccion in direcciones)
+    ):
+        raise ErrorVerificacionSubespacio(
+            "La familia propuesta no tiene la dimensión ni la cantidad de direcciones esperadas."
         )
-        pesos = [
-            sum(
-                (Fraction(coeficiente) * valor for coeficiente, valor in zip(fila, direccion)),
-                Fraction(0),
-            )
-            for direccion in direcciones
-        ]
-        if izquierda != Fraction(termino) or any(pesos):
-            raise ErrorVerificacionSubespacio(
-                f"La fila {indice + 1} no satisface la ecuacion original."
-            )
-        comprobaciones.append({
-            "tipo": "familia",
-            "fila": indice + 1,
-            "coincide": True,
-            "detalle_latex": (
-                f"La fila {indice + 1} se verifica exactamente; "
-                "desarrollo omitido por tamano."
-            ),
-        })
-    return tuple(comprobaciones)
+    if any(
+        direccion[columna] != (indice == posicion)
+        for indice, direccion in enumerate(direcciones)
+        for posicion, columna in enumerate(columnas_libres)
+    ):
+        raise ErrorVerificacionSubespacio(
+            "Las direcciones no forman la base canónica sobre las variables libres."
+        )
+
+
+def _requiere_resumen(valores: Iterable[Fraction]) -> bool:
+    for valor in valores:
+        fraccion = convertir_fraccion(valor)
+        if max(fraccion.numerator.bit_length(), fraccion.denominator.bit_length()) > MAXIMO_BITS_DESARROLLO:
+            return True
+    return False
 
 
 def construir_testigo_contradictorio(
@@ -141,7 +134,7 @@ def construir_testigo_contradictorio(
                 "coeficientes": coeficientes,
                 "termino_independiente": termino,
                 "valor_izquierdo": Fraction(0),
-                "descripcion": f"La fila {indice + 1} reducida queda 0 = {termino}.",
+                "descripcion": _descripcion_testigo(f"La fila {indice + 1} reducida queda", termino),
             }
     raise ErrorVerificacionSubespacio(
         "El sistema se clasifico como incompatible sin fila contradictoria."
@@ -155,24 +148,28 @@ def construir_testigo_origen(
     for indice, (fila, termino) in enumerate(zip(matriz_a.datos, vector_b)):
         if termino != 0:
             coeficientes = tuple(Fraction(valor) for valor in fila)
-            izquierda = sum((coeficiente * 0 for coeficiente in coeficientes), Fraction(0))
             return {
                 "tipo": "origen_no_pertenece",
                 "indice_fila": indice,
                 "coeficientes": coeficientes,
                 "termino_independiente": Fraction(termino),
-                "valor_izquierdo": izquierda,
-                "descripcion": (
-                    f"En el origen, la ecuacion {indice + 1} da {izquierda} = {termino}."
-                ),
+                "valor_izquierdo": Fraction(0),
+                "descripcion": _descripcion_testigo(f"En el origen, la ecuacion {indice + 1} da", termino),
             }
     raise ErrorVerificacionSubespacio(
         "El conjunto afin no contiene al origen pero el vector b es nulo."
     )
 
 
+def _descripcion_testigo(prefijo: str, termino: Fraction) -> str:
+    if _requiere_resumen((termino,)):
+        return f"{prefijo} 0 = c, con c distinto de cero. El testigo conserva su valor exacto."
+    return f"{prefijo} 0 = {texto_fraccion_exacta(termino)}."
+
+
 def _comprobacion_independencia(
-    base: tuple[tuple[Fraction, ...], ...]
+    base: tuple[tuple[Fraction, ...], ...], indices: tuple[int, ...],
+    matriz_reducida: Matriz | None,
 ) -> dict:
     if not base:
         return {
@@ -180,16 +177,27 @@ def _comprobacion_independencia(
             "coincide": True,
             "detalle": "La base vacia describe el subespacio cero.",
         }
-    vectores = [
-        Matriz(len(vector), 1, [[valor] for valor in vector]) for vector in base
-    ]
-    analisis = analizar_independencia(vectores)
-    if not analisis["es_independiente"]:
+    if matriz_reducida is None:
+        matriz = Matriz(len(base[0]), len(base), [list(fila) for fila in zip(*base, strict=True)])
+        reduccion = ReductorFilas(matriz, matriz.columnas, CONFIGURACION_EXACTA).reducir()
+        independiente = reduccion["rango"] == len(base)
+    else:
+        independiente = _pivotes_canonicos(matriz_reducida, indices)
+    if not independiente:
         raise ErrorVerificacionSubespacio(
             "La base seleccionada no es linealmente independiente."
         )
     return {
         "tipo": "independencia_base",
         "coincide": True,
-        "detalle": analisis["mensaje"],
+        "detalle": "Los vectores son linealmente independientes.",
     }
+
+
+def _pivotes_canonicos(matriz: Matriz, indices: tuple[int, ...]) -> bool:
+    return len(indices) <= matriz.filas and all(
+        columna < matriz.columnas and all(
+            matriz.obtener(fila, columna) == (fila == posicion) for fila in range(matriz.filas)
+        )
+        for posicion, columna in enumerate(indices)
+    )
