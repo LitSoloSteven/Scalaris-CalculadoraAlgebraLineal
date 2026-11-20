@@ -7,13 +7,29 @@
     const pagina = 24;
     let controles;
     let destino;
+    let ultimoCampo = null;
+    let posicionPendiente = null;
     let cantidad;
 
     function perfil(campo) {
         if (!campo?.matches?.(selectorCampo) || campo.disabled || campo.readOnly) return '';
+        if (campo.closest?.('.simbolos-dialogo')) return '';
         if (campo.dataset.simbolos) return campo.dataset.simbolos;
         if (campo.dataset.soloNumerico === 'true') return 'numero';
-        return campo.hasAttribute('data-ecuaciones-fila') ? 'ecuacion' : '';
+        if (campo.hasAttribute('data-ecuaciones-indice') || campo.hasAttribute('data-ecuaciones-fila')) {
+            return 'ecuacion';
+        }
+        return 'texto';
+    }
+
+    function esCampoVisible(campo) {
+        if (!perfil(campo) || !campo.isConnected) return false;
+        if (campo.closest?.('[inert], [hidden], [aria-hidden="true"]')) return false;
+        return typeof campo.getClientRects !== 'function' || campo.getClientRects().length > 0;
+    }
+
+    function resolverCampoDestino(candidato) {
+        return [candidato, document.activeElement, ultimoCampo].find(esCampoVisible) || null;
     }
 
     function guardarSeleccion(campo) {
@@ -21,23 +37,40 @@
         return tipo ? {campo, tipo, inicio: campo.selectionStart, fin: campo.selectionEnd} : null;
     }
 
+    function esCompatible(entrada, seleccion) {
+        return Boolean(seleccion) && (seleccion.tipo === 'texto' || Boolean(entrada.campos[seleccion.tipo]));
+    }
+
     function insercion(entrada, seleccion) {
         if (!seleccion) return undefined;
-        return seleccion.tipo === 'texto' ? entrada.simbolo : entrada.campos[seleccion.tipo];
+        if (seleccion.tipo === 'texto') return entrada.simbolo;
+        return entrada.campos[seleccion.tipo] ?? entrada.simbolo;
+    }
+
+    function limitesSeleccion(seleccion, longitudCampo) {
+        const inicio = Math.min(seleccion.inicio ?? longitudCampo, longitudCampo);
+        const fin = Math.min(seleccion.fin ?? inicio, longitudCampo);
+        return [inicio, fin];
+    }
+
+    function puedeInsertar(campo, reemplazo, borrados) {
+        if (!campo.isConnected || !perfil(campo)) return false;
+        const longitud = campo.value.length - borrados + reemplazo.length;
+        return campo.maxLength < 0 || longitud <= campo.maxLength;
     }
 
     function insertar(entrada, seleccion, texto) {
+        if (!seleccion) return false;
         const {campo} = seleccion;
-        if (!campo.isConnected || !perfil(campo)) return false;
-        const inicio = Math.min(seleccion.inicio, campo.value.length);
-        const fin = Math.min(seleccion.fin, campo.value.length);
-        const radicando = campo.value.slice(inicio, fin);
-        const esRaiz = seleccion.tipo === 'funcion' && entrada.tecla;
-        const reemplazo = esRaiz ? texto.slice(0, -1) + radicando + ')' : texto;
-        const longitud = campo.value.length - (fin - inicio) + reemplazo.length;
-        if (campo.maxLength >= 0 && longitud > campo.maxLength) return false;
+        const [inicio, fin] = limitesSeleccion(seleccion, campo.value.length);
+        const esRaiz = seleccion.tipo === 'funcion' && Boolean(entrada.tecla);
+        const reemplazo = esRaiz ? texto.slice(0, -1) + campo.value.slice(inicio, fin) + ')' : texto;
+        if (!puedeInsertar(campo, reemplazo, fin - inicio)) return false;
         campo.setRangeText(reemplazo, inicio, fin, 'end');
-        if (esRaiz && inicio === fin) campo.setSelectionRange(inicio + 2, inicio + 2);
+        if (esRaiz && inicio === fin) {
+            const cursorRaiz = inicio + texto.length - 1;
+            campo.setSelectionRange(cursorRaiz, cursorRaiz);
+        }
         campo.dispatchEvent(new Event('input', {bubbles: true}));
         return true;
     }
@@ -70,7 +103,17 @@
             (!consulta || simbolo.includes(consulta) || simplificar(nombre + ' ' + seccion).includes(criterio)));
         if (!filtradas.length && porCodigo) return [porCodigo];
         return filtradas.sort((primera, segunda) =>
-            Number(Boolean(insercion(segunda, destino))) - Number(Boolean(insercion(primera, destino))));
+            Number(esCompatible(segunda, destino)) - Number(esCompatible(primera, destino)));
+    }
+
+    function etiquetaModo(entrada, texto) {
+        if (!destino) return 'Copiar';
+        if (entrada.tecla && destino.tipo === 'funcion') {
+            return 'Insertar · Ctrl+Mayús+' + entrada.tecla.slice(-1);
+        }
+        if (texto !== entrada.simbolo) return 'Insertar ' + texto;
+        if (!esCompatible(entrada, destino)) return 'Insertar · solo texto';
+        return 'Insertar';
     }
 
     function crearOpcion(entrada) {
@@ -86,8 +129,7 @@
         const nombre = document.createElement('span');
         nombre.textContent = entrada.nombre;
         const modo = document.createElement('small');
-        const atajo = entrada.tecla && destino?.tipo === 'funcion' ? ' · Ctrl+Mayús+' + entrada.tecla.slice(-1) : '';
-        modo.textContent = texto && texto !== entrada.simbolo && !entrada.tecla ? accion + ' ' + texto : accion + atajo;
+        modo.textContent = etiquetaModo(entrada, texto);
         boton.append(signo, nombre, modo);
         boton.addEventListener('click', () => elegir(entrada, texto));
         return boton;
@@ -104,13 +146,17 @@
 
     async function elegir(entrada, texto) {
         if (texto !== undefined) {
-            if (insertar(entrada, destino, texto)) controles.dialogo.close();
-            else controles.estado.textContent = 'El símbolo no cabe en el campo o el campo ya no está disponible.';
+            if (insertar(entrada, destino, texto)) {
+                posicionPendiente = [destino.campo.selectionStart, destino.campo.selectionEnd];
+                controles.dialogo.close();
+            } else {
+                controles.estado.textContent = 'El símbolo no cabe en el campo o el campo ya no está disponible.';
+            }
             return;
         }
         try {
             await navigator.clipboard.writeText(entrada.simbolo);
-            controles.estado.textContent = 'Símbolo copiado ' + entrada.simbolo;
+            controles.dialogo.close();
         } catch (_) {
             controles.copia.hidden = false;
             const campo = controles.copia.querySelector('input');
@@ -121,14 +167,62 @@
         }
     }
 
+    function manejarTecladoDialogo(evento) {
+        if (evento.key === 'Tab') evento.stopPropagation();
+        if (evento.key === 'Escape') {
+            evento.preventDefault();
+            evento.stopPropagation();
+            controles.dialogo.close();
+            return;
+        }
+        if (evento.key !== 'Enter' || evento.target !== controles.busqueda || evento.isComposing) return;
+        evento.preventDefault();
+        controles.lista.firstElementChild?.click();
+    }
+
+    function fueraDeDialogo(evento, dialogo) {
+        const marco = dialogo.getBoundingClientRect();
+        return evento.clientX < marco.left || evento.clientX > marco.right ||
+            evento.clientY < marco.top || evento.clientY > marco.bottom;
+    }
+
+    function registrarCierreExterior(dialogo) {
+        if (typeof HTMLDialogElement !== 'undefined' && 'closedBy' in HTMLDialogElement.prototype) return;
+        let pulsadoFuera = false;
+        dialogo.addEventListener('pointerdown', evento => {
+            pulsadoFuera = fueraDeDialogo(evento, dialogo);
+        });
+        dialogo.addEventListener('pointerup', evento => {
+            if (pulsadoFuera && fueraDeDialogo(evento, dialogo)) dialogo.close();
+            pulsadoFuera = false;
+        });
+    }
+
+    function alCerrarDialogo() {
+        if (controles.dialogo.open) return;
+        if (destino?.campo.isConnected) {
+            destino.campo.focus();
+            if (posicionPendiente && posicionPendiente[0] !== null && typeof destino.campo.setSelectionRange === 'function') {
+                destino.campo.setSelectionRange(posicionPendiente[0], posicionPendiente[1]);
+            }
+        }
+        posicionPendiente = null;
+        destino = null;
+    }
+
     function construir() {
         const plantilla = document.getElementById('plantilla-simbolos');
         const dialogo = plantilla.content.firstElementChild.cloneNode(true);
         document.body.append(dialogo);
         controles = {
-            dialogo, busqueda: dialogo.querySelector('input[type="search"]'), grupo: dialogo.querySelector('select'),
-            lista: dialogo.querySelector('.simbolos-lista'), estado: dialogo.querySelector('[role="status"]'),
-            mas: dialogo.querySelector('[data-mas-simbolos]'), copia: dialogo.querySelector('[data-copia-simbolo]'),
+            dialogo,
+            cuerpo: dialogo.querySelector('.simbolos-cuerpo'),
+            busqueda: dialogo.querySelector('input[type="search"]'),
+            grupo: dialogo.querySelector('select'),
+            lista: dialogo.querySelector('.simbolos-lista'),
+            estado: dialogo.querySelector('[role="status"]'),
+            mas: dialogo.querySelector('[data-mas-simbolos]'),
+            copia: dialogo.querySelector('[data-copia-simbolo]'),
         };
         const grupos = new Set(catalogo.map(entrada => entrada.grupo));
         grupos.forEach(grupo => controles.grupo.add(new Option(grupo, grupo)));
@@ -140,23 +234,9 @@
             mostrarResultados();
             controles.lista.children[indice]?.focus();
         });
-        dialogo.addEventListener('keydown', evento => {
-            if (evento.key === 'Tab') evento.stopPropagation();
-            if (evento.key === 'Escape') {
-                evento.preventDefault();
-                evento.stopPropagation();
-                dialogo.close();
-                return;
-            }
-            if (evento.key !== 'Enter' || evento.target !== controles.busqueda || evento.isComposing) return;
-            evento.preventDefault();
-            controles.lista.firstElementChild?.click();
-        });
-        dialogo.addEventListener('close', () => {
-            if (dialogo.open) return;
-            if (destino?.campo.isConnected) destino.campo.focus();
-            destino = null;
-        });
+        dialogo.addEventListener('keydown', manejarTecladoDialogo);
+        registrarCierreExterior(dialogo);
+        dialogo.addEventListener('close', alCerrarDialogo);
     }
 
     function reiniciarResultados() {
@@ -165,13 +245,15 @@
         mostrarResultados();
     }
 
-    function abrir(campo) {
+    function abrir(candidato) {
         if (!controles) construir();
         if (controles.dialogo.open) return;
-        destino = guardarSeleccion(campo);
+        destino = guardarSeleccion(resolverCampoDestino(candidato));
+        posicionPendiente = null;
         controles.busqueda.value = '';
         controles.grupo.value = '';
         reiniciarResultados();
+        if (controles.cuerpo) controles.cuerpo.scrollTop = 0;
         controles.dialogo.showModal();
         controles.busqueda.focus();
     }
@@ -195,9 +277,8 @@
         if (!evento.repeat) insertar(entrada, guardarSeleccion(evento.target), entrada.campos.funcion);
     }
 
-    document.addEventListener('keydown', atajo);
-    document.addEventListener('click', evento => {
-        const boton = evento?.target?.closest?.('[data-campo-simbolos]');
-        if (boton) abrir(document.getElementById(boton.dataset.campoSimbolos));
+    document.addEventListener('focusin', evento => {
+        if (perfil(evento.target)) ultimoCampo = evento.target;
     });
+    document.addEventListener('keydown', atajo);
 }
