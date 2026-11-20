@@ -16,7 +16,7 @@ from src.frontend.controladores.inicio._recientes import (
 from src.frontend.navegacion import consultas, enlace_elemento_navegacion, ruta_de
 from src.frontend.navegacion.secciones_inicio import secciones_inicio
 from src.frontend.vistas.inicio._catalogo_ejemplos import CLAVES_EJEMPLOS, obtener_ejemplo
-from src.frontend.vistas.inicio.panel_ejemplo import construir_html_ejemplo
+from src.frontend.vistas.inicio.panel_ejemplo import construir_html_ejemplo, renderizar_panel_ejemplo
 from tests.comun_construccion_vistas import construir_pagina
 
 _CLAVES_ESPERADAS = {
@@ -181,9 +181,9 @@ def test_portada_actualiza_acceso_y_ejemplo_conservando_directorio(
         assert f'data-ejemplo-clave="{clave}"' in vista._panel_ejemplo.content
         assert f'href="{enlace_esperado}"' in vista._panel_ejemplo.content
         assert (clave == "sistemas") != any("ejemplosInicio?.preparar" in codigo for codigo in emitidos)
-        directorio = next(el for el in cliente.elements.values() if "inicio-directorio" in el.classes)
+        directorio = next(elemento for elemento in cliente.elements.values() if "inicio-directorio" in elemento.classes)
         assert "data-directorio-listo" in directorio._props
-        assert len([el for el in directorio.descendants() if "inicio-enlace" in el.classes]) == 15
+        assert len([elemento for elemento in directorio.descendants() if "inicio-enlace" in elemento.classes]) == 15
 
     def _responder(codigo):
         emitidos.append(codigo)
@@ -228,19 +228,67 @@ class _RespuestaJS:
         return _responder().__await__()
 
 
+def test_normalizacion_acota_tamano_de_lista_y_longitud_clave():
+    """El servidor rechaza claves mayores a 64 caracteres y descarta más allá de 16."""
+    assert [acceso.clave for acceso in normalizar_accesos_recientes(["x" * 65, "leontief"])] == ["leontief"]
+    assert normalizar_accesos_recientes(["desconocida"] * 16 + ["romanos"]) == ()
+    with pytest.raises(ValueError, match="ruta interna"):
+        renderizar_panel_ejemplo("https://externo.invalid", estado_portada(["leontief"]))
+
+
+def test_portada_omite_cliente_eliminado_y_respuestas_no_estrictas(monkeypatch):
+    """Cliente desconectado al conectar o respuesta no estricta conservan Sistemas."""
+    llamadas = []
+
+    async def _comprobar_no_estricto(vista, _cliente):
+        assert vista._texto_destacado.content == "Resolver un sistema"
+        assert not any("ejemplosInicio?.preparar" in codigo for codigo in llamadas)
+
+    _instalar_respuesta_js(
+        monkeypatch,
+        lambda codigo: _RespuestaJS(valor={"valido": 1, "identificadores": ["romanos"]})
+        if "recientes?.leer" in codigo else _RespuestaJS(),
+    )
+    asyncio.run(construir_pagina(monkeypatch, "inicio", _comprobar_no_estricto))
+
+    async def _ejecutar_cliente_eliminado():
+        from src.frontend.vistas.inicio.vista_inicio import VistaInicio
+        import tests.comun_construccion_vistas as modulo_vistas
+
+        cliente = Client(ui.page("/prueba-cliente-eliminado"))
+        modulo_vistas.preparar_transporte(monkeypatch, cliente)
+
+        async def _conectar(**opciones):
+            cliente.delete()
+
+        monkeypatch.setattr(cliente, "connected", _conectar)
+        monkeypatch.setattr(cliente, "run_javascript", lambda codigo, **opciones: llamadas.append(codigo) or _RespuestaJS())
+        vista = VistaInicio()
+        try:
+            with cliente:
+                await vista.construir(cliente)
+            assert vista._texto_destacado.content == "Resolver un sistema"
+            assert not any("recientes?.leer" in codigo for codigo in llamadas)
+        finally:
+            if cliente.id in Client.instances:
+                cliente.delete()
+
+    asyncio.run(_ejecutar_cliente_eliminado())
+
+
 def _instalar_respuesta_js(monkeypatch, resolver):
     """Sustituye el transporte del cliente por respuestas JS deterministas."""
     import tests.comun_construccion_vistas as modulo_vistas
     original = modulo_vistas.preparar_transporte
 
-    def _preparar(mp, cliente):
-        llamadas = original(mp, cliente)
+    def _preparar(parche, cliente):
+        llamadas = original(parche, cliente)
 
         def _ejecutar(codigo, **opciones):
             llamadas.append(codigo)
             return resolver(codigo)
 
-        mp.setattr(cliente, "run_javascript", _ejecutar)
+        parche.setattr(cliente, "run_javascript", _ejecutar)
         return llamadas
 
     monkeypatch.setattr(modulo_vistas, "preparar_transporte", _preparar)

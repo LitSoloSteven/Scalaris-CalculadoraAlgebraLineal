@@ -19,7 +19,8 @@ def _leer_plantilla() -> Template:
 
 
 def validar_enlace_interno(enlace: str) -> str:
-    """Valida que el destino del ejemplo apunte a una ruta relativa del origen."""
+    """Valida que enlace apunte a una ruta relativa del origen y lo devuelve.
+    Lanza ValueError cuando el destino es externo, ambiguo o incluye controles."""
     if (
         not enlace.startswith("/")
         or enlace.startswith(("//", "/\\"))
@@ -30,7 +31,8 @@ def validar_enlace_interno(enlace: str) -> str:
 
 
 def construir_html_ejemplo(estado: EstadoPortada) -> str:
-    """Compone el fragmento HTML local del ejemplo para el estado dado."""
+    """Compone y devuelve el HTML local del ejemplo para el estado recibido.
+    Lanza ValueError si el enlace del estado no supera la validación interna."""
     enlace = validar_enlace_interno(estado.enlace)
     ejemplo = obtener_ejemplo(estado.clave)
     etiqueta_enlace = f"Ver módulo de {estado.titulo}"
@@ -47,8 +49,9 @@ def construir_html_ejemplo(estado: EstadoPortada) -> str:
 
 
 def renderizar_panel_ejemplo(enlace: str, estado: EstadoPortada | None = None) -> ui.html:
-    """Monta el ejemplo y devuelve su contenedor actualizable."""
-    estado_actual = replace(estado_portada(), enlace=enlace) if estado is None else estado
+    """Monta el ejemplo con enlace y estado opcional y devuelve su contenedor ui.html.
+    Lanza ValueError si enlace no corresponde a una ruta interna válida."""
+    estado_actual = replace(estado_portada() if estado is None else estado, enlace=enlace)
     contenido = construir_html_ejemplo(estado_actual)
     # El sanitizador estricto del navegador suprime los controles del fragmento local.
     return ui.html(contenido, sanitize=False).classes("inicio-ejemplo-contenedor")
