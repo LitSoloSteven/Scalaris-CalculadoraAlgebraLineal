@@ -8,7 +8,7 @@ from src.frontend.componentes.reproductor_pasos.textos import limpiar_latex_plan
 from src.frontend.componentes.reproductor_pasos.html_tablas import html_tabla_aumentada
 from src.frontend.componentes.reproductor_pasos.modelo import GrupoReproductor, PasoReproductor
 from src.frontend.nucleo.ayudas import formatear_paso_mathjax
-from src.frontend.componentes.presentacion_analisis import anexar_analisis
+from src.frontend.componentes.resultados.analisis.presentacion_analisis import anexar_analisis
 
 
 def _crear_paso_eliminacion(

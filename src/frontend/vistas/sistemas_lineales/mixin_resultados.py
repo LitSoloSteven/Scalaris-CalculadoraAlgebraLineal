@@ -6,7 +6,7 @@ from src.frontend.controladores.sesion_matricial import invalidar_resultado, act
 
 from src.frontend.controladores.sistemas_lineales.captura import preparar_captura_ecuaciones
 from src.frontend.controladores.sistemas_lineales.estado_captura import modo_homogeneo_activo
-from src.frontend.componentes.presentacion_analisis import mostrar_resumen_analisis
+from src.frontend.componentes.resultados.analisis.presentacion_analisis import mostrar_resumen_analisis
 from .mixin_resolucion import MixinResolucionSistemas
 
 

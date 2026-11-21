@@ -4,8 +4,8 @@ from unittest.mock import Mock
 
 from nicegui import Client, core, ui
 
-from src.frontend.componentes.desarrollo_comprobacion import mostrar_desarrollo
-from src.frontend.componentes import desarrollo_comprobacion as desarrollo
+from src.frontend.componentes.resultados.analisis.desarrollo_comprobacion import mostrar_desarrollo
+from src.frontend.componentes.resultados.analisis import desarrollo_comprobacion as desarrollo
 
 
 def _producto(dimension):

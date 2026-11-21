@@ -1,7 +1,7 @@
 """Construcción de pasos y grupos didácticos para operaciones con vectores."""
 
 from __future__ import annotations
-from src.frontend.componentes.presentacion_analisis import adaptar_analisis
+from src.frontend.componentes.resultados.analisis.presentacion_analisis import adaptar_analisis
 
 from dataclasses import dataclass
 from typing import Any

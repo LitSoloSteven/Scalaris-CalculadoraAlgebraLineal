@@ -3,7 +3,7 @@ from dataclasses import replace
 from nicegui import ui
 
 from src.frontend.nucleo.textos import textos
-from src.frontend.componentes.presentacion_analisis import adaptar_analisis, montar_pasos_analisis
+from src.frontend.componentes.resultados.analisis.presentacion_analisis import adaptar_analisis, montar_pasos_analisis
 from src.frontend.componentes.reproductor_pasos.modelo import GrupoReproductor
 from src.frontend.componentes.reproductor_pasos.textos import limpiar_latex_plano
 from src.frontend.controladores.agrupacion_trazas import agrupar_traza

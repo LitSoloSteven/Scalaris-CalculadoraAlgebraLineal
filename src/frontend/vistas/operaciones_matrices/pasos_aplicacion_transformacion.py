@@ -1,6 +1,6 @@
 """Adaptación de la aplicación y su comprobación al reproductor compartido."""
 from src.frontend.nucleo.textos import textos_transformaciones as textos
-from src.frontend.componentes.presentacion_analisis import adaptar_analisis
+from src.frontend.componentes.resultados.analisis.presentacion_analisis import adaptar_analisis
 from src.frontend.componentes.reproductor_pasos.modelo import GrupoReproductor
 from src.frontend.controladores.operaciones_matrices.vista_previa_modelos import preparar_vista_previa_aplicacion
 
