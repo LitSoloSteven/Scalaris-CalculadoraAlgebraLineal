@@ -4,7 +4,7 @@ from src.frontend.componentes.captura.matrices.captura_modelos import construir_
 from src.frontend.nucleo.textos import textos_transformaciones as textos
 from nicegui import ui
 from src.frontend.vistas.algebra.operaciones_matrices.transformaciones.apoyo._ejemplos_transformaciones import EJEMPLOS_TRANSFORMACIONES
-from src.frontend.vistas.operaciones_matrices._ejemplos_aplicacion_transformacion import EJEMPLOS_APLICACION
+from src.frontend.vistas.algebra.operaciones_matrices.aplicacion_transformacion.procedimiento._ejemplos_aplicacion_transformacion import EJEMPLOS_APLICACION
 from src.frontend.vistas.algebra.operaciones_matrices.compartido.carga_modelos import cargar_captura_modelo
 
 

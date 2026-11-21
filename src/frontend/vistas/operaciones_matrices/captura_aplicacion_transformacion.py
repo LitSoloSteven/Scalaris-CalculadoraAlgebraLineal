@@ -5,7 +5,7 @@ from src.frontend.nucleo.textos import textos_transformaciones as textos
 from src.frontend.componentes.captura.nucleo.cuadricula_base import crear_entradas_matriz
 from src.frontend.componentes.aplicacion.controles.selector_opciones import SelectorOpciones
 from src.frontend.controladores.compartido.matrices.limpieza_captura import vaciar_campos
-from .procedimiento_aplicacion_transformacion import detener_procedimiento_aplicacion
+from src.frontend.vistas.algebra.operaciones_matrices.aplicacion_transformacion.procedimiento.procedimiento_aplicacion_transformacion import detener_procedimiento_aplicacion
 
 
 class MixinAplicacionTransformacion:

@@ -6,7 +6,7 @@ from nicegui import ui
 
 from src.frontend.nucleo.textos import textos_transformaciones as textos
 from src.frontend.controladores.algebra.operaciones_matrices.modelos.capturas_modelos import capturar_transformaciones
-from src.frontend.vistas.operaciones_matrices._ejemplos_aplicacion_transformacion import EJEMPLOS_APLICACION
+from src.frontend.vistas.algebra.operaciones_matrices.aplicacion_transformacion.procedimiento._ejemplos_aplicacion_transformacion import EJEMPLOS_APLICACION
 from tests.comun_construccion_vistas import construir_pagina
 
 
