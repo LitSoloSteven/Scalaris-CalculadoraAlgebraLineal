@@ -2,7 +2,7 @@
 from dataclasses import replace
 
 from ..contratos.contrato_biseccion import ESTADO_DISCONTINUIDAD, EntradaBiseccion, IteracionBiseccion, ResultadoBiseccion
-from ...criterios_biseccion import CriterioParada
+from ..contratos.criterios_biseccion import CriterioParada
 
 _MOTIVOS = {"relativo": "relativo_menor_que_porcentaje", "ancho": "ancho_menor_que_E",
             "decimales": "ancho_menor_que_E", "residuo": "residuo_menor_que_delta",

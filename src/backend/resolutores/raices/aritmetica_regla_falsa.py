@@ -1,7 +1,7 @@
 """Aritmetica acotada del peso escalado y la aproximacion de regla falsa."""
 import math
 
-from .aritmetica_biseccion import ancho_intervalo, error_relativo_numerico  # noqa: F401  reexport para traza_regla_falsa
+from .biseccion.contratos.aritmetica_biseccion import ancho_intervalo, error_relativo_numerico  # noqa: F401  reexport para traza_regla_falsa
 from .compartido.errores_numericos import ErrorCapacidadNumerica
 
 

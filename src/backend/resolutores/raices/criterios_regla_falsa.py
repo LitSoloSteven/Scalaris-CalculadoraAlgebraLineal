@@ -1,7 +1,7 @@
 """Validación y métricas de criterios sobre filas de la secante."""
-from .aritmetica_biseccion import ancho_intervalo
+from .biseccion.contratos.aritmetica_biseccion import ancho_intervalo
 from .contrato_regla_falsa import IteracionReglaFalsa
-from .criterios_biseccion import CriterioParada, validar_criterio
+from .biseccion.contratos.criterios_biseccion import CriterioParada, validar_criterio
 
 MOTIVOS_CRITERIO = {
     "residuo": "tolerancia_residuo",

@@ -9,7 +9,7 @@ from src.backend.resolutores.raices.biseccion.motor.biseccion import biseccion
 from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import EntradaBiseccion, validar_entrada
 from src.backend.resolutores.raices.contrato_exploracion import EntradaExploracion, validar_exploracion
 from src.backend.resolutores.raices.contrato_resolucion_multiple import CandidatoResolucion, EntradaResolucionMultiple
-from src.backend.resolutores.raices.criterios_biseccion import CriterioParada
+from src.backend.resolutores.raices.biseccion.contratos.criterios_biseccion import CriterioParada
 from src.backend.resolutores.raices.exploracion_intervalos import explorar_intervalos
 from src.backend.resolutores.raices.resolucion_multiple import resolver_candidatos
 from src.frontend.controladores.biseccion.controlador import calcular_presentacion, resolver_captura

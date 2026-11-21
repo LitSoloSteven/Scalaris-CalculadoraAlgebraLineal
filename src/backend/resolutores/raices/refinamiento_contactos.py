@@ -2,7 +2,7 @@
 from collections.abc import Callable
 from dataclasses import replace
 
-from .aritmetica_biseccion import punto_medio
+from .biseccion.contratos.aritmetica_biseccion import punto_medio
 from .clasificacion_candidatos import AVISO_CONTACTO, clasificar_candidatos
 from .contrato_exploracion import CandidatoExploracion, EntradaExploracion, EvidenciaContacto, MuestraExploracion
 from .evaluacion_exploracion import muestrear_punto

@@ -3,10 +3,10 @@ from collections.abc import Sequence
 from dataclasses import replace
 
 from src.backend.excepciones import ErrorDominio, ErrorNoFinito
-from .aritmetica_biseccion import ancho_intervalo
+from .biseccion.contratos.aritmetica_biseccion import ancho_intervalo
 from .aritmetica_regla_falsa import error_relativo_numerico, peso_escalado
 from .contrato_regla_falsa import EntradaReglaFalsa, IteracionReglaFalsa, ResultadoReglaFalsa
-from .decision_biseccion import signo_producto
+from .biseccion.contratos.decision_biseccion import signo_producto
 
 _CIERRES = {
     "criterio_ancho_cumplido": (

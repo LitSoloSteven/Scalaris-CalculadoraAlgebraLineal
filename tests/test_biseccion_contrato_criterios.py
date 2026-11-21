@@ -7,7 +7,7 @@ import pytest
 
 from src.backend.resolutores.raices.biseccion.motor.biseccion import biseccion
 from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import EntradaBiseccion, validar_entrada
-from src.backend.resolutores.raices.criterios_biseccion import CriterioParada
+from src.backend.resolutores.raices.biseccion.contratos.criterios_biseccion import CriterioParada
 
 
 def _datos(criterio=None, limite=100):

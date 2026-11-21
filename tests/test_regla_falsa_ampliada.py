@@ -7,7 +7,7 @@ import pytest
 
 from src.backend.resolutores.raices.contrato_regla_falsa import EntradaReglaFalsa
 from src.backend.resolutores.raices.contrato_regla_falsa_ampliada import ConfiguracionReglaFalsa
-from src.backend.resolutores.raices.criterios_biseccion import CriterioParada
+from src.backend.resolutores.raices.biseccion.contratos.criterios_biseccion import CriterioParada
 from src.backend.resolutores.raices.regla_falsa import regla_falsa
 from src.backend.resolutores.raices.regla_falsa_ampliada import resolver_regla_falsa_configurada
 
