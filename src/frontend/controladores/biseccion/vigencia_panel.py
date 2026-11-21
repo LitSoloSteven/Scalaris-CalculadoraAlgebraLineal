@@ -1,5 +1,5 @@
 """Invalidación común de solicitudes independientes de bisección."""
-from src.frontend.controladores.actualizacion_cancelable import cancelar_actualizacion
+from src.frontend.controladores.compartido.sesion.actualizacion_cancelable import cancelar_actualizacion
 
 
 def invalidar_panel(panel) -> None:

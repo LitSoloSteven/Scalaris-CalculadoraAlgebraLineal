@@ -1,5 +1,5 @@
 """Vigencia de las solicitudes individuales de los métodos cerrados."""
-from src.frontend.controladores.actualizacion_cancelable import cancelar_actualizacion
+from src.frontend.controladores.compartido.sesion.actualizacion_cancelable import cancelar_actualizacion
 from src.frontend.controladores.calculo_raices import ConfiguracionCalculoRaices, resolver_calculo_raices
 from src.frontend.controladores.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
 from src.frontend.controladores.metodos_cerrados.adaptadores import METODOS, resolver_presentacion

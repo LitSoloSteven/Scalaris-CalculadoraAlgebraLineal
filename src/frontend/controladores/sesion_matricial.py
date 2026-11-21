@@ -4,7 +4,7 @@ import time
 
 from src.frontend.nucleo.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
 from src.ai.huellas import calcular_huella
-from src.frontend.controladores.actualizacion_cancelable import cancelar_actualizacion, programar_actualizacion
+from src.frontend.controladores.compartido.sesion.actualizacion_cancelable import cancelar_actualizacion, programar_actualizacion
 from src.frontend.nucleo.textos.textos import HISTORIAL_DETERMINANTE_CALCULADO, HISTORIAL_DETERMINANTE_DETALLE, OPCIONES_METODOS_DETERMINANTES
 from src.frontend.nucleo.textos.textos import HISTORIAL_FACTORIZACION_LU_CALCULADA, HISTORIAL_FACTORIZACION_LU_DETALLE
 

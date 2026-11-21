@@ -1,5 +1,5 @@
 """Adaptación de resultados numéricos y escenas al contrato compartido de PDF."""
-from src.frontend.controladores.captura_contexto import capturar_bases, capturar_romanos
+from src.frontend.controladores.compartido.sesion.captura_contexto import capturar_bases, capturar_romanos
 from src.frontend.controladores.exportacion_pdf.vigencia import EnlacePDF
 from .boton import renderizar_boton_pdf
 from .integracion import identificador_raiz

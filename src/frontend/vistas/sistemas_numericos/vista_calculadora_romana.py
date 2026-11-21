@@ -18,7 +18,7 @@ from src.backend.resolutores.sistemas_numericos.calculadora_romana import (
 from src.frontend.componentes.glosa.panel.panel_ia import PanelIA
 from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.navegacion import ruta_de
-from src.frontend.controladores.captura_contexto import capturar_romanos
+from src.frontend.controladores.compartido.sesion.captura_contexto import capturar_romanos
 from .mixin_resultado_romano import MixinResultadoRomano
 from .mixin_contexto_romanos import MixinContextoRomano
 from .mixin_captura_romanos import MixinCapturaRomanos

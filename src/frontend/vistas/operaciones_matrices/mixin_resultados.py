@@ -18,7 +18,7 @@ from src.frontend.controladores.exportacion_pdf.vigencia import EnlacePDF
 from src.frontend.componentes.resultados.acciones.acciones_matriz import renderizar_acciones_matriz
 from src.frontend.nucleo.textos import textos
 from src.frontend.controladores.sesion_matricial import actualizar_contexto
-from src.frontend.controladores.captura_contexto import capturar_matrices, capturar_matrices_documento
+from src.frontend.controladores.compartido.sesion.captura_contexto import capturar_matrices, capturar_matrices_documento
 from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
 
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos

@@ -4,7 +4,7 @@ from typing import Any
 
 from src.ai.contexto.contexto import ContextoIA, EstadoContexto, sanear_cadena_usuario
 from src.ai.huellas import esta_desactualizado
-from src.frontend.controladores.captura_contexto import capturar_romanos
+from src.frontend.controladores.compartido.sesion.captura_contexto import capturar_romanos
 
 from src.backend.resolutores.sistemas_numericos.calculadora_romana import (
     ErrorNumeroRomano, romano_a_entero, ERROR_CERO_NO_REPRESENTABLE,

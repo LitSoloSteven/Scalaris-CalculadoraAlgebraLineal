@@ -2,7 +2,7 @@
 from typing import Any
 from src.ai.contexto.contexto import describir_matriz, sanear_cadena_usuario
 from src.ai.huellas import calcular_huella
-from src.frontend.controladores.memo_captura import reutilizar_captura
+from src.frontend.controladores.compartido.sesion.memo_captura import reutilizar_captura
 from src.frontend.presentacion.sugerencias import primera_celda_invalida
 
 

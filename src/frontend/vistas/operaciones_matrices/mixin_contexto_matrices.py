@@ -1,6 +1,6 @@
 """Contexto y señales del asistente para la vista de matrices."""
 from src.frontend.controladores.operaciones_matrices import ControladorOperacionesMatrices
-from src.frontend.controladores.captura_contexto import capturar_matrices
+from src.frontend.controladores.compartido.sesion.captura_contexto import capturar_matrices
 
 
 def _estado_sugerencias(resultado: dict, banderas: set) -> str:
