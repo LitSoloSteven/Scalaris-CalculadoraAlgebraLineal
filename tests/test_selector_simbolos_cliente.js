@@ -174,7 +174,7 @@ prueba("inserta raiz cuadrada y simbolo no evaluable en funcion cerrando el dial
     entorno.abrirEn(campo);
     entorno.busqueda.value = "Infinito";
     entorno.busqueda.dispatchEvent({ type: "input" });
-    afirmar.equal(entorno.lista.children.length, 0);
+    afirmar.deepEqual(entorno.lista.children.map(opcion => opcion.children[0].textContent), ["∞"]);
     afirmar.equal(campo.value, "√(x+1)");
     entorno.dialogo.close();
 });
@@ -231,7 +231,7 @@ prueba("conserva cursor tras saneado en input, prioriza compatibles y respeta ma
     afirmar.equal(entorno.lista.children[0].children[2].textContent, "Insertar");
     entorno.busqueda.value = "Infinito";
     entorno.busqueda.dispatchEvent({ type: "input" });
-    afirmar.equal(entorno.lista.children.length, 0);
+    afirmar.deepEqual(entorno.lista.children.map(opcion => opcion.children[0].textContent), ["∞"]);
     entorno.buscarYElegir("pi minúscula", "π");
     afirmar.equal(entorno.dialogo.open, true);
     afirmar.equal(entorno.estado.textContent, "El símbolo no cabe en el campo o el campo ya no está disponible.");
