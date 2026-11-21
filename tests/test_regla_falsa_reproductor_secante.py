@@ -1,7 +1,7 @@
 """Seguimiento del paso, fila, fórmula, secante y foco con el reproductor compartido."""
 from nicegui import ui
 
-from src.frontend.controladores.regla_falsa.presentacion_grafica import calcular_presentacion
+from src.frontend.controladores.raices.regla_falsa.ejecucion.presentacion_grafica import calcular_presentacion
 from src.frontend.vistas.regla_falsa.procedimiento import PanelProcedimiento
 from tests.comun_regla_falsa_vista import captura_regla_falsa, ejecutar_escenario
 

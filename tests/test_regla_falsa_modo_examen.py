@@ -3,7 +3,7 @@ from copy import deepcopy
 
 import pytest
 
-from src.frontend.controladores.regla_falsa.controlador import resolver_captura
+from src.frontend.controladores.raices.regla_falsa.ejecucion.controlador import resolver_captura
 from src.frontend.controladores.regla_falsa.presentacion_examen import datos_examen
 from src.frontend.controladores.regla_falsa.salidas_regla_falsa import (
     texto_copia_examen_regla_falsa, texto_copia_regla_falsa,

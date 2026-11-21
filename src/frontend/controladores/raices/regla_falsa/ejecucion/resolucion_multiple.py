@@ -10,7 +10,7 @@ from src.frontend.controladores.raices.compartido.formato.captura_real import en
 from src.frontend.controladores.raices.compartido.exploracion.exploracion_raices import LONGITUD_CAMPO_EXPLORACION
 from src.frontend.controladores.raices.compartido.formato.rango_exploracion_raices import RANGO_GRAFICA_DEFECTO
 from src.frontend.controladores.raices.regla_falsa.captura.configuracion_ampliada import preparar_configuracion
-from .presentacion_grafica import agregar_grafica
+from src.frontend.controladores.raices.regla_falsa.ejecucion.presentacion_grafica import agregar_grafica
 
 _ERROR_CAPTURA = "Revisa la configuración, el presupuesto y la selección de candidatos; vuelve a explorar si es necesario."
 _ERROR_EJECUCION = "No se pudo completar el lote de regla falsa. Revisa los datos y vuelve a resolver."

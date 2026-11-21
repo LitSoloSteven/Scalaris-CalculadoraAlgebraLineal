@@ -1,6 +1,6 @@
 """Resolución real y muestreo orientativo separados del sobre matemático."""
 from src.frontend.controladores.raices.compartido.exploracion.muestreo_raices import muestrear_funcion
-from .ejecucion_ampliada import resolver_presentacion
+from src.frontend.controladores.raices.regla_falsa.ejecucion.ejecucion_ampliada import resolver_presentacion
 
 
 def calcular_presentacion(captura: dict) -> dict:

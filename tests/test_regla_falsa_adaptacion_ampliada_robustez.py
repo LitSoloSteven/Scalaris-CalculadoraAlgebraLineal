@@ -1,7 +1,7 @@
 """Aislamiento de fallos internos en la ejecución configurada y sus servicios."""
 import pytest
 
-from src.frontend.controladores.regla_falsa import ejecucion_ampliada
+from src.frontend.controladores.raices.regla_falsa.ejecucion import ejecucion_ampliada
 from tests.comun_regla_falsa_vista import captura_regla_falsa
 
 

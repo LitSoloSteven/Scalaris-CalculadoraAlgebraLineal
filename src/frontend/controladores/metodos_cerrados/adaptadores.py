@@ -4,7 +4,7 @@ from src.frontend.controladores.raices.biseccion.captura.captura_criterio import
 from src.frontend.controladores.raices.biseccion.captura.catalogo_criterios import CRITERIOS
 from src.frontend.controladores.raices.biseccion.ejecucion.controlador import calcular_presentacion as calcular_biseccion
 from src.frontend.controladores.raices.regla_falsa.captura.configuracion_ampliada import criterio_capturado
-from src.frontend.controladores.regla_falsa.presentacion_grafica import calcular_presentacion as calcular_regla_falsa
+from src.frontend.controladores.raices.regla_falsa.ejecucion.presentacion_grafica import calcular_presentacion as calcular_regla_falsa
 from src.frontend.controladores.raices.biseccion.captura.catalogo_criterios import condicion_criterio
 
 BISECCION = "biseccion"

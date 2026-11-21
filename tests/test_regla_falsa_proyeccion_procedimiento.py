@@ -3,10 +3,10 @@ import json
 
 import pytest
 
-from src.frontend.controladores.regla_falsa.controlador import resolver_captura
+from src.frontend.controladores.raices.regla_falsa.ejecucion.controlador import resolver_captura
 from src.frontend.controladores.regla_falsa.formulas_procedimiento import formulas_iteracion
 from src.frontend.controladores.regla_falsa.pasos import construir_pasos, referencia_paso
-from src.frontend.controladores.regla_falsa.presentacion_grafica import calcular_presentacion
+from src.frontend.controladores.raices.regla_falsa.ejecucion.presentacion_grafica import calcular_presentacion
 from src.frontend.controladores.regla_falsa.tabla import filas_tabla
 from src.frontend.vistas.regla_falsa.figura import crear_figura
 from tests.comun_regla_falsa_vista import captura_regla_falsa

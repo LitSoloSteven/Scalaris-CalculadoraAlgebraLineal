@@ -5,7 +5,7 @@ import pytest
 from nicegui import run
 
 from src.frontend.controladores.regla_falsa.contexto_regla_falsa import resumir_contexto_regla_falsa
-from src.frontend.controladores.regla_falsa.presentacion_grafica import calcular_presentacion
+from src.frontend.controladores.raices.regla_falsa.ejecucion.presentacion_grafica import calcular_presentacion
 from src.frontend.controladores.regla_falsa.salidas_regla_falsa import datos_copia_configurada
 from tests.comun_regla_falsa_vista import captura_regla_falsa, ejecutar_escenario
 

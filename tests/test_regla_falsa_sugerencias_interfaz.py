@@ -4,7 +4,7 @@ from copy import deepcopy
 import pytest
 
 from src.ai.huellas import calcular_huella
-from src.frontend.controladores.regla_falsa.presentacion_grafica import calcular_presentacion
+from src.frontend.controladores.raices.regla_falsa.ejecucion.presentacion_grafica import calcular_presentacion
 from src.frontend.vistas.regla_falsa.sugerencias import aplicar_sugerencia
 from tests.comun_regla_falsa_vista import captura_regla_falsa, ejecutar_escenario, textos_resultado
 
