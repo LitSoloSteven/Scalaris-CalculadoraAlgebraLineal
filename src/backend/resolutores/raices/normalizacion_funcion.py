@@ -13,6 +13,7 @@ _DIGITOS_SUPERIORES = "⁰¹²³⁴⁵⁶⁷⁸⁹"
 _SUPERINDICES = str.maketrans(_DIGITOS_SUPERIORES + "⁺⁻", "0123456789+-")
 _POTENCIA_TIPOGRAFICA = re.compile(rf"[⁺⁻]?[{_DIGITOS_SUPERIORES}]+")
 _FRACCIONES = "¼½¾⅐⅑⅒⅓⅔⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞↉"
+_SEPARAR_POSTFIJOS = str.maketrans({simbolo: " " + simbolo + " " for simbolo in POSTFIJOS})
 _SIMBOLOS = str.maketrans({
     "−": "-", "×": "*", "·": "*", "⋅": "*", "∙": "*",
     "÷": "/", "⁄": "/", "∕": "/", "√": " sqrt", "∛": " cbrt", "∜": " raiz4",
@@ -28,7 +29,7 @@ def normalizar_expresion(expresion: str) -> str:
     texto = expresion.translate(_SIMBOLOS).strip()
     texto = _POTENCIA_TIPOGRAFICA.sub(_explicitar_potencia, texto)
     _comprobar_longitud(texto)
-    tokens = _obtener_tokens(texto)
+    tokens = _obtener_tokens(texto.translate(_SEPARAR_POSTFIJOS).strip())
     partes = []
     anterior = None
     for actual in tokens:
@@ -81,7 +82,7 @@ def _token_admitido(token: tokenize.TokenInfo) -> bool:
         return True
     if token.type == tokenize.OP and token.string in _OPERADORES:
         return True
-    if token.type == tokenize.ERRORTOKEN and token.string in POSTFIJOS:
+    if token.string in POSTFIJOS:
         return True
     if token.type == tokenize.ERRORTOKEN and token.string in (" ", "\t"):
         return False
