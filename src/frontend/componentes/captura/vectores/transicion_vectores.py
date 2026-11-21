@@ -1,7 +1,7 @@
 """Coordinación de transiciones de dimensión y composición de la familia vectorial."""
 from functools import partial
 from src.backend.constantes import DIMENSION_MAXIMA_VECTORES, DIMENSION_MINIMA
-from .captura.nucleo.cuadricula_base import (
+from src.frontend.componentes.captura.nucleo.cuadricula_base import (
     ejecutar_transicion_cuadricula, selectores_cambio_dimension,
     actualizar_estados_botones_dimension, purgar_cache_unidimensional,
     indice_cambio_dimension,

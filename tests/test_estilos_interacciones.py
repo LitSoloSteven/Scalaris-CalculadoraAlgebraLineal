@@ -125,7 +125,7 @@ def test_componentes_celdas_resistentes_y_animaciones():
     assert "cuadricula-celda" in python_ecuaciones
     assert "w-20" not in python_ecuaciones
 
-    python_vectores = Path("src/frontend/componentes/captura_vectores.py").read_text(encoding="utf-8")
+    python_vectores = Path("src/frontend/componentes/captura/vectores/captura_vectores.py").read_text(encoding="utf-8")
     assert "cuadricula-celda" in python_vectores
     assert "w-20" not in python_vectores
 

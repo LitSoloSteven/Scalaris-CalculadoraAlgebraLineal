@@ -10,7 +10,7 @@ from src.ai.huellas import calcular_huella
 from src.backend.constantes import DIMENSION_MAXIMA_VECTORES
 from src.frontend.componentes.panel_ia import PanelIA
 from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
-from src.frontend.componentes.captura_vectores import PanelCapturaVectores
+from src.frontend.componentes.captura.vectores.captura_vectores import PanelCapturaVectores
 from src.frontend.navegacion import ruta_de
 from src.frontend.controladores.sesion_matricial import actualizar_contexto
 from . import contexto, controles

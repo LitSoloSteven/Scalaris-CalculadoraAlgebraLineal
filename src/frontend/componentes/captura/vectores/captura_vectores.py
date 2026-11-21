@@ -8,7 +8,7 @@ from nicegui import ui
 from src.frontend.componentes.aplicacion.base.sonido import notificar
 from .opciones_captura_vectores import OpcionesCapturaVectores
 from .transicion_vectores import MixinTransicionVectores
-from .captura.nucleo.carga_numerica import preparar_matriz_numerica
+from src.frontend.componentes.captura.nucleo.carga_numerica import preparar_matriz_numerica
 from src.backend.constantes import DIMENSION_MAXIMA_VECTORES
 
 from src.frontend.componentes.captura.nucleo.cuadricula_base import (

@@ -8,7 +8,7 @@ from nicegui import ui
 from src.frontend.componentes.captura.paneles.panel_matriz_cuadrada import PanelMatrizCuadrada
 from src.frontend.componentes.captura.paneles.panel_matriz_rectangular import PanelMatrizRectangular
 from src.frontend.componentes.captura.matrices.estado_captura_matrices import crear_registro_matriz
-from src.frontend.componentes.captura_vectores import PanelCapturaVectores
+from src.frontend.componentes.captura.vectores.captura_vectores import PanelCapturaVectores
 from src.frontend.componentes.captura.ecuaciones.cuadricula_ecuaciones import CuadriculaEcuaciones
 
 

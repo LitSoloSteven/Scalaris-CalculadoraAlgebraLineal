@@ -1,6 +1,6 @@
 """Adaptación del panel vectorial para identificar celdas de las escenas."""
 from nicegui import ui
-from src.frontend.componentes.captura_vectores import PanelCapturaVectores
+from src.frontend.componentes.captura.vectores.captura_vectores import PanelCapturaVectores
 
 
 class PanelVectoresGeometria(PanelCapturaVectores):
