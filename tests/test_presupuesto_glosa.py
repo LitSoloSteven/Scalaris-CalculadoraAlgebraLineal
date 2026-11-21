@@ -6,10 +6,10 @@ from unittest.mock import Mock
 import pytest
 
 from src.ai.respuestas.clasificador_respuestas import procesar_respuesta_exitosa
-from src.ai.cliente_openrouter import ClienteOpenRouter
+from src.ai.cliente.cliente_openrouter import ClienteOpenRouter
 from src.ai.constantes import MAXIMO_CARACTERES_MENSAJE
 from src.ai.presupuesto.historial import limpiar_historial_almacenado
-from src.ai.mensajes import construir_mensajes, recortar_historial
+from src.ai.cliente.mensajes import construir_mensajes, recortar_historial
 from src.ai.respuestas.respuestas import TipoErrorIA
 from src.ai.textos import RESPUESTA_DEMASIADO_EXTENSA
 from src.frontend.componentes.glosa_envio import EnvioGlosaMixin

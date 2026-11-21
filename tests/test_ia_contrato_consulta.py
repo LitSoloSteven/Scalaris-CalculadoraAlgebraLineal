@@ -8,8 +8,8 @@ from types import SimpleNamespace
 
 import pytest
 
-from src.ai.cliente_openrouter import ClienteOpenRouter
-from src.ai.mensajes import SUFIJO_MAS_SIMPLE
+from src.ai.cliente.cliente_openrouter import ClienteOpenRouter
+from src.ai.cliente.mensajes import SUFIJO_MAS_SIMPLE
 from src.ai.respuestas.respuestas import OpcionesConsulta, ResultadoIA, TipoErrorIA
 from src.ai.textos import CONSULTA_CANCELADA, ERROR_SERVICIO
 from src.frontend.componentes import glosa_envio

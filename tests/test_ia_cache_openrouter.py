@@ -1,5 +1,5 @@
 """Identidad de caché, exclusión voluntaria y expiración de respuestas de IA."""
-from src.ai.cliente_openrouter import ClienteOpenRouter
+from src.ai.cliente.cliente_openrouter import ClienteOpenRouter
 from src.ai.respuestas.respuestas import OpcionesConsulta
 from tests.comun_openrouter import RespuestaSimulada, limpiar_estado_openrouter
 

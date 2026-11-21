@@ -1,7 +1,7 @@
 """Catálogo contextual coherente de determinantes y modelos matriciales."""
 import pytest
 
-from src.ai.mensajes import construir_pregunta_explicar_paso
+from src.ai.cliente.mensajes import construir_pregunta_explicar_paso
 from src.frontend.catalogo_sugerencias import CATALOGO_SUGERENCIAS
 from src.frontend.sugerencias import Senales, generar_candidatas
 

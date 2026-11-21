@@ -2,7 +2,7 @@
 import threading
 import requests
 
-from src.ai.cliente_openrouter import ClienteOpenRouter
+from src.ai.cliente.cliente_openrouter import ClienteOpenRouter
 from tests.comun_openrouter import RespuestaSimulada, limpiar_estado_openrouter
 
 

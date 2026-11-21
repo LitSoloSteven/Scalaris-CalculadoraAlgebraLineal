@@ -4,7 +4,7 @@ from typing import Any
 from nicegui import ui
 from src.frontend.componentes.sonido import notificar
 
-from src.ai.mensajes import construir_pregunta_explicar_paso
+from src.ai.cliente.mensajes import construir_pregunta_explicar_paso
 from src.frontend import banderas
 
 

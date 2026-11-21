@@ -8,7 +8,7 @@ from nicegui import app, ui
 from src.frontend.componentes.sonido import notificar
 
 from src.ai.contexto.contexto import CapturaPaso, ReferenciaPaso, serializar_contexto
-from src.ai.cliente_openrouter import ClienteOpenRouter
+from src.ai.cliente.cliente_openrouter import ClienteOpenRouter
 from src.ai.presupuesto.historial import limpiar_historial_almacenado
 from src.frontend import banderas
 from src.frontend.componentes.panel_ia_clasico import (

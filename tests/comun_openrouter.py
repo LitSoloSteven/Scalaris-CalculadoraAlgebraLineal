@@ -2,7 +2,7 @@
 import json
 import pytest
 
-from src.ai.cliente_openrouter import ClienteOpenRouter
+from src.ai.cliente.cliente_openrouter import ClienteOpenRouter
 
 
 class RespuestaSimulada:
