@@ -1,5 +1,5 @@
 """Preparacion de capacidades para presentar una matriz inversa."""
-from src.backend.utilidades.estado_captura import opciones_dimension_inversa
+from src.backend.utilidades.captura.estado_captura import opciones_dimension_inversa
 
 
 def preparar_opciones_inversa(dimension: int) -> dict:

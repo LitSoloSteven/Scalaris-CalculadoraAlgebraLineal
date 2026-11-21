@@ -2,7 +2,7 @@
 import html
 from src.backend.modelos.matriz import Matriz
 from src.backend.utilidades.formato.formateadores import formatear_variable_para_latex, separar_indice_variable
-from src.backend.utilidades.reconstruccion_matrices import reconstruir_matriz
+from src.backend.utilidades.captura.reconstruccion_matrices import reconstruir_matriz
 
 
 def formatear_elemento_solucion(variable: str, valor: str) -> tuple[str, str, str]:

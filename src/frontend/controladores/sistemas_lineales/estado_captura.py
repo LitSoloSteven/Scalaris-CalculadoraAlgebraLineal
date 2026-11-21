@@ -1,5 +1,5 @@
 """Estado y sincronizacion de la captura de sistemas lineales."""
-from src.backend.utilidades.estado_captura import (
+from src.backend.utilidades.captura.estado_captura import (
     ajustar_numero_ecuaciones, captura_vacia, opciones_transferencia_sistema,
 )
 from src.frontend.controladores.sesion_matricial import actualizar_contexto

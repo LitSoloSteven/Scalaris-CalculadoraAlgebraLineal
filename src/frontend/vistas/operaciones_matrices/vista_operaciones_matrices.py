@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from nicegui import ui
 from src.frontend.componentes.sonido import notificar
-from src.backend.utilidades.estado_captura import captura_vacia
+from src.backend.utilidades.captura.estado_captura import captura_vacia
 from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
 from src.frontend.componentes.simbolos import habilitar_simbolos
 

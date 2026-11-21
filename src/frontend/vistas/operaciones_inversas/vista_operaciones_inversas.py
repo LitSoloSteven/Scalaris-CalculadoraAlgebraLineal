@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from nicegui import ui
-from src.backend.utilidades.estado_captura import captura_vacia
+from src.backend.utilidades.captura.estado_captura import captura_vacia
 from src.frontend.controladores.operaciones_inversas.contexto import obtener_contexto_inversa, obtener_senales_inversa
 
 from src.frontend.componentes.panel_ia import PanelIA

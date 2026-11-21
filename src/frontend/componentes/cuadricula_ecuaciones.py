@@ -1,6 +1,6 @@
 """Cuadricula interactiva de captura para sistemas de ecuaciones lineales."""
 from __future__ import annotations
-from src.backend.utilidades.estado_captura import captura_vacia
+from src.backend.utilidades.captura.estado_captura import captura_vacia
 
 from functools import partial
 from typing import Any, Callable

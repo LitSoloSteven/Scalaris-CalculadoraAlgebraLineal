@@ -1,6 +1,6 @@
 """Proyección del directorio, preferencia destacada y contrato del cliente."""
 from pathlib import Path
-from src.backend.utilidades.estado_captura import celdas_matriz
+from src.backend.utilidades.captura.estado_captura import celdas_matriz
 import pytest
 
 from src.frontend.controladores.inicio._modelo import acceso_destacado

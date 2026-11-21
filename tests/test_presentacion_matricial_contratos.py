@@ -1,7 +1,7 @@
 """Contratos de estilos estrechos, limites y nombres de las vistas matriciales."""
 from pathlib import Path
 
-from src.backend.utilidades.estado_captura import opciones_transferencia_sistema
+from src.backend.utilidades.captura.estado_captura import opciones_transferencia_sistema
 from src.frontend.controladores.operaciones_inversas.vista_previa import preparar_presentacion_previa
 from tests.comun import RAIZ
 

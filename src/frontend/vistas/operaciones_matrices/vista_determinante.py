@@ -1,7 +1,7 @@
 """Captura y herramientas de sesión del determinante exacto."""
 from nicegui import ui
 
-from src.backend.utilidades.estado_captura import captura_vacia
+from src.backend.utilidades.captura.estado_captura import captura_vacia
 from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
 from src.frontend.componentes.calculadora import PanelCalculadora
 from src.frontend.componentes.selector_opciones import SelectorOpciones
