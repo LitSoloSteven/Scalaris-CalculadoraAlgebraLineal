@@ -7,9 +7,9 @@ from nicegui import ui
 from nicegui.observables import ObservableDict
 
 from src.ai.respuestas.respuestas import ResultadoIA, TipoErrorIA
-from src.frontend.componentes.glosa_envio import EnvioGlosaMixin
+from src.frontend.componentes.glosa.panel.glosa_envio import EnvioGlosaMixin
 from src.frontend.componentes.glosa.interaccion.glosa_bitacora import _renderizar_mensaje_lateral
-from src.frontend.componentes.panel_ia_clasico import renderizar_mensaje_clasico
+from src.frontend.componentes.glosa.panel.panel_ia_clasico import renderizar_mensaje_clasico
 from tests.comun_clientes import PanelIASimulado
 
 
@@ -42,7 +42,7 @@ def test_ambas_presentaciones_consumen_marca_y_conservan_escape(monkeypatch, lat
 @pytest.mark.parametrize("exito", [True, False])
 def test_solo_respuestas_exitosas_solicitan_revelado(monkeypatch, exito):
     """El flujo de resultados conserva errores inmediatos y anima solo respuestas válidas."""
-    monkeypatch.setattr('src.frontend.componentes.glosa_envio.banderas.panel_lateral_habilitado', lambda: False)
+    monkeypatch.setattr('src.frontend.componentes.glosa.panel.glosa_envio.banderas.panel_lateral_habilitado', lambda: False)
     instancia = SimpleNamespace(historial_chat=[], area_chat=ui.column(),
                                 _renderizar_mensaje=Mock(), _desplazar_al_final=Mock())
     resultado = ResultadoIA(exito, 'Respuesta', None if exito else TipoErrorIA.SERVICIO)

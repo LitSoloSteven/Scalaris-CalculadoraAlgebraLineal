@@ -8,7 +8,7 @@ from src.backend.utilidades.captura.estado_captura import captura_vacia
 from src.frontend.componentes.captura.ecuaciones.limpieza_captura import crear_boton_limpieza
 from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
 
-from src.frontend.componentes.panel_ia import PanelIA
+from src.frontend.componentes.glosa.panel.panel_ia import PanelIA
 from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.captura.matrices.captura_matrices import PanelCapturaMatrices
 from src.frontend.navegacion import ruta_de

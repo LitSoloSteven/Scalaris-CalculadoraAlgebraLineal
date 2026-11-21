@@ -22,7 +22,7 @@ def test_contrato_cliente_glosa():
 
 def test_contrato_accesibilidad_glosa():
     """Verifica contratos de accesibilidad en glosa_panel_lateral.py."""
-    ruta_python = Path("src/frontend/componentes/glosa_panel_lateral.py")
+    ruta_python = Path("src/frontend/componentes/glosa/panel/glosa_panel_lateral.py")
     ruta_pie = Path("src/frontend/componentes/glosa/interaccion/glosa_pie.py")
     assert ruta_python.exists() and ruta_pie.exists()
     contenido = ruta_python.read_text(encoding="utf-8") + "\n" + ruta_pie.read_text(encoding="utf-8")

@@ -1,6 +1,6 @@
 """Componentes reutilizables de UI de Scalaris."""
 
-from .panel_ia import PanelIA
+from .glosa.panel.panel_ia import PanelIA
 from .aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
 from .captura.paneles.calculadora import PanelCalculadora
 from .captura.ecuaciones.cuadricula_ecuaciones import CuadriculaEcuaciones

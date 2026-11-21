@@ -5,7 +5,7 @@ import asyncio
 import logging
 from nicegui import ui
 
-from src.frontend.componentes.panel_ia import PanelIA
+from src.frontend.componentes.glosa.panel.panel_ia import PanelIA
 from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.aplicacion.base.tareas import lanzar_tarea
 from src.frontend.nucleo.constantes import ANTIRREBOTE_GEOMETRIA_SEGUNDOS

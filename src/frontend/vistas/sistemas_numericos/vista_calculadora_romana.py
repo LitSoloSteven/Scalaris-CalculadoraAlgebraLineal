@@ -15,7 +15,7 @@ from src.backend.resolutores.sistemas_numericos.calculadora_romana import (
     CalculadoraRomana,
     ErrorNumeroRomano,
 )
-from src.frontend.componentes.panel_ia import PanelIA
+from src.frontend.componentes.glosa.panel.panel_ia import PanelIA
 from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.navegacion import ruta_de
 from src.frontend.controladores.captura_contexto import capturar_romanos

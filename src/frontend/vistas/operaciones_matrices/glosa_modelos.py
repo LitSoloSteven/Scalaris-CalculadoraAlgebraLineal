@@ -1,7 +1,7 @@
 """Integración de Glosa y ciclo de vida de los modelos matriciales."""
 from nicegui import ui
 
-from src.frontend.componentes.panel_ia import PanelIA
+from src.frontend.componentes.glosa.panel.panel_ia import PanelIA
 from src.frontend.componentes.captura.nucleo.cuadricula_base import ubicar_celda_matriz
 from src.frontend.controladores.limpieza_captura import retirar_estado_calculado
 from src.frontend.controladores.sesion_matricial import invalidar_resultado, actualizar_contexto, programar_vista_previa, cancelar_vista_previa

@@ -4,7 +4,7 @@ from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import 
 from src.frontend.navegacion import ruta_de
 from src.frontend.componentes.captura.ecuaciones.cuadricula_ecuaciones import CuadriculaEcuaciones
 from src.frontend.componentes.captura.paneles.calculadora import PanelCalculadora
-from src.frontend.componentes.panel_ia import PanelIA
+from src.frontend.componentes.glosa.panel.panel_ia import PanelIA
 from .mixin_sincronizacion import MixinSincronizacionSistemasLineales
 from .mixin_historial import MixinHistorialSistemasLineales
 from .mixin_pasos import MixinPasosSistemasLineales

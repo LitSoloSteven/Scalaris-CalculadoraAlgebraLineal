@@ -8,7 +8,7 @@ from src.backend.utilidades.captura.estado_captura import captura_vacia
 
 from src.ai.huellas import calcular_huella
 from src.backend.constantes import DIMENSION_MAXIMA_VECTORES
-from src.frontend.componentes.panel_ia import PanelIA
+from src.frontend.componentes.glosa.panel.panel_ia import PanelIA
 from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.captura.vectores.captura_vectores import PanelCapturaVectores
 from src.frontend.navegacion import ruta_de

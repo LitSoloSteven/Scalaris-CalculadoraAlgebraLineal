@@ -20,7 +20,7 @@ from src.frontend.controladores.captura_contexto import capturar_bases, capturar
 from src.frontend.controladores.sesion_matricial import actualizar_contexto
 from src.frontend.controladores.utilidades import extraer_datos_matriz, parsear_carga_json
 from src.frontend.componentes.glosa.interaccion.glosa_preguntas import PreguntasGlosaMixin
-from src.frontend.componentes.glosa_panel_lateral import PanelLateralGlosaMixin
+from src.frontend.componentes.glosa.panel.glosa_panel_lateral import PanelLateralGlosaMixin
 from tests.comun import RAIZ
 from tests.comun_clientes import ClienteSimulado
 from tests.comun_construccion_vistas import construir_pagina

@@ -13,7 +13,7 @@ from src.frontend.componentes.glosa.interaccion.glosa_bitacora import (
 )
 from src.frontend.componentes.glosa.elementos.glosa_cabecera import construir_cabecera_lateral
 from src.frontend.componentes.glosa.interaccion.glosa_sugerencias import renderizar_fila_sugerencias
-from src.frontend.componentes.glosa_envio import EnvioGlosaMixin
+from src.frontend.componentes.glosa.panel.glosa_envio import EnvioGlosaMixin
 from src.frontend.componentes.glosa.interaccion.glosa_foco import FocoGlosaMixin
 from src.frontend.componentes.glosa.interaccion.glosa_pie import (
     construir_boton_y_fondo,

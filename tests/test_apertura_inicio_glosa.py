@@ -11,7 +11,7 @@ from tests.comun_construccion_vistas import construir_pagina
 def test_parametro_publico_abre_solo_cuando_se_solicita(monkeypatch, abrir):
     """El constructor consume glosa=1 y mantiene el panel cerrado por defecto."""
     codigos = []
-    monkeypatch.setattr("src.frontend.componentes.panel_ia.PanelIA.abrir",
+    monkeypatch.setattr("src.frontend.componentes.glosa.panel.panel_ia.PanelIA.abrir",
                         lambda instancia: codigos.append("abrir"))
 
     async def comprobar(vista, cliente):

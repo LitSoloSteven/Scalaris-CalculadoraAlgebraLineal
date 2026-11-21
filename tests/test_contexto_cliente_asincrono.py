@@ -5,7 +5,7 @@ import re
 from tests.comun import comprobar_tarea_en_cliente
 from tests.comun_clientes import ClienteSimulado
 from src.frontend.vistas.geometria.vista_geometria import VistaGeometria
-from src.frontend.componentes.glosa_panel_lateral import PanelLateralGlosaMixin
+from src.frontend.componentes.glosa.panel.glosa_panel_lateral import PanelLateralGlosaMixin
 
 
 def test_geometria_ejecuta_js_desde_cliente():
@@ -31,7 +31,7 @@ def test_contrato_cliente_vista_geometria():
 
 def test_contrato_tareas_glosa_panel_lateral():
     """Glosa lanza sus envíos mediante el protocolo de cliente."""
-    ruta = Path('src/frontend/componentes/glosa_panel_lateral.py')
+    ruta = Path('src/frontend/componentes/glosa/panel/glosa_panel_lateral.py')
     assert ruta.exists()
     contenido = ruta.read_text(encoding='utf-8')
     assert 'asyncio.create_task(self._enviar_consulta' not in contenido

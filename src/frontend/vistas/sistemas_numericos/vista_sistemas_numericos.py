@@ -7,7 +7,7 @@ from src.backend.utilidades.validacion.reglas_dominio import BASES_NUMERICAS, va
 from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
 from src.frontend.navegacion import ruta_de
-from src.frontend.componentes.panel_ia import PanelIA
+from src.frontend.componentes.glosa.panel.panel_ia import PanelIA
 from src.frontend.controladores.captura_contexto import capturar_bases
 from .mixin_interaccion import MixinInteraccionSistemasNumericos
 from .mixin_renderizado import MixinRenderizadoSistemasNumericos

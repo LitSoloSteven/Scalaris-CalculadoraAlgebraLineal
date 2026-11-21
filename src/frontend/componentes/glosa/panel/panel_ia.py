@@ -11,13 +11,13 @@ from src.ai.contexto.contexto import CapturaPaso, ReferenciaPaso, serializar_con
 from src.ai.cliente.cliente_openrouter import ClienteOpenRouter
 from src.ai.presupuesto.historial import limpiar_historial_almacenado
 from src.frontend.nucleo import banderas
-from src.frontend.componentes.panel_ia_clasico import (
+from src.frontend.componentes.glosa.panel.panel_ia_clasico import (
     actualizar_visibilidad_clasico,
     construir_panel_clasico,
     renderizar_chat_clasico,
     renderizar_mensaje_clasico,
 )
-from src.frontend.componentes.glosa_panel_lateral import PanelLateralGlosaMixin
+from src.frontend.componentes.glosa.panel.glosa_panel_lateral import PanelLateralGlosaMixin
 from src.frontend.nucleo.constantes import ANTIRREBOTE_IA_SEGUNDOS, MAXIMO_HISTORIAL
 
 registro = logging.getLogger(__name__)
