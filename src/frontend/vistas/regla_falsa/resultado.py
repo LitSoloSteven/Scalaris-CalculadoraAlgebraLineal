@@ -8,7 +8,7 @@ from src.frontend.controladores.raices.regla_falsa.presentacion.diagnostico impo
 from src.frontend.controladores.raices.regla_falsa.presentacion.presentacion import (
     aproximacion_presentada, avisos_resumen,
 )
-from src.frontend.controladores.regla_falsa.salidas_regla_falsa import (
+from src.frontend.controladores.raices.regla_falsa.procedimiento.salidas_regla_falsa import (
     datos_copia_regla_falsa, datos_copia_examen_regla_falsa, datos_copia_configurada,
 )
 from src.frontend.controladores.raices.regla_falsa.presentacion.presentacion_ampliada import etiqueta_configurada, metricas_configuradas, titulo_configurado

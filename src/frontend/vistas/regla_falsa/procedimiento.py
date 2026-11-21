@@ -4,9 +4,9 @@ from nicegui import ui
 from src.frontend.componentes.glosa.interaccion.glosa_foco import crear_accion_explicacion
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos, renderizar_latex
 from src.frontend.controladores.raices.compartido.formato.formato_funcion_real import formatear_expresion
-from src.frontend.controladores.regla_falsa.formulas_procedimiento import formulas_iteracion
-from src.frontend.controladores.regla_falsa.pasos import construir_pasos, referencia_paso
-from src.frontend.controladores.regla_falsa.pasos_ampliados import construir_pasos_configurados
+from src.frontend.controladores.raices.regla_falsa.procedimiento.formulas_procedimiento import formulas_iteracion
+from src.frontend.controladores.raices.regla_falsa.procedimiento.pasos import construir_pasos, referencia_paso
+from src.frontend.controladores.raices.regla_falsa.procedimiento.pasos_ampliados import construir_pasos_configurados
 from src.frontend.controladores.raices.regla_falsa.presentacion.tabla import COLUMNAS, valor_columna
 from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto
 from .figura import crear_figura

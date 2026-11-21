@@ -1,7 +1,7 @@
 """Procedimiento configurado que conserva las filas originales y su foco pedagógico."""
 from dataclasses import replace
 
-from .pasos import construir_pasos
+from src.frontend.controladores.raices.regla_falsa.procedimiento.pasos import construir_pasos
 from src.frontend.controladores.raices.regla_falsa.presentacion.presentacion_ampliada import datos_criterio, titulo_configurado
 
 

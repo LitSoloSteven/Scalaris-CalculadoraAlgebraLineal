@@ -4,8 +4,8 @@ import json
 import pytest
 
 from src.frontend.controladores.raices.regla_falsa.ejecucion.controlador import resolver_captura
-from src.frontend.controladores.regla_falsa.formulas_procedimiento import formulas_iteracion
-from src.frontend.controladores.regla_falsa.pasos import construir_pasos, referencia_paso
+from src.frontend.controladores.raices.regla_falsa.procedimiento.formulas_procedimiento import formulas_iteracion
+from src.frontend.controladores.raices.regla_falsa.procedimiento.pasos import construir_pasos, referencia_paso
 from src.frontend.controladores.raices.regla_falsa.ejecucion.presentacion_grafica import calcular_presentacion
 from src.frontend.controladores.raices.regla_falsa.presentacion.tabla import filas_tabla
 from src.frontend.vistas.regla_falsa.figura import crear_figura

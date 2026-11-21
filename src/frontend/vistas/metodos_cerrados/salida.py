@@ -9,9 +9,9 @@ from src.frontend.controladores.raices.biseccion.salidas.formulas_procedimiento 
 from src.frontend.controladores.raices.biseccion.salidas.salidas_biseccion import COLUMNAS_EXAMEN, datos_examen
 from src.frontend.controladores.raices.compartido.formato.formato_funcion_real import formatear_expresion
 from src.frontend.controladores.metodos_cerrados.adaptadores import BISECCION, METODOS
-from src.frontend.controladores.regla_falsa.formulas_procedimiento import formulas_iteracion as formulas_regla_falsa
-from src.frontend.controladores.regla_falsa.pasos import construir_pasos
-from src.frontend.controladores.regla_falsa.pasos_ampliados import construir_pasos_configurados
+from src.frontend.controladores.raices.regla_falsa.procedimiento.formulas_procedimiento import formulas_iteracion as formulas_regla_falsa
+from src.frontend.controladores.raices.regla_falsa.procedimiento.pasos import construir_pasos
+from src.frontend.controladores.raices.regla_falsa.procedimiento.pasos_ampliados import construir_pasos_configurados
 from src.frontend.controladores.raices.regla_falsa.presentacion.tabla import COLUMNAS, filas_tabla
 from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto
 from src.frontend.vistas.biseccion.modo_examen import crear_interruptor_examen, mostrar_accion_examen as examen_biseccion

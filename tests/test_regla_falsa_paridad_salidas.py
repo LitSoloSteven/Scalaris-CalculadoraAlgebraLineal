@@ -4,7 +4,7 @@ import json
 import pytest
 
 from src.frontend.controladores.raices.regla_falsa.presentacion.presentacion import metricas_resumen, titulo_estado
-from src.frontend.controladores.regla_falsa.salidas_regla_falsa import texto_copia_regla_falsa
+from src.frontend.controladores.raices.regla_falsa.procedimiento.salidas_regla_falsa import texto_copia_regla_falsa
 from src.frontend.controladores.raices.regla_falsa.presentacion.tabla import COLUMNAS, valor_columna
 from tests.comun_regla_falsa_vista import captura_regla_falsa, ejecutar_escenario, textos_resultado
 
