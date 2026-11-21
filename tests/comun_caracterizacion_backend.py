@@ -14,7 +14,7 @@ MODULOS = {
     "inversa": ("operaciones_matrices.inversa.inversa", "ResolutorInversa"),
     "evaluador": ("operaciones_matrices.expresiones.evaluador", "EvaluadorExpresionesMatriciales"),
     "leontief": ("operaciones_matrices.leontief.leontief", "ResolutorModeloLeontief"),
-    "transformaciones": ("operaciones_matrices.transformaciones", "ResolutorTransformacionesLineales"),
+    "transformaciones": ("operaciones_matrices.transformaciones.transformaciones", "ResolutorTransformacionesLineales"),
     "vectores": ("operaciones_vectores.operaciones.operaciones", "ResolutorOperacionesVectores"),
     "combinacion": ("operaciones_vectores.operaciones.combinacion_lineal", "ResolutorCombinacionLineal"),
     "romanos": ("sistemas_numericos.calculadora_romana", "CalculadoraRomana"),

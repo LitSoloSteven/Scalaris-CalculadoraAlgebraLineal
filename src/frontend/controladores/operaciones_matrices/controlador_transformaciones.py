@@ -3,7 +3,7 @@ import json
 from src.backend.resolutores.operaciones_matrices.captura_modelos import (
     parsear_matriz_modelo, validar_nombres,
 )
-from src.backend.resolutores.operaciones_matrices.transformaciones import ResolutorTransformacionesLineales
+from src.backend.resolutores.operaciones_matrices.transformaciones.transformaciones import ResolutorTransformacionesLineales
 from src.frontend.controladores.utilidades import parsear_carga_json
 
 

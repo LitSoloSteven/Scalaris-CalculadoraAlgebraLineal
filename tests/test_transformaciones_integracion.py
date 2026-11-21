@@ -4,7 +4,7 @@ from fractions import Fraction
 
 from src.backend.excepciones import ErrorDiscrepanciaDimension
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices.transformaciones import ResolutorTransformacionesLineales
+from src.backend.resolutores.operaciones_matrices.transformaciones.transformaciones import ResolutorTransformacionesLineales
 
 
 @pytest.fixture

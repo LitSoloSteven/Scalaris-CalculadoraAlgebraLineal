@@ -13,7 +13,7 @@ from src.backend.resolutores.operaciones_matrices.leontief.leontief import (
 from src.backend.resolutores.operaciones_matrices.expresiones.operaciones import (
     ResolutorOperacionesMatrices,
 )
-from src.backend.resolutores.operaciones_matrices.transformaciones import (
+from src.backend.resolutores.operaciones_matrices.transformaciones.transformaciones import (
     ResolutorTransformacionesLineales,
 )
 

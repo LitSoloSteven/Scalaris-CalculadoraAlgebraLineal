@@ -3,7 +3,7 @@ import pytest
 from fractions import Fraction
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices.aplicacion_transformacion import (
+from src.backend.resolutores.operaciones_matrices.transformaciones.aplicacion_transformacion import (
     matriz_rotacion,
     matriz_reflexion,
     matriz_escala,

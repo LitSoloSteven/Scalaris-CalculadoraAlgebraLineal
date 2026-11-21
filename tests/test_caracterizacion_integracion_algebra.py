@@ -6,7 +6,7 @@ import pytest
 
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_matrices.determinante.determinante import ResolutorDeterminante
-from src.backend.resolutores.operaciones_matrices.transformaciones import ResolutorTransformacionesLineales
+from src.backend.resolutores.operaciones_matrices.transformaciones.transformaciones import ResolutorTransformacionesLineales
 from src.backend.resolutores.sistemas_lineales.eliminacion.gauss import ResolutorGauss
 from src.backend.resolutores.sistemas_lineales.eliminacion.gauss_jordan import ResolutorGaussJordan
 from src.backend.utilidades.validacion.verificacion import verificar_solucion

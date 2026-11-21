@@ -5,7 +5,7 @@ from unittest.mock import patch
 import pytest
 
 from src.backend.constantes import DIMENSION_MAXIMA_MODELOS, LONGITUD_MAXIMA_CADENA_NUMERO
-from src.backend.resolutores.operaciones_matrices.transformaciones import ResolutorTransformacionesLineales
+from src.backend.resolutores.operaciones_matrices.transformaciones.transformaciones import ResolutorTransformacionesLineales
 from src.frontend.controladores.operaciones_matrices.controlador_aplicacion_transformacion import (
     ControladorAplicacionTransformacion,
 )
