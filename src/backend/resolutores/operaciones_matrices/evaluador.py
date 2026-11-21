@@ -41,9 +41,9 @@ _OPERACIONES_ESCALARES = {"+": add, "-": sub, "*": mul, "/": truediv}
 _ERROR_DIVISION_CERO = "No se puede dividir entre cero."
 
 
-def _apilar_escalar(pila: list[_Operandos], valor: Fraction) -> None:
+def _apilar_escalar(pila: list[_Operandos], valor: Fraction, literal: str | None = None) -> None:
     validar_magnitud(valor)
-    pila.append((numero_a_latex(valor), valor))
+    pila.append((literal or numero_a_latex(valor), valor))
 
 
 def _operar_escalares(token: str, izquierda: Fraction, derecha: Fraction) -> Fraction:
@@ -250,7 +250,8 @@ class EvaluadorExpresionesMatriciales:
     ) -> int:
         """Procesa un token individual en el recorrido RPN y actualiza la pila."""
         if es_numero(token):
-            _apilar_escalar(pila, fraccion_desde_texto(token))
+            literal = token if token[-1].isdecimal() else None
+            _apilar_escalar(pila, fraccion_desde_texto(token), literal)
             return contador
         if es_nombre_matriz(token):
             if token not in diccionario_matrices:

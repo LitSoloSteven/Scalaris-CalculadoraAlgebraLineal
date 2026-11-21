@@ -53,8 +53,8 @@ def tokenizar_expresion(expresion: str) -> list[str]:
     limpia = "".join(expresion.split()).translate(_TRADUCCION)
     limpia = limpia.replace("^T", "ᵀ").replace("^t", "ᵀ")
     brutos = _PATRON.findall(limpia)
-    if "".join(brutos) != limpia:
-        raise ValueError("La expresión contiene caracteres no soportados.")
+    if "/" in expresion or "".join(brutos) != limpia:
+        raise ValueError("La expresión contiene caracteres no soportados (p. ej. '/').")
 
     tokens = []
     espera_operando = True
@@ -110,9 +110,9 @@ def convertir_a_rpn(tokens: list[str]) -> list[str]:
         else:
             raise ValueError(_ERROR_SINTAXIS)
 
-    if espera_operando:
-        raise ValueError(_ERROR_SINTAXIS)
     _vaciar_operadores(pila, salida)
     if pila:
         raise ValueError("Error de sintaxis: Paréntesis desbalanceados.")
+    if espera_operando:
+        raise ValueError(_ERROR_SINTAXIS)
     return salida

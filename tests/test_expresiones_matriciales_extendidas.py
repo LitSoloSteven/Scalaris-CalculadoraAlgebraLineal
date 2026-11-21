@@ -22,9 +22,9 @@ def matrices() -> dict[str, Matriz]:
     }
 
 
-@pytest.mark.parametrize("signo", ["/", "÷", "⁄", "∕"])
+@pytest.mark.parametrize("signo", ["÷", "⁄", "∕"])
 def test_division_escalar_exacta(matrices, signo):
-    """Las cuatro barras equivalentes conservan fracciones y pasos por celda."""
+    """Los tres signos de división conservan fracciones y pasos por celda."""
     respuesta = modulo_evaluador.EvaluadorExpresionesMatriciales().evaluar(f"A{signo}−(1+2)", matrices)
     assert respuesta["estado"] == "EXITO"
     assert respuesta["matriz_resultado"].datos == [[Fraction(-2, 3), Fraction(-1, 3)], [0, Fraction(-2, 3)]]
@@ -86,6 +86,7 @@ def test_operaciones_con_segmento(matrices, expresion, esperado, tipo, simbolo):
 @pytest.mark.parametrize(("expresion", "mensaje"), [
     ("A÷0", "cero"), ("A∕A", "divisor"), ("2⁄A", "divisor"),
     ("C⁻¹", "singular"), ("B⁰", "cuadrada"), ("2⊕A", "dos matrices"),
+    ("A/2", "caracteres no soportados"),
     ("⊗A", "mal formada"), ("A÷", "mal formada"), ("(A⊕B", "desbalanceados"),
     ("A¹⁰⁰", "operaciones"), ("(999999999⁹)⁹⁹", "operaciones"),
     ("((999999999⁹)⁹)⁹A", "grandes"),
