@@ -6,10 +6,10 @@ from src.backend.constantes import ERROR, EXITO
 from src.backend.excepciones import ErrorVectorInvalido
 from src.backend.modelos.matriz import Matriz, Numerico
 from src.backend.modelos.operaciones.calculo_matricial import operar_celda
-from src.backend.resolutores.operaciones_vectores.base import (
+from src.backend.resolutores.operaciones_vectores.base.base import (
     _BaseResolutorVectores,
 )
-from src.backend.resolutores.operaciones_vectores.formateadores import (
+from src.backend.resolutores.operaciones_vectores.base.formateadores import (
     formatear_vector_latex,
     vector_a_latex,
 )

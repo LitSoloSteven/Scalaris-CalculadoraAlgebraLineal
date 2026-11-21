@@ -15,8 +15,8 @@ MODULOS = {
     "evaluador": ("operaciones_matrices.evaluador", "EvaluadorExpresionesMatriciales"),
     "leontief": ("operaciones_matrices.leontief", "ResolutorModeloLeontief"),
     "transformaciones": ("operaciones_matrices.transformaciones", "ResolutorTransformacionesLineales"),
-    "vectores": ("operaciones_vectores.operaciones", "ResolutorOperacionesVectores"),
-    "combinacion": ("operaciones_vectores.combinacion_lineal", "ResolutorCombinacionLineal"),
+    "vectores": ("operaciones_vectores.operaciones.operaciones", "ResolutorOperacionesVectores"),
+    "combinacion": ("operaciones_vectores.operaciones.combinacion_lineal", "ResolutorCombinacionLineal"),
     "romanos": ("sistemas_numericos.calculadora_romana", "CalculadoraRomana"),
     "bases": ("sistemas_numericos.conversor_bases", "ConversorBases"),
 }

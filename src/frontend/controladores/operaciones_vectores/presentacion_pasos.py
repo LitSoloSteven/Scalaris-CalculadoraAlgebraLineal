@@ -1,5 +1,5 @@
 """Preparación de tablas de pasos vectoriales desde el contrato serializado."""
-from src.backend.resolutores.operaciones_vectores.captura_resultados import reconstruir_matriz_resultado
+from src.backend.resolutores.operaciones_vectores.base.captura_resultados import reconstruir_matriz_resultado
 from src.frontend.componentes.reproductor_pasos.html_tablas import html_tabla_aumentada
 
 

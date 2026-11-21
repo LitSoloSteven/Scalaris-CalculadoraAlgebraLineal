@@ -6,9 +6,9 @@ from fractions import Fraction
 import pytest
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_vectores.captura import construir_vector_desde_diccionario
-from src.backend.resolutores.operaciones_vectores.combinacion_lineal import ResolutorCombinacionLineal
-from src.backend.resolutores.operaciones_vectores.operaciones import ResolutorOperacionesVectores
+from src.backend.resolutores.operaciones_vectores.base.captura import construir_vector_desde_diccionario
+from src.backend.resolutores.operaciones_vectores.operaciones.combinacion_lineal import ResolutorCombinacionLineal
+from src.backend.resolutores.operaciones_vectores.operaciones.operaciones import ResolutorOperacionesVectores
 from src.frontend.controladores.operaciones_vectores.captura import capturar_vectores, preparar_transferencia
 from src.frontend.controladores.operaciones_vectores.controlador_operaciones_vectores import ControladorOperacionesVectores
 from src.frontend.controladores.operaciones_vectores.presentacion_pasos import construir_tabla_paso_vectorial

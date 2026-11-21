@@ -1,6 +1,6 @@
 """Preparación del ejemplo canónico de combinación lineal de Lay."""
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_vectores.combinacion_lineal import ResolutorCombinacionLineal
+from src.backend.resolutores.operaciones_vectores.operaciones.combinacion_lineal import ResolutorCombinacionLineal
 
 
 def preparar_combinacion_canonica():

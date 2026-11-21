@@ -1,7 +1,7 @@
 """Captura acotada de familias vectoriales para el analisis de independencia."""
 from src.backend.constantes import DIMENSION_MAXIMA_VECTORES
 from src.backend.modelos.matriz import Matriz
-from .captura import construir_vector_desde_diccionario
+from src.backend.resolutores.operaciones_vectores.base.captura import construir_vector_desde_diccionario
 from .independencia import validar_cantidad_vectores
 
 

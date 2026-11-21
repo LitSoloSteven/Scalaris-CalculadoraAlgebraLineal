@@ -8,7 +8,7 @@ from fractions import Fraction
 import pytest
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_vectores.operaciones import ResolutorOperacionesVectores
+from src.backend.resolutores.operaciones_vectores.operaciones.operaciones import ResolutorOperacionesVectores
 from src.frontend.controladores.operaciones_vectores import (
     ControladorOperacionesVectores,
 )

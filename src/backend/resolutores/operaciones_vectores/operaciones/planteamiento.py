@@ -5,7 +5,7 @@ from fractions import Fraction
 from src.backend.modelos.matriz import Matriz
 from src.backend.modelos.operaciones.construcciones import matriz_de_columnas
 from src.backend.resolutores.operaciones_matrices.comprobacion_productos import comprobar_producto
-from src.backend.resolutores.operaciones_vectores.formateadores import (
+from src.backend.resolutores.operaciones_vectores.base.formateadores import (
     formatear_combinacion_lineal_vector,
     formatear_componente_escalar,
     formatear_expresion_lineal,

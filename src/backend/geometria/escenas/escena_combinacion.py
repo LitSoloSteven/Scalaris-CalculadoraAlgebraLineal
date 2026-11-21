@@ -8,8 +8,8 @@ from src.backend.geometria.base.coordenadas import a_flotante_seguro
 from src.backend.geometria.base.errores import respuesta_error
 from src.backend.geometria.base.recorte import calcular_rango_automatico
 from src.backend.geometria.preparacion.transferencia import LIMITES_VECTORES_ESCENA
-from src.backend.resolutores.operaciones_vectores.captura import construir_vector_desde_diccionario
-from src.backend.resolutores.operaciones_vectores.combinacion_lineal import ResolutorCombinacionLineal
+from src.backend.resolutores.operaciones_vectores.base.captura import construir_vector_desde_diccionario
+from src.backend.resolutores.operaciones_vectores.operaciones.combinacion_lineal import ResolutorCombinacionLineal
 
 
 def _parsear_vector(entrada, nombre):

@@ -15,13 +15,13 @@ from src.backend.modelos.matriz import Matriz
 from src.backend.modelos.operaciones.construcciones import matriz_de_columnas
 from src.backend.resolutores.sistemas_lineales.comprobacion_sistemas import comprobar_familia
 from src.backend.resolutores.operaciones_matrices.comprobacion_productos import crear_paso_analisis
-from src.backend.resolutores.operaciones_vectores.base import (
+from src.backend.resolutores.operaciones_vectores.base.base import (
     _BaseResolutorVectores,
 )
-from src.backend.resolutores.operaciones_vectores.formateadores import (
+from src.backend.resolutores.operaciones_vectores.base.formateadores import (
     matriz_aumentada_gauss_a_latex,
 )
-from src.backend.resolutores.operaciones_vectores.planteamiento import (
+from src.backend.resolutores.operaciones_vectores.operaciones.planteamiento import (
     construir_paso_comprobacion,
     construir_pasos_planteamiento,
 )

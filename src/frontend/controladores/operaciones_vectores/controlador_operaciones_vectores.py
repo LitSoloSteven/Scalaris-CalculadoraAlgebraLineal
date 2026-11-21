@@ -5,13 +5,13 @@ import logging
 from src.backend.excepciones import AlgebraLinealError
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_matrices.formateadores import matriz_a_latex
-from src.backend.resolutores.operaciones_vectores.combinacion_lineal import (
+from src.backend.resolutores.operaciones_vectores.operaciones.combinacion_lineal import (
     ResolutorCombinacionLineal,
 )
-from src.backend.resolutores.operaciones_vectores.captura import (
+from src.backend.resolutores.operaciones_vectores.base.captura import (
     construir_vector_desde_diccionario, parsear_escalar_capturado, validar_carga_vectorial,
 )
-from src.backend.resolutores.operaciones_vectores.operaciones import (
+from src.backend.resolutores.operaciones_vectores.operaciones.operaciones import (
     ResolutorOperacionesVectores,
 )
 from src.frontend.controladores.agrupador_pasos import agrupar_pasos_eliminacion

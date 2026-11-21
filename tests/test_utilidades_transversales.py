@@ -11,7 +11,7 @@ from nicegui import ui
 from src.ai.respuestas.clasificador_respuestas import ContextoIntento, clasificar_error_http
 from src.ai.huellas import calcular_huella
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_vectores.formateadores import (
+from src.backend.resolutores.operaciones_vectores.base.formateadores import (
     formatear_combinacion_lineal_vector, formatear_expresion_lineal,
 )
 from src.frontend.componentes.avisos_resultado import mostrar_error_inesperado

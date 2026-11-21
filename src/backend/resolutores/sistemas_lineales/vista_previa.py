@@ -5,7 +5,7 @@ from fractions import Fraction
 import re
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_vectores.formateadores import (
+from src.backend.resolutores.operaciones_vectores.base.formateadores import (
     matriz_aumentada_gauss_a_latex,
     formatear_expresion_lineal,
 )

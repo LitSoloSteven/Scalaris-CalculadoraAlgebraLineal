@@ -1,7 +1,7 @@
 """Producto escalar de vectores, precisión y trazabilidad."""
 from fractions import Fraction
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_vectores.operaciones import ResolutorOperacionesVectores
+from src.backend.resolutores.operaciones_vectores.operaciones.operaciones import ResolutorOperacionesVectores
 
 
 def test_producto_escalar_columna():
