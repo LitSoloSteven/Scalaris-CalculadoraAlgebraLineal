@@ -5,6 +5,7 @@
     const revelado = window.scalaris.reveladoCircular;
     const clave = 'scalaris:origen-navegacion';
     const claveTeclado = 'scalaris:navegacion-teclado';
+    const vigenciaRegistro = 8000;
     const preferencia = window.matchMedia('(prefers-reduced-motion: reduce)');
     let intencion = null;
     let activa = null;
@@ -13,7 +14,7 @@
         try {
             const registro = JSON.parse(sessionStorage.getItem(claveTeclado));
             sessionStorage.removeItem(claveTeclado);
-            if (registro?.destino === window.location.href && Date.now() - registro.instante < 8000) {
+            if (registro?.destino === window.location.href && instanteVigente(registro.instante)) {
                 raiz.setAttribute('data-entrada', 'teclado');
             }
         } catch (_) { /* La navegación no depende del almacenamiento. */ }
@@ -55,19 +56,17 @@
         if (url.origin !== window.location.origin) return null;
         const actual = new URL(window.location.href);
         if (url.pathname === actual.pathname && url.search === actual.search) return null;
-        return { enlace, url };
+        return url;
     }
 
     function registrarEnlace(evento) {
         intencion = null;
         const destino = destinoInterno(evento);
         if (!destino) return;
-        registrarTeclado(evento, destino.url);
-        const origen = evento.detail === 0 ? revelado.centroDe(destino.enlace) :
-            { x: evento.clientX, y: evento.clientY };
+        registrarTeclado(evento, destino);
         intencion = {
-            evento, destino: destino.url.href, instante: Date.now(),
-            ...origen,
+            evento, destino: destino.href, instante: Date.now(),
+            x: evento.clientX, y: evento.clientY,
         };
     }
 
@@ -76,6 +75,7 @@
         const activacion = evento.activation;
         const elegida = intencion;
         intencion = null;
+        cancelarTransicion();
         if (!evento.viewTransition) return;
         if (omitirMovimiento(elegida)) {
             evento.viewTransition.skipTransition();
@@ -84,7 +84,7 @@
         prepararTransicion(evento.viewTransition);
         if (!elegida || elegida.evento.defaultPrevented || !activacion) return;
         if (!['push', 'replace'].includes(activacion.navigationType)) return;
-        if (activacion.entry.url !== elegida.destino || Date.now() - elegida.instante > 8000) return;
+        if (activacion.entry.url !== elegida.destino || !instanteVigente(elegida.instante)) return;
         try {
             // La entrada nueva puede tener una clave provisional en pageswap.
             sessionStorage.setItem(clave, JSON.stringify({
@@ -95,7 +95,7 @@
     }
 
     function omitirMovimiento(elegida) {
-        return preferencia.matches || elegida?.evento.detail === 0 ||
+        return !revelado || preferencia.matches || elegida?.evento.detail === 0 ||
             window.scalaris.presentacion?.activa || !window.scalaris.movimiento.permitido();
     }
 
@@ -107,12 +107,14 @@
         raiz.removeAttribute('data-navegacion-circular');
     }
 
-    function prepararTransicion(transicion) {
-        if (activa) {
-            activa.transicion.skipTransition();
-            limpiar(activa);
-        }
-        const estado = { transicion, animacion: null, cancelarEspera: null };
+    function cancelarTransicion(estado = activa) {
+        if (!estado || activa !== estado) return;
+        estado.transicion.skipTransition();
+        limpiar(estado);
+    }
+
+    function prepararTransicion(transicion, entrada = false) {
+        const estado = { transicion, entrada, animacion: null, cancelarEspera: null };
         activa = estado;
         raiz.setAttribute('data-navegacion-circular', '');
         transicion.finished.then(() => limpiar(estado), () => limpiar(estado));
@@ -120,10 +122,14 @@
         return estado;
     }
 
+    function instanteVigente(instante) {
+        if (!Number.isFinite(instante)) return false;
+        const antiguedad = Date.now() - instante;
+        return antiguedad >= 0 && antiguedad < vigenciaRegistro;
+    }
+
     function registroVigente(registro, activacion) {
-        if (!registro || !registro.salida) return false;
-        const antiguedad = Date.now() - registro.instante;
-        if (antiguedad < 0 || antiguedad >= 8000) return false;
+        if (!registro?.salida || !instanteVigente(registro.instante)) return false;
         return registro.destino === window.location.href && registro.salida === activacion?.from?.key;
     }
 
@@ -138,8 +144,8 @@
     function animarEntrada(estado, origen) {
         if (activa !== estado) return;
         estado.animacion = revelado.animarCaptura(raiz, origen, { fill: 'both' });
+        estado.animacion.finished.catch(() => cancelarTransicion(estado));
         estado.animacion.pause();
-        estado.animacion.finished.catch(() => {});
         esperarContenido(estado);
     }
 
@@ -161,15 +167,16 @@
             cancelAnimationFrame(fotograma);
         };
         function terminar() {
+            if (activa !== estado || !estado.cancelarEspera) return;
             estado.cancelarEspera();
             estado.cancelarEspera = null;
-            if (activa === estado) {
+            try {
                 window.scalaris.sonido?.reproducir('entrada');
                 estado.animacion.play();
-            }
+            } catch (_) { cancelarTransicion(estado); }
         }
         function comprobar() {
-            if (!contenidoMontado()) return;
+            if (fotograma !== undefined || !contenidoMontado()) return;
             observador.disconnect();
             fotograma = requestAnimationFrame(() => {
                 fotograma = requestAnimationFrame(terminar);
@@ -182,31 +189,26 @@
     function revelarPagina(evento) {
         const registro = consumirOrigen();
         intencion = null;
-        if (activa) {
-            activa.transicion.skipTransition();
-            limpiar(activa);
-        }
+        cancelarTransicion();
         if (!evento.viewTransition) return;
         if (omitirMovimiento() || typeof raiz.animate !== 'function') {
             evento.viewTransition.skipTransition();
             return;
         }
-        const estado = prepararTransicion(evento.viewTransition);
+        const estado = prepararTransicion(evento.viewTransition, true);
         raiz.setAttribute('data-vista-revelada', '');
         const origen = obtenerOrigen(registro);
-        estado.transicion.ready.then(() => animarEntrada(estado, origen)).catch(() => {
-            estado.transicion.skipTransition();
-            limpiar(estado);
-        });
+        estado.transicion.ready.then(() => animarEntrada(estado, origen)).catch(() => cancelarTransicion(estado));
     }
 
     recuperarTeclado();
     document.addEventListener('click', registrarEnlace);
     window.addEventListener('pageswap', guardarSalida);
     window.addEventListener('pagereveal', revelarPagina);
+    window.addEventListener('pagehide', () => {
+        if (activa?.entrada) cancelarTransicion();
+    });
     preferencia.addEventListener('change', () => {
-        if (!preferencia.matches || !activa) return;
-        activa.transicion.skipTransition();
-        limpiar(activa);
+        if (preferencia.matches) cancelarTransicion();
     });
 }

@@ -37,7 +37,7 @@ function crearRaiz(atributos, animaciones) {
 }
 
 /** Simula documentos independientes compartiendo únicamente el almacenamiento de sesión. */
-function crearCliente(almacen = new Map(), url = DESTINO) {
+function crearCliente(almacen = new Map(), url = DESTINO, { sinRevelado = false } = {}) {
     const eventos = new Map(), clics = new Map(), atributos = new Map();
     const animaciones = [], cuadros = new Map(), temporizadores = new Map(), observadores = [];
     let secuencia = 0;
@@ -71,7 +71,7 @@ function crearCliente(almacen = new Map(), url = DESTINO) {
         cancelAnimationFrame: id => cuadros.delete(id),
     });
     cargarAssetCliente('interacciones_globales.js', contexto);
-    cargarAssetCliente('revelado_circular.js', contexto);
+    if (!sinRevelado) cargarAssetCliente('revelado_circular.js', contexto);
     cargarAssetCliente('navegacion_circular.js', contexto);
     return { eventos, clics, atributos, animaciones, cuadros, temporizadores, observadores,
         preferencia, ventana, documento, contexto, raiz, almacen };
