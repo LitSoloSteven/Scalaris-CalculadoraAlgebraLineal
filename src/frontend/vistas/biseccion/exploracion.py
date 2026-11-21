@@ -10,8 +10,8 @@ from src.frontend.controladores.biseccion.exploracion import (
 )
 from src.frontend.controladores.captura_exploratoria_raices import capturar_exploracion, intervalo_seleccionable
 from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
-from src.frontend.componentes.exploracion_raices import ESTADO_INICIAL, MontajeExploracion, construir_exploracion
-from src.frontend.componentes.paso_exploracion_raices import PasoExploracion
+from src.frontend.componentes.raices.exploracion.exploracion_raices import ESTADO_INICIAL, MontajeExploracion, construir_exploracion
+from src.frontend.componentes.raices.exploracion.paso_exploracion_raices import PasoExploracion
 from .acciones_captura import desplegable
 from .candidatos import mostrar_candidatos
 from .modos_captura import MODO_BUSQUEDA

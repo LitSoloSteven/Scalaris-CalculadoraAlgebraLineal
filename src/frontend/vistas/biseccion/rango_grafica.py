@@ -1,8 +1,8 @@
 """Controles del rango visual independiente de los extremos del método."""
 from nicegui import ui
 
-from src.frontend.componentes.captura_exploracion_raices import campos_rango as campos_rango_raices
-from src.frontend.componentes.sincronizacion_rango_raices import sincronizar_rango as sincronizar_paneles
+from src.frontend.componentes.raices.exploracion.captura_exploracion_raices import campos_rango as campos_rango_raices
+from src.frontend.componentes.raices.exploracion.sincronizacion_rango_raices import sincronizar_rango as sincronizar_paneles
 from .estado_captura import transaccion
 
 

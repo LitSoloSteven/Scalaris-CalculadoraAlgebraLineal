@@ -16,7 +16,7 @@ _MODULOS = (
     "controladores/biseccion/vista_previa.py", "controladores/regla_falsa/presentacion_grafica.py",
     "controladores/regla_falsa/formulas_procedimiento.py", "componentes/raices/captura/previa_expresion_raices.py",
     "componentes/raices/captura/borrador_intervalo_raices.py", "componentes/figura_funcion_real.py",
-    "componentes/colores_figuras.py", "componentes/sincronizacion_rango_raices.py",
+    "componentes/colores_figuras.py", "componentes/raices/exploracion/sincronizacion_rango_raices.py",
     "controladores/rango_exploracion_raices.py", "vistas/geometria/_colores_figuras.py",
     "vistas/biseccion/rango_grafica.py", "vistas/biseccion/vista_previa.py",
     "vistas/biseccion/previa_expresion.py", "vistas/biseccion/seleccion_grafico.py", "vistas/biseccion/figura.py",

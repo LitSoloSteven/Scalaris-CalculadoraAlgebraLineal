@@ -7,7 +7,7 @@ from tests import test_cumplimiento_reglas as reglas
 _RUTAS = (
     "componentes/raices/captura/modos_captura_raices.py", "controladores/captura_exploratoria_raices.py",
     "vistas/biseccion/modos_captura.py",
-    "componentes/paso_exploracion_raices.py", "componentes/exploracion_raices.py",
+    "componentes/raices/exploracion/paso_exploracion_raices.py", "componentes/raices/exploracion/exploracion_raices.py",
     "vistas/biseccion/exploracion.py", "vistas/regla_falsa/modos_captura.py",
     "vistas/regla_falsa/seleccion_candidato.py", "vistas/regla_falsa/exploracion.py",
     "vistas/regla_falsa/captura.py", "vistas/regla_falsa/composicion.py",

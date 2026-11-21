@@ -7,8 +7,8 @@ from tests.comun import RAIZ
 from tests import test_cumplimiento_reglas as reglas
 
 _COMPARTIDOS = (
-    "componentes/candidatos_raices.py", "componentes/captura_exploracion_raices.py",
-    "componentes/exploracion_raices.py", "controladores/coordinacion_trabajos_raices.py",
+    "componentes/raices/exploracion/candidatos_raices.py", "componentes/raices/exploracion/captura_exploracion_raices.py",
+    "componentes/raices/exploracion/exploracion_raices.py", "controladores/coordinacion_trabajos_raices.py",
     "controladores/exploracion_raices.py", "controladores/formato_numerico_raices.py",
     "controladores/rango_exploracion_raices.py",
 )

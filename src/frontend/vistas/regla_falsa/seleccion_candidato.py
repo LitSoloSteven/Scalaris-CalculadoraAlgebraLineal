@@ -1,5 +1,5 @@
 """Carga explícita de intervalos pertenecientes a la exploración vigente."""
-from src.frontend.componentes.candidatos_raices import PresentacionCandidatos, mostrar_candidatos
+from src.frontend.componentes.raices.exploracion.candidatos_raices import PresentacionCandidatos, mostrar_candidatos
 from src.frontend.controladores.captura_exploratoria_raices import intervalo_seleccionable
 
 _PRESENTACION = PresentacionCandidatos(

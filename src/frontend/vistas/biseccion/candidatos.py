@@ -1,5 +1,5 @@
 """Presentación compatible de candidatos para el panel de bisección."""
-from src.frontend.componentes.candidatos_raices import (
+from src.frontend.componentes.raices.exploracion.candidatos_raices import (
     PresentacionCandidatos, mostrar_candidatos as mostrar_candidatos_raices,
 )
 
