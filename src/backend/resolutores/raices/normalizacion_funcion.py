@@ -36,6 +36,8 @@ def normalizar_expresion(expresion: str) -> str:
             envolver_postfijo(partes, actual.string)
             anterior = actual._replace(type=tokenize.OP, string=")")
             continue
+        if actual.string == ")" and anterior is not None and anterior.string == ",":
+            raise ValueError("Escribe un argumento después de la última coma.")
         if anterior is not None and _requiere_producto(anterior, actual):
             partes.append("*")
         elif anterior is not None and _requiere_espacio(anterior, actual):
@@ -50,7 +52,7 @@ def normalizar_expresion(expresion: str) -> str:
 def _explicitar_potencia(grupo: re.Match[str]) -> str:
     exponente = grupo[0].translate(_SUPERINDICES)
     resto = grupo.string[grupo.end():].lstrip()
-    return f"**({exponente})" if resto[:1] in ("′", "″") else "**" + exponente
+    return f"**({exponente})" if resto[:1] in POSTFIJOS else "**" + exponente
 
 
 def _comprobar_longitud(expresion: str) -> None:

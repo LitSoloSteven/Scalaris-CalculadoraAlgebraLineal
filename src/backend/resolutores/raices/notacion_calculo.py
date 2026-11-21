@@ -31,11 +31,21 @@ def entero_literal(nodo: ast.AST) -> int:
 def envolver_postfijo(partes: list[str], simbolo: str) -> None:
     """Reemplaza el operando previo por una llamada; rechaza un postfijo sin operando."""
     inicio = _inicio_atomo(partes, len(partes) - 1)
-    if simbolo in ("′", "″"):
-        while inicio > 0 and partes[inicio - 1] == "**":
-            inicio = _inicio_atomo(partes, inicio - 2)
+    potencia = _operador_potencia_anterior(partes, inicio)
+    while potencia is not None:
+        inicio = _inicio_atomo(partes, potencia - 1)
+        potencia = _operador_potencia_anterior(partes, inicio)
     partes.insert(inicio, POSTFIJOS[simbolo] + "(")
     partes.append(")")
+
+
+def _operador_potencia_anterior(partes: list[str], inicio: int) -> int | None:
+    anterior = inicio - 1
+    if anterior >= 0 and partes[anterior] in ("+", "-"):
+        anterior -= 1
+    if anterior >= 0 and partes[anterior] == " ":
+        anterior -= 1
+    return anterior if anterior >= 0 and partes[anterior] == "**" else None
 
 
 def _inicio_atomo(partes: list[str], fin: int) -> int:

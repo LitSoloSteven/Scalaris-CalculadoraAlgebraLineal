@@ -9,6 +9,7 @@ from .errores_numericos import ErrorCapacidadNumerica
 from .expansion_calculo import desarrollar_calculo
 from .normalizacion_funcion import normalizar_expresion
 from .notacion_calculo import AGREGADOS, DERIVADAS, MAXIMO_TERMINOS_AGREGADO, NOMBRES_ANGULARES, POSTFIJOS, entero_literal
+from .unidades_angulares import validar_unidad_angular
 
 FUNCIONES_REALES = {"sin": math.sin, "cos": math.cos, "tan": math.tan, "exp": math.exp,
                    "log": math.log, "ln": math.log, "log10": math.log10, "log2": math.log2,
@@ -20,6 +21,7 @@ MAXIMO_NODOS_EXPRESION = 256
 MAXIMA_PROFUNDIDAD_EXPRESION = 32
 _OPERADORES = (ast.Add, ast.Sub, ast.Mult, ast.Div, ast.Pow)
 _AGREGADOS = frozenset(AGREGADOS.values())
+_CALCULO = _AGREGADOS | frozenset(POSTFIJOS.values())
 _FUNCIONES_UNARIAS = frozenset((*FUNCIONES_REALES, *NOMBRES_ANGULARES, *POSTFIJOS.values()))
 _VARIABLE_INDEPENDIENTE = frozenset({"x"})
 
@@ -29,10 +31,13 @@ def analizar_expresion(
     unidad_angular: str = "radianes",
 ) -> ast.Expression:
     """Devuelve AST validado para evaluar o proyectar; lanza ValueError/ErrorNoFinito."""
+    unidad = validar_unidad_angular(unidad_angular)
     arbol = _leer_expresion(expresion)
     variables = frozenset() if solo_constantes else _VARIABLE_INDEPENDIENTE
     _validar_arbol(arbol, variables)
-    desarrollado = desarrollar_calculo(arbol, MAXIMO_NODOS_EXPRESION, unidad_angular)
+    if not any(isinstance(nodo, ast.Call) and nodo.func.id in _CALCULO for nodo in ast.walk(arbol)):
+        return arbol
+    desarrollado = desarrollar_calculo(arbol, MAXIMO_NODOS_EXPRESION, unidad)
     _validar_arbol(desarrollado, variables)
     return arbol if conservar_calculo else desarrollado
 
