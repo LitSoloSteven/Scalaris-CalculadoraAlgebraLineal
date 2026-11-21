@@ -1,8 +1,8 @@
 """Construcción y redimensión de entradas de coeficientes y términos independientes."""
 from typing import Any
 from nicegui import ui
-from .cuadricula_base import propiedades_celda_accesible
-from .redimension_rectangular import actualizar_rectangulo
+from .captura.nucleo.cuadricula_base import propiedades_celda_accesible
+from .captura.nucleo.redimension_rectangular import actualizar_rectangulo
 
 
 def crear_coeficiente(cuadricula: Any, fila: int, columna: int) -> ui.input:

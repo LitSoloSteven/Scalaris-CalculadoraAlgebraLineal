@@ -1,7 +1,7 @@
 """Construcción de filas y celdas de las matrices con nombre."""
 from typing import Any
 from nicegui import ui
-from .cuadricula_base import propiedades_celda_accesible
+from .captura.nucleo.cuadricula_base import propiedades_celda_accesible
 
 
 def crear_celda_matriz(panel: Any, nombre: str, coordenada: tuple[int, int]) -> ui.input:

@@ -2,7 +2,7 @@
 from nicegui import ui
 from src.backend.constantes import DIMENSION_MAXIMA_MODELOS, DIMENSION_MINIMA_LEONTIEF
 from functools import partial
-from src.frontend.componentes.cuadricula_base import (
+from src.frontend.componentes.captura.nucleo.cuadricula_base import (
     crear_entradas_matriz, ejecutar_transicion_cuadricula, selectores_cambio_dimension,
     selector_dimension_matriz, actualizar_estados_botones_dimension,
     indice_cambio_dimension,

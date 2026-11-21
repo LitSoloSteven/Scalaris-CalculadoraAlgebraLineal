@@ -8,7 +8,7 @@ from typing import Callable
 from nicegui import ui
 from src.frontend.componentes.aplicacion.base.sonido import notificar
 
-from src.frontend.componentes.cuadricula_base import (
+from src.frontend.componentes.captura.nucleo.cuadricula_base import (
     DIMENSION_MINIMA,
     actualizar_estados_botones_dimension,
     cache_matriz_desde_datos,
@@ -19,9 +19,9 @@ from src.frontend.componentes.cuadricula_base import (
 )
 from .redimension_matriz_cuadrada import redimensionar_celdas, actualizar_etiqueta_dimension, DIMENSION_MAXIMA_CELDA_NORMAL
 from .aplicacion.base.tareas import lanzar_tarea
-from .animacion_matriz import animar_redimension_matriz
-from .portapapeles_matricial import parsear_portapapeles_rectangular
-from .carga_numerica import preparar_matriz_numerica
+from .captura.nucleo.animacion_matriz import animar_redimension_matriz
+from .captura.nucleo.portapapeles_matricial import parsear_portapapeles_rectangular
+from .captura.nucleo.carga_numerica import preparar_matriz_numerica
 from src.backend.constantes import DIMENSION_MAXIMA_INVERSA
 
 registro = logging.getLogger(__name__)

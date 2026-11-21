@@ -2,7 +2,7 @@
 from nicegui import ui
 
 from src.frontend.componentes.panel_ia import PanelIA
-from src.frontend.componentes.cuadricula_base import ubicar_celda_matriz
+from src.frontend.componentes.captura.nucleo.cuadricula_base import ubicar_celda_matriz
 from src.frontend.controladores.limpieza_captura import retirar_estado_calculado
 from src.frontend.controladores.sesion_matricial import invalidar_resultado, actualizar_contexto, programar_vista_previa, cancelar_vista_previa
 from src.frontend.controladores.operaciones_matrices.contexto_modelos import obtener_contexto_modelo, obtener_senales_modelo, capturar_modelo, resultado_modelo_vigente

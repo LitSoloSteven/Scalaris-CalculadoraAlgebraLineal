@@ -12,7 +12,7 @@ from src.backend.resolutores.sistemas_lineales.captura.vista_previa import prepa
 from src.backend.resolutores.sistemas_numericos.conversor_bases import ConversorBases
 from src.backend.utilidades.validacion.analizadores import AnalizadorSistema
 from src.backend.utilidades.validacion.reglas_dominio import validar_entrada_base
-from src.frontend.componentes.portapapeles_matricial import filtrar_matriz_numerica
+from src.frontend.componentes.captura.nucleo.portapapeles_matricial import filtrar_matriz_numerica
 from src.frontend.controladores.sistemas_lineales.presentacion_solucion import formatear_elemento_solucion
 
 

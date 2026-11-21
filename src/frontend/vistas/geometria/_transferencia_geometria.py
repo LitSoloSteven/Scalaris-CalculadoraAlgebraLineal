@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from src.backend.geometria.preparacion.transferencia import validar_transferencia_escena
-from src.frontend.componentes.cuadricula_base import DIMENSION_MINIMA, actualizar_estados_botones_dimension
+from src.frontend.componentes.captura.nucleo.cuadricula_base import DIMENSION_MINIMA, actualizar_estados_botones_dimension
 from src.backend.constantes import DIMENSION_MAXIMA_VECTORES
 from src.frontend.componentes.transferencia import (
     ResultadoTransferencia, consumir_sistema, consumir_vectores,

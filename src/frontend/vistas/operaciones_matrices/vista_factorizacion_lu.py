@@ -3,7 +3,7 @@ from nicegui import ui
 
 from src.frontend.nucleo.textos import textos
 from src.frontend.componentes.calculadora import PanelCalculadora
-from src.frontend.componentes.cuadricula_base import ubicar_celda_matriz
+from src.frontend.componentes.captura.nucleo.cuadricula_base import ubicar_celda_matriz
 from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
 from src.frontend.componentes.panel_ia import PanelIA

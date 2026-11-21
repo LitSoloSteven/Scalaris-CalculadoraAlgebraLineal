@@ -7,7 +7,7 @@ from typing import Any, Callable
 from nicegui import ui
 from src.frontend.componentes.aplicacion.base.sonido import notificar
 
-from src.frontend.componentes.cuadricula_base import (
+from src.frontend.componentes.captura.nucleo.cuadricula_base import (
     DIMENSION_MINIMA,
     actualizar_estados_botones_dimension,
     ejecutar_transicion_cuadricula, selectores_cambio_dimension, selector_dimension_matriz, indice_cambio_dimension,
@@ -17,7 +17,7 @@ from src.backend.constantes import DIMENSION_MAXIMA_MATRICES
 from .estado_captura_matrices import (
     MATRICES_PERMANENTES, crear_registro_matriz, asegurar_matrices_permanentes,
 )
-from .redimension_rectangular import actualizar_rectangulo
+from .captura.nucleo.redimension_rectangular import actualizar_rectangulo
 from .redimension_captura_matrices import crear_celda_matriz, crear_fila_matriz
 from .carga_coleccion_matrices import cargar_matriz_a
 

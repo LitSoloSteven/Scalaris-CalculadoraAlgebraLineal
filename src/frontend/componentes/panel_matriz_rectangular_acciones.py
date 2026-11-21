@@ -4,12 +4,12 @@ from nicegui import ui
 from src.frontend.componentes.aplicacion.base.sonido import notificar
 
 from src.backend.constantes import DIMENSION_MAXIMA_MATRICES, DIMENSION_MINIMA
-from src.frontend.componentes.cuadricula_base import (CambioCuadricula, actualizar_estados_botones_dimension,
+from src.frontend.componentes.captura.nucleo.cuadricula_base import (CambioCuadricula, actualizar_estados_botones_dimension,
     ejecutar_transicion_cuadricula, indice_cambio_dimension, purgar_cache_bidimensional,
     selector_dimension_matriz, selectores_cambio_dimension)
-from src.frontend.componentes.animacion_matriz import animar_redimension_matriz
-from src.frontend.componentes.portapapeles_matricial import parsear_portapapeles_rectangular
-from src.frontend.componentes.redimension_rectangular import actualizar_rectangulo
+from src.frontend.componentes.captura.nucleo.animacion_matriz import animar_redimension_matriz
+from src.frontend.componentes.captura.nucleo.portapapeles_matricial import parsear_portapapeles_rectangular
+from src.frontend.componentes.captura.nucleo.redimension_rectangular import actualizar_rectangulo
 from src.frontend.componentes.aplicacion.base.tareas import lanzar_tarea
 from src.frontend.nucleo.textos.textos import CAPTURA_PORTAPAPELES_ERROR, CAPTURA_RECTANGULAR_RECORTADA
 

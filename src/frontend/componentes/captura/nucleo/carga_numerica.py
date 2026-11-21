@@ -1,7 +1,7 @@
 """Saneamiento de matrices externas con aviso único por carga."""
 from src.frontend.componentes.aplicacion.base.sonido import notificar
 
-from src.frontend.componentes.portapapeles_matricial import filtrar_matriz_numerica
+from src.frontend.componentes.captura.nucleo.portapapeles_matricial import filtrar_matriz_numerica
 from src.frontend.nucleo.textos.textos import MENSAJE_ENTRADA_NUMERICA
 
 

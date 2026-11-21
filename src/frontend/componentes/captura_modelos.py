@@ -1,8 +1,8 @@
 """Controles compartidos de captura para modelos matriciales."""
 from typing import Any
 from nicegui import ui
-from .cuadricula_base import propiedades_celda_accesible
-from .carga_numerica import preparar_matriz_numerica
+from .captura.nucleo.cuadricula_base import propiedades_celda_accesible
+from .captura.nucleo.carga_numerica import preparar_matriz_numerica
 
 
 def crear_entradas_vector(contenedor: Any, cantidad: int, identificador: str) -> list[Any]:

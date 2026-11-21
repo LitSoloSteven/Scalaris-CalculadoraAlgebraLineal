@@ -10,7 +10,7 @@ from src.frontend.componentes.calculadora import PanelCalculadora
 from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.navegacion import ruta_de
 from src.frontend.componentes.panel_matriz_cuadrada import PanelMatrizCuadrada
-from src.frontend.componentes.cuadricula_base import ubicar_celda_matriz
+from src.frontend.componentes.captura.nucleo.cuadricula_base import ubicar_celda_matriz
 from src.frontend.vistas.operaciones_inversas.mixin_historial import MixinHistorialOperacionesInversas
 from src.frontend.vistas.operaciones_inversas.mixin_resultados import MixinResultadosOperacionesInversas
 from src.frontend.vistas.operaciones_inversas.mixin_pasos import MixinPasosOperacionesInversas

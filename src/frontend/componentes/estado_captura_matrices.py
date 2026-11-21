@@ -1,8 +1,8 @@
 """Registros de captura y nombres permanentes de la coleccion matricial."""
 from typing import Any
 
-from src.frontend.componentes.cuadricula_base import cache_matriz_desde_datos
-from src.frontend.componentes.carga_numerica import preparar_matriz_numerica
+from src.frontend.componentes.captura.nucleo.cuadricula_base import cache_matriz_desde_datos
+from src.frontend.componentes.captura.nucleo.carga_numerica import preparar_matriz_numerica
 
 MATRICES_PERMANENTES = ("A", "B")
 DIMENSION_INICIAL = 3

@@ -10,7 +10,7 @@ from src.frontend.componentes.panel_ia import PanelIA
 from src.frontend.componentes.panel_matriz_cuadrada import PanelMatrizCuadrada
 from src.frontend.componentes.transferencia import recibir_matriz
 from src.frontend.controladores.operaciones_matrices.contexto_determinante import obtener_contexto_determinante, obtener_senales_determinante
-from src.frontend.componentes.cuadricula_base import ubicar_celda_matriz
+from src.frontend.componentes.captura.nucleo.cuadricula_base import ubicar_celda_matriz
 from src.frontend.controladores.operaciones_matrices.vista_previa_determinante import preparar_presentacion_determinante
 from src.frontend.controladores.sesion_matricial import invalidar_resultado, actualizar_contexto
 from src.frontend.navegacion import ruta_de

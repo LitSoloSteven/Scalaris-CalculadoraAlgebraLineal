@@ -3,7 +3,7 @@ import asyncio
 import pytest
 
 from src.frontend.componentes.panel_matriz_rectangular import PanelMatrizRectangular
-from src.frontend.componentes.portapapeles_matricial import parsear_texto_portapapeles, parsear_portapapeles_rectangular
+from src.frontend.componentes.captura.nucleo.portapapeles_matricial import parsear_texto_portapapeles, parsear_portapapeles_rectangular
 from src.frontend.controladores.operaciones_matrices.controlador_factorizacion_lu import ControladorFactorizacionLU
 from src.frontend.controladores.operaciones_matrices.vista_previa_factorizacion_lu import preparar_presentacion_factorizacion_lu
 from src.frontend.controladores.sesion_matricial import describir_registro
