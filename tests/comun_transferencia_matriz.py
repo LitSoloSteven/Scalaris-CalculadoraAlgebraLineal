@@ -9,7 +9,7 @@ DESTINOS_MATRICIALES = ("sistemas", "inversa", "determinantes", "factorizacion_l
 def preparar_ruta_lu(monkeypatch) -> None:
     """Registra LU en el arnés conservando su ruta y su constructor reales."""
     monkeypatch.setitem(VISTAS_RUTAS, "factorizacion_lu",
-                        ("operaciones_matrices.vista_factorizacion_lu", "VistaFactorizacionLU"))
+                        ("algebra.operaciones_matrices.factorizacion_lu.vista_factorizacion_lu", "VistaFactorizacionLU"))
 
 
 def leer_matriz(vista, herramienta: str) -> list[list[str]]:

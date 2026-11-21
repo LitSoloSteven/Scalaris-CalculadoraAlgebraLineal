@@ -70,7 +70,7 @@ def test_sistemas_recepcion_retira_modo_homogeneo_y_deja_b_vacio(monkeypatch):
 def test_variante_matrices_determinante_propaga_handoff(monkeypatch):
     """La ruta compatible con operacion=determinante no pierde la transferencia."""
     monkeypatch.setitem(VISTAS_RUTAS, "matrices",
-                        ("operaciones_matrices.vista_determinante", "VistaDeterminante"))
+                        ("algebra.operaciones_matrices.determinante.vista_determinante", "VistaDeterminante"))
     token = transferencia.guardar_matriz("inversa", MATRIZ_TRANSFERIDA)
 
     async def comprobar(vista, cliente):

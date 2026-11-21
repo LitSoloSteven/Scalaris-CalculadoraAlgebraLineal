@@ -11,7 +11,7 @@ from tests.test_regla_falsa_registro_publico import comprobar_hoja_versionada
 @pytest.mark.parametrize("navegacion", ["0", "1"])
 def test_ruta_publica_con_cabecera_y_motor_real(monkeypatch, navegacion):
     """La ruta construye controles, enlaces activos y Glosa en ambos modos de navegación."""
-    monkeypatch.setitem(VISTAS_RUTAS, "regla_falsa", ("regla_falsa.pagina", "VistaReglaFalsa"))
+    monkeypatch.setitem(VISTAS_RUTAS, "regla_falsa", ("raices.regla_falsa.pagina", "VistaReglaFalsa"))
     monkeypatch.setenv("SCALARIS_NAV", navegacion)
 
     async def comprobar(vista, cliente):

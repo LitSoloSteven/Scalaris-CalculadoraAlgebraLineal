@@ -21,7 +21,7 @@ def test_navegacion_y_recursos():
 
 def test_sesion_factorizacion(monkeypatch):
     """Monta la ruta real y comprueba cálculo, errores, historial y restauración."""
-    monkeypatch.setitem(VISTAS_RUTAS, 'factorizacion_lu', ('operaciones_matrices.vista_factorizacion_lu', 'VistaFactorizacionLU'))
+    monkeypatch.setitem(VISTAS_RUTAS, 'factorizacion_lu', ('algebra.operaciones_matrices.factorizacion_lu.vista_factorizacion_lu', 'VistaFactorizacionLU'))
 
     async def comprobar(vista, cliente):
         """Ejercita el ciclo de una captura rectangular y una celda inválida."""
@@ -53,7 +53,7 @@ def test_sesion_factorizacion(monkeypatch):
 
 def test_respuesta_obsoleta_no_se_publica(monkeypatch):
     """Descarta un resultado cuando la captura cambia durante el cálculo."""
-    monkeypatch.setitem(VISTAS_RUTAS, 'factorizacion_lu', ('operaciones_matrices.vista_factorizacion_lu', 'VistaFactorizacionLU'))
+    monkeypatch.setitem(VISTAS_RUTAS, 'factorizacion_lu', ('algebra.operaciones_matrices.factorizacion_lu.vista_factorizacion_lu', 'VistaFactorizacionLU'))
 
     async def comprobar(vista, cliente):
         """Simula una edición mientras el trabajador produce el resultado."""

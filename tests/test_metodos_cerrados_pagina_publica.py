@@ -13,9 +13,9 @@ from tests.test_metodos_cerrados_exploracion import _buscar, _resolver_lote
 from tests.test_regla_falsa_registro_publico import comprobar_hoja_versionada
 
 ACCESOS = (
-    ("metodos_cerrados", "biseccion", ("metodos_cerrados.vista_metodos_cerrados", "VistaMetodosCerrados")),
-    ("biseccion", "biseccion", ("metodos_cerrados.vista_metodos_cerrados", "VistaMetodosCerrados")),
-    ("regla_falsa", "regla_falsa", ("regla_falsa.pagina", "VistaReglaFalsa")),
+    ("metodos_cerrados", "biseccion", ("raices.metodos_cerrados.vista_metodos_cerrados", "VistaMetodosCerrados")),
+    ("biseccion", "biseccion", ("raices.metodos_cerrados.vista_metodos_cerrados", "VistaMetodosCerrados")),
+    ("regla_falsa", "regla_falsa", ("raices.regla_falsa.pagina", "VistaReglaFalsa")),
 )
 
 

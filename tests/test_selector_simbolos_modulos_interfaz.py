@@ -63,7 +63,7 @@ def test_campos_de_metodos_abiertos_declaran_perfiles_real_y_entero(monkeypatch)
 def test_campos_de_metodos_cerrados_declaran_perfiles_real_y_entero(monkeypatch):
     """Métodos cerrados asigna perfil real o entero a captura, exploración y lote."""
     monkeypatch.setitem(
-        VISTAS_RUTAS, "metodos_cerrados", ("metodos_cerrados.vista_metodos_cerrados", "VistaMetodosCerrados"),
+        VISTAS_RUTAS, "metodos_cerrados", ("raices.metodos_cerrados.vista_metodos_cerrados", "VistaMetodosCerrados"),
     )
 
     async def _comprobar(vista, cliente):
