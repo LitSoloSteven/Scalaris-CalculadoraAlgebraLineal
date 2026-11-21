@@ -4,7 +4,7 @@ from fractions import Fraction
 
 import pytest
 
-from src.backend.resolutores.sistemas_lineales.contrato_jacobi import (
+from src.backend.resolutores.sistemas_lineales.jacobi.contrato_jacobi import (
     DiagnosticoJacobi,
     PasoJacobi,
     ResultadoJacobi,

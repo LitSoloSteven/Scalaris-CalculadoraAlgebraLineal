@@ -4,8 +4,8 @@ from fractions import Fraction
 import pytest
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.sistemas_lineales.contrato_jacobi import EntradaJacobi
-from src.backend.resolutores.sistemas_lineales.jacobi import (
+from src.backend.resolutores.sistemas_lineales.jacobi.contrato_jacobi import EntradaJacobi
+from src.backend.resolutores.sistemas_lineales.jacobi.jacobi import (
     resolver_jacobi, resolver_jacobi_desde_captura,
 )
 
