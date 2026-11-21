@@ -6,8 +6,8 @@ from types import SimpleNamespace
 from nicegui import ui
 from plotly import graph_objects as go
 
-from src.frontend.componentes.colores_figuras import aplicar_colores_figura
-from src.frontend.componentes.figura_funcion_real import crear_base
+from src.frontend.componentes.raices.graficos.colores_figuras import aplicar_colores_figura
+from src.frontend.componentes.raices.graficos.figura_funcion_real import crear_base
 from src.frontend.nucleo.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
 from src.frontend.controladores.actualizacion_cancelable import cancelar_actualizacion, programar_actualizacion
 from src.frontend.controladores.biseccion.muestreo import separar_intervalo_sospechoso

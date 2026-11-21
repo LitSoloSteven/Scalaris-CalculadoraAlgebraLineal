@@ -7,8 +7,8 @@ import plotly.graph_objects as go
 from nicegui import ui
 
 from src.ai.huellas import calcular_huella
-from src.frontend.componentes.figura_funcion_real import crear_figura_previa
-from src.frontend.componentes.colores_figuras import aplicar_colores_figura
+from src.frontend.componentes.raices.graficos.figura_funcion_real import crear_figura_previa
+from src.frontend.componentes.raices.graficos.colores_figuras import aplicar_colores_figura
 from src.frontend.nucleo.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
 from src.frontend.controladores.actualizacion_cancelable import cancelar_actualizacion, programar_actualizacion
 from src.frontend.controladores.coordinacion_trabajos_raices import CoordinadorTrabajosRaices

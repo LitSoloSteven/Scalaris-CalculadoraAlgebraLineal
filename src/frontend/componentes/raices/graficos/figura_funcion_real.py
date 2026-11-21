@@ -2,7 +2,7 @@
 import plotly.graph_objects as go
 
 from src.frontend.presentacion.tema import COLOR_TRANSPARENTE, PALETA_GRAFICOS
-from src.frontend.componentes.colores_figuras import aplicar_colores_figura
+from src.frontend.componentes.raices.graficos.colores_figuras import aplicar_colores_figura
 
 
 def crear_figura_previa(respuesta: dict) -> go.Figure:
