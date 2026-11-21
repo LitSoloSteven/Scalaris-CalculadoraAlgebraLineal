@@ -37,8 +37,8 @@ def test_etiquetas_del_selector_conservan_las_rutas_del_componente(monkeypatch):
     """Las etiquetas del componente conservan sus URL directas fuera del versionado global."""
     async def comprobar(vista, cliente):
         """Inspecciona las referencias reales del cliente sin presuponer invalidacion de cache."""
-        for extension in ['css', 'js']:
-            url = f'/assets/{extension}/selector_opciones.{extension}'
+        for url in ('/assets/css/componentes/selector_opciones.css',
+                    '/assets/js/nucleo/navegacion/selector_opciones.js'):
             assert f'"{url}"' in cliente.head_html
             assert f'"{url}?v=' not in cliente.head_html
     asyncio.run(construir_pagina(monkeypatch, 'vectores', comprobar))
