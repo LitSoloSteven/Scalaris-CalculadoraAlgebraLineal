@@ -1,7 +1,7 @@
 """Carga de transferencias validadas en controles del visualizador geométrico."""
 from __future__ import annotations
 
-from src.backend.geometria.transferencia import validar_transferencia_escena
+from src.backend.geometria.preparacion.transferencia import validar_transferencia_escena
 from src.frontend.componentes.cuadricula_base import DIMENSION_MINIMA, actualizar_estados_botones_dimension
 from src.backend.constantes import DIMENSION_MAXIMA_VECTORES
 from src.frontend.componentes.transferencia import (

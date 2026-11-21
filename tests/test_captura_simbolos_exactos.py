@@ -4,7 +4,7 @@ from fractions import Fraction
 import pytest
 
 from src.backend.constantes import LONGITUD_MAXIMA_CADENA_NUMERO
-from src.backend.geometria.captura import parsear_par_vectores
+from src.backend.geometria.preparacion.captura import parsear_par_vectores
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_matrices.celdas_exactas import parsear_celda_exacta
 from src.backend.resolutores.sistemas_lineales.captura_ecuaciones import preparar_ecuaciones

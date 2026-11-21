@@ -1,7 +1,7 @@
 """Adaptación de la captura vectorial al contrato de los resolutores existentes."""
 import json
 
-from src.backend.geometria.transferencia import preparar_vectores_visualizador
+from src.backend.geometria.preparacion.transferencia import preparar_vectores_visualizador
 from .controlador_operaciones_vectores import ControladorOperacionesVectores
 from .controlador_independencia import procesar_independencia
 

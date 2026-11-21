@@ -2,12 +2,12 @@
 from fractions import Fraction
 
 from src.backend.excepciones import AlgebraLinealError
-from src.backend.geometria.cadena_combinacion import calcular_cadena_acumulada
-from src.backend.geometria.captura import ubicar_error_vector
+from src.backend.geometria.preparacion.cadena_combinacion import calcular_cadena_acumulada
+from src.backend.geometria.preparacion.captura import ubicar_error_vector
 from src.backend.geometria.base.coordenadas import a_flotante_seguro
 from src.backend.geometria.base.errores import respuesta_error
 from src.backend.geometria.base.recorte import calcular_rango_automatico
-from src.backend.geometria.transferencia import LIMITES_VECTORES_ESCENA
+from src.backend.geometria.preparacion.transferencia import LIMITES_VECTORES_ESCENA
 from src.backend.resolutores.operaciones_vectores.captura import construir_vector_desde_diccionario
 from src.backend.resolutores.operaciones_vectores.combinacion_lineal import ResolutorCombinacionLineal
 
