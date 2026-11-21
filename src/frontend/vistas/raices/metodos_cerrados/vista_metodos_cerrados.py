@@ -8,16 +8,16 @@ from src.frontend.controladores.compartido.sesion.actualizacion_cancelable impor
 from src.frontend.controladores.raices.metodos_cerrados.adaptadores import BISECCION
 from src.frontend.navegacion import ruta_de
 from src.frontend.presentacion.tema import configurar_tema
-from .acciones import AccionesMetodosCerrados
-from .calculo import CalculoIndividual
-from .captura import CapturaMetodosCerrados, captura_vacia, limpiar_captura
-from .contexto import construir_contexto
-from .continuidad import ContinuidadMetodosCerrados
-from .exploracion import ExploracionMetodosCerrados
-from .grafica import GraficaMetodosCerrados
-from .montaje import MENSAJE_INICIAL, montar_contenido
-from .presentacion_vigente import PresentacionVigente
-from .salida import SalidaMetodosCerrados
+from src.frontend.vistas.raices.metodos_cerrados.captura.acciones import AccionesMetodosCerrados
+from src.frontend.vistas.raices.metodos_cerrados.calculo.calculo import CalculoIndividual
+from src.frontend.vistas.raices.metodos_cerrados.captura.captura import CapturaMetodosCerrados, captura_vacia, limpiar_captura
+from src.frontend.vistas.raices.metodos_cerrados.salida.contexto import construir_contexto
+from src.frontend.vistas.raices.metodos_cerrados.captura.continuidad import ContinuidadMetodosCerrados
+from src.frontend.vistas.raices.metodos_cerrados.calculo.exploracion import ExploracionMetodosCerrados
+from src.frontend.vistas.raices.metodos_cerrados.salida.grafica import GraficaMetodosCerrados
+from src.frontend.vistas.raices.metodos_cerrados.captura.montaje import MENSAJE_INICIAL, montar_contenido
+from src.frontend.vistas.raices.metodos_cerrados.calculo.presentacion_vigente import PresentacionVigente
+from src.frontend.vistas.raices.metodos_cerrados.salida.salida import SalidaMetodosCerrados
 
 class VistaMetodosCerrados:
     """Conecta ambas tareas con las regiones compartidas y su ciclo de vida."""

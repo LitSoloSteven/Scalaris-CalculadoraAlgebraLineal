@@ -6,7 +6,7 @@ from nicegui import ui
 
 from src.frontend.controladores.inicio._recientes import normalizar_recientes
 from src.frontend.navegacion import predeterminado_elemento_clave, ruta_de, ruta_navegacion
-from src.frontend.vistas.metodos_cerrados.vista_metodos_cerrados import VistaMetodosCerrados
+from src.frontend.vistas.raices.metodos_cerrados.vista_metodos_cerrados import VistaMetodosCerrados
 from tests.comun_construccion_vistas import VISTAS_RUTAS, construir_pagina
 from tests.test_metodos_cerrados_calculo import captura_ejercicio
 from tests.test_metodos_cerrados_exploracion import _buscar, _resolver_lote

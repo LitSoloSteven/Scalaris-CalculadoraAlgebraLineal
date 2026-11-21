@@ -151,7 +151,7 @@ def _registrar_pagina_metodos_cerrados() -> None:
     @ui.page(ruta_de("biseccion"), title=titulo)
     def pagina_metodos_cerrados():
         """Construye la vista común con Bisección preseleccionada."""
-        from src.frontend.vistas.metodos_cerrados.vista_metodos_cerrados import VistaMetodosCerrados, montar_pagina
+        from src.frontend.vistas.raices.metodos_cerrados.vista_metodos_cerrados import VistaMetodosCerrados, montar_pagina
 
         montar_pagina(VistaMetodosCerrados())
 
