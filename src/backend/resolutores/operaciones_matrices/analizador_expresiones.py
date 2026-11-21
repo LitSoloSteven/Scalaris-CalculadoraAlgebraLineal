@@ -16,7 +16,7 @@ _DIGITOS_EXPONENTE = str.maketrans(_DIGITOS_SUPERIORES + "⁻", "0123456789-")
 _TRADUCCION = str.maketrans(
     SIGNO_MENOS_TIPOGRAFICO + "×·⋅∙" + DIVISIONES_TIPOGRAFICAS, "-****///"
 )
-_NUMERO = rf"(?:[0-9]+(?:\.[0-9]+)?|[{FRACCIONES_TIPOGRAFICAS}]){SIMBOLO_POR_MIL}?"
+_NUMERO = rf"(?:\d+(?:\.\d+)?|[{FRACCIONES_TIPOGRAFICAS}]){SIMBOLO_POR_MIL}?"
 _MATRIZ = r"[A-Za-z][A-Za-z0-9]*_[A-Za-z0-9_]*|[A-Za-z][0-9]+|[A-Za-z]"
 _POTENCIA = rf"[⁻]?[{_DIGITOS_SUPERIORES}]+"
 _PATRON = re.compile(rf"{_NUMERO}|{_MATRIZ}|{_POTENCIA}|ᵀ|[+*/⊕⊗()\-]")
@@ -68,9 +68,13 @@ def tokenizar_expresion(expresion: str) -> list[str]:
     return tokens
 
 
-def _cerrar_parentesis(pila: list[str], salida: list[str]) -> None:
+def _vaciar_operadores(pila: list[str], salida: list[str]) -> None:
     while pila and pila[-1] != "(":
         salida.append(pila.pop())
+
+
+def _cerrar_parentesis(pila: list[str], salida: list[str]) -> None:
+    _vaciar_operadores(pila, salida)
     if not pila:
         raise ValueError("Error de sintaxis: Paréntesis desbalanceados.")
     pila.pop()
@@ -108,9 +112,7 @@ def convertir_a_rpn(tokens: list[str]) -> list[str]:
 
     if espera_operando:
         raise ValueError(_ERROR_SINTAXIS)
-    while pila:
-        tope = pila.pop()
-        if tope == "(":
-            raise ValueError("Error de sintaxis: Paréntesis desbalanceados.")
-        salida.append(tope)
+    _vaciar_operadores(pila, salida)
+    if pila:
+        raise ValueError("Error de sintaxis: Paréntesis desbalanceados.")
     return salida
