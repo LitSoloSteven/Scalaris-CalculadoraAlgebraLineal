@@ -7,12 +7,12 @@ from importlib import import_module
 import pytest
 
 from src.backend.resolutores.raices.exploracion.base.contrato_exploracion import CandidatoExploracion
-from src.backend.resolutores.raices.contrato_lote_regla_falsa import EntradaLoteReglaFalsa
+from src.backend.resolutores.raices.regla_falsa.lote.contrato_lote_regla_falsa import EntradaLoteReglaFalsa
 from src.backend.resolutores.raices.regla_falsa.contratos.contrato_regla_falsa import EntradaReglaFalsa
 from src.backend.resolutores.raices.regla_falsa.contratos.contrato_regla_falsa_ampliada import ConfiguracionReglaFalsa
 from src.backend.resolutores.raices.biseccion.lote.contrato_resolucion_multiple import CandidatoResolucion
 from src.backend.resolutores.raices.biseccion.contratos.criterios_biseccion import CriterioParada
-from src.backend.resolutores.raices.resolucion_multiple_regla_falsa import resolver_candidatos_regla_falsa
+from src.backend.resolutores.raices.regla_falsa.lote.resolucion_multiple_regla_falsa import resolver_candidatos_regla_falsa
 
 
 def _lote(expresion="x^2-2", intervalo=(1, 2), **opciones):
@@ -125,7 +125,7 @@ def test_estancamiento_conserva_aproximacion_provisional_y_filas():
 
 def test_fallo_interno_no_filtra_detalles_ni_aborta_el_lote(monkeypatch):
     """Una excepción inesperada conserva los registros siguientes y publica un error genérico."""
-    modulo = import_module("src.backend.resolutores.raices.resolucion_multiple_regla_falsa")
+    modulo = import_module("src.backend.resolutores.raices.regla_falsa.lote.resolucion_multiple_regla_falsa")
     original = modulo.resolver_regla_falsa_configurada
     llamadas = []
     def fallar_primero(configuracion):

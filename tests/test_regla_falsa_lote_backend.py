@@ -6,13 +6,13 @@ from importlib import import_module
 import pytest
 
 from src.backend.resolutores.raices.exploracion.base.contrato_exploracion import CandidatoExploracion
-from src.backend.resolutores.raices.contrato_lote_regla_falsa import EntradaLoteReglaFalsa
+from src.backend.resolutores.raices.regla_falsa.lote.contrato_lote_regla_falsa import EntradaLoteReglaFalsa
 from src.backend.resolutores.raices.regla_falsa.contratos.contrato_regla_falsa import EntradaReglaFalsa
 from src.backend.resolutores.raices.regla_falsa.contratos.contrato_regla_falsa_ampliada import ConfiguracionReglaFalsa
 from src.backend.resolutores.raices.biseccion.lote.contrato_resolucion_multiple import CandidatoResolucion
 from src.backend.resolutores.raices.biseccion.contratos.criterios_biseccion import CriterioParada
 from src.backend.resolutores.raices.regla_falsa.motor.regla_falsa_ampliada import resolver_regla_falsa_configurada
-from src.backend.resolutores.raices.resolucion_multiple_regla_falsa import resolver_candidatos_regla_falsa
+from src.backend.resolutores.raices.regla_falsa.lote.resolucion_multiple_regla_falsa import resolver_candidatos_regla_falsa
 
 
 def _entrada(expresion="x^3-x", criterio=None, limite=100):
@@ -56,7 +56,7 @@ def test_paridad_con_resoluciones_individuales(criterio):
 @pytest.mark.parametrize("presupuesto,ejecutados", [(1, 0), (101, 0), (102, 1), (203, 1), (204, 2), (306, 3)])
 def test_reserva_estricta_sin_ejecutar_candidatos_fuera_de_presupuesto(monkeypatch, presupuesto, ejecutados):
     """Reserva el coste máximo antes de cualquier llamada y no recorta el criterio solicitado."""
-    modulo = import_module("src.backend.resolutores.raices.resolucion_multiple_regla_falsa")
+    modulo = import_module("src.backend.resolutores.raices.regla_falsa.lote.resolucion_multiple_regla_falsa")
     llamadas = []
     def resolver(configuracion):
         """Registra cada solicitud real antes de delegar al motor configurado."""
@@ -103,7 +103,7 @@ def test_formas_globales_duplicados_y_limites_de_cantidad():
 
 def test_configuracion_global_invalida_falla_antes_de_evaluar(monkeypatch):
     """Sintaxis, unidad, entrada y criterio inválidos impiden iniciar cualquier candidato."""
-    modulo = import_module("src.backend.resolutores.raices.resolucion_multiple_regla_falsa")
+    modulo = import_module("src.backend.resolutores.raices.regla_falsa.lote.resolucion_multiple_regla_falsa")
     def prohibir(_configuracion):
         """Impide evaluar candidatos con una configuración global inválida."""
         pytest.fail("No debe resolver con una configuración global inválida")

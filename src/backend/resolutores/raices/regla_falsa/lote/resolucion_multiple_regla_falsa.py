@@ -1,15 +1,15 @@
 """Resolución de candidatos por falsa posición con reserva previa y fallos aislados."""
 from dataclasses import replace
 
-from .exploracion.base.contrato_exploracion import CandidatoExploracion
+from ...exploracion.base.contrato_exploracion import CandidatoExploracion
 from .contrato_lote_regla_falsa import (
     EntradaLoteReglaFalsa, ResolucionCandidatoReglaFalsa, ResultadoLoteReglaFalsa,
     validar_lote_regla_falsa,
 )
-from .regla_falsa.contratos.contrato_regla_falsa_ampliada import ConfiguracionReglaFalsa
-from .biseccion.lote.contrato_resolucion_multiple import CandidatoResolucion
-from .regla_falsa.motor.regla_falsa_ampliada import resolver_regla_falsa_configurada
-from .compartido.validacion_raices import validar_extremo
+from ..contratos.contrato_regla_falsa_ampliada import ConfiguracionReglaFalsa
+from ...biseccion.lote.contrato_resolucion_multiple import CandidatoResolucion
+from ..motor.regla_falsa_ampliada import resolver_regla_falsa_configurada
+from ...compartido.validacion_raices import validar_extremo
 
 EVALUACIONES_EXTREMOS_REGLA_FALSA = 2
 
