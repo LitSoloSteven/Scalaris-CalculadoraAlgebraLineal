@@ -3,7 +3,7 @@ from src.ai.contexto.contexto import ContextoIA, EstadoContexto, describir_matri
 from src.backend.utilidades.formato.formateadores import formatear_fraccion_texto
 from src.ai.huellas import calcular_huella
 from src.frontend.presentacion.sugerencias import Senales
-from .captura_factorizacion_lu import localizar_invalida
+from src.frontend.controladores.algebra.operaciones_matrices.base.captura_factorizacion_lu import localizar_invalida
 
 
 def _resultado_vigente(vista) -> dict | None:

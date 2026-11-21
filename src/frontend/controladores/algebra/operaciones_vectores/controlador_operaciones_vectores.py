@@ -15,7 +15,7 @@ from src.backend.resolutores.operaciones_vectores.operaciones.operaciones import
     ResolutorOperacionesVectores,
 )
 from src.frontend.controladores.compartido.pasos.agrupador_pasos import agrupar_pasos_eliminacion
-from src.frontend.controladores.operaciones_matrices.codificador import (
+from src.frontend.controladores.algebra.operaciones_matrices.base.codificador import (
     CodificadorMatriz,
 )
 from src.frontend.controladores.algebra.sistemas_lineales.nucleo.compartido import (

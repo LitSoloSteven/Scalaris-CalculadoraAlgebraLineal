@@ -3,7 +3,7 @@ import json
 
 from src.backend.resolutores.operaciones_vectores.independencia.captura_independencia import capturar_independencia
 from src.backend.resolutores.operaciones_vectores.independencia.independencia import analizar_independencia
-from src.frontend.controladores.operaciones_matrices.codificador import CodificadorMatriz
+from src.frontend.controladores.algebra.operaciones_matrices.base.codificador import CodificadorMatriz
 
 
 def procesar_independencia(vectores: dict) -> str:

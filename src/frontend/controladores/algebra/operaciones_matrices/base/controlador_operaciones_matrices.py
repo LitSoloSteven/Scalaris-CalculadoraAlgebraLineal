@@ -12,7 +12,7 @@ from src.backend.resolutores.operaciones_matrices.expresiones.captura_matrices i
 from src.backend.resolutores.operaciones_matrices.compartido.estado_resultado import (
     calcular_banderas_resultado, preparar_transferencia_inversa,
 )
-from src.frontend.controladores.operaciones_matrices.codificador import (
+from src.frontend.controladores.algebra.operaciones_matrices.base.codificador import (
     CodificadorMatriz,
 )
 from src.frontend.controladores.compartido.pasos.utilidades import parsear_carga_json

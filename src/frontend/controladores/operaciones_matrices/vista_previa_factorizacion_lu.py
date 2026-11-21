@@ -1,5 +1,5 @@
 """Presentación saneada de la captura rectangular de LU."""
-from src.frontend.controladores.operaciones_matrices.presentacion_matriz_previa import preparar_matriz_previa
+from src.frontend.controladores.algebra.operaciones_matrices.base.presentacion_matriz_previa import preparar_matriz_previa
 
 
 def preparar_presentacion_factorizacion_lu(datos: list[list[str]], dimension: int) -> dict:

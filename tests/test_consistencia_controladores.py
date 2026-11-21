@@ -9,7 +9,7 @@ from src.frontend.controladores.algebra.sistemas_lineales.resolucion.controlador
 from src.frontend.controladores.algebra.sistemas_lineales.resolucion.controlador_gauss_jordan import (
     ControladorGaussJordan,
 )
-from src.frontend.controladores.operaciones_matrices.controlador_operaciones_matrices import (
+from src.frontend.controladores.algebra.operaciones_matrices.base.controlador_operaciones_matrices import (
     ControladorOperacionesMatrices,
 )
 

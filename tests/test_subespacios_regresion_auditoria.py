@@ -17,7 +17,7 @@ from src.backend.resolutores.operaciones_vectores.subespacios.captura_subespacio
     capturar_generadores,
     capturar_restricciones,
 )
-from src.frontend.controladores.operaciones_matrices.codificador import CodificadorMatriz
+from src.frontend.controladores.algebra.operaciones_matrices.base.codificador import CodificadorMatriz
 
 
 @pytest.fixture

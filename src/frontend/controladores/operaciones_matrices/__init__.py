@@ -1,5 +1,5 @@
 """Controladores para operaciones matriciales, determinantes, Leontief y transformaciones."""
-from src.frontend.controladores.operaciones_matrices.codificador import (
+from src.frontend.controladores.algebra.operaciones_matrices.base.codificador import (
     CodificadorMatriz,
 )
 from src.frontend.controladores.operaciones_matrices.controlador_determinante import (
@@ -9,7 +9,7 @@ from src.frontend.controladores.operaciones_matrices.controlador_factorizacion_l
 from src.frontend.controladores.operaciones_matrices.controlador_leontief import (
     ControladorLeontief,
 )
-from src.frontend.controladores.operaciones_matrices.controlador_operaciones_matrices import (
+from src.frontend.controladores.algebra.operaciones_matrices.base.controlador_operaciones_matrices import (
     ControladorOperacionesMatrices,
 )
 from src.frontend.controladores.operaciones_matrices.controlador_transformaciones import (

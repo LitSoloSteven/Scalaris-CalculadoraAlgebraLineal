@@ -18,7 +18,7 @@ from src.backend.resolutores.operaciones_vectores.subespacios.contrato_subespaci
     ErrorVerificacionSubespacio,
 )
 from src.backend.resolutores.operaciones_vectores.subespacios.subespacios import analizar_subespacio
-from src.frontend.controladores.operaciones_matrices.codificador import CodificadorMatriz
+from src.frontend.controladores.algebra.operaciones_matrices.base.codificador import CodificadorMatriz
 
 CLAVES_RESULTADO = {
     "estado", "modo", "clasificacion", "codigo", "mensaje", "dimension_ambiente",

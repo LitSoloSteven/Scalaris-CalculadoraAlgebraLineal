@@ -5,7 +5,7 @@ from typing import Any
 from src.backend.resolutores.operaciones_matrices.compartido.formateadores import matriz_a_latex
 from src.backend.utilidades.validacion.validadores import ValidadorMatriz
 from src.backend.modelos.matriz import Matriz
-from src.frontend.controladores.operaciones_matrices.codificador import CodificadorMatriz
+from src.frontend.controladores.algebra.operaciones_matrices.base.codificador import CodificadorMatriz
 from src.backend.resolutores.sistemas_lineales.eliminacion.homogeneos import analizar_resultado_homogeneo
 from src.backend.resolutores.sistemas_lineales.solucion.comprobacion_sistemas import comprobar_familia
 from src.frontend.controladores.compartido.pasos.agrupador_pasos import agrupar_pasos_eliminacion
