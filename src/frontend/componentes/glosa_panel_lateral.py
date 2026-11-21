@@ -11,7 +11,7 @@ from src.frontend.componentes.glosa_bitacora import (
     desplazar_al_final,
     renderizar_bitacora_lateral,
 )
-from src.frontend.componentes.glosa_cabecera import construir_cabecera_lateral
+from src.frontend.componentes.glosa.elementos.glosa_cabecera import construir_cabecera_lateral
 from src.frontend.componentes.glosa_sugerencias import renderizar_fila_sugerencias
 from src.frontend.componentes.glosa_envio import EnvioGlosaMixin
 from src.frontend.componentes.glosa_foco import FocoGlosaMixin

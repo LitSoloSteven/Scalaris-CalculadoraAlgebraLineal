@@ -11,10 +11,10 @@ from src.ai.respuestas.respuestas import OpcionesConsulta, ResultadoIA, TipoErro
 from src.ai.textos import CONSULTA_CANCELADA, ERROR_SERVICIO, RESPUESTA_DEMASIADO_EXTENSA
 from src.ai.presupuesto.presupuesto_mensajes import validar_longitud_mensaje
 from src.frontend.componentes.glosa_preguntas import PreguntasGlosaMixin
-from src.frontend.componentes.glosa_espera import iniciar_temporizador_cancelar, finalizar_envio
+from src.frontend.componentes.glosa.elementos.glosa_espera import iniciar_temporizador_cancelar, finalizar_envio
 from src.frontend.nucleo import banderas
 from src.frontend.nucleo.constantes import ANTI_REBOTE_GLOSA_SEGUNDOS
-from src.frontend.componentes.historial_glosa import incorporar_mensaje
+from src.frontend.componentes.glosa.elementos.historial_glosa import incorporar_mensaje
 from src.frontend.nucleo.textos.textos import MENSAJE_ANTI_REBOTE_GLOSA
 
 registro = logging.getLogger(__name__)

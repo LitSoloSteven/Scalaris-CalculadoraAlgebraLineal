@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Any
 from nicegui import ui
-from src.frontend.componentes.glosa_entrada import EstiloEntradaGlosa, construir_entrada_glosa
+from src.frontend.componentes.glosa.elementos.glosa_entrada import EstiloEntradaGlosa, construir_entrada_glosa
 from src.frontend.componentes.aplicacion.base.iconos import icono_svg
 
 

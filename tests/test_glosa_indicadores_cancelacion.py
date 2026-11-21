@@ -5,7 +5,7 @@ from unittest.mock import Mock
 
 from nicegui import ui
 
-from src.frontend.componentes.glosa_espera import finalizar_envio, iniciar_temporizador_cancelar
+from src.frontend.componentes.glosa.elementos.glosa_espera import finalizar_envio, iniciar_temporizador_cancelar
 
 
 def _preparar_espera(monkeypatch):

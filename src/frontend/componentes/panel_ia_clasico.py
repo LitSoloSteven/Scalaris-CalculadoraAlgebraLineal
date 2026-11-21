@@ -3,8 +3,8 @@ from __future__ import annotations
 
 from typing import Any
 from nicegui import ui
-from src.frontend.componentes.glosa_entrada import EstiloEntradaGlosa, construir_entrada_glosa
-from src.frontend.componentes.glosa_renderizado import crear_contenido_glosa
+from src.frontend.componentes.glosa.elementos.glosa_entrada import EstiloEntradaGlosa, construir_entrada_glosa
+from src.frontend.componentes.glosa.elementos.glosa_renderizado import crear_contenido_glosa
 
 
 def construir_panel_clasico(instancia: Any) -> None:

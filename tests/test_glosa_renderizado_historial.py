@@ -1,6 +1,6 @@
 import pytest
 import os
-from src.frontend.componentes.glosa_renderizado import renderizar_texto_glosa
+from src.frontend.componentes.glosa.elementos.glosa_renderizado import renderizar_texto_glosa
 from tests.comun_clientes import PanelIASimulado
 
 def test_renderizado_glosa_escapa_codigo():
