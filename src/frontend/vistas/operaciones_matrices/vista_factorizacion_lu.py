@@ -13,8 +13,8 @@ from src.frontend.controladores.operaciones_matrices.vista_previa_factorizacion_
 from src.frontend.controladores.operaciones_matrices.contexto_factorizacion_lu import obtener_contexto_ia, obtener_senales_ia
 from src.frontend.controladores.sesion_matricial import invalidar_resultado, actualizar_contexto
 from src.frontend.navegacion import ruta_de
-from src.frontend.vistas.mixin_sesion_matricial import MixinSesionMatricial
-from src.frontend.vistas.vista_previa_matricial import actualizar_vista_previa
+from src.frontend.vistas.compartido.mixin_sesion_matricial import MixinSesionMatricial
+from src.frontend.vistas.compartido.vista_previa_matricial import actualizar_vista_previa
 from ._estados_modelos import mostrar_estado
 from .resultados_factorizacion_lu import ResultadosFactorizacionLU
 

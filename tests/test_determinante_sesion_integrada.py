@@ -7,7 +7,7 @@ from nicegui import run, ui
 
 from src.frontend.controladores.operaciones_matrices.vista_previa_determinante import preparar_presentacion_determinante
 from src.frontend.controladores.operaciones_inversas.vista_previa import preparar_presentacion_previa
-from src.frontend.vistas.mixin_sesion_matricial import MixinSesionMatricial
+from src.frontend.vistas.compartido.mixin_sesion_matricial import MixinSesionMatricial
 from tests.comun_construccion_vistas import construir_pagina
 
 

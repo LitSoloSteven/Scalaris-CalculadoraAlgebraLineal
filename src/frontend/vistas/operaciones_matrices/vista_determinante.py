@@ -14,8 +14,8 @@ from src.frontend.componentes.cuadricula_base import ubicar_celda_matriz
 from src.frontend.controladores.operaciones_matrices.vista_previa_determinante import preparar_presentacion_determinante
 from src.frontend.controladores.sesion_matricial import invalidar_resultado, actualizar_contexto
 from src.frontend.navegacion import ruta_de
-from src.frontend.vistas.mixin_sesion_matricial import MixinSesionMatricial
-from src.frontend.vistas.vista_previa_matricial import actualizar_vista_previa
+from src.frontend.vistas.compartido.mixin_sesion_matricial import MixinSesionMatricial
+from src.frontend.vistas.compartido.vista_previa_matricial import actualizar_vista_previa
 from src.frontend.nucleo.textos import textos
 from .recomendacion_determinante import RecomendacionDeterminante
 from .resultados_determinante import ResultadosDeterminante
