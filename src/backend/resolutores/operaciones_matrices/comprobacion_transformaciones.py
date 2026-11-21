@@ -1,7 +1,7 @@
 """Comprobacion del nucleo y de la generacion de la imagen desde la reduccion existente."""
 from src.backend.modelos.matriz import Matriz
 from src.backend.modelos.operaciones.construcciones import identidad
-from src.backend.resolutores.sistemas_lineales.comprobacion_sistemas import comprobar_familia
+from src.backend.resolutores.sistemas_lineales.solucion.comprobacion_sistemas import comprobar_familia
 from .comprobacion_productos import comprobar_producto, crear_paso_analisis
 from .formateadores import matriz_a_latex
 

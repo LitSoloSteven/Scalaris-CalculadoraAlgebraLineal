@@ -2,7 +2,7 @@
 from fractions import Fraction
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.sistemas_lineales.modelo_solucion import ParametrosSolucion, validar_invariantes_parametricos
+from src.backend.resolutores.sistemas_lineales.solucion.modelo_solucion import ParametrosSolucion, validar_invariantes_parametricos
 
 
 def _despejar_valor(fila: list, columna: int, vector: list[Fraction], termino: Fraction) -> Fraction:

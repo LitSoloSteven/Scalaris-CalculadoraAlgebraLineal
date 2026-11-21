@@ -5,11 +5,11 @@ from itertools import chain
 
 from src.backend.modelos.escalares.conversion_fracciones import convertir_fraccion, texto_fraccion_exacta
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.sistemas_lineales.comprobacion_sistemas import (
+from src.backend.resolutores.sistemas_lineales.solucion.comprobacion_sistemas import (
     comprobar_familia,
 )
 from src.backend.resolutores.sistemas_lineales.reduccion.configuracion_reduccion import ConfiguracionReduccion
-from src.backend.resolutores.sistemas_lineales.modelo_solucion import ParametrosSolucion
+from src.backend.resolutores.sistemas_lineales.solucion.modelo_solucion import ParametrosSolucion
 from src.backend.resolutores.sistemas_lineales.reduccion.reduccion import ReductorFilas
 from .contrato_subespacios import (
     ErrorVerificacionSubespacio,

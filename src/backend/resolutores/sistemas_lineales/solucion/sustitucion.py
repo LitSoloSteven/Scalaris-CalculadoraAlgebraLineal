@@ -1,7 +1,7 @@
 """Adaptacion del calculo parametrico al contrato de resolucion de sistemas."""
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.sistemas_lineales.calculo_solucion import calcular_solucion_parametrica
-from src.backend.resolutores.sistemas_lineales.presentacion_sustitucion import presentar_sustitucion
+from src.backend.resolutores.sistemas_lineales.solucion.calculo_solucion import calcular_solucion_parametrica
+from src.backend.resolutores.sistemas_lineales.solucion.presentacion_sustitucion import presentar_sustitucion
 
 
 def ejecutar_sustitucion_hacia_atras(matriz: Matriz, columnas_pivote: list[int],

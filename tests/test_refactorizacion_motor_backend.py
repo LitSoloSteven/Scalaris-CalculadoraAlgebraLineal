@@ -10,8 +10,8 @@ from src.backend.resolutores.sistemas_lineales.reduccion.configuracion_reduccion
 from src.backend.resolutores.sistemas_lineales.reduccion.reduccion import ReductorFilas
 from src.backend.resolutores.sistemas_lineales.gauss import ResolutorGauss
 from src.backend.resolutores.operaciones_matrices.calculo_determinante import triangular_y_determinante
-from src.backend.resolutores.sistemas_lineales.calculo_solucion import calcular_solucion_parametrica
-from src.backend.resolutores.sistemas_lineales.presentacion_sustitucion import presentar_sustitucion
+from src.backend.resolutores.sistemas_lineales.solucion.calculo_solucion import calcular_solucion_parametrica
+from src.backend.resolutores.sistemas_lineales.solucion.presentacion_sustitucion import presentar_sustitucion
 
 
 @pytest.mark.parametrize("datos", [

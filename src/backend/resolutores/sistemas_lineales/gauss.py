@@ -8,7 +8,7 @@ from src.backend.resolutores.sistemas_lineales.reduccion.clasificacion_sistema i
 from src.backend.resolutores.sistemas_lineales.reduccion.configuracion_reduccion import ConfiguracionReduccion
 from src.backend.resolutores.sistemas_lineales.reduccion.pasos_reduccion import RegistroPasosSistema
 from src.backend.resolutores.sistemas_lineales.reduccion.reduccion import ReductorFilas
-from src.backend.resolutores.sistemas_lineales.sustitucion import ejecutar_sustitucion_hacia_atras
+from src.backend.resolutores.sistemas_lineales.solucion.sustitucion import ejecutar_sustitucion_hacia_atras
 from src.backend.modelos.escalares.aritmetica import es_cero
 
 

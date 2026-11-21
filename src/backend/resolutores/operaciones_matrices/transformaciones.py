@@ -2,7 +2,7 @@
 from src.backend.constantes import CERO_EPSILON, ERROR
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_matrices.presentacion_transformaciones import presentar_transformacion
-from src.backend.resolutores.sistemas_lineales.calculo_solucion import calcular_solucion_parametrica
+from src.backend.resolutores.sistemas_lineales.solucion.calculo_solucion import calcular_solucion_parametrica
 from src.backend.resolutores.sistemas_lineales.gauss_jordan import ResolutorGaussJordan
 from .aplicacion_transformacion import aplicar_vector
 

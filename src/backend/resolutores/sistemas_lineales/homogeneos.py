@@ -7,7 +7,7 @@ from src.backend.utilidades.formato.formateadores import formatear_variable_para
 from src.backend.resolutores.operaciones_matrices.formateadores import matriz_a_latex
 from src.backend.resolutores.operaciones_matrices.comprobacion_productos import comprobar_producto, crear_paso_analisis
 from .gauss import ResolutorGauss
-from .comprobacion_sistemas import comprobar_familia
+from src.backend.resolutores.sistemas_lineales.solucion.comprobacion_sistemas import comprobar_familia
 
 
 def resolver_homogeneo(matriz: Matriz, simbolo: str = "x") -> dict:
