@@ -2,6 +2,7 @@
 import math
 from decimal import Decimal, DecimalException
 
+from src.backend.resolutores.raices.evaluador_funcion import evaluar_constante_real
 
 def entero_capturado(valor: object, etiqueta: str) -> int:
     """Convierte un campo con su etiqueta a entero sin truncar; lanza ValueError."""
@@ -23,12 +24,20 @@ def entero_capturado(valor: object, etiqueta: str) -> int:
 
 
 def real_capturado(valor: object, etiqueta: str) -> float:
-    """Convierte campo y etiqueta a float sin bool; lanza ValueError si falla la conversión.
-    El dominio valida después la finitud y los límites del número devuelto.
-    """
+    """Convierte un campo real o una expresión constante; lanza ValueError con su etiqueta."""
     try:
         if isinstance(valor, bool):
             raise ValueError
-        return float(valor)
-    except (ValueError, TypeError, OverflowError) as error:
-        raise ValueError(f"{etiqueta} debe ser un número real. Usa un punto para los decimales.") from error
+        return _texto_real(valor) if isinstance(valor, str) else float(valor)
+    except (ValueError, TypeError, OverflowError, DecimalException) as error:
+        raise ValueError(f"{etiqueta} debe ser un número real. Escribe un número o una expresión constante.") from error
+
+
+def _texto_real(texto: str) -> float:
+    try:
+        numero = float(texto)
+    except ValueError:
+        return evaluar_constante_real(texto)
+    if numero == 0 and Decimal(texto.strip()) != 0:
+        return evaluar_constante_real(texto)
+    return numero

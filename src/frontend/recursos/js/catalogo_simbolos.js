@@ -5,25 +5,25 @@
     window.scalaris = window.scalaris || {};
     const operadores = [
         ['−', 'Signo menos', {funcion: '−', matriz: '−', numero: '-', ecuacion: '-', base: '-', real: '-'}],
-        ['×', 'Multiplicación', {funcion: '×', matriz: '×', ecuacion: '×'}],
-        ['·', 'Producto con punto', {funcion: '·', matriz: '·', ecuacion: '·'}],
-        ['⋅', 'Punto de multiplicación', {funcion: '⋅', matriz: '⋅', ecuacion: '⋅'}],
-        ['∙', 'Punto operador', {funcion: '∙', matriz: '∙', ecuacion: '∙'}],
-        ['÷', 'División', {funcion: '÷', matriz: '÷', numero: '/', ecuacion: '/'}],
-        ['⁄', 'Barra de fracción', {funcion: '⁄', matriz: '⁄', numero: '/', ecuacion: '/'}],
-        ['∕', 'Barra de división', {funcion: '∕', matriz: '∕', numero: '/', ecuacion: '/'}],
+        ['×', 'Multiplicación', {funcion: '×', real: '×', matriz: '×', ecuacion: '×'}],
+        ['·', 'Producto con punto', {funcion: '·', real: '·', matriz: '·', ecuacion: '·'}],
+        ['⋅', 'Punto de multiplicación', {funcion: '⋅', real: '⋅', matriz: '⋅', ecuacion: '⋅'}],
+        ['∙', 'Punto operador', {funcion: '∙', real: '∙', matriz: '∙', ecuacion: '∙'}],
+        ['÷', 'División', {funcion: '÷', real: '÷', matriz: '÷', numero: '/', ecuacion: '/'}],
+        ['⁄', 'Barra de fracción', {funcion: '⁄', real: '⁄', matriz: '⁄', numero: '/', ecuacion: '/'}],
+        ['∕', 'Barra de división', {funcion: '∕', real: '∕', matriz: '∕', numero: '/', ecuacion: '/'}],
         ['±', 'Más o menos'], ['∓', 'Menos o más'], ['⊕', 'Suma directa', {matriz: '⊕'}],
         ['⊗', 'Producto tensorial', {matriz: '⊗'}], ['∘', 'Composición'], ['∝', 'Proporcional a'],
         ['ᵀ', 'Transpuesta', {matriz: 'ᵀ'}], ['†', 'Adjunta'],
     ];
     const raices = [
-        ['√', 'Raíz cuadrada', {funcion: '√()'}, 'Digit2'],
-        ['∛', 'Raíz cúbica', {funcion: '∛()'}, 'Digit3'],
-        ['∜', 'Raíz cuarta', {funcion: '∜()'}, 'Digit4'],
+        ['√', 'Raíz cuadrada', {funcion: '√()', real: '√()'}, 'Digit2'],
+        ['∛', 'Raíz cúbica', {funcion: '∛()', real: '∛()'}, 'Digit3'],
+        ['∜', 'Raíz cuarta', {funcion: '∜()', real: '∜()'}, 'Digit4'],
     ];
     const potencias = Array.from('⁰¹²³⁴⁵⁶⁷⁸⁹', (simbolo, indice) =>
-        [simbolo, 'Superíndice ' + indice, {funcion: simbolo, matriz: simbolo}]);
-    const negativos = [['⁻¹', 'Exponente menos uno', {funcion: '⁻¹', matriz: '⁻¹'}]];
+        [simbolo, 'Superíndice ' + indice, {funcion: simbolo, real: simbolo, matriz: simbolo}]);
+    const negativos = [['⁻¹', 'Exponente menos uno', {funcion: '⁻¹', real: '⁻¹', matriz: '⁻¹'}]];
     const subindices = Array.from('₀₁₂₃₄₅₆₇₈₉', (simbolo, indice) =>
         [simbolo, 'Subíndice ' + indice, {ecuacion: simbolo}]);
     const fracciones = [
@@ -31,12 +31,12 @@
         ['⅓', '1/3'], ['⅔', '2/3'], ['⅕', '1/5'], ['⅖', '2/5'], ['⅗', '3/5'], ['⅘', '4/5'],
         ['⅙', '1/6'], ['⅚', '5/6'], ['⅛', '1/8'], ['⅜', '3/8'], ['⅝', '5/8'], ['⅞', '7/8'], ['↉', '0/3'],
     ].map(([simbolo, fraccion]) =>
-        [simbolo, 'Fracción ' + fraccion, {funcion: simbolo, matriz: simbolo, numero: fraccion, ecuacion: fraccion}]);
+        [simbolo, 'Fracción ' + fraccion, {funcion: simbolo, real: simbolo, matriz: simbolo, numero: fraccion, ecuacion: fraccion}]);
     const nombresGriegos = 'alfa beta gamma delta épsilon zeta eta theta iota kappa lambda mu nu xi ómicron pi rho sigma tau ípsilon fi ji psi omega'.split(' ');
     const griegas = Array.from('αβγδεζηθικλμνξοπρστυφχψω').flatMap((simbolo, indice) => {
         const nombre = nombresGriegos[indice];
         const mayuscula = simbolo.toUpperCase();
-        const perfiles = simbolo === 'π' ? {funcion: simbolo, ecuacion: simbolo} : {ecuacion: simbolo};
+        const perfiles = simbolo === 'π' ? {funcion: simbolo, real: simbolo, ecuacion: simbolo} : {ecuacion: simbolo};
         return [[simbolo, nombre + ' minúscula', perfiles],
             [mayuscula, nombre + ' mayúscula', {ecuacion: mayuscula}]];
     });
@@ -54,11 +54,14 @@
         ['∧', 'Conjunción'], ['∨', 'Disyunción'], ['¬', 'Negación'],
     ];
     const calculo = [
-        ['ℯ', 'Número de Euler', {funcion: 'ℯ'}], ['∞', 'Infinito'], ['∑', 'Sumatoria'], ['∏', 'Productoria'],
+        ['ℯ', 'Número de Euler', {funcion: 'ℯ', real: 'ℯ'}], ['∞', 'Infinito'],
+        ['∑', 'Sumatoria', {funcion: '∑(i,1,3,i×x)'}], ['∏', 'Productoria', {funcion: '∏(i,1,3,i×x)'}],
         ['∫', 'Integral'], ['∬', 'Integral doble'], ['∭', 'Integral triple'], ['∮', 'Integral de contorno'],
-        ['∂', 'Derivada parcial'], ['∇', 'Nabla'], ['′', 'Prima'], ['″', 'Doble prima'],
-        ['°', 'Grados'], ['∠', 'Ángulo'], ['△', 'Triángulo'], ['∴', 'Por lo tanto'], ['∵', 'Porque'],
-        ['‰', 'Por mil', {matriz: '‰', numero: '‰', ecuacion: '‰'}],
+        ['∂', 'Derivada parcial'], ['∇', 'Nabla'],
+        ['′', 'Prima (primera derivada)', {funcion: '′'}], ['″', 'Doble prima (segunda derivada)', {funcion: '″'}],
+        ['°', 'Grados', {funcion: '°', real: '°'}], ['∠', 'Ángulo'], ['△', 'Triángulo'],
+        ['∴', 'Por lo tanto'], ['∵', 'Porque'],
+        ['‰', 'Por mil', {funcion: '‰', real: '‰', matriz: '‰', numero: '‰', ecuacion: '‰'}],
     ];
     const grupos = {
         'Operadores': operadores,

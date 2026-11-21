@@ -65,8 +65,10 @@
         if (!seleccion) return false;
         const {campo} = seleccion;
         const [inicio, fin] = limitesSeleccion(seleccion, campo.value.length);
-        const esRaiz = seleccion.tipo === 'funcion' && Boolean(entrada.tecla);
-        const reemplazo = esRaiz ? texto.slice(0, -1) + campo.value.slice(inicio, fin) + ')' : texto;
+        const esCampoReal = seleccion.tipo === 'funcion' || seleccion.tipo === 'real';
+        const esRaiz = esCampoReal && Boolean(entrada.tecla);
+        const contenido = campo.value.slice(inicio, fin);
+        const reemplazo = textoConSeleccion(texto, contenido, esRaiz, esCampoReal);
         if (!puedeInsertar(campo, reemplazo, fin - inicio)) return false;
         campo.setRangeText(reemplazo, inicio, fin, 'end');
         if (esRaiz && inicio === fin) {
@@ -75,6 +77,12 @@
         }
         campo.dispatchEvent(new Event('input', {bubbles: true}));
         return true;
+    }
+
+    function textoConSeleccion(texto, contenido, esRaiz, esCampoReal) {
+        if (esRaiz) return texto.slice(0, -1) + contenido + ')';
+        if (contenido && esCampoReal && /^[°‰′″]$/u.test(texto)) return '(' + contenido + ')' + texto;
+        return texto;
     }
 
     function simplificar(texto) {
