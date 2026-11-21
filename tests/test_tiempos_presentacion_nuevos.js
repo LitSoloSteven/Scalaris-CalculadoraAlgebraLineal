@@ -5,8 +5,8 @@ const { crearPresentacion } = require('./comun_presentacion_cliente.js');
 
 prueba('la presentación encadena duraciones de token sin retardos ni curva literal', async () => {
   const cliente = crearPresentacion();
-  await cliente.reloj.avanzar(1982);
-  afirmar.deepEqual(cliente.animaciones.map(animacion => animacion.tiempos.duration), [600, 900, 600, 450, 600, 600, 450]);
+  await cliente.reloj.avanzar(2290);
+  afirmar.deepEqual(cliente.animaciones.map(animacion => animacion.tiempos.duration), [600, 900, 600, 450, 450, 450, 340, 600]);
   afirmar(cliente.animaciones.every(animacion => animacion.tiempos.delay === undefined));
   afirmar(cliente.animaciones.every(animacion => animacion.tiempos.easing === cliente.ventana.scalaris.movimiento.curva()));
   afirmar.equal(cliente.animaciones[0].fotogramas[0].transform, 'scale(0.95)');

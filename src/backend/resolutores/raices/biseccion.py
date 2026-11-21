@@ -24,7 +24,7 @@ def biseccion(entrada: EntradaBiseccion, *, cero_preferido: float | None = None)
         return construir_error(error, codigo="ENTRADA_INVALIDA")
     try:
         funcion = compilar(entrada.expresion, **opciones_unidad(entrada.unidad_angular))
-        arbol = analizar_expresion(entrada.expresion)
+        arbol = analizar_expresion(entrada.expresion, unidad_angular=entrada.unidad_angular)
     except ValueError as error:
         fallo = error_contextual(error, {"etapa": "sintaxis", "x_fallo": None, "intervalo_valido": None})
         return completar_diagnostico(entrada, completar_criterio(entrada, fallo))

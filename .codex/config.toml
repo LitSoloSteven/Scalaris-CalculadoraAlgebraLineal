@@ -1,0 +1,21 @@
+[mcp_servers.serena]
+enabled = false
+command = "serena"
+args = [
+    "start-mcp-server",
+    "--project-from-cwd",
+    "--context=codex",
+    "--agent-interface=tools",
+    "--mode=planning",
+    "--add-mode=no-memories",
+    "--add-mode=no-onboarding",
+    "--enable-web-dashboard=false",
+    "--enable-gui-log-window=false",
+]
+startup_timeout_sec = 20
+enabled_tools = [
+    "activate_project",
+    "find_symbol",
+    "find_referencing_symbols",
+    "get_symbols_overview",
+]

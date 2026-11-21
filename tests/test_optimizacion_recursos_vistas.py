@@ -30,7 +30,10 @@ def test_paginas_versionan_cabecera_sin_cambiar_recursos_de_componentes(monkeypa
         assert cabecera.index("observacion_dom.js") < cabecera.index("selector_tema.js")
         assert cabecera.index("interacciones_globales.js") < cabecera.index("cuadricula_compartida.js")
         assert cabecera.index("escritura_progresiva.js") < cabecera.index("reproductor_pasos.js")
-        assert ("inicio.js" in cabecera) == (vista == "inicio")
+        urls = {url for url, _ in recursos}
+        for recurso_inicio in ("js/inicio.js", "css/vistas_inicio_directorio.css",
+                              "css/vistas_inicio_ejemplos.css", "js/ejemplos_inicio.js"):
+            assert (f"/assets/{recurso_inicio}" in urls) == (vista == "inicio")
         assert ("tema_graficos.js" in cabecera) == (vista in {"visualizador", "biseccion", "regla_falsa", "metodos_abiertos"})
         assert ("sincronizacion_diseno.js" in cabecera) == (vista == "visualizador")
         assert ("sistemas_metodo.js" in cabecera) == (vista == "sistemas")
@@ -49,7 +52,7 @@ def test_seleccion_conserva_plantillas_recursos_desconocidos_y_orden():
     seleccion = seleccionar_recursos(cabecera, "visualizador")
     assert "vistas_vectores.css" in seleccion
     assert "vistas_geometria.css" in seleccion
-    assert "vistas_inicio_matriz.css" not in seleccion
+    assert "vistas_inicio_directorio.css" not in seleccion
     assert "vistas_modelos.css" in seleccionar_recursos(cabecera, "determinantes")
     for vista in ("sistemas", "inversa", "visualizador"):
         assert "vistas_inicio_adaptable.css" in seleccionar_recursos(cabecera, vista)

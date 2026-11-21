@@ -4,30 +4,30 @@
   window.scalaris = window.scalaris || {};
   if (!window.scalaris.presentacion) {
     const raiz = document.documentElement;
+    const revelado = window.scalaris.reveladoCircular;
     const animaciones = new Set();
-    const temporizadores = new Set();
     const preferencia = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const posicionElevada = 'translateY(-18px) scale(1.2)';
     let fondo = null;
     let completada = false;
+    let temporizador;
+    let plazo;
+    let tramos;
     let resolver;
     const estado = { activa: false, terminada: new Promise(respuesta => { resolver = respuesta; }), finalizar };
     window.scalaris.presentacion = estado;
 
-    function programar(accion, demora) {
-      const identificador = setTimeout(() => { temporizadores.delete(identificador); accion(); }, demora);
-      temporizadores.add(identificador);
-    }
-
     function finalizar() {
       if (completada) return;
       completada = true;
-      temporizadores.forEach(clearTimeout);
-      temporizadores.clear();
+      clearTimeout(temporizador);
+      if (estado.activa) window.scalaris.entradaInicio?.finalizar();
       animaciones.forEach(animacion => animacion.cancel());
       animaciones.clear();
       fondo?.remove();
       raiz.removeAttribute('data-presentacion-activa');
       window.removeEventListener('pagehide', finalizar);
+      window.removeEventListener('resize', finalizar);
       document.removeEventListener('keydown', finalizarPorGesto, true);
       document.removeEventListener('pointerdown', finalizarPorGesto, true);
       document.removeEventListener('visibilitychange', alOcultar);
@@ -39,8 +39,13 @@
     function alOcultar() { if (document.hidden) finalizar(); }
     function alReducir(evento) { if (evento.matches) finalizar(); }
 
+    function sonarEntrada() {
+      try { window.scalaris.sonido?.reproducir('entrada'); }
+      catch (_) { /* El audio no condiciona la presentación ni su cierre. */ }
+    }
+
     function finalizarPorGesto(evento) {
-      if (evento?.isTrusted) window.scalaris.sonido?.reproducir('entrada');
+      if (evento?.isTrusted) sonarEntrada();
       finalizar();
     }
 
@@ -57,70 +62,107 @@
       const animacion = elemento.animate(fotogramas, { fill: 'both', ...opciones });
       animaciones.add(animacion);
       animacion.finished.catch(finalizar);
-      return animacion;
+      return animacion.finished;
     }
 
-    function opciones(token) {
-      return { duration: window.scalaris.movimiento.duracion(token), easing: window.scalaris.movimiento.curva() };
+    function definirTramos(reducido) {
+      if (reducido) {
+        const fundido = revelado.tiempos('--dur-reduced');
+        return { fundido, limite: fundido.duration };
+      }
+      const anillo = revelado.tiempos('--dur-didactic');
+      const elevacion = revelado.tiempos('--dur-panel');
+      const impacto = revelado.tiempos('--dur-panel-exit');
+      const onda = revelado.tiempos();
+      const resto = elevacion.duration + impacto.duration + onda.duration;
+      return { anillo, elevacion, impacto, onda, resto, limite: anillo.duration + resto + onda.duration };
     }
 
-    async function reproducirSecuencia() {
-      const entrada = [
-        animar(fondo.querySelector('#presentacion-logotipo'),
-          [{ opacity: 0, transform: 'scale(0.95)' }, { opacity: 1, transform: 'scale(1)' }], opciones('--dur-view')),
+    function animarCarga(imagen) {
+      return Promise.all([
+        animar(imagen,
+          [{ opacity: 0, transform: 'scale(0.95)' }, { opacity: 1, transform: 'scale(1)' }], tramos.onda),
         animar(fondo.querySelector('#presentacion-anillo circle'),
-          [{ strokeDashoffset: 365 }, { strokeDashoffset: 0 }], opciones('--dur-didactic')),
+          [{ strokeDashoffset: 365 }, { strokeDashoffset: 0 }], tramos.anillo),
         animar(fondo.querySelector('#presentacion-nombre'),
-          [{ clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)' }], opciones('--dur-view')),
+          [{ clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)' }], tramos.onda),
         animar(fondo.querySelector('#presentacion-organizacion'),
-          [{ opacity: 0, transform: 'scale(0.95) translateY(16px)' }, { opacity: 1, transform: 'scale(1) translateY(0)' }], opciones('--dur-panel')),
-      ];
-      await Promise.all(entrada.map(animacion => animacion.finished));
-      if (completada) return;
-      const cierre = [
-        animar(fondo.querySelector('#presentacion-anillo'),
-          [{ transform: 'rotate(-90deg) scale(1)' }, { transform: 'rotate(-90deg) scale(1.03)', offset: 0.5 },
-            { transform: 'rotate(-90deg) scale(1)' }], opciones('--dur-view')),
+          [{ opacity: 0, transform: 'scale(0.95) translateY(16px)' }, { opacity: 1, transform: 'scale(1) translateY(0)' }], tramos.elevacion),
+      ]);
+    }
+
+    function prepararAbertura(imagen) {
+      const abertura = fondo.querySelector('#presentacion-abertura');
+      const superficie = fondo.querySelector('#presentacion-superficie-mascara');
+      const { x, y, radio } = revelado.medir(revelado.centroDe(imagen));
+      superficie.setAttribute('width', window.innerWidth);
+      superficie.setAttribute('height', window.innerHeight);
+      abertura.setAttribute('cx', x);
+      abertura.setAttribute('cy', y);
+      abertura.setAttribute('r', radio);
+      return abertura;
+    }
+
+    function elevarLogotipo(imagen) {
+      return Promise.all([
+        animar(imagen, [{ transform: 'scale(1)' }, { transform: posicionElevada }], tramos.elevacion),
         animar(fondo.querySelector('#presentacion-barra'),
-          [{ opacity: 0, transform: 'scaleX(0.95)' }, { opacity: 1, transform: 'scaleX(1)' }], opciones('--dur-view')),
-      ];
-      await Promise.all(cierre.map(animacion => animacion.finished));
-      if (completada) return;
-      await animar(fondo, [{ opacity: 1, transform: 'scale(1)' }, { opacity: 0, transform: 'scale(1.04)' }],
-        opciones('--dur-view-exit')).finished;
-      finalizar();
+          [{ opacity: 0, transform: 'scaleX(0.95)' }, { opacity: 1, transform: 'scaleX(1)' }], tramos.elevacion),
+      ]);
     }
 
-    function reproducir() {
+    async function reproducirSecuencia(imagen) {
+      await animarCarga(imagen);
+      const directorioListo = await window.scalaris.entradaInicio?.directorioListo;
+      if (!directorioListo || completada || performance.now() + tramos.resto >= plazo) return;
+      const abertura = prepararAbertura(imagen);
+      window.addEventListener('resize', finalizar);
+      await elevarLogotipo(imagen);
       if (completada) return;
-      try {
-        window.scalaris.sonido?.reproducir('entrada');
-        if (preferencia.matches) {
-          animar(fondo, [{ opacity: 1 }, { opacity: 0 }], opciones('--dur-reduced'))
-            .finished.then(finalizar, finalizar);
-        } else reproducirSecuencia().catch(finalizar);
-      } catch (_) { finalizar(); }
+      await animar(imagen, [{ transform: posicionElevada }, { transform: 'translateY(0) scale(0.95)' }], tramos.impacto);
+      if (completada) return;
+      const onda = animar(abertura, [{ transform: 'scale(0)' }, { transform: 'scale(1)' }], tramos.onda);
+      fondo.setAttribute('data-revelando', '');
+      await onda;
     }
 
-    function montarPresentacion() {
-      const plantilla = document.getElementById('presentacion-plantilla');
-      fondo = plantilla.content.firstElementChild.cloneNode(true);
-      const imagen = fondo.querySelector('#presentacion-logotipo');
-      imagen.src = raiz.getAttribute('data-tema') === 'medianoche' ? '/assets/LogoClaro.png' : '/assets/LogoOscuro.png';
-      fondo.toggleAttribute('data-movimiento-reducido', preferencia.matches);
-      estado.activa = true;
-      raiz.setAttribute('data-presentacion-activa', '');
-      raiz.appendChild(fondo);
+    function reproducir(imagen) {
+      if (completada) return;
+      sonarEntrada();
+      if (tramos.fundido) return animar(fondo, [{ opacity: 1 }, { opacity: 0 }], tramos.fundido);
+      return reproducirSecuencia(imagen);
+    }
+
+    function escucharInterrupciones() {
       window.addEventListener('pagehide', finalizar);
       document.addEventListener('keydown', finalizarPorGesto, true);
       document.addEventListener('pointerdown', finalizarPorGesto, true);
       document.addEventListener('visibilitychange', alOcultar);
       preferencia.addEventListener('change', alReducir);
-      const duracion = window.scalaris.movimiento.duracion;
-      const limite = preferencia.matches ? duracion('--dur-reduced') :
-        duracion('--dur-didactic') + duracion('--dur-view') + duracion('--dur-view-exit');
-      programar(finalizar, limite + duracion('--dur-view'));
-      imagen.decode().then(reproducir, finalizar);
+    }
+
+    function montarPresentacion() {
+      const reducido = preferencia.matches;
+      if (document.hidden || (!reducido && !window.CSS?.supports('mask-image', "url('#presentacion-mascara')"))) {
+        finalizar();
+        return;
+      }
+      const plantilla = document.getElementById('presentacion-plantilla');
+      fondo = plantilla.content.firstElementChild.cloneNode(true);
+      const imagen = fondo.querySelector('#presentacion-logotipo');
+      if (typeof imagen.animate !== 'function') { finalizar(); return; }
+      tramos = definirTramos(reducido);
+      imagen.src = raiz.getAttribute('data-tema') === 'medianoche' ? '/assets/LogoClaro.png' : '/assets/LogoOscuro.png';
+      fondo.toggleAttribute('data-movimiento-reducido', reducido);
+      estado.activa = true;
+      raiz.setAttribute('data-presentacion-activa', '');
+      // El fundido base sigue desactivado al retirar la máscara.
+      raiz.setAttribute('data-vista-revelada', '');
+      raiz.appendChild(fondo);
+      escucharInterrupciones();
+      plazo = performance.now() + tramos.limite;
+      temporizador = setTimeout(finalizar, tramos.limite);
+      imagen.decode().then(() => reproducir(imagen)).then(finalizar, finalizar);
     }
 
     try {

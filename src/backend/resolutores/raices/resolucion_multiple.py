@@ -22,7 +22,7 @@ def resolver_candidatos(entrada: EntradaResolucionMultiple) -> ResultadoResoluci
     """Devuelve un resultado por identificador; lanza ValueError solo por configuración común inválida."""
     entrada = validar_resolucion_multiple(entrada)
     funcion = compilar(entrada.configuracion.expresion, **opciones_unidad(entrada.unidad_angular))
-    arbol = analizar_expresion(entrada.configuracion.expresion)
+    arbol = analizar_expresion(entrada.configuracion.expresion, unidad_angular=entrada.unidad_angular)
     reserva = entrada.configuracion.limite_iteraciones + EVALUACIONES_AUXILIARES_CANDIDATO
     resultados = []
     reservadas = 0

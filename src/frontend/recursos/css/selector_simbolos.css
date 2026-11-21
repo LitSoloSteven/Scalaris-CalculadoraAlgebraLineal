@@ -2,30 +2,57 @@
     width: min(42rem, calc(100% - var(--space-6)));
     max-height: calc(100dvh - var(--space-6));
     margin: auto;
-    padding: var(--space-5);
+    padding: 0;
     border: 1px solid var(--border-input);
     border-radius: var(--radius-card);
     color: var(--text-main);
     background: var(--bg-elevated);
+    box-shadow: var(--elev-3);
+    overflow: hidden;
     overscroll-behavior: contain;
+}
+
+.simbolos-dialogo[open] {
+    display: flex;
+    flex-direction: column;
 }
 
 .simbolos-dialogo::backdrop {
     background: var(--scrim);
+    overflow: hidden;
+    overscroll-behavior: contain;
 }
 
 .simbolos-cabecera {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: var(--space-2);
-    margin-block-end: var(--space-4);
+    gap: var(--space-3);
+    flex-shrink: 0;
+    padding: var(--space-4) var(--space-5);
+    border-bottom: 1px solid var(--border-input);
+    background: var(--bg-elevated);
 }
 
 .simbolos-cabecera h2 {
+    margin: 0;
+    min-width: 0;
     font-size: var(--fs-h2);
     line-height: 1.3;
     font-weight: var(--fw-h2);
+}
+
+.simbolos-cabecera form {
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.simbolos-cuerpo {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: var(--space-4) var(--space-5) var(--space-5);
 }
 
 .simbolos-filtros,
@@ -72,12 +99,27 @@
 .simbolos-opcion,
 .simbolos-boton {
     min-height: 44px;
-    padding: var(--space-2);
+    padding: var(--space-2) var(--space-3);
     border: 1px solid var(--border-input);
     border-radius: var(--radius-btn);
     color: var(--text-main);
     background: var(--bg-calc-btn);
     cursor: pointer;
+    transition: transform var(--dur-release) var(--ease-std);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    :is(.simbolos-opcion, .simbolos-boton):hover {
+        background: var(--accent-soft);
+        transform: scale(1.02);
+        transition-duration: var(--dur-state);
+    }
+}
+
+:is(.simbolos-opcion, .simbolos-boton):active {
+    box-shadow: var(--elev-inset);
+    transform: scale(0.97);
+    transition-duration: var(--dur-press);
 }
 
 .simbolos-opcion {
@@ -104,14 +146,33 @@
     margin-block-start: var(--space-3);
 }
 
-.simbolos-dialogo :focus-visible,
-.simbolos-boton:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 1px;
+.simbolos-dialogo :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+}
+
+html[data-entrada="teclado"] :is(.simbolos-opcion, .simbolos-boton) {
+    transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    :is(.simbolos-opcion, .simbolos-boton),
+    :is(.simbolos-opcion, .simbolos-boton):is(:hover, :active) {
+        transition: none;
+        transform: none;
+    }
 }
 
 @media (max-width: 480px) {
     .simbolos-filtros {
         grid-template-columns: 1fr;
+    }
+
+    .simbolos-cabecera {
+        padding: var(--space-3) var(--space-4);
+    }
+
+    .simbolos-cuerpo {
+        padding: var(--space-3) var(--space-4) var(--space-4);
     }
 }

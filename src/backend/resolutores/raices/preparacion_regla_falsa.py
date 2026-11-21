@@ -44,7 +44,7 @@ def preparar_intervalo_regla_falsa(entrada: EntradaReglaFalsa) -> IntervaloRegla
     canonica = validar_entrada_regla_falsa(_datos_entrada(entrada))
     try:
         funcion = compilar(canonica.expresion, **opciones_unidad(canonica.unidad_angular))
-        arbol = analizar_expresion(canonica.expresion)
+        arbol = analizar_expresion(canonica.expresion, unidad_angular=canonica.unidad_angular)
     except ValueError as error:
         fallo = _error_contextual_regla_falsa(
             error, {"etapa": "sintaxis", "x_fallo": None, "intervalo_valido": None}

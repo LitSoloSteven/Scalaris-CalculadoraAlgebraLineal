@@ -7,7 +7,7 @@ from ._estados_modelos import mostrar_estado
 
 from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.iconos import icono_svg
-from src.frontend.navegacion import ruta_de
+from src.frontend.navegacion import herramienta_por_identificador
 from src.frontend.componentes.captura_matrices import PanelCapturaMatrices
 from .mixin_calculo_leontief import MixinCalculoLeontief
 
@@ -34,12 +34,13 @@ class VistaLeontief(MixinGlosaModelos, MixinLimpiezaModelos, MixinCalculoLeontie
     def construir(self, token_transferencia: str = ''):
         """Monta captura, ejemplos y resultados del modelo económico."""
         PanelCapturaMatrices.inyectar_recursos_cliente()
-        crear_estructura_aplicacion(self, ruta_activa=ruta_de("leontief"))
+        herramienta = herramienta_por_identificador(self.herramienta_modelo)
+        crear_estructura_aplicacion(self, ruta_activa=herramienta.ruta)
 
         with ui.column().classes("w-full max-w-7xl mx-auto p-6 mt-4 vista-raiz"):
             self.contenedor_transferencia = ui.column().classes('w-full')
             with ui.row().classes("w-full items-center gap-3 mb-6"):
-                ui.html(icono_svg("matriz_inversa")).classes("w-8 h-8 texto-acento")
+                ui.html(icono_svg(herramienta.icono)).classes("w-8 h-8 texto-acento")
                 with ui.column().classes("gap-0"):
                     ui.label("Modelo de Leontief").classes("text-2xl font-bold texto-principal")
                     ui.label("Insumo-Producto · x = (I - C)^(-1) d").classes("text-sm texto-secundario")

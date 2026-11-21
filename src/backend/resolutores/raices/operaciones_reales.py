@@ -6,6 +6,7 @@ from collections.abc import Callable
 from src.backend.excepciones import ErrorDominio, ErrorNoFinito
 from .errores_numericos import ErrorCapacidadNumerica
 from .gramatica_funcion import FUNCIONES_REALES
+from .notacion_calculo import NOMBRES_ANGULARES
 from .unidades_angulares import argumento_angular, resultado_angular, validar_unidad_angular
 
 _OPERACIONES = {ast.Add: lambda izquierda, derecha: izquierda + derecha,
@@ -28,7 +29,10 @@ def comprobar_real(valor: object) -> float:
     return numero
 
 
-def aplicar_operador(operador: ast.operator, izquierda: float, derecha: float) -> float:
+def aplicar_operador(
+    operador: ast.operator, izquierda: float, derecha: float, *,
+    admitir_subdesbordamiento: Callable[[], bool] | None = None,
+) -> float:
     """Aplica un operador permitido; traduce fallos y detecta ceros por subdesbordamiento."""
     operacion = _OPERACIONES.get(type(operador))
     if operacion is None:
@@ -36,16 +40,21 @@ def aplicar_operador(operador: ast.operator, izquierda: float, derecha: float) -
     resultado = ejecutar_operacion(lambda: operacion(izquierda, derecha))
     producto_no_nulo = isinstance(operador, ast.Mult) and izquierda != 0 and derecha != 0
     cociente_o_potencia = isinstance(operador, (ast.Div, ast.Pow)) and izquierda != 0
-    _comprobar_subdesbordamiento(resultado, producto_no_nulo or cociente_o_potencia)
+    _comprobar_subdesbordamiento(resultado, producto_no_nulo or cociente_o_potencia, admitir_subdesbordamiento)
     return resultado
 
 
-def aplicar_funcion(nombre: str, argumento: float, *, unidad_angular: str = "radianes") -> float:
+def aplicar_funcion(
+    nombre: str, argumento: float, *, unidad_angular: str = "radianes",
+    admitir_subdesbordamiento: Callable[[], bool] | None = None,
+) -> float:
     """Evalúa una función real de un argumento y detecta la pérdida total de exp."""
     unidad = validar_unidad_angular(unidad_angular)
+    if nombre in NOMBRES_ANGULARES:
+        nombre, unidad = NOMBRES_ANGULARES[nombre], "radianes"
     argumento = argumento_angular(nombre, comprobar_real(argumento), unidad)
     resultado = ejecutar_operacion(lambda: FUNCIONES_REALES[nombre](argumento))
-    _comprobar_subdesbordamiento(resultado, nombre == "exp")
+    _comprobar_subdesbordamiento(resultado, nombre == "exp", admitir_subdesbordamiento)
     return comprobar_real(resultado_angular(nombre, resultado, unidad))
 
 
@@ -63,6 +72,10 @@ def ejecutar_operacion(operacion: Callable[[], float]) -> float:
         raise ErrorDominio("La función no es real en un punto del intervalo.") from error
 
 
-def _comprobar_subdesbordamiento(resultado: float, matematicamente_no_nulo: bool) -> None:
+def _comprobar_subdesbordamiento(
+    resultado: float, matematicamente_no_nulo: bool, admitir: Callable[[], bool] | None,
+) -> None:
     if resultado == 0 and matematicamente_no_nulo:
+        if admitir is not None and admitir():
+            return
         raise ErrorCapacidadNumerica("La evaluación se redondea a cero por subdesbordamiento.", "SUBDESBORDAMIENTO")

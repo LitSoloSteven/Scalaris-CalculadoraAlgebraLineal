@@ -6,14 +6,24 @@ from src.frontend.componentes.iconos import icono_svg
 from src.frontend.componentes.menu_accesible import vincular_estado_menu
 
 
-def renderizar_boton_tema():
-    """Renderiza el botón de tema con su menú desplegable accesible."""
-    boton_tema = ui.button(color=None).classes("boton-icono p-0 texto-principal").props(
-        'flat ripple=false data-sonido="apertura" aria-label="Seleccionar Tema" aria-haspopup="menu" aria-expanded="false"'
+_TEMAS = (("Papel", "papel"), ("Marea", "marea"), ("Medianoche", "medianoche"))
+
+
+def renderizar_boton_tema(mostrar_nombre: bool = False):
+    """Renderiza el selector de tema y muestra su nombre si se solicita."""
+    clases = "selector-tema-textual" if mostrar_nombre else "boton-icono p-0 texto-principal"
+    boton_tema = ui.button(color=None).classes(clases).props(
+        'flat ripple=false data-sonido="apertura" aria-haspopup="menu" aria-expanded="false"'
     )
+    if not mostrar_nombre:
+        boton_tema.props('aria-label="Seleccionar Tema"')
 
     with boton_tema:
         ui.html(icono_svg("temas"))
+        if mostrar_nombre:
+            ui.label("Tema").classes("sr-only")
+            for etiqueta, identificador in _TEMAS:
+                ui.label(etiqueta).props(f'data-inicio-nombre-tema="{identificador}"')
         menu_tema = ui.menu().classes("p-2 min-w-[150px]")
         vincular_estado_menu(boton_tema, menu_tema)
 
@@ -25,12 +35,7 @@ def renderizar_boton_tema():
 
 def _renderizar_opciones_tema() -> None:
     """Genera las tres alternativas de tema gráfico con su muestra de color."""
-    opciones = (
-        ("Papel", "papel"),
-        ("Marea", "marea"),
-        ("Medianoche", "medianoche"),
-    )
-    for etiqueta, id_tema in opciones:
+    for etiqueta, id_tema in _TEMAS:
         with ui.menu_item().classes("rounded-lg mb-1 flex items-center gap-3 w-full").props(
             f'role="menuitemradio" aria-checked="false" data-tema-opcion="{id_tema}"'
         ):

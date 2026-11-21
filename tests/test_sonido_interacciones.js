@@ -14,7 +14,7 @@ function boton(tipo = 'accion') {
         tipo, atributos, iconos,
         setAttribute: (clave, valor) => atributos.set(clave, valor),
         getAttribute: clave => atributos.get(clave) ?? null,
-        querySelector: () => null,
+        querySelector: selector => selector === '.q-icon' && tipo === 'cierre' ? { textContent: 'close' } : null,
         querySelectorAll: () => iconos,
         closest(selector) {
             if (selector.includes('data-sonido-control')) return tipo === 'silencio' ? this : null;
@@ -23,8 +23,7 @@ function boton(tipo = 'accion') {
         },
         matches(selector) {
             if (selector.includes(':disabled')) return this.disabled || atributos.get('aria-disabled') === 'true';
-            return { '.inicio-fila': 'apertura', '.inicio-dialogo-cerrar': 'cierre',
-                'a[href], [href]': 'navegacion' }[selector] === tipo;
+            return { '.q-select': 'apertura', 'a[href], [href]': 'navegacion' }[selector] === tipo;
         }
     };
 }
@@ -40,7 +39,6 @@ function preparar(valor = null, bloquear = false) {
     const almacen = new Map(valor === null ? [] : [['scalaris:sonido-silenciado', valor]]);
     documento.documentElement = {};
     documento.querySelectorAll = () => botones;
-    documento.querySelector = () => documento.dialogoAbierto ? {} : null;
     ventana.scalaris = { sonido: { reproducir: nombre => sonidos.push(nombre),
         silenciar: estado => estados.push(estado) } };
     const entorno = { window: ventana, document: documento,
@@ -137,16 +135,12 @@ test('las ráfagas de teclado, controles inertes y navegación modificada no emi
     comprobar.deepEqual(caso.sonidos, []);
 });
 
-test('Escape solo suena en un diálogo abierto y no se repite', () => {
+test('Escape no reproduce el cierre del directorio sin diálogos', () => {
     const caso = preparar();
     caso.documento.emitir('keydown', { isTrusted: true, key: 'Escape' });
-    comprobar.deepEqual(caso.sonidos, []);
-    caso.documento.dialogoAbierto = true;
     caso.documento.emitir('keydown', { isTrusted: true, key: 'Escape', repeat: true });
     caso.documento.emitir('keydown', { isTrusted: false, key: 'Escape' });
     comprobar.deepEqual(caso.sonidos, []);
-    caso.documento.emitir('keydown', { isTrusted: true, key: 'Escape' });
-    comprobar.deepEqual(caso.sonidos, ['cierre']);
 });
 
 test('recargar y destruir retira listeners y observadores anteriores', () => {

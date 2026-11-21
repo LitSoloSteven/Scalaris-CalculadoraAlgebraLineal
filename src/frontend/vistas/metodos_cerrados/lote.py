@@ -8,6 +8,7 @@ from nicegui import ui
 from src.backend.resolutores.raices.limites_resolucion_multiple import (
     MAXIMO_CANDIDATOS_MULTIPLE, MAXIMO_EVALUACIONES_MULTIPLE,
 )
+from src.frontend.componentes.simbolos import habilitar_simbolos
 from src.frontend.controladores.biseccion.resolucion_multiple import resolver_lote as resolver_biseccion
 from src.frontend.controladores.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
 from src.frontend.controladores.exploracion_raices import LONGITUD_CAMPO_EXPLORACION, presentar_candidato
@@ -232,6 +233,7 @@ def _montar_controles(lote: LoteMetodosCerrados) -> None:
             "w-full matriz-entrada").props(f":max-values={MAXIMO_CANDIDATOS_MULTIPLE}")
         lote.presupuesto = ui.input("Presupuesto de evaluaciones", value=str(MAXIMO_EVALUACIONES_MULTIPLE)).classes(
             "w-full matriz-entrada").props(f"inputmode=numeric maxlength={LONGITUD_CAMPO_EXPLORACION}")
+        habilitar_simbolos(lote.presupuesto, "entero")
         lote.boton_seleccion = _boton("Resolver selección", partial(lote._resolver, False, False))
     for campo in (lote.selector_uno, lote.selector_multiple, lote.presupuesto):
         campo.on_value_change(lote.invalidar)

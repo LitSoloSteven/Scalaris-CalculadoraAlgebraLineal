@@ -1,15 +1,18 @@
-/** Libera la entrada del inicio después de la presentación y de montar las tarjetas. */
+/** Detecta el directorio listo y prepara la portada en paralelo a la presentación. */
 'use strict';
 {
   if (location.pathname === '/' && !window.scalaris.entradaInicio) {
     const raiz = document.documentElement;
+    const presentacionActiva = window.scalaris.presentacion?.activa;
     let observador = null;
     let fotograma = null;
     let completada = false;
-    const temporizador = setTimeout(finalizar, 5000);
+    let resolver;
+    const directorioListo = new Promise(respuesta => { resolver = respuesta; });
+    const temporizador = presentacionActiva ? null : setTimeout(finalizar, 5000);
     raiz.setAttribute('data-glosa', 'cerrado');
-    raiz.setAttribute('data-inicio-pendiente', '');
-    window.scalaris.entradaInicio = { finalizar };
+    if (!presentacionActiva) raiz.setAttribute('data-inicio-pendiente', '');
+    window.scalaris.entradaInicio = { directorioListo, finalizar };
 
     function finalizar() {
       if (completada) return;
@@ -19,25 +22,24 @@
       observador?.disconnect();
       window.removeEventListener('pagehide', finalizar);
       raiz.removeAttribute('data-inicio-pendiente');
+      resolver(false);
+    }
+
+    function confirmarMontaje() {
+      resolver(true);
+      finalizar();
     }
 
     function comprobarContenido() {
-      if (completada || !document.querySelector('.inicio-raiz .inicio-fila')) return;
+      if (completada || !document.querySelector('.inicio-directorio[data-directorio-listo] .inicio-enlace[href]')) return;
       observador?.disconnect();
       if (document.body) document.body.classList.add('inicio-pagina');
-      fotograma = requestAnimationFrame(() => { fotograma = requestAnimationFrame(finalizar); });
-    }
-
-    function esperarContenido() {
-      if (completada) return;
-      observador = new MutationObserver(comprobarContenido);
-      observador.observe(raiz, { childList: true, subtree: true });
-      comprobarContenido();
+      fotograma = requestAnimationFrame(() => { fotograma = requestAnimationFrame(confirmarMontaje); });
     }
 
     window.addEventListener('pagehide', finalizar);
-    const presentacion = window.scalaris.presentacion;
-    if (presentacion?.activa) presentacion.terminada.then(esperarContenido);
-    else esperarContenido();
+    observador = new MutationObserver(comprobarContenido);
+    observador.observe(raiz, { childList: true, subtree: true, attributes: true, attributeFilter: ['data-directorio-listo'] });
+    comprobarContenido();
   }
 }

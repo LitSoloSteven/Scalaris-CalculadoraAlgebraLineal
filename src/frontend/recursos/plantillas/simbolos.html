@@ -1,24 +1,26 @@
 <template id="plantilla-simbolos">
-    <dialog class="simbolos-dialogo" aria-labelledby="titulo-simbolos">
+    <dialog class="simbolos-dialogo" aria-labelledby="titulo-simbolos" closedby="any">
         <header class="simbolos-cabecera">
             <h2 id="titulo-simbolos">Símbolos matemáticos</h2>
             <form method="dialog">
-                <button type="submit" class="simbolos-boton">Cerrar</button>
+                <button type="submit" class="simbolos-boton simbolos-cerrar" aria-label="Cerrar selector de símbolos">Cerrar</button>
             </form>
         </header>
-        <div class="simbolos-filtros">
-            <label>Buscar símbolo
-                <input type="search" placeholder="Nombre, símbolo o U+221E" autocomplete="off" autofocus>
-            </label>
-            <label>Categoría
-                <select><option value="">Todas</option></select>
+        <div class="simbolos-cuerpo">
+            <div class="simbolos-filtros">
+                <label>Buscar símbolo
+                    <input type="search" placeholder="Nombre, símbolo o U+221E" autocomplete="off" autofocus>
+                </label>
+                <label>Categoría
+                    <select><option value="">Todas</option></select>
+                </label>
+            </div>
+            <p role="status" class="simbolos-estado"></p>
+            <div class="simbolos-lista"></div>
+            <button type="button" class="simbolos-boton" data-mas-simbolos hidden>Mostrar más</button>
+            <label class="simbolos-copia" data-copia-simbolo hidden>Símbolo para copiar
+                <input type="text" readonly>
             </label>
         </div>
-        <p role="status" class="simbolos-estado"></p>
-        <div class="simbolos-lista"></div>
-        <button type="button" class="simbolos-boton" data-mas-simbolos hidden>Mostrar más</button>
-        <label class="simbolos-copia" data-copia-simbolo hidden>Símbolo para copiar
-            <input type="text" readonly>
-        </label>
     </dialog>
 </template>

@@ -9,6 +9,7 @@ from .contrato_biseccion import EntradaBiseccion, ResultadoBiseccion, Sugerencia
 from .dominio_intervalo import argumento_afin, comprobar_dominio_intervalo
 from .evaluador_funcion import compilar, evaluar
 from .gramatica_funcion import analizar_expresion
+from .nodos_integral import nodos_exteriores
 from .unidades_angulares import opciones_unidad
 
 
@@ -59,7 +60,7 @@ def sugerir_recorte_dominio(
 def _recortar_raices(expresion: str, intervalo: tuple[float, float]) -> tuple[float, float] | None:
     limites = Fraction(intervalo[0]), Fraction(intervalo[1])
     arbol = analizar_expresion(expresion)
-    for nodo in ast.walk(arbol):
+    for nodo in nodos_exteriores(arbol):
         if isinstance(nodo, ast.Call) and nodo.func.id == "sqrt":
             afin = argumento_afin(nodo.args[0])
             if afin is None:

@@ -2,7 +2,11 @@
 import ast
 
 from src.backend.resolutores.raices.gramatica_funcion import analizar_expresion
+from src.backend.resolutores.raices.nodos_integral import NOMBRE_INTEGRAL, signo_infinito
 from src.backend.resolutores.raices.normalizacion_funcion import normalizar_expresion
+from src.backend.resolutores.raices.notacion_calculo import (
+    AGREGADOS, GUARDIA_DERIVADA, NOMBRES_ANGULARES, POSTFIJOS, entero_literal,
+)
 
 _OPERADORES = {ast.Add: ("+", 1), ast.Sub: ("-", 1), ast.Mult: (r"\cdot", 2)}
 _FUNCIONES = {
@@ -13,11 +17,16 @@ _FUNCIONES = {
 }
 _ATOMO = 5
 _INDICES_RAIZ = {"sqrt": "", "cbrt": "[3]", "raiz4": "[4]"}
+_AGREGADOS = {AGREGADOS["∑"]: r"\sum", AGREGADOS["∏"]: r"\prod"}
+_POSTFIJOS = {
+    POSTFIJOS["°"]: r"^{\circ}", POSTFIJOS["‰"]: r"\text{‰}",
+    POSTFIJOS["′"]: r"^{\prime}", POSTFIJOS["″"]: r"^{\prime\prime}",
+}
 
 
 def formatear_expresion(expresion: str, etiqueta: str = "f(x)") -> dict[str, str]:
     """Devuelve TeX de vocabulario fijo y texto normalizado; propaga ValueError."""
-    arbol = analizar_expresion(expresion)
+    arbol = analizar_expresion(expresion, conservar_calculo=True)
     formula, _ = _proyectar(arbol.body)
     return {"latex": f"{etiqueta} = {formula}", "texto": f"{etiqueta} = {normalizar_expresion(expresion)}"}
 
@@ -37,7 +46,7 @@ def _proyectar(nodo: ast.AST) -> tuple[str, int]:
         signo = "-" if isinstance(nodo.op, ast.USub) else "+"
         return signo + _agrupar(_proyectar(nodo.operand), 4), 3
     if isinstance(nodo, ast.Call):
-        return _proyectar_llamada(nodo), _ATOMO
+        return _proyectar_llamada(nodo)
     return _proyectar_binario(nodo)
 
 
@@ -56,11 +65,44 @@ def _agrupar(proyeccion: tuple[str, int], minima: int) -> str:
     return rf"\left({texto}\right)" if prioridad < minima else texto
 
 
-def _proyectar_llamada(nodo: ast.Call) -> str:
-    nombre = nodo.func.id
+def _proyectar_llamada(nodo: ast.Call) -> tuple[str, int]:
+    nombre = NOMBRES_ANGULARES.get(nodo.func.id, nodo.func.id)
+    if nombre == GUARDIA_DERIVADA:
+        return _proyectar(nodo.args[1])
+    if nombre in _AGREGADOS:
+        return _proyectar_agregado(_AGREGADOS[nombre], nodo), 4
+    if nombre in _POSTFIJOS:
+        return _proyectar_postfijo(_POSTFIJOS[nombre], nodo.args[0]), 4
+    if nombre == NOMBRE_INTEGRAL:
+        return _proyectar_integral(nodo), 4
     argumento, _ = _proyectar(nodo.args[0])
     if nombre in _INDICES_RAIZ:
-        return rf"\sqrt{_INDICES_RAIZ[nombre]}{{{argumento}}}"
+        return rf"\sqrt{_INDICES_RAIZ[nombre]}{{{argumento}}}", _ATOMO
     if nombre == "abs":
-        return rf"\left|{argumento}\right|"
-    return rf"{_FUNCIONES[nombre]}\left({argumento}\right)"
+        return rf"\left|{argumento}\right|", _ATOMO
+    return rf"{_FUNCIONES[nombre]}\left({argumento}\right)", _ATOMO
+
+
+def _proyectar_postfijo(sufijo: str, nodo: ast.AST) -> str:
+    prioridad = _ATOMO if isinstance(nodo, (ast.Name, ast.Constant)) else _ATOMO + 1
+    return _agrupar(_proyectar(nodo), prioridad) + sufijo
+
+
+def _proyectar_agregado(operador: str, nodo: ast.Call) -> str:
+    indice, inferior, superior, cuerpo = nodo.args
+    expresion, _ = _proyectar(cuerpo)
+    limites = f"_{{{indice.id}={entero_literal(inferior)}}}^{{{entero_literal(superior)}}}"
+    return rf"{operador}{limites}\left({expresion}\right)"
+
+
+def _proyectar_integral(nodo: ast.Call) -> str:
+    cuerpo, variable, inferior, superior = nodo.args
+    integrando = _agrupar(_proyectar(cuerpo), 2)
+    return rf"\int_{{{_proyectar_limite(inferior)}}}^{{{_proyectar_limite(superior)}}} {integrando}\,\mathrm{{d}}{variable.id}"
+
+
+def _proyectar_limite(nodo: ast.AST) -> str:
+    signo = signo_infinito(nodo)
+    if signo:
+        return r"-\infty" if signo < 0 else r"\infty"
+    return _proyectar(nodo)[0]

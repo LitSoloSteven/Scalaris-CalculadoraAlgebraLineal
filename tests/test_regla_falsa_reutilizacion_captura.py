@@ -39,7 +39,7 @@ def test_reales_conservan_conversion_lexica(valor, esperado):
     assert captura_real.real_capturado(valor, "El extremo") == esperado
 
 
-@pytest.mark.parametrize("valor", [True, False, None, "", "1/2", "1,5", "abc", [], {}])
+@pytest.mark.parametrize("valor", [True, False, None, "", "1,5", "abc", [], {}])
 def test_reales_invalidos_orientan_sin_exponer_el_valor(valor):
     """Los errores conservan la etiqueta y la indicación del separador decimal."""
     with pytest.raises(ValueError) as error:

@@ -1,16 +1,15 @@
-"""Movimiento de filas, halo del puntero y diálogos del inicio."""
+"""Movimiento, puntero y contraste del directorio de inicio."""
 from pathlib import Path
 import re
 
 from tests.comun_estilos import (
     analizar_tokens, hexadecimal_a_rgb, razon_contraste,
-    leer_css_inicio, buscar_cierre_bloque, bloque_css,
+    leer_css_inicio, bloque_css,
 )
 
 
-RUTA_CSS_TEMAS = Path("src/frontend/recursos/css/theme.css")
 RUTA_JS_INICIO = Path("src/frontend/recursos/js/inicio.js")
-RUTA_VISTA_INICIO = Path("src/frontend/vistas/inicio/vista_inicio.py")
+RUTA_JS_ENTRADA = Path("src/frontend/recursos/js/inicio_entrada.js")
 
 
 def test_transiciones_inicio_solo_transformacion_y_opacidad():
@@ -35,104 +34,85 @@ def test_transiciones_inicio_solo_transformacion_y_opacidad():
 
 
 def test_teclado_y_movimiento_reducido_desactivan_transformaciones():
-    """Teclado y preferencia de movimiento reducido evitan animaciones físicas."""
+    """El teclado revela las secciones al instante y el movimiento reducido usa opacidad."""
     css = leer_css_inicio()
-    inicio_teclado = css.index('html[data-entrada="teclado"] .inicio-fila,')
-    apertura_teclado = css.index("{", inicio_teclado)
-    teclado = css[inicio_teclado:buscar_cierre_bloque(css, apertura_teclado) + 1]
+    teclado = bloque_css(css, 'html[data-entrada="teclado"] :is(.inicio-seccion, .inicio-simbolo)')
     movimiento_reducido = bloque_css(css, "@media (prefers-reduced-motion: reduce)")
 
-    assert "transition: none !important" in teclado
-    assert "transition-delay: var(--tiempo-instantaneo) !important" in teclado
-    assert ".inicio-dialogo-tarjeta" in teclado
-    assert ".inicio-tarjeta" in teclado
-    assert "inicio-capa-destacada" in teclado
+    assert "opacity: 1" in teclado
+    assert "transform: none" in teclado
+    assert "transition: none" in teclado
+    assert ".inicio-seccion:focus-within" in css
     assert "transition: opacity var(--dur-reduced) var(--ease-std)" in movimiento_reducido
-    assert "transform: none !important" in movimiento_reducido
-    assert "transition-delay: var(--tiempo-instantaneo) !important" in movimiento_reducido
-    assert ".inicio-fila" in movimiento_reducido
-    assert ".inicio-dialogo-tarjeta" in movimiento_reducido
-    assert ".inicio-tarjeta" in movimiento_reducido
-    assert ".inicio-capa-destacada" in movimiento_reducido
+    assert "transform: none" in movimiento_reducido
+    assert ".inicio-seccion" in movimiento_reducido
+    assert ".inicio-simbolo" in movimiento_reducido
+    assert 'html:not([data-entrada="teclado"]) .inicio-enlace:active .inicio-simbolo' in css
 
 
-def test_filas_y_tarjetas_inicio_limitan_retardos():
-    """Los índices limitados mantienen los retardos y el arranque tras la pantalla inicial."""
-    vista = RUTA_VISTA_INICIO.read_text(encoding="utf-8")
+def test_secciones_inicio_limitan_retardos():
+    """El escalonado de secciones espera el montaje y tiene un tope compartido."""
     css = leer_css_inicio()
-    js = RUTA_JS_INICIO.read_text(encoding="utf-8")
+    seccion = bloque_css(css, ".inicio-seccion {")
+    assert "min(calc(var(--inicio-indice, 0) * var(--stagger-step)), var(--stagger-max))" in seccion
+    assert "var(--dur-view)" in seccion
+    assert "html[data-inicio-pendiente]" in css
 
-    assert "_CLASES_ORDEN[indice_fila]" in vista
-    assert "_CLASES_ORDEN[min(indice_tarjeta, 3)]" in vista
-    assert "min(calc(var(--i, 0) * var(--stagger-step)), var(--stagger-max))" in bloque_css(css, ".inicio-fila")
-    assert "min(calc(var(--i, 0) * var(--stagger-step)), var(--stagger-max))" in bloque_css(css, ".inicio-dialogo[data-abierto] .inicio-tarjeta")
-    assert "min(indice_tarjeta, 3)" in vista
-    assert "evento.detail === 0" in js
-    assert "html[data-entrada=\"teclado\"]" in css
-    entrada = Path("src/frontend/recursos/js/inicio_entrada.js").read_text(encoding="utf-8")
-    assert "presentacion.terminada.then(esperarContenido)" in entrada
+    entrada = RUTA_JS_ENTRADA.read_text(encoding="utf-8")
+    assert ".inicio-directorio[data-directorio-listo]" in entrada
+    assert "{ directorioListo, finalizar }" in entrada
     assert "new MutationObserver" in entrada
-    assert "requestAnimationFrame(finalizar)" in entrada
+    assert "requestAnimationFrame(confirmarMontaje)" in entrada
 
 
-def test_halo_puntero_limita_cuadros_y_solo_mueve_su_capa():
-    """El halo agrupa eventos por cuadro y respeta táctil y movimiento reducido."""
+def test_gesto_puntero_solo_mueve_los_trazos_del_simbolo():
+    """El gesto usa la capa vectorial, puntero preciso y la preferencia de movimiento."""
     js = RUTA_JS_INICIO.read_text(encoding="utf-8")
-    inicio = js.index("  function mover_destacada(fila, evento) {")
-    fin = js.index("  function limpiar_destacada_al_salir_puntero(evento) {", inicio)
-    manejador_halo = js[inicio:fin]
 
-    assert "window.requestAnimationFrame" in manejador_halo
-    assert "fotogramasDestacada.has(fila)" in manejador_halo
-    assert "posicionesDestacada.set(fila" in manejador_halo
-    assert "destacada.style.transform = 'translate3d('" in manejador_halo
-    assert ".style." not in manejador_halo.replace("destacada.style.transform", "")
-    assert "data-destacada-activa" in js
-    assert "pointermove" in js
-    assert "pointerout" in js
-    assert "evento.pointerType === 'touch'" in js
+    assert "data-gesto-inicio" in js
+    assert ".inicio-simbolo" in js
+    assert ".animate(" in js
+    assert re.search(r"\bcancel(?:\?\.)?\(", js)
+    assert "--dur-state" in js
+    assert "pointerenter" in js or "pointerover" in js
+    assert "pointercancel" in js and ".finished" in js
+    assert "pointerdown" in js and "keydown" in js
+    assert "pointerType" in js and re.search(r"['\"]touch['\"]", js)
+    assert "(hover: hover) and (pointer: fine)" in js
     assert "prefers-reduced-motion: reduce" in js
+    assert "getBoundingClientRect(" not in js
+    assert "pointermove" not in js
 
 
-def test_token_halo_definido_y_contraste_texto_aa():
-    """La mezcla del halo mantiene contraste de texto en los tres temas."""
-    from tests.comun import leer_css_completo
-    css_completo = leer_css_completo()
+def test_texto_y_foco_del_directorio_conservan_contraste():
+    """El texto, el acento y el anillo de foco mantienen contraste en los tres temas."""
     css = leer_css_inicio()
     tokens = analizar_tokens("src/frontend/recursos/css/tokens.css", pasadas=1, exigir_cierre=False)
-
-    assert css_completo.count("--hub-spot:") == 4
-    assert "color-mix(in srgb, var(--accent) var(--hub-spot), transparent)" in css
-    for nombre_tema in ("papel", "marea", "medianoche"):
-        tema = tokens[nombre_tema]
-        porcentaje = float(tema["--hub-spot"].rstrip("%")) / 100
-        panel = hexadecimal_a_rgb(tema["--bg-panel"], limpiar_espacios=False)
-        acento = hexadecimal_a_rgb(tema["--accent"], limpiar_espacios=False)
-        fondo_halo = tuple(
-            porcentaje * canal_acento + (1 - porcentaje) * canal_panel
-            for canal_acento, canal_panel in zip(acento, panel)
-        )
-        for color_frente in ("--text-main", "--text-sec"):
-            proporcion = razon_contraste(hexadecimal_a_rgb(tema[color_frente], limpiar_espacios=False), fondo_halo)
-            assert proporcion >= 4.5, (
-                f"Contraste de {color_frente} en {nombre_tema}: {proporcion:.2f}:1 < 4.5:1"
-            )
+    enlace = bloque_css(css, ".inicio-enlace {")
+    hover = bloque_css(css, ".inicio-enlace:hover")
+    assert "color: var(--text-main)" in enlace
+    assert "background: var(--bg-panel)" in hover
+    assert "outline: 2px solid var(--focus-ring)" in css
+    for nombre_tema, tema in tokens.items():
+        for color_fondo in ("--bg-page", "--bg-panel"):
+            fondo = hexadecimal_a_rgb(tema[color_fondo])
+            for color_frente, minimo in (("--text-main", 4.5), ("--text-sec", 4.5),
+                                        ("--accent", 3), ("--focus-ring", 3)):
+                proporcion = razon_contraste(hexadecimal_a_rgb(tema[color_frente]), fondo)
+                assert proporcion >= minimo, (
+                    f"Contraste de {color_frente} frente a {color_fondo} en {nombre_tema}: "
+                    f"{proporcion:.2f}:1 < {minimo}:1"
+                )
 
 
-def test_cierre_dialogo_espera_transicion_y_tiene_respaldo():
-    """El cierre termina por evento de opacidad o por el temporizador de respaldo."""
-    js = RUTA_JS_INICIO.read_text(encoding="utf-8")
-    css = leer_css_inicio()
+def test_entrada_directorio_limpia_esperas_y_tiene_respaldo():
+    """El montaje termina aunque falte contenido y libera sus recursos con pagehide."""
+    entrada = RUTA_JS_ENTRADA.read_text(encoding="utf-8")
 
-    assert "tarjeta.style.transformOrigin" in js
-    assert "if (inmediato) tarjeta.style.removeProperty('transform-origin')" in js
-    assert "cancelar_espera_cierre();" in js
-    assert "dialogo.removeAttribute('data-abierto')" in js
-    assert "evento.propertyName === 'opacity'" in js
-    assert "window.scalaris.movimiento.duracion('--dur-view-exit') + 50" in js
-    assert "dialogo.close()" in js
-    assert "transition: opacity var(--dur-view-exit) var(--ease-std)" in css
-    assert "transform var(--dur-view-exit) var(--ease-std)" in css
-    assert "transition-duration: var(--dur-view)" in css
-    assert "transform: translateY(100%)" in css
-    assert "transition-duration: var(--dur-view-exit)" in css
+    assert re.search(r"setTimeout\(finalizar,\s*(?:5_?000)\)", entrada)
+    assert "clearTimeout(" in entrada
+    assert "cancelAnimationFrame(" in entrada
+    assert ".disconnect()" in entrada
+    assert "addEventListener('pagehide', finalizar)" in entrada
+    assert "removeEventListener('pagehide', finalizar)" in entrada
+    assert "removeAttribute('data-inicio-pendiente')" in entrada

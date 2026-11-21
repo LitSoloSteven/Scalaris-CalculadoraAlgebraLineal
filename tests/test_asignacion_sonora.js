@@ -31,9 +31,10 @@ function pulsar(caso, boton, datos = {}) {
 
 test('la prioridad es atributo valido, regla ordenada, icono y accion generica', () => {
     const caso = preparar();
-    const reglas = ['[data-destino-matriz]', '.inicio-fila'];
+    const reglas = ['[data-destino-matriz]', 'a[href], [href]'];
     comprobar.equal(caso.resolver(control({ 'data-sonido': 'pegar' }, reglas, 'add')), 'pegar');
     comprobar.equal(caso.resolver(control({}, reglas, 'add')), 'transferencia');
+    comprobar.equal(caso.resolver(control({}, [reglas[1]], 'add')), 'navegacion');
     comprobar.equal(caso.resolver(control({}, [], 'add')), 'agregar');
     comprobar.equal(caso.resolver(control()), 'accion');
     for (const nombre of ['__proto__', 'constructor', '', 'inexistente']) {

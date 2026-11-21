@@ -1,0 +1,170 @@
+<template data-ejemplo="sistemas">
+  <div class="inicio-ejemplo-etapa">
+    <p class="inicio-ejemplo-etiqueta">Matriz aumentada</p>
+    <table class="inicio-ejemplo-matriz" aria-hidden="true">
+      <tbody>
+        <tr><td>1</td><td>1</td><td>5</td></tr>
+        <tr><td>1</td><td>−1</td><td>1</td></tr>
+      </tbody>
+    </table>
+    <div class="inicio-ejemplo-ecuaciones">
+      <span role="math" aria-label="x más y igual a cinco">x + y = 5</span>
+      <span role="math" aria-label="x menos y igual a uno">x − y = 1</span>
+    </div>
+  </div>
+  <span class="inicio-ejemplo-flecha" aria-hidden="true">→</span>
+  <div class="inicio-ejemplo-etapa">
+    <p class="inicio-ejemplo-etiqueta">Sin x en la segunda fila</p>
+    <table class="inicio-ejemplo-matriz" aria-hidden="true">
+      <tbody>
+        <tr><td>1</td><td>1</td><td>5</td></tr>
+        <tr data-ejemplo-fila><td class="inicio-ejemplo-cero">0</td><td>−2</td><td>−4</td></tr>
+      </tbody>
+    </table>
+    <div class="inicio-ejemplo-ecuaciones">
+      <span role="math" aria-label="x más y igual a cinco">x + y = 5</span>
+      <strong class="inicio-ejemplo-resultado" role="math" aria-label="menos dos y igual a menos cuatro">−2y = −4</strong>
+    </div>
+  </div>
+</template>
+
+<template data-ejemplo="leontief">
+  <div class="inicio-ejemplo-etapa">
+    <p class="inicio-ejemplo-etiqueta">Demanda final</p>
+    <div class="inicio-ejemplo-barras" aria-hidden="true">
+      <div class="inicio-ejemplo-barra-fila">
+        <span>S₁</span>
+        <span class="inicio-ejemplo-barra-pista"><span class="inicio-ejemplo-barra-relleno inicio-ejemplo-barra-d1"></span></span>
+        <span>10</span>
+      </div>
+      <div class="inicio-ejemplo-barra-fila">
+        <span>S₂</span>
+        <span class="inicio-ejemplo-barra-pista"><span class="inicio-ejemplo-barra-relleno inicio-ejemplo-barra-d2"></span></span>
+        <span>6</span>
+      </div>
+    </div>
+    <div class="inicio-ejemplo-ecuaciones">
+      <span role="math" aria-label="Demanda diez y seis">d = (10, 6)</span>
+    </div>
+  </div>
+  <span class="inicio-ejemplo-flecha" aria-hidden="true">→</span>
+  <div class="inicio-ejemplo-etapa">
+    <p class="inicio-ejemplo-etiqueta">Producción total</p>
+    <div class="inicio-ejemplo-barras" aria-hidden="true">
+      <div class="inicio-ejemplo-barra-fila">
+        <span>S₁</span>
+        <span class="inicio-ejemplo-barra-pista"><span class="inicio-ejemplo-barra-relleno inicio-ejemplo-barra-activa inicio-ejemplo-barra-x1" data-ejemplo-marca="crecer-x"></span></span>
+        <span>20</span>
+      </div>
+      <div class="inicio-ejemplo-barra-fila">
+        <span>S₂</span>
+        <span class="inicio-ejemplo-barra-pista"><span class="inicio-ejemplo-barra-relleno inicio-ejemplo-barra-activa inicio-ejemplo-barra-x2" data-ejemplo-marca="crecer-x"></span></span>
+        <span>8</span>
+      </div>
+    </div>
+    <div class="inicio-ejemplo-ecuaciones">
+      <strong class="inicio-ejemplo-resultado" role="math" aria-label="Producción veinte y ocho">x = (20, 8)</strong>
+    </div>
+  </div>
+</template>
+
+<template data-ejemplo="matrices">
+  <div class="inicio-ejemplo-etapa">
+    <p class="inicio-ejemplo-etiqueta">Fila y columna</p>
+    <div class="inicio-ejemplo-matrices-par" aria-hidden="true">
+      <table class="inicio-ejemplo-matriz inicio-ejemplo-matriz-compacta">
+        <tbody>
+          <tr class="inicio-ejemplo-resaltado"><td>1</td><td>2</td></tr>
+          <tr><td>0</td><td>1</td></tr>
+        </tbody>
+      </table>
+      <span class="inicio-ejemplo-operador">×</span>
+      <table class="inicio-ejemplo-matriz inicio-ejemplo-matriz-compacta">
+        <tbody>
+          <tr><td class="inicio-ejemplo-cero">2</td><td>0</td></tr>
+          <tr><td class="inicio-ejemplo-cero">1</td><td>3</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="inicio-ejemplo-ecuaciones">
+      <span role="math" aria-label="Fila uno coma dos por columna dos coma uno">(1, 2) · (2, 1)</span>
+    </div>
+  </div>
+  <span class="inicio-ejemplo-flecha" aria-hidden="true">→</span>
+  <div class="inicio-ejemplo-etapa">
+    <p class="inicio-ejemplo-etiqueta">Primera entrada de AB</p>
+    <table class="inicio-ejemplo-matriz inicio-ejemplo-matriz-compacta" aria-hidden="true">
+      <tbody>
+        <tr><td class="inicio-ejemplo-cero" data-ejemplo-marca="expandir">4</td><td>6</td></tr>
+        <tr><td>1</td><td>3</td></tr>
+      </tbody>
+    </table>
+    <div class="inicio-ejemplo-ecuaciones">
+      <strong class="inicio-ejemplo-resultado" role="math" aria-label="Primera entrada de A B igual a cuatro">(AB)₁₁ = 4</strong>
+    </div>
+  </div>
+</template>
+
+<template data-ejemplo="inversa">
+  <div class="inicio-ejemplo-etapa">
+    <p class="inicio-ejemplo-etiqueta">Bloques A e I</p>
+    <table class="inicio-ejemplo-matriz inicio-ejemplo-matriz-cuatro" aria-hidden="true">
+      <tbody>
+        <tr><td>2</td><td>0</td><td>1</td><td>0</td></tr>
+        <tr><td>0</td><td>3</td><td>0</td><td>1</td></tr>
+      </tbody>
+    </table>
+    <div class="inicio-ejemplo-ecuaciones">
+      <span role="math" aria-label="Bloques A e identidad">[A | I]</span>
+    </div>
+  </div>
+  <span class="inicio-ejemplo-flecha" aria-hidden="true">→</span>
+  <div class="inicio-ejemplo-etapa">
+    <p class="inicio-ejemplo-etiqueta">Bloques I y A⁻¹</p>
+    <table class="inicio-ejemplo-matriz inicio-ejemplo-matriz-cuatro" aria-hidden="true">
+      <tbody data-ejemplo-marca="deslizar-derecha">
+        <tr><td>1</td><td>0</td><td class="inicio-ejemplo-cero">1/2</td><td class="inicio-ejemplo-cero">0</td></tr>
+        <tr><td>0</td><td>1</td><td class="inicio-ejemplo-cero">0</td><td class="inicio-ejemplo-cero">1/3</td></tr>
+      </tbody>
+    </table>
+    <div class="inicio-ejemplo-ecuaciones">
+      <strong class="inicio-ejemplo-resultado" role="math" aria-label="Bloques identidad y A inversa">[I | A⁻¹]</strong>
+    </div>
+  </div>
+</template>
+
+<template data-ejemplo="factorizacion_lu">
+  <div class="inicio-ejemplo-etapa">
+    <p class="inicio-ejemplo-etiqueta">Pivoteo parcial PA</p>
+    <table class="inicio-ejemplo-matriz inicio-ejemplo-matriz-compacta" aria-hidden="true">
+      <tbody>
+        <tr class="inicio-ejemplo-resaltado"><td>4</td><td>3</td></tr>
+        <tr><td>2</td><td>1</td></tr>
+      </tbody>
+    </table>
+    <div class="inicio-ejemplo-ecuaciones">
+      <span role="math" aria-label="A de filas dos uno y cuatro tres permutada">P permuta F₁ y F₂</span>
+    </div>
+  </div>
+  <span class="inicio-ejemplo-flecha" aria-hidden="true">→</span>
+  <div class="inicio-ejemplo-etapa">
+    <p class="inicio-ejemplo-etiqueta">Factores L y U</p>
+    <div class="inicio-ejemplo-matrices-par" aria-hidden="true">
+      <table class="inicio-ejemplo-matriz inicio-ejemplo-matriz-compacta" data-ejemplo-marca="deslizar-izquierda">
+        <tbody>
+          <tr><td>1</td><td>0</td></tr>
+          <tr><td class="inicio-ejemplo-cero">1/2</td><td>1</td></tr>
+        </tbody>
+      </table>
+      <table class="inicio-ejemplo-matriz inicio-ejemplo-matriz-compacta" data-ejemplo-marca="deslizar-derecha">
+        <tbody>
+          <tr><td class="inicio-ejemplo-cero">4</td><td class="inicio-ejemplo-cero">3</td></tr>
+          <tr><td>0</td><td class="inicio-ejemplo-cero">−1/2</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="inicio-ejemplo-ecuaciones">
+      <strong class="inicio-ejemplo-resultado" role="math" aria-label="L por U igual a P A">L · U = PA</strong>
+    </div>
+  </div>
+</template>

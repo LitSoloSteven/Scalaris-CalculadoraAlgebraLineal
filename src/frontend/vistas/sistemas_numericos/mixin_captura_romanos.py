@@ -1,5 +1,6 @@
 """Operandos, operación y ejemplos de la calculadora romana."""
 from nicegui import ui
+from src.frontend.componentes.simbolos import habilitar_simbolos
 from src.frontend.componentes.sonido import notificar
 from src.frontend.controladores.sesion_matricial import actualizar_contexto, notificar_edicion
 
@@ -27,6 +28,7 @@ class MixinCapturaRomanos:
                     "flex-1 matriz-entrada numericos-entrada text-center"
                 ).classes("numericos-operando")
                 self.entrada_a.props('autocomplete="off" spellcheck="false"')
+                habilitar_simbolos(self.entrada_a, "romano")
 
                 self.etiqueta_signo = ui.label("+").classes("text-2xl font-bold texto-secundario flex-shrink-0")
 
@@ -34,6 +36,7 @@ class MixinCapturaRomanos:
                     "flex-1 matriz-entrada numericos-entrada text-center"
                 ).classes("numericos-operando")
                 self.entrada_b.props('autocomplete="off" spellcheck="false"')
+                habilitar_simbolos(self.entrada_b, "romano")
 
             self.etiqueta_error = ui.label("").classes("fuente-pequena").classes("numericos-error").props('role="alert"')
 

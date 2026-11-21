@@ -18,7 +18,7 @@ from src.frontend.componentes.portapapeles_matricial import filtrar_entrada_nume
 @pytest.mark.parametrize('texto,esperado', [
     ('', ''), ('+-./', '+-./'), ('-3/7', '-3/7'), ('+0.25', '+0.25'),
     ('1e3', '13'), ('-2E-4', '-2-4'), ('uno 12 dos', '12'),
-    ('１２٣−2\u00a0', '2'), ('1\U0001f600/2', '1/2'),
+    ('１２٣−2\u00a0', '−2'), ('1\U0001f600/2', '1/2'),
     ('<script>9</script>', '9/'), ('--1//2..++', '--1//2..++'),
     ('9' * 10000, '9' * 10000),
 ])
@@ -41,7 +41,7 @@ def test_configuracion_json_coincide_con_fuentes_python():
     assert bloque is not None
     assert json.loads(bloque.group(1)) == {'caracteres': CARACTERES_ENTRADA_NUMERICA,
                                          'mensaje': MENSAJE_ENTRADA_NUMERICA}
-    assert set(CARACTERES_ENTRADA_NUMERICA) == set('0123456789./-+')
+    assert set(CARACTERES_ENTRADA_NUMERICA) == set('0123456789./-+−÷⁄∕¼½¾⅐⅑⅒⅓⅔⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞↉‰')
     assert tema._CABECERA_HTML.index('scalaris-configuracion-numerica') < tema._CABECERA_HTML.index('/assets/js/entrada_numerica.js')
 
 

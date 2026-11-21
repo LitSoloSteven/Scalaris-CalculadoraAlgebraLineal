@@ -5,6 +5,8 @@ from fractions import Fraction
 from src.backend.excepciones import ErrorDominio
 from .errores_numericos import ErrorSingularidad
 from .gramatica_funcion import analizar_expresion, CONSTANTES_REALES
+from .nodos_integral import es_integral, nodos_exteriores
+from .notacion_calculo import ANGULARES_RADIANES, GRADOS_POR_MEDIA_VUELTA, NOMBRES_ANGULARES
 from .polos_trigonometricos import comprobar_polos_tangente
 from .unidades_angulares import validar_unidad_angular
 
@@ -20,16 +22,17 @@ def argumento_afin(nodo: ast.AST) -> Afin | None:
 def comprobar_dominio_intervalo(expresion: str, intervalo: tuple[float, float], *, unidad_angular: str = "radianes") -> None:
     """Rechaza polos verificables; no certifica continuidad de expresiones generales."""
     validar_unidad_angular(unidad_angular)
-    comprobar_dominio_arbol(analizar_expresion(expresion), intervalo, unidad_angular)
+    arbol = analizar_expresion(expresion, unidad_angular=unidad_angular)
+    comprobar_dominio_arbol(arbol, intervalo, unidad_angular)
 
 
 def comprobar_dominio_arbol(arbol: ast.Expression, intervalo: tuple[float, float], unidad_angular: str) -> None:
     """Comprueba restricciones estructurales con un AST y una unidad ya validados."""
     extremos = tuple(Fraction(valor) for valor in intervalo)
-    for nodo in ast.walk(arbol):
+    for nodo in nodos_exteriores(arbol):
         if isinstance(nodo, ast.BinOp):
             _comprobar_operacion(nodo, extremos)
-        elif isinstance(nodo, ast.Call):
+        elif isinstance(nodo, ast.Call) and not es_integral(nodo):
             _comprobar_funcion(nodo, extremos, unidad_angular)
 
 
@@ -51,8 +54,9 @@ def _comprobar_potencia(base: ast.AST, exponente: Fraction, extremos: tuple) -> 
 
 
 def _comprobar_funcion(nodo: ast.Call, extremos: tuple, unidad: str) -> None:
-    nombre = nodo.func.id
-    rango = _rango_afin(nodo.args[0], extremos)
+    nombre = NOMBRES_ANGULARES.get(nodo.func.id, nodo.func.id)
+    argumento, unidad = _argumento_para_dominio(nodo, unidad)
+    rango = _rango_afin(argumento, extremos)
     if rango is None:
         return
     if nombre == "tan":
@@ -63,6 +67,24 @@ def _comprobar_funcion(nodo: ast.Call, extremos: tuple, unidad: str) -> None:
         raise ErrorDominio(f"La raíz {_RAICES_PARES[nombre]} no es real en todo el intervalo.")
     if nombre in ("asin", "acos") and (rango[0] < -1 or rango[1] > 1):
         raise ErrorDominio("El argumento de la función trigonométrica inversa debe estar entre -1 y 1.")
+
+
+def _argumento_para_dominio(nodo: ast.Call, unidad: str) -> tuple[ast.AST, str]:
+    argumento = nodo.args[0]
+    if nodo.func.id != ANGULARES_RADIANES["tan"]:
+        return argumento, unidad
+    if isinstance(argumento, ast.BinOp) and isinstance(argumento.op, ast.Mult):
+        if _es_escala_grados(argumento.right):
+            return argumento.left, "grados"
+    return argumento, "radianes"
+
+
+def _es_escala_grados(nodo: ast.AST) -> bool:
+    return (
+        isinstance(nodo, ast.BinOp) and isinstance(nodo.op, ast.Div)
+        and isinstance(nodo.left, ast.Name) and nodo.left.id == "pi"
+        and isinstance(nodo.right, ast.Constant) and nodo.right.value == GRADOS_POR_MEDIA_VUELTA
+    )
 
 
 def _contiene_cero(nodo: ast.AST, extremos: tuple) -> bool:

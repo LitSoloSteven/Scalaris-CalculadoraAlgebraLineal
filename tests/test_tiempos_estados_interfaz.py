@@ -22,14 +22,14 @@ def test_pulsacion_y_regreso_comparten_tokens():
 
 
 def test_selector_geometria_y_regreso_inicio():
-    """El selector, el deslizador y las filas responden con los tokens previstos."""
+    """El selector, el deslizador y los símbolos responden con los tokens previstos."""
     selector = leer_estilos("selector_opciones.css")
     geometria = leer_estilos("vistas_geometria.css")
-    inicio = leer_estilos("vistas_inicio_matriz.css")
+    inicio = leer_estilos("vistas_inicio_directorio.css")
     assert "var(--dur-state)" in bloque_css(selector, ".selector-opciones-cambiando .selector-opciones-indicador")
     assert "var(--dur-press)" in bloque_css(selector, ".selector-opciones-opcion:active")
     assert "var(--dur-release)" in bloque_css(geometria, ".geometria-deslizador-entrada")
     assert "var(--dur-press)" in bloque_css(geometria, ".geometria-deslizador-entrada:active")
-    fila = bloque_css(inicio, ".inicio-fila[data-interaccion]")
-    assert "var(--dur-release)" in fila
-    assert "var(--dur-press)" in bloque_css(inicio, ".inicio-fila:active")
+    simbolo = bloque_css(inicio, ".inicio-simbolo {")
+    assert "var(--dur-release)" in simbolo
+    assert "var(--dur-press)" in bloque_css(inicio, ".inicio-enlace:active .inicio-simbolo")

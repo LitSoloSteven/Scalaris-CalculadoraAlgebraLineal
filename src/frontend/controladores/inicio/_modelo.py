@@ -1,113 +1,57 @@
-"""Datos de presentacion de las tarjetas de inicio."""
-from __future__ import annotations
-
+"""Datos canónicos para el acceso destacado y el ejemplo de la portada."""
 from dataclasses import dataclass
 
-from src.frontend.navegacion import (
-    PILARES,
-    predeterminado_elemento_clave,
-    enlace_elemento_navegacion,
-    elementos_navegacion,
-    pilar_de,
+from src.frontend.controladores.inicio._recientes import (
+    IDENTIFICADOR_DESTACADA_PREDETERMINADA,
+    elegir_acceso_destacado,
 )
-from ._recientes import elegir_destacada
+from src.frontend.navegacion import (
+    ElementoNavegacion,
+    Herramienta,
+    enlace_elemento_navegacion,
+    herramienta_por_identificador,
+)
 
-
-@dataclass(frozen=True)
-class ModeloTarjeta:
-    """Datos inmutables de una tarjeta de herramienta o escena."""
-    clave: str
-    identificador_herramienta: str
-    nombre: str
-    descripcion: str
-    icono: str
-    enlace: str
-
-
-@dataclass(frozen=True)
-class ModeloPilar:
-    """Datos inmutables de un area y sus tarjetas."""
-    identificador: str
-    nombre_corto: str
-    tarjetas: tuple[ModeloTarjeta, ...]
-    icono: str = ""
-    descripcion: str = ""
-    unidad_singular: str = "herramienta"
-    unidad_plural: str = "herramientas"
-
-
-@dataclass(frozen=True)
-class SeleccionInicial:
-    """Estado de seleccion focal inicial deducido de historial o estado vacio."""
-    identificador_pilar: str
-    clave_tarjeta: str
-    hay_historial: bool
-
-
-METADATOS_PILARES: dict[str, dict[str, str]] = {
-    "algebra": {
-        "descripcion": "Sistemas, vectores, matrices, inversa, determinantes y factorización LU, con cada paso a la vista.",
-        "unidad_singular": "herramienta",
-        "unidad_plural": "herramientas",
-    },
-    "visualizador": {
-        "descripcion": "Mira rectas, planos y vectores en 2D y 3D.",
-        "unidad_singular": "escena",
-        "unidad_plural": "escenas",
-    },
-    "utilidades": {
-        "descripcion": "Convierte bases y opera con números romanos.",
-        "unidad_singular": "herramienta",
-        "unidad_plural": "herramientas",
-    },
+_TITULOS_PORTADA: dict[str, str] = {
+    "vis:vectores": "Vectores del Visualizador",
 }
 
 
-def formatear_cantidad_elementos(cantidad: int, singular: str = "herramienta", plural: str = "herramientas") -> str:
-    """Devuelve el conteo con el plural correcto (probada con 0, 1 y N)."""
-    unidad = singular if cantidad == 1 else plural
-    return f"{cantidad} {unidad}"
+@dataclass(frozen=True)
+class EstadoPortada:
+    """Estado único que sincroniza título, enlace destacado y ejemplo de portada."""
+
+    clave: str
+    titulo: str
+    enlace: str
+    texto_destacado: str
+    hay_historial: bool
 
 
-def pilares_inicio() -> tuple[ModeloPilar, ...]:
-    """Prepara las areas y tarjetas siguiendo el catalogo de navegacion."""
-    pilares = []
-    for pilar in PILARES:
-        elementos = elementos_navegacion(pilar.identificador)
-        tarjetas = tuple(
-            ModeloTarjeta(
-                clave=elemento.clave,
-                identificador_herramienta=elemento.identificador_herramienta,
-                nombre=elemento.etiqueta,
-                descripcion=elemento.descriptor,
-                icono=elemento.icono,
-                enlace=enlace_elemento_navegacion(elemento),
-            )
-            for elemento in elementos
-        )
-        meta = METADATOS_PILARES.get(pilar.identificador, {})
-        pilares.append(
-            ModeloPilar(
-                identificador=pilar.identificador,
-                nombre_corto=pilar.nombre_corto,
-                tarjetas=tarjetas,
-                icono=pilar.icono,
-                descripcion=meta.get("descripcion", ""),
-                unidad_singular=meta.get("unidad_singular", "herramienta"),
-                unidad_plural=meta.get("unidad_plural", "herramientas"),
-            )
-        )
-    return tuple(pilares)
+def acceso_destacado() -> Herramienta:
+    """Devuelve el acceso de Sistemas que comparten el destacado y el ejemplo."""
+    return herramienta_por_identificador(IDENTIFICADOR_DESTACADA_PREDETERMINADA)
 
 
-def seleccion_inicial(datos_crudos) -> SeleccionInicial:
-    """Prepara la seleccion inicial o el estado orientativo cuando no hay historial."""
-    try:
-        herramienta, hay_historial = elegir_destacada(datos_crudos)
-        identificador_pilar = pilar_de(herramienta.identificador).identificador
-        clave_tarjeta = predeterminado_elemento_clave(herramienta.ruta)
-        if clave_tarjeta is None:
-            clave_tarjeta = "sistemas"
-        return SeleccionInicial(identificador_pilar=identificador_pilar, clave_tarjeta=clave_tarjeta, hay_historial=hay_historial)
-    except Exception:
-        return SeleccionInicial(identificador_pilar="algebra", clave_tarjeta="sistemas", hay_historial=False)
+def titulo_portada(acceso: ElementoNavegacion) -> str:
+    """Devuelve el título legible del acceso para el destacado y el ejemplo."""
+    return _TITULOS_PORTADA.get(acceso.clave, acceso.etiqueta)
+
+
+def estado_portada(datos_crudos=None) -> EstadoPortada:
+    """Resuelve en un único estado el título, el vínculo de retorno y el ejemplo."""
+    acceso, hay_historial = elegir_acceso_destacado(datos_crudos)
+    titulo = titulo_portada(acceso)
+    if hay_historial:
+        texto_destacado = f"Retomar {titulo}"
+    elif acceso.clave == IDENTIFICADOR_DESTACADA_PREDETERMINADA:
+        texto_destacado = "Resolver un sistema"
+    else:
+        texto_destacado = f"Abrir {titulo}"
+    return EstadoPortada(
+        clave=acceso.clave,
+        titulo=titulo,
+        enlace=enlace_elemento_navegacion(acceso),
+        texto_destacado=texto_destacado,
+        hay_historial=hay_historial,
+    )

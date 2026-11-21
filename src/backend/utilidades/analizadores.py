@@ -3,8 +3,19 @@
 from fractions import Fraction
 import re
 
+from src.backend.modelos.entrada_numerica import (
+    DIVISIONES_TIPOGRAFICAS, FRACCIONES_TIPOGRAFICAS, SIGNO_MENOS_TIPOGRAFICO, SIMBOLO_POR_MIL,
+)
 from src.backend.modelos.matriz import Matriz
 from src.backend.utilidades.validadores import ValidadorMatriz
+
+_LETRAS_VARIABLE = "a-zA-ZΑ-Ωα-ω"
+_DIGITOS_SUBINDICE = "₀₁₂₃₄₅₆₇₈₉"
+_NORMALIZACION_SUBINDICES = str.maketrans(_DIGITOS_SUBINDICE, "0123456789")
+_PRODUCTOS = "*×·⋅∙"
+_DIVISIONES = "/" + DIVISIONES_TIPOGRAFICAS
+_ATOMO_NUMERICO = rf"(?:\d+(?:\.\d*)?|\.\d+|[{FRACCIONES_TIPOGRAFICAS}])"
+_RAZON_NUMERICA = rf"{_ATOMO_NUMERICO}(?:\s*[{_DIVISIONES}]\s*\d+)?{SIMBOLO_POR_MIL}?"
 
 
 def _clave_orden_natural(cadena: str) -> list[int | str]:
@@ -19,7 +30,12 @@ class AnalizadorSistema:
     """Parsea ecuaciones lineales de texto a matrices aumentadas de coeficientes."""
 
     EXPRESION_REGULAR_TERMINO = re.compile(
-        r"([+-]?)\s*(?:(?:([\d\.\/]+)\s*\*?\s*)?([a-zA-Z][a-zA-Z0-9_]*)|([\d\.\/]+))"
+        rf"\s*(?P<signo>[+{SIGNO_MENOS_TIPOGRAFICO}-]?)\s*"
+        rf"(?:(?:(?P<coeficiente>{_RAZON_NUMERICA})(?:\s*[{_PRODUCTOS}])?\s*)?"
+        rf"(?P<variable>[{_LETRAS_VARIABLE}][{_LETRAS_VARIABLE}0-9_{_DIGITOS_SUBINDICE}]*)"
+        rf"(?:\s*(?P<operador>[{_PRODUCTOS}{_DIVISIONES}])\s*"
+        rf"(?P<escalar>{_ATOMO_NUMERICO}{SIMBOLO_POR_MIL}?))?"
+        rf"|(?P<constante>{_RAZON_NUMERICA}))"
     )
 
     @classmethod
@@ -48,32 +64,21 @@ class AnalizadorSistema:
         valor_derecha -= constante_izquierda
         return True, coeficientes_izquierda, valor_derecha, ""
 
-    @classmethod
-    def _procesar_termino(
-        cls,
-        coincidencia: re.Match,
-    ) -> tuple[bool, str | None, Fraction, str]:
+    @staticmethod
+    def _procesar_termino(coincidencia: re.Match[str]) -> tuple[str | None, Fraction, str]:
         """Extrae el signo, valor y variable o constante de un término sintáctico."""
-        signo_texto, coeficiente_texto, nombre_variable, constante_texto = coincidencia.groups()
-        signo = -1 if signo_texto == "-" else 1
-
-        if nombre_variable:
-            if not coeficiente_texto:
-                valor = Fraction(1)
-            else:
-                exito, valor_analizado, _ = ValidadorMatriz.parsear_numero_exacto(coeficiente_texto)
-                if not exito:
-                    return False, None, Fraction(0), f"Coeficiente inválido '{coeficiente_texto}' en la variable '{nombre_variable}'."
-                valor = valor_analizado
-            return True, nombre_variable, signo * valor, ""
-
-        if constante_texto:
-            exito, valor_analizado, _ = ValidadorMatriz.parsear_numero_exacto(constante_texto)
-            if not exito:
-                return False, None, Fraction(0), f"Término independiente inválido '{constante_texto}'."
-            return True, None, signo * valor_analizado, ""
-
-        return True, None, Fraction(0), ""
+        signo, coeficiente, variable, operador, escalar, constante = coincidencia.groups()
+        literal = coeficiente or constante or "1"
+        valido, valor, error = ValidadorMatriz.parsear_numero_exacto(literal)
+        if not valido:
+            return None, Fraction(0), f"Valor inválido '{literal}': {error}"
+        if operador:
+            valor, error = _aplicar_escalar(valor, operador, escalar)
+        if signo in ("-", SIGNO_MENOS_TIPOGRAFICO):
+            valor = -valor
+        if variable:
+            variable = variable.translate(_NORMALIZACION_SUBINDICES)
+        return variable, valor, error
 
     @classmethod
     def _parsear_lado_izquierdo(
@@ -83,21 +88,21 @@ class AnalizadorSistema:
         """Extrae los coeficientes de variables y constantes del lado izquierdo."""
         coeficientes: dict[str, Fraction] = {}
         suma_constantes = Fraction(0)
-        cadena_limpia = cadena_izquierda.replace(" ", "")
-
-        coincidencias = list(cls.EXPRESION_REGULAR_TERMINO.finditer(cadena_izquierda))
-        reconstruido = "".join(coincidencia.group(0).replace(" ", "") for coincidencia in coincidencias)
-        if len(reconstruido) != len(cadena_limpia):
-            return {}, Fraction(0), f"Contiene operadores o sintaxis no válida en '{cadena_izquierda}'."
-
-        for coincidencia_termino in coincidencias:
-            correcto, variable, valor, error = cls._procesar_termino(coincidencia_termino)
-            if not correcto:
+        posicion = 0
+        if not cadena_izquierda:
+            return {}, Fraction(0), "Escribe un término a la izquierda de '='."
+        while posicion < len(cadena_izquierda):
+            coincidencia = cls.EXPRESION_REGULAR_TERMINO.match(cadena_izquierda, posicion)
+            if coincidencia is None or (posicion and not coincidencia["signo"]):
+                return {}, Fraction(0), f"Contiene operadores o sintaxis no válida en '{cadena_izquierda}'."
+            variable, valor, error = cls._procesar_termino(coincidencia)
+            if error:
                 return {}, Fraction(0), error
             if variable:
                 coeficientes[variable] = coeficientes.get(variable, Fraction(0)) + valor
             else:
                 suma_constantes += valor
+            posicion = coincidencia.end()
 
         return coeficientes, suma_constantes, None
 
@@ -125,7 +130,7 @@ class AnalizadorSistema:
         if not todas_variables:
             return False, None, [], "No se detectaron variables válidas en el sistema."
 
-        variables_ordenadas = sorted(list(todas_variables), key=_clave_orden_natural)
+        variables_ordenadas = sorted(todas_variables, key=lambda variable: (_clave_orden_natural(variable), variable))
 
         coherente, error_coherencia = _validar_coherencia(ecuaciones_analizadas, variables_estrictas)
         if not coherente:
@@ -148,3 +153,14 @@ def _validar_coherencia(ecuaciones: list, variables_estrictas: bool) -> tuple[bo
     if variables_estrictas:
         return ValidadorMatriz.validar_coherencia_variables(ecuaciones)
     return True, ""
+
+
+def _aplicar_escalar(valor: Fraction, operador: str, literal: str) -> tuple[Fraction, str]:
+    valido, escalar, error = ValidadorMatriz.parsear_numero_exacto(literal)
+    if not valido:
+        return Fraction(0), f"Escalar inválido '{literal}': {error}"
+    if operador in _PRODUCTOS:
+        return valor * escalar, ""
+    if not escalar:
+        return Fraction(0), "No puedes dividir una variable entre cero."
+    return valor / escalar, ""

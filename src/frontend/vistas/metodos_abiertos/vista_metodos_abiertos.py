@@ -6,6 +6,7 @@ from src.frontend.componentes.estructura_aplicacion import crear_estructura_apli
 from src.frontend.componentes.estructura_metodos_raices import montar_estructura_metodos_raices
 from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
 from src.frontend.componentes.selector_opciones import SelectorOpciones
+from src.frontend.componentes.simbolos import habilitar_simbolos
 from src.frontend.controladores.metodos_abiertos import LONGITUD_MAXIMA_NUMERICA, resolver_captura
 from src.frontend.navegacion import ruta_de
 from .figura import crear_figura_metodos_abiertos
@@ -77,13 +78,15 @@ class VistaMetodosAbiertos:
             self.tolerancia = self._crear_campo_numerico(
                 "Tolerancia ε", _TOLERANCIA_POR_DEFECTO)
             self.limite = self._crear_campo_numerico(
-                "Máximo de iteraciones", _LIMITE_POR_DEFECTO)
+                "Máximo de iteraciones", _LIMITE_POR_DEFECTO, "entero")
 
     @staticmethod
-    def _crear_campo_numerico(etiqueta: str, valor: str):
-        return ui.input(etiqueta, value=valor).props(
+    def _crear_campo_numerico(etiqueta: str, valor: str, perfil: str = "real"):
+        campo = ui.input(etiqueta, value=valor).props(
             f"maxlength={LONGITUD_MAXIMA_NUMERICA} autocomplete=off").classes(
             "matriz-entrada min-w-0 flex-1")
+        habilitar_simbolos(campo, perfil)
+        return campo
 
     def _construir_acciones(self) -> None:
         with ui.row().classes("metodos-raices-acciones w-full flex-wrap items-center"):

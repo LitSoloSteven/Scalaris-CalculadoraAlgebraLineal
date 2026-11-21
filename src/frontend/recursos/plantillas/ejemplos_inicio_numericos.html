@@ -1,0 +1,115 @@
+<template data-ejemplo="metodos_cerrados">
+  <div class="inicio-ejemplo-etapa">
+    <p class="inicio-ejemplo-etiqueta">Intervalo [1, 2]</p>
+    <svg class="inicio-ejemplo-lienzo" viewBox="0 0 120 88" role="img" aria-label="Curva x al cuadrado menos 2 con cambio de signo en el intervalo 1 a 2">
+      <line class="inicio-ejemplo-eje" x1="14" y1="54" x2="106" y2="54" />
+      <path class="inicio-ejemplo-trazo-base" d="M 24 74 Q 58 58 96 18" />
+      <circle class="inicio-ejemplo-punto-base" cx="24" cy="54" r="3" />
+      <circle class="inicio-ejemplo-punto-base" cx="96" cy="54" r="3" />
+      <text class="inicio-ejemplo-etiqueta-svg" x="20" y="66">1</text>
+      <text class="inicio-ejemplo-etiqueta-svg" x="93" y="66">2</text>
+    </svg>
+    <div class="inicio-ejemplo-ecuaciones">
+      <span role="math" aria-label="Intervalo inicial de uno a dos">[1, 2]</span>
+    </div>
+  </div>
+  <span class="inicio-ejemplo-flecha" aria-hidden="true">→</span>
+  <div class="inicio-ejemplo-etapa">
+    <p class="inicio-ejemplo-etiqueta">Nuevo extremo 1,5</p>
+    <svg class="inicio-ejemplo-lienzo" viewBox="0 0 120 88" role="img" aria-label="Reducción del extremo superior a 1,5">
+      <line class="inicio-ejemplo-eje" x1="14" y1="54" x2="106" y2="54" />
+      <path class="inicio-ejemplo-trazo-base" d="M 24 74 Q 58 58 96 18" />
+      <g data-ejemplo-marca="deslizar-izquierda">
+        <line class="inicio-ejemplo-trazo-acento" x1="24" y1="54" x2="60" y2="54" />
+        <circle class="inicio-ejemplo-punto" cx="60" cy="54" r="3.5" />
+      </g>
+      <text class="inicio-ejemplo-etiqueta-svg" x="20" y="66">1</text>
+      <text class="inicio-ejemplo-etiqueta-acento" x="55" y="68">1,5</text>
+    </svg>
+    <div class="inicio-ejemplo-ecuaciones">
+      <strong class="inicio-ejemplo-resultado" role="math" aria-label="Nuevo intervalo de uno a uno coma cinco">[1, 1,5]</strong>
+    </div>
+  </div>
+</template>
+
+<template data-ejemplo="metodos_abiertos">
+  <div class="inicio-ejemplo-etapa">
+    <p class="inicio-ejemplo-etiqueta">Aproximación x₀ = 2</p>
+    <svg class="inicio-ejemplo-lienzo" viewBox="0 0 120 88" role="img" aria-label="Punto inicial x0 igual a 2 sobre la parábola">
+      <line class="inicio-ejemplo-eje" x1="14" y1="64" x2="106" y2="64" />
+      <path class="inicio-ejemplo-trazo-base" d="M 20 76 Q 56 66 96 22" />
+      <circle class="inicio-ejemplo-punto-base" cx="96" cy="22" r="3.5" />
+      <text class="inicio-ejemplo-etiqueta-svg" x="88" y="76">x₀=2</text>
+    </svg>
+    <div class="inicio-ejemplo-ecuaciones">
+      <span role="math" aria-label="x sub cero igual a dos">x₀ = 2</span>
+    </div>
+  </div>
+  <span class="inicio-ejemplo-flecha" aria-hidden="true">→</span>
+  <div class="inicio-ejemplo-etapa">
+    <p class="inicio-ejemplo-etiqueta">Paso Newton x₁ = 1,5</p>
+    <svg class="inicio-ejemplo-lienzo" viewBox="0 0 120 88" role="img" aria-label="Recta tangente desde x0 igual a 2 cortando en x1 igual a 1,5">
+      <line class="inicio-ejemplo-eje" x1="14" y1="64" x2="106" y2="64" />
+      <path class="inicio-ejemplo-trazo-base" d="M 20 76 Q 56 66 96 22" />
+      <line class="inicio-ejemplo-trazo-discontinuo" x1="96" y1="22" x2="60" y2="64" />
+      <g data-ejemplo-marca="punto">
+        <circle class="inicio-ejemplo-punto" cx="60" cy="64" r="3.5" />
+      </g>
+      <text class="inicio-ejemplo-etiqueta-acento" x="48" y="78">x₁=1,5</text>
+    </svg>
+    <div class="inicio-ejemplo-ecuaciones">
+      <strong class="inicio-ejemplo-resultado" role="math" aria-label="x sub uno igual a uno coma cinco">x₁ = 1,5</strong>
+    </div>
+  </div>
+</template>
+
+<template data-ejemplo="bases">
+  <div class="inicio-ejemplo-etapa">
+    <p class="inicio-ejemplo-etiqueta">Pesos de 1010₂</p>
+    <table class="inicio-ejemplo-matriz inicio-ejemplo-matriz-cuatro" aria-hidden="true">
+      <tbody>
+        <tr><th>2³</th><th>2²</th><th>2¹</th><th>2⁰</th></tr>
+        <tr><td class="inicio-ejemplo-cero">1</td><td>0</td><td class="inicio-ejemplo-cero">1</td><td>0</td></tr>
+      </tbody>
+    </table>
+    <div class="inicio-ejemplo-ecuaciones">
+      <span role="math" aria-label="Uno por ocho más cero por cuatro más uno por dos más cero por uno">1·8 + 0·4 + 1·2 + 0·1</span>
+    </div>
+  </div>
+  <span class="inicio-ejemplo-flecha" aria-hidden="true">→</span>
+  <div class="inicio-ejemplo-etapa">
+    <p class="inicio-ejemplo-etiqueta">Valor decimal</p>
+    <div class="inicio-ejemplo-fichas" data-ejemplo-marca="expandir" aria-hidden="true">
+      <span class="inicio-ejemplo-ficha inicio-ejemplo-cero">8</span>
+      <span>+</span>
+      <span class="inicio-ejemplo-ficha inicio-ejemplo-cero">2</span>
+    </div>
+    <div class="inicio-ejemplo-ecuaciones">
+      <strong class="inicio-ejemplo-resultado" role="math" aria-label="Diez en base diez">10₁₀</strong>
+    </div>
+  </div>
+</template>
+
+<template data-ejemplo="romanos">
+  <div class="inicio-ejemplo-etapa">
+    <p class="inicio-ejemplo-etiqueta">Términos romanos</p>
+    <div class="inicio-ejemplo-fichas" aria-hidden="true">
+      <span class="inicio-ejemplo-ficha">XIV (14)</span>
+      <span>+</span>
+      <span class="inicio-ejemplo-ficha">IX (9)</span>
+    </div>
+    <div class="inicio-ejemplo-ecuaciones">
+      <span role="math" aria-label="Catorce más nueve">14 + 9</span>
+    </div>
+  </div>
+  <span class="inicio-ejemplo-flecha" aria-hidden="true">→</span>
+  <div class="inicio-ejemplo-etapa">
+    <p class="inicio-ejemplo-etiqueta">Resultado romano</p>
+    <div class="inicio-ejemplo-fichas" data-ejemplo-marca="deslizar-derecha" aria-hidden="true">
+      <span class="inicio-ejemplo-ficha inicio-ejemplo-cero">XXIII (23)</span>
+    </div>
+    <div class="inicio-ejemplo-ecuaciones">
+      <strong class="inicio-ejemplo-resultado" role="math" aria-label="Veintitrés en numeración romana">XXIII</strong>
+    </div>
+  </div>
+</template>

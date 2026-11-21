@@ -43,7 +43,7 @@ def analizar_continuidad_intervalo(expresion: str, intervalo: tuple[float, float
     if cero_preferido is not None and (type(cero_preferido) not in (int, float)
             or cero_preferido not in (entrada.extremo_izquierdo, entrada.extremo_derecho)):
         raise ValueError("El cero elegido debe ser un extremo del intervalo.")
-    arbol = analizar_expresion(entrada.expresion)
+    arbol = analizar_expresion(entrada.expresion, unidad_angular=entrada.unidad_angular)
     funcion = compilar(entrada.expresion, **opciones_unidad(entrada.unidad_angular))
     preparado = preparar_intervalo(entrada, funcion, arbol)
     if cero_preferido is not None and not any(
@@ -140,8 +140,8 @@ def error_extremos(evaluaciones: tuple[EvaluacionExtremo, ...]) -> ResultadoBise
 def diagnostico_interior(expresion: str, intervalo: tuple[float, float], *, unidad_angular: str = "radianes") -> DiagnosticoBiseccion | None:
     """Consulta restricciones estructurales; no afirma haber evaluado su ubicación."""
     try:
-        arbol = analizar_expresion(expresion)
         opciones_unidad(unidad_angular)
+        arbol = analizar_expresion(expresion, unidad_angular=unidad_angular)
     except ValueError as error:
         return _diagnostico_estructural(error)
     return _diagnosticar_arbol(arbol, intervalo, unidad_angular)

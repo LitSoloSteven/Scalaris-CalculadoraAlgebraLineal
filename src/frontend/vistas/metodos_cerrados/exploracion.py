@@ -8,6 +8,7 @@ from src.frontend.componentes.candidatos_raices import PresentacionCandidatos, m
 from src.frontend.componentes.captura_exploracion_raices import campos_rango
 from src.frontend.componentes.exploracion_raices import ESTADO_INICIAL
 from src.frontend.componentes.paso_exploracion_raices import PasoExploracion
+from src.frontend.componentes.simbolos import habilitar_simbolos
 from src.frontend.controladores.captura_exploratoria_raices import intervalo_seleccionable
 from src.frontend.controladores.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
 from src.frontend.controladores.exploracion_raices import (
@@ -54,6 +55,7 @@ class ExploracionMetodosCerrados(PasoExploracion):
         with ui.row().classes("metodos-raices-campos w-full items-center"):
             self.paso = ui.input("Paso h", value=PASO_EXPLORACION_DEFECTO).classes("matriz-entrada min-w-0").props(
                 f"inputmode=decimal maxlength={LONGITUD_CAMPO_EXPLORACION} autocomplete=off")
+            habilitar_simbolos(self.paso, "real")
             ui.button("Volver a automático", color=None, on_click=self.restablecer_paso).classes("boton-discreto").props(
                 "type=button ripple=false")
         self.etiqueta_paso = ui.label().classes("text-sm texto-secundario").props("aria-live=polite")

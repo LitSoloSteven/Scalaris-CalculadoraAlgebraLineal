@@ -5,7 +5,7 @@ from src.frontend.constantes import CARACTERES_ENTRADA_NUMERICA
 
 
 def filtrar_entrada_numerica(texto: str) -> str:
-    """Devuelve solo los caracteres ASCII de captura sin validar su sintaxis numérica."""
+    """Conserva los caracteres admitidos en celdas sin validar su sintaxis numérica."""
     return "".join(caracter for caracter in texto if caracter in CARACTERES_ENTRADA_NUMERICA)
 
 

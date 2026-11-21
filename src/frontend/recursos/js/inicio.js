@@ -1,252 +1,183 @@
+/** Reproduce los gestos de los símbolos del directorio con entradas de puntero. */
 'use strict';
 {
 
-  window.scalaris = window.scalaris || {};
+    const CONTROLES = "[data-gesto-inicio]";
+    const SIMBOLO = ".inicio-simbolo svg";
+    const preferenciaReducida = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const punteroFino = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const animaciones = new Set();
+    let sesiones = null;
 
-  function limpiar_pendiente() {
-    if (!window.scalaris.presentacion?.activa) window.scalaris.entradaInicio?.finalizar();
-  }
-
-  let dialogoActivo = null;
-  let origenActivo = null;
-  let temporizadorCierre = null;
-  let manejar_transicion_cierre = null;
-  let dialogoCerrandose = null;
-  let posicionesDestacada = new WeakMap();
-  let fotogramasDestacada = new WeakMap();
-
-  function establecer_modo_entrada(inmediato) {
-    if (inmediato) document.documentElement.setAttribute('data-entrada', 'teclado');
-    else document.documentElement.removeAttribute('data-entrada');
-  }
-
-  function cancelar_espera_cierre() {
-    if (temporizadorCierre) {
-      clearTimeout(temporizadorCierre);
-      temporizadorCierre = null;
-    }
-    if (manejar_transicion_cierre && dialogoCerrandose) {
-      let tarjeta = dialogoCerrandose.querySelector('.inicio-dialogo-tarjeta');
-      if (tarjeta) tarjeta.removeEventListener('transitionend', manejar_transicion_cierre);
-    }
-    manejar_transicion_cierre = null;
-    dialogoCerrandose = null;
-  }
-
-  function finalizar_cierre(dialogo, devolverFoco) {
-    let identificadorPilar = dialogo.id.replace(/^inicio-dialogo-/, '');
-    let origen = origenActivo || document.getElementById('inicio-fila-' + identificadorPilar);
-    cancelar_espera_cierre();
-    if (dialogo.open) dialogo.close();
-    dialogo.removeAttribute('data-abierto');
-    document.documentElement.removeAttribute('data-inicio-dialogo-abierto');
-    let tarjeta = dialogo.querySelector('.inicio-dialogo-tarjeta');
-    if (tarjeta) tarjeta.style.removeProperty('transform-origin');
-    if (dialogoActivo === dialogo) {
-      dialogoActivo = null;
-      origenActivo = null;
-    }
-    if (devolverFoco !== false && origen && origen.isConnected) {
-      origen.focus({ preventScroll: true });
-    }
-  }
-
-  function calcular_desplazamiento(desplazamiento) {
-    return desplazamiento < 0 ? '- ' + Math.abs(desplazamiento) + 'px' : '+ ' + desplazamiento + 'px';
-  }
-
-  function establecer_origen_ventana_emergente(tarjeta, fila) {
-    let rectangulo = fila.getBoundingClientRect();
-    let centroHorizontal = rectangulo.left + rectangulo.width / 2;
-    let centroVertical = rectangulo.top + rectangulo.height / 2;
-    let desplazamientoHorizontal = centroHorizontal - window.innerWidth / 2;
-    let origenVertical;
-    if (window.matchMedia('(max-width: 639px)').matches) {
-      origenVertical = 'calc(100% ' + calcular_desplazamiento(centroVertical - window.innerHeight) + ')';
-    } else {
-      origenVertical = 'calc(50% ' + calcular_desplazamiento(centroVertical - window.innerHeight / 2) + ')';
-    }
-    tarjeta.style.transformOrigin = 'calc(50% ' + calcular_desplazamiento(desplazamientoHorizontal) + ') ' + origenVertical;
-  }
-
-  function prepararOrigenDialogo(dialogo, fila, inmediato) {
-    let tarjeta = dialogo.querySelector('.inicio-dialogo-tarjeta');
-    if (tarjeta) {
-      if (inmediato) tarjeta.style.removeProperty('transform-origin');
-      else establecer_origen_ventana_emergente(tarjeta, fila);
-    }
-  }
-
-  function enfocarDialogo(dialogo) {
-    let focoInicial = dialogo.querySelector('.inicio-tarjeta.esta-destacada')
-      || dialogo.querySelector('.inicio-tarjeta')
-      || dialogo.querySelector('.inicio-dialogo-cerrar');
-    if (focoInicial) focoInicial.focus({ preventScroll: true });
-  }
-
-  function abrir(identificadorPilar, opciones) {
-    let inmediato = opciones && opciones.inmediato;
-    let elementoOrigen = opciones && opciones.elementoOrigen;
-    limpiar_pendiente();
-    let fila = elementoOrigen || document.getElementById('inicio-fila-' + identificadorPilar);
-    let dialogo = document.getElementById('inicio-dialogo-' + identificadorPilar);
-    if (!fila || !dialogo || typeof dialogo.showModal !== 'function') return;
-
-    establecer_modo_entrada(Boolean(inmediato));
-    if (dialogoActivo && dialogoActivo !== dialogo) {
-      finalizar_cierre(dialogoActivo, false);
-    }
-    cancelar_espera_cierre();
-
-    prepararOrigenDialogo(dialogo, fila, inmediato);
-    if (!dialogo.open) dialogo.showModal();
-
-    dialogo.removeAttribute('data-interaccion');
-    dialogo.setAttribute('data-abierto', '');
-    fila.setAttribute('aria-expanded', 'true');
-    dialogoActivo = dialogo;
-    origenActivo = fila;
-    document.documentElement.setAttribute('data-inicio-dialogo-abierto', '');
-
-    enfocarDialogo(dialogo);
-  }
-
-  function colapsarFilasInicio() {
-    let filasExpandidas = document.querySelectorAll('.inicio-fila[aria-expanded="true"]');
-    for (let i = 0; i < filasExpandidas.length; i++) {
-      filasExpandidas[i].setAttribute('aria-expanded', 'false');
+    function recorrido(...posturas) {
+        return ["none", ...posturas, "none"];
     }
 
-  }
+    const giroInversa = [0, -180, -360].map(angulo => "perspective(60px) rotateY(" + angulo + "deg)");
+    const binaria = recorrido("translate(12px, 10px)");
+    const decimal = recorrido("translate(-12px, -10px)");
+    const elevarVector = recorrido("translateY(-4px)");
+    const opacidadReducida = [{ opacity: 1 }, { opacity: 0.72 }, { opacity: 1 }];
+    const gestos = new Map(Object.entries({
+        "seccion-sistemas-lineales": [
+            [0, recorrido("translateY(-3px)")],
+            [1, recorrido("translateY(3px)")],
+        ],
+        "seccion-matrices": [
+            [0, recorrido("translateX(-3px) rotateY(-32deg)")],
+            [1, recorrido("translateX(3px) rotateY(32deg)")],
+        ],
+        "seccion-vectores-geometria": [
+            [0, recorrido("rotate(-29deg)", "rotate(12deg)")],
+        ],
+        "seccion-metodos-numericos": [
+            [0, recorrido("scaleY(1.16)")],
+            [1, recorrido("translateX(-5px)", "translateX(-2px)")],
+        ],
+        "seccion-sistemas-numeracion": [
+            [0, recorrido("translateY(-4px) rotateX(-36deg)")],
+            [1, recorrido("translateY(4px) rotateX(36deg)")],
+        ],
+        sistemas: [
+            [1, recorrido("translate(2px, -1px)")],
+            [3, recorrido("translateX(1px)")],
+        ],
+        leontief: [
+            [0, recorrido("rotate(-12deg)")],
+            [1, recorrido("scaleX(0.45)")],
+            [2, recorrido("translateX(-2px) rotate(14deg)")],
+        ],
+        matrices: [
+            [0, recorrido("translate(3px, -3px)")],
+            [2, recorrido("translate(-3px, 3px)")],
+        ],
+        inversa: [[0, giroInversa], [1, giroInversa]],
+        determinantes: [
+            [0, recorrido("translateX(3px) scaleY(1.18)")],
+            [1, recorrido("translateX(-3px) scaleY(1.18)")],
+            [2, recorrido("scaleX(0.78)")],
+        ],
+        factorizacion_lu: [
+            [0, recorrido("translate(-3px, 3px)")],
+            [1, recorrido("translate(3px, -3px)")],
+        ],
+        vectores: [[0, recorrido("translateX(-1px) scaleX(1.42)")]],
+        transformaciones: [
+            [0, recorrido("skewX(-34deg)")],
+            [1, recorrido("translateX(2px) skewY(-14deg)")],
+        ],
+        "vis:rectas-planos": [
+            [0, recorrido("rotate(28deg)")],
+            [1, recorrido("rotate(-28deg)")],
+        ],
+        "vis:vectores": [
+            [0, recorrido("rotate(30deg)", "translateY(-2px) rotate(30deg)")],
+            [1, recorrido("translateY(-4px) scaleY(1.16)")],
+        ],
+        "vis:combinacion": [
+            [0, elevarVector],
+            [1, elevarVector],
+            [2, ["rotate(0deg)", "rotate(45deg)", "rotate(90deg)"]],
+        ],
+        metodos_cerrados: [
+            [1, recorrido("translateX(5px)", "translateX(3px)")],
+            [2, recorrido("translateX(-5px)", "translateX(-3px)")],
+            [3, recorrido("scale(1.65)")],
+        ],
+        metodos_abiertos: [
+            [1, recorrido("rotate(-14deg) translateX(2px)")],
+            [3, recorrido("translate(3px, -5px)", "translate(3px, -5px)", "translate(7px, -12px)")],
+        ],
+        bases: [[0, binaria], [1, binaria], [2, decimal], [3, decimal]],
+        romanos: [
+            [1, recorrido("translateY(4px) scaleX(0.82)")],
+            [2, recorrido("scaleY(0.55)", "scaleY(1.18)")],
+        ],
+    }));
 
-  function cerrar(opciones) {
-    let inmediato = opciones && opciones.inmediato;
-    let dialogo = dialogoActivo || document.querySelector('dialog.inicio-dialogo[open]');
-    if (!dialogo) return;
-
-    if (inmediato) establecer_modo_entrada(true);
-    colapsarFilasInicio();
-
-    dialogo.removeAttribute('data-abierto');
-    if (inmediato || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      finalizar_cierre(dialogo);
-      return;
+    function cancelarGestos() {
+        for (const animacion of animaciones) animacion.cancel();
+        animaciones.clear();
     }
 
-    if (temporizadorCierre && dialogoCerrandose === dialogo) return;
-    cancelar_espera_cierre();
-    dialogoCerrandose = dialogo;
-    let tarjeta = dialogo.querySelector('.inicio-dialogo-tarjeta');
-    if (!tarjeta) {
-      finalizar_cierre(dialogo);
-      return;
+    function animarPieza(pieza, fotogramas, opciones) {
+        const animacion = pieza.animate(fotogramas, opciones);
+        animaciones.add(animacion);
+        const retirar = () => animaciones.delete(animacion);
+        animacion.finished.then(retirar, retirar);
     }
-    manejar_transicion_cierre = function (evento) {
-      if (evento.target === tarjeta && evento.propertyName === 'opacity') finalizar_cierre(dialogo);
-    };
-    tarjeta.addEventListener('transitionend', manejar_transicion_cierre);
-    temporizadorCierre = setTimeout(function () { finalizar_cierre(dialogo); }, window.scalaris.movimiento.duracion('--dur-view-exit') + 50);
-  }
 
-  function esta_halo_deshabilitado(evento) {
-    return evento.pointerType === 'touch'
-      || document.documentElement.getAttribute('data-entrada') === 'teclado'
-      || !window.matchMedia('(hover: hover) and (pointer: fine)').matches
-      || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  }
-
-  function mover_destacada(fila, evento) {
-    let destacada = fila.querySelector('.inicio-destacada');
-    if (!destacada) return;
-    let rectangulo = fila.getBoundingClientRect();
-    posicionesDestacada.set(fila, {
-      x: evento.clientX - rectangulo.left,
-      y: evento.clientY - rectangulo.top,
-    });
-    if (fotogramasDestacada.has(fila)) return;
-
-    let fotograma = window.requestAnimationFrame(function () {
-      fotogramasDestacada.delete(fila);
-      let posicion = posicionesDestacada.get(fila);
-      if (!posicion || !fila.isConnected) return;
-      destacada.style.transform = 'translate3d(' + posicion.x + 'px, ' + posicion.y + 'px, 0)';
-    });
-    fotogramasDestacada.set(fila, fotograma);
-  }
-
-  function limpiar_destacada_al_salir_puntero(evento) {
-    let objetivo = evento.target;
-    if (!objetivo || typeof objetivo.closest !== 'function') return;
-    let fila = objetivo.closest('.inicio-fila');
-    let relacionado = evento.relatedTarget;
-    let siguienteFila = relacionado && typeof relacionado.closest === 'function'
-      ? relacionado.closest('.inicio-fila')
-      : null;
-    if (fila && fila !== siguienteFila) fila.removeAttribute('data-destacada-activa');
-  }
-
-  function manejar_clic_delegado(evento) {
-    let objetivo = evento.target;
-    if (!objetivo || typeof objetivo.closest !== 'function') return;
-    let botonCerrar = objetivo.closest('.inicio-dialogo-cerrar');
-    if (botonCerrar) {
-      establecer_modo_entrada(evento.detail === 0);
-      cerrar({ inmediato: evento.detail === 0 });
-      return;
+    function animarGesto(simbolo, gesto, reducido, opciones) {
+        for (const [indice, posturas] of gesto) {
+            const pieza = simbolo.children[indice];
+            if (!pieza?.animate) continue;
+            const fotogramas = reducido ? opacidadReducida : posturas.map(transform => ({ transform }));
+            animarPieza(pieza, fotogramas, opciones);
+        }
     }
-    let dialogo = objetivo.closest('dialog.inicio-dialogo');
-    if (dialogo && objetivo === dialogo) {
-      establecer_modo_entrada(evento.detail === 0);
-      cerrar({ inmediato: evento.detail === 0 });
-      return;
+
+    function reproducir(control) {
+        const gesto = gestos.get(control?.dataset.gestoInicio);
+        if (!gesto) return;
+
+        const simbolo = control.querySelector(SIMBOLO);
+        const movimiento = window.scalaris?.movimiento;
+        if (!simbolo || !movimiento) return;
+
+        const reducido = preferenciaReducida.matches;
+        const duracion = movimiento.duracion(reducido ? "--dur-reduced" : "--dur-state");
+        if (!Number.isFinite(duracion) || duracion <= 0) return;
+        const opciones = {
+            duration: duracion,
+            easing: movimiento.curva(),
+        };
+
+        cancelarGestos();
+        try {
+            animarGesto(simbolo, gesto, reducido, opciones);
+        } catch {
+            cancelarGestos();
+        }
     }
-    let fila = objetivo.closest('.inicio-fila');
-    if (fila && !objetivo.closest('.inicio-tarjeta')) {
-      establecer_modo_entrada(evento.detail === 0);
-      abrir(fila.id.replace(/^inicio-fila-/, ''), { inmediato: evento.detail === 0, elementoOrigen: fila });
+
+    function encontrarControl(nodo) {
+        return nodo?.closest?.(CONTROLES);
     }
-  }
 
-  function registrar_manejadores_delegados() {
-    if (window.__scalarisInicioDelegado) return;
-    window.__scalarisInicioDelegado = true;
-    document.addEventListener('pointerdown', function (evento) {
-      let fila = evento.target.closest('.inicio-fila');
-      if (fila) fila.setAttribute('data-interaccion', '');
-      let tarjeta = evento.target.closest('.inicio-dialogo[data-abierto] .inicio-tarjeta');
-      if (tarjeta) tarjeta.closest('.inicio-dialogo').setAttribute('data-interaccion', '');
-    }, true);
-    document.addEventListener('click', manejar_clic_delegado);
-    document.addEventListener('cancel', function (evento) {
-      let dialogo = evento.target;
-      if (dialogo && dialogo.classList && dialogo.classList.contains('inicio-dialogo')) {
-        evento.preventDefault();
-        cerrar({ inmediato: true });
-      }
-    });
-    document.addEventListener('keydown', function (evento) {
-      if (evento.key === 'Escape' && dialogoActivo) {
-        establecer_modo_entrada(true);
-        cerrar({ inmediato: true });
-      }
-    });
-    document.addEventListener('pointerenter', function (evento) {
-      if (esta_halo_deshabilitado(evento) || !evento.target || typeof evento.target.closest !== 'function') return;
-      let fila = evento.target.closest('.inicio-fila');
-      if (fila) { fila.setAttribute('data-destacada-activa', ''); mover_destacada(fila, evento); }
-    }, true);
-    document.addEventListener('pointermove', function (evento) {
-      if (esta_halo_deshabilitado(evento) || !evento.target || typeof evento.target.closest !== 'function') return;
-      let fila = evento.target.closest('.inicio-fila');
-      if (fila) { if (!fila.hasAttribute('data-destacada-activa')) fila.setAttribute('data-destacada-activa', ''); mover_destacada(fila, evento); }
-    }, { capture: true, passive: true });
-    document.addEventListener('pointerout', limpiar_destacada_al_salir_puntero, true);
-  }
+    function alEntrarPuntero(evento) {
+        if (!punteroFino.matches || evento.pointerType === "touch" || evento.buttons) return;
+        const control = encontrarControl(evento.target);
+        if (control !== encontrarControl(evento.relatedTarget)) reproducir(control);
+    }
 
-  registrar_manejadores_delegados();
+    function alTocar(evento) {
+        if (evento.pointerType === "touch" && evento.isPrimary) reproducir(encontrarControl(evento.target));
+    }
 
-  window.scalaris.inicio = {
-    abrir: abrir,
-    cerrar: cerrar
-  };
+    function alCambiarVisibilidad() {
+        if (document.hidden) cancelarGestos();
+    }
+
+    function desmontar() {
+        sesiones.abort();
+        sesiones = null;
+        cancelarGestos();
+    }
+
+    function montar() {
+        if (sesiones) return;
+        sesiones = new AbortController();
+        const opciones = { passive: true, signal: sesiones.signal };
+        document.addEventListener("pointerover", alEntrarPuntero, opciones);
+        document.addEventListener("pointerdown", alTocar, opciones);
+        document.addEventListener("pointercancel", cancelarGestos, opciones);
+        document.addEventListener("keydown", cancelarGestos, opciones);
+        document.addEventListener("visibilitychange", alCambiarVisibilidad, opciones);
+        preferenciaReducida.addEventListener("change", cancelarGestos, opciones);
+        punteroFino.addEventListener("change", cancelarGestos, opciones);
+        window.addEventListener("pagehide", desmontar, opciones);
+    }
+
+    window.addEventListener("pageshow", montar);
+    montar();
 }

@@ -1,47 +1,54 @@
-"""Escala tipográfica y ancho de la matriz del inicio."""
+"""Escala tipográfica y ancho del directorio de inicio."""
 from decimal import Decimal
 from pathlib import Path
 import re
 from tests.comun_estilos import leer_css_inicio
 
 
-RUTA_CSS_TEMAS = Path("src/frontend/recursos/css/theme.css")
+RUTA_CSS_TEMAS = Path("src/frontend/recursos/css/tokens.css")
 RUTA_VISTA_INICIO = Path("src/frontend/vistas/inicio/vista_inicio.py")
 
 
 def cuerpo_regla(css: str, selector: str) -> str:
     """Localiza una regla simple por su selector completo."""
-    coincidencia = re.search(
+    coincidencias = re.findall(
         rf"(?m)^{re.escape(selector)}\s*\{{([^{{}}]*)\}}",
         css,
     )
-    assert coincidencia is not None, f"No se encontró la regla {selector}"
-    return coincidencia.group(1)
+    assert coincidencias, f"No se encontró la regla {selector}"
+    return "\n".join(coincidencias)
 
 
 def minimo_tipografico_rem(css: str, selector: str) -> Decimal:
-    """Extrae el tamaño mínimo en rem de una declaración clamp."""
+    """Extrae el mínimo de la escala y resuelve un token tipográfico cuando se usa."""
     cuerpo = cuerpo_regla(css, selector)
-    coincidencia = re.search(r"font-size:\s*clamp\(\s*([\d.]+)rem\s*,", cuerpo)
-    assert coincidencia is not None, f"{selector} no declara un font-size clamp en rem"
-    return Decimal(coincidencia.group(1))
+    coincidencia = re.search(r"font-size:\s*clamp\(\s*(?:([\d.]+)rem|var\((--[\w-]+)\))\s*,", cuerpo)
+    assert coincidencia is not None, f"{selector} no declara un mínimo tipográfico en rem"
+    minimo, token = coincidencia.groups()
+    if token:
+        temas = RUTA_CSS_TEMAS.read_text(encoding="utf-8")
+        definido = re.search(rf"{re.escape(token)}:\s*([\d.]+)rem\b", temas)
+        assert definido is not None, f"El mínimo {token} debe estar expresado en rem"
+        minimo = definido.group(1)
+    return Decimal(minimo)
 
 
 def test_escala_inicio_y_propiedades_permitidas():
-    """La matriz conserva ancho limitado y tamaños tipográficos mínimos."""
+    """La portada contiene el directorio y aplica mínimos tipográficos legibles."""
     from tests.comun import leer_css_completo
     vista = RUTA_VISTA_INICIO.read_text(encoding="utf-8")
     css_completo = leer_css_completo()
     css = leer_css_inicio()
 
     assert "hub-theme" not in vista
-    assert "renderizar_boton_tema" not in vista
+    assert "renderizar_boton_tema" in vista
     assert ".hub-theme" not in css_completo
-    assert "width: min(100%, 72rem)" in cuerpo_regla(css, ".inicio-matriz")
+    assert "width: 100%" in cuerpo_regla(css, ".inicio-raiz")
+    assert "max-width: 71rem" in cuerpo_regla(css, ".inicio-raiz")
 
-    assert minimo_tipografico_rem(css, ".inicio-titulo") >= Decimal("2.5")
-    assert minimo_tipografico_rem(css, ".inicio-titulo-fila") >= Decimal("1.4")
-    assert minimo_tipografico_rem(css, ".inicio-descripcion-fila") >= Decimal("0.9375")
+    assert minimo_tipografico_rem(css, ".inicio-titulo") >= Decimal("2.25")
+    assert minimo_tipografico_rem(css, ".inicio-seccion-titulo") >= Decimal("1.35")
+    assert minimo_tipografico_rem(css, ".inicio-descripcion") >= Decimal("0.9375")
 
     assert "100vh" not in css
     assert not re.search(r"#[0-9a-fA-F]{3,8}\b", css)
