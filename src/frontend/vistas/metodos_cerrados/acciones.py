@@ -7,7 +7,7 @@ from src.frontend.controladores.biseccion.catalogo_criterios import DECIMALES_PR
 from src.frontend.controladores.biseccion.presentacion_criterio import titulo_estado
 from src.frontend.controladores.metodos_cerrados.adaptadores import BISECCION, METODOS
 from src.frontend.controladores.regla_falsa.presentacion_ampliada import descripcion_captura, titulo_configurado
-from src.frontend.controladores.sesion_matricial import registrar_calculo
+from src.frontend.controladores.compartido.sesion.sesion_matricial import registrar_calculo
 from src.frontend.vistas.biseccion.acciones_captura import desplegable
 
 

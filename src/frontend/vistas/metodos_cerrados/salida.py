@@ -13,7 +13,7 @@ from src.frontend.controladores.regla_falsa.formulas_procedimiento import formul
 from src.frontend.controladores.regla_falsa.pasos import construir_pasos
 from src.frontend.controladores.regla_falsa.pasos_ampliados import construir_pasos_configurados
 from src.frontend.controladores.regla_falsa.tabla import COLUMNAS, filas_tabla
-from src.frontend.controladores.sesion_matricial import actualizar_contexto
+from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto
 from src.frontend.vistas.biseccion.modo_examen import crear_interruptor_examen, mostrar_accion_examen as examen_biseccion
 from src.frontend.vistas.biseccion.resumen_criterio import mostrar_resumen
 from src.frontend.vistas.regla_falsa.modo_examen import mostrar_accion_examen

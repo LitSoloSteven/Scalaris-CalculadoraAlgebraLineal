@@ -4,7 +4,7 @@ from collections.abc import Awaitable, Callable
 from typing import Any
 from nicegui import run
 from src.ai.huellas import calcular_huella
-from src.frontend.controladores.sesion_matricial import notificar_edicion
+from src.frontend.controladores.compartido.sesion.sesion_matricial import notificar_edicion
 
 
 def _campos(vista: Any) -> tuple:

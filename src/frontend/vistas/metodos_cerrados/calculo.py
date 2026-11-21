@@ -3,7 +3,7 @@ from src.frontend.controladores.compartido.sesion.actualizacion_cancelable impor
 from src.frontend.controladores.calculo_raices import ConfiguracionCalculoRaices, resolver_calculo_raices
 from src.frontend.controladores.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
 from src.frontend.controladores.metodos_cerrados.adaptadores import METODOS, resolver_presentacion
-from src.frontend.controladores.sesion_matricial import notificar_edicion
+from src.frontend.controladores.compartido.sesion.sesion_matricial import notificar_edicion
 
 _CONFIGURACION = ConfiguracionCalculoRaices(
     mensaje_carga="Calculando la raíz en el intervalo…",

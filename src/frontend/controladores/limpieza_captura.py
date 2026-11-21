@@ -1,6 +1,6 @@
 """Operaciones de presentación para retirar una captura y su explicación."""
 from src.backend.utilidades.captura.estado_captura import captura_vacia
-from src.frontend.controladores.sesion_matricial import invalidar_resultado, actualizar_contexto
+from src.frontend.controladores.compartido.sesion.sesion_matricial import invalidar_resultado, actualizar_contexto
 
 
 def campos_vacios(entradas) -> bool:

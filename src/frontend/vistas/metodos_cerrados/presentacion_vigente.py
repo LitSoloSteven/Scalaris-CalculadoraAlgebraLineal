@@ -2,7 +2,7 @@
 from dataclasses import dataclass
 
 from src.ai.huellas import calcular_huella
-from src.frontend.controladores.sesion_matricial import actualizar_contexto
+from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto
 
 
 @dataclass

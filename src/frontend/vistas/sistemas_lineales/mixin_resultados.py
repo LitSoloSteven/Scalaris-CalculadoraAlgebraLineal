@@ -2,7 +2,7 @@
 
 from nicegui import ui
 from src.frontend.controladores.sistemas_lineales.presentacion_solucion import formatear_elemento_solucion
-from src.frontend.controladores.sesion_matricial import invalidar_resultado, actualizar_contexto, calculo_sigue_vigente
+from src.frontend.controladores.compartido.sesion.sesion_matricial import invalidar_resultado, actualizar_contexto, calculo_sigue_vigente
 
 from src.frontend.controladores.sistemas_lineales.captura import preparar_captura_ecuaciones
 from src.frontend.controladores.sistemas_lineales.estado_captura import modo_homogeneo_activo

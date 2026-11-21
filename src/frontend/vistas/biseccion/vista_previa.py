@@ -10,7 +10,7 @@ from src.frontend.controladores.compartido.sesion.actualizacion_cancelable impor
 from src.frontend.controladores.biseccion.vista_previa import preparar_vista_previa, rango_grafica, RANGO_GRAFICA_DEFECTO
 from src.frontend.controladores.rango_exploracion_raices import rango_evento, rango_evento_distinto
 from src.frontend.controladores.biseccion.vigencia_panel import invalidar_panel
-from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
+from src.frontend.controladores.compartido.sesion.calculo_vigente import ejecutar_calculo_vigente
 from .captura import GUIA_CONTINUIDAD
 from .grafico_compartido import GraficoCompartido
 from .rango_grafica import construir_rango, sincronizar_rango

@@ -2,7 +2,7 @@
 import asyncio
 from nicegui import ui
 from src.backend.resolutores.sistemas_numericos.pasos_didacticos import desglosar_bits
-from src.frontend.controladores.sesion_matricial import actualizar_contexto
+from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto
 from src.frontend.controladores.compartido.sesion.captura_contexto import capturar_bases
 from .mixin_procedimiento import MixinProcedimientoSistemasNumericos
 from src.frontend.componentes.exportacion_pdf.montaje.utilidades import montar_utilidad_pdf

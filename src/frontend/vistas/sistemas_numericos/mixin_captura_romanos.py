@@ -2,7 +2,7 @@
 from nicegui import ui
 from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
 from src.frontend.componentes.aplicacion.base.sonido import notificar
-from src.frontend.controladores.sesion_matricial import actualizar_contexto, notificar_edicion
+from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto, notificar_edicion
 
 
 class MixinCapturaRomanos:

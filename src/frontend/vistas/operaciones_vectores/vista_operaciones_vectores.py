@@ -12,7 +12,7 @@ from src.frontend.componentes.glosa.panel.panel_ia import PanelIA
 from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.captura.vectores.captura_vectores import PanelCapturaVectores
 from src.frontend.navegacion import ruta_de
-from src.frontend.controladores.sesion_matricial import actualizar_contexto
+from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto
 from . import contexto, controles
 from .mixin_resultados import MixinResultadosVectores
 from src.frontend.controladores.operaciones_vectores.captura import (

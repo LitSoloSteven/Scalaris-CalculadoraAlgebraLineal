@@ -8,7 +8,7 @@ from src.backend.resolutores.raices.biseccion.lote.limites_resolucion_multiple i
 from src.frontend.controladores.biseccion.exploracion import presentar_candidato
 from src.frontend.controladores.biseccion.resolucion_multiple import resolver_lote
 from src.frontend.controladores.biseccion.vigencia_panel import invalidar_panel
-from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
+from src.frontend.controladores.compartido.sesion.calculo_vigente import ejecutar_calculo_vigente
 from .grafico_compartido import restaurar_grafico_principal
 from .modos_captura import MODO_BUSQUEDA
 from .resultados_multiples import mostrar_resultados_multiples

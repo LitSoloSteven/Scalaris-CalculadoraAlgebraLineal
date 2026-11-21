@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from src.ai.huellas import calcular_huella
-from src.frontend.controladores.sesion_matricial import captura_sigue_vigente, calculo_sigue_vigente
+from src.frontend.controladores.compartido.sesion.sesion_matricial import captura_sigue_vigente, calculo_sigue_vigente
 
 
 @dataclass(frozen=True)

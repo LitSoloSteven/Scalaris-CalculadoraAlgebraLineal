@@ -8,7 +8,7 @@ from src.frontend.nucleo.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
 from src.frontend.controladores.compartido.sesion.actualizacion_cancelable import programar_actualizacion
 from src.frontend.controladores.biseccion.continuidad_intervalo import consultar_continuidad
 from src.frontend.controladores.biseccion.vigencia_panel import invalidar_panel
-from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
+from src.frontend.controladores.compartido.sesion.calculo_vigente import ejecutar_calculo_vigente
 
 _CLAVES = ("expresion", "extremo_izquierdo", "extremo_derecho", "unidad_angular", "cero_preferido")
 

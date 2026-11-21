@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import json
 from nicegui import run, ui
-from src.frontend.controladores.sesion_matricial import invalidar_resultado, actualizar_contexto, notificar_edicion, captura_sigue_vigente, calculo_sigue_vigente
+from src.frontend.controladores.compartido.sesion.sesion_matricial import invalidar_resultado, actualizar_contexto, notificar_edicion, captura_sigue_vigente, calculo_sigue_vigente
 
 from src.frontend.controladores.operaciones_inversas import (
     ControladorOperacionesInversas,

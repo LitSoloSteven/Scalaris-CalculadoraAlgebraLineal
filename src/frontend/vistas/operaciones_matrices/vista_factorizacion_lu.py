@@ -11,7 +11,7 @@ from src.frontend.componentes.captura.paneles.panel_matriz_rectangular import Pa
 from src.frontend.componentes.resultados.acciones.transferencia import recibir_matriz
 from src.frontend.controladores.operaciones_matrices.vista_previa_factorizacion_lu import preparar_presentacion_factorizacion_lu
 from src.frontend.controladores.operaciones_matrices.contexto_factorizacion_lu import obtener_contexto_ia, obtener_senales_ia
-from src.frontend.controladores.sesion_matricial import invalidar_resultado, actualizar_contexto
+from src.frontend.controladores.compartido.sesion.sesion_matricial import invalidar_resultado, actualizar_contexto
 from src.frontend.navegacion import ruta_de
 from src.frontend.vistas.compartido.mixin_sesion_matricial import MixinSesionMatricial
 from src.frontend.vistas.compartido.vista_previa_matricial import actualizar_vista_previa

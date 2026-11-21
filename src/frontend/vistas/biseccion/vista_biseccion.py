@@ -9,7 +9,7 @@ from src.frontend.controladores.biseccion.controlador import calcular_presentaci
 from src.frontend.controladores.biseccion.catalogo_criterios import DECIMALES_PRESENTACION_DEFECTO
 from src.frontend.controladores.biseccion.contexto_biseccion import resumir_contexto_biseccion
 from src.frontend.controladores.biseccion.presentacion_criterio import etiqueta_aproximacion, titulo_estado
-from src.frontend.controladores.sesion_matricial import invalidar_resultado, actualizar_contexto, registrar_calculo
+from src.frontend.controladores.compartido.sesion.sesion_matricial import invalidar_resultado, actualizar_contexto, registrar_calculo
 from src.frontend.navegacion import ruta_de
 from .acciones_captura import mostrar_recientes
 from .calculo_individual import resolver_calculo

@@ -10,7 +10,7 @@ from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import 
 from src.frontend.componentes.aplicacion.base.tareas import lanzar_tarea
 from src.frontend.nucleo.constantes import ANTIRREBOTE_GEOMETRIA_SEGUNDOS
 from src.frontend.navegacion import ruta_de
-from src.frontend.controladores.sesion_matricial import actualizar_contexto, notificar_edicion
+from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto, notificar_edicion
 from .mixin_controles import MixinControlesGeometria
 from .limpieza_geometria import MixinLimpiezaGeometria
 from .mixin_escenas import MixinEscenasGeometria

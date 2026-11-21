@@ -2,7 +2,7 @@
 from src.backend.utilidades.captura.estado_captura import (
     ajustar_numero_ecuaciones, captura_vacia, opciones_transferencia_sistema,
 )
-from src.frontend.controladores.sesion_matricial import actualizar_contexto
+from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto
 
 
 def valores_ecuaciones(vista) -> list[str]:

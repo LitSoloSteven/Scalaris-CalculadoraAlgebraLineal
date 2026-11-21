@@ -5,7 +5,7 @@ from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 from typing import Any
 
-from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
+from src.frontend.controladores.compartido.sesion.calculo_vigente import ejecutar_calculo_vigente
 
 _registro = logging.getLogger(__name__)
 

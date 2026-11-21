@@ -4,7 +4,7 @@ from src.frontend.componentes.aplicacion.base.sonido import notificar
 from functools import partial
 from src.backend.constantes import DIMENSION_MAXIMA_SISTEMAS, DIMENSION_MINIMA
 from src.frontend.componentes.captura.nucleo.cuadricula_base import ejecutar_transicion_cuadricula, selectores_cambio_dimension, actualizar_estados_botones_dimension
-from src.frontend.controladores.sesion_matricial import actualizar_contexto, notificar_edicion
+from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto, notificar_edicion
 from src.frontend.controladores.sistemas_lineales.estado_captura import cambiar_numero_ecuaciones, matriz_vacia, ecuaciones_vacias
 from src.frontend.controladores.sistemas_lineales.captura import preparar_captura_ecuaciones
 
