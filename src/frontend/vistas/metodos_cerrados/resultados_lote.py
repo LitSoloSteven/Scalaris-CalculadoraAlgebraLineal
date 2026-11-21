@@ -3,7 +3,7 @@ from nicegui import ui
 
 from src.frontend.componentes.raices.resultados.informe_continuidad_raices import mostrar_informe_continuidad
 from src.frontend.controladores.raices.biseccion.presentacion.presentacion_criterio import titulo_estado
-from src.frontend.controladores.metodos_cerrados.adaptadores import BISECCION
+from src.frontend.controladores.raices.metodos_cerrados.adaptadores import BISECCION
 from src.frontend.controladores.raices.regla_falsa.presentacion.presentacion_ampliada import titulo_configurado
 
 _ESTADOS = {"NO_APTO": "Candidato no apto", "PRESUPUESTO_AGOTADO": "Pendiente por presupuesto"}

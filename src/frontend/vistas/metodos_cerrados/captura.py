@@ -12,7 +12,7 @@ from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
 from src.frontend.controladores.raices.biseccion.captura.captura_criterio import texto_estimacion
 from src.frontend.controladores.raices.biseccion.captura.catalogo_criterios import CRITERIOS
 from src.frontend.controladores.raices.biseccion.captura.metadatos_expresion import sensible_a_unidad
-from src.frontend.controladores.metodos_cerrados.adaptadores import (
+from src.frontend.controladores.raices.metodos_cerrados.adaptadores import (
     BISECCION, METODOS, REGLA_FALSA, captura_del_metodo, criterio_inicial, guia_parada, parametros_iniciales,
 )
 from src.frontend.controladores.raices.compartido.formato.rango_exploracion_raices import LONGITUD_CAMPO_GRAFICA, RANGO_GRAFICA_DEFECTO, rango_grafica

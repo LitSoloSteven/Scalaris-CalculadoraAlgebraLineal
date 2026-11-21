@@ -1,5 +1,5 @@
 """Montaje del enlace anterior de Regla falsa."""
-from src.frontend.controladores.metodos_cerrados.adaptadores import REGLA_FALSA
+from src.frontend.controladores.raices.metodos_cerrados.adaptadores import REGLA_FALSA
 from src.frontend.vistas.metodos_cerrados.vista_metodos_cerrados import VistaMetodosCerrados, montar_pagina
 
 

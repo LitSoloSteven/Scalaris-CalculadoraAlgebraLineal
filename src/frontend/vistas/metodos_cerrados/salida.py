@@ -8,7 +8,7 @@ from src.frontend.controladores.raices.biseccion.presentacion import presentacio
 from src.frontend.controladores.raices.biseccion.salidas.formulas_procedimiento import formulas_iteracion as formulas_biseccion
 from src.frontend.controladores.raices.biseccion.salidas.salidas_biseccion import COLUMNAS_EXAMEN, datos_examen
 from src.frontend.controladores.raices.compartido.formato.formato_funcion_real import formatear_expresion
-from src.frontend.controladores.metodos_cerrados.adaptadores import BISECCION, METODOS
+from src.frontend.controladores.raices.metodos_cerrados.adaptadores import BISECCION, METODOS
 from src.frontend.controladores.raices.regla_falsa.procedimiento.formulas_procedimiento import formulas_iteracion as formulas_regla_falsa
 from src.frontend.controladores.raices.regla_falsa.procedimiento.pasos import construir_pasos
 from src.frontend.controladores.raices.regla_falsa.procedimiento.pasos_ampliados import construir_pasos_configurados

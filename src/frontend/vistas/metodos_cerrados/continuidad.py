@@ -8,7 +8,7 @@ from src.frontend.nucleo.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
 from src.frontend.controladores.compartido.sesion.actualizacion_cancelable import cancelar_actualizacion, programar_actualizacion
 from src.frontend.controladores.raices.biseccion.ejecucion.continuidad_intervalo import consultar_continuidad as consultar_biseccion
 from src.frontend.controladores.raices.compartido.ejecucion.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
-from src.frontend.controladores.metodos_cerrados.adaptadores import BISECCION, REGLA_FALSA
+from src.frontend.controladores.raices.metodos_cerrados.adaptadores import BISECCION, REGLA_FALSA
 from src.frontend.controladores.raices.regla_falsa.captura.continuidad_intervalo import CLAVES_CONTINUIDAD, consultar_continuidad
 
 _REGISTRO = logging.getLogger(__name__)

@@ -5,7 +5,7 @@ from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import 
 from src.frontend.componentes.raices.captura.modos_captura_raices import MODO_BUSQUEDA, MODO_INTERVALO
 from src.frontend.componentes.glosa.panel.panel_ia import PanelIA
 from src.frontend.controladores.compartido.sesion.actualizacion_cancelable import cancelar_actualizacion
-from src.frontend.controladores.metodos_cerrados.adaptadores import BISECCION
+from src.frontend.controladores.raices.metodos_cerrados.adaptadores import BISECCION
 from src.frontend.navegacion import ruta_de
 from src.frontend.presentacion.tema import configurar_tema
 from .acciones import AccionesMetodosCerrados
