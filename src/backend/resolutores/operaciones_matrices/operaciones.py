@@ -188,8 +188,10 @@ class ResolutorOperacionesMatrices(TrazadorPasos):
 
 def sumar_directa(izquierda: Matriz, derecha: Matriz) -> Matriz:
     """Coloca las matrices en la diagonal de bloques y rellena los demás bloques con ceros."""
-    datos = [fila + [0] * derecha.columnas for fila in izquierda.datos]
-    datos.extend([0] * izquierda.columnas + fila for fila in derecha.datos)
+    ceros_derecha = [Fraction(0)] * derecha.columnas
+    ceros_izquierda = [Fraction(0)] * izquierda.columnas
+    datos = [fila + ceros_derecha for fila in izquierda.datos]
+    datos.extend(ceros_izquierda + fila for fila in derecha.datos)
     return Matriz(izquierda.filas + derecha.filas, izquierda.columnas + derecha.columnas, datos)
 
 
