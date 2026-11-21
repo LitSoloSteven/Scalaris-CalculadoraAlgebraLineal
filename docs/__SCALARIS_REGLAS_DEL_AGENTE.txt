@@ -191,7 +191,7 @@ Diseña y verifica contra datos desfavorables: valores muy largos, números con 
 - El plan se crea antes de tocar código y contiene: objetivo, fases, archivos de cada fase, criterios de aceptación y estado de cada fase.
 - Actualiza el estado del plan al cerrar cada fase.
 - El plan es temporal. Cuando termina la última fase y se entrega su informe, el archivo se elimina y se declara en el informe. Si la tarea se cancela, también se elimina.
-- No dejes otros archivos temporales en docs/ ni toques la documentación permanente que ya exista allí.
+- No dejes otros archivos temporales en docs/ salvo los archivos de relevo previstos en 16.2. No toques la documentación permanente que ya exista allí.
 - Nunca referencies planes, fases o tareas desde el código, los comentarios o los mensajes.
 
 ## 12. Protocolo de fase
@@ -283,6 +283,8 @@ Si 6.2 Sol no está disponible, Codex usa 6.1 Sol. Si falta acceso al cliente o 
 3. **OpenCode y Antigravity verifican el mismo candidato.** Pueden trabajar en paralelo sobre un estado estable. OpenCode lee el paquete y devuelve hallazgos accionables o confirma el alcance revisado. Antigravity sigue el guion en una pasada y recoge la evidencia necesaria. Usa DOM, estado y consola cuando basten, y captura o traza cuando el criterio sea visual o de rendimiento. Registra por separado lo bloqueado por el navegador. Codex reutiliza los resultados.
 4. **Codex integra y cierra.** Corrige hallazgos comprobados. Pide una segunda comprobación únicamente sobre lo que la corrección invalide. Ejecuta la suite completa una vez sobre el resultado final. Si hay cambios después, repite las verificaciones afectadas. Registra qué hash cubrió cada cliente, tiempo y uso según 16.4.
 5. Si hay duplicación, relecturas o intentos sin evidencia nueva, reduce la siguiente búsqueda o prueba. Conserva el mismo hilo dentro de un entregable dependiente. Pasa entre clientes el paquete correspondiente con hashes y resultados. En Codex usa `/compact` para liberar contexto cuando haga falta. Tras compactar conserva decisiones, rutas y resultados ya comprobados. [Comandos de Codex](https://learn.chatgpt.com/docs/developer-commands)
+
+**Ubicación de los archivos de relevo.** Guarda el paquete de revisión para OpenCode Desktop y el guion para Antigravity en una carpeta separada dentro del proyecto, por ejemplo `relevos/`. Usa `docs/` solo como último recurso si no puedes usar una carpeta separada. Entrega la ruta exacta de cada archivo para adjuntarlo al relevo.
 
 **OpenCode Desktop.** Abre la raíz de Scalaris como proyecto y crea una conversación para el candidato. Confirma `revisor-scalaris` y **DeepSeek V4.1 Flash vía OpenRouter** antes de enviar. `opencode.json` fija esos valores para nuevas sesiones en OpenCode V2. Usa tu conexión existente de OpenRouter o conéctala con `/connect` si hace falta. Adjunta solo el paquete de revisión en UTF-8 y pide hallazgos con evidencia. Una sesión anterior puede conservar otro modelo. Si el perfil no aparece, verifica la versión de Desktop y que el proyecto abierto sea la raíz de Scalaris. [Agentes](https://opencode.ai/docs/agents/) · [Modelos](https://opencode.ai/docs/models/) · [Adjuntos](https://opencode.ai/docs/attachments/)
 
