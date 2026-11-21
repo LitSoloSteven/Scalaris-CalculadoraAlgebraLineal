@@ -3,11 +3,11 @@ from nicegui import ui
 
 from src.backend.utilidades.captura.estado_captura import captura_vacia
 from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
-from src.frontend.componentes.calculadora import PanelCalculadora
+from src.frontend.componentes.captura.paneles.calculadora import PanelCalculadora
 from src.frontend.componentes.aplicacion.controles.selector_opciones import SelectorOpciones
 from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.panel_ia import PanelIA
-from src.frontend.componentes.panel_matriz_cuadrada import PanelMatrizCuadrada
+from src.frontend.componentes.captura.paneles.panel_matriz_cuadrada import PanelMatrizCuadrada
 from src.frontend.componentes.transferencia import recibir_matriz
 from src.frontend.controladores.operaciones_matrices.contexto_determinante import obtener_contexto_determinante, obtener_senales_determinante
 from src.frontend.componentes.captura.nucleo.cuadricula_base import ubicar_celda_matriz

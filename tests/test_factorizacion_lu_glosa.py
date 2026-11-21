@@ -3,7 +3,7 @@ from types import SimpleNamespace
 
 from src.ai.huellas import calcular_huella
 from src.ai.cliente.mensajes import construir_pregunta_explicar_paso
-from src.frontend.componentes.panel_matriz_rectangular import PanelMatrizRectangular
+from src.frontend.componentes.captura.paneles.panel_matriz_rectangular import PanelMatrizRectangular
 from src.frontend.controladores.operaciones_matrices.controlador_factorizacion_lu import ControladorFactorizacionLU
 from src.frontend.controladores.operaciones_matrices.contexto_factorizacion_lu import obtener_contexto_ia, obtener_senales_ia
 from src.frontend.presentacion.sugerencias import generar_candidatas

@@ -36,7 +36,7 @@ def test_interfaz_y_asistente_sin_voseo():
 
 def test_ayuda_matriz_cuadrada_usa_limite_dinamico():
     """Verifica que el panel de matriz cuadrada use el límite dinámico en el texto de ayuda."""
-    archivo_panel = Path("src/frontend/componentes/panel_matriz_cuadrada.py")
+    archivo_panel = Path("src/frontend/componentes/captura/paneles/panel_matriz_cuadrada.py")
     assert archivo_panel.exists()
     contenido = archivo_panel.read_text(encoding="utf-8")
     assert "Máx. 50×50" not in contenido, "square_matrix_panel.py todavía contiene 'Máx. 50×50' hardcodeado"

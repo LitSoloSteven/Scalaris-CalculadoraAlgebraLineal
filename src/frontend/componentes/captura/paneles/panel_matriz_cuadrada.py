@@ -18,10 +18,10 @@ from src.frontend.componentes.captura.nucleo.cuadricula_base import (
     CambioCuadricula, indice_cambio_dimension,
 )
 from .redimension_matriz_cuadrada import redimensionar_celdas, actualizar_etiqueta_dimension, DIMENSION_MAXIMA_CELDA_NORMAL
-from .aplicacion.base.tareas import lanzar_tarea
-from .captura.nucleo.animacion_matriz import animar_redimension_matriz
-from .captura.nucleo.portapapeles_matricial import parsear_portapapeles_rectangular
-from .captura.nucleo.carga_numerica import preparar_matriz_numerica
+from src.frontend.componentes.aplicacion.base.tareas import lanzar_tarea
+from src.frontend.componentes.captura.nucleo.animacion_matriz import animar_redimension_matriz
+from src.frontend.componentes.captura.nucleo.portapapeles_matricial import parsear_portapapeles_rectangular
+from src.frontend.componentes.captura.nucleo.carga_numerica import preparar_matriz_numerica
 from src.backend.constantes import DIMENSION_MAXIMA_INVERSA
 
 registro = logging.getLogger(__name__)

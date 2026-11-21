@@ -129,7 +129,7 @@ def test_componentes_celdas_resistentes_y_animaciones():
     assert "cuadricula-celda" in python_vectores
     assert "w-20" not in python_vectores
 
-    python_matriz_cuadrada = Path("src/frontend/componentes/panel_matriz_cuadrada.py").read_text(encoding="utf-8")
+    python_matriz_cuadrada = Path("src/frontend/componentes/captura/paneles/panel_matriz_cuadrada.py").read_text(encoding="utf-8")
     assert "CELL_PX" not in python_matriz_cuadrada
     assert "cuadricula-celda" in python_matriz_cuadrada
     assert "cuadricula-celda-compacta" in python_matriz_cuadrada
