@@ -1,12 +1,12 @@
 """Gramática acotada de expresiones reales de una variable, sin ejecutar código."""
 import ast
 import math
-import re
 from decimal import Decimal
 
 from .constantes_funcion import CONSTANTES_REALES as CONSTANTES_REALES
 from .errores_numericos import ErrorCapacidadNumerica
 from .expansion_calculo import desarrollar_calculo
+from .nodos_integral import NOMBRE_INTEGRAL, signo_infinito, variable_ligable
 from .normalizacion_funcion import normalizar_expresion
 from .notacion_calculo import (
     AGREGADOS, DERIVADAS, GUARDIA_DERIVADA, MAXIMO_TERMINOS_AGREGADO, NOMBRES_ANGULARES, POSTFIJOS, entero_literal,
@@ -90,6 +90,9 @@ def _validar_llamada(nodo: ast.Call, profundidad: int, variables: frozenset[str]
     if not isinstance(nodo.func, ast.Name) or nodo.keywords:
         raise ValueError("Llamada no permitida. Usa una función real del catálogo.")
     nombre = nodo.func.id
+    if nombre == NOMBRE_INTEGRAL and "x" in variables:
+        _validar_integral(nodo, profundidad, variables)
+        return
     if nombre in _CALCULO_MULTIPLE and "x" in variables:
         _validar_calculo_multiple(nodo, profundidad, variables)
         return
@@ -114,7 +117,7 @@ def _validar_agregado(nodo: ast.Call, profundidad: int, variables: frozenset[str
     if len(nodo.args) != 4:
         raise ValueError("Escribe el índice, el límite inferior, el superior y la expresión.")
     indice, inferior, superior, expresion = nodo.args
-    if not isinstance(indice, ast.Name) or not _indice_disponible(indice.id):
+    if not variable_ligable(indice):
         raise ValueError("Usa una letra minúscula libre, por ejemplo i, como índice.")
     primero, ultimo = entero_literal(inferior), entero_literal(superior)
     if not 1 <= ultimo - primero + 1 <= MAXIMO_TERMINOS_AGREGADO:
@@ -124,12 +127,19 @@ def _validar_agregado(nodo: ast.Call, profundidad: int, variables: frozenset[str
     _validar_nodo(expresion, profundidad + 1, variables | {indice.id})
 
 
-def _indice_disponible(nombre: str) -> bool:
-    return (
-        re.fullmatch(r"[a-z]", nombre) is not None
-        and nombre not in _VARIABLE_INDEPENDIENTE
-        and nombre not in CONSTANTES_REALES
-    )
+def _validar_integral(nodo: ast.Call, profundidad: int, variables: frozenset[str]) -> None:
+    if len(nodo.args) != 4:
+        raise ValueError("Escribe la integral como ∫(expresión, variable, límite inferior, límite superior).")
+    cuerpo, variable, inferior, superior = nodo.args
+    if not variable_ligable(variable):
+        raise ValueError("Usa una letra minúscula libre, por ejemplo t, como variable de integración.")
+    signo_inferior, signo_superior = signo_infinito(inferior), signo_infinito(superior)
+    if signo_inferior and signo_inferior == signo_superior:
+        raise ValueError("Los dos límites de integración no pueden ser el mismo infinito.")
+    for limite in (inferior, superior):
+        if not signo_infinito(limite):
+            _validar_nodo(limite, profundidad + 1, variables)
+    _validar_nodo(cuerpo, profundidad + 1, variables | {variable.id})
 
 
 def _validar_constante(valor: object) -> None:

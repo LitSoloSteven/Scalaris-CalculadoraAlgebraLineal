@@ -5,6 +5,7 @@ import tokenize
 from unicodedata import normalize
 
 from .limites_biseccion import LONGITUD_MAXIMA_EXPRESION
+from .nodos_integral import NOMBRE_INFINITO, NOMBRE_INTEGRAL, SIMBOLO_INFINITO, SIMBOLO_INTEGRAL
 from .notacion_calculo import AGREGADOS, POSTFIJOS, envolver_postfijo
 
 _OPERADORES = {"+", "-", "*", "/", "**", "^", "(", ")", ","}
@@ -18,6 +19,7 @@ _SIMBOLOS = str.maketrans({
     "−": "-", "×": "*", "·": "*", "⋅": "*", "∙": "*",
     "÷": "/", "⁄": "/", "∕": "/", "√": " sqrt", "∛": " cbrt", "∜": " raiz4",
     "π": " pi ", "ℯ": " e ",
+    SIMBOLO_INTEGRAL: " " + NOMBRE_INTEGRAL, SIMBOLO_INFINITO: f" {NOMBRE_INFINITO} ",
     **{simbolo: " " + nombre for simbolo, nombre in AGREGADOS.items()},
     **{fraccion: "(" + normalize("NFKC", fraccion).replace("⁄", "/") + ")" for fraccion in _FRACCIONES},
 })
