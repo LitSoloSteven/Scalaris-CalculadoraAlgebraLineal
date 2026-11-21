@@ -1,7 +1,7 @@
 """Marcado de regiones y montaje de la acción compartida de exportación."""
 from nicegui import ui
 
-from src.frontend.controladores.exportacion_pdf.vigencia import EnlacePDF
+from src.frontend.controladores.exportacion_pdf.documento.vigencia import EnlacePDF
 from .boton import renderizar_boton_pdf
 
 

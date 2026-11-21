@@ -2,7 +2,7 @@
 from types import SimpleNamespace
 
 from src.frontend.controladores.compartido.sesion.captura_contexto import capturar_matrices_documento
-from src.frontend.controladores.exportacion_pdf.vigencia import EnlacePDF
+from src.frontend.controladores.exportacion_pdf.documento.vigencia import EnlacePDF
 
 
 def test_enlace_anterior_reutiliza_su_entrada_sin_proveedor():

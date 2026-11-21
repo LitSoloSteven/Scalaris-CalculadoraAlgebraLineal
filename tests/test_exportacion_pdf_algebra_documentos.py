@@ -3,8 +3,8 @@ import re
 
 import pytest
 from src.frontend.nucleo.textos import textos
-from src.frontend.controladores.exportacion_pdf.documento import generar_pdf
-from src.frontend.controladores.exportacion_pdf.figuras import preparar_figuras
+from src.frontend.controladores.exportacion_pdf.documento.documento import generar_pdf
+from src.frontend.controladores.exportacion_pdf.documento.figuras import preparar_figuras
 from tests.comun_exportacion_pdf import PORTADA, crear_captura
 
 CASOS = [(herramienta, estado) for herramienta, estados in textos.PDF_ESTADOS_POR_HERRAMIENTA.items()

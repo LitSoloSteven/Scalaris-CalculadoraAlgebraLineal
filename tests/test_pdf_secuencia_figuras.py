@@ -2,9 +2,9 @@
 import pytest
 
 from src.frontend.componentes.reproductor_pasos.nucleo.modelo import PasoReproductor
-from src.frontend.controladores.exportacion_pdf.documento import generar_pdf
-from src.frontend.controladores.exportacion_pdf.figuras import preparar_figuras
-from src.frontend.controladores.exportacion_pdf.secuencia import seleccionar_intermedios
+from src.frontend.controladores.exportacion_pdf.documento.documento import generar_pdf
+from src.frontend.controladores.exportacion_pdf.documento.figuras import preparar_figuras
+from src.frontend.controladores.exportacion_pdf.documento.secuencia import seleccionar_intermedios
 from tests.comun_exportacion_pdf import PORTADA, crear_captura
 
 

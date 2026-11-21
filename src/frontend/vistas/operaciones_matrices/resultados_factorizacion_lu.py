@@ -11,7 +11,7 @@ from ._estados_modelos import ejecutar_modelo, mostrar_estado
 from ._factores_factorizacion_lu import mostrar_factores_lu
 from ._presentacion_factorizacion_lu import montar_reproductor_lu
 from src.frontend.componentes.exportacion_pdf.montaje.integracion import region_pdf, completar_exportacion
-from src.frontend.controladores.exportacion_pdf.vigencia import EnlacePDF
+from src.frontend.controladores.exportacion_pdf.documento.vigencia import EnlacePDF
 from src.frontend.componentes.resultados.acciones.acciones_matriz import renderizar_acciones_matriz
 
 

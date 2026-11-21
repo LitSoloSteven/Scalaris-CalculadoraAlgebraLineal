@@ -6,7 +6,7 @@ from src.frontend.nucleo import constantes as medidas
 from src.frontend.nucleo.textos import textos
 from src.frontend.controladores.exportacion_pdf.recursos.estilos import parrafo
 from src.frontend.controladores.exportacion_pdf.recursos.imagenes import ImagenValidada, validar_imagenes
-from .secuencia import registro_secuencia
+from src.frontend.controladores.exportacion_pdf.documento.secuencia import registro_secuencia
 
 
 def preparar_figuras(herramienta: str, resultado: dict, capturas: list) -> list[dict]:

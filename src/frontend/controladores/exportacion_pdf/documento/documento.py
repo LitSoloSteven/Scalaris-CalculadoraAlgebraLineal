@@ -7,7 +7,7 @@ from reportlab.platypus import BaseDocTemplate, Frame, PageBreak, PageTemplate, 
 from src.frontend.nucleo import constantes as medidas
 from src.frontend.nucleo.textos import textos
 from src.frontend.controladores.exportacion_pdf.recursos.estilos import crear_estilos, parrafo
-from .figuras import construir_figura, preparar_figuras
+from src.frontend.controladores.exportacion_pdf.documento.figuras import construir_figura, preparar_figuras
 from src.frontend.controladores.exportacion_pdf.recursos.portada import fecha_espanola, validar_portada
 
 

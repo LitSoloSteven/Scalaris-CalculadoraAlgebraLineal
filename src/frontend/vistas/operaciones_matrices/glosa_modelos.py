@@ -9,7 +9,7 @@ from src.frontend.controladores.operaciones_matrices.contexto_modelos import obt
 from ._presentacion_modelos import montar_pasos_modelo
 from .herramientas_modelos import MixinHerramientasModelos
 from src.frontend.componentes.exportacion_pdf.montaje.integracion import completar_exportacion, identificador_raiz
-from src.frontend.controladores.exportacion_pdf.vigencia import EnlacePDF
+from src.frontend.controladores.exportacion_pdf.documento.vigencia import EnlacePDF
 from src.frontend.componentes.resultados.acciones.acciones_matriz import renderizar_acciones_matriz
 
 

@@ -12,7 +12,7 @@ from src.frontend.componentes.reproductor_pasos.formato.html_tablas import html_
 from src.frontend.componentes.resultados.analisis.desarrollo_comprobacion import mostrar_desarrollo
 from src.frontend.componentes.resultados.acciones.acciones_matriz import renderizar_acciones_matriz
 from src.frontend.componentes.exportacion_pdf.montaje.integracion import region_pdf, completar_exportacion, identificador_raiz
-from src.frontend.controladores.exportacion_pdf.vigencia import EnlacePDF
+from src.frontend.controladores.exportacion_pdf.documento.vigencia import EnlacePDF
 
 
 def renderizar_resultado_error(vista, resultado: dict) -> None:

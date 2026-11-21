@@ -3,7 +3,7 @@ import pytest
 
 from src.frontend.presentacion import tema
 from src.frontend.nucleo.textos import textos
-from src.frontend.controladores.exportacion_pdf.figuras import preparar_figuras
+from src.frontend.controladores.exportacion_pdf.documento.figuras import preparar_figuras
 from src.frontend.presentacion.recursos_vistas import seleccionar_recursos
 from tests.comun_exportacion_pdf import crear_captura
 
