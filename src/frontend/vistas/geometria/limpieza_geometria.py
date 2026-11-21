@@ -1,6 +1,6 @@
 """Presencia y vaciado de la captura de la escena geométrica activa."""
 from src.backend.utilidades.captura.estado_captura import captura_vacia
-from src.frontend.controladores.limpieza_captura import retirar_estado_calculado
+from src.frontend.controladores.compartido.matrices.limpieza_captura import retirar_estado_calculado
 
 
 class MixinLimpiezaGeometria:

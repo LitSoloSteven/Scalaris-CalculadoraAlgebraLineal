@@ -1,5 +1,5 @@
 """Vaciado de los campos de modelos matriciales sin modificar dimensiones."""
-from src.frontend.controladores.limpieza_captura import (
+from src.frontend.controladores.compartido.matrices.limpieza_captura import (
     campos_vacios, vaciar_campos, retirar_estado_calculado,
 )
 

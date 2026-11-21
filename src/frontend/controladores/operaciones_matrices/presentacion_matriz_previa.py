@@ -2,7 +2,7 @@
 import html
 
 from src.backend.resolutores.operaciones_matrices.inversa.vista_previa_inversa import sanitizar_valor_latex
-from src.frontend.controladores.vista_previa_matricial import orientacion_limite_previa
+from src.frontend.controladores.compartido.matrices.vista_previa_matricial import orientacion_limite_previa
 
 
 def preparar_matriz_previa(datos: list[list[str]], dimension: int, opciones: tuple[str, str, str]) -> dict:

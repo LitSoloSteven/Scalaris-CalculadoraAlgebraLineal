@@ -1,6 +1,6 @@
 """Delegación de la preparación matemática de la vista previa de inversa."""
 from src.backend.resolutores.operaciones_matrices.inversa.vista_previa_inversa import generar_latex_vista_previa
-from src.frontend.controladores.vista_previa_matricial import orientacion_limite_previa
+from src.frontend.controladores.compartido.matrices.vista_previa_matricial import orientacion_limite_previa
 
 
 def preparar_vista_previa_inversa(datos: list[list[str]], dimension: int) -> tuple[str, str | None, list[str]]:

@@ -1,6 +1,6 @@
 """Retiro de capturas, mensajes y procedimientos en las herramientas numéricas."""
 from nicegui import ui
-from src.frontend.controladores.limpieza_captura import (
+from src.frontend.controladores.compartido.matrices.limpieza_captura import (
     campos_vacios, vaciar_campos, retirar_estado_calculado,
 )
 from src.frontend.nucleo.textos.textos import LIMPIEZA_ESTADO_BASES, LIMPIEZA_ESTADO_ROMANOS
