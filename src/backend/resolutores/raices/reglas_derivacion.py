@@ -6,6 +6,7 @@ from .nodos_derivada import (
     constante as _constante, depende_de_x as _depende_de_x, llamada as _llamada, valor_constante as _valor_constante,
     proteger_derivada,
 )
+from .nodos_integral import NOMBRE_INTEGRAL, construir_integral, signo_infinito, sustituir_variable
 from .notacion_calculo import ANGULARES_RADIANES, GUARDIA_DERIVADA, TRIGONOMETRICAS_INVERSAS
 
 _MENSAJE_POTENCIA_VARIABLE = (
@@ -89,11 +90,32 @@ def _derivar_potencia(nodo: ast.BinOp) -> ast.AST:
 
 def _derivar_llamada(nodo: ast.Call) -> ast.AST:
     nombre = nodo.func.id
+    if nombre == NOMBRE_INTEGRAL:
+        return _derivar_integral(nodo)
     regla = _REGLAS_LLAMADA.get(nombre)
     if regla is None:
         raise ErrorDerivadaNoDisponible(f"La función {nombre} no tiene regla de derivación disponible.")
     argumento = nodo.args[0]
     return regla(argumento, derivar_nodo(argumento))
+
+
+def _derivar_integral(nodo: ast.Call) -> ast.AST:
+    cuerpo, variable, inferior, superior = nodo.args
+    extremos = _resta(
+        _derivar_extremo(cuerpo, variable, superior),
+        _derivar_extremo(cuerpo, variable, inferior),
+    )
+    parcial = derivar_nodo(cuerpo)
+    return extremos if _es_cero(parcial) else _suma(extremos, construir_integral(parcial, variable, inferior, superior))
+
+
+def _derivar_extremo(cuerpo: ast.AST, variable: ast.Name, limite: ast.AST) -> ast.AST:
+    if signo_infinito(limite):
+        return _constante(0)
+    cambio = derivar_nodo(limite)
+    if _es_cero(cambio):
+        return cambio
+    return _producto(sustituir_variable(cuerpo, variable, limite), cambio)
 
 
 def _regla_seno(argumento: ast.AST, derivada: ast.AST, *, coseno: str = "cos") -> ast.AST:

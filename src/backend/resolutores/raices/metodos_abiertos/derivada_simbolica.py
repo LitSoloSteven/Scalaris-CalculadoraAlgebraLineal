@@ -2,6 +2,8 @@
 import ast
 
 from ..gramatica_funcion import analizar_expresion
+from ..nodos_derivada import proteger_derivada
+from ..nodos_integral import es_integral
 from ..normalizacion_funcion import normalizar_expresion
 from ..reglas_derivacion import ErrorDerivadaNoDisponible as ErrorDerivadaNoDisponible, derivar_nodo
 
@@ -14,6 +16,8 @@ def derivar_expresion(expresion: str) -> str:
     """Devuelve f'(x) normalizada y validada; lanza ValueError si no se puede derivar."""
     arbol = analizar_expresion(expresion)
     derivada = derivar_nodo(arbol.body)
+    if any(es_integral(nodo) for nodo in ast.walk(arbol)):
+        derivada = proteger_derivada(arbol.body, derivada)
     try:
         texto = ast.unparse(ast.Expression(body=derivada))
     except (ValueError, RecursionError) as error:

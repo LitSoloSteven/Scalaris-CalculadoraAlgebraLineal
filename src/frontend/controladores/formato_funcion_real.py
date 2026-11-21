@@ -2,6 +2,7 @@
 import ast
 
 from src.backend.resolutores.raices.gramatica_funcion import analizar_expresion
+from src.backend.resolutores.raices.nodos_integral import NOMBRE_INTEGRAL, signo_infinito
 from src.backend.resolutores.raices.normalizacion_funcion import normalizar_expresion
 from src.backend.resolutores.raices.notacion_calculo import (
     AGREGADOS, GUARDIA_DERIVADA, NOMBRES_ANGULARES, POSTFIJOS, entero_literal,
@@ -72,6 +73,8 @@ def _proyectar_llamada(nodo: ast.Call) -> tuple[str, int]:
         return _proyectar_agregado(_AGREGADOS[nombre], nodo), 4
     if nombre in _POSTFIJOS:
         return _proyectar_postfijo(_POSTFIJOS[nombre], nodo.args[0]), 4
+    if nombre == NOMBRE_INTEGRAL:
+        return _proyectar_integral(nodo), 4
     argumento, _ = _proyectar(nodo.args[0])
     if nombre in _INDICES_RAIZ:
         return rf"\sqrt{_INDICES_RAIZ[nombre]}{{{argumento}}}", _ATOMO
@@ -90,3 +93,16 @@ def _proyectar_agregado(operador: str, nodo: ast.Call) -> str:
     expresion, _ = _proyectar(cuerpo)
     limites = f"_{{{indice.id}={entero_literal(inferior)}}}^{{{entero_literal(superior)}}}"
     return rf"{operador}{limites}\left({expresion}\right)"
+
+
+def _proyectar_integral(nodo: ast.Call) -> str:
+    cuerpo, variable, inferior, superior = nodo.args
+    integrando = _agrupar(_proyectar(cuerpo), 2)
+    return rf"\int_{{{_proyectar_limite(inferior)}}}^{{{_proyectar_limite(superior)}}} {integrando}\,\mathrm{{d}}{variable.id}"
+
+
+def _proyectar_limite(nodo: ast.AST) -> str:
+    signo = signo_infinito(nodo)
+    if signo:
+        return r"-\infty" if signo < 0 else r"\infty"
+    return _proyectar(nodo)[0]
