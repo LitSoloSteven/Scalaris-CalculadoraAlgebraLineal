@@ -1,5 +1,6 @@
 """Proyección del catálogo en el orden de lectura del directorio de inicio."""
 from dataclasses import dataclass, replace
+from functools import cached_property
 
 from src.frontend.navegacion.catalogo import PILARES
 from src.frontend.navegacion.consultas import elementos_navegacion, herramientas_visibles, pilar_de
@@ -27,15 +28,16 @@ class SeccionInicio:
         """Identifica el símbolo que comparten la portada y la barra."""
         return f"seccion-{self.identificador}"
 
-    @property
+    @cached_property
     def accesos(self) -> tuple[ElementoNavegacion, ...]:
         """Devuelve los accesos en orden, incluidos los subgrupos."""
         return tuple(acceso for grupo in self.grupos for acceso in grupo.accesos)
 
 
 _GruposPorClave = tuple[tuple[str | None, tuple[str, ...]], ...]
+_DefinicionSeccion = tuple[str, str, _GruposPorClave]
 
-_SECCIONES: tuple[tuple[str, str, _GruposPorClave], ...] = (
+_SECCIONES: tuple[_DefinicionSeccion, ...] = (
     ("sistemas-lineales", "Sistemas lineales", ((None, ("sistemas", "leontief")),)),
     ("matrices", "Matrices", ((None, ("matrices", "inversa", "determinantes", "factorizacion_lu")),)),
     ("vectores-geometria", "Vectores y geometría", (
@@ -45,6 +47,12 @@ _SECCIONES: tuple[tuple[str, str, _GruposPorClave], ...] = (
     ("metodos-numericos", "Métodos numéricos", (("Raíces de ecuaciones", ("metodos_cerrados", "metodos_abiertos")),)),
     ("sistemas-numeracion", "Sistemas de numeración", ((None, ("bases", "romanos")),)),
 )
+
+_SECCIONES_POR_CLAVE = {
+    clave: (identificador, titulo, grupos)
+    for identificador, titulo, grupos in _SECCIONES
+    for _, claves in grupos for clave in claves
+}
 
 _ETIQUETAS_INICIO = {
     "matrices": "Operaciones con matrices",
@@ -63,8 +71,8 @@ def _resolver_grupos(
     return tuple(resultado)
 
 
-def secciones_inicio() -> tuple[SeccionInicio, ...]:
-    """Devuelve las secciones del directorio con los accesos habilitados del catálogo."""
+def _elementos_habilitados() -> dict[str, ElementoNavegacion]:
+    """Recupera los accesos vigentes con las etiquetas del directorio."""
     habilitadas = {herramienta.identificador for herramienta in herramientas_visibles()}
     elementos = {
         elemento.clave: elemento
@@ -75,18 +83,29 @@ def secciones_inicio() -> tuple[SeccionInicio, ...]:
     for clave, etiqueta in _ETIQUETAS_INICIO.items():
         if clave in elementos:
             elementos[clave] = replace(elementos[clave], etiqueta=etiqueta)
+    return elementos
 
-    secciones = []
-    for identificador, titulo, grupos in _SECCIONES:
-        grupos_resueltos = _resolver_grupos(grupos, elementos)
-        if grupos_resueltos:
-            secciones.append(SeccionInicio(identificador, titulo, grupos_resueltos))
-    return tuple(secciones)
+
+def _resolver_seccion(
+    definicion: _DefinicionSeccion, elementos: dict[str, ElementoNavegacion]
+) -> SeccionInicio | None:
+    """Proyecta una sección si conserva algún acceso habilitado."""
+    identificador, titulo, grupos = definicion
+    grupos_resueltos = _resolver_grupos(grupos, elementos)
+    return SeccionInicio(identificador, titulo, grupos_resueltos) if grupos_resueltos else None
+
+
+def secciones_inicio() -> tuple[SeccionInicio, ...]:
+    """Devuelve las secciones del directorio con los accesos habilitados del catálogo."""
+    elementos = _elementos_habilitados()
+    return tuple(seccion for definicion in _SECCIONES
+                 if (seccion := _resolver_seccion(definicion, elementos)) is not None)
 
 
 def seccion_por_clave(clave: str | None) -> SeccionInicio | None:
     """Resuelve la sección de un acceso habilitado por su clave de herramienta o escena."""
-    if clave is None:
+    definicion = _SECCIONES_POR_CLAVE.get(clave) if clave is not None else None
+    if definicion is None:
         return None
-    return next((seccion for seccion in secciones_inicio()
-                 if any(acceso.clave == clave for acceso in seccion.accesos)), None)
+    elementos = _elementos_habilitados()
+    return _resolver_seccion(definicion, elementos) if clave in elementos else None
