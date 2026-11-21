@@ -60,7 +60,7 @@ def test_arnes_leontief_rechaza_resultado_sin_renderizado(monkeypatch):
 
 def test_arnes_matricial_rechaza_resultado_sin_renderizado(monkeypatch):
     """La guarda común detecta errores capturados después de un cálculo exitoso."""
-    from src.frontend.vistas.operaciones_matrices.mixin_resultados import MixinResultadosOperacionesMatrices
+    from src.frontend.vistas.algebra.operaciones_matrices.expresiones.mixin_resultados import MixinResultadosOperacionesMatrices
 
     def fallar_renderizado(vista, resultado):
         """Procesa fallar renderizado con los datos recibidos."""

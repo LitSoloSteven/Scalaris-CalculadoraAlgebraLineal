@@ -58,7 +58,7 @@ def _registrar_paginas_algebra() -> None:
     @ui.page(ruta_de("matrices"), title=herramienta_por_identificador("matrices").titulo_pagina)
     def pagina_matrices(operacion: str = "", handoff: str = ""):
         """Construye la página de matrices con sus controles y contexto."""
-        from src.frontend.vistas.operaciones_matrices.vista_operaciones_matrices import VistaOperacionesMatrices
+        from src.frontend.vistas.algebra.operaciones_matrices.expresiones.vista_operaciones_matrices import VistaOperacionesMatrices
 
         configurar_tema("determinantes" if operacion == OPERACION_DETERMINANTE else "matrices")
         if operacion == OPERACION_DETERMINANTE:

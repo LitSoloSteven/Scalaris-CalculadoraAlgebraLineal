@@ -15,7 +15,7 @@ from src.frontend.navegacion import ruta_de
 from src.frontend.controladores.algebra.operaciones_matrices import ControladorOperacionesMatrices
 from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto
 from src.frontend.componentes.resultados.acciones.transferencia import recibir_matriz
-from src.frontend.vistas.operaciones_matrices.mixin_resultados import MixinResultadosOperacionesMatrices
+from src.frontend.vistas.algebra.operaciones_matrices.expresiones.mixin_resultados import MixinResultadosOperacionesMatrices
 
 from .mixin_contexto_matrices import MixinContextoMatrices
 

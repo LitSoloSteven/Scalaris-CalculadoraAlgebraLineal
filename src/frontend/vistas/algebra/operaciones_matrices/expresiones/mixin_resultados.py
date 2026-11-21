@@ -25,7 +25,7 @@ from src.frontend.componentes.reproductor_pasos import ReproductorPasos
 from src.frontend.controladores.algebra.operaciones_matrices import (
     ControladorOperacionesMatrices,
 )
-from src.frontend.vistas.operaciones_matrices._pasos_reproductor import construir_pasos_matrices
+from src.frontend.vistas.algebra.operaciones_matrices.expresiones._pasos_reproductor import construir_pasos_matrices
 
 registro = logging.getLogger(__name__)
 
