@@ -8,8 +8,8 @@ import pytest
 
 from src.backend.resolutores.raices.exploracion.base.contrato_exploracion import CandidatoExploracion
 from src.backend.resolutores.raices.contrato_lote_regla_falsa import EntradaLoteReglaFalsa
-from src.backend.resolutores.raices.contrato_regla_falsa import EntradaReglaFalsa
-from src.backend.resolutores.raices.contrato_regla_falsa_ampliada import ConfiguracionReglaFalsa
+from src.backend.resolutores.raices.regla_falsa.contratos.contrato_regla_falsa import EntradaReglaFalsa
+from src.backend.resolutores.raices.regla_falsa.contratos.contrato_regla_falsa_ampliada import ConfiguracionReglaFalsa
 from src.backend.resolutores.raices.biseccion.lote.contrato_resolucion_multiple import CandidatoResolucion
 from src.backend.resolutores.raices.biseccion.contratos.criterios_biseccion import CriterioParada
 from src.backend.resolutores.raices.resolucion_multiple_regla_falsa import resolver_candidatos_regla_falsa

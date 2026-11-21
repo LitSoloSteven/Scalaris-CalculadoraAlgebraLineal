@@ -2,7 +2,7 @@
 import json
 from dataclasses import asdict
 
-from src.backend.resolutores.raices.contrato_regla_falsa import ResultadoReglaFalsa
+from src.backend.resolutores.raices.regla_falsa.contratos.contrato_regla_falsa import ResultadoReglaFalsa
 from src.backend.resolutores.raices.regla_falsa.motor.regla_falsa_ampliada import resolver_regla_falsa_configurada
 from src.backend.resolutores.raices.sugerencias_regla_falsa import sugerir_acciones_regla_falsa
 from .configuracion_ampliada import preparar_configuracion

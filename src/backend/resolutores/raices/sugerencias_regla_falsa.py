@@ -2,9 +2,9 @@
 from dataclasses import asdict
 from typing import Literal, TypedDict
 
-from .contrato_regla_falsa import EntradaReglaFalsa, ResultadoReglaFalsa
+from .regla_falsa.contratos.contrato_regla_falsa import EntradaReglaFalsa, ResultadoReglaFalsa
 from .continuidad.analisis.sugerencias_dominio import sugerir_recorte_dominio
-from .validacion_regla_falsa import validar_entrada_regla_falsa
+from .regla_falsa.contratos.validacion_regla_falsa import validar_entrada_regla_falsa
 
 
 class SugerenciaIntervaloReglaFalsa(TypedDict):

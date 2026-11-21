@@ -5,7 +5,7 @@ import math
 import pytest
 
 from src.backend.excepciones import ErrorDominio
-from src.backend.resolutores.raices.contrato_regla_falsa import EntradaReglaFalsa
+from src.backend.resolutores.raices.regla_falsa.contratos.contrato_regla_falsa import EntradaReglaFalsa
 
 
 def test_fallo_tras_filas_validas_conserva_traza_e_intervalo(monkeypatch):

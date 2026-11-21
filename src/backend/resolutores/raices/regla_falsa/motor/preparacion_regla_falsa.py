@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from ...continuidad.dominio.cobertura_continuidad import cubre_intervalo_cerrado
 from ...biseccion.contratos.contrato_biseccion import EvaluacionExtremo
 from ...continuidad.dominio.contrato_continuidad import InformeContinuidad
-from ...contrato_regla_falsa import (
+from ..contratos.contrato_regla_falsa import (
     DiagnosticoReglaFalsa,
     EntradaReglaFalsa,
     IteracionReglaFalsa,
@@ -19,7 +19,7 @@ from ...funcion_real.evaluacion.gramatica_funcion import analizar_expresion
 from ...continuidad.analisis.informe_continuidad import crear_informe, observacion
 from .traza_regla_falsa import construir_error
 from ...compartido.unidades_angulares import opciones_unidad
-from ...validacion_regla_falsa import validar_entrada_regla_falsa
+from ..contratos.validacion_regla_falsa import validar_entrada_regla_falsa
 
 
 @dataclass(frozen=True)

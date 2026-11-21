@@ -2,12 +2,12 @@
 import math
 from dataclasses import asdict, replace
 
-from ...contrato_regla_falsa import EntradaReglaFalsa
-from ...contrato_regla_falsa_ampliada import ConfiguracionReglaFalsa, ResultadoReglaFalsaAmpliado
-from ...criterios_regla_falsa import MOTIVOS_CRITERIO, metrica_regla_falsa, validar_criterio_regla_falsa
+from ..contratos.contrato_regla_falsa import EntradaReglaFalsa
+from ..contratos.contrato_regla_falsa_ampliada import ConfiguracionReglaFalsa, ResultadoReglaFalsaAmpliado
+from ..contratos.criterios_regla_falsa import MOTIVOS_CRITERIO, metrica_regla_falsa, validar_criterio_regla_falsa
 from .preparacion_regla_falsa import IntervaloReglaFalsaPreparado, preparar_intervalo_regla_falsa
 from .regla_falsa import resolver_intervalo_regla_falsa
-from ...validacion_regla_falsa import validar_entrada_regla_falsa
+from ..contratos.validacion_regla_falsa import validar_entrada_regla_falsa
 
 
 def resolver_regla_falsa_configurada(configuracion: ConfiguracionReglaFalsa) -> ResultadoReglaFalsaAmpliado:

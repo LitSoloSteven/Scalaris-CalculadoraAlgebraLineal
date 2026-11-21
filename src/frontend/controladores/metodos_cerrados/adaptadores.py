@@ -1,5 +1,5 @@
 """Contratos de presentación de Bisección y Regla falsa para una captura común."""
-from src.backend.resolutores.raices.contrato_regla_falsa import EntradaReglaFalsa
+from src.backend.resolutores.raices.regla_falsa.contratos.contrato_regla_falsa import EntradaReglaFalsa
 from src.frontend.controladores.biseccion.captura_criterio import texto_condicion
 from src.frontend.controladores.biseccion.catalogo_criterios import CRITERIOS
 from src.frontend.controladores.biseccion.controlador import calcular_presentacion as calcular_biseccion

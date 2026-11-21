@@ -2,10 +2,10 @@
 from dataclasses import dataclass, field
 from typing import Literal
 
-from .biseccion.contratos.contrato_biseccion import AVISO_INTERVALO_INVERTIDO, ContextoFallo
-from .continuidad.dominio.contrato_continuidad import InformeContinuidad
-from .biseccion.contratos.decision_biseccion import SignoProducto
-from .compartido.limites_raices import LIMITE_ITERACIONES_DEFECTO
+from ...biseccion.contratos.contrato_biseccion import AVISO_INTERVALO_INVERTIDO, ContextoFallo
+from ...continuidad.dominio.contrato_continuidad import InformeContinuidad
+from ...biseccion.contratos.decision_biseccion import SignoProducto
+from ...compartido.limites_raices import LIMITE_ITERACIONES_DEFECTO
 
 AccionReglaFalsa = Literal["reemplazar_a", "reemplazar_b", "raiz", "sin_cambio"]
 DiagnosticoReglaFalsa = dict

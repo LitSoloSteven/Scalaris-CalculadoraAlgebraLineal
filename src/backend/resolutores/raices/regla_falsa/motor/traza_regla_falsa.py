@@ -4,8 +4,8 @@ from dataclasses import replace
 
 from src.backend.excepciones import ErrorDominio, ErrorNoFinito
 from ...biseccion.contratos.aritmetica_biseccion import ancho_intervalo
-from ...aritmetica_regla_falsa import error_relativo_numerico, peso_escalado
-from ...contrato_regla_falsa import EntradaReglaFalsa, IteracionReglaFalsa, ResultadoReglaFalsa
+from ..contratos.aritmetica_regla_falsa import error_relativo_numerico, peso_escalado
+from ..contratos.contrato_regla_falsa import EntradaReglaFalsa, IteracionReglaFalsa, ResultadoReglaFalsa
 from ...biseccion.contratos.decision_biseccion import signo_producto
 
 _CIERRES = {

@@ -3,7 +3,7 @@ import math
 
 import pytest
 
-from src.backend.resolutores.raices.contrato_regla_falsa import (
+from src.backend.resolutores.raices.regla_falsa.contratos.contrato_regla_falsa import (
     EntradaReglaFalsa,
     IteracionReglaFalsa,
     ResultadoReglaFalsa,
@@ -12,7 +12,7 @@ from src.backend.resolutores.raices.compartido.limites_raices import (
     LIMITE_ITERACIONES_DEFECTO,
     LIMITE_ITERACIONES_MAXIMO,
 )
-from src.backend.resolutores.raices.validacion_regla_falsa import (
+from src.backend.resolutores.raices.regla_falsa.contratos.validacion_regla_falsa import (
     validar_entrada_regla_falsa,
 )
 

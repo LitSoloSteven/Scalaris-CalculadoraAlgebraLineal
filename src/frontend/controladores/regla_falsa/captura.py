@@ -1,8 +1,8 @@
 """Conversión de campos de regla falsa al contrato real del dominio."""
 from collections.abc import Mapping
 
-from src.backend.resolutores.raices.contrato_regla_falsa import EntradaReglaFalsa
-from src.backend.resolutores.raices.validacion_regla_falsa import validar_entrada_regla_falsa
+from src.backend.resolutores.raices.regla_falsa.contratos.contrato_regla_falsa import EntradaReglaFalsa
+from src.backend.resolutores.raices.regla_falsa.contratos.validacion_regla_falsa import validar_entrada_regla_falsa
 from src.frontend.controladores.captura_real import entero_capturado, real_capturado
 
 

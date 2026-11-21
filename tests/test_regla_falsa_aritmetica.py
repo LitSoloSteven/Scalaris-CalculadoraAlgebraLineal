@@ -2,7 +2,7 @@
 import math
 import pytest
 
-from src.backend.resolutores.raices.aritmetica_regla_falsa import (
+from src.backend.resolutores.raices.regla_falsa.contratos.aritmetica_regla_falsa import (
     peso_escalado,
     punto_cruce,
 )

@@ -3,9 +3,9 @@ import math
 from collections.abc import Mapping
 
 from .contrato_regla_falsa import EntradaReglaFalsa
-from .compartido.limites_raices import LIMITE_ITERACIONES_MAXIMO
-from .compartido.unidades_angulares import validar_unidad_angular
-from .compartido.validacion_raices import (
+from ...compartido.limites_raices import LIMITE_ITERACIONES_MAXIMO
+from ...compartido.unidades_angulares import validar_unidad_angular
+from ...compartido.validacion_raices import (
     validar_expresion,
     validar_extremo,
     validar_limite_iteraciones,

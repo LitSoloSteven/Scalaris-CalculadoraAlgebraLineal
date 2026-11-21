@@ -4,13 +4,13 @@ from dataclasses import asdict
 
 import pytest
 
-from src.backend.resolutores.raices.contrato_regla_falsa import (
+from src.backend.resolutores.raices.regla_falsa.contratos.contrato_regla_falsa import (
     EntradaReglaFalsa,
     IteracionReglaFalsa,
     ResultadoReglaFalsa,
 )
 from src.backend.resolutores.raices.regla_falsa.motor.regla_falsa import regla_falsa
-from src.backend.resolutores.raices.validacion_regla_falsa import validar_entrada_regla_falsa
+from src.backend.resolutores.raices.regla_falsa.contratos.validacion_regla_falsa import validar_entrada_regla_falsa
 
 
 def _entrada(expresion, a, b, tol=1e-6, limite=100):

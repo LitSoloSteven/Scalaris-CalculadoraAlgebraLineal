@@ -4,13 +4,13 @@ from typing import Literal
 
 from .continuidad.dominio.contrato_continuidad import InformeContinuidad
 from .exploracion.base.contrato_exploracion import AVISO_EXPLORACION
-from .contrato_regla_falsa import EntradaReglaFalsa
-from .contrato_regla_falsa_ampliada import ConfiguracionReglaFalsa, ResultadoReglaFalsaAmpliado
+from .regla_falsa.contratos.contrato_regla_falsa import EntradaReglaFalsa
+from .regla_falsa.contratos.contrato_regla_falsa_ampliada import ConfiguracionReglaFalsa, ResultadoReglaFalsaAmpliado
 from .biseccion.lote.contrato_resolucion_multiple import CandidatoResolucion, validar_seleccion_multiple
-from .criterios_regla_falsa import validar_criterio_regla_falsa
+from .regla_falsa.contratos.criterios_regla_falsa import validar_criterio_regla_falsa
 from .funcion_real.evaluacion.gramatica_funcion import analizar_expresion
 from .biseccion.lote.limites_resolucion_multiple import MAXIMO_EVALUACIONES_MULTIPLE
-from .validacion_regla_falsa import validar_entrada_regla_falsa
+from .regla_falsa.contratos.validacion_regla_falsa import validar_entrada_regla_falsa
 
 EstadoCandidatoReglaFalsa = Literal[
     "EXITO", "SIN_CAMBIO_DE_SIGNO", "ESTANCAMIENTO", "LIMITE_ITERACIONES",

@@ -3,7 +3,7 @@ import math
 
 import pytest
 
-from src.backend.resolutores.raices.contrato_regla_falsa import EntradaReglaFalsa
+from src.backend.resolutores.raices.regla_falsa.contratos.contrato_regla_falsa import EntradaReglaFalsa
 from src.backend.resolutores.raices.regla_falsa.motor.regla_falsa import regla_falsa
 
 

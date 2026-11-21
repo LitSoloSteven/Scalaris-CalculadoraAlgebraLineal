@@ -2,7 +2,7 @@
 from dataclasses import asdict
 
 from src.ai.huellas import calcular_huella
-from src.backend.resolutores.raices.contrato_regla_falsa import EntradaReglaFalsa
+from src.backend.resolutores.raices.regla_falsa.contratos.contrato_regla_falsa import EntradaReglaFalsa
 from src.frontend.controladores.regla_falsa.captura import preparar_entrada
 from src.frontend.vistas.biseccion.estado_captura import transaccion
 from .selector_criterio import capturar_criterio, actualizar_guia

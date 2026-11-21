@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import Literal
 
 from .contrato_regla_falsa import EntradaReglaFalsa, ResultadoReglaFalsa
-from .biseccion.contratos.criterios_biseccion import CriterioParada
+from ...biseccion.contratos.criterios_biseccion import CriterioParada
 
 CumplimientoReglaFalsa = Literal["CUMPLIDO", "NO_CUMPLIDO", "CONTEO_COMPLETADO", "NO_APLICA"]
 
