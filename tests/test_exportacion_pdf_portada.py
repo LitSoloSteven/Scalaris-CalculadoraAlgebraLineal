@@ -2,8 +2,8 @@
 import pytest
 
 from src.frontend.nucleo import constantes as limites
-from src.frontend.controladores.exportacion_pdf.glifos import texto_admitido
-from src.frontend.controladores.exportacion_pdf.portada import validar_portada, fecha_espanola, nombre_archivo
+from src.frontend.controladores.exportacion_pdf.recursos.glifos import texto_admitido
+from src.frontend.controladores.exportacion_pdf.recursos.portada import validar_portada, fecha_espanola, nombre_archivo
 from tests.comun_exportacion_pdf import PORTADA
 
 

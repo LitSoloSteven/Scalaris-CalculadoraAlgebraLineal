@@ -4,8 +4,8 @@ from io import BytesIO
 from reportlab.platypus import Image, KeepTogether
 from src.frontend.nucleo import constantes as medidas
 from src.frontend.nucleo.textos import textos
-from .estilos import parrafo
-from .imagenes import ImagenValidada, validar_imagenes
+from src.frontend.controladores.exportacion_pdf.recursos.estilos import parrafo
+from src.frontend.controladores.exportacion_pdf.recursos.imagenes import ImagenValidada, validar_imagenes
 from .secuencia import registro_secuencia
 
 

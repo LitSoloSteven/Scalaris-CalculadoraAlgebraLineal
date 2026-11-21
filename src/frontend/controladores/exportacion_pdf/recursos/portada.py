@@ -5,7 +5,7 @@ from datetime import date
 
 from src.frontend.nucleo import constantes as limites
 from src.frontend.nucleo.textos import textos
-from .glifos import texto_admitido
+from src.frontend.controladores.exportacion_pdf.recursos.glifos import texto_admitido
 
 def validar_portada(datos: dict) -> tuple[dict[str, str], dict[str, str]]:
     """Devuelve datos normalizados y errores por campo sin conservar información personal."""

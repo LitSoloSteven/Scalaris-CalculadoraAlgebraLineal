@@ -6,7 +6,7 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.platypus import Paragraph
 from src.frontend.nucleo import constantes as medidas
 from src.frontend.nucleo.textos import textos
-from .glifos import texto_admitido
+from src.frontend.controladores.exportacion_pdf.recursos.glifos import texto_admitido
 
 
 def crear_estilos() -> dict[str, ParagraphStyle]:

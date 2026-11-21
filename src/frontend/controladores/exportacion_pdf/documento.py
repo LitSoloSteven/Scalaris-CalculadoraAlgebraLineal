@@ -6,9 +6,9 @@ from reportlab.lib.pagesizes import letter
 from reportlab.platypus import BaseDocTemplate, Frame, PageBreak, PageTemplate, Spacer
 from src.frontend.nucleo import constantes as medidas
 from src.frontend.nucleo.textos import textos
-from .estilos import crear_estilos, parrafo
+from src.frontend.controladores.exportacion_pdf.recursos.estilos import crear_estilos, parrafo
 from .figuras import construir_figura, preparar_figuras
-from .portada import fecha_espanola, validar_portada
+from src.frontend.controladores.exportacion_pdf.recursos.portada import fecha_espanola, validar_portada
 
 
 def generar_pdf(herramienta: str, datos_portada: dict, resultado: dict, capturas: list) -> tuple[bytes, bool]:
