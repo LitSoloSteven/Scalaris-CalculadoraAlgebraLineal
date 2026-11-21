@@ -8,7 +8,7 @@ from src.frontend.controladores.raices.biseccion.ejecucion.controlador import ca
 from src.frontend.controladores.raices.biseccion.presentacion.presentacion import construir_pasos
 from src.frontend.controladores.raices.biseccion.presentacion.presentacion_criterio import texto_resumen, titulo_estado
 from src.frontend.controladores.raices.biseccion.adaptadores.vista_previa import preparar_vista_previa
-from src.frontend.vistas.biseccion.figura import crear_figura_previa
+from src.frontend.vistas.raices.biseccion.grafica.figura import crear_figura_previa
 from tests.comun_biseccion_criterios import captura_criterio, ejecutar_escenario
 
 

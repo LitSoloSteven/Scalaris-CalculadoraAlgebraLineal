@@ -17,7 +17,7 @@ from src.frontend.controladores.raices.metodos_cerrados.adaptadores import BISEC
 from src.frontend.controladores.raices.compartido.formato.rango_exploracion_raices import RANGO_GRAFICA_DEFECTO, rango_evento_distinto, rango_grafica
 from src.frontend.controladores.raices.compartido.exploracion.vista_previa_raices import preparar_vista_previa
 from src.frontend.presentacion.tema import PALETA_GRAFICOS
-from src.frontend.vistas.biseccion.figura import crear_figura as figura_biseccion
+from src.frontend.vistas.raices.biseccion.grafica.figura import crear_figura as figura_biseccion
 from src.frontend.vistas.regla_falsa.figura import crear_figura as figura_regla_falsa
 from src.frontend.vistas.regla_falsa.seleccion_grafico import SeleccionGrafico
 

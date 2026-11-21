@@ -8,7 +8,7 @@ from nicegui import ui
 
 from src.frontend.controladores.raices.biseccion.adaptadores import muestreo
 from src.frontend.controladores.raices.biseccion.adaptadores.vista_previa import preparar_vista_previa
-from src.frontend.vistas.biseccion.figura import crear_figura_previa
+from src.frontend.vistas.raices.biseccion.grafica.figura import crear_figura_previa
 from tests.comun_biseccion_criterios import captura_criterio, ejecutar_escenario
 from tests.comun_exploracion_biseccion import activar_accion
 

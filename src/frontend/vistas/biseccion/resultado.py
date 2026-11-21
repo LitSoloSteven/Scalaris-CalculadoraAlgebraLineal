@@ -1,5 +1,5 @@
 """Presentación del veredicto y de la traza del cálculo individual."""
-from .grafico_compartido import mostrar_paso_principal
+from src.frontend.vistas.raices.biseccion.grafica.grafico_compartido import mostrar_paso_principal
 from .modo_examen import crear_interruptor_examen
 from .procedimiento import mostrar_traza
 from .resumen_criterio import mostrar_resumen

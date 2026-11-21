@@ -8,8 +8,8 @@ from .exploracion import PanelExploracion
 from src.frontend.vistas.raices.biseccion.base.modos_captura import MODO_BUSQUEDA, MODO_INTERVALO, construir_modos, region_modo
 from src.frontend.vistas.raices.biseccion.base.previa_expresion import PreviaExpresion
 from .resolucion_multiple import PanelResolucionMultiple
-from .seleccion_grafico import SeleccionGrafico
-from .vista_previa import PanelVistaPrevia
+from src.frontend.vistas.raices.biseccion.grafica.seleccion_grafico import SeleccionGrafico
+from src.frontend.vistas.raices.biseccion.grafica.vista_previa import PanelVistaPrevia
 
 
 def componer_herramienta(vista) -> None:

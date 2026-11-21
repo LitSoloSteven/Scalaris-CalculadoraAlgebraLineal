@@ -9,7 +9,7 @@ from src.frontend.controladores.raices.biseccion.adaptadores.exploracion import 
 from src.frontend.controladores.raices.biseccion.ejecucion.resolucion_multiple import resolver_lote
 from src.frontend.controladores.raices.biseccion.captura.vigencia_panel import invalidar_panel
 from src.frontend.controladores.compartido.sesion.calculo_vigente import ejecutar_calculo_vigente
-from .grafico_compartido import restaurar_grafico_principal
+from src.frontend.vistas.raices.biseccion.grafica.grafico_compartido import restaurar_grafico_principal
 from src.frontend.vistas.raices.biseccion.base.modos_captura import MODO_BUSQUEDA
 from .resultados_multiples import mostrar_resultados_multiples
 

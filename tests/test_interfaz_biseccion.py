@@ -11,7 +11,7 @@ from src.frontend.controladores.raices.biseccion.adaptadores.muestreo import mue
 from src.frontend.controladores.raices.biseccion.presentacion.presentacion import construir_pasos, filas_tabla
 from src.frontend.navegacion import ruta_de, pilar_de
 from src.frontend.vistas.biseccion.vista_biseccion import VistaBiseccion
-from src.frontend.vistas.biseccion.figura import crear_figura
+from src.frontend.vistas.raices.biseccion.grafica.figura import crear_figura
 from tests.comun_construccion_vistas import preparar_transporte, cerrar_cliente
 
 

@@ -16,7 +16,7 @@ from src.frontend.vistas.raices.biseccion.captura.acciones_captura import desple
 from .candidatos import mostrar_candidatos
 from src.frontend.vistas.raices.biseccion.base.modos_captura import MODO_BUSQUEDA
 from src.frontend.vistas.raices.biseccion.base.movimiento import animar_entrada, cancelar_entrada, modalidad_puntero, vincular_envio
-from .rango_grafica import campos_rango
+from src.frontend.vistas.raices.biseccion.grafica.rango_grafica import campos_rango
 
 registro = logging.getLogger(__name__)
 _ESTADO_INICIAL = ESTADO_INICIAL
