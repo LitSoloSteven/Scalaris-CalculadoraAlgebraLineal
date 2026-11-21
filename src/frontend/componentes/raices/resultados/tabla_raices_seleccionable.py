@@ -5,7 +5,7 @@ from dataclasses import dataclass
 
 from nicegui import ui
 
-from src.frontend.componentes.tabla_iteraciones import PaginacionIteraciones
+from src.frontend.componentes.raices.resultados.tabla_iteraciones import PaginacionIteraciones
 
 
 @dataclass(frozen=True)

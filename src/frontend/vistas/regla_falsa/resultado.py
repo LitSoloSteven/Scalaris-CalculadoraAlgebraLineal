@@ -3,7 +3,7 @@ from nicegui import ui
 
 from src.backend.resolutores.raices.compartido.limites_raices import D_MAXIMO
 from src.frontend.componentes.resultados.acciones.copia_resultado import renderizar_copia_resultado
-from src.frontend.componentes.precision_presentacion import leer_precision_presentacion
+from src.frontend.componentes.raices.resultados.precision_presentacion import leer_precision_presentacion
 from src.frontend.controladores.regla_falsa.diagnostico import detalles_diagnostico
 from src.frontend.controladores.regla_falsa.presentacion import (
     aproximacion_presentada, avisos_resumen,

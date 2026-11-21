@@ -1,7 +1,7 @@
 """Paginación en servidor y formato de la página visible de la traza."""
 from nicegui import ui
 
-from src.frontend.componentes.tabla_iteraciones import PaginacionIteraciones
+from src.frontend.componentes.raices.resultados.tabla_iteraciones import PaginacionIteraciones
 from src.frontend.controladores.biseccion.presentacion import COLUMNAS, filas_tabla
 from src.frontend.controladores.biseccion.salidas_biseccion import COLUMNAS_EXAMEN, datos_examen
 

@@ -3,7 +3,7 @@ import logging
 
 from nicegui import ui
 
-from src.frontend.componentes.informe_continuidad_raices import mostrar_consulta_continuidad
+from src.frontend.componentes.raices.resultados.informe_continuidad_raices import mostrar_consulta_continuidad
 from src.frontend.nucleo.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
 from src.frontend.controladores.actualizacion_cancelable import cancelar_actualizacion, programar_actualizacion
 from src.frontend.controladores.biseccion.continuidad_intervalo import consultar_continuidad as consultar_biseccion

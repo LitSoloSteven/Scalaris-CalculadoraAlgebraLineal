@@ -1,5 +1,5 @@
 """Tabla de regla falsa con el formato y los textos de su traza."""
-from src.frontend.componentes.tabla_raices_seleccionable import FormatoTablaRaices, TablaRaicesSeleccionable
+from src.frontend.componentes.raices.resultados.tabla_raices_seleccionable import FormatoTablaRaices, TablaRaicesSeleccionable
 from src.frontend.controladores.regla_falsa.tabla import COLUMNAS, filas_tabla
 
 _FORMATO = FormatoTablaRaices(

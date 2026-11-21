@@ -2,8 +2,8 @@
 from nicegui import ui
 
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos, renderizar_latex
-from src.frontend.componentes.informe_continuidad_raices import mostrar_informe_continuidad
-from src.frontend.componentes.tabla_raices_seleccionable import FormatoTablaRaices, TablaRaicesSeleccionable
+from src.frontend.componentes.raices.resultados.informe_continuidad_raices import mostrar_informe_continuidad
+from src.frontend.componentes.raices.resultados.tabla_raices_seleccionable import FormatoTablaRaices, TablaRaicesSeleccionable
 from src.frontend.controladores.biseccion import presentacion as presentacion_biseccion
 from src.frontend.controladores.biseccion.formulas_procedimiento import formulas_iteracion as formulas_biseccion
 from src.frontend.controladores.biseccion.salidas_biseccion import COLUMNAS_EXAMEN, datos_examen
