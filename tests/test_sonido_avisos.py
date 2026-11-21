@@ -11,7 +11,7 @@ from src.frontend.componentes import sonido
 from src.frontend.componentes.control_sonido import renderizar_control_sonido
 from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.tema import _CABECERA_HTML
-from src.frontend.recursos_vistas import seleccionar_recursos
+from src.frontend.presentacion.recursos_vistas import seleccionar_recursos
 from tests.comun import RAIZ
 
 

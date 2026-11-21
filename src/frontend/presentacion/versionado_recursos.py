@@ -3,7 +3,7 @@ import hashlib
 import re
 from pathlib import Path
 
-_RECURSOS = Path(__file__).parent / "recursos"
+_RECURSOS = Path(__file__).parents[1] / "recursos"
 _URL_RECURSO = re.compile(r'(?P<atributo>\b(?:src|href)=")(?P<url>/assets/(?:js|css)/[\w-]+\.(?:js|css))"')
 
 

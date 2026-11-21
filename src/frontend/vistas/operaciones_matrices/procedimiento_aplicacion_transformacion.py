@@ -7,7 +7,7 @@ from nicegui import ui
 from src.frontend.nucleo.textos import textos_transformaciones as textos
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos
 from src.frontend.componentes.glosa_foco import crear_accion_explicacion
-from src.frontend.versionado_recursos import versionar_html
+from src.frontend.presentacion.versionado_recursos import versionar_html
 from .pasos_aplicacion_transformacion import adaptar_pasos_aplicacion
 from .reproductor_aplicacion_transformacion import ReproductorAplicacion
 

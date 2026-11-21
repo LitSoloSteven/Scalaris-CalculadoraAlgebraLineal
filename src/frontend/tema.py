@@ -6,8 +6,8 @@ from string import Template
 from nicegui import ui
 
 from src.frontend.nucleo import banderas
-from src.frontend.recursos_vistas import seleccionar_recursos
-from src.frontend.versionado_recursos import versionar_html
+from src.frontend.presentacion.recursos_vistas import seleccionar_recursos
+from src.frontend.presentacion.versionado_recursos import versionar_html
 from src.frontend.nucleo.constantes import CARACTERES_ENTRADA_NUMERICA
 from src.frontend.nucleo.textos.textos import MENSAJE_ENTRADA_NUMERICA
 

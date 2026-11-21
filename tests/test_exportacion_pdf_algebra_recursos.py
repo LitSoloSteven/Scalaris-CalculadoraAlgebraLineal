@@ -1,7 +1,7 @@
 """Carga del capturador y estilos PDF exclusivamente en las rutas que los consumen."""
 import pytest
 
-from src.frontend.recursos_vistas import seleccionar_recursos
+from src.frontend.presentacion.recursos_vistas import seleccionar_recursos
 from src.frontend import tema
 from tests.comun_exportacion_algebra import HERRAMIENTAS
 

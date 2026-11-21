@@ -5,7 +5,7 @@ from types import SimpleNamespace
 from nicegui import run, ui
 
 from src.frontend.navegacion import elementos_navegacion, ruta_de
-from src.frontend.recursos_vistas import seleccionar_recursos
+from src.frontend.presentacion.recursos_vistas import seleccionar_recursos
 from tests.comun_construccion_vistas import VISTAS_RUTAS, construir_pagina
 
 

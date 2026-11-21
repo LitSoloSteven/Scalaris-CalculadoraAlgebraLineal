@@ -4,7 +4,7 @@ import logging
 from nicegui import ui
 
 from src.frontend.nucleo.textos import textos_transformaciones as textos
-from src.frontend.versionado_recursos import versionar_html
+from src.frontend.presentacion.versionado_recursos import versionar_html
 from .figura_aplicacion_transformacion import preparar_escenas_aplicacion
 from .procedimiento_aplicacion_transformacion import URL_COMPONENTES
 from .proyeccion_aplicacion_transformacion import anexar_proyeccion

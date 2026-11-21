@@ -10,7 +10,7 @@ from src.frontend.navegacion import (
     ORDEN_NAVEGACION_PLANA, elementos_navegacion, herramienta_por_identificador,
     herramienta_por_ruta, herramientas_visibles, ruta_de, ruta_navegacion,
 )
-from src.frontend.recursos_vistas import seleccionar_recursos
+from src.frontend.presentacion.recursos_vistas import seleccionar_recursos
 
 
 def test_registro_visible_con_identidad_ruta_y_contexto_coherentes():
