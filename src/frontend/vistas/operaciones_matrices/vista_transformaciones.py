@@ -15,8 +15,8 @@ from .mixin_calculo_transformaciones import MixinCalculoTransformaciones
 
 from .mixin_captura_transformaciones import MixinCapturaTransformaciones
 from .mixin_ejemplos_transformaciones import MixinEjemplosTransformaciones
-from .glosa_modelos import MixinGlosaModelos
-from .transferencia_modelos import recibir_matriz_modelo
+from src.frontend.vistas.algebra.operaciones_matrices.compartido.herramientas.glosa_modelos import MixinGlosaModelos
+from src.frontend.vistas.algebra.operaciones_matrices.compartido.herramientas.transferencia_modelos import recibir_matriz_modelo
 from .captura_aplicacion_transformacion import MixinAplicacionTransformacion
 
 

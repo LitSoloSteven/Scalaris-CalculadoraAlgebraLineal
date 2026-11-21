@@ -14,8 +14,8 @@ from .mixin_calculo_leontief import MixinCalculoLeontief
 
 from .mixin_captura_leontief import MixinCapturaLeontief
 from .mixin_ejemplos_leontief import MixinEjemplosLeontief
-from .glosa_modelos import MixinGlosaModelos
-from .transferencia_modelos import recibir_matriz_modelo
+from src.frontend.vistas.algebra.operaciones_matrices.compartido.herramientas.glosa_modelos import MixinGlosaModelos
+from src.frontend.vistas.algebra.operaciones_matrices.compartido.herramientas.transferencia_modelos import recibir_matriz_modelo
 
 
 class VistaLeontief(MixinGlosaModelos, MixinLimpiezaModelos, MixinCalculoLeontief, MixinCapturaLeontief, MixinEjemplosLeontief):
