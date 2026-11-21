@@ -9,7 +9,7 @@ from src.backend.resolutores.operaciones_matrices.expresiones.evaluador import E
 from src.frontend.controladores.algebra.operaciones_matrices import (
     ControladorLeontief, ControladorOperacionesMatrices, ControladorTransformaciones,
 )
-from src.frontend.vistas.operaciones_matrices._ejemplos_leontief import EJEMPLOS_LEONTIEF
+from src.frontend.vistas.algebra.operaciones_matrices.leontief.apoyo._ejemplos_leontief import EJEMPLOS_LEONTIEF
 from src.frontend.vistas.operaciones_matrices._ejemplos_transformaciones import EJEMPLOS_TRANSFORMACIONES
 
 CLAVES_SEGMENTO = {

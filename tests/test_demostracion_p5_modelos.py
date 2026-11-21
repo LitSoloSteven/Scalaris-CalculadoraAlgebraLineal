@@ -4,7 +4,7 @@ from fractions import Fraction
 
 from nicegui import ui
 
-from src.frontend.vistas.operaciones_matrices._ejemplos_leontief import EJEMPLOS_LEONTIEF
+from src.frontend.vistas.algebra.operaciones_matrices.leontief.apoyo._ejemplos_leontief import EJEMPLOS_LEONTIEF
 from tests.comun_construccion_vistas import construir_pagina
 
 

@@ -109,7 +109,7 @@ def _registrar_paginas_avanzadas() -> None:
     @ui.page(ruta_de("leontief"), title=herramienta_por_identificador("leontief").titulo_pagina)
     def pagina_leontief(handoff: str = ""):
         """Construye la página de leontief con sus controles y contexto."""
-        from src.frontend.vistas.operaciones_matrices.vista_leontief import VistaLeontief
+        from src.frontend.vistas.algebra.operaciones_matrices.leontief.vista_leontief import VistaLeontief
 
         configurar_tema("leontief")
         VistaLeontief().construir(token_transferencia=handoff)

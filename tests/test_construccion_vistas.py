@@ -38,7 +38,7 @@ def test_calculo_minimo_de_cada_vista(monkeypatch, herramienta):
 
 def test_arnes_leontief_rechaza_resultado_sin_renderizado(monkeypatch):
     """Un backend exitoso no oculta la excepción posterior del renderizador."""
-    from src.frontend.vistas.operaciones_matrices import mixin_calculo_leontief
+    from src.frontend.vistas.algebra.operaciones_matrices.leontief import mixin_calculo_leontief
     from tests.comun_calculos_vistas import calcular_leontief
 
     def fallar_renderizado(resultado):

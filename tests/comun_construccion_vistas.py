@@ -19,7 +19,7 @@ VISTAS_RUTAS = {
     "inversa": ("operaciones_inversas.vista_operaciones_inversas", "VistaOperacionesInversas"),
     "determinantes": ("algebra.operaciones_matrices.determinante.vista_determinante", "VistaDeterminante"),
     "visualizador": ("geometria.vista_geometria", "VistaGeometria"),
-    "leontief": ("operaciones_matrices.vista_leontief", "VistaLeontief"),
+    "leontief": ("algebra.operaciones_matrices.leontief.vista_leontief", "VistaLeontief"),
     "transformaciones": ("operaciones_matrices.vista_transformaciones", "VistaTransformaciones"),
     "bases": ("sistemas_numericos.vista_sistemas_numericos", "VistaSistemasNumericos"),
     "romanos": ("sistemas_numericos.vista_calculadora_romana", "VistaCalculadoraRomana"),

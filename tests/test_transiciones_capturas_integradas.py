@@ -71,7 +71,7 @@ def test_cargar_ejemplos_actualiza_botones_previamente_limitados(monkeypatch, he
     async def comprobar(vista, cliente):
         """Carga un ejemplo mayor tras llegar al mínimo editable."""
         if herramienta == 'leontief':
-            from src.frontend.vistas.operaciones_matrices._ejemplos_leontief import EJEMPLOS_LEONTIEF
+            from src.frontend.vistas.algebra.operaciones_matrices.leontief.apoyo._ejemplos_leontief import EJEMPLOS_LEONTIEF
             assert not vista.boton_reducir.enabled
             ejemplo = next(dato for dato in EJEMPLOS_LEONTIEF if len(dato['matriz_coeficientes']) > 2)
             vista._cargar_ejemplo(ejemplo)
