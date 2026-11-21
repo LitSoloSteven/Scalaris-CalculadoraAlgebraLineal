@@ -9,8 +9,8 @@ from src.backend.constantes import (
 )
 from src.backend.excepciones import ErrorDatosMatriz
 from src.backend.modelos.operaciones_filas import sumar_fila_multiplicada
-from src.backend.modelos.aritmetica import numeros_iguales
-from src.backend.modelos.entrada_numerica import fraccion_desde_texto, motivo_cadena_no_soportada
+from src.backend.modelos.escalares.aritmetica import numeros_iguales
+from src.backend.modelos.escalares.entrada_numerica import fraccion_desde_texto, motivo_cadena_no_soportada
 from src.backend.modelos.copia_normalizada import copiar_datos_normalizados
 
 Numerico = Union[float, Fraction, int]

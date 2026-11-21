@@ -8,7 +8,7 @@ from src.backend.constantes import (
     DIMENSION_MAXIMA_SISTEMAS, LONGITUD_MAXIMA_CADENA_NUMERO,
     MENSAJE_NUMERO_DEMASIADO_LARGO,
 )
-from src.backend.modelos.entrada_numerica import convertir_numero_exacto
+from src.backend.modelos.escalares.entrada_numerica import convertir_numero_exacto
 
 from .contrato_jacobi import (
     CampoJacobi, CodigoJacobi, DiagnosticoJacobi, EntradaJacobi,

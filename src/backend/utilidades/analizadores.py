@@ -3,7 +3,7 @@
 from fractions import Fraction
 import re
 
-from src.backend.modelos.entrada_numerica import (
+from src.backend.modelos.escalares.entrada_numerica import (
     DIVISIONES_TIPOGRAFICAS, FRACCIONES_TIPOGRAFICAS, SIGNO_MENOS_TIPOGRAFICO, SIMBOLO_POR_MIL,
 )
 from src.backend.modelos.matriz import Matriz

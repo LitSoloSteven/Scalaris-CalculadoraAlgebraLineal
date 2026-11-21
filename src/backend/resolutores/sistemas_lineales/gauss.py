@@ -9,7 +9,7 @@ from src.backend.resolutores.sistemas_lineales.configuracion_reduccion import Co
 from src.backend.resolutores.sistemas_lineales.pasos_reduccion import RegistroPasosSistema
 from src.backend.resolutores.sistemas_lineales.reduccion import ReductorFilas
 from src.backend.resolutores.sistemas_lineales.sustitucion import ejecutar_sustitucion_hacia_atras
-from src.backend.modelos.aritmetica import es_cero
+from src.backend.modelos.escalares.aritmetica import es_cero
 
 
 class ResolutorGauss:

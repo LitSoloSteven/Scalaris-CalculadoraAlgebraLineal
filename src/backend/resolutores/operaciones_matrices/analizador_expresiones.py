@@ -2,7 +2,7 @@
 
 import re
 
-from src.backend.modelos.entrada_numerica import (
+from src.backend.modelos.escalares.entrada_numerica import (
     DIVISIONES_TIPOGRAFICAS,
     FRACCIONES_TIPOGRAFICAS,
     SIGNO_MENOS_TIPOGRAFICO,

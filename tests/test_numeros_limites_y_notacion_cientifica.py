@@ -8,7 +8,7 @@ from src.backend.constantes import LONGITUD_MAXIMA_CADENA_NUMERO
 from src.backend.excepciones import ErrorDatosMatriz
 from src.backend.modelos.matriz import Matriz
 from src.backend.utilidades.validadores import ValidadorMatriz
-from src.backend.modelos.entrada_numerica import convertir_numero_exacto
+from src.backend.modelos.escalares.entrada_numerica import convertir_numero_exacto
 
 
 MENSAJE_NOTACION = "Notación científica no soportada. Escribe el número con decimales o fracción."

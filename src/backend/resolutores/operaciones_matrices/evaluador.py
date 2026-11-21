@@ -4,7 +4,7 @@ from fractions import Fraction
 from operator import add, mul, sub, truediv
 
 from src.backend.constantes import ERROR, EXITO
-from src.backend.modelos.entrada_numerica import fraccion_desde_texto
+from src.backend.modelos.escalares.entrada_numerica import fraccion_desde_texto
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_matrices.analizador_expresiones import (
     OPERADORES_BINARIOS,

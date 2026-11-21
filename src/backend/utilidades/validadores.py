@@ -4,7 +4,7 @@ from fractions import Fraction
 from typing import Any
 
 from src.backend.constantes import LONGITUD_MAXIMA_CELDA
-from src.backend.modelos.entrada_numerica import convertir_numero_exacto
+from src.backend.modelos.escalares.entrada_numerica import convertir_numero_exacto
 from src.backend.excepciones import ErrorDiscrepanciaDimension
 from src.backend.modelos.matriz import Matriz
 from src.backend.utilidades.verificacion import verificar_solucion

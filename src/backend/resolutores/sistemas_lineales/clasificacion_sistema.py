@@ -1,7 +1,7 @@
 """Clasificacion exacta de una matriz aumentada reducida."""
 from src.backend.constantes import SIN_SOLUCION, SOLUCION_UNICA, SOLUCIONES_INFINITAS
 from src.backend.modelos.matriz import Matriz
-from src.backend.modelos.aritmetica import es_cero
+from src.backend.modelos.escalares.aritmetica import es_cero
 
 
 def clasificar_sistema(matriz: Matriz, numero_variables: int, rango: int, tolerancia: float) -> tuple[str, str]:

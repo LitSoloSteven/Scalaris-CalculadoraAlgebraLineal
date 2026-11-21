@@ -4,7 +4,7 @@ from fractions import Fraction
 import pytest
 
 from src.backend.excepciones import ErrorDatosMatriz
-from src.backend.modelos.conversion_fracciones import convertir_fraccion, convertir_fila_fracciones
+from src.backend.modelos.escalares.conversion_fracciones import convertir_fraccion, convertir_fila_fracciones
 from src.backend.modelos.matriz import Matriz
 
 

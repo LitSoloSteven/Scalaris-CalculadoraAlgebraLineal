@@ -2,7 +2,7 @@
 
 from typing import Any
 from src.backend.constantes import LONGITUD_MAXIMA_ENTRADA_BASES
-from src.backend.modelos.entrada_numerica import SIGNO_MENOS_TIPOGRAFICO
+from src.backend.modelos.escalares.entrada_numerica import SIGNO_MENOS_TIPOGRAFICO
 
 BASES_NUMERICAS = {"decimal": 10, "binario": 2, "octal": 8, "hexadecimal": 16}
 

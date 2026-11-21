@@ -2,7 +2,7 @@
 
 from fractions import Fraction
 from typing import Any
-from src.backend.modelos.entrada_numerica import convertir_numero_exacto
+from src.backend.modelos.escalares.entrada_numerica import convertir_numero_exacto
 
 from src.backend.utilidades.formateadores import (
     formatear_fraccion_texto,

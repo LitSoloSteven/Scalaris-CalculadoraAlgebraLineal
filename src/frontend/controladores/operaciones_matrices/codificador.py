@@ -3,7 +3,7 @@ from collections.abc import Mapping
 from fractions import Fraction
 import json
 
-from src.backend.modelos.conversion_fracciones import texto_fraccion_exacta
+from src.backend.modelos.escalares.conversion_fracciones import texto_fraccion_exacta
 from src.backend.modelos.matriz import Matriz
 
 

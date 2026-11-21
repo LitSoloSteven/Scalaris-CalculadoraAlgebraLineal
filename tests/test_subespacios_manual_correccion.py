@@ -5,7 +5,7 @@ from random import Random
 
 import pytest
 
-from src.backend.modelos.conversion_fracciones import texto_fraccion_exacta
+from src.backend.modelos.escalares.conversion_fracciones import texto_fraccion_exacta
 from src.backend.resolutores.operaciones_vectores.captura_subespacios import (
     capturar_restricciones,
 )

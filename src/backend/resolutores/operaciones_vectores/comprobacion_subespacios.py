@@ -3,7 +3,7 @@ from collections.abc import Iterable
 from fractions import Fraction
 from itertools import chain
 
-from src.backend.modelos.conversion_fracciones import convertir_fraccion, texto_fraccion_exacta
+from src.backend.modelos.escalares.conversion_fracciones import convertir_fraccion, texto_fraccion_exacta
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.sistemas_lineales.comprobacion_sistemas import (
     comprobar_familia,
