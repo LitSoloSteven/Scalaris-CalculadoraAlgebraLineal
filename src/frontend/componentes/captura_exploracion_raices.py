@@ -1,6 +1,7 @@
 """Campos de rango visual con etiquetas y límites compartidos."""
 from nicegui import ui
 
+from src.frontend.componentes.simbolos import habilitar_simbolos
 from src.frontend.controladores.rango_exploracion_raices import LONGITUD_CAMPO_GRAFICA, RANGO_GRAFICA_DEFECTO
 
 
@@ -13,5 +14,7 @@ def campos_rango(contexto: str, clase_contenedor: str) -> tuple:
 
 
 def _campo(etiqueta: str, valor: int):
-    return ui.input(etiqueta, value=str(valor)).classes("w-full matriz-entrada").props(
+    campo = ui.input(etiqueta, value=str(valor)).classes("w-full matriz-entrada").props(
         f"inputmode=decimal maxlength={LONGITUD_CAMPO_GRAFICA} autocomplete=off")
+    habilitar_simbolos(campo, "real")
+    return campo

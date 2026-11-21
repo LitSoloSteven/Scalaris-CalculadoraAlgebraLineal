@@ -1,6 +1,7 @@
 """Controles comunes para confirmar extremos sin ejecutar un método."""
 from collections.abc import Callable
 from nicegui import ui
+from src.frontend.componentes.simbolos import habilitar_simbolos
 from src.frontend.controladores.rango_exploracion_raices import rango_grafica
 
 
@@ -20,6 +21,7 @@ def construir_borrador(seleccion, instruccion: str, al_editar: Callable[[], None
                 "boton-discreto")
     seleccion.region.on("keydown.escape", lambda: seleccion.cancelar(devolver_foco=True))
     for campo in seleccion.campos:
+        habilitar_simbolos(campo, "real")
         campo.on_value_change(al_editar)
     seleccion.region.set_visibility(False)
 
