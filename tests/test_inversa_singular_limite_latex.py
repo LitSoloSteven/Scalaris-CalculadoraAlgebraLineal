@@ -5,7 +5,7 @@ import pytest
 
 from src.backend.constantes import DIMENSION_MAXIMA_LATEX_INVERSA
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices import inversa
+from src.backend.resolutores.operaciones_matrices.inversa import inversa
 
 
 @pytest.mark.parametrize('dimension', [DIMENSION_MAXIMA_LATEX_INVERSA,

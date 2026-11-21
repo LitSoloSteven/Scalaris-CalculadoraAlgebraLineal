@@ -6,7 +6,7 @@ from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_matrices.determinante.determinante import (
     ResolutorDeterminante,
 )
-from src.backend.resolutores.operaciones_matrices.captura_inversa import validar_y_parsear_matriz_cuadrada
+from src.backend.resolutores.operaciones_matrices.inversa.captura_inversa import validar_y_parsear_matriz_cuadrada
 
 
 class ControladorDeterminante:

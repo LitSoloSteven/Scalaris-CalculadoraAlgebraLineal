@@ -11,7 +11,7 @@ MODULOS = {
     "gauss_jordan": ("sistemas_lineales.eliminacion.gauss_jordan", "ResolutorGaussJordan"),
     "operaciones": ("operaciones_matrices.operaciones", "ResolutorOperacionesMatrices"),
     "determinante": ("operaciones_matrices.determinante.determinante", "ResolutorDeterminante"),
-    "inversa": ("operaciones_matrices.inversa", "ResolutorInversa"),
+    "inversa": ("operaciones_matrices.inversa.inversa", "ResolutorInversa"),
     "evaluador": ("operaciones_matrices.evaluador", "EvaluadorExpresionesMatriciales"),
     "leontief": ("operaciones_matrices.leontief", "ResolutorModeloLeontief"),
     "transformaciones": ("operaciones_matrices.transformaciones", "ResolutorTransformacionesLineales"),

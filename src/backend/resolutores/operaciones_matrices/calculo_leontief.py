@@ -9,7 +9,7 @@ from .compartido.comprobacion_productos import crear_paso_analisis
 from .compartido.formateadores import matriz_a_latex
 from src.backend.utilidades.formato.formateadores import numero_a_latex
 from .comprobacion_leontief import comprobar_balance
-from src.backend.resolutores.operaciones_matrices.calculo_inversa import calcular_inversa
+from src.backend.resolutores.operaciones_matrices.inversa.nucleo.calculo_inversa import calcular_inversa
 from .consistencia_leontief import resolver_balance_singular
 
 

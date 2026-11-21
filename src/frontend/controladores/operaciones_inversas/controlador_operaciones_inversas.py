@@ -7,13 +7,13 @@ import time
 from src.backend.constantes import DIMENSION_MAXIMA_LATEX_INVERSA
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_matrices.compartido.formateadores import matriz_a_latex
-from src.backend.resolutores.operaciones_matrices.inversa import ResolutorInversa
+from src.backend.resolutores.operaciones_matrices.inversa.inversa import ResolutorInversa
 from src.backend.utilidades.formato.formateadores import formatear_fraccion_texto
 from src.frontend.controladores.agrupador_pasos import agrupar_pasos_eliminacion
 from src.frontend.controladores.operaciones_inversas.foco_paso import (
     construir_foco_paso,
 )
-from src.backend.resolutores.operaciones_matrices.captura_inversa import (
+from src.backend.resolutores.operaciones_matrices.inversa.captura_inversa import (
     construir_resultado_vacio,
     extraer_comprobaciones_inversa,
     validar_y_parsear_matriz_cuadrada,

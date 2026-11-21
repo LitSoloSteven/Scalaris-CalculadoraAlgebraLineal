@@ -4,7 +4,7 @@ from unittest.mock import Mock
 import pytest
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices.inversa import ResolutorInversa
+from src.backend.resolutores.operaciones_matrices.inversa.inversa import ResolutorInversa
 
 
 @pytest.mark.parametrize("direccion", [

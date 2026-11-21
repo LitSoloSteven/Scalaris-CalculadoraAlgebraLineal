@@ -8,7 +8,7 @@ from src.backend.constantes import (
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_matrices.compartido.formateadores import matriz_a_latex
 from src.backend.utilidades.formato.formateadores import formatear_fraccion_texto
-from .compartido.celdas_exactas import parsear_celda_exacta
+from src.backend.resolutores.operaciones_matrices.compartido.celdas_exactas import parsear_celda_exacta
 from .opciones_resultado import OpcionesResultadoVacio
 
 

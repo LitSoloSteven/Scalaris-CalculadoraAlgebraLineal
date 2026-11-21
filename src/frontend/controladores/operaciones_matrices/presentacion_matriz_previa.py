@@ -1,7 +1,7 @@
 """Presentación saneada compartida de matrices en la vista previa."""
 import html
 
-from src.backend.resolutores.operaciones_matrices.vista_previa_inversa import sanitizar_valor_latex
+from src.backend.resolutores.operaciones_matrices.inversa.vista_previa_inversa import sanitizar_valor_latex
 from src.frontend.controladores.vista_previa_matricial import orientacion_limite_previa
 
 
