@@ -4,7 +4,7 @@ from dataclasses import asdict
 
 import pytest
 
-from src.backend.resolutores.raices.contrato_biseccion import EntradaBiseccion
+from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import EntradaBiseccion
 from src.backend.resolutores.raices.criterios_biseccion import CriterioParada
 from src.backend.resolutores.raices.estimacion_biseccion import estimar_iteraciones
 

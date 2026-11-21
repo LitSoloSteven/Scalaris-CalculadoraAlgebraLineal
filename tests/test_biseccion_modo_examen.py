@@ -4,7 +4,7 @@ import json
 import pytest
 
 from src.backend.resolutores.raices.biseccion.motor.biseccion import biseccion
-from src.backend.resolutores.raices.contrato_biseccion import EntradaBiseccion
+from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import EntradaBiseccion
 from src.backend.resolutores.raices.criterios_biseccion import CriterioParada
 from src.frontend.controladores.biseccion.controlador import serializar_resultado
 

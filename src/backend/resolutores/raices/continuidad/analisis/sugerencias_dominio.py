@@ -5,7 +5,7 @@ from dataclasses import asdict
 from fractions import Fraction
 
 from ...aritmetica_biseccion import ancho_intervalo, cota_intervalo
-from ...contrato_biseccion import EntradaBiseccion, ResultadoBiseccion, SugerenciaBiseccion, validar_entrada
+from ...biseccion.contratos.contrato_biseccion import EntradaBiseccion, ResultadoBiseccion, SugerenciaBiseccion, validar_entrada
 from ..dominio.dominio_intervalo import argumento_afin, comprobar_dominio_intervalo
 from ...funcion_real.evaluacion.evaluador_funcion import compilar, evaluar
 from ...funcion_real.evaluacion.gramatica_funcion import analizar_expresion

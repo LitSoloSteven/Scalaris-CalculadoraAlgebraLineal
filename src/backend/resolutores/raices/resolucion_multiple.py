@@ -5,7 +5,7 @@ from collections.abc import Callable
 from dataclasses import asdict, replace
 
 from .biseccion.motor.biseccion import resolver_intervalo_preparado
-from .contrato_biseccion import EntradaBiseccion, validar_entrada
+from .biseccion.contratos.contrato_biseccion import EntradaBiseccion, validar_entrada
 from .contrato_exploracion import CandidatoExploracion
 from .contrato_resolucion_multiple import (
     CandidatoResolucion, EntradaResolucionMultiple, ResolucionCandidato,

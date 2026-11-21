@@ -2,7 +2,7 @@
 import pytest
 
 from src.backend.resolutores.raices.biseccion.motor.biseccion import biseccion
-from src.backend.resolutores.raices.contrato_biseccion import CONTINUIDAD_CONDICIONAL, EntradaBiseccion
+from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import CONTINUIDAD_CONDICIONAL, EntradaBiseccion
 from src.backend.resolutores.raices.criterios_biseccion import CriterioParada
 
 

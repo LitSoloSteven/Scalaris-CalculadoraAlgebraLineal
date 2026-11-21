@@ -3,17 +3,17 @@ from dataclasses import dataclass, field
 from fractions import Fraction
 from typing import NotRequired, TypedDict
 
-from .continuidad.dominio.contrato_continuidad import InformeContinuidad
-from .criterios_biseccion import CriterioParada, tolerancia_decimal, validar_criterio, validar_entero_criterio
-from .decision_biseccion import AccionBiseccion, SignoProducto
-from .compartido.limites_raices import (
+from ...continuidad.dominio.contrato_continuidad import InformeContinuidad
+from ...criterios_biseccion import CriterioParada, tolerancia_decimal, validar_criterio, validar_entero_criterio
+from ...decision_biseccion import AccionBiseccion, SignoProducto
+from ...compartido.limites_raices import (
     D_MAXIMO,
     LIMITE_ITERACIONES_DEFECTO,
     LIMITE_ITERACIONES_MAXIMO,
     LONGITUD_MAXIMA_EXPRESION,
 )
-from .compartido.unidades_angulares import validar_unidad_angular
-from .compartido.validacion_raices import (
+from ...compartido.unidades_angulares import validar_unidad_angular
+from ...compartido.validacion_raices import (
     validar_expresion,
     validar_extremo,
     validar_limite_iteraciones,

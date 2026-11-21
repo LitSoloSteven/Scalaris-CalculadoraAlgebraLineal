@@ -1,5 +1,5 @@
 """Conversión léxica de la captura y consulta de condiciones al dominio."""
-from src.backend.resolutores.raices.contrato_biseccion import EntradaBiseccion, validar_entrada, validar_precision
+from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import EntradaBiseccion, validar_entrada, validar_precision
 from src.backend.resolutores.raices.criterios_biseccion import validar_criterio
 from src.backend.resolutores.raices.estimacion_biseccion import estimar_iteraciones
 from src.frontend.controladores.captura_real import entero_capturado, real_capturado

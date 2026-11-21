@@ -2,7 +2,7 @@
 from dataclasses import dataclass, field
 from typing import Literal
 
-from .contrato_biseccion import AVISO_INTERVALO_INVERTIDO, ContextoFallo
+from .biseccion.contratos.contrato_biseccion import AVISO_INTERVALO_INVERTIDO, ContextoFallo
 from .continuidad.dominio.contrato_continuidad import InformeContinuidad
 from .decision_biseccion import SignoProducto
 from .compartido.limites_raices import LIMITE_ITERACIONES_DEFECTO

@@ -1,7 +1,7 @@
 """Figura temática para relacionar la función con la partición activa."""
 import plotly.graph_objects as go
 
-from src.backend.resolutores.raices.contrato_biseccion import ESTADO_DISCONTINUIDAD
+from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import ESTADO_DISCONTINUIDAD
 from src.frontend.tema import PALETA_GRAFICOS, COLOR_SOLUCION
 from src.frontend.vistas.geometria._colores_figuras import aplicar_colores_figura
 from src.frontend.componentes.figura_funcion_real import crear_base as _crear_base, crear_figura_previa

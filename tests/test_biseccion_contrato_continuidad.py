@@ -4,7 +4,7 @@ from importlib import import_module
 import pytest
 
 from src.backend.resolutores.raices.biseccion.motor.biseccion import biseccion
-from src.backend.resolutores.raices.contrato_biseccion import EntradaBiseccion
+from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import EntradaBiseccion
 from src.backend.resolutores.raices.contrato_exploracion import CandidatoExploracion
 from src.backend.resolutores.raices.contrato_resolucion_multiple import CandidatoResolucion, EntradaResolucionMultiple
 from src.backend.resolutores.raices.biseccion.motor.diagnostico_biseccion import analizar_continuidad_intervalo

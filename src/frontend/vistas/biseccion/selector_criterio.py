@@ -1,7 +1,7 @@
 """Controles contextuales del criterio activo, con guía consultada al dominio."""
 from nicegui import ui
 
-from src.backend.resolutores.raices.contrato_biseccion import D_MAXIMO, LIMITE_ITERACIONES_MAXIMO
+from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import D_MAXIMO, LIMITE_ITERACIONES_MAXIMO
 from src.frontend.controladores.biseccion.catalogo_criterios import CRITERIOS
 from src.frontend.controladores.biseccion.captura_criterio import texto_condicion, texto_estimacion
 

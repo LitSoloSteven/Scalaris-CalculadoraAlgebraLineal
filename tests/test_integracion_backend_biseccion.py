@@ -1,5 +1,5 @@
 """Consumo del contrato numérico robusto en tablas, pasos y mensajes de la interfaz."""
-from src.backend.resolutores.raices.contrato_biseccion import LIMITE_ITERACIONES_MAXIMO
+from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import LIMITE_ITERACIONES_MAXIMO
 from src.frontend.controladores.biseccion.controlador import resolver_captura, LIMITE_ITERACIONES_INTERFAZ
 from src.frontend.controladores.biseccion.presentacion import filas_tabla, valor_columna, motivo
 

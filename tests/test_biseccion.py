@@ -1,6 +1,6 @@
 """Pruebas unitarias para el motor de bisección y el contrato."""
 import pytest
-from src.backend.resolutores.raices.contrato_biseccion import (
+from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import (
     validar_entrada, validar_precision, EntradaBiseccion
 )
 from src.backend.resolutores.raices.biseccion.motor.biseccion import biseccion

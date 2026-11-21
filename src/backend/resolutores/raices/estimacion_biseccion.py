@@ -3,7 +3,7 @@ from dataclasses import asdict, dataclass
 from fractions import Fraction
 
 from .aritmetica_biseccion import cota_intervalo
-from .contrato_biseccion import EntradaBiseccion, validar_entrada
+from .biseccion.contratos.contrato_biseccion import EntradaBiseccion, validar_entrada
 
 _HIPOTESIS = "La estimación supone ausencia de ceros evaluados y de interrupciones numéricas."
 

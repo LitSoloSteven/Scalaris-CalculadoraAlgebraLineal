@@ -1,7 +1,7 @@
 """Ayuda, opciones avanzadas y acciones secundarias de la captura."""
 from nicegui import ui
 
-from src.backend.resolutores.raices.contrato_biseccion import D_MAXIMO, LIMITE_ITERACIONES_DEFECTO
+from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import D_MAXIMO, LIMITE_ITERACIONES_DEFECTO
 from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
 from src.frontend.controladores.biseccion.catalogo_criterios import CRITERIOS
 from src.frontend.controladores.biseccion.controlador import LIMITE_ITERACIONES_INTERFAZ

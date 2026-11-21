@@ -1,5 +1,5 @@
 """Textos y magnitudes del resultado según el estado publicado por el motor."""
-from src.backend.resolutores.raices.contrato_biseccion import ESTADO_DISCONTINUIDAD
+from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import ESTADO_DISCONTINUIDAD
 
 from .catalogo_criterios import CRITERIOS, condicion_criterio
 from .presentacion import motivo, numero

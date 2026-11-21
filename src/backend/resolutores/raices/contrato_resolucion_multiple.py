@@ -1,7 +1,7 @@
 """Contratos inmutables de un lote y de sus resultados por candidato."""
 from dataclasses import asdict, dataclass
 
-from .contrato_biseccion import EntradaBiseccion, ResultadoBiseccion, validar_entrada
+from .biseccion.contratos.contrato_biseccion import EntradaBiseccion, ResultadoBiseccion, validar_entrada
 from .continuidad.dominio.contrato_continuidad import InformeContinuidad
 from .contrato_exploracion import AVISO_EXPLORACION, CandidatoExploracion
 from .compartido.unidades_angulares import validar_unidad_angular

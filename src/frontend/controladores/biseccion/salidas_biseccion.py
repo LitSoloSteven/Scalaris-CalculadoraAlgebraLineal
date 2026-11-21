@@ -1,5 +1,5 @@
 """Formato compartido para el signo y la acción registrados en el modo examen."""
-from src.backend.resolutores.raices.contrato_biseccion import ESTADO_DISCONTINUIDAD
+from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import ESTADO_DISCONTINUIDAD
 from .presentacion import MOTIVOS
 from .presentacion_criterio import texto_resumen
 

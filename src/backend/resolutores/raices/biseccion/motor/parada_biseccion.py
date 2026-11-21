@@ -1,7 +1,7 @@
 """Decisiones y comprobaciones del criterio activo sobre las filas del motor."""
 from dataclasses import replace
 
-from ...contrato_biseccion import ESTADO_DISCONTINUIDAD, EntradaBiseccion, IteracionBiseccion, ResultadoBiseccion
+from ..contratos.contrato_biseccion import ESTADO_DISCONTINUIDAD, EntradaBiseccion, IteracionBiseccion, ResultadoBiseccion
 from ...criterios_biseccion import CriterioParada
 
 _MOTIVOS = {"relativo": "relativo_menor_que_porcentaje", "ancho": "ancho_menor_que_E",

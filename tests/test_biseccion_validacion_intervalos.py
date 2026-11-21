@@ -6,7 +6,7 @@ from dataclasses import asdict
 import pytest
 
 from src.backend.resolutores.raices.biseccion.motor.biseccion import biseccion
-from src.backend.resolutores.raices.contrato_biseccion import (
+from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import (
     AVISO_INTERVALO_INVERTIDO, EntradaBiseccion, validar_entrada,
 )
 from src.frontend.controladores.biseccion.controlador import resolver_captura

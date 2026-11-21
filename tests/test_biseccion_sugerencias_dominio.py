@@ -6,7 +6,7 @@ from fractions import Fraction
 import pytest
 
 from src.backend.resolutores.raices.biseccion.motor.biseccion import biseccion
-from src.backend.resolutores.raices.contrato_biseccion import EntradaBiseccion
+from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import EntradaBiseccion
 from src.backend.resolutores.raices.criterios_biseccion import CriterioParada
 from src.backend.resolutores.raices.continuidad.dominio.dominio_intervalo import comprobar_dominio_intervalo
 from src.backend.resolutores.raices.funcion_real.evaluacion.evaluador_funcion import compilar, evaluar

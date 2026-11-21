@@ -3,7 +3,7 @@ import math
 from dataclasses import asdict
 
 from src.backend.resolutores.raices.biseccion.motor.biseccion import biseccion
-from src.backend.resolutores.raices.contrato_biseccion import EntradaBiseccion, ResultadoBiseccion, derivar_E, LIMITE_ITERACIONES_MAXIMO
+from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import EntradaBiseccion, ResultadoBiseccion, derivar_E, LIMITE_ITERACIONES_MAXIMO
 from src.backend.resolutores.raices.biseccion.motor.parada_biseccion import comprobar_cierre_criterio
 from .captura_criterio import entero_capturado, preparar_entrada, real_capturado
 from .muestreo import muestrear_funcion, separar_intervalo_sospechoso

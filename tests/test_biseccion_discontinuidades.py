@@ -5,7 +5,7 @@ from importlib import import_module
 import pytest
 
 from src.backend.resolutores.raices.biseccion.motor.biseccion import biseccion
-from src.backend.resolutores.raices.contrato_biseccion import EntradaBiseccion
+from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import EntradaBiseccion
 from src.backend.resolutores.raices.criterios_biseccion import CriterioParada
 from src.backend.resolutores.raices.funcion_real.evaluacion.evaluador_funcion import compilar
 from src.frontend.controladores.biseccion.controlador import serializar_resultado

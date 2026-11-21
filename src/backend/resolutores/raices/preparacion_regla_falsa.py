@@ -4,7 +4,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 
 from .continuidad.dominio.cobertura_continuidad import cubre_intervalo_cerrado
-from .contrato_biseccion import EvaluacionExtremo
+from .biseccion.contratos.contrato_biseccion import EvaluacionExtremo
 from .continuidad.dominio.contrato_continuidad import InformeContinuidad
 from .contrato_regla_falsa import (
     DiagnosticoReglaFalsa,

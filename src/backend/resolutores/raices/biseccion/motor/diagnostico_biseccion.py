@@ -5,7 +5,7 @@ from dataclasses import dataclass, replace
 
 from ...aritmetica_biseccion import cota_intervalo
 from ...continuidad.dominio.cobertura_continuidad import cubre_intervalo_cerrado
-from ...contrato_biseccion import (
+from ..contratos.contrato_biseccion import (
     CONTINUIDAD_CONDICIONAL, ContextoFallo, DiagnosticoBiseccion, EntradaBiseccion,
     EvaluacionExtremo, IteracionBiseccion, ResultadoBiseccion, validar_entrada,
 )
