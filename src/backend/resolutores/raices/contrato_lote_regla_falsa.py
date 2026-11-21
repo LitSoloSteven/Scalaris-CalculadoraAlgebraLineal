@@ -60,6 +60,6 @@ def validar_lote_regla_falsa(entrada: EntradaLoteReglaFalsa) -> EntradaLoteRegla
     validar_seleccion_multiple(entrada.candidatos, entrada.presupuesto_evaluaciones)
     canonica = validar_entrada_regla_falsa(asdict(configuracion.entrada))
     criterio = validar_criterio_regla_falsa(configuracion.criterio, canonica.limite_iteraciones)
-    analizar_expresion(canonica.expresion)
+    analizar_expresion(canonica.expresion, unidad_angular=canonica.unidad_angular)
     return EntradaLoteReglaFalsa(ConfiguracionReglaFalsa(canonica, criterio),
                                entrada.candidatos, entrada.presupuesto_evaluaciones)
