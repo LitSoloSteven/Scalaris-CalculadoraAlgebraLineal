@@ -71,6 +71,35 @@ function crearDialogo(documento) {
     return { dialogo, busqueda, grupo, lista, estado, mas, copia };
 }
 
+function cargarSelector(documento, copiados) {
+    const contexto = vm.createContext({
+        window: {}, document: documento,
+        navigator: { clipboard: { writeText: async texto => { copiados.push(texto); } } },
+        Event: class { constructor(tipo, cfg = {}) { this.type = tipo; this.bubbles = Boolean(cfg.bubbles); } },
+        Option: class { constructor(texto, valor) { this.text = texto; this.value = valor; } },
+    });
+    const base = path.join(__dirname, "../src/frontend/recursos/js");
+    vm.runInContext(fs.readFileSync(path.join(base, "catalogo_simbolos.js"), "utf8"), contexto);
+    vm.runInContext(fs.readFileSync(path.join(base, "selector_simbolos.js"), "utf8"), contexto);
+    return contexto;
+}
+
+function crearAccionesFiltrado(eventosDocumento, partes) {
+    const abrirEn = objetivo => {
+        objetivo.focus();
+        for (const manejador of eventosDocumento.get("focusin") || []) manejador({ target: objetivo });
+        for (const manejador of eventosDocumento.get("keydown") || []) {
+            manejador({ ctrlKey: true, shiftKey: true, code: "Space", target: objetivo, preventDefault() {}, stopPropagation() {} });
+        }
+    };
+    const buscar = texto => { partes.busqueda.value = texto; partes.busqueda.dispatchEvent({ type: "input" }); };
+    const signosVisibles = () => {
+        while (!partes.mas.hidden) partes.mas.click();
+        return partes.lista.children.map(boton => boton.children[0].textContent);
+    };
+    return { abrirEn, buscar, signosVisibles };
+}
+
 function crearEntornoFiltrado(moduloInicial = "") {
     let moduloActual = moduloInicial;
     const eventosDocumento = new Map();
@@ -88,32 +117,9 @@ function crearEntornoFiltrado(moduloInicial = "") {
     const partes = crearDialogo(documento);
     documento.getElementById = id => (id === "plantilla-simbolos"
         ? { content: { firstElementChild: { cloneNode: () => partes.dialogo } } } : null);
-    const contexto = vm.createContext({
-        window: {}, document: documento,
-        navigator: { clipboard: { writeText: async texto => { copiados.push(texto); } } },
-        Event: class { constructor(tipo, cfg = {}) { this.type = tipo; this.bubbles = Boolean(cfg.bubbles); } },
-        Option: class { constructor(texto, valor) { this.text = texto; this.value = valor; } },
-    });
-    const base = path.join(__dirname, "../src/frontend/recursos/js");
-    vm.runInContext(fs.readFileSync(path.join(base, "catalogo_simbolos.js"), "utf8"), contexto);
-    vm.runInContext(fs.readFileSync(path.join(base, "selector_simbolos.js"), "utf8"), contexto);
-    const abrirEn = objetivo => {
-        objetivo.focus();
-        for (const fn of eventosDocumento.get("focusin") || []) fn({ target: objetivo });
-        for (const fn of eventosDocumento.get("keydown") || []) {
-            fn({ ctrlKey: true, shiftKey: true, code: "Space", target: objetivo, preventDefault() {}, stopPropagation() {} });
-        }
-    };
-    const buscar = texto => {
-        partes.busqueda.value = texto;
-        partes.busqueda.dispatchEvent({ type: "input" });
-    };
-    const signosVisibles = () => {
-        while (!partes.mas.hidden) partes.mas.click();
-        return partes.lista.children.map(boton => boton.children[0].textContent);
-    };
+    const contexto = cargarSelector(documento, copiados);
     return {
-        documento, ...partes, copiados, contexto, abrirEn, buscar, signosVisibles,
+        documento, ...partes, copiados, contexto, ...crearAccionesFiltrado(eventosDocumento, partes),
         fijarModulo: nuevo => { moduloActual = nuevo; },
     };
 }
