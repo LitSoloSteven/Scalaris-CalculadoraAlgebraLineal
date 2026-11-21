@@ -1,7 +1,7 @@
 """Selección y carga de ejemplos de Transformaciones."""
 from src.frontend.componentes.sonido import notificar
 from src.frontend.componentes.captura_modelos import construir_ejemplos
-from src.frontend import textos_transformaciones as textos
+from src.frontend.nucleo.textos import textos_transformaciones as textos
 from nicegui import ui
 from ._ejemplos_transformaciones import EJEMPLOS_TRANSFORMACIONES
 from ._ejemplos_aplicacion_transformacion import EJEMPLOS_APLICACION

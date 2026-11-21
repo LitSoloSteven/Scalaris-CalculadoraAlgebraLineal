@@ -1,6 +1,6 @@
 """Restauración completa de capturas de modelos sin ejecutar cálculos."""
 from src.frontend.componentes.captura_modelos import llenar_entradas
-from src.frontend import textos_transformaciones as textos
+from src.frontend.nucleo.textos import textos_transformaciones as textos
 
 
 def cargar_captura_modelo(vista, captura: dict) -> None:

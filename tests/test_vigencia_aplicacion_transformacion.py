@@ -6,7 +6,7 @@ from unittest.mock import Mock
 import pytest
 from nicegui import run, ui
 
-from src.frontend import textos_transformaciones as textos
+from src.frontend.nucleo.textos import textos_transformaciones as textos
 from src.frontend.controladores.operaciones_matrices.controlador_aplicacion_transformacion import (
     ControladorAplicacionTransformacion,
 )

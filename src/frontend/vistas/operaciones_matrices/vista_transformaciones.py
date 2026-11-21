@@ -1,7 +1,7 @@
 """Vista para capturar matrices y analizar transformaciones lineales."""
 
 from nicegui import ui
-from src.frontend import textos_transformaciones as textos
+from src.frontend.nucleo.textos import textos_transformaciones as textos
 from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
 from .limpieza_modelos import MixinLimpiezaModelos
 

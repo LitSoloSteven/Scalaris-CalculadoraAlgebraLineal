@@ -6,7 +6,7 @@ from urllib.parse import parse_qs, urlsplit
 import pytest
 from nicegui import ui
 
-from src.frontend import textos_transformaciones as textos
+from src.frontend.nucleo.textos import textos_transformaciones as textos
 from src.frontend.componentes import acciones_matriz, transferencia
 from src.frontend.vistas.operaciones_matrices.carga_modelos import cargar_captura_modelo
 from tests.comun_construccion_vistas import construir_pagina

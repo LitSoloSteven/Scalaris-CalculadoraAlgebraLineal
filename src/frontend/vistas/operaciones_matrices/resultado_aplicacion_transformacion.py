@@ -3,7 +3,7 @@ from nicegui import ui
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos
 from src.frontend.componentes.exportacion_pdf.integracion import region_pdf
 
-from src.frontend import textos_transformaciones as textos
+from src.frontend.nucleo.textos import textos_transformaciones as textos
 from src.frontend.componentes.reproductor_pasos.cuerpos import renderizar_latex
 from src.frontend.controladores.operaciones_matrices.vista_previa_modelos import preparar_vista_previa_aplicacion
 from ._estados_modelos import mostrar_estado

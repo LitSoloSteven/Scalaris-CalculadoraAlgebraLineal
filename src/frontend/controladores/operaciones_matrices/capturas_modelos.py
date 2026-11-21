@@ -1,6 +1,6 @@
 """Lectura independiente de controles para los trabajadores de modelos matriciales."""
 from typing import Any
-from src.frontend.textos_transformaciones import MODO_APLICACION
+from src.frontend.nucleo.textos.textos_transformaciones import MODO_APLICACION
 
 
 def capturar_leontief(vista: Any) -> dict:

@@ -1,7 +1,7 @@
 """Controles de modo y coordenadas para aplicar transformaciones lineales."""
 from nicegui import ui
 
-from src.frontend import textos_transformaciones as textos
+from src.frontend.nucleo.textos import textos_transformaciones as textos
 from src.frontend.componentes.cuadricula_base import crear_entradas_matriz
 from src.frontend.componentes.selector_opciones import SelectorOpciones
 from src.frontend.controladores.limpieza_captura import vaciar_campos

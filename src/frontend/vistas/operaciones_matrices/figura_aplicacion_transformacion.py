@@ -4,7 +4,7 @@ import math
 
 import plotly.graph_objects as graficos
 
-from src.frontend import textos_transformaciones as textos
+from src.frontend.nucleo.textos import textos_transformaciones as textos
 from src.frontend.tema import PALETA_GRAFICOS, COLORES_TEXTO_GRAFICOS
 from src.frontend.vistas.geometria._colores_figuras import aplicar_colores_figura
 from src.frontend.vistas.geometria._figuras_comunes import disposicion_2d, disposicion_3d

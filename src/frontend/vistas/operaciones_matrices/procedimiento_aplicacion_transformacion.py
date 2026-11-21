@@ -4,7 +4,7 @@ from functools import partial
 
 from nicegui import ui
 
-from src.frontend import textos_transformaciones as textos
+from src.frontend.nucleo.textos import textos_transformaciones as textos
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos
 from src.frontend.componentes.glosa_foco import crear_accion_explicacion
 from src.frontend.versionado_recursos import versionar_html

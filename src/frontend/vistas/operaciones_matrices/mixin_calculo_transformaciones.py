@@ -5,7 +5,7 @@ from ._estados_modelos import mostrar_estado
 from src.frontend.controladores.operaciones_matrices import ControladorTransformaciones
 from src.frontend.controladores.operaciones_matrices.controlador_aplicacion_transformacion import ControladorAplicacionTransformacion
 from src.frontend.controladores.sesion_matricial import actualizar_contexto
-from src.frontend import textos_transformaciones as textos
+from src.frontend.nucleo.textos import textos_transformaciones as textos
 from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
 from src.frontend.controladores.operaciones_matrices.capturas_modelos import capturar_transformaciones
 from ._renderizado_transformaciones import renderizar_resultado_transformaciones
