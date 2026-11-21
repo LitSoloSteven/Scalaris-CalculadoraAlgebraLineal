@@ -8,9 +8,9 @@ from src.frontend.controladores.raices.regla_falsa.procedimiento.contexto_regla_
 from src.frontend.controladores.raices.regla_falsa.ejecucion.presentacion_grafica import calcular_presentacion
 from src.frontend.controladores.raices.regla_falsa.presentacion.presentacion_ampliada import titulo_configurado
 from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto, invalidar_resultado, registrar_calculo
-from .acciones_captura import mostrar_recientes
+from src.frontend.vistas.raices.regla_falsa.captura.acciones_captura import mostrar_recientes
 from .composicion import componer_herramienta
-from .estado_captura import CAMPOS, CAMPOS_EJERCICIO, capturar, reflejar_intervalo, restaurar_captura, vaciar_captura
+from src.frontend.vistas.raices.regla_falsa.captura.estado_captura import CAMPOS, CAMPOS_EJERCICIO, capturar, reflejar_intervalo, restaurar_captura, vaciar_captura
 from .detalle_resultado import captura_contexto, presentar_detalle
 from src.frontend.vistas.raices.regla_falsa.base.modos_captura import MODO_BUSQUEDA, MODO_INTERVALO
 from src.frontend.vistas.raices.regla_falsa.base.selector_criterio import actualizar_guia

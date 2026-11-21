@@ -7,7 +7,7 @@ from nicegui import ui
 from src.frontend.componentes.raices.captura.estructura_metodos_raices import montar_estructura_metodos_raices
 from src.frontend.componentes.raices.captura.modos_captura_raices import MODO_BUSQUEDA, MODO_INTERVALO
 from src.frontend.controladores.raices.metodos_cerrados.adaptadores import REGLA_FALSA, captura_del_metodo
-from src.frontend.vistas.regla_falsa.estados_entrada import EstadosEntrada
+from src.frontend.vistas.raices.regla_falsa.captura.estados_entrada import EstadosEntrada
 
 MENSAJE_INICIAL = "Escribe la función y los extremos del intervalo."
 

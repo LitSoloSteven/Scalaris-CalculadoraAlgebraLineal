@@ -19,7 +19,7 @@ from src.frontend.controladores.raices.compartido.formato.rango_exploracion_raic
 from src.frontend.vistas.raices.biseccion.captura.acciones_captura import construir_ayuda
 from src.frontend.vistas.raices.biseccion.captura.ejemplos import EJEMPLOS as EJEMPLOS_BISECCION
 from src.frontend.vistas.raices.biseccion.captura.estado_captura import transaccion
-from src.frontend.vistas.regla_falsa.ejemplos import EJEMPLOS as EJEMPLOS_REGLA_FALSA
+from src.frontend.vistas.raices.regla_falsa.captura.ejemplos import EJEMPLOS as EJEMPLOS_REGLA_FALSA
 
 _EJEMPLOS = {
     BISECCION: {nombre: datos for grupo in EJEMPLOS_BISECCION.values() for nombre, datos in grupo},

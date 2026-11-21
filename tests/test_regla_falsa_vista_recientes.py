@@ -3,7 +3,7 @@ from copy import deepcopy
 
 from nicegui import ui
 
-from src.frontend.vistas.regla_falsa.ejemplos import EJEMPLOS
+from src.frontend.vistas.raices.regla_falsa.captura.ejemplos import EJEMPLOS
 from tests.comun_regla_falsa_vista import captura_regla_falsa, ejecutar_escenario
 
 

@@ -3,15 +3,15 @@ from nicegui import ui
 from src.frontend.componentes.raices.captura.previa_expresion_raices import PreviaExpresion
 
 from src.frontend.vistas.raices.biseccion.captura.captura import GUIA_CONTINUIDAD
-from .acciones_captura import construir_acciones, mostrar_recientes
-from .captura import construir_captura
+from src.frontend.vistas.raices.regla_falsa.captura.acciones_captura import construir_acciones, mostrar_recientes
+from src.frontend.vistas.raices.regla_falsa.captura.captura import construir_captura
 from .exploracion import PanelExploracion
 from .resolucion_multiple import PanelResolucionMultiple
 from src.frontend.vistas.raices.regla_falsa.base.modos_captura import MODO_BUSQUEDA, region_modo
 from .vista_previa import PanelVistaPrevia
 from .seleccion_grafico import SeleccionGrafico
 from .continuidad_intervalo import PanelContinuidad
-from .estados_entrada import EstadosEntrada
+from src.frontend.vistas.raices.regla_falsa.captura.estados_entrada import EstadosEntrada
 
 
 def componer_herramienta(vista) -> None:
