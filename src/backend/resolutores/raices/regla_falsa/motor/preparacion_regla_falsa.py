@@ -3,23 +3,23 @@ import ast
 from collections.abc import Callable
 from dataclasses import dataclass
 
-from .continuidad.dominio.cobertura_continuidad import cubre_intervalo_cerrado
-from .biseccion.contratos.contrato_biseccion import EvaluacionExtremo
-from .continuidad.dominio.contrato_continuidad import InformeContinuidad
-from .contrato_regla_falsa import (
+from ...continuidad.dominio.cobertura_continuidad import cubre_intervalo_cerrado
+from ...biseccion.contratos.contrato_biseccion import EvaluacionExtremo
+from ...continuidad.dominio.contrato_continuidad import InformeContinuidad
+from ...contrato_regla_falsa import (
     DiagnosticoReglaFalsa,
     EntradaReglaFalsa,
     IteracionReglaFalsa,
     ResultadoReglaFalsa,
 )
-from .biseccion.motor.diagnostico_biseccion import error_extremos, evaluar_extremos
-from .continuidad.dominio.dominio_intervalo import comprobar_dominio_arbol
-from .funcion_real.evaluacion.evaluador_funcion import compilar
-from .funcion_real.evaluacion.gramatica_funcion import analizar_expresion
-from .continuidad.analisis.informe_continuidad import crear_informe, observacion
+from ...biseccion.motor.diagnostico_biseccion import error_extremos, evaluar_extremos
+from ...continuidad.dominio.dominio_intervalo import comprobar_dominio_arbol
+from ...funcion_real.evaluacion.evaluador_funcion import compilar
+from ...funcion_real.evaluacion.gramatica_funcion import analizar_expresion
+from ...continuidad.analisis.informe_continuidad import crear_informe, observacion
 from .traza_regla_falsa import construir_error
-from .compartido.unidades_angulares import opciones_unidad
-from .validacion_regla_falsa import validar_entrada_regla_falsa
+from ...compartido.unidades_angulares import opciones_unidad
+from ...validacion_regla_falsa import validar_entrada_regla_falsa
 
 
 @dataclass(frozen=True)

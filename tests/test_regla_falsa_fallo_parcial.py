@@ -10,7 +10,7 @@ from src.backend.resolutores.raices.contrato_regla_falsa import EntradaReglaFals
 
 def test_fallo_tras_filas_validas_conserva_traza_e_intervalo(monkeypatch):
     """Un fallo en la tercera evaluación conserva las dos filas válidas y el último intervalo."""
-    modulo = importlib.import_module("src.backend.resolutores.raices.regla_falsa")
+    modulo = importlib.import_module("src.backend.resolutores.raices.regla_falsa.motor.regla_falsa")
     original = modulo.evaluar
     llamadas = {"n": 0}
 

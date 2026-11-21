@@ -11,7 +11,7 @@ from src.backend.resolutores.raices.contrato_regla_falsa import EntradaReglaFals
 from src.backend.resolutores.raices.contrato_regla_falsa_ampliada import ConfiguracionReglaFalsa
 from src.backend.resolutores.raices.biseccion.lote.contrato_resolucion_multiple import CandidatoResolucion
 from src.backend.resolutores.raices.biseccion.contratos.criterios_biseccion import CriterioParada
-from src.backend.resolutores.raices.regla_falsa_ampliada import resolver_regla_falsa_configurada
+from src.backend.resolutores.raices.regla_falsa.motor.regla_falsa_ampliada import resolver_regla_falsa_configurada
 from src.backend.resolutores.raices.resolucion_multiple_regla_falsa import resolver_candidatos_regla_falsa
 
 

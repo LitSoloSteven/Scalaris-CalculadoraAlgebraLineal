@@ -7,7 +7,7 @@ from src.backend.resolutores.raices.aritmetica_regla_falsa import (
 )
 from src.backend.resolutores.raices.contrato_regla_falsa import EntradaReglaFalsa
 from src.backend.resolutores.raices.compartido.errores_numericos import ErrorCapacidadNumerica
-from src.backend.resolutores.raices.regla_falsa import regla_falsa
+from src.backend.resolutores.raices.regla_falsa.motor.regla_falsa import regla_falsa
 from tests.test_regla_falsa_dominio import _entrada
 
 

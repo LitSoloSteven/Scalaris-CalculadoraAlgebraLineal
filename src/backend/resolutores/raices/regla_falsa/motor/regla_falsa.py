@@ -1,18 +1,18 @@
 """Motor clasico de regla falsa (falsa posicion) con la preparacion compartida."""
 from dataclasses import asdict, dataclass, replace
 
-from .aritmetica_regla_falsa import punto_cruce
-from .biseccion.contratos.contrato_biseccion import ContextoFallo
-from .continuidad.dominio.contrato_continuidad import InformeContinuidad
-from .contrato_regla_falsa import (
+from ...aritmetica_regla_falsa import punto_cruce
+from ...biseccion.contratos.contrato_biseccion import ContextoFallo
+from ...continuidad.dominio.contrato_continuidad import InformeContinuidad
+from ...contrato_regla_falsa import (
     EntradaReglaFalsa,
     IteracionReglaFalsa,
     ResultadoReglaFalsa,
 )
-from .biseccion.contratos.decision_biseccion import signo_producto
-from .biseccion.contratos.criterios_biseccion import CriterioParada
+from ...biseccion.contratos.decision_biseccion import signo_producto
+from ...biseccion.contratos.criterios_biseccion import CriterioParada
 from .parada_regla_falsa import decidir_parada_regla_falsa
-from .funcion_real.evaluacion.evaluador_funcion import evaluar
+from ...funcion_real.evaluacion.evaluador_funcion import evaluar
 from .preparacion_regla_falsa import (
     IntervaloReglaFalsaPreparado,
     preparar_intervalo_regla_falsa,
@@ -22,7 +22,7 @@ from .traza_regla_falsa import (
     construir_resultado,
     crear_iteracion,
 )
-from .validacion_regla_falsa import validar_entrada_regla_falsa
+from ...validacion_regla_falsa import validar_entrada_regla_falsa
 
 
 @dataclass(frozen=True)

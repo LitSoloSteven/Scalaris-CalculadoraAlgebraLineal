@@ -1,7 +1,7 @@
 """Consulta geométrica de regla falsa independiente de la configuración de parada."""
 import json
 
-from src.backend.resolutores.raices.preparacion_regla_falsa import preparar_intervalo_regla_falsa
+from src.backend.resolutores.raices.regla_falsa.motor.preparacion_regla_falsa import preparar_intervalo_regla_falsa
 from .captura import preparar_entrada
 from .serializacion import serializar_resultado
 

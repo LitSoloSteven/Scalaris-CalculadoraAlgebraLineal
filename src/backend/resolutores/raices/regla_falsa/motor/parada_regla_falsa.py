@@ -1,7 +1,7 @@
 """Prioridad de criterios y estancamiento en una fila de regla falsa."""
-from .contrato_regla_falsa import EntradaReglaFalsa, IteracionReglaFalsa
-from .biseccion.contratos.criterios_biseccion import CriterioParada
-from .criterios_regla_falsa import motivo_criterio_regla_falsa
+from ...contrato_regla_falsa import EntradaReglaFalsa, IteracionReglaFalsa
+from ...biseccion.contratos.criterios_biseccion import CriterioParada
+from ...criterios_regla_falsa import motivo_criterio_regla_falsa
 from .traza_regla_falsa import crear_iteracion_estancamiento
 
 

@@ -76,7 +76,7 @@ def test_unidad_angular_procede_de_la_entrada_comun():
     ("x*(x-1)", (0, 1), 5), ("sqrt(x)-1", (-1, 4), 5), ("1/(x-.1234)", (0, 1), 5)])
 def test_coste_real_no_supera_la_reserva_de_dos_extremos_mas_limite(monkeypatch, expresion, intervalo, limite):
     """Cuenta invocaciones reales a la función compilada, incluidos intentos fallidos de extremo."""
-    preparacion = import_module("src.backend.resolutores.raices.preparacion_regla_falsa")
+    preparacion = import_module("src.backend.resolutores.raices.regla_falsa.motor.preparacion_regla_falsa")
     compilar_original = preparacion.compilar
     evaluaciones = []
     def compilar_contando(*argumentos, **opciones):

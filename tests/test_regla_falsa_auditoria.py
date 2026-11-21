@@ -10,7 +10,7 @@ TESTS = RAIZ / "tests"
 
 
 def _archivos_produccion():
-    return sorted(RAICES.glob("*regla_falsa*.py"))
+    return sorted(RAICES.rglob("*regla_falsa*.py"))
 
 
 def _archivos_test():

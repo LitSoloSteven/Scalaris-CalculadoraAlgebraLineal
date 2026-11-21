@@ -7,7 +7,7 @@ from dataclasses import asdict, replace
 import pytest
 
 from src.backend.resolutores.raices.contrato_regla_falsa import ResultadoReglaFalsa
-from src.backend.resolutores.raices.regla_falsa import regla_falsa
+from src.backend.resolutores.raices.regla_falsa.motor.regla_falsa import regla_falsa
 from src.frontend.controladores.regla_falsa.captura import preparar_entrada
 from src.frontend.controladores.regla_falsa.controlador import resolver_captura
 from src.frontend.controladores.regla_falsa.serializacion import serializar_resultado

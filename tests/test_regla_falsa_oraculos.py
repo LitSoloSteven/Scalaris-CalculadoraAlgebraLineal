@@ -9,7 +9,7 @@ from src.backend.resolutores.raices.contrato_regla_falsa import (
     IteracionReglaFalsa,
     ResultadoReglaFalsa,
 )
-from src.backend.resolutores.raices.regla_falsa import regla_falsa
+from src.backend.resolutores.raices.regla_falsa.motor.regla_falsa import regla_falsa
 from src.backend.resolutores.raices.validacion_regla_falsa import validar_entrada_regla_falsa
 
 

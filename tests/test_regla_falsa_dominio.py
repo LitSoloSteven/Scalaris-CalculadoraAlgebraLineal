@@ -2,7 +2,7 @@
 import pytest
 
 from src.backend.resolutores.raices.contrato_regla_falsa import EntradaReglaFalsa
-from src.backend.resolutores.raices.preparacion_regla_falsa import (
+from src.backend.resolutores.raices.regla_falsa.motor.preparacion_regla_falsa import (
     preparar_intervalo_regla_falsa,
 )
 

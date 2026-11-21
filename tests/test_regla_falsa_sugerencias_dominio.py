@@ -5,7 +5,7 @@ from dataclasses import replace
 import pytest
 
 from src.backend.resolutores.raices.contrato_regla_falsa import EntradaReglaFalsa
-from src.backend.resolutores.raices.regla_falsa import regla_falsa
+from src.backend.resolutores.raices.regla_falsa.motor.regla_falsa import regla_falsa
 from src.backend.resolutores.raices.sugerencias_regla_falsa import sugerir_acciones_regla_falsa
 
 
