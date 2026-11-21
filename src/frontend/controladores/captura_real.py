@@ -30,7 +30,7 @@ def real_capturado(valor: object, etiqueta: str) -> float:
             raise ValueError
         return _texto_real(valor) if isinstance(valor, str) else float(valor)
     except (ValueError, TypeError, OverflowError, DecimalException) as error:
-        raise ValueError(f"{etiqueta} debe ser un número real. Escribe un número o una expresión constante.") from error
+        raise ValueError(f"{etiqueta} debe ser un número real. Usa un punto para los decimales.") from error
 
 
 def _texto_real(texto: str) -> float:
