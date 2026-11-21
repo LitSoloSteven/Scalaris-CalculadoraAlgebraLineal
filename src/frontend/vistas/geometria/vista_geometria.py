@@ -11,13 +11,13 @@ from src.frontend.componentes.aplicacion.base.tareas import lanzar_tarea
 from src.frontend.nucleo.constantes import ANTIRREBOTE_GEOMETRIA_SEGUNDOS
 from src.frontend.navegacion import ruta_de
 from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto, notificar_edicion
-from .mixin_controles import MixinControlesGeometria
-from .limpieza_geometria import MixinLimpiezaGeometria
+from src.frontend.vistas.geometria.controles.mixin_controles import MixinControlesGeometria
+from src.frontend.vistas.geometria.controles.limpieza_geometria import MixinLimpiezaGeometria
 from .mixin_escenas import MixinEscenasGeometria
-from ._actualizacion_geometria import actualizar_figura
+from src.frontend.vistas.geometria.escenas._actualizacion_geometria import actualizar_figura
 from ._contexto_ia_geometria import obtener_contexto_ia, obtener_senales_ia
-from ._estados_geometria import mostrar_estado_vacio, renderizar_error
-from ._transferencia_geometria import procesar_transferencia_rectas, procesar_transferencia_vectores
+from src.frontend.vistas.geometria.escenas._estados_geometria import mostrar_estado_vacio, renderizar_error
+from src.frontend.vistas.geometria.controles._transferencia_geometria import procesar_transferencia_rectas, procesar_transferencia_vectores
 
 registro = logging.getLogger(__name__)
 ESCENAS_VALIDAS = ('rectas-planos', 'vectores', 'combinacion')

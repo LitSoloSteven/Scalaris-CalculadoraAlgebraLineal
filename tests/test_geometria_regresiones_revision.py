@@ -4,8 +4,8 @@ from unittest.mock import MagicMock
 from nicegui import ui
 
 from src.frontend.vistas.geometria.vista_geometria import VistaGeometria
-from src.frontend.vistas.geometria._transferencia_geometria import _cargar_vectores
-from src.frontend.vistas.geometria._figura_combinacion import construir_figura_combinacion
+from src.frontend.vistas.geometria.controles._transferencia_geometria import _cargar_vectores
+from src.frontend.vistas.geometria.figuras._figura_combinacion import construir_figura_combinacion
 from src.frontend.controladores.geometria import ControladorGeometria, selector_celda_error
 
 

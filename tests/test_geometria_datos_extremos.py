@@ -9,7 +9,7 @@ from src.backend.constantes import LONGITUD_MAXIMA_CADENA_NUMERO
 from src.backend.geometria.preparacion.transferencia import validar_transferencia_escena
 from src.frontend.controladores.geometria import ControladorGeometria
 from src.frontend.controladores.geometria.base.captura import construir_carga_sistema, construir_carga_vectores
-from src.frontend.vistas.geometria._escenas import construir_figura_rectas_planos, construir_figura_combinacion
+from src.frontend.vistas.geometria.escenas._escenas import construir_figura_rectas_planos, construir_figura_combinacion
 from src.frontend.vistas.geometria.vista_geometria import VistaGeometria
 
 

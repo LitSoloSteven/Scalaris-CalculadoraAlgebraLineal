@@ -6,8 +6,8 @@ import plotly.graph_objects as graficos
 
 from src.frontend.nucleo.textos import textos_transformaciones as textos
 from src.frontend.presentacion.tema import PALETA_GRAFICOS, COLORES_TEXTO_GRAFICOS
-from src.frontend.vistas.geometria._colores_figuras import aplicar_colores_figura
-from src.frontend.vistas.geometria._figuras_comunes import disposicion_2d, disposicion_3d
+from src.frontend.vistas.geometria.figuras._colores_figuras import aplicar_colores_figura
+from src.frontend.vistas.geometria.figuras._figuras_comunes import disposicion_2d, disposicion_3d
 
 
 def preparar_escenas_aplicacion(resultado: dict, tipo_objeto: str, *, tema: str = "papel") -> dict:

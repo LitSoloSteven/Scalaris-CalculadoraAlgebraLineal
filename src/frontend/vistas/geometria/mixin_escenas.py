@@ -4,8 +4,8 @@ from __future__ import annotations
 import json
 import logging
 from nicegui import ui
-from ._escenas import construir_figura_rectas_planos, construir_figura_vectores, construir_figura_combinacion
-from ._resumen_geometria import renderizar_resumen
+from src.frontend.vistas.geometria.escenas._escenas import construir_figura_rectas_planos, construir_figura_vectores, construir_figura_combinacion
+from src.frontend.vistas.geometria.escenas._resumen_geometria import renderizar_resumen
 
 registro = logging.getLogger(__name__)
 
@@ -57,7 +57,7 @@ class MixinEscenasGeometria:
             self._elemento_plotly.on('plotly_afterplot', js_handler='() => window.scalaris.sincronizarTemaPlotly()')
 
     async def _construir_figura(self, resultado: dict, escena: str) -> bool:
-        from ._actualizacion_geometria import ERROR_RENDERIZADO
+        from src.frontend.vistas.geometria.escenas._actualizacion_geometria import ERROR_RENDERIZADO
         try:
             figura = await self._obtener_solo_figura(resultado, escena)
             if figura is None:

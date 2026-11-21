@@ -196,7 +196,7 @@ def test_controlador_simulado_sin_parametros_solucion(monkeypatch):
 def test_figuras_recta_dos_dimensiones_y_plano_tres_dimensiones():
     """Verifica figuras recta dos dimensiones y plano tres dimensiones."""
     pytest.importorskip("plotly")
-    from src.frontend.vistas.geometria._escenas import construir_figura_rectas_planos
+    from src.frontend.vistas.geometria.escenas._escenas import construir_figura_rectas_planos
 
     carga_plana = json.dumps({"matriz_a": [["1", "1"]], "vector_b": ["2"]})
     res_2d = ControladorGeometria.procesar_rectas_planos(carga_plana)

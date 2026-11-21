@@ -5,7 +5,7 @@ import pytest
 from nicegui import ui
 
 from src.frontend.componentes.captura.vectores import captura_vectores
-from src.frontend.vistas.geometria._panel_vectores import PanelVectoresGeometria
+from src.frontend.vistas.geometria.controles._panel_vectores import PanelVectoresGeometria
 from tests.comun_animaciones_cliente import observar_invocaciones_cliente
 
 

@@ -1,7 +1,7 @@
 """Contratos de paleta por tema para todas las familias de figuras."""
 import pytest
 from src.frontend.presentacion.tema import PALETAS_POR_TEMA, COLORES_SOLUCION_POR_TEMA, COLORES_TEXTO_GRAFICOS
-from src.frontend.vistas.geometria._escenas import (
+from src.frontend.vistas.geometria.escenas._escenas import (
     construir_figura_rectas_planos, construir_figura_vectores, construir_figura_combinacion,
 )
 

@@ -2,7 +2,7 @@
 import plotly.graph_objects as go
 
 from src.frontend.presentacion.tema import COLOR_SOLUCION, COLOR_TRANSPARENTE, PALETA_GRAFICOS
-from src.frontend.vistas.geometria._colores_figuras import aplicar_colores_figura
+from src.frontend.vistas.geometria.figuras._colores_figuras import aplicar_colores_figura
 
 
 def crear_figura(respuesta: dict, muestra: dict | None, fila: dict | None = None,

@@ -8,7 +8,7 @@ from src.frontend.presentacion.tema import (
     PALETAS_POR_TEMA, COLORES_SOLUCION_POR_TEMA,
     COLORES_TEXTO_GRAFICOS, COLORES_CUADRICULA_GRAFICOS, OPACIDAD_PLANOS,
 )
-from src.frontend.vistas.geometria._escenas import construir_figura_rectas_planos
+from src.frontend.vistas.geometria.escenas._escenas import construir_figura_rectas_planos
 from tests.comun_estilos import analizar_tokens, hexadecimal_a_rgb, razon_contraste
 from tests.comun_construccion_vistas import construir_pagina
 
