@@ -5,7 +5,7 @@ from nicegui import background_tasks, core
 from nicegui.persistence import FilePersistentDict
 from nicegui.persistence.serialization import dumps
 
-from src.frontend.archivo_atomico import (
+from src.frontend.nucleo.persistencia.archivo_atomico import (
     RespaldoObsoleto, comprobar_directorio, eliminar_archivo_persistente,
     guardar_archivo_atomico, identificar_directorio,
 )

@@ -2,7 +2,7 @@
 import nicegui.storage as almacenamiento_nicegui
 from nicegui.persistence import FilePersistentDict
 
-from src.frontend.persistencia_archivo import DiccionarioPersistenteSeguro
+from src.frontend.nucleo.persistencia.persistencia_archivo import DiccionarioPersistenteSeguro
 
 
 def configurar_persistencia() -> None:

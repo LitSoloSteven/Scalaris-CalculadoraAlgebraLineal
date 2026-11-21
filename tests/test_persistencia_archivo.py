@@ -8,8 +8,8 @@ import pytest
 from nicegui import background_tasks, core
 from nicegui.storage import Storage
 
-from src.frontend import persistencia_archivo
-from src.frontend.persistencia_archivo import DiccionarioPersistenteSeguro
+from src.frontend.nucleo.persistencia import persistencia_archivo
+from src.frontend.nucleo.persistencia.persistencia_archivo import DiccionarioPersistenteSeguro
 
 
 def test_lee_json_existente_y_conserva_estructura_y_unicode(tmp_path):
