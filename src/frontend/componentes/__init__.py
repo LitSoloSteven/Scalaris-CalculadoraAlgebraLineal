@@ -4,7 +4,7 @@ from .panel_ia import PanelIA
 from .aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
 from .calculadora import PanelCalculadora
 from .cuadricula_ecuaciones import CuadriculaEcuaciones
-from .captura_matrices import PanelCapturaMatrices
+from .captura.matrices.captura_matrices import PanelCapturaMatrices
 from .aplicacion.controles.barra_navegacion import crear_barra_navegacion
 from .panel_matriz_cuadrada import PanelMatrizCuadrada
 from .captura_vectores import PanelCapturaVectores

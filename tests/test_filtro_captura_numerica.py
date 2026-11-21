@@ -10,7 +10,7 @@ from src.frontend.presentacion import tema
 from src.frontend.nucleo.constantes import CARACTERES_ENTRADA_NUMERICA
 from src.frontend.nucleo.textos.textos import MENSAJE_ENTRADA_NUMERICA
 from src.frontend.componentes.captura.nucleo.carga_numerica import preparar_matriz_numerica
-from src.frontend.componentes.captura_modelos import crear_entradas_nombres, crear_entradas_vector, llenar_entradas
+from src.frontend.componentes.captura.matrices.captura_modelos import crear_entradas_nombres, crear_entradas_vector, llenar_entradas
 from src.frontend.componentes.captura.nucleo.cuadricula_base import propiedades_celda_accesible, propiedades_vector_accesible
 from src.frontend.componentes.captura.nucleo.portapapeles_matricial import filtrar_entrada_numerica, filtrar_matriz_numerica
 

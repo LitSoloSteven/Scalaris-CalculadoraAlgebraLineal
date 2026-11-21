@@ -116,7 +116,7 @@ def test_cliente_resaltado_cruzado_sin_desenfoque():
 
 def test_componentes_celdas_resistentes_y_animaciones():
     """Las cuadrículas usan clases de celdas con tamaño adaptable."""
-    python_matrices = Path("src/frontend/componentes/captura_matrices.py").read_text(encoding="utf-8")
+    python_matrices = Path("src/frontend/componentes/captura/matrices/captura_matrices.py").read_text(encoding="utf-8")
     assert "filter: 'blur" not in python_matrices
     assert "cuadricula-celda" in python_matrices
     assert "w-20" not in python_matrices

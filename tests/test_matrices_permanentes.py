@@ -4,7 +4,7 @@ import asyncio
 import pytest
 from nicegui import ui
 
-from src.frontend.componentes.captura_matrices import PanelCapturaMatrices
+from src.frontend.componentes.captura.matrices.captura_matrices import PanelCapturaMatrices
 from tests.comun_construccion_vistas import construir_pagina
 
 

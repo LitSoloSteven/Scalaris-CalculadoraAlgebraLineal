@@ -86,7 +86,8 @@ def test_redimension_homogenea_conserva_b_general_y_solo_lectura(monkeypatch):
 @pytest.mark.parametrize('herramienta', ['sistemas', 'matrices'])
 def test_fallo_creando_borde_permite_reconstruir_en_el_siguiente_cambio(monkeypatch, herramienta):
     """Una excepción no borra el caché y la dimensión siguiente repara el registro parcial."""
-    from src.frontend.componentes import redimension_ecuaciones, redimension_captura_matrices
+    from src.frontend.componentes import redimension_ecuaciones
+    from src.frontend.componentes.captura.matrices import redimension_captura_matrices
     async def _comprobar(vista, cliente):
         _, entradas, aplicar = _preparar(vista, herramienta)
         modulo, nombre = ((redimension_ecuaciones, 'crear_coeficiente') if herramienta == 'sistemas'

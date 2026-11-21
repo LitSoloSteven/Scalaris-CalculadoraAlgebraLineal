@@ -7,7 +7,7 @@ from .limpieza_modelos import MixinLimpiezaModelos
 
 from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.navegacion import ruta_de
-from src.frontend.componentes.captura_matrices import PanelCapturaMatrices
+from src.frontend.componentes.captura.matrices.captura_matrices import PanelCapturaMatrices
 
 
 from .mixin_calculo_transformaciones import MixinCalculoTransformaciones

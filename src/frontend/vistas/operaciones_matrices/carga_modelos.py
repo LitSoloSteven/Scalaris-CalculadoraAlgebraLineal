@@ -1,5 +1,5 @@
 """Restauración completa de capturas de modelos sin ejecutar cálculos."""
-from src.frontend.componentes.captura_modelos import llenar_entradas
+from src.frontend.componentes.captura.matrices.captura_modelos import llenar_entradas
 from src.frontend.nucleo.textos import textos_transformaciones as textos
 
 

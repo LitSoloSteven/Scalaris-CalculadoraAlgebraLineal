@@ -7,7 +7,7 @@ from src.frontend.componentes.captura.nucleo.cuadricula_base import (
     selector_dimension_matriz, actualizar_estados_botones_dimension,
     indice_cambio_dimension,
 )
-from src.frontend.componentes.captura_modelos import crear_entradas_nombres
+from src.frontend.componentes.captura.matrices.captura_modelos import crear_entradas_nombres
 
 
 class MixinCapturaTransformaciones:

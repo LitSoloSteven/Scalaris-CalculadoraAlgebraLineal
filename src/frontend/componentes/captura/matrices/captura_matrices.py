@@ -17,7 +17,7 @@ from src.backend.constantes import DIMENSION_MAXIMA_MATRICES
 from .estado_captura_matrices import (
     MATRICES_PERMANENTES, crear_registro_matriz, asegurar_matrices_permanentes,
 )
-from .captura.nucleo.redimension_rectangular import actualizar_rectangulo
+from src.frontend.componentes.captura.nucleo.redimension_rectangular import actualizar_rectangulo
 from .redimension_captura_matrices import crear_celda_matriz, crear_fila_matriz
 from .carga_coleccion_matrices import cargar_matriz_a
 

@@ -8,7 +8,7 @@ from ._estados_modelos import mostrar_estado
 from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.aplicacion.base.iconos import icono_svg
 from src.frontend.navegacion import herramienta_por_identificador
-from src.frontend.componentes.captura_matrices import PanelCapturaMatrices
+from src.frontend.componentes.captura.matrices.captura_matrices import PanelCapturaMatrices
 from .mixin_calculo_leontief import MixinCalculoLeontief
 
 

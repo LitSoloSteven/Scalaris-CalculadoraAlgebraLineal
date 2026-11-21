@@ -1,6 +1,6 @@
 """Carga focalizada de una matriz en la colección del editor."""
 from typing import Any
-from src.frontend.componentes.estado_captura_matrices import crear_registro_matriz
+from src.frontend.componentes.captura.matrices.estado_captura_matrices import crear_registro_matriz
 
 
 def cargar_matriz_a(panel: Any, datos: list[list[str]]) -> None:
