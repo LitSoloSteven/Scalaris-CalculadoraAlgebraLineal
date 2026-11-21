@@ -19,5 +19,6 @@ prueba('ofrece cálculos acotados en funciones y solo constantes en reales', () 
     for (const simbolo of '×·⋅∙÷⁄∕¼πℯ°‰²') afirmar.equal(reales.get(simbolo), simbolo);
     afirmar.equal(reales.get('√'), '√()');
     for (const simbolo of '∑∏′″∫∞') afirmar.equal(reales.has(simbolo), false);
-    for (const simbolo of '∫∞') afirmar.equal(funciones.has(simbolo), false);
+    afirmar.equal(funciones.get('∫'), '∫(t,t,0,x)');
+    afirmar.equal(funciones.get('∞'), '∞');
 });

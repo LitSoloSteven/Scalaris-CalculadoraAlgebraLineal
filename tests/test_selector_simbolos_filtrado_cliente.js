@@ -127,7 +127,7 @@ function crearEntornoFiltrado(moduloInicial = "") {
 prueba("oculta simbolos incompatibles y categorias vacias en cada perfil", () => {
     const entorno = crearEntornoFiltrado();
     const expectativas = [
-        ["funcion", ["√", "⁰", "π", "ℯ", "¼"], ["ᵀ", "⊕", "∞", "∫", "₀"], ["", "Operadores", "Raíces, potencias y subíndices", "Fracciones", "Letras griegas", "Cálculo y geometría"]],
+        ["funcion", ["√", "⁰", "π", "ℯ", "¼", "∞", "∫"], ["ᵀ", "⊕", "₀"], ["", "Operadores", "Raíces, potencias y subíndices", "Fracciones", "Letras griegas", "Cálculo y geometría"]],
         ["matriz", ["−", "×", "·", "⋅", "∙", "ᵀ", "½"], ["√", "π", "∞", "₀"], ["", "Operadores", "Raíces, potencias y subíndices", "Fracciones", "Cálculo y geometría"]],
         ["numero", ["−", "⁄", "∕", "¼", "½"], ["×", "√", "π", "ᵀ", "∞"], ["", "Operadores", "Fracciones", "Cálculo y geometría"]],
         ["ecuacion", ["−", "⁄", "∕", "¼"], ["√", "⁰", "ᵀ", "∞"], ["", "Operadores", "Raíces, potencias y subíndices", "Fracciones", "Letras griegas", "Cálculo y geometría"]],
@@ -169,8 +169,7 @@ prueba("restringe la busqueda Unicode en perfiles acotados y la conserva en text
     const campoFuncion = crearCampo(entorno.documento, { dataset: { simbolos: "funcion" } });
     entorno.abrirEn(campoFuncion);
     entorno.buscar("U+221E");
-    afirmar.equal(entorno.lista.children.length, 0);
-    afirmar.equal(entorno.estado.textContent, "Sin resultados compatibles. Prueba otro nombre o símbolo.");
+    afirmar.deepEqual(entorno.signosVisibles(), ["∞"]);
     entorno.buscar("");
     afirmar.ok(entorno.estado.textContent.startsWith("Se muestran "));
     entorno.buscar("U+03C0");
