@@ -10,8 +10,8 @@ from src.backend.resolutores.operaciones_matrices.transformaciones.transformacio
 from src.backend.resolutores.sistemas_lineales.eliminacion.gauss import ResolutorGauss
 from src.backend.resolutores.sistemas_lineales.eliminacion.gauss_jordan import ResolutorGaussJordan
 from src.backend.utilidades.validacion.verificacion import verificar_solucion
-from src.frontend.controladores.sistemas_lineales.controlador_gauss import ControladorGauss
-from src.frontend.controladores.sistemas_lineales.controlador_gauss_jordan import ControladorGaussJordan
+from src.frontend.controladores.algebra.sistemas_lineales.resolucion.controlador_gauss import ControladorGauss
+from src.frontend.controladores.algebra.sistemas_lineales.resolucion.controlador_gauss_jordan import ControladorGaussJordan
 
 
 @pytest.mark.parametrize("metodo", [

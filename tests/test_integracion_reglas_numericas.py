@@ -5,8 +5,8 @@ from src.backend.utilidades.validacion.analizadores import AnalizadorSistema
 from src.backend.resolutores.operaciones_matrices.expresiones.evaluador import EvaluadorExpresionesMatriciales
 from src.backend.modelos.matriz import Matriz
 from src.backend.utilidades.formato.formateadores import formatear_fraccion_texto, numero_a_latex
-from src.frontend.controladores.sistemas_lineales.controlador_gauss import ControladorGauss
-from src.frontend.controladores.sistemas_lineales.controlador_gauss_jordan import ControladorGaussJordan
+from src.frontend.controladores.algebra.sistemas_lineales.resolucion.controlador_gauss import ControladorGauss
+from src.frontend.controladores.algebra.sistemas_lineales.resolucion.controlador_gauss_jordan import ControladorGaussJordan
 
 
 def test_analizador_distingue_productos_lineales_y_ecuaciones_constantes():

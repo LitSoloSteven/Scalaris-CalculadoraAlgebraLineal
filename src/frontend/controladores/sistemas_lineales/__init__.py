@@ -2,10 +2,10 @@
 from src.frontend.controladores.algebra.sistemas_lineales.nucleo.compartido import (
     construir_metadatos_pasos,
 )
-from src.frontend.controladores.sistemas_lineales.controlador_gauss import (
+from src.frontend.controladores.algebra.sistemas_lineales.resolucion.controlador_gauss import (
     ControladorGauss,
 )
-from src.frontend.controladores.sistemas_lineales.controlador_gauss_jordan import (
+from src.frontend.controladores.algebra.sistemas_lineales.resolucion.controlador_gauss_jordan import (
     ControladorGaussJordan,
 )
 

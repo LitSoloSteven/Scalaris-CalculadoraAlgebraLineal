@@ -21,10 +21,10 @@ from src.frontend.controladores.algebra.operaciones_inversas.calculo.controlador
 from src.frontend.controladores.algebra.operaciones_vectores.controlador_operaciones_vectores import (
     ControladorOperacionesVectores,
 )
-from src.frontend.controladores.sistemas_lineales.controlador_gauss import (
+from src.frontend.controladores.algebra.sistemas_lineales.resolucion.controlador_gauss import (
     ControladorGauss,
 )
-from src.frontend.controladores.sistemas_lineales.controlador_gauss_jordan import (
+from src.frontend.controladores.algebra.sistemas_lineales.resolucion.controlador_gauss_jordan import (
     ControladorGaussJordan,
 )
 

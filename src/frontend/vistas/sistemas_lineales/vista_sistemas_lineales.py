@@ -11,7 +11,7 @@ from .mixin_pasos import MixinPasosSistemasLineales
 from .mixin_resultados import MixinResultadosSistemasLineales
 from .mixin_vista_previa import MixinVistaPreviaSistemasLineales
 from ._transferencia_sistemas import procesar_transferencia_matriz
-from src.frontend.controladores.sistemas_lineales.contexto import (
+from src.frontend.controladores.algebra.sistemas_lineales.resolucion.contexto import (
     obtener_contexto_sistema, obtener_senales_sistema,
 )
 from src.frontend.controladores.algebra.sistemas_lineales.nucleo.estado_captura import cambiar_modo
