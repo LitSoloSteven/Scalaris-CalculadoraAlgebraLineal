@@ -12,13 +12,19 @@ FUNCIONES_PERMITIDAS = {**FUNCIONES_REALES, **CONSTANTES_REALES}
 def compilar(expresion: str, *, unidad_angular: str = "radianes") -> Callable[[float], float]:
     """Valida una expresión y devuelve f(x); lanza ValueError o ErrorNoFinito si es inválida."""
     unidad = validar_unidad_angular(unidad_angular)
-    arbol = analizar_expresion(expresion)
+    arbol = analizar_expresion(expresion, unidad_angular=unidad)
 
     def funcion(valor: float) -> float:
         """Evalúa la expresión con argumento finito y errores de dominio controlados."""
         return _evaluar_nodo(arbol.body, comprobar_real(valor), unidad)
 
     return funcion
+
+
+def evaluar_constante_real(expresion: str) -> float:
+    """Evalúa una expresión real cerrada en radianes; lanza ValueError si es inválida."""
+    arbol = analizar_expresion(expresion, solo_constantes=True)
+    return _evaluar_nodo(arbol.body, 0.0, "radianes")
 
 
 def evaluar(funcion: Callable[[float], float], valor: float) -> float:

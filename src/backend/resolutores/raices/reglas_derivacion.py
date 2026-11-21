@@ -1,9 +1,11 @@
 """Reglas simbólicas sobre nodos de funciones reales previamente validados."""
 import ast
+from functools import partial
 
 from .nodos_derivada import (
     constante as _constante, depende_de_x as _depende_de_x, llamada as _llamada, valor_constante as _valor_constante,
 )
+from .notacion_calculo import ANGULARES_RADIANES, TRIGONOMETRICAS_INVERSAS
 
 _MENSAJE_POTENCIA_VARIABLE = (
     "La derivada de una potencia con base y exponente variables no está disponible "
@@ -90,16 +92,16 @@ def _derivar_llamada(nodo: ast.Call) -> ast.AST:
     return regla(argumento, derivar_nodo(argumento))
 
 
-def _regla_seno(argumento: ast.AST, derivada: ast.AST) -> ast.AST:
-    return _producto(_llamada("cos", argumento), derivada)
+def _regla_seno(argumento: ast.AST, derivada: ast.AST, *, coseno: str = "cos") -> ast.AST:
+    return _producto(_llamada(coseno, argumento), derivada)
 
 
-def _regla_coseno(argumento: ast.AST, derivada: ast.AST) -> ast.AST:
-    return _negar(_producto(_llamada("sin", argumento), derivada))
+def _regla_coseno(argumento: ast.AST, derivada: ast.AST, *, seno: str = "sin") -> ast.AST:
+    return _negar(_producto(_llamada(seno, argumento), derivada))
 
 
-def _regla_tangente(argumento: ast.AST, derivada: ast.AST) -> ast.AST:
-    return _producto(_suma(_constante(1), _potencia(_llamada("tan", argumento), _constante(2))), derivada)
+def _regla_tangente(argumento: ast.AST, derivada: ast.AST, *, tangente: str = "tan") -> ast.AST:
+    return _producto(_suma(_constante(1), _potencia(_llamada(tangente, argumento), _constante(2))), derivada)
 
 
 def _regla_arco_seno(argumento: ast.AST, derivada: ast.AST) -> ast.AST:
@@ -181,6 +183,12 @@ _REGLAS_LLAMADA = {
     "raiz4": _regla_raiz_cuarta,
     "abs": _regla_valor_absoluto,
 }
+_REGLAS_LLAMADA.update({
+    ANGULARES_RADIANES["sin"]: partial(_regla_seno, coseno=ANGULARES_RADIANES["cos"]),
+    ANGULARES_RADIANES["cos"]: partial(_regla_coseno, seno=ANGULARES_RADIANES["sin"]),
+    ANGULARES_RADIANES["tan"]: partial(_regla_tangente, tangente=ANGULARES_RADIANES["tan"]),
+    **{ANGULARES_RADIANES[nombre]: _REGLAS_LLAMADA[nombre] for nombre in TRIGONOMETRICAS_INVERSAS},
+})
 
 
 def _es_cero(nodo: ast.AST) -> bool:

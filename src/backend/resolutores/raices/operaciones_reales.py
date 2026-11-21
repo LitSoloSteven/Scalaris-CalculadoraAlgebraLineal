@@ -6,6 +6,7 @@ from collections.abc import Callable
 from src.backend.excepciones import ErrorDominio, ErrorNoFinito
 from .errores_numericos import ErrorCapacidadNumerica
 from .gramatica_funcion import FUNCIONES_REALES
+from .notacion_calculo import NOMBRES_ANGULARES
 from .unidades_angulares import argumento_angular, resultado_angular, validar_unidad_angular
 
 _OPERACIONES = {ast.Add: lambda izquierda, derecha: izquierda + derecha,
@@ -43,6 +44,8 @@ def aplicar_operador(operador: ast.operator, izquierda: float, derecha: float) -
 def aplicar_funcion(nombre: str, argumento: float, *, unidad_angular: str = "radianes") -> float:
     """Evalúa una función real de un argumento y detecta la pérdida total de exp."""
     unidad = validar_unidad_angular(unidad_angular)
+    if nombre in NOMBRES_ANGULARES:
+        nombre, unidad = NOMBRES_ANGULARES[nombre], "radianes"
     argumento = argumento_angular(nombre, comprobar_real(argumento), unidad)
     resultado = ejecutar_operacion(lambda: FUNCIONES_REALES[nombre](argumento))
     _comprobar_subdesbordamiento(resultado, nombre == "exp")
