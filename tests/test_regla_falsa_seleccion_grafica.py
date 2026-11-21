@@ -3,7 +3,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from src.frontend.controladores.seleccion_muestra_raices import abscisa_muestreada
+from src.frontend.controladores.raices.compartido.ejecucion.seleccion_muestra_raices import abscisa_muestreada
 from tests.comun_regla_falsa_vista import ejecutar_escenario
 
 

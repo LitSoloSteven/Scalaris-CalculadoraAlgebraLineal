@@ -1,7 +1,7 @@
 """Borrador accesible a partir de puntos reales de una muestra vigente."""
 from src.frontend.componentes.raices.captura.borrador_intervalo_raices import construir_borrador, confirmar_borrador, siguiente_extremo
 from src.frontend.controladores.raices.compartido.formato.captura_real import real_capturado
-from src.frontend.controladores.seleccion_muestra_raices import abscisa_muestreada, puntos_borrador
+from src.frontend.controladores.raices.compartido.ejecucion.seleccion_muestra_raices import abscisa_muestreada, puntos_borrador
 
 
 class SeleccionGrafico:

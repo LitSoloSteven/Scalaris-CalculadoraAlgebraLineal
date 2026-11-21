@@ -4,7 +4,7 @@ from math import isfinite
 from src.frontend.componentes.raices.captura.borrador_intervalo_raices import construir_borrador, confirmar_borrador, siguiente_extremo
 
 from src.frontend.controladores.biseccion.captura_criterio import real_capturado
-from src.frontend.controladores.seleccion_muestra_raices import puntos_borrador
+from src.frontend.controladores.raices.compartido.ejecucion.seleccion_muestra_raices import puntos_borrador
 from .modos_captura import MODO_BUSQUEDA
 
 

@@ -10,7 +10,7 @@ from src.frontend.componentes.raices.exploracion.exploracion_raices import ESTAD
 from src.frontend.componentes.raices.exploracion.paso_exploracion_raices import PasoExploracion
 from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
 from src.frontend.controladores.raices.compartido.exploracion.captura_exploratoria_raices import intervalo_seleccionable
-from src.frontend.controladores.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
+from src.frontend.controladores.raices.compartido.ejecucion.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
 from src.frontend.controladores.raices.compartido.exploracion.exploracion_raices import (
     LONGITUD_CAMPO_EXPLORACION, PASO_EXPLORACION_DEFECTO, resolver_exploracion,
 )

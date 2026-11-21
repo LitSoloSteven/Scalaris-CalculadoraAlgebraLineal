@@ -11,7 +11,7 @@ from src.frontend.componentes.raices.graficos.figura_funcion_real import crear_f
 from src.frontend.componentes.raices.graficos.colores_figuras import aplicar_colores_figura
 from src.frontend.nucleo.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
 from src.frontend.controladores.compartido.sesion.actualizacion_cancelable import cancelar_actualizacion, programar_actualizacion
-from src.frontend.controladores.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
+from src.frontend.controladores.raices.compartido.ejecucion.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
 from src.frontend.controladores.raices.compartido.formato.rango_exploracion_raices import RANGO_GRAFICA_DEFECTO, rango_evento_distinto
 from src.frontend.controladores.raices.compartido.exploracion.vista_previa_raices import preparar_vista_previa
 from src.frontend.presentacion.tema import PALETA_GRAFICOS

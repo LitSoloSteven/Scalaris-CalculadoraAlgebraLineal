@@ -4,7 +4,7 @@ import asyncio
 import pytest
 from nicegui import run
 
-from src.frontend.controladores.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
+from src.frontend.controladores.raices.compartido.ejecucion.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
 
 
 def test_cincuenta_ediciones_conservan_solo_el_ultimo_borrador(monkeypatch):

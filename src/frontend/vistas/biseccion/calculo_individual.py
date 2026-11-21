@@ -1,5 +1,5 @@
 """Configuración de bisección para la solicitud individual compartida."""
-from src.frontend.controladores.calculo_raices import ConfiguracionCalculoRaices, resolver_calculo_raices
+from src.frontend.controladores.raices.compartido.ejecucion.calculo_raices import ConfiguracionCalculoRaices, resolver_calculo_raices
 
 _CONFIGURACION = ConfiguracionCalculoRaices(
     mensaje_carga="Calculando la raíz en el intervalo…",

@@ -8,7 +8,7 @@ from tests import test_cumplimiento_reglas as auditoria
 
 _RUTAS = (
     "src/frontend/controladores/raices/compartido/formato/captura_real.py",
-    "src/frontend/controladores/calculo_raices.py",
+    "src/frontend/controladores/raices/compartido/ejecucion/calculo_raices.py",
     "src/frontend/componentes/raices/resultados/tabla_iteraciones.py",
     "src/frontend/controladores/biseccion/captura_criterio.py",
     "src/frontend/vistas/biseccion/calculo_individual.py",

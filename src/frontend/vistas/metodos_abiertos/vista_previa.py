@@ -7,7 +7,7 @@ from nicegui import ui
 
 from src.frontend.nucleo.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
 from src.frontend.controladores.compartido.sesion.actualizacion_cancelable import cancelar_actualizacion, programar_actualizacion
-from src.frontend.controladores.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
+from src.frontend.controladores.raices.compartido.ejecucion.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
 from src.frontend.controladores.raices.compartido.exploracion.vista_previa_raices import preparar_vista_previa
 from .figura_base import crear_figura_vacia
 

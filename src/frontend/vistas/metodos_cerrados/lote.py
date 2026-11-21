@@ -10,7 +10,7 @@ from src.backend.resolutores.raices.biseccion.lote.limites_resolucion_multiple i
 )
 from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
 from src.frontend.controladores.biseccion.resolucion_multiple import resolver_lote as resolver_biseccion
-from src.frontend.controladores.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
+from src.frontend.controladores.raices.compartido.ejecucion.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
 from src.frontend.controladores.raices.compartido.exploracion.exploracion_raices import LONGITUD_CAMPO_EXPLORACION, presentar_candidato
 from src.frontend.controladores.metodos_cerrados.adaptadores import BISECCION, REGLA_FALSA, captura_del_metodo
 from src.frontend.controladores.regla_falsa.resolucion_multiple import resolver_lote as resolver_regla_falsa
