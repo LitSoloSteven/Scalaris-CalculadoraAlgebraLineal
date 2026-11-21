@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 from fractions import Fraction
 from typing import NotRequired, TypedDict
 
-from .contrato_continuidad import InformeContinuidad
+from .continuidad.dominio.contrato_continuidad import InformeContinuidad
 from .criterios_biseccion import CriterioParada, tolerancia_decimal, validar_criterio, validar_entero_criterio
 from .decision_biseccion import AccionBiseccion, SignoProducto
 from .compartido.limites_raices import (

@@ -2,7 +2,7 @@
 import math
 
 from .contrato_exploracion import CandidatoExploracion, MuestraExploracion
-from .dominio_intervalo import comprobar_dominio_intervalo
+from .continuidad.dominio.dominio_intervalo import comprobar_dominio_intervalo
 from .limites_exploracion import MAXIMO_REGISTROS_EXPLORACION
 
 CONTRASTE_CONTACTO = 0.25

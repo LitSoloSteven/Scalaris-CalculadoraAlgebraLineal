@@ -3,7 +3,7 @@ from dataclasses import asdict, dataclass, replace
 
 from .aritmetica_regla_falsa import punto_cruce
 from .contrato_biseccion import ContextoFallo
-from .contrato_continuidad import InformeContinuidad
+from .continuidad.dominio.contrato_continuidad import InformeContinuidad
 from .contrato_regla_falsa import (
     EntradaReglaFalsa,
     IteracionReglaFalsa,

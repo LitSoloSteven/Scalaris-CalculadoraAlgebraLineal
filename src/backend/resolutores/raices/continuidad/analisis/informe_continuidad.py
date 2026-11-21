@@ -1,8 +1,8 @@
 """Traducción de observaciones del motor a la política de continuidad."""
 from typing import cast
 
-from .contrato_biseccion import CODIGO_DISCONTINUIDAD, ResultadoBiseccion
-from .contrato_continuidad import EvidenciaContinuidad, InformeContinuidad, TipoEvidencia
+from ...contrato_biseccion import CODIGO_DISCONTINUIDAD, ResultadoBiseccion
+from ..dominio.contrato_continuidad import EvidenciaContinuidad, InformeContinuidad, TipoEvidencia
 
 _RESTRICCIONES = {"DOMINIO_INVALIDO", "SINGULARIDAD_DETECTADA"}
 _MENSAJES = {

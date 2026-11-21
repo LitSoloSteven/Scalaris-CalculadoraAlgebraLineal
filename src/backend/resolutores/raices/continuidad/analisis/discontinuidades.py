@@ -3,7 +3,7 @@ import math
 from dataclasses import replace
 from fractions import Fraction
 
-from .contrato_biseccion import (
+from ...contrato_biseccion import (
     CODIGO_DISCONTINUIDAD, ESTADO_DISCONTINUIDAD, EvidenciaDiscontinuidad,
     IteracionBiseccion, ResultadoBiseccion,
 )

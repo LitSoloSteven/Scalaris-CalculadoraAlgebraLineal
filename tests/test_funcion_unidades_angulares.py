@@ -6,7 +6,7 @@ import pytest
 
 from src.backend.excepciones import ErrorDominio, ErrorNoFinito
 from src.backend.resolutores.raices.funcion_real.evaluacion.evaluador_funcion import compilar, evaluar
-from src.backend.resolutores.raices.dominio_intervalo import comprobar_dominio_intervalo
+from src.backend.resolutores.raices.continuidad.dominio.dominio_intervalo import comprobar_dominio_intervalo
 from src.backend.resolutores.raices.funcion_real.evaluacion.gramatica_funcion import CONSTANTES_REALES
 from src.backend.resolutores.raices.compartido.unidades_angulares import validar_unidad_angular
 

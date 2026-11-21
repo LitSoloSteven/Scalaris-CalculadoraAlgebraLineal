@@ -3,7 +3,7 @@ from dataclasses import asdict
 from typing import Literal, TypedDict
 
 from .contrato_regla_falsa import EntradaReglaFalsa, ResultadoReglaFalsa
-from .sugerencias_dominio import sugerir_recorte_dominio
+from .continuidad.analisis.sugerencias_dominio import sugerir_recorte_dominio
 from .validacion_regla_falsa import validar_entrada_regla_falsa
 
 

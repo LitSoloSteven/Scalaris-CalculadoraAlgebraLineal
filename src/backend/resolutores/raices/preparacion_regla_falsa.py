@@ -3,9 +3,9 @@ import ast
 from collections.abc import Callable
 from dataclasses import dataclass
 
-from .cobertura_continuidad import cubre_intervalo_cerrado
+from .continuidad.dominio.cobertura_continuidad import cubre_intervalo_cerrado
 from .contrato_biseccion import EvaluacionExtremo
-from .contrato_continuidad import InformeContinuidad
+from .continuidad.dominio.contrato_continuidad import InformeContinuidad
 from .contrato_regla_falsa import (
     DiagnosticoReglaFalsa,
     EntradaReglaFalsa,
@@ -13,10 +13,10 @@ from .contrato_regla_falsa import (
     ResultadoReglaFalsa,
 )
 from .diagnostico_biseccion import error_extremos, evaluar_extremos
-from .dominio_intervalo import comprobar_dominio_arbol
+from .continuidad.dominio.dominio_intervalo import comprobar_dominio_arbol
 from .funcion_real.evaluacion.evaluador_funcion import compilar
 from .funcion_real.evaluacion.gramatica_funcion import analizar_expresion
-from .informe_continuidad import crear_informe, observacion
+from .continuidad.analisis.informe_continuidad import crear_informe, observacion
 from .traza_regla_falsa import construir_error
 from .compartido.unidades_angulares import opciones_unidad
 from .validacion_regla_falsa import validar_entrada_regla_falsa

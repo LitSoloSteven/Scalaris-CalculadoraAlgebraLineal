@@ -2,7 +2,7 @@
 from dataclasses import asdict, dataclass
 from typing import Literal
 
-from .contrato_continuidad import InformeContinuidad
+from .continuidad.dominio.contrato_continuidad import InformeContinuidad
 from .contrato_exploracion import AVISO_EXPLORACION
 from .contrato_regla_falsa import EntradaReglaFalsa
 from .contrato_regla_falsa_ampliada import ConfiguracionReglaFalsa, ResultadoReglaFalsaAmpliado

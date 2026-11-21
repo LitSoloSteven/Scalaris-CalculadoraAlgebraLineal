@@ -12,6 +12,6 @@ def test_modulos_ampliados_cumplen_reglas(monkeypatch, comprobar):
     rutas = list((RAIZ / "src/backend/resolutores/raices").glob("*regla_falsa*.py"))
     rutas.extend((RAIZ / "src/frontend/controladores/regla_falsa").glob("*.py"))
     rutas.extend((RAIZ / "src/frontend/vistas/regla_falsa").glob("*.py"))
-    rutas.append(RAIZ / "src/backend/resolutores/raices/sugerencias_dominio.py")
+    rutas.append(RAIZ / "src/backend/resolutores/raices/continuidad/analisis/sugerencias_dominio.py")
     monkeypatch.setattr(reglas, "RUTAS_AUDITADAS", tuple(rutas))
     comprobar()

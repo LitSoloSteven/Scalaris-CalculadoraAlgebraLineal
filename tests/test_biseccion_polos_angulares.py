@@ -11,10 +11,10 @@ from src.backend.resolutores.raices.contrato_biseccion import EntradaBiseccion
 from src.backend.resolutores.raices.contrato_exploracion import CandidatoExploracion, EntradaExploracion
 from src.backend.resolutores.raices.contrato_resolucion_multiple import CandidatoResolucion, EntradaResolucionMultiple
 from src.backend.resolutores.raices.criterios_biseccion import CriterioParada
-from src.backend.resolutores.raices.dominio_intervalo import comprobar_dominio_intervalo
+from src.backend.resolutores.raices.continuidad.dominio.dominio_intervalo import comprobar_dominio_intervalo
 from src.backend.resolutores.raices.compartido.errores_numericos import ErrorSingularidad
 from src.backend.resolutores.raices.exploracion_intervalos import explorar_intervalos
-from src.backend.resolutores.raices.polos_trigonometricos import comprobar_polos_tangente
+from src.backend.resolutores.raices.continuidad.dominio.polos_trigonometricos import comprobar_polos_tangente
 from src.backend.resolutores.raices.resolucion_multiple import resolver_candidatos
 
 

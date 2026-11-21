@@ -2,8 +2,8 @@
 import math
 from fractions import Fraction
 
-from .compartido.errores_numericos import ErrorSingularidad
-from .compartido.unidades_angulares import validar_unidad_angular
+from ...compartido.errores_numericos import ErrorSingularidad
+from ...compartido.unidades_angulares import validar_unidad_angular
 
 _PERIODO_GRADOS = (Fraction(180), Fraction(180))
 _PERIODO_RADIANES = (Fraction(math.pi), Fraction(math.nextafter(math.pi, math.inf)))

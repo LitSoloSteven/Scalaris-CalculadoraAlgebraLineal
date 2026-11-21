@@ -9,7 +9,7 @@ from src.backend.resolutores.raices.biseccion import biseccion
 from src.backend.resolutores.raices.contrato_biseccion import EntradaBiseccion
 from src.backend.resolutores.raices.contrato_exploracion import EntradaExploracion
 from src.backend.resolutores.raices.contrato_resolucion_multiple import CandidatoResolucion, EntradaResolucionMultiple
-from src.backend.resolutores.raices.dominio_intervalo import comprobar_dominio_intervalo
+from src.backend.resolutores.raices.continuidad.dominio.dominio_intervalo import comprobar_dominio_intervalo
 from src.backend.resolutores.raices.exploracion_intervalos import explorar_intervalos
 from src.backend.resolutores.raices.funcion_real.evaluacion.normalizacion_funcion import normalizar_expresion
 from src.backend.resolutores.raices.resolucion_multiple import resolver_candidatos
