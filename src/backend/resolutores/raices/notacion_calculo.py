@@ -6,6 +6,7 @@ import re
 POSTFIJOS = {"°": "grados", "‰": "por_mil", "′": "derivada", "″": "derivada_segunda"}
 AGREGADOS = {"∑": "sumatoria", "∏": "productoria"}
 DERIVADAS = {POSTFIJOS["′"]: 1, POSTFIJOS["″"]: 2}
+GUARDIA_DERIVADA = "dominio_derivada"
 TRIGONOMETRICAS_DIRECTAS = ("sin", "cos", "tan")
 TRIGONOMETRICAS_INVERSAS = ("asin", "acos", "atan")
 ANGULARES_RADIANES = {

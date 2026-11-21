@@ -4,8 +4,9 @@ from functools import partial
 
 from .nodos_derivada import (
     constante as _constante, depende_de_x as _depende_de_x, llamada as _llamada, valor_constante as _valor_constante,
+    proteger_derivada,
 )
-from .notacion_calculo import ANGULARES_RADIANES, TRIGONOMETRICAS_INVERSAS
+from .notacion_calculo import ANGULARES_RADIANES, GUARDIA_DERIVADA, TRIGONOMETRICAS_INVERSAS
 
 _MENSAJE_POTENCIA_VARIABLE = (
     "La derivada de una potencia con base y exponente variables no está disponible "
@@ -19,6 +20,9 @@ class ErrorDerivadaNoDisponible(ValueError):
 
 def derivar_nodo(nodo: ast.AST) -> ast.AST:
     """Deriva un nodo validado respecto de x; puede lanzar ErrorDerivadaNoDisponible."""
+    if isinstance(nodo, ast.Call) and nodo.func.id == GUARDIA_DERIVADA:
+        original, derivada = nodo.args
+        return proteger_derivada(original, derivar_nodo(derivada))
     if not _depende_de_x(nodo):
         return _constante(0)
     if isinstance(nodo, ast.Name):
@@ -38,6 +42,8 @@ def _derivar_unario(nodo: ast.UnaryOp) -> ast.AST:
 
 
 def _derivar_binario(nodo: ast.BinOp) -> ast.AST:
+    if isinstance(nodo.op, ast.Pow):
+        return _derivar_potencia(nodo)
     izquierda = derivar_nodo(nodo.left)
     derecha = derivar_nodo(nodo.right)
     if isinstance(nodo.op, ast.Add):
@@ -49,8 +55,6 @@ def _derivar_binario(nodo: ast.BinOp) -> ast.AST:
     if isinstance(nodo.op, ast.Div):
         numerador = _resta(_producto(izquierda, nodo.right), _producto(nodo.left, derecha))
         return _cociente(numerador, _potencia(nodo.right, _constante(2)))
-    if isinstance(nodo.op, ast.Pow):
-        return _derivar_potencia(nodo)
     raise ErrorDerivadaNoDisponible("La expresión contiene un operador que no se puede derivar.")
 
 

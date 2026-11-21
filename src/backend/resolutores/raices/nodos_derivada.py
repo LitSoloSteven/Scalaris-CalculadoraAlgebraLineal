@@ -2,6 +2,7 @@
 import ast
 
 from .constantes_funcion import CONSTANTES_REALES
+from .notacion_calculo import GUARDIA_DERIVADA
 
 
 def depende_de_x(nodo: ast.AST) -> bool:
@@ -19,6 +20,13 @@ def constante(valor: int | float) -> ast.Constant:
 def llamada(nombre: str, argumento: ast.AST) -> ast.Call:
     """Construye una llamada a una función de un argumento."""
     return ast.Call(func=ast.Name(id=nombre, ctx=ast.Load()), args=[argumento], keywords=[])
+
+
+def proteger_derivada(original: ast.AST, derivada: ast.AST) -> ast.Call:
+    """Construye un nodo que comprueba el dominio original antes de devolver la derivada."""
+    return ast.Call(
+        func=ast.Name(id=GUARDIA_DERIVADA, ctx=ast.Load()), args=[original, derivada], keywords=[],
+    )
 
 
 def valor_constante(nodo: ast.AST) -> int | float | None:
