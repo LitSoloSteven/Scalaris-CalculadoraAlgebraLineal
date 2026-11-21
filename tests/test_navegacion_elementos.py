@@ -1,7 +1,7 @@
 """Elementos de navegación, escenas y composición de la barra contextual."""
 from unittest.mock import patch
 
-from src.frontend.componentes.iconos import icono_svg
+from src.frontend.componentes.aplicacion.base.iconos import icono_svg
 from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.barra_navegacion import crear_barra_navegacion
 from src.frontend.navegacion import (

@@ -4,7 +4,7 @@ from __future__ import annotations
 from typing import Any
 from nicegui import ui
 from src.frontend.componentes.glosa_entrada import EstiloEntradaGlosa, construir_entrada_glosa
-from src.frontend.componentes.iconos import icono_svg
+from src.frontend.componentes.aplicacion.base.iconos import icono_svg
 
 
 def construir_pie_lateral(instancia: Any) -> None:

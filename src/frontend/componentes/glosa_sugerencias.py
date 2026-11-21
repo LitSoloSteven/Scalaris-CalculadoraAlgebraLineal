@@ -93,7 +93,7 @@ def renderizar_boton_explicacion(indice_paso: int, al_pulsar: Callable, *, esta_
     """Renderiza el botón accesible 'Explicar paso' para un paso algebraico concreto."""
     from src.frontend.nucleo import banderas
     from src.frontend.presentacion.sugerencias import glosa_configurada
-    from src.frontend.componentes.iconos import icono_svg
+    from src.frontend.componentes.aplicacion.base.iconos import icono_svg
 
     if not banderas.panel_lateral_habilitado():
         return None

@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Callable
 from nicegui import ui
-from src.frontend.componentes.iconos import icono_svg
+from src.frontend.componentes.aplicacion.base.iconos import icono_svg
 
 
 def construir_cabecera_lateral(al_limpiar: Callable) -> None:

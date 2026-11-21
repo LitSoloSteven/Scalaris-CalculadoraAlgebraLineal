@@ -1,7 +1,7 @@
 """Control de silencio accesible sincronizado por el recurso cliente compartido."""
 from nicegui import ui
 
-from src.frontend.componentes.iconos import icono_svg
+from src.frontend.componentes.aplicacion.base.iconos import icono_svg
 
 
 def renderizar_control_sonido() -> ui.element:

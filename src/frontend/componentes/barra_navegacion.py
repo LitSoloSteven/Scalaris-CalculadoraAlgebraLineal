@@ -8,7 +8,7 @@ from nicegui import ui
 
 
 from src.frontend.nucleo import banderas
-from src.frontend.componentes.iconos import icono_svg
+from src.frontend.componentes.aplicacion.base.iconos import icono_svg
 from src.frontend.componentes.selector_tema import renderizar_boton_tema
 from src.frontend.navegacion import (
     RUTA_INICIO,

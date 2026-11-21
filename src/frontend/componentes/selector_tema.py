@@ -2,8 +2,8 @@
 from __future__ import annotations
 
 from nicegui import ui
-from src.frontend.componentes.iconos import icono_svg
-from src.frontend.componentes.menu_accesible import vincular_estado_menu
+from src.frontend.componentes.aplicacion.base.iconos import icono_svg
+from src.frontend.componentes.aplicacion.base.menu_accesible import vincular_estado_menu
 
 
 _TEMAS = (("Papel", "papel"), ("Marea", "marea"), ("Medianoche", "medianoche"))

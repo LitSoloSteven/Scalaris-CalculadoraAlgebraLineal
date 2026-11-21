@@ -29,7 +29,7 @@ def test_historial_glosa_agrega_y_limpia_mensajes():
 
 def test_icono_glosa_es_svg():
     """El catálogo devuelve el icono SVG de Glosa."""
-    from src.frontend.componentes.iconos import icono_svg
+    from src.frontend.componentes.aplicacion.base.iconos import icono_svg
     assert '<svg' in icono_svg('glosa')
 
 def test_contraste_glosa_declarado():
