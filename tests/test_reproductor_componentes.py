@@ -16,7 +16,7 @@ from src.frontend.componentes.reproductor_pasos import (
     html_tabla_aumentada,
 )
 from src.frontend.componentes.reproductor_pasos.interfaz import reproductor as modulo_reproductor
-from src.frontend.controladores.operaciones_inversas import (
+from src.frontend.controladores.algebra.operaciones_inversas import (
     ControladorOperacionesInversas,
 )
 from src.frontend.vistas.operaciones_inversas._adaptador_pasos import (

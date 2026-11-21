@@ -9,7 +9,7 @@ from src.backend.resolutores.sistemas_lineales.eliminacion.gauss import Resoluto
 from src.backend.resolutores.sistemas_lineales.eliminacion.gauss_jordan import ResolutorGaussJordan
 from src.backend.resolutores.operaciones_matrices.inversa.inversa import ResolutorInversa
 from src.frontend.controladores.sistemas_lineales import ControladorGauss, ControladorGaussJordan
-from src.frontend.controladores.operaciones_inversas import ControladorOperacionesInversas
+from src.frontend.controladores.algebra.operaciones_inversas import ControladorOperacionesInversas
 
 
 CLAVES_SISTEMA = {

@@ -42,7 +42,7 @@ class MixinPasosOperacionesInversas:
         """Crea la acción de Glosa y añade el foco exacto del controlador."""
         def explicar(paso):
             """Envía al asistente los metadatos del paso seleccionado."""
-            from src.frontend.controladores.operaciones_inversas import (
+            from src.frontend.controladores.algebra.operaciones_inversas import (
                 ControladorOperacionesInversas,
             )
 

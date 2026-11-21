@@ -5,7 +5,7 @@ import json
 from nicegui import run, ui
 from src.frontend.controladores.compartido.sesion.sesion_matricial import invalidar_resultado, actualizar_contexto, notificar_edicion, captura_sigue_vigente, calculo_sigue_vigente
 
-from src.frontend.controladores.operaciones_inversas import (
+from src.frontend.controladores.algebra.operaciones_inversas import (
     ControladorOperacionesInversas,
 )
 from src.frontend.controladores.algebra.operaciones_inversas.contexto.presentacion import preparar_opciones_inversa

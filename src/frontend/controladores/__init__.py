@@ -5,7 +5,7 @@ from src.frontend.controladores.geometria import (
     ControladorGeometria,
     selector_celda_error,
 )
-from src.frontend.controladores.operaciones_inversas import (
+from src.frontend.controladores.algebra.operaciones_inversas import (
     ControladorOperacionesInversas,
     construir_foco_paso,
 )
