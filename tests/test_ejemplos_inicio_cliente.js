@@ -21,7 +21,7 @@ const CLAVES = [
 ];
 
 function leerPlantillas() {
-    const base = ruta.join(__dirname, "..", "src", "frontend", "recursos", "plantillas");
+    const base = ruta.join(__dirname, "..", "src", "frontend", "recursos", "plantillas", "inicio");
     const bloques = new Map();
     for (const nombre of PLANTILLAS) {
         const texto = archivos.readFileSync(ruta.join(base, nombre), "utf8");

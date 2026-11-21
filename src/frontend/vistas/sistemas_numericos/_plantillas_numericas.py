@@ -6,12 +6,28 @@ from pathlib import Path
 from string import Template
 from typing import Any
 
-_RUTA_PLANTILLAS = Path(__file__).resolve().parents[2] / "recursos" / "plantillas"
+_RUTA_PLANTILLAS = Path(__file__).resolve().parents[2] / "recursos" / "plantillas" / "numericos"
+_RUTAS_POR_NOMBRE = {
+    "tabla": "tablas/numericos_tabla.html",
+    "lectura": "tablas/numericos_lectura.html",
+    "division": "tablas/numericos_division.html",
+    "expansion": "tablas/numericos_expansion.html",
+    "subtotal": "tablas/numericos_subtotal.html",
+    "construccion": "pasos/numericos_construccion.html",
+    "iteracion": "pasos/numericos_iteracion.html",
+    "operacion": "pasos/numericos_operacion.html",
+    "operando": "pasos/numericos_operando.html",
+    "definicion": "resultados/numericos_definicion.html",
+    "producto": "resultados/numericos_producto.html",
+    "resultado": "resultados/numericos_resultado.html",
+    "validacion": "resultados/numericos_validacion.html",
+}
 
 
 @lru_cache(maxsize=None)
 def _leer_plantilla(nombre: str) -> Template:
-    return Template((_RUTA_PLANTILLAS / f"numericos_{nombre}.html").read_text(encoding="utf-8"))
+    ruta = _RUTA_PLANTILLAS / _RUTAS_POR_NOMBRE.get(nombre, f"numericos_{nombre}.html")
+    return Template(ruta.read_text(encoding="utf-8"))
 
 
 def renderizar_plantilla(nombre: str, valores: dict[str, Any]) -> str:

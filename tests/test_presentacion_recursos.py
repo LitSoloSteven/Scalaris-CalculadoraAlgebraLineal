@@ -17,7 +17,7 @@ def test_presentacion_decorativa_no_intercepta_la_aplicacion():
     """La capa no recibe foco ni puntero y su orden se deriva de los tokens."""
     recursos = Path("src/frontend/recursos")
     css = (recursos / "css/presentacion.css").read_text(encoding="utf-8")
-    plantilla = (recursos / "plantillas/presentacion.html").read_text(encoding="utf-8")
+    plantilla = (recursos / "plantillas/cabecera/presentacion.html").read_text(encoding="utf-8")
     assert "pointer-events: none;" in css
     assert "z-index: calc(var(--z-modal) + 1)" in css
     assert 'id="aplicacion-presentacion-fondo" aria-hidden="true"' in plantilla

@@ -47,7 +47,7 @@ def test_crear_campo_funcion_conserva_aviso_teclado_sin_boton_visible():
 
 def test_plantilla_simbolos_mantiene_cabecera_fija_y_dialogo_nativo():
     """La plantilla usa dialog nativo con closedby, cabecera separada y cierre etiquetado."""
-    ruta_plantilla = RAIZ / "src/frontend/recursos/plantillas/simbolos.html"
+    ruta_plantilla = RAIZ / "src/frontend/recursos/plantillas/cabecera/simbolos.html"
     html = ruta_plantilla.read_text(encoding="utf-8")
 
     assert '<dialog class="simbolos-dialogo" aria-labelledby="titulo-simbolos" closedby="any">' in html

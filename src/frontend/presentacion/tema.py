@@ -73,18 +73,18 @@ def _etiquetas_recursos_cliente(nombre_catalogo: str) -> str:
 _PLANTILLAS = Path(__file__).parents[1] / "recursos" / "plantillas"
 _CONFIGURACION_SONIDOS = json.loads(
     (_PLANTILLAS.parent / "catalogo_sonidos.json").read_text(encoding="utf-8"))
-_CABECERA_HTML = Template((_PLANTILLAS / "cabecera.html").read_text(encoding="utf-8")).substitute(
+_CABECERA_HTML = Template((_PLANTILLAS / "cabecera/cabecera.html").read_text(encoding="utf-8")).substitute(
     configuracion_sonidos=json.dumps(_CONFIGURACION_SONIDOS).replace("<", "\\u003c"),
     configuracion_graficos=_CONFIGURACION_GRAFICOS_JSON.replace("<", "\\u003c"),
     configuracion_numerica=json.dumps({"caracteres": CARACTERES_ENTRADA_NUMERICA,
                                       "mensaje": MENSAJE_ENTRADA_NUMERICA}).replace("<", "\\u003c"),
-    plantilla_presentacion=(_PLANTILLAS / "presentacion.html").read_text(encoding="utf-8"),
-    plantilla_simbolos=(_PLANTILLAS / "simbolos.html").read_text(encoding="utf-8"),
+    plantilla_presentacion=(_PLANTILLAS / "cabecera/presentacion.html").read_text(encoding="utf-8"),
+    plantilla_simbolos=(_PLANTILLAS / "cabecera/simbolos.html").read_text(encoding="utf-8"),
     etiquetas_interacciones=_etiquetas_recursos_cliente("catalogo_interacciones.json"),
     etiquetas_captura=_etiquetas_recursos_cliente("catalogo_captura.json"),
 )
-_CABECERA_GLOSA_HTML = (_PLANTILLAS / "cabecera_glosa.html").read_text(encoding="utf-8")
-_CABECERA_REGLA_FALSA_HTML = (_PLANTILLAS / "cabecera_regla_falsa.html").read_text(encoding="utf-8")
+_CABECERA_GLOSA_HTML = (_PLANTILLAS / "cabecera/cabecera_glosa.html").read_text(encoding="utf-8")
+_CABECERA_REGLA_FALSA_HTML = (_PLANTILLAS / "cabecera/cabecera_regla_falsa.html").read_text(encoding="utf-8")
 
 
 def configurar_tema(vista: str = "") -> None:
