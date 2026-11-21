@@ -18,8 +18,8 @@ from src.frontend.controladores.raices.compartido.formato.rango_exploracion_raic
 from src.frontend.controladores.raices.compartido.exploracion.vista_previa_raices import preparar_vista_previa
 from src.frontend.presentacion.tema import PALETA_GRAFICOS
 from src.frontend.vistas.raices.biseccion.grafica.figura import crear_figura as figura_biseccion
-from src.frontend.vistas.regla_falsa.figura import crear_figura as figura_regla_falsa
-from src.frontend.vistas.regla_falsa.seleccion_grafico import SeleccionGrafico
+from src.frontend.vistas.raices.regla_falsa.grafica.figura import crear_figura as figura_regla_falsa
+from src.frontend.vistas.raices.regla_falsa.grafica.seleccion_grafico import SeleccionGrafico
 
 _MUESTRA_VACIA = {"x": [], "y": []}
 _MENSAJE_INICIAL = "Escribe una función para ver la gráfica. El muestreo no demuestra continuidad."

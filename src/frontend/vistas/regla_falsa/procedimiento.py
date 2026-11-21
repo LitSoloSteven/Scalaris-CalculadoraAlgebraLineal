@@ -9,7 +9,7 @@ from src.frontend.controladores.raices.regla_falsa.procedimiento.pasos import co
 from src.frontend.controladores.raices.regla_falsa.procedimiento.pasos_ampliados import construir_pasos_configurados
 from src.frontend.controladores.raices.regla_falsa.presentacion.tabla import COLUMNAS, valor_columna
 from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto
-from .figura import crear_figura
+from src.frontend.vistas.raices.regla_falsa.grafica.figura import crear_figura
 from .tabla_iteraciones import TablaReglaFalsa
 from .modo_examen import mostrar_accion_examen
 

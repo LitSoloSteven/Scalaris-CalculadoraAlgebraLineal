@@ -8,8 +8,8 @@ from src.frontend.vistas.raices.regla_falsa.captura.captura import construir_cap
 from .exploracion import PanelExploracion
 from .resolucion_multiple import PanelResolucionMultiple
 from src.frontend.vistas.raices.regla_falsa.base.modos_captura import MODO_BUSQUEDA, region_modo
-from .vista_previa import PanelVistaPrevia
-from .seleccion_grafico import SeleccionGrafico
+from src.frontend.vistas.raices.regla_falsa.grafica.vista_previa import PanelVistaPrevia
+from src.frontend.vistas.raices.regla_falsa.grafica.seleccion_grafico import SeleccionGrafico
 from .continuidad_intervalo import PanelContinuidad
 from src.frontend.vistas.raices.regla_falsa.captura.estados_entrada import EstadosEntrada
 
