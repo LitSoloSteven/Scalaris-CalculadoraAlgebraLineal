@@ -47,7 +47,7 @@ def test_estilos_no_heredan_marcas_activas_de_papel():
     recursos = Path("src/frontend/recursos")
     controles = (recursos / "css/componentes/componentes_controles.css").read_text(encoding="utf-8")
     tokens = (recursos / "css/base/tokens.css").read_text(encoding="utf-8")
-    vectores = (recursos / "css/vistas_vectores.css").read_text(encoding="utf-8")
+    vectores = (recursos / "css/algebra/espacios/vistas_vectores.css").read_text(encoding="utf-8")
     assert "--show-" not in tokens + controles
     assert '[data-tema-opcion][aria-checked="true"] .tema-marca-activa' in controles
     assert "visibility: hidden;" in controles

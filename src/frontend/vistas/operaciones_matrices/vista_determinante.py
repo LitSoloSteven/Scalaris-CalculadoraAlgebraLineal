@@ -46,7 +46,7 @@ class VistaDeterminante(ResultadosDeterminante, MixinSesionMatricial):
         ui.page_title(f'{textos.DETERMINANTES_TITULO} | Scalaris')
         self.panel_matriz.inyectar_recursos_cliente()
         self.calculadora.inyectar_recursos_cliente()
-        ui.add_head_html('<link rel="stylesheet" href="/assets/css/vistas_determinantes.css">')
+        ui.add_head_html('<link rel="stylesheet" href="/assets/css/algebra/matrices/vistas_determinantes.css">')
         with (ui.element('div').classes('determinantes-marco w-full'),
               ui.column().classes('vista-raiz sesion-vista sesion-paneles-compartidos determinantes-vista w-full max-w-7xl mx-auto p-6 gap-4')):
             self.contenedor_transferencia = ui.column().classes('w-full')

@@ -44,7 +44,7 @@ class MixinSesionMatricial:
 
     def _registrar_desmontaje(self) -> None:
         """Retira tareas y reproductor al borrar el cliente de la pagina."""
-        ui.add_head_html('<link rel="stylesheet" href="/assets/css/vistas_sesion_matricial.css">')
+        ui.add_head_html('<link rel="stylesheet" href="/assets/css/algebra/espacios/vistas_sesion_matricial.css">')
         ui.context.client.on_delete(self._desmontar_sesion)
 
     def _desmontar_sesion(self) -> None:

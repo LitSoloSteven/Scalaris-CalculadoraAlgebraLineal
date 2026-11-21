@@ -42,7 +42,7 @@ def test_recursos_de_raices_no_filtran_movimiento_a_otras_herramientas(vista):
 
 def comprobar_hoja_versionada(cabecera):
     """Contrasta la hoja realmente cargada con su contenido y el orden de cascada común."""
-    versiones = re.findall(r'/assets/css/vistas_metodos_cerrados.css\?v=([a-f0-9]+)', cabecera)
-    contenido = Path("src/frontend/recursos/css/vistas_metodos_cerrados.css").read_bytes()
+    versiones = re.findall(r'/assets/css/numericos/raices/vistas_metodos_cerrados.css\?v=([a-f0-9]+)', cabecera)
+    contenido = Path("src/frontend/recursos/css/numericos/raices/vistas_metodos_cerrados.css").read_bytes()
     assert versiones == [hashlib.sha256(contenido).hexdigest()]
     assert cabecera.index("vistas_inversa.css") < cabecera.index("vistas_metodos_cerrados.css")

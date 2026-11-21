@@ -87,7 +87,7 @@ def test_selector_reemplaza_scroll_y_respeta_movimiento():
     """Las reglas antiguas desaparecen y la adaptación pertenece al contenedor."""
     raiz = Path('src/frontend')
     controles = (raiz / 'vistas/operaciones_vectores/controles.py').read_text(encoding='utf-8')
-    estilos = (raiz / 'recursos/css/vistas_vectores.css').read_text(encoding='utf-8')
+    estilos = (raiz / 'recursos/css/algebra/espacios/vistas_vectores.css').read_text(encoding='utf-8')
     selector = (raiz / 'recursos/css/componentes/selector_opciones.css').read_text(encoding='utf-8')
     for anterior in ['pestanas-vectores', 'q-tabs__arrow', 'q-tabs--scrollable', 'q-tabs__content']:
         assert anterior not in controles + estilos + selector

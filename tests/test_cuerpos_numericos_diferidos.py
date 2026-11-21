@@ -48,7 +48,7 @@ def test_creacion_no_renderiza_tablas_y_cada_cuerpo_conserva_su_indice(monkeypat
 
 def test_tarjetas_didacticas_romanas_no_comparten_ocultacion_del_conversor():
     """La regla de ocultación inicial solo afecta a las tarjetas de conversión."""
-    css = Path("src/frontend/recursos/css/vistas_numericos.css").read_text(encoding="utf8")
+    css = Path("src/frontend/recursos/css/numericos/sistemas/vistas_numericos.css").read_text(encoding="utf8")
     assert ".numericos-tarjeta-conversion {" in css
     assert ".numericos-tarjeta {" not in css
     pasos, _ = construir_pasos_romanos(CalculadoraRomana.sumar("I", "I"), "suma")

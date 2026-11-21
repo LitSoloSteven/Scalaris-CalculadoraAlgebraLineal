@@ -8,7 +8,7 @@ from tests.comun import RAIZ
 
 def test_disposicion_estrecha_conserva_numeros_y_dialogos():
     """El CSS permite encoger a 320 px y contiene numeros y dialogos de confirmacion."""
-    css = (RAIZ / 'src/frontend/recursos/css/vistas_sesion_matricial.css').read_text(encoding='utf-8')
+    css = (RAIZ / 'src/frontend/recursos/css/algebra/espacios/vistas_sesion_matricial.css').read_text(encoding='utf-8')
     assert 'width: min(100%, 24rem)' in css
     assert 'min-width: 0' in css
     assert 'overflow-wrap: anywhere;' in css

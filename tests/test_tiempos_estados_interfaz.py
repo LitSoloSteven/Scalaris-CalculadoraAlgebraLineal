@@ -24,7 +24,7 @@ def test_pulsacion_y_regreso_comparten_tokens():
 def test_selector_geometria_y_regreso_inicio():
     """El selector, el deslizador y los símbolos responden con los tokens previstos."""
     selector = leer_estilos("componentes/selector_opciones.css")
-    geometria = leer_estilos("vistas_geometria.css")
+    geometria = leer_estilos("algebra/espacios/vistas_geometria.css")
     inicio = leer_estilos("inicio/vistas_inicio_directorio.css")
     assert "var(--dur-state)" in bloque_css(selector, ".selector-opciones-cambiando .selector-opciones-indicador")
     assert "var(--dur-press)" in bloque_css(selector, ".selector-opciones-opcion:active")

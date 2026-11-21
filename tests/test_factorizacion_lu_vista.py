@@ -14,7 +14,7 @@ def test_navegacion_y_recursos():
     claves = [elemento.clave for elemento in elementos_navegacion("algebra")]
     assert claves[claves.index("determinantes") + 1] == "factorizacion_lu"
     assert ruta_de("factorizacion_lu") == "/algebra-lineal/factorizacion-lu"
-    cabecera = '<link rel="stylesheet" href="/assets/css/vistas_inversa.css"><script src="/assets/js/inicio.js"></script>'
+    cabecera = '<link rel="stylesheet" href="/assets/css/algebra/matrices/vistas_inversa.css"><script src="/assets/js/inicio.js"></script>'
     assert 'vistas_inversa.css' in seleccionar_recursos(cabecera, 'factorizacion_lu')
     assert 'inicio.js' not in seleccionar_recursos(cabecera, 'factorizacion_lu')
 

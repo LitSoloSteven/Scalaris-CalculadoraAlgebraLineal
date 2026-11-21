@@ -141,7 +141,7 @@ def test_vistas_sanean_resultados_y_contienen_contenido_ancho():
     assert "movimiento-sacudida" not in mixin_numerico
 
     resultados_lineales = Path("src/frontend/vistas/sistemas_lineales/mixin_resultados.py").read_text(encoding="utf-8")
-    css_sesion = Path('src/frontend/recursos/css/vistas_sesion_matricial.css').read_text(encoding='utf-8')
+    css_sesion = Path('src/frontend/recursos/css/algebra/espacios/vistas_sesion_matricial.css').read_text(encoding='utf-8')
     assert "overflow-wrap: anywhere;" in bloque_css(css_sesion, '.sesion-numero') and "sesion-numero" in resultados_lineales
     assert "min-w-0 max-w-full" in resultados_lineales
 
