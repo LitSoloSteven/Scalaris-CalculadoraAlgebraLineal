@@ -5,7 +5,7 @@ from src.frontend.controladores.algebra.operaciones_matrices.base.codificador im
 from src.frontend.controladores.algebra.operaciones_matrices.determinante.controlador_determinante import (
     ControladorDeterminante,
 )
-from src.frontend.controladores.operaciones_matrices.controlador_factorizacion_lu import ControladorFactorizacionLU
+from src.frontend.controladores.algebra.operaciones_matrices.factorizacion_lu.controlador_factorizacion_lu import ControladorFactorizacionLU
 from src.frontend.controladores.operaciones_matrices.controlador_leontief import (
     ControladorLeontief,
 )

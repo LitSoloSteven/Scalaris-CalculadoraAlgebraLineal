@@ -9,8 +9,8 @@ from src.frontend.componentes.captura.ecuaciones.limpieza_captura import crear_b
 from src.frontend.componentes.glosa.panel.panel_ia import PanelIA
 from src.frontend.componentes.captura.paneles.panel_matriz_rectangular import PanelMatrizRectangular
 from src.frontend.componentes.resultados.acciones.transferencia import recibir_matriz
-from src.frontend.controladores.operaciones_matrices.vista_previa_factorizacion_lu import preparar_presentacion_factorizacion_lu
-from src.frontend.controladores.operaciones_matrices.contexto_factorizacion_lu import obtener_contexto_ia, obtener_senales_ia
+from src.frontend.controladores.algebra.operaciones_matrices.factorizacion_lu.vista_previa_factorizacion_lu import preparar_presentacion_factorizacion_lu
+from src.frontend.controladores.algebra.operaciones_matrices.factorizacion_lu.contexto_factorizacion_lu import obtener_contexto_ia, obtener_senales_ia
 from src.frontend.controladores.compartido.sesion.sesion_matricial import invalidar_resultado, actualizar_contexto
 from src.frontend.navegacion import ruta_de
 from src.frontend.vistas.compartido.mixin_sesion_matricial import MixinSesionMatricial
