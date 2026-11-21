@@ -10,7 +10,7 @@ from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_matrices.leontief.leontief import ResolutorModeloLeontief
 from src.backend.resolutores.operaciones_matrices.transformaciones.transformaciones import ResolutorTransformacionesLineales
 from src.frontend.controladores.algebra.operaciones_matrices.leontief.controlador_leontief import ControladorLeontief
-from src.frontend.controladores.operaciones_matrices.controlador_transformaciones import ControladorTransformaciones
+from src.frontend.controladores.algebra.operaciones_matrices.transformaciones.controlador_transformaciones import ControladorTransformaciones
 from tests.comun_entradas import copiar_entrada_prueba
 
 

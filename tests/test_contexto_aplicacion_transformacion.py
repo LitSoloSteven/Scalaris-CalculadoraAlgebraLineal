@@ -9,7 +9,7 @@ from src.ai.huellas import calcular_huella
 from src.frontend.controladores.algebra.operaciones_matrices.modelos.contexto_modelos import (
     capturar_modelo, obtener_contexto_modelo, obtener_senales_modelo,
 )
-from src.frontend.controladores.operaciones_matrices.controlador_aplicacion_transformacion import ControladorAplicacionTransformacion
+from src.frontend.controladores.algebra.operaciones_matrices.transformaciones.controlador_aplicacion_transformacion import ControladorAplicacionTransformacion
 
 
 def _vista():

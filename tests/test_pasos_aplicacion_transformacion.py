@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from src.frontend.controladores.operaciones_matrices.controlador_aplicacion_transformacion import ControladorAplicacionTransformacion
+from src.frontend.controladores.algebra.operaciones_matrices.transformaciones.controlador_aplicacion_transformacion import ControladorAplicacionTransformacion
 from src.frontend.vistas.operaciones_matrices.pasos_aplicacion_transformacion import adaptar_pasos_aplicacion
 
 

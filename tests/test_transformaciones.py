@@ -5,7 +5,7 @@ import pytest
 
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_matrices.transformaciones.transformaciones import ResolutorTransformacionesLineales
-from src.frontend.controladores.operaciones_matrices.controlador_transformaciones import (
+from src.frontend.controladores.algebra.operaciones_matrices.transformaciones.controlador_transformaciones import (
     ControladorTransformaciones,
 )
 

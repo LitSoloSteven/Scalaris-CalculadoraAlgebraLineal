@@ -1,7 +1,7 @@
 """Procesamiento público de una transformación identidad mediante el contrato canónico."""
 import json
 
-from src.frontend.controladores.operaciones_matrices.controlador_transformaciones import ControladorTransformaciones
+from src.frontend.controladores.algebra.operaciones_matrices.transformaciones.controlador_transformaciones import ControladorTransformaciones
 
 
 def test_procesar_identidad_con_entrada_serializada():

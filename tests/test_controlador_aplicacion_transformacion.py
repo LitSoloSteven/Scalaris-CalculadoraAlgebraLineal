@@ -6,10 +6,10 @@ import pytest
 
 from src.backend.constantes import DIMENSION_MAXIMA_MODELOS, LONGITUD_MAXIMA_CADENA_NUMERO
 from src.backend.resolutores.operaciones_matrices.transformaciones.transformaciones import ResolutorTransformacionesLineales
-from src.frontend.controladores.operaciones_matrices.controlador_aplicacion_transformacion import (
+from src.frontend.controladores.algebra.operaciones_matrices.transformaciones.controlador_aplicacion_transformacion import (
     ControladorAplicacionTransformacion,
 )
-from src.frontend.controladores.operaciones_matrices.controlador_transformaciones import ControladorTransformaciones
+from src.frontend.controladores.algebra.operaciones_matrices.transformaciones.controlador_transformaciones import ControladorTransformaciones
 
 
 def _procesar(matriz: object, vector: object) -> dict:
