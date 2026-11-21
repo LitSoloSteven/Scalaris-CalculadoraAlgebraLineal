@@ -6,7 +6,7 @@ from heapq import heapify, heappop, heappush
 from math import fsum
 from sys import float_info
 
-from .compartido.errores_numericos import ErrorCapacidadNumerica
+from ...compartido.errores_numericos import ErrorCapacidadNumerica
 
 # Nodos positivos y central con sus pesos de Kronrod y de Gauss, según QUADPACK DQK15.
 _REGLA = (

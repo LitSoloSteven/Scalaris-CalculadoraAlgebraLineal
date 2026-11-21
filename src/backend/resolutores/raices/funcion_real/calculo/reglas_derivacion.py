@@ -2,12 +2,12 @@
 import ast
 from functools import partial
 
-from .funcion_real.sintaxis.nodos_derivada import (
+from ..sintaxis.nodos_derivada import (
     constante as _constante, depende_de_x as _depende_de_x, llamada as _llamada, valor_constante as _valor_constante,
     proteger_derivada,
 )
-from .funcion_real.sintaxis.nodos_integral import NOMBRE_INTEGRAL, construir_integral, sustituir_variable
-from .funcion_real.sintaxis.notacion_calculo import ANGULARES_RADIANES, GUARDIA_DERIVADA, TRIGONOMETRICAS_INVERSAS
+from ..sintaxis.nodos_integral import NOMBRE_INTEGRAL, construir_integral, sustituir_variable
+from ..sintaxis.notacion_calculo import ANGULARES_RADIANES, GUARDIA_DERIVADA, TRIGONOMETRICAS_INVERSAS
 
 _MENSAJE_POTENCIA_VARIABLE = (
     "La derivada de una potencia con base y exponente variables no está disponible "

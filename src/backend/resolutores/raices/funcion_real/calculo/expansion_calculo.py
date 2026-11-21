@@ -3,10 +3,10 @@
 import ast
 from itertools import islice
 
-from .compartido.errores_numericos import ErrorCapacidadNumerica
-from .funcion_real.sintaxis.nodos_derivada import constante, llamada, proteger_derivada
-from .funcion_real.sintaxis.nodos_integral import NOMBRE_INTEGRAL, construir_integral
-from .funcion_real.sintaxis.notacion_calculo import (
+from ...compartido.errores_numericos import ErrorCapacidadNumerica
+from ..sintaxis.nodos_derivada import constante, llamada, proteger_derivada
+from ..sintaxis.nodos_integral import NOMBRE_INTEGRAL, construir_integral
+from ..sintaxis.notacion_calculo import (
     AGREGADOS, ANGULARES_RADIANES, DERIVADAS, GRADOS_POR_MEDIA_VUELTA, GUARDIA_DERIVADA, POSTFIJOS,
     TRIGONOMETRICAS_DIRECTAS, TRIGONOMETRICAS_INVERSAS, UNIDADES_POR_MIL, entero_literal,
 )

@@ -5,7 +5,7 @@ from math import fsum, isfinite, sqrt
 
 from src.backend.excepciones import ErrorDominio
 from .cuadratura_kronrod import integrar_tramo
-from .compartido.errores_numericos import ErrorCapacidadNumerica
+from ...compartido.errores_numericos import ErrorCapacidadNumerica
 
 _MAXIMO_MUESTRAS_POR_EVALUACION = 18000
 

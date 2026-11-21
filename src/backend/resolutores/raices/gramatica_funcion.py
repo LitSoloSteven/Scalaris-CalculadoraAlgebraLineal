@@ -5,7 +5,7 @@ from decimal import Decimal
 
 from .funcion_real.sintaxis.constantes_funcion import CONSTANTES_REALES as CONSTANTES_REALES
 from .compartido.errores_numericos import ErrorCapacidadNumerica
-from .expansion_calculo import desarrollar_calculo
+from .funcion_real.calculo.expansion_calculo import desarrollar_calculo
 from .funcion_real.sintaxis.nodos_integral import NOMBRE_INTEGRAL, signo_infinito, variable_ligable
 from .normalizacion_funcion import normalizar_expresion
 from .funcion_real.sintaxis.notacion_calculo import (
