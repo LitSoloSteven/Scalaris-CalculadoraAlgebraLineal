@@ -5,8 +5,8 @@ from fractions import Fraction
 from src.backend.excepciones import ErrorDominio
 from .compartido.errores_numericos import ErrorSingularidad
 from .gramatica_funcion import analizar_expresion, CONSTANTES_REALES
-from .nodos_integral import es_integral, nodos_exteriores
-from .notacion_calculo import ANGULARES_RADIANES, GRADOS_POR_MEDIA_VUELTA, NOMBRES_ANGULARES
+from .funcion_real.sintaxis.nodos_integral import es_integral, nodos_exteriores
+from .funcion_real.sintaxis.notacion_calculo import ANGULARES_RADIANES, GRADOS_POR_MEDIA_VUELTA, NOMBRES_ANGULARES
 from .polos_trigonometricos import comprobar_polos_tangente
 from .compartido.unidades_angulares import validar_unidad_angular
 

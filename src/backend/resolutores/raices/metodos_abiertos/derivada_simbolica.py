@@ -2,8 +2,8 @@
 import ast
 
 from ..gramatica_funcion import analizar_expresion
-from ..nodos_derivada import proteger_derivada
-from ..nodos_integral import es_integral
+from ..funcion_real.sintaxis.nodos_derivada import proteger_derivada
+from ..funcion_real.sintaxis.nodos_integral import es_integral
 from ..normalizacion_funcion import normalizar_expresion
 from ..reglas_derivacion import ErrorDerivadaNoDisponible as ErrorDerivadaNoDisponible, derivar_nodo
 

@@ -9,7 +9,7 @@ from .contrato_biseccion import EntradaBiseccion, ResultadoBiseccion, Sugerencia
 from .dominio_intervalo import argumento_afin, comprobar_dominio_intervalo
 from .evaluador_funcion import compilar, evaluar
 from .gramatica_funcion import analizar_expresion
-from .nodos_integral import nodos_exteriores
+from .funcion_real.sintaxis.nodos_integral import nodos_exteriores
 from .compartido.unidades_angulares import opciones_unidad
 
 
