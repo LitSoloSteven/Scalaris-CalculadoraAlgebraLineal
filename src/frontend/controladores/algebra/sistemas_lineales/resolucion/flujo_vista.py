@@ -1,5 +1,5 @@
 """Captura estable y delegacion de la resolucion de sistemas para la vista."""
-from src.frontend.controladores.sistemas_lineales import ControladorGauss, ControladorGaussJordan
+from src.frontend.controladores.algebra.sistemas_lineales import ControladorGauss, ControladorGaussJordan
 from src.frontend.controladores.algebra.sistemas_lineales.nucleo.estado_captura import modo_homogeneo_activo
 
 

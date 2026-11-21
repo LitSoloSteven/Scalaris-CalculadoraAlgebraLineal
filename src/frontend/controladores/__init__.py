@@ -20,7 +20,7 @@ from src.frontend.controladores.operaciones_matrices import (
 from src.frontend.controladores.algebra.operaciones_vectores import (
     ControladorOperacionesVectores,
 )
-from src.frontend.controladores.sistemas_lineales import (
+from src.frontend.controladores.algebra.sistemas_lineales import (
     ControladorGauss,
     ControladorGaussJordan,
     construir_metadatos_pasos,

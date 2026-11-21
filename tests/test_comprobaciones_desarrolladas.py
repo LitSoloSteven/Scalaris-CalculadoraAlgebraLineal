@@ -14,7 +14,7 @@ from src.backend.resolutores.operaciones_matrices.leontief.leontief import Resol
 from src.backend.resolutores.operaciones_vectores.operaciones.combinacion_lineal import ResolutorCombinacionLineal
 from src.backend.resolutores.sistemas_lineales.solucion.comprobacion_sistemas import comprobar_familia
 from src.backend.resolutores.sistemas_lineales.eliminacion.gauss import ResolutorGauss
-from src.frontend.controladores.sistemas_lineales import ControladorGauss, ControladorGaussJordan
+from src.frontend.controladores.algebra.sistemas_lineales import ControladorGauss, ControladorGaussJordan
 
 
 def test_producto_fallido_no_afirma_igualdad_y_mantiene_desarrollo():

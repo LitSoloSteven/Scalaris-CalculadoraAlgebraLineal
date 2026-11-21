@@ -8,7 +8,7 @@ from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.sistemas_lineales.eliminacion.homogeneos import resolver_homogeneo
 from src.backend.resolutores.operaciones_vectores.independencia.independencia import analizar_independencia
 from src.frontend.controladores.algebra.operaciones_vectores.controlador_independencia import procesar_independencia
-from src.frontend.controladores.sistemas_lineales import ControladorGauss, ControladorGaussJordan
+from src.frontend.controladores.algebra.sistemas_lineales import ControladorGauss, ControladorGaussJordan
 
 
 @pytest.mark.parametrize("datos,rango", [
