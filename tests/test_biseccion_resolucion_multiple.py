@@ -168,7 +168,8 @@ def test_reserva_acota_evaluaciones_efectivas(monkeypatch, presupuesto):
             llamadas.append(valor)
             return evaluador(valor)
         return funcion
-    for nombre in ("resolucion_multiple", "biseccion", "sugerencias_dominio"):
+    for nombre in ("biseccion.lote.resolucion_multiple", "biseccion.motor.biseccion",
+                   "continuidad.analisis.sugerencias_dominio"):
         modulo = import_module(f"src.backend.resolutores.raices.{nombre}")
         monkeypatch.setattr(modulo, "compilar", compilar_contando)
     lote = resolver_candidatos(entrada)
