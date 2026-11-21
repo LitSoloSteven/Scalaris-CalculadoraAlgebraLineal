@@ -1,7 +1,7 @@
 """Fases del determinante según eventos y coordenadas de la traza original."""
 from src.backend.utilidades.formato.formateadores import formatear_fraccion_texto
 from src.frontend.nucleo.textos import textos
-from src.frontend.controladores.agrupacion_trazas import agrupar_traza
+from src.frontend.controladores.compartido.pasos.agrupacion_trazas import agrupar_traza
 
 
 def agrupar_determinante(resultado: dict) -> tuple[list[dict], tuple[int, ...]]:

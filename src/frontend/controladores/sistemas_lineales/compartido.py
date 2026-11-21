@@ -1,7 +1,7 @@
 """Metadatos pedagógicos de pasos de sistemas lineales."""
 from typing import Any
-from src.frontend.controladores.utilidades import extraer_datos_matriz
-from src.frontend.controladores.clasificador_pasos import clasificar_paso
+from src.frontend.controladores.compartido.pasos.utilidades import extraer_datos_matriz
+from src.frontend.controladores.compartido.pasos.clasificador_pasos import clasificar_paso
 
 def _determinar_filas_objetivo(
     tipo_paso: str, r1: int | None, r2: int | None

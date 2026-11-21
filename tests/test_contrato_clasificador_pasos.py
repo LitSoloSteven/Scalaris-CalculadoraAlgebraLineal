@@ -5,7 +5,7 @@ from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_matrices.inversa.inversa import ResolutorInversa
 from src.backend.resolutores.sistemas_lineales.eliminacion.gauss import ResolutorGauss
 from src.backend.resolutores.sistemas_lineales.eliminacion.gauss_jordan import ResolutorGaussJordan
-from src.frontend.controladores.clasificador_pasos import clasificar_paso
+from src.frontend.controladores.compartido.pasos.clasificador_pasos import clasificar_paso
 
 
 def test_contrato_gauss_tres_por_tres_con_intercambio():

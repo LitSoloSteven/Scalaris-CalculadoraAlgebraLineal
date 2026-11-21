@@ -1,7 +1,7 @@
 """Agrupación y clasificación didáctica de pasos de eliminación por filas."""
 
-from src.frontend.controladores.clasificador_pasos import clasificar_paso
-from src.frontend.controladores.manejadores_pasos import (
+from src.frontend.controladores.compartido.pasos.clasificador_pasos import clasificar_paso
+from src.frontend.controladores.compartido.pasos.manejadores_pasos import (
     ContextoPasos,
     construir_titulo_columna,
     manejar_eliminacion,

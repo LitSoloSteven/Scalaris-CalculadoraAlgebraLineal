@@ -3,7 +3,7 @@ import json
 from collections.abc import Callable
 
 from src.backend.geometria.base.errores import respuesta_error
-from src.frontend.controladores.utilidades import parsear_carga_json
+from src.frontend.controladores.compartido.pasos.utilidades import parsear_carga_json
 
 
 def procesar_carga(carga_json: str, campos: set[str], preparar: Callable[[dict], dict]) -> dict:

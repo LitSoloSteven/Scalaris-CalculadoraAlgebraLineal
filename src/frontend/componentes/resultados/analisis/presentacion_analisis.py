@@ -7,7 +7,7 @@ from src.frontend.componentes.glosa.interaccion.glosa_foco import crear_accion_e
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos
 from src.frontend.componentes.reproductor_pasos.formato.cuerpos import CuerpoLatex, renderizar_latex
 from src.frontend.componentes.reproductor_pasos.nucleo.modelo import PasoReproductor, GrupoReproductor
-from src.frontend.controladores.agrupacion_trazas import agrupar_traza
+from src.frontend.controladores.compartido.pasos.agrupacion_trazas import agrupar_traza
 
 
 def adaptar_analisis(resultado: dict, inicio: tuple[int, int] = (0, 0)) -> tuple[tuple, tuple]:

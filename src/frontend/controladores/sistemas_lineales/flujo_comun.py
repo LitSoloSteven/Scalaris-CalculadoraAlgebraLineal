@@ -8,12 +8,12 @@ from src.backend.modelos.matriz import Matriz
 from src.frontend.controladores.operaciones_matrices.codificador import CodificadorMatriz
 from src.backend.resolutores.sistemas_lineales.eliminacion.homogeneos import analizar_resultado_homogeneo
 from src.backend.resolutores.sistemas_lineales.solucion.comprobacion_sistemas import comprobar_familia
-from src.frontend.controladores.agrupador_pasos import agrupar_pasos_eliminacion
+from src.frontend.controladores.compartido.pasos.agrupador_pasos import agrupar_pasos_eliminacion
 from src.backend.resolutores.sistemas_lineales.captura.captura import validar_y_construir_aumentada
 from src.frontend.controladores.sistemas_lineales.compartido import (
     construir_metadatos_pasos,
 )
-from src.frontend.controladores.utilidades import (
+from src.frontend.controladores.compartido.pasos.utilidades import (
     construir_vista_pasos,
     parsear_carga_json,
 )

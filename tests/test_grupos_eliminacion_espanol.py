@@ -1,6 +1,6 @@
 """Caracterización del estado compartido de agrupación tras normalizar pivotes."""
 from src.backend.modelos.matriz import Matriz
-from src.frontend.controladores.agrupador_pasos import agrupar_pasos_eliminacion
+from src.frontend.controladores.compartido.pasos.agrupador_pasos import agrupar_pasos_eliminacion
 
 
 def test_normalizacion_cierra_columna_antes_de_operacion_no_clasificada():

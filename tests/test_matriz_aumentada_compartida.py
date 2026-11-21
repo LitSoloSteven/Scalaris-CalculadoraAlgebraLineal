@@ -3,7 +3,7 @@ from src.backend.resolutores.sistemas_lineales.captura.captura import validar_y_
 from fractions import Fraction
 import json
 
-from src.frontend.controladores.utilidades import parsear_carga_json
+from src.frontend.controladores.compartido.pasos.utilidades import parsear_carga_json
 
 
 class TestParsearCarga:

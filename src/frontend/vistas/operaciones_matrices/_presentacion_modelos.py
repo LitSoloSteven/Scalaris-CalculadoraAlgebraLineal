@@ -6,8 +6,8 @@ from src.frontend.nucleo.textos import textos
 from src.frontend.componentes.resultados.analisis.presentacion_analisis import adaptar_analisis, montar_pasos_analisis
 from src.frontend.componentes.reproductor_pasos.nucleo.modelo import GrupoReproductor
 from src.frontend.componentes.reproductor_pasos.formato.textos import limpiar_latex_plano
-from src.frontend.controladores.agrupacion_trazas import agrupar_traza
-from src.frontend.controladores.clasificador_pasos import clasificar_paso
+from src.frontend.controladores.compartido.pasos.agrupacion_trazas import agrupar_traza
+from src.frontend.controladores.compartido.pasos.clasificador_pasos import clasificar_paso
 
 
 def adaptar_pasos_modelo(resultado: dict, herramienta: str) -> tuple:

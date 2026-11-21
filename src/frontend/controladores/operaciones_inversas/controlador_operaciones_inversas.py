@@ -9,7 +9,7 @@ from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_matrices.compartido.formateadores import matriz_a_latex
 from src.backend.resolutores.operaciones_matrices.inversa.inversa import ResolutorInversa
 from src.backend.utilidades.formato.formateadores import formatear_fraccion_texto
-from src.frontend.controladores.agrupador_pasos import agrupar_pasos_eliminacion
+from src.frontend.controladores.compartido.pasos.agrupador_pasos import agrupar_pasos_eliminacion
 from src.frontend.controladores.operaciones_inversas.foco_paso import (
     construir_foco_paso,
 )
@@ -18,7 +18,7 @@ from src.backend.resolutores.operaciones_matrices.inversa.captura_inversa import
     extraer_comprobaciones_inversa,
     validar_y_parsear_matriz_cuadrada,
 )
-from src.frontend.controladores.utilidades import parsear_carga_json
+from src.frontend.controladores.compartido.pasos.utilidades import parsear_carga_json
 
 registro = logging.getLogger(__name__)
 

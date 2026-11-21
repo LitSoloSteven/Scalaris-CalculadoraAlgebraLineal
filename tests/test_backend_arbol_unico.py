@@ -13,7 +13,7 @@ from src.backend.resolutores.operaciones_matrices.inversa.inversa import Resolut
 from src.backend.resolutores.sistemas_lineales.eliminacion.gauss import ResolutorGauss
 from src.backend.resolutores.sistemas_numericos.calculadora_romana import ErrorNumeroRomano
 from src.frontend.controladores.operaciones_matrices.codificador import CodificadorMatriz
-from src.frontend.controladores.utilidades import serializar_matriz
+from src.frontend.controladores.compartido.pasos.utilidades import serializar_matriz
 from tests.comun import RAIZ
 
 NOMBRES_RETIRADOS = {"solvers", "models", "utils", "constants", "exceptions"}

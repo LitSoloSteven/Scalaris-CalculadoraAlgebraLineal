@@ -15,7 +15,7 @@ from src.backend.resolutores.operaciones_matrices.compartido.estado_resultado im
 from src.frontend.controladores.operaciones_matrices.codificador import (
     CodificadorMatriz,
 )
-from src.frontend.controladores.utilidades import parsear_carga_json
+from src.frontend.controladores.compartido.pasos.utilidades import parsear_carga_json
 
 registro = logging.getLogger(__name__)
 

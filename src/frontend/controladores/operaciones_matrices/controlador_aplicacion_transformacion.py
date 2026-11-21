@@ -7,7 +7,7 @@ from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_matrices.captura_modelos import parsear_matriz_modelo
 from src.backend.resolutores.operaciones_matrices.compartido.comprobacion_productos import comprobar_producto
 from src.backend.resolutores.operaciones_matrices.transformaciones.transformaciones import ResolutorTransformacionesLineales
-from src.frontend.controladores.utilidades import parsear_carga_json, serializar_matriz
+from src.frontend.controladores.compartido.pasos.utilidades import parsear_carga_json, serializar_matriz
 
 
 class ControladorAplicacionTransformacion:

@@ -1,8 +1,8 @@
 """Cálculo de foco visual (filas antes/después y columnas) para un paso del reproductor."""
 
-from src.frontend.controladores.utilidades import extraer_datos_matriz
+from src.frontend.controladores.compartido.pasos.utilidades import extraer_datos_matriz
 from src.ai.contexto.contexto import extraer_filas
-from src.frontend.controladores.clasificador_pasos import clasificar_paso
+from src.frontend.controladores.compartido.pasos.clasificador_pasos import clasificar_paso
 
 
 def _determinar_columna_central(pasos: list[dict], indice: int, analisis_paso: dict) -> int:
