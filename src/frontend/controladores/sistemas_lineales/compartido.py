@@ -26,7 +26,7 @@ def _extraer_detalles_paso(
     filas_actuales: list,
 ) -> tuple[list[int] | None, dict, dict, list | None, int]:
     """Calcula pivote y extractos de filas antes y después según la operación."""
-    from src.ai.contexto import extraer_filas
+    from src.ai.contexto.contexto import extraer_filas
 
     r1, r2 = analisis_paso.get("fila_origen"), analisis_paso.get("fila_destino")
     if tipo_paso == "pivote" and r1 is not None and analisis_paso.get("columna") is not None:

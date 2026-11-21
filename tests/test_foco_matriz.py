@@ -2,7 +2,7 @@
 from fractions import Fraction
 import pytest
 
-from src.ai.contexto import ContextoIA
+from src.ai.contexto.contexto import ContextoIA
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_matrices.evaluador import (
     EvaluadorExpresionesMatriciales,

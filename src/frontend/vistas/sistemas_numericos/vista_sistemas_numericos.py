@@ -121,7 +121,7 @@ class VistaSistemasNumericos(MixinLimpiezaBases, MixinInteraccionSistemasNumeric
 
     def obtener_contexto_ia(self):
         """Devuelve el contexto de entrada y el resultado vigente para el asistente."""
-        from src.ai.contexto import ContextoIA, EstadoContexto, sanear_cadena_usuario
+        from src.ai.contexto.contexto import ContextoIA, EstadoContexto, sanear_cadena_usuario
         from src.ai.huellas import esta_desactualizado
         valor = getattr(getattr(self, 'entrada_valor', None), 'value', None)
         if not valor:

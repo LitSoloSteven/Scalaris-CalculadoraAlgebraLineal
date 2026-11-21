@@ -1,5 +1,5 @@
 """Extractos acotados de las matrices y menores del paso seleccionado."""
-from src.ai.contexto import describir_matriz, extraer_filas
+from src.ai.contexto.contexto import describir_matriz, extraer_filas
 from .fases_determinante import columna_determinante
 
 

@@ -5,7 +5,7 @@ import json
 import pytest
 from nicegui import ui
 
-from src.ai.contexto import serializar_contexto
+from src.ai.contexto.contexto import serializar_contexto
 from src.frontend.componentes.copia_resultado import texto_resultado_copiable
 from src.frontend.controladores.biseccion.presentacion_criterio import titulo_estado
 from src.frontend.controladores.biseccion.resolucion_multiple import resolver_lote

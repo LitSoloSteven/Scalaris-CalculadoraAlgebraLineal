@@ -4,7 +4,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from src.ai.contexto import serializar_contexto
+from src.ai.contexto.contexto import serializar_contexto
 from src.ai.huellas import calcular_huella
 from src.frontend.controladores.operaciones_matrices.contexto_modelos import (
     capturar_modelo, obtener_contexto_modelo, obtener_senales_modelo,

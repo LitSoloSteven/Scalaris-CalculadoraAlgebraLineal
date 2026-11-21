@@ -1,5 +1,5 @@
 """Comprobaciones comunes del presupuesto y la señal de truncado del contexto."""
-from src.ai.contexto import serializar_contexto
+from src.ai.contexto.contexto import serializar_contexto
 from src.ai.constantes import MAXIMO_CARACTERES_CONTEXTO
 
 

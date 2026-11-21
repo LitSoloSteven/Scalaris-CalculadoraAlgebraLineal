@@ -1,7 +1,7 @@
 """Contexto y sugerencias de IA para la escena y el resultado vigente."""
 from __future__ import annotations
 
-from src.ai.contexto import ContextoIA, EstadoContexto, sanear_cadena_usuario
+from src.ai.contexto.contexto import ContextoIA, EstadoContexto, sanear_cadena_usuario
 from src.ai.huellas import esta_desactualizado
 from src.frontend.sugerencias import Senales
 

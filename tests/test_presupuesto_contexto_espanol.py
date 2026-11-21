@@ -4,8 +4,8 @@ import json
 
 import pytest
 
-from src.ai.contexto import CapturaPaso, ContextoIA, EstadoContexto, ReferenciaPaso, serializar_contexto
-from src.ai.estrategias_recorte import _reducir_elemento_entrada
+from src.ai.contexto.contexto import CapturaPaso, ContextoIA, EstadoContexto, ReferenciaPaso, serializar_contexto
+from src.ai.contexto.estrategias_recorte import _reducir_elemento_entrada
 
 
 @pytest.mark.parametrize("limite", [120, 180, 400, 1200, 4000])

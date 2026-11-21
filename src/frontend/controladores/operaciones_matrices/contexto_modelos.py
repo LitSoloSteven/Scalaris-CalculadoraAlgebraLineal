@@ -1,5 +1,5 @@
 """Contexto y señales de Leontief y Transformaciones con huella vigente."""
-from src.ai.contexto import ContextoIA, EstadoContexto, describir_matriz, sanear_cadena_usuario
+from src.ai.contexto.contexto import ContextoIA, EstadoContexto, describir_matriz, sanear_cadena_usuario
 from src.ai.huellas import calcular_huella
 from src.frontend.sugerencias import Senales, primera_celda_invalida
 from .capturas_modelos import capturar_leontief, capturar_transformaciones

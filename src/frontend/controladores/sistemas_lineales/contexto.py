@@ -1,5 +1,5 @@
 """Captura y serialización del contexto pedagógico de un sistema lineal."""
-from src.ai.contexto import (
+from src.ai.contexto.contexto import (
     ContextoIA, EstadoContexto, describir_matriz, sanear_cadena_usuario, generar_nota_ventana,
 )
 from src.ai.huellas import esta_desactualizado

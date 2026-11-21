@@ -3,7 +3,7 @@
 from typing import Any
 
 from src.ai.constantes import MAXIMO_CARACTERES_MENSAJE, MAXIMO_HISTORIAL_MENSAJES
-from src.ai.contexto import sanear_cadena_usuario
+from src.ai.contexto.contexto import sanear_cadena_usuario
 from src.ai.historial import es_contrato_historial
 from src.ai.presupuesto_mensajes import validar_longitud_mensaje
 

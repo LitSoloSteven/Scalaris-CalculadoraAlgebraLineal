@@ -1,6 +1,6 @@
 """Cobertura de ventanas matriciales y errores fuera del área visible."""
 import pytest
-from src.ai.contexto import describir_matriz
+from src.ai.contexto.contexto import describir_matriz
 
 
 def test_ventana_cuenta_errores_fuera_de_celdas_visibles():

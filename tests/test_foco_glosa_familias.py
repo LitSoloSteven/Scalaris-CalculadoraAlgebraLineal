@@ -4,7 +4,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from src.ai.contexto import ContextoIA
+from src.ai.contexto.contexto import ContextoIA
 from src.backend.modelos.matriz import Matriz
 from src.frontend.componentes.glosa_foco import crear_accion_explicacion
 from src.frontend.componentes.panel_ia import _recopilar_contexto_didactico

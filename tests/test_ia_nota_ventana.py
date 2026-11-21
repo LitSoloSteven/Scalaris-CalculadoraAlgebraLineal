@@ -1,4 +1,4 @@
-from src.ai.contexto import describir_matriz, generar_nota_ventana, ContextoIA, EstadoContexto
+from src.ai.contexto.contexto import describir_matriz, generar_nota_ventana, ContextoIA, EstadoContexto
 
 
 def test_nota_ventana_matriz_pequena():

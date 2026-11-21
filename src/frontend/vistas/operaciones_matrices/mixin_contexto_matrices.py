@@ -17,7 +17,7 @@ class MixinContextoMatrices:
 
     def _extraer_datos_matrices_ia(self, matrices: dict) -> tuple[dict, list]:
         """Extrae matrices sanitizadas y descripciones de texto para IA."""
-        from src.ai.contexto import describir_matriz, sanear_cadena_usuario
+        from src.ai.contexto.contexto import describir_matriz, sanear_cadena_usuario
         datos_entrada = {}
         descripciones = []
         for nombre, matriz in matrices.items():
@@ -29,7 +29,7 @@ class MixinContextoMatrices:
 
     def obtener_contexto_ia(self):
         """Proporciona el contexto serializado al asistente Glosa."""
-        from src.ai.contexto import ContextoIA, EstadoContexto, sanear_cadena_usuario, generar_nota_ventana
+        from src.ai.contexto.contexto import ContextoIA, EstadoContexto, sanear_cadena_usuario, generar_nota_ventana
         from src.ai.huellas import esta_desactualizado
         try:
             matrices = ControladorOperacionesMatrices.obtener_matrices_serializadas(

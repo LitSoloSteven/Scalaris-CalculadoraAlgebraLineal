@@ -1,7 +1,7 @@
 """Secuencia pedagógica que conserva filas, estado y cierre del motor."""
 from dataclasses import replace
 
-from src.ai.contexto import CapturaPaso, ReferenciaPaso
+from src.ai.contexto.contexto import CapturaPaso, ReferenciaPaso
 from src.frontend.componentes.reproductor_pasos.modelo import GrupoReproductor, PasoReproductor
 from src.frontend.controladores.biseccion.presentacion import numero
 from .presentacion import titulo_estado

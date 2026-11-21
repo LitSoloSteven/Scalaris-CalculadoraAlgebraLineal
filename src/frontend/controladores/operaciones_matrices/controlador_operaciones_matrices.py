@@ -4,7 +4,7 @@ import logging
 import re
 from typing import Any
 
-from src.ai.contexto import sanear_cadena_usuario
+from src.ai.contexto.contexto import sanear_cadena_usuario
 from src.backend.resolutores.operaciones_matrices.evaluador import (
     EvaluadorExpresionesMatriciales,
 )

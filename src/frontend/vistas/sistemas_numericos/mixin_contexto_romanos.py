@@ -2,7 +2,7 @@
 
 from typing import Any
 
-from src.ai.contexto import ContextoIA, EstadoContexto, sanear_cadena_usuario
+from src.ai.contexto.contexto import ContextoIA, EstadoContexto, sanear_cadena_usuario
 from src.ai.huellas import esta_desactualizado
 from src.frontend.controladores.captura_contexto import capturar_romanos
 

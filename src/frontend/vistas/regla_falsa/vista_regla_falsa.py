@@ -1,7 +1,7 @@
 """Orquestación del cálculo vigente y de las capturas de regla falsa."""
 from nicegui import ui
 
-from src.ai.contexto import ContextoIA, EstadoContexto
+from src.ai.contexto.contexto import ContextoIA, EstadoContexto
 from src.frontend.controladores.biseccion.catalogo_criterios import DECIMALES_PRESENTACION_DEFECTO
 from src.frontend.controladores.calculo_raices import ConfiguracionCalculoRaices, resolver_calculo_raices
 from src.frontend.controladores.regla_falsa.contexto_regla_falsa import resumir_contexto_regla_falsa

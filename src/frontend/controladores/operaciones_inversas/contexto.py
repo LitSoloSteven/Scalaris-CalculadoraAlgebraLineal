@@ -1,6 +1,6 @@
 """Preparacion del contexto y senales de la captura de matriz inversa."""
 from copy import deepcopy
-from src.ai.contexto import (
+from src.ai.contexto.contexto import (
     ContextoIA, EstadoContexto, describir_matriz, generar_nota_ventana,
 )
 from .captura_contexto import describir_captura, localizar_invalida

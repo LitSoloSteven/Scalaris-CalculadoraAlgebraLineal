@@ -1,7 +1,7 @@
 """Orquestación de captura, vigencia y presentación de la herramienta de raíces."""
 from nicegui import ui
 
-from src.ai.contexto import ContextoIA, EstadoContexto
+from src.ai.contexto.contexto import ContextoIA, EstadoContexto
 from src.backend.resolutores.raices.contrato_biseccion import ESTADO_DISCONTINUIDAD
 from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.panel_ia import PanelIA

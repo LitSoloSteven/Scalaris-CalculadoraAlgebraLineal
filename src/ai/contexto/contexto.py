@@ -1,7 +1,7 @@
 """Interfaz del contexto pedagógico y serialización segura para Glosa."""
 from src.ai.constantes import MAXIMO_CARACTERES_CONTEXTO
-from src.ai.datos_contexto import CapturaPaso, ContextoIA, EstadoContexto, ReferenciaPaso
-from src.ai.estrategias_recorte import construir_contexto_minimo, ejecutar_cascada_recortes
+from src.ai.contexto.datos_contexto import CapturaPaso, ContextoIA, EstadoContexto, ReferenciaPaso
+from src.ai.contexto.estrategias_recorte import construir_contexto_minimo, ejecutar_cascada_recortes
 from src.ai.matrices_contexto import describir_matriz, extraer_filas, generar_nota_ventana
 from src.ai.texto_contexto import compactar_numero, recortar_texto, sanear_cadena_usuario
 
