@@ -2,7 +2,7 @@
 from nicegui import ui
 
 from src.frontend.controladores.raices.regla_falsa.ejecucion.presentacion_grafica import calcular_presentacion
-from src.frontend.vistas.regla_falsa.procedimiento import PanelProcedimiento
+from src.frontend.vistas.raices.regla_falsa.procedimiento.procedimiento import PanelProcedimiento
 from tests.comun_regla_falsa_vista import captura_regla_falsa, ejecutar_escenario
 
 

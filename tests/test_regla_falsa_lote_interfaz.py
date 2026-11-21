@@ -4,7 +4,7 @@ from nicegui import ui
 
 from src.backend.resolutores.raices.regla_falsa.lote.resolucion_multiple_regla_falsa import EVALUACIONES_EXTREMOS_REGLA_FALSA
 from src.frontend.controladores.raices.regla_falsa.presentacion.tabla import filas_tabla
-from src.frontend.vistas.regla_falsa import resultado
+from src.frontend.vistas.raices.regla_falsa.procedimiento import resultado
 from src.frontend.vistas.raices.regla_falsa.base.modos_captura import MODO_BUSQUEDA
 from tests.comun_exploracion_biseccion import activar_accion
 from tests.comun_regla_falsa_vista import captura_regla_falsa, ejecutar_escenario

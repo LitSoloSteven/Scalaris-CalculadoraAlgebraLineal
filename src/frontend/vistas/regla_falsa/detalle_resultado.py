@@ -1,6 +1,6 @@
 """Montaje del detalle compartido por un cálculo individual y un candidato de lote."""
-from .procedimiento import PanelProcedimiento
-from .resultado import mostrar_resultado
+from src.frontend.vistas.raices.regla_falsa.procedimiento.procedimiento import PanelProcedimiento
+from src.frontend.vistas.raices.regla_falsa.procedimiento.resultado import mostrar_resultado
 
 
 def presentar_detalle(vista, datos: dict) -> None:
