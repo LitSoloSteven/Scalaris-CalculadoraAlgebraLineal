@@ -5,7 +5,7 @@ from fractions import Fraction
 from src.backend.modelos.matriz import Matriz
 from src.backend.modelos.escalares.conversion_fracciones import convertir_fraccion, convertir_fila_fracciones
 from src.backend.modelos.operaciones_filas import sumar_fila_multiplicada
-from src.backend.resolutores.sistemas_lineales.configuracion_reduccion import ConfiguracionReduccion
+from src.backend.resolutores.sistemas_lineales.reduccion.configuracion_reduccion import ConfiguracionReduccion
 from src.backend.modelos.escalares.aritmetica import es_cero
 
 

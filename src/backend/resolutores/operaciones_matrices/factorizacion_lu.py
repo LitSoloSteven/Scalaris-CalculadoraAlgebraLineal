@@ -7,8 +7,8 @@ from src.backend.constantes import DIMENSION_MAXIMA_MATRICES, DIMENSION_MINIMA, 
 from src.backend.modelos.matriz import Matriz
 from src.backend.modelos.operaciones.construcciones import identidad
 from src.backend.modelos.operaciones.calculo_matricial import multiplicar_matrices
-from src.backend.resolutores.sistemas_lineales.configuracion_reduccion import ConfiguracionReduccion
-from src.backend.resolutores.sistemas_lineales.reduccion import ReductorFilas
+from src.backend.resolutores.sistemas_lineales.reduccion.configuracion_reduccion import ConfiguracionReduccion
+from src.backend.resolutores.sistemas_lineales.reduccion.reduccion import ReductorFilas
 from .pasos_determinante import RegistroPasosDeterminante
 from .comprobacion_productos import comprobar_producto, crear_paso_analisis, desarrollar_producto
 from .formateadores import matriz_a_latex

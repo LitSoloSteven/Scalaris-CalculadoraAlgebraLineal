@@ -8,9 +8,9 @@ from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.sistemas_lineales.comprobacion_sistemas import (
     comprobar_familia,
 )
-from src.backend.resolutores.sistemas_lineales.configuracion_reduccion import ConfiguracionReduccion
+from src.backend.resolutores.sistemas_lineales.reduccion.configuracion_reduccion import ConfiguracionReduccion
 from src.backend.resolutores.sistemas_lineales.modelo_solucion import ParametrosSolucion
-from src.backend.resolutores.sistemas_lineales.reduccion import ReductorFilas
+from src.backend.resolutores.sistemas_lineales.reduccion.reduccion import ReductorFilas
 from .contrato_subespacios import (
     ErrorVerificacionSubespacio,
     TestigoSubespacio,

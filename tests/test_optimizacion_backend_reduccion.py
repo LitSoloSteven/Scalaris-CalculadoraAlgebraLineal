@@ -4,9 +4,9 @@ from fractions import Fraction
 import pytest
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.sistemas_lineales.configuracion_reduccion import ConfiguracionReduccion
-from src.backend.resolutores.sistemas_lineales.reduccion import ReductorFilas
-from src.backend.resolutores.sistemas_lineales.pasos_reduccion import RegistroPasosSistema
+from src.backend.resolutores.sistemas_lineales.reduccion.configuracion_reduccion import ConfiguracionReduccion
+from src.backend.resolutores.sistemas_lineales.reduccion.reduccion import ReductorFilas
+from src.backend.resolutores.sistemas_lineales.reduccion.pasos_reduccion import RegistroPasosSistema
 from src.backend.resolutores.operaciones_matrices.pasos_determinante import RegistroPasosDeterminante
 
 

@@ -4,8 +4,8 @@ from math import prod
 from collections.abc import Callable
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.sistemas_lineales.configuracion_reduccion import ConfiguracionReduccion
-from src.backend.resolutores.sistemas_lineales.reduccion import ReductorFilas
+from src.backend.resolutores.sistemas_lineales.reduccion.configuracion_reduccion import ConfiguracionReduccion
+from src.backend.resolutores.sistemas_lineales.reduccion.reduccion import ReductorFilas
 
 
 def triangular_y_determinante(matriz: Matriz, registrar: Callable | None = None,

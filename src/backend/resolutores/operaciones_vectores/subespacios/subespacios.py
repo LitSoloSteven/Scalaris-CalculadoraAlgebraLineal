@@ -9,10 +9,10 @@ from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.sistemas_lineales.calculo_solucion import (
     calcular_solucion_parametrica,
 )
-from src.backend.resolutores.sistemas_lineales.clasificacion_sistema import (
+from src.backend.resolutores.sistemas_lineales.reduccion.clasificacion_sistema import (
     clasificar_sistema,
 )
-from src.backend.resolutores.sistemas_lineales.reduccion import ReductorFilas
+from src.backend.resolutores.sistemas_lineales.reduccion.reduccion import ReductorFilas
 from .comprobacion_subespacios import (
     CONFIGURACION_EXACTA,
     comprobar_familia_exacta,
