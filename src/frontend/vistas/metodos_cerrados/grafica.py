@@ -14,7 +14,7 @@ from src.frontend.controladores.biseccion.muestreo import separar_intervalo_sosp
 from src.frontend.controladores.raices.compartido.formato.captura_real import real_capturado
 from src.frontend.controladores.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
 from src.frontend.controladores.metodos_cerrados.adaptadores import BISECCION
-from src.frontend.controladores.rango_exploracion_raices import RANGO_GRAFICA_DEFECTO, rango_evento_distinto, rango_grafica
+from src.frontend.controladores.raices.compartido.formato.rango_exploracion_raices import RANGO_GRAFICA_DEFECTO, rango_evento_distinto, rango_grafica
 from src.frontend.controladores.vista_previa_raices import preparar_vista_previa
 from src.frontend.presentacion.tema import PALETA_GRAFICOS
 from src.frontend.vistas.biseccion.figura import crear_figura as figura_biseccion

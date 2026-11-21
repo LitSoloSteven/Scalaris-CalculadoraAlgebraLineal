@@ -1,6 +1,6 @@
 """Presentación compartida de evidencia y política de continuidad del dominio."""
 from nicegui import ui
-from src.frontend.controladores.formato_numerico_raices import numero
+from src.frontend.controladores.raices.compartido.formato.formato_numerico_raices import numero
 
 
 def mostrar_informe_continuidad(informe: dict, clase_numero: str) -> None:

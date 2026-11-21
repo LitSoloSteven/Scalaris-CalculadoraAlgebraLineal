@@ -2,7 +2,7 @@
 from nicegui import ui
 
 from src.ai.huellas import calcular_huella
-from src.frontend.controladores.formato_numerico_raices import texto_intervalo
+from src.frontend.controladores.raices.compartido.formato.formato_numerico_raices import texto_intervalo
 
 
 def mostrar_sugerencias(vista, datos: dict) -> None:

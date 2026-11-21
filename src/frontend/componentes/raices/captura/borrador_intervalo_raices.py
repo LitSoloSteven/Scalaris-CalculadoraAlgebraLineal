@@ -2,7 +2,7 @@
 from collections.abc import Callable
 from nicegui import ui
 from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
-from src.frontend.controladores.rango_exploracion_raices import rango_grafica
+from src.frontend.controladores.raices.compartido.formato.rango_exploracion_raices import rango_grafica
 
 
 def construir_borrador(seleccion, instruccion: str, al_editar: Callable[[], None]) -> None:

@@ -2,7 +2,7 @@
 from src.backend.resolutores.raices.compartido.limites_raices import LONGITUD_MAXIMA_EXPRESION
 from src.backend.resolutores.raices.funcion_real.evaluacion.normalizacion_funcion import normalizar_expresion
 from src.backend.resolutores.raices.compartido.unidades_angulares import opciones_unidad
-from src.frontend.controladores.rango_exploracion_raices import (
+from src.frontend.controladores.raices.compartido.formato.rango_exploracion_raices import (
     LONGITUD_CAMPO_GRAFICA, RANGO_GRAFICA_DEFECTO, rango_grafica,
 )
 from .muestreo_raices import muestrear_funcion

@@ -8,7 +8,7 @@ from src.backend.resolutores.raices.regla_falsa.lote.resolucion_multiple_regla_f
 from src.frontend.controladores.candidatos_lote_raices import convertir_candidato
 from src.frontend.controladores.raices.compartido.formato.captura_real import entero_capturado
 from src.frontend.controladores.exploracion_raices import LONGITUD_CAMPO_EXPLORACION
-from src.frontend.controladores.rango_exploracion_raices import RANGO_GRAFICA_DEFECTO
+from src.frontend.controladores.raices.compartido.formato.rango_exploracion_raices import RANGO_GRAFICA_DEFECTO
 from .configuracion_ampliada import preparar_configuracion
 from .presentacion_grafica import agregar_grafica
 

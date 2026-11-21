@@ -3,21 +3,21 @@ import json
 
 import pytest
 
-from src.frontend.controladores.formato_funcion_real import formatear_expresion
+from src.frontend.controladores.raices.compartido.formato.formato_funcion_real import formatear_expresion
 from src.frontend.controladores.vista_previa_raices import preparar_vista_previa
 from tests import test_cumplimiento_reglas as reglas
 from tests.comun import RAIZ
 from tests.comun_regla_falsa_vista import ejecutar_escenario
 
 _MODULOS = (
-    "controladores/muestreo_raices.py", "controladores/formato_funcion_real.py",
+    "controladores/muestreo_raices.py", "controladores/raices/compartido/formato/formato_funcion_real.py",
     "controladores/vista_previa_raices.py", "controladores/seleccion_muestra_raices.py",
     "controladores/biseccion/muestreo.py", "controladores/biseccion/formato_expresion.py",
     "controladores/biseccion/vista_previa.py", "controladores/regla_falsa/presentacion_grafica.py",
     "controladores/regla_falsa/formulas_procedimiento.py", "componentes/raices/captura/previa_expresion_raices.py",
     "componentes/raices/captura/borrador_intervalo_raices.py", "componentes/raices/graficos/figura_funcion_real.py",
     "componentes/raices/graficos/colores_figuras.py", "componentes/raices/exploracion/sincronizacion_rango_raices.py",
-    "controladores/rango_exploracion_raices.py", "vistas/geometria/_colores_figuras.py",
+    "controladores/raices/compartido/formato/rango_exploracion_raices.py", "vistas/geometria/_colores_figuras.py",
     "vistas/biseccion/rango_grafica.py", "vistas/biseccion/vista_previa.py",
     "vistas/biseccion/previa_expresion.py", "vistas/biseccion/seleccion_grafico.py", "vistas/biseccion/figura.py",
     "vistas/regla_falsa/rango_previo.py", "vistas/regla_falsa/vista_previa.py",

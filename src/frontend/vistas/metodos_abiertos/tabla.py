@@ -3,7 +3,7 @@ from collections.abc import Callable
 
 from nicegui import ui
 
-from src.frontend.controladores.formato_numerico_raices import numero
+from src.frontend.controladores.raices.compartido.formato.formato_numerico_raices import numero
 
 
 class TablaIteraciones:

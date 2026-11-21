@@ -1,7 +1,7 @@
 """Presentación del estado y las métricas del método abierto."""
 from nicegui import ui
 
-from src.frontend.controladores.formato_funcion_real import formatear_expresion
+from src.frontend.controladores.raices.compartido.formato.formato_funcion_real import formatear_expresion
 from src.frontend.componentes.reproductor_pasos import renderizar_latex
 
 

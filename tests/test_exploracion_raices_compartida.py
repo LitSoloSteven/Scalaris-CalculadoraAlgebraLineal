@@ -5,7 +5,7 @@ import pytest
 
 from src.frontend.controladores import exploracion_raices as comun
 from src.frontend.controladores.biseccion import exploracion as anterior
-from src.frontend.controladores.rango_exploracion_raices import rango_grafica
+from src.frontend.controladores.raices.compartido.formato.rango_exploracion_raices import rango_grafica
 from tests.comun_biseccion_criterios import ejecutar_escenario
 from tests.comun_exploracion_biseccion import preparar_exploracion, acciones_exploracion, activar_accion
 

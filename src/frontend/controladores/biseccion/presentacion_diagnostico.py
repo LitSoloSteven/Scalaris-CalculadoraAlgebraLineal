@@ -1,6 +1,6 @@
 """Textos compartidos de diagnósticos y sugerencias para vista, copia y explicación."""
 from .presentacion import numero
-from src.frontend.controladores.formato_numerico_raices import texto_intervalo
+from src.frontend.controladores.raices.compartido.formato.formato_numerico_raices import texto_intervalo
 
 _ETAPAS = {"sintaxis": "Análisis de sintaxis", "extremos": "Evaluación de extremos",
            "estructura": "Análisis estructural", "iteracion": "Evaluación de punto medio",

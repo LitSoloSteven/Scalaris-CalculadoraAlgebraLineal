@@ -15,7 +15,7 @@ from src.frontend.controladores.exploracion_raices import (
     LONGITUD_CAMPO_EXPLORACION, PASO_EXPLORACION_DEFECTO, resolver_exploracion,
 )
 from src.frontend.controladores.metodos_cerrados.adaptadores import METODOS
-from src.frontend.controladores.rango_exploracion_raices import RANGO_GRAFICA_DEFECTO
+from src.frontend.controladores.raices.compartido.formato.rango_exploracion_raices import RANGO_GRAFICA_DEFECTO
 from src.frontend.vistas.biseccion.estado_captura import transaccion
 from src.frontend.vistas.regla_falsa.vigencia_solicitud import iniciar_solicitud, revocar_solicitud
 

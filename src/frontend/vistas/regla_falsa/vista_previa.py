@@ -12,7 +12,7 @@ from src.frontend.componentes.raices.graficos.colores_figuras import aplicar_col
 from src.frontend.nucleo.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
 from src.frontend.controladores.compartido.sesion.actualizacion_cancelable import cancelar_actualizacion, programar_actualizacion
 from src.frontend.controladores.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
-from src.frontend.controladores.rango_exploracion_raices import RANGO_GRAFICA_DEFECTO, rango_evento_distinto
+from src.frontend.controladores.raices.compartido.formato.rango_exploracion_raices import RANGO_GRAFICA_DEFECTO, rango_evento_distinto
 from src.frontend.controladores.vista_previa_raices import preparar_vista_previa
 from src.frontend.presentacion.tema import PALETA_GRAFICOS
 from src.frontend.vistas.biseccion.estado_captura import transaccion

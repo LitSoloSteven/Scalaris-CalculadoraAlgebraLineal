@@ -2,7 +2,7 @@
 from src.backend.resolutores.raices.compartido.validacion_raices import validar_expresion, validar_extremo
 from src.backend.resolutores.raices.compartido.unidades_angulares import validar_unidad_angular
 from src.frontend.controladores.raices.compartido.formato.captura_real import real_capturado
-from src.frontend.controladores.formato_funcion_real import formatear_expresion
+from src.frontend.controladores.raices.compartido.formato.formato_funcion_real import formatear_expresion
 from .captura import preparar_entrada
 from .continuidad_intervalo import CLAVES_CONTINUIDAD
 from .configuracion_ampliada import criterio_capturado

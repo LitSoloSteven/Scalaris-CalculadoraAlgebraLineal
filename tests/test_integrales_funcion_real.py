@@ -12,7 +12,7 @@ from src.backend.resolutores.raices.compartido.errores_numericos import ErrorCap
 from src.backend.resolutores.raices.funcion_real.evaluacion.evaluador_funcion import compilar, evaluar_constante_real
 from src.backend.resolutores.raices.metodos_abiertos import EntradaMetodoAbierto, newton
 from src.backend.resolutores.raices.metodos_abiertos.base.derivada_simbolica import derivar_expresion
-from src.frontend.controladores.formato_funcion_real import formatear_expresion
+from src.frontend.controladores.raices.compartido.formato.formato_funcion_real import formatear_expresion
 
 
 @pytest.mark.parametrize(("expresion", "esperado"), [

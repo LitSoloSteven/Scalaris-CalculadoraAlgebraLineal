@@ -7,7 +7,7 @@ from src.frontend.componentes.raices.resultados.tabla_raices_seleccionable impor
 from src.frontend.controladores.biseccion import presentacion as presentacion_biseccion
 from src.frontend.controladores.biseccion.formulas_procedimiento import formulas_iteracion as formulas_biseccion
 from src.frontend.controladores.biseccion.salidas_biseccion import COLUMNAS_EXAMEN, datos_examen
-from src.frontend.controladores.formato_funcion_real import formatear_expresion
+from src.frontend.controladores.raices.compartido.formato.formato_funcion_real import formatear_expresion
 from src.frontend.controladores.metodos_cerrados.adaptadores import BISECCION, METODOS
 from src.frontend.controladores.regla_falsa.formulas_procedimiento import formulas_iteracion as formulas_regla_falsa
 from src.frontend.controladores.regla_falsa.pasos import construir_pasos

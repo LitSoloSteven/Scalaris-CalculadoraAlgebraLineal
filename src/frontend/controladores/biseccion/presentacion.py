@@ -2,7 +2,7 @@
 from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import ESTADO_DISCONTINUIDAD
 from src.frontend.componentes.reproductor_pasos.nucleo.modelo import GrupoReproductor, PasoReproductor
 from .catalogo_criterios import condicion_criterio
-from src.frontend.controladores.formato_numerico_raices import numero
+from src.frontend.controladores.raices.compartido.formato.formato_numerico_raices import numero
 
 COLUMNAS = (
     ("i", "i"), ("extremo_izquierdo", "a"), ("extremo_derecho", "b"),

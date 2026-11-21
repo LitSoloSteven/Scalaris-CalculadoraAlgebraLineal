@@ -5,7 +5,7 @@ import pytest
 from src.backend.excepciones import ErrorDominio
 from src.backend.resolutores.raices.funcion_real.evaluacion.evaluador_funcion import compilar
 from src.backend.resolutores.raices.metodos_abiertos import derivar_expresion
-from src.frontend.controladores.formato_funcion_real import formatear_expresion
+from src.frontend.controladores.raices.compartido.formato.formato_funcion_real import formatear_expresion
 
 
 @pytest.mark.parametrize(("texto", "fuera_de_dominio"), [

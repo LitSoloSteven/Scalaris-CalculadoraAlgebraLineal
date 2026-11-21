@@ -2,7 +2,7 @@
 from nicegui import ui
 
 from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
-from src.frontend.controladores.rango_exploracion_raices import LONGITUD_CAMPO_GRAFICA, RANGO_GRAFICA_DEFECTO
+from src.frontend.controladores.raices.compartido.formato.rango_exploracion_raices import LONGITUD_CAMPO_GRAFICA, RANGO_GRAFICA_DEFECTO
 
 
 def campos_rango(contexto: str, clase_contenedor: str) -> tuple:

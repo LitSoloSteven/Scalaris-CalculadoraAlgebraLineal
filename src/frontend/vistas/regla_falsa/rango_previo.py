@@ -3,7 +3,7 @@ from nicegui import ui
 
 from src.frontend.componentes.raices.exploracion.captura_exploracion_raices import campos_rango
 from src.frontend.componentes.raices.exploracion.sincronizacion_rango_raices import sincronizar_rango as sincronizar_paneles
-from src.frontend.controladores.rango_exploracion_raices import rango_grafica
+from src.frontend.controladores.raices.compartido.formato.rango_exploracion_raices import rango_grafica
 from src.frontend.vistas.biseccion.estado_captura import transaccion
 
 
