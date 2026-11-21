@@ -128,6 +128,6 @@ def _tiene_grados_explicitos(nodo: ast.AST) -> bool:
         if nombre in _ANGULARES or nombre in ANGULARES_RADIANES.values() or nombre in DERIVADAS:
             return False
         if nombre == NOMBRE_INTEGRAL:
-            return False
+            return _tiene_grados_explicitos(nodo.args[0])
         return any(_tiene_grados_explicitos(argumento) for argumento in nodo.args)
     return any(_tiene_grados_explicitos(hijo) for hijo in ast.iter_child_nodes(nodo))

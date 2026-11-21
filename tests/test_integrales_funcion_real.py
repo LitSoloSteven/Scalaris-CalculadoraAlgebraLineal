@@ -76,6 +76,13 @@ def test_presupuesto_es_compartido_y_se_reinicia_en_cada_evaluacion():
     assert funcion(0) == 0
 
 
+def test_cola_no_acepta_un_integrando_constante_redondeado_a_cero():
+    """Un subdesbordamiento dependiente de x no demuestra decaimiento de la cola."""
+    with pytest.raises(ErrorCapacidadNumerica) as error:
+        compilar("∫(exp(−x),t,0,∞)")(1000)
+    assert error.value.codigo == "SUBDESBORDAMIENTO"
+
+
 @pytest.mark.parametrize(("expresion", "esperado"), [
     ("∫(x×t,t,x,x²)", 34),
     ("∫(t,t,x,0)", -2),
@@ -99,6 +106,12 @@ def test_primas_conservan_la_unidad_angular():
     """En grados, derivar la integral conserva el factor de conversión en su integrando."""
     expresion = "(∫(sin(x)×t,t,0,2))′"
     assert compilar(expresion, unidad_angular="grados")(60) == pytest.approx(math.pi / 180)
+
+
+@pytest.mark.parametrize("expresion", ["sin(∫(90°,t,0,1))", "sin(∫(90,t,0,180°/π))"])
+def test_unidad_explicita_de_integral_proviene_del_integrando(expresion):
+    """Los grados del integrando afectan al resultado y los del límite solo al intervalo."""
+    assert compilar(expresion, unidad_angular="grados")(0) == pytest.approx(1)
 
 
 def test_proyeccion_latex_de_extremos_integrando_y_diferencial():

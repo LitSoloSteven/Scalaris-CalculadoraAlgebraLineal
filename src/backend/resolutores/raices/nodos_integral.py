@@ -45,7 +45,7 @@ def nodos_exteriores(nodo: ast.AST) -> Iterator[ast.AST]:
 def sustituir_variable(cuerpo: ast.AST, variable: ast.Name, limite: ast.AST) -> ast.AST:
     """Sustituye ocurrencias libres en el integrando sin capturar variables del límite."""
     ocupadas = _nombres(cuerpo) | _nombres(limite)
-    return _Sustitucion(variable.id, limite, ocupadas).visit(cuerpo)
+    return _Sustitucion(variable.id, limite, ocupadas).visitar(cuerpo)
 
 
 def nombres_libres(nodo: ast.AST) -> set[str]:
@@ -62,39 +62,36 @@ def _nombres(nodo: ast.AST) -> set[str]:
     return {hijo.id for hijo in ast.walk(nodo) if isinstance(hijo, ast.Name)}
 
 
-class _Sustitucion(ast.NodeTransformer):
+class _Sustitucion:
     def __init__(self, variable: str, reemplazo: ast.AST, ocupadas: set[str]) -> None:
         self._variable = variable
         self._reemplazo = reemplazo
         self._ocupadas = ocupadas
         self._nombres_reemplazo = nombres_libres(reemplazo)
 
-    def visit_Name(self, nodo: ast.Name) -> ast.AST:
-        """Sustituye la variable objetivo por el subárbol de reemplazo."""
-        return self._reemplazo if nodo.id == self._variable else nodo
-
-    def generic_visit(self, nodo: ast.AST) -> ast.AST:
-        """Reconstruye los nodos visitados sin alterar el árbol original."""
+    def visitar(self, nodo: ast.AST) -> ast.AST:
+        """Sustituye los nombres libres sin alterar el árbol original."""
+        if isinstance(nodo, ast.Name):
+            return self._reemplazo if nodo.id == self._variable else nodo
+        if es_integral(nodo):
+            return self._visitar_integral(nodo)
         campos = {nombre: self._visitar_campo(valor) for nombre, valor in ast.iter_fields(nodo)}
         return type(nodo)(**campos)
 
     def _visitar_campo(self, valor: object) -> object:
         if isinstance(valor, ast.AST):
-            return self.visit(valor)
+            return self.visitar(valor)
         if isinstance(valor, list):
             return [self._visitar_campo(elemento) for elemento in valor]
         return valor
 
-    def visit_Call(self, nodo: ast.Call) -> ast.AST:
-        """Mantiene el enlace de las variables locales y visita los límites en el alcance exterior."""
-        if not es_integral(nodo):
-            return self.generic_visit(nodo)
+    def _visitar_integral(self, nodo: ast.Call) -> ast.AST:
         cuerpo, variable, inferior, superior = nodo.args
         if variable.id != self._variable:
             if variable.id in self._nombres_reemplazo:
                 cuerpo, variable = self._renombrar(cuerpo, variable)
-            cuerpo = self.visit(cuerpo)
-        return construir_integral(cuerpo, variable, self.visit(inferior), self.visit(superior))
+            cuerpo = self.visitar(cuerpo)
+        return construir_integral(cuerpo, variable, self.visitar(inferior), self.visitar(superior))
 
     def _renombrar(self, cuerpo: ast.AST, variable: ast.Name) -> tuple[ast.AST, ast.Name]:
         libres = _VARIABLES_LIGABLES - self._ocupadas
@@ -103,4 +100,4 @@ class _Sustitucion(ast.NodeTransformer):
         nombre = min(libres)
         self._ocupadas.add(nombre)
         nueva = ast.Name(id=nombre, ctx=ast.Load())
-        return _Sustitucion(variable.id, nueva, self._ocupadas).visit(cuerpo), nueva
+        return _Sustitucion(variable.id, nueva, self._ocupadas).visitar(cuerpo), nueva
