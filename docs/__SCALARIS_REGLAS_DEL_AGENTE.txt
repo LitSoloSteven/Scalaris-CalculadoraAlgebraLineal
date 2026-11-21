@@ -1,6 +1,6 @@
 # SCALARIS: REGLAS DEL AGENTE
 
-Estas reglas aplican a Scalaris en Codex, Google Antigravity y OpenCode. `AGENTS.md` es la entrada compartida e indica qué secciones consultar según el encargo. El contexto de cada fase vive en el código y en el plan temporal de la tarea (sección 11). Cada agente recibe las secciones aplicables y los límites de su encargo.
+Estas reglas aplican a Scalaris en Codex y Google Antigravity. `AGENTS.md` es la entrada compartida e indica qué secciones consultar según el encargo. El contexto de cada fase vive en el código y en el plan temporal de la tarea (sección 11). El agente activo recibe las secciones aplicables y los límites de su encargo.
 
 Rol: Design Engineer y Arquitecto Frontend. Entregas código listo para producción, modular, seguro y mantenible.
 
@@ -108,9 +108,9 @@ El objetivo es un proyecto sumamente modular, donde añadir una funcionalidad si
 Antes de cerrar una fase, revisa el cambio final desde las tres perspectivas. Ajusta la revisión al riesgo y registra la modalidad utilizada.
 
 ### 6.1 Cuándo y cómo
-- OpenCode es el revisor independiente de solo lectura en toda fase de código. Hace una pasada por seguridad, regresiones y mantenibilidad sobre el diff y verifica contra fuentes concretas cuando hay una duda. Codex reutiliza esos hallazgos y sus propias pruebas al cerrar. Reserva revisores adicionales para un riesgo específico que alguien deba verificar por separado.
-- Entrega al revisor el rango base–candidato, criterios pertinentes, diff, consumidores ya comprobados y resumen de pruebas. Incluye cambios sin commit si forman parte del candidato. Cada hallazgo lleva severidad, archivo, línea, evidencia y corrección sugerida. OpenCode reutiliza los resultados de Codex.
-- En tareas documentales, el agente principal revisa el diff. Cuando OpenCode esté bloqueado en una fase de código, registra la revisión independiente como pendiente. Tras las correcciones, revisa los hunks afectados y las comprobaciones invalidadas.
+- El agente activo revisa el diff una vez con los criterios de seguridad, regresiones y mantenibilidad. Coteja los hallazgos con la fuente y las pruebas vigentes. Usa una revisión independiente adicional cuando el usuario la pida o cuando un riesgo concreto la justifique.
+- Si se pide revisión separada, usa el rango base–candidato, criterios pertinentes, fragmentos con riesgo y resumen de pruebas. Cada hallazgo lleva severidad, archivo, línea, evidencia y corrección sugerida.
+- En tareas documentales revisa el diff. Tras una corrección, revisa los fragmentos afectados y repite las comprobaciones que hayan perdido validez.
 
 ### 6.2 Qué debe buscar cada revisor
 - Seguridad: entradas sin validar o sin límites de tamaño (denegación de servicio), inyección y XSS (todo texto de usuario o de modelos de lenguaje se escapa al renderizar y nunca se interpreta como HTML ni como código), secretos en código o en logs, mensajes de error que filtran detalles internos, redirecciones abiertas, rutas de archivo no saneadas, deserialización insegura, almacenamiento de sesión y del cliente, autorización faltante y dependencias dudosas.
@@ -178,7 +178,7 @@ Diseña y verifica contra datos desfavorables: valores muy largos, números con 
 - La validación de dominio vive en la capa de dominio. La interfaz solo valida para orientar al usuario y nunca duplica las reglas de dominio.
 
 ## 10. Verificación honesta y pruebas
-- Codex agrupa las pruebas dirigidas al cerrar cada entregable. Ejecuta la suite completa y los análisis estáticos aplicables sobre el candidato final. Repite solo las comprobaciones invalidadas por una corrección. Descubre los comandos en la configuración del repositorio. Para cambios documentales verifica el diff, las referencias y la coherencia de las instrucciones.
+- El agente activo agrupa las pruebas dirigidas al cerrar cada entregable. Ejecuta la suite completa y los análisis estáticos aplicables sobre el candidato final. Repite solo las comprobaciones invalidadas por una corrección. Descubre los comandos en la configuración del repositorio. Para cambios documentales verifica el diff, las referencias y la coherencia de las instrucciones.
 - Marca cada afirmación como VERIFICADO (lo ejecutaste o lo viste), INFERIDO (lo deduces del código) o NO PROBADO. Si no puedes ejecutar o ver algo, dilo y entrega los pasos manuales exactos. No lo simules.
 - No instales navegadores, herramientas ni dependencias para poder verificar. Lo que dependa de verlo en pantalla queda NO PROBADO con pasos manuales.
 - Las pruebas existentes son contrato: no se borran ni se debilitan. Solo si un cambio deliberado de comportamiento invalida una aserción, y con autorización explícita del usuario o previsión expresa en el plan, se edita únicamente esa aserción sin cambiar la intención de la prueba. Cada edición se lista en el informe con la aserción antes y después.
@@ -197,7 +197,7 @@ Diseña y verifica contra datos desfavorables: valores muy largos, números con 
 ## 12. Protocolo de fase
 1. Usa la sección de la fase como plan de trabajo. Si hace falta acotar un entregable, anota sus rutas y su verificación en hasta 10 líneas. En modo Planning respeta la aprobación que requiera el cliente antes de editar.
 2. Implementa solo la fase actual. No adelantes fases ni refactorices lo no pedido, salvo lo que exijan los límites de la sección 4 sobre los archivos que toques.
-3. Aplica el reparto de 16.2. Codex hace los commits de la sección 15, consolida la revisión de la sección 6 y ejecuta las verificaciones automatizadas de la sección 10.
+3. Sigue 16.2. El agente activo hace los commits de la sección 15, consolida la revisión de la sección 6 y ejecuta las verificaciones de la sección 10.
 4. Cierra con el INFORME DE FASE:
    a. Archivos creados, modificados y eliminados, y commits realizados (rama, hash corto y asunto de cada uno).
    b. Criterios de aceptación con estado VERIFICADO, INFERIDO o NO PROBADO.
@@ -264,61 +264,50 @@ vecinas y deja el scroll operable con teclado.
 
 ## 16. Modelos, contexto y cupo
 
-### 16.1 Roles y modelos de los tres clientes
+### 16.1 Modelo y agente activo
 
-Toda fase de código pasa por los tres roles. La persona que opera los clientes comparte los relevos indicados en 16.2. Cada cliente tiene una responsabilidad fija. Verifica el selector y el acceso antes de iniciar. Modelos consultados el 20 de noviembre de 2026.
+Codex y Antigravity pueden implementar, revisar y verificar el mismo alcance. Cada fase tiene un agente activo. Usa la sesión del plan contratado y conserva el mismo repositorio al cambiar de cliente.
 
-| Cliente | Responsabilidad | Modelo de inicio |
+| Cliente | Modelo | Uso |
 |---|---|---|
-| **Codex con ChatGPT Plus** | Define el alcance, localiza dependencias, implementa, integra hallazgos, ejecuta pruebas automatizadas y cierra la fase. Codex es el único que edita código y crea commits. | **GPT-6.2 Sol · medio · Standard**. Bajo para cambios mecánicos y alto para una hipótesis de depuración difícil. Reserva Astra para un bloqueo que Sol no resuelva. |
-| **OpenCode Desktop con OpenRouter** | Revisa en solo lectura el diff candidato. Cubre seguridad defensiva, regresiones y mantenibilidad en una pasada. Contrasta hallazgos con fragmentos y reutiliza las pruebas de Codex. | **DeepSeek V4.1 Flash**, selector `openrouter/deepseek/deepseek-v4.1-flash`. El agente `revisor-scalaris` dispone de ocho pasos por encargo y hasta 2048 tokens de salida por solicitud. |
-| **Google Antigravity con AI Pro de pago** | Verifica el comportamiento en funcionamiento con un guion reproducible. En fases de interfaz comprueba el navegador, la interacción y la evidencia visual. Para cambios sin UI comprueba el contrato por una ruta de uso real. | **Orchestrator (Neon)**. Gemini 4 Neon planifica y revisa, Gemini 4 Hydrogen ejecuta. El orquestador usa un esfuerzo fijo. |
+| **Codex con ChatGPT Plus** | GPT-6.2 Sol · Standard | Primario por defecto. Usa esfuerzo bajo en cambios acotados y medio para integrar varios archivos. Escala por una dificultad comprobada. |
+| **Antigravity con Google AI Pro** | Orchestrator (Neon) | Continúa cuando Codex agota su cuota. También puede ser primario si se elige al arrancar. Neon y Hydrogen se relevan dentro del turno con esfuerzo fijo. |
 
-Si 6.2 Sol no está disponible, Codex usa 6.1 Sol. Si falta acceso al cliente o al modelo asignado, registra el rol pendiente. En Antigravity el relevo entre Neon e Hydrogen ocurre dentro del turno. Usa esa orquestación con el guion de Codex y conserva un único flujo de verificación, sin `swarm` ni revisores adicionales. [Modelos y cupo de Codex](https://learn.chatgpt.com/docs/pricing) · [Orchestrator en Antigravity](https://antigravity.google/docs/models#orchestrator) · [DeepSeek en OpenRouter](https://openrouter.ai/deepseek/deepseek-v4.1-flash)
+[Codex en modo no interactivo](https://learn.chatgpt.com/docs/non-interactive-mode) · [Orchestrator en Antigravity](https://antigravity.google/docs/models#orchestrator)
 
-### 16.2 Ejecución y relevos
+### 16.2 Ejecución y relevo por cuota
 
-1. **Codex prepara e implementa.** Define resultado, revisión base, rutas, consumidores y prueba dirigida. Consulta el grafo para localizar dependencias. Agrupa búsquedas y ediciones por entregable. Lee al comienzo solo pruebas previstas por el plan, las que cubren el criterio actual y las que fallen. El plan de la fase da continuidad a la ejecución. Vuelve a planificar cuando aparezca evidencia que cambie una decisión.
-2. **Codex prepara el candidato.** Anota rama, hash base y candidato, resumen de cambios y pruebas dirigidas con resultado. Prepara un paquete de revisión con el diff, criterios vigentes y puntos de riesgo, y un paquete de ejecución con URL o ruta, flags, datos, acciones, selectores y resultados esperados. Adjunta al revisor el diff en texto UTF-8 después de inspeccionarlo. Excluye secretos, archivos de entorno, transcripciones, logs completos y cambios ajenos.
-3. **OpenCode y Antigravity verifican el mismo candidato.** Pueden trabajar en paralelo sobre un estado estable. OpenCode lee el paquete y devuelve hallazgos accionables o confirma el alcance revisado. Antigravity sigue el guion en una pasada y recoge la evidencia necesaria. Usa DOM, estado y consola cuando basten, y captura o traza cuando el criterio sea visual o de rendimiento. Registra por separado lo bloqueado por el navegador. Codex reutiliza los resultados.
-4. **Codex integra y cierra.** Corrige hallazgos comprobados. Pide una segunda comprobación únicamente sobre lo que la corrección invalide. Ejecuta la suite completa una vez sobre el resultado final. Si hay cambios después, repite las verificaciones afectadas. Registra qué hash cubrió cada cliente, tiempo y uso según 16.4.
-5. Si hay duplicación, relecturas o intentos sin evidencia nueva, reduce la siguiente búsqueda o prueba. Conserva el mismo hilo dentro de un entregable dependiente. Pasa entre clientes el paquete correspondiente con hashes y resultados. En Codex usa `/compact` para liberar contexto cuando haga falta. Tras compactar conserva decisiones, rutas y resultados ya comprobados. [Comandos de Codex](https://learn.chatgpt.com/docs/developer-commands)
-
-**Ubicación de los archivos de relevo.** Guarda el paquete de revisión para OpenCode Desktop y el guion para Antigravity en una carpeta separada dentro del proyecto, por ejemplo `relevos/`. Usa `docs/` solo como último recurso si no puedes usar una carpeta separada. Entrega la ruta exacta de cada archivo para adjuntarlo al relevo.
-
-**OpenCode Desktop.** Abre la raíz de Scalaris como proyecto y crea una conversación para el candidato. Confirma `revisor-scalaris` y **DeepSeek V4.1 Flash vía OpenRouter** antes de enviar. `opencode.json` fija esos valores para nuevas sesiones en OpenCode V2. Usa tu conexión existente de OpenRouter o conéctala con `/connect` si hace falta. Adjunta solo el paquete de revisión en UTF-8 y pide hallazgos con evidencia. Una sesión anterior puede conservar otro modelo. Si el perfil no aparece, verifica la versión de Desktop y que el proyecto abierto sea la raíz de Scalaris. [Agentes](https://opencode.ai/docs/agents/) · [Modelos](https://opencode.ai/docs/models/) · [Adjuntos](https://opencode.ai/docs/attachments/)
-
-**CLI opcional.** Desde la raíz, con `$diffEscalaris` apuntando al paquete UTF-8, usa este comando para automatizar el mismo relevo.
+1. Acota la tarea con el entregable, los criterios y el alcance del plan. Desde la raíz, ejecuta el lanzador con Python del entorno habitual. Se puede pedir a Codex que lo ejecute desde el chat o invocarlo desde una terminal antes de comenzar la fase.
+2. El agente activo implementa, revisa y verifica. Registra en `relevos/automatizados/` un avance de hasta diez líneas al cerrar un entregable. Incluye pruebas vigentes y qué queda por hacer.
+3. Ante un aviso explícito de cuota, el lanzador inicia el cliente de reserva sobre el mismo repositorio. La entrada contiene el objetivo, la revisión inicial y actual, los commits recientes y las rutas pendientes. El agente lee el avance y retoma la tarea. Mantiene los cambios locales y comprueba solo lo que falte. Hay un único relevo por ejecución.
+4. El lanzador conserva el resultado de cada cliente y sus diagnósticos en la carpeta de la ejecución. Si hay un fallo de autenticación, herramienta, permisos o contexto, revisa ese fallo y conserva el estado. El agente activo cierra la fase conforme a 6, 10 y 12.
 
 ```powershell
-opencode run --standalone --agent revisor-scalaris --model openrouter/deepseek/deepseek-v4.1-flash --file $diffEscalaris "Revisa el diff adjunto según sus criterios, hashes y pruebas."
+.\venv\Scripts\python.exe scripts/ejecutar_fase.py "Continúa la fase 4 de docs/PLAN_MENU_Y_PRESENTACION.md desde el estado actual."
 ```
 
-[Proveedor OpenRouter en OpenCode](https://opencode.ai/docs/providers/) · [CLI de OpenCode](https://opencode.ai/docs/cli/commands)
-
-**Antigravity.** Abre un chat para el guion del candidato y selecciona **Orchestrator (Neon)** antes de enviar. Pasa en un solo mensaje el hash, la URL de la aplicación ya levantada, los pasos del primer lote y los resultados esperados. Pide que el plan del orquestador se limite a ese guion y mantenga una sola sesión de navegador por pasada. Entrega al navegador los selectores, acciones y evidencias esperadas; así puede comenzar en la aplicación. Cada mensaje puede iniciar otra planificación, así que agrupa los criterios de cada lote y evita interrupciones mientras avanza. Si interviene `browser`, registra su modelo cuando el cliente lo muestre. Registra de inmediato las capacidades que el navegador declara no disponibles y permite un solo reintento ante fallos transitorios. Usa las pruebas automatizadas como evidencia separada. [Orchestrator en Antigravity](https://antigravity.google/docs/models#orchestrator) · [Navegador de Antigravity](https://antigravity.google/docs/browser/)
+Para comenzar por Antigravity añade `--primario agy`. Para una tarea acotada en Codex añade `--esfuerzo low`. Usa `--simular` para comprobar los ejecutables y la revisión de partida sin consumir cuota. La ejecución real necesita credenciales locales válidas en los clientes que entren en uso. Una sesión normal abierta directamente en una aplicación queda fuera del lanzador. [Antigravity CLI en modo no interactivo](https://antigravity.google/docs/cli/headless/)
 
 ### 16.3 Recuperación de código con poco contexto
 
-1. **Empieza con el guion y el síntoma.** En Antigravity, consulta el grafo solo si una duda de estructura impide verificar un caso. Antes de buscar, identifica el símbolo, el consumidor o la relación que falta. Para un selector, mensaje, clave de configuración u otro literal, usa `rg -n` en las rutas pertinentes. `search_code` también es búsqueda textual y se reserva para texto acotado si hace falta.
+1. **Empieza con el entregable y el estado real.** Identifica el símbolo, consumidor o relación que falta antes de buscar. En una comprobación funcional parte del guion y del síntoma. Para un selector, mensaje, configuración u otro literal, usa `rg -n` en las rutas pertinentes. Reserva `search_code` para búsqueda textual acotada.
 2. **Codebase Memory primero en consultas estructurales.** Con el MCP y el índice disponibles, usa `search_graph` con el nombre o ruta más precisos. Si buscas llamadas, usa `trace_path` solo en la dirección necesaria, a profundidad 1. Usa `get_code_snippet` si necesitas confirmar el comportamiento. Ejecuta `check_index_coverage` en lote para los archivos en que te apoyes. Lee los rangos afectados de la fuente si hay huecos o señal de desactualización. Amplía solo para responder una duda pendiente.
 3. **Graphify como respaldo.** Si Codebase Memory no está disponible o deja la pregunta sin resolver, consulta el índice existente. Para llamadas usa `graphify query "simbolo" --seed "simbolo" --context call --budget 600 --depth 1`. Para una definición usa `graphify explain "simbolo"`. Coteja el resultado con la fuente. Si ambos grafos dejan un hueco, lee los rangos pertinentes con `rg -n` y, si es una consulta estructural que sigue abierta, evalúa Serena según 16.5.
-4. **Cierra la búsqueda con evidencia suficiente.** Conserva en el mismo guion o informe el símbolo, la ruta y las conclusiones que cambian el caso. Abre archivos y pruebas pertinentes al fallo observable o al criterio en trabajo. La verificación usa el diff de Codex, los selectores y los resultados de pruebas que ya se entregaron. Reserva la actualización incremental de Graphify para cuando la frescura del índice sea necesaria en un encargo de mantenimiento. Reserva la reconstrucción y la extracción semántica para solicitudes explícitas. [Reglas de Antigravity](https://antigravity.google/docs/rules/) · [MCP en Antigravity](https://antigravity.google/docs/mcp)
+4. **Cierra la búsqueda con evidencia suficiente.** Conserva el símbolo, la ruta y la conclusión en el guion o avance. Abre los rangos pertinentes al fallo o criterio que se verifica. Reutiliza el diff, selectores y pruebas del mismo candidato. Reserva la actualización incremental de Graphify para cuando la frescura del índice sea necesaria. Reserva la reconstrucción y la extracción semántica para solicitudes explícitas. [Reglas de Antigravity](https://antigravity.google/docs/rules/) · [MCP en Antigravity](https://antigravity.google/docs/mcp)
 
 ### 16.4 Medición y control de cupo
 
 - **Codex Plus.** Usa la sesión de ChatGPT y verifica Configuración → Uso o `/status` en clientes compatibles. Usar una clave API tiene facturación separada. [Cupo y facturación de Codex](https://learn.chatgpt.com/docs/pricing)
 - **Google AI Pro.** Consulta el uso en Configuración o con `/usage` en Antigravity CLI. Distingue grupo de modelos y ventana de cinco horas o semanal. Mantén `AI Credit Overages` en `Never` si trabajas solo con el cupo incluido. [Planes de Antigravity](https://antigravity.google/docs/plans) · [Comando de cuota](https://antigravity.google/docs/cli/commands/usage)
-- **Punto de control de Antigravity.** Mide el cupo antes de enviar el guion y después del primer recorrido funcional. Como alerta inicial del proyecto, una caída de 10 puntos porcentuales en el mismo grupo y ventana activa una revisión de lo que falta. Continúa con un lote más pequeño para los criterios pendientes y reutiliza las pruebas de Codex. El umbral es una señal para ajustar el trabajo. El cliente puede actualizar la cuota después del turno.
-- **OpenRouter.** Usa una clave dedicada con el límite de crédito que autorice el usuario. Consulta Activity para tokens y coste real de la revisión, o `opencode stats --project . --cost` para el registro del cliente. Conserva la clave en OpenCode o en el entorno del proceso. [Límites de OpenRouter](https://openrouter.ai/docs/api/reference/limits) · [Actividad de OpenRouter](https://openrouter.ai/activity) · [Estadísticas de OpenCode](https://opencode.ai/docs/cli/commands#stats)
-- Registra por rol el cliente, modelo, esfuerzo, hash, duración y resultados. Para planes de suscripción anota grupo, ventana, hora de reinicio y cuota inicial y final. Para API anota tokens y cargo observado. Distingue entrada, salida, razonamiento y lecturas de caché cuando estén disponibles. `/context` en Antigravity CLI mide ocupación de contexto. [Comando de contexto](https://antigravity.google/docs/cli/commands/context)
+- **Umbral de Antigravity.** Una caída de 10 puntos porcentuales en el mismo grupo y ventana es una señal para acotar el siguiente lote cuando se disponga de ambas lecturas. El lanzador cambia de proveedor por error explícito de cuota. El porcentaje y los tokens son métricas distintas.
+- Registra el cliente, modelo, esfuerzo, revisión, duración y resultados de las ejecuciones usadas. Para comparar cuota anota grupo, ventana y reinicio. Distingue entrada, salida, razonamiento y lecturas de caché cuando estén disponibles. `/context` en Antigravity CLI mide ocupación de contexto. [Comando de contexto](https://antigravity.google/docs/cli/commands/context)
 - Ante un consumo inesperado, revisa relecturas, cambios de modo, repeticiones y pruebas duplicadas antes de escalar. Compara diferencias de cuota solo dentro de la misma ventana y grupo, sin reinicios. La comparación entre clientes requiere tareas equivalentes con los mismos criterios y métricas comparables. Las lecturas de caché pueden tener un tratamiento de coste distinto.
 
 ### 16.5 Skills y herramientas evaluadas
 
-**Skills activas.** `codebase-memory` es la primera opción para localizar símbolos, relaciones y consumidores con su MCP. `graphify` se usa sobre el índice existente si el MCP no está disponible o la consulta queda pendiente. Aplica 16.3 y abre solo el código que confirme el resultado. Codex usa esta recuperación al preparar el cambio. OpenCode recibe los hallazgos relevantes en el paquete y Antigravity recibe selectores y resultados esperados en el guion.
+**Skills activas.** `codebase-memory` es la primera opción para localizar símbolos, relaciones y consumidores con su MCP. `graphify` se usa sobre el índice existente si el MCP no está disponible o la consulta queda pendiente. Aplica 16.3 y abre solo el código que confirme el resultado. Guarda en el avance los hallazgos que el cliente de reserva deba reutilizar.
 
-**Herramientas instaladas para pilotos.** Activa `caveman` bajo demanda para informes breves. Mantén completos los comandos, errores, evidencias y resultados. Usa Serena como tercer recuperador cuando Codebase Memory y Graphify no resuelvan una búsqueda estructural. Usa RTK OSS de forma explícita para salidas largas, por ejemplo `rtk git status` o `rtk git log -20 --oneline`, y consulta `rtk gain` para medir la reducción de salida. Para el paquete de OpenCode usa el diff original. Los estudios siguientes corresponden a tareas, modelos y métricas concretos.
+**Herramientas instaladas para pilotos.** Activa `caveman` bajo demanda para informes breves. Mantén completos los comandos, errores, evidencias y resultados. Usa Serena como tercer recuperador cuando Codebase Memory y Graphify no resuelvan una búsqueda estructural. Usa RTK OSS de forma explícita para salidas largas, por ejemplo `rtk git log -20`, y consulta `rtk gain` para medir la reducción. Si un hallazgo depende de un fragmento de diff, revisa el fragmento original. Los estudios siguientes corresponden a tareas, modelos y métricas concretos.
 
 Serena queda registrada en `.codex/config.toml` con cuatro herramientas de búsqueda y desactivada de inicio para evitar cargar un tercer índice. Para una sesión puntual de Codex CLI, inicia desde la raíz con `codex -c 'mcp_servers.serena.enabled=true'`. En Desktop, establece `enabled = true` en el bloque de Serena y reinicia Codex para cargar el cambio. Restaura `enabled = false` al cerrar la consulta. [Configuración de MCP en Codex](https://learn.chatgpt.com/docs/extend/mcp)
 
