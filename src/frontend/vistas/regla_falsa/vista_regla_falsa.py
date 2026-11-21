@@ -12,9 +12,9 @@ from .acciones_captura import mostrar_recientes
 from .composicion import componer_herramienta
 from .estado_captura import CAMPOS, CAMPOS_EJERCICIO, capturar, reflejar_intervalo, restaurar_captura, vaciar_captura
 from .detalle_resultado import captura_contexto, presentar_detalle
-from .modos_captura import MODO_BUSQUEDA, MODO_INTERVALO
-from .selector_criterio import actualizar_guia
-from .sugerencias import mostrar_sugerencias
+from src.frontend.vistas.raices.regla_falsa.base.modos_captura import MODO_BUSQUEDA, MODO_INTERVALO
+from src.frontend.vistas.raices.regla_falsa.base.selector_criterio import actualizar_guia
+from src.frontend.vistas.raices.regla_falsa.base.sugerencias import mostrar_sugerencias
 
 _CONFIGURACION = ConfiguracionCalculoRaices(
     mensaje_carga="Calculando la raíz por regla falsa…",

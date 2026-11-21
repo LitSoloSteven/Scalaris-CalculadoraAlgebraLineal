@@ -10,9 +10,9 @@ from src.frontend.controladores.raices.compartido.exploracion.exploracion_raices
 from src.frontend.controladores.raices.regla_falsa.ejecucion.resolucion_multiple import resolver_lote
 from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto
 from .detalle_resultado import presentar_detalle
-from .modos_captura import MODO_BUSQUEDA
+from src.frontend.vistas.raices.regla_falsa.base.modos_captura import MODO_BUSQUEDA
 from .resultados_multiples import mostrar_resultados_multiples
-from .vigencia_solicitud import iniciar_solicitud, revocar_solicitud
+from src.frontend.vistas.raices.regla_falsa.base.vigencia_solicitud import iniciar_solicitud, revocar_solicitud
 
 _registro = logging.getLogger(__name__)
 _ESTADO_INICIAL = "Explora y selecciona candidatos para resolver un lote."

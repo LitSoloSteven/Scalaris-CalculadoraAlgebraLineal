@@ -15,9 +15,9 @@ from src.frontend.controladores.raices.compartido.exploracion.exploracion_raices
 from src.frontend.controladores.raices.compartido.formato.rango_exploracion_raices import RANGO_GRAFICA_DEFECTO
 from src.frontend.vistas.raices.biseccion.captura.acciones_captura import desplegable
 from src.frontend.vistas.raices.biseccion.captura.estado_captura import transaccion
-from .modos_captura import MODO_BUSQUEDA
+from src.frontend.vistas.raices.regla_falsa.base.modos_captura import MODO_BUSQUEDA
 from .seleccion_candidato import presentar_candidatos, seleccionar_candidato
-from .vigencia_solicitud import iniciar_solicitud, revocar_solicitud
+from src.frontend.vistas.raices.regla_falsa.base.vigencia_solicitud import iniciar_solicitud, revocar_solicitud
 
 _registro = logging.getLogger(__name__)
 

@@ -5,6 +5,36 @@ from tests.comun import RAIZ
 from tests import test_cumplimiento_reglas as reglas
 
 
+_VISTAS_REGLA_FALSA = (
+    "src/frontend/vistas/regla_falsa/__init__.py",
+    "src/frontend/vistas/regla_falsa/acciones_captura.py",
+    "src/frontend/vistas/regla_falsa/captura.py",
+    "src/frontend/vistas/regla_falsa/composicion.py",
+    "src/frontend/vistas/regla_falsa/continuidad_intervalo.py",
+    "src/frontend/vistas/regla_falsa/detalle_resultado.py",
+    "src/frontend/vistas/regla_falsa/ejemplos.py",
+    "src/frontend/vistas/regla_falsa/estado_captura.py",
+    "src/frontend/vistas/regla_falsa/estados_entrada.py",
+    "src/frontend/vistas/regla_falsa/exploracion.py",
+    "src/frontend/vistas/regla_falsa/figura.py",
+    "src/frontend/vistas/regla_falsa/modo_examen.py",
+    "src/frontend/vistas/raices/regla_falsa/base/modos_captura.py",
+    "src/frontend/vistas/regla_falsa/pagina.py",
+    "src/frontend/vistas/regla_falsa/procedimiento.py",
+    "src/frontend/vistas/regla_falsa/rango_previo.py",
+    "src/frontend/vistas/regla_falsa/resolucion_multiple.py",
+    "src/frontend/vistas/regla_falsa/resultado.py",
+    "src/frontend/vistas/regla_falsa/resultados_multiples.py",
+    "src/frontend/vistas/regla_falsa/seleccion_candidato.py",
+    "src/frontend/vistas/regla_falsa/seleccion_grafico.py",
+    "src/frontend/vistas/raices/regla_falsa/base/selector_criterio.py",
+    "src/frontend/vistas/raices/regla_falsa/base/sugerencias.py",
+    "src/frontend/vistas/regla_falsa/tabla_iteraciones.py",
+    "src/frontend/vistas/raices/regla_falsa/base/vigencia_solicitud.py",
+    "src/frontend/vistas/regla_falsa/vista_previa.py",
+    "src/frontend/vistas/regla_falsa/vista_regla_falsa.py",
+)
+
 @pytest.mark.parametrize("comprobar", [reglas.test_limites_tamanio_y_complejidad, reglas.test_docstrings_publicos,
     reglas.test_identificadores_idioma_y_ascii, reglas.test_comentarios_y_textos_limpios, reglas.test_reglas_python_frontend])
 def test_modulos_ampliados_cumplen_reglas(monkeypatch, comprobar):
@@ -32,7 +62,7 @@ def test_modulos_ampliados_cumplen_reglas(monkeypatch, comprobar):
         "src/frontend/controladores/raices/regla_falsa/presentacion/tabla.py",
         "src/frontend/controladores/raices/regla_falsa/captura/validacion_contextual.py",
     ))
-    rutas.extend((RAIZ / "src/frontend/vistas/regla_falsa").glob("*.py"))
+    rutas.extend(RAIZ / ruta for ruta in _VISTAS_REGLA_FALSA)
     rutas.append(RAIZ / "src/backend/resolutores/raices/continuidad/analisis/sugerencias_dominio.py")
     monkeypatch.setattr(reglas, "RUTAS_AUDITADAS", tuple(rutas))
     comprobar()

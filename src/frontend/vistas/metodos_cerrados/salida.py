@@ -18,7 +18,7 @@ from src.frontend.vistas.raices.biseccion.procedimiento.modo_examen import crear
 from src.frontend.vistas.raices.biseccion.resultados.resumen_criterio import mostrar_resumen
 from src.frontend.vistas.regla_falsa.modo_examen import mostrar_accion_examen
 from src.frontend.vistas.regla_falsa.resultado import mostrar_resultado
-from src.frontend.vistas.regla_falsa.sugerencias import mostrar_sugerencias
+from src.frontend.vistas.raices.regla_falsa.base.sugerencias import mostrar_sugerencias
 from .contexto import opciones_glosa
 
 

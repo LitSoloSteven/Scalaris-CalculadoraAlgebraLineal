@@ -7,7 +7,7 @@ from .acciones_captura import construir_acciones, mostrar_recientes
 from .captura import construir_captura
 from .exploracion import PanelExploracion
 from .resolucion_multiple import PanelResolucionMultiple
-from .modos_captura import MODO_BUSQUEDA, region_modo
+from src.frontend.vistas.raices.regla_falsa.base.modos_captura import MODO_BUSQUEDA, region_modo
 from .vista_previa import PanelVistaPrevia
 from .seleccion_grafico import SeleccionGrafico
 from .continuidad_intervalo import PanelContinuidad

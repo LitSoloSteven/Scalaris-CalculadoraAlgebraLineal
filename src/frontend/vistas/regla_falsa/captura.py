@@ -4,8 +4,8 @@ from nicegui import ui
 from src.backend.resolutores.raices.compartido.unidades_angulares import UNIDADES_ANGULARES
 from src.frontend.componentes.raices.captura.campo_funcion_real import crear_campo_funcion
 from .estado_captura import PREFERENCIAS_INICIALES
-from .modos_captura import MODO_INTERVALO, construir_modos, region_modo
-from .selector_criterio import construir_selector
+from src.frontend.vistas.raices.regla_falsa.base.modos_captura import MODO_INTERVALO, construir_modos, region_modo
+from src.frontend.vistas.raices.regla_falsa.base.selector_criterio import construir_selector
 
 
 def construir_captura(vista) -> None:

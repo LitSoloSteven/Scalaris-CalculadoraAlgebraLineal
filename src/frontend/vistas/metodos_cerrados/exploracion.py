@@ -17,7 +17,7 @@ from src.frontend.controladores.raices.compartido.exploracion.exploracion_raices
 from src.frontend.controladores.raices.metodos_cerrados.adaptadores import METODOS
 from src.frontend.controladores.raices.compartido.formato.rango_exploracion_raices import RANGO_GRAFICA_DEFECTO
 from src.frontend.vistas.raices.biseccion.captura.estado_captura import transaccion
-from src.frontend.vistas.regla_falsa.vigencia_solicitud import iniciar_solicitud, revocar_solicitud
+from src.frontend.vistas.raices.regla_falsa.base.vigencia_solicitud import iniciar_solicitud, revocar_solicitud
 
 from .lote import LoteMetodosCerrados
 
