@@ -5,6 +5,7 @@ from .limpieza_numerica import MixinLimpiezaBases
 from src.backend.resolutores.sistemas_numericos.conversor_bases import ConversorBases
 from src.backend.utilidades.reglas_dominio import BASES_NUMERICAS, validar_entrada_base
 from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
+from src.frontend.componentes.simbolos import habilitar_simbolos
 from src.frontend.navegacion import ruta_de
 from src.frontend.componentes.panel_ia import PanelIA
 from src.frontend.controladores.captura_contexto import capturar_bases
@@ -36,6 +37,7 @@ class VistaSistemasNumericos(MixinLimpiezaBases, MixinInteraccionSistemasNumeric
                     'w-full matriz-entrada numericos-entrada'
                 ).classes("numericos-entrada-base")
                 self.entrada_valor.props('autocomplete="off" spellcheck="false"')
+                habilitar_simbolos(self.entrada_valor, "base")
                 self.entrada_valor.on_value_change(self._notificar_entrada)
                 self.entrada_valor.on('keydown.enter', self._convertir_boton)
 

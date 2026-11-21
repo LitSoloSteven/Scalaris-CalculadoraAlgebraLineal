@@ -1,4 +1,5 @@
 """Configuración de temas, paletas y recursos estáticos de Scalaris."""
+import html
 import json
 from pathlib import Path
 from string import Template
@@ -88,12 +89,16 @@ _CABECERA_REGLA_FALSA_HTML = (_PLANTILLAS / "cabecera_regla_falsa.html").read_te
 
 def configurar_tema(vista: str = "") -> None:
     """Configura fuentes, estilos, MathJax y recursos cliente de la interfaz."""
-    def agregar(cabecera: str) -> None:
+    def agregar(cabecera: str, *, incluir_modulo: bool = False) -> None:
         """Prepara la cabecera antes de que la conexión pueda enviar el HTML inicial."""
         seleccion = seleccionar_recursos(cabecera, vista)
-        ui.add_head_html(versionar_html(seleccion) if vista else seleccion)
+        contenido = versionar_html(seleccion) if vista else seleccion
+        if incluir_modulo and vista:
+            meta = f'<meta name="scalaris-modulo" content="{html.escape(vista, quote=True)}">\n'
+            contenido = meta + contenido
+        ui.add_head_html(contenido)
 
-    agregar(_CABECERA_HTML)
+    agregar(_CABECERA_HTML, incluir_modulo=True)
     if vista == "regla_falsa":
         agregar(_CABECERA_REGLA_FALSA_HTML)
     if banderas.panel_lateral_habilitado():
