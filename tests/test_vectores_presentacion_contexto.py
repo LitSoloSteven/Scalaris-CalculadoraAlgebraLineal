@@ -62,7 +62,7 @@ def test_construccion_completa_monta_asistente_y_tres_paneles(monkeypatch, panel
     from src.frontend.vistas.operaciones_vectores import vista_operaciones_vectores as modulo
     monkeypatch.setattr(modulo, "PanelIA", PanelIASimulado)
     monkeypatch.setattr(ui, "run_javascript", Mock())
-    from src.frontend import banderas
+    from src.frontend.nucleo import banderas
     monkeypatch.setattr(banderas, "panel_lateral_habilitado", lambda: panel_lateral)
     monkeypatch.setattr(banderas, "navegacion_actualizada", lambda: False)
     vista = VistaOperacionesVectores()

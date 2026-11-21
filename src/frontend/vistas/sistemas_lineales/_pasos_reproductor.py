@@ -7,7 +7,7 @@ from src.frontend.componentes.reproductor_pasos.cuerpos import CuerpoLatex
 from src.frontend.componentes.reproductor_pasos.textos import limpiar_latex_plano
 from src.frontend.componentes.reproductor_pasos.html_tablas import html_tabla_aumentada
 from src.frontend.componentes.reproductor_pasos.modelo import GrupoReproductor, PasoReproductor
-from src.frontend.ayudas import formatear_paso_mathjax
+from src.frontend.nucleo.ayudas import formatear_paso_mathjax
 from src.frontend.componentes.presentacion_analisis import anexar_analisis
 
 

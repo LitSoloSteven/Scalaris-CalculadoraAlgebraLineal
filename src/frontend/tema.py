@@ -5,7 +5,7 @@ from pathlib import Path
 from string import Template
 from nicegui import ui
 
-from src.frontend import banderas
+from src.frontend.nucleo import banderas
 from src.frontend.recursos_vistas import seleccionar_recursos
 from src.frontend.versionado_recursos import versionar_html
 from src.frontend.constantes import CARACTERES_ENTRADA_NUMERICA

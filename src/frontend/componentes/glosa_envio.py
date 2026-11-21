@@ -12,7 +12,7 @@ from src.ai.textos import CONSULTA_CANCELADA, ERROR_SERVICIO, RESPUESTA_DEMASIAD
 from src.ai.presupuesto.presupuesto_mensajes import validar_longitud_mensaje
 from src.frontend.componentes.glosa_preguntas import PreguntasGlosaMixin
 from src.frontend.componentes.glosa_espera import iniciar_temporizador_cancelar, finalizar_envio
-from src.frontend import banderas
+from src.frontend.nucleo import banderas
 from src.frontend.constantes import ANTI_REBOTE_GLOSA_SEGUNDOS
 from src.frontend.componentes.historial_glosa import incorporar_mensaje
 from src.frontend.textos import MENSAJE_ANTI_REBOTE_GLOSA

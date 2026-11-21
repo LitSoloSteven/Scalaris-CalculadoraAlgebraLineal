@@ -5,7 +5,7 @@ import pytest
 from nicegui import ui
 from src.ai.respuestas.respuestas import ResultadoIA
 from src.frontend.constantes import MAXIMO_HISTORIAL
-from src.frontend import banderas
+from src.frontend.nucleo import banderas
 from src.frontend.componentes import glosa_bitacora
 from tests.comun_clientes import PanelIASimulado
 

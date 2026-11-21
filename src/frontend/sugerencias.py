@@ -4,7 +4,7 @@ import os
 from typing import Any
 
 from src.backend.utilidades.validacion.validadores import ValidadorMatriz
-from src.frontend import banderas
+from src.frontend.nucleo import banderas
 from src.frontend.catalogo_sugerencias import CATALOGO_SUGERENCIAS
 
 
