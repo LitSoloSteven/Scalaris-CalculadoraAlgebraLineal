@@ -14,7 +14,7 @@ from src.backend.excepciones import ErrorVectorInvalido
 from src.backend.modelos.matriz import Matriz
 from src.backend.modelos.operaciones.construcciones import matriz_de_columnas
 from src.backend.resolutores.sistemas_lineales.solucion.comprobacion_sistemas import comprobar_familia
-from src.backend.resolutores.operaciones_matrices.comprobacion_productos import crear_paso_analisis
+from src.backend.resolutores.operaciones_matrices.compartido.comprobacion_productos import crear_paso_analisis
 from src.backend.resolutores.operaciones_vectores.base.base import (
     _BaseResolutorVectores,
 )

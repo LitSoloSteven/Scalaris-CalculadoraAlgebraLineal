@@ -4,7 +4,7 @@ from src.backend.geometria.base.coordenadas import a_flotante_seguro
 from src.backend.geometria.analisis.planos import calcular_geometria_plano
 from src.backend.geometria.base.recorte import recortar_recta_a_caja
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices.formateadores import matriz_a_latex
+from src.backend.resolutores.operaciones_matrices.compartido.formateadores import matriz_a_latex
 
 
 def representar_conjunto(conjunto: ConjuntoSolucion | None, parametros: dict | None, dimension: int, limite: float) -> dict | None:

@@ -2,7 +2,7 @@
 from src.backend.constantes import EXITO
 from src.backend.modelos.matriz import Matriz
 from src.backend.modelos.operaciones.calculo_matricial import es_identidad
-from src.backend.resolutores.operaciones_matrices.formateadores import matriz_a_latex, matriz_particionada_a_latex
+from src.backend.resolutores.operaciones_matrices.compartido.formateadores import matriz_a_latex, matriz_particionada_a_latex
 
 
 def formatear_pasos_inversa(pasos: list[dict], dimension: int, construir_latex: bool) -> list[dict]:

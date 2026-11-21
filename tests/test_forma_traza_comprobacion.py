@@ -2,7 +2,7 @@
 import pytest
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices.comprobacion_productos import comprobar_producto
+from src.backend.resolutores.operaciones_matrices.compartido.comprobacion_productos import comprobar_producto
 from src.frontend.componentes.datos_desarrollo import es_traza_producto, agrupar_filas_producto
 
 

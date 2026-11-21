@@ -3,17 +3,17 @@ from src.backend.constantes import ERROR, SINGULAR
 from src.backend.constantes import DIMENSION_MAXIMA_LATEX_INVERSA
 from src.backend.modelos.matriz import Matriz
 from src.backend.modelos.operaciones.construcciones import identidad
-from .comprobacion_productos import comprobar_producto, desarrollar_producto
+from .compartido.comprobacion_productos import comprobar_producto, desarrollar_producto
 from src.backend.resolutores.operaciones_matrices.calculo_inversa import calcular_inversa
-from src.backend.resolutores.operaciones_matrices.formateadores import matriz_particionada_a_latex
+from src.backend.resolutores.operaciones_matrices.compartido.formateadores import matriz_particionada_a_latex
 from src.backend.resolutores.operaciones_matrices.operaciones import ResolutorOperacionesMatrices
 from src.backend.resolutores.operaciones_matrices.presentacion_inversa import (
     formatear_pasos_inversa, presentar_inversa, presentar_producto_inversa, presentar_propiedad_transpuesta,
 )
 from src.backend.resolutores.sistemas_lineales.reduccion.pasos_reduccion import RegistroPasosSistema
 from .pasos_determinante import RegistroPasosDeterminante
-from .formateadores import matriz_a_latex
-from .comprobacion_productos import crear_paso_analisis
+from .compartido.formateadores import matriz_a_latex
+from .compartido.comprobacion_productos import crear_paso_analisis
 
 
 class ResolutorInversa:

@@ -1,6 +1,6 @@
 """Vista previa de coeficientes validada por el dominio sin resolver el modelo."""
 from src.backend.resolutores.operaciones_matrices.captura_modelos import parsear_matriz_modelo
-from src.backend.resolutores.operaciones_matrices.formateadores import matriz_a_latex
+from src.backend.resolutores.operaciones_matrices.compartido.formateadores import matriz_a_latex
 from src.backend.utilidades.validacion.validadores import validar_dimensiones_multiplicacion
 from .contexto_modelos import capturar_modelo
 

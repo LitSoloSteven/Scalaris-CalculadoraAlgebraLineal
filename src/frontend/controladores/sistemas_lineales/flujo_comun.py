@@ -2,7 +2,7 @@
 import json
 from typing import Any
 
-from src.backend.resolutores.operaciones_matrices.formateadores import matriz_a_latex
+from src.backend.resolutores.operaciones_matrices.compartido.formateadores import matriz_a_latex
 from src.backend.utilidades.validacion.validadores import ValidadorMatriz
 from src.backend.modelos.matriz import Matriz
 from src.frontend.controladores.operaciones_matrices.codificador import CodificadorMatriz

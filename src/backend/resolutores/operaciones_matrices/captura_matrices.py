@@ -1,6 +1,6 @@
 """Captura exacta de colecciones matriciales sin dependencias de interfaz."""
 from src.backend.modelos.matriz import Matriz
-from .celdas_exactas import parsear_celda_exacta
+from .compartido.celdas_exactas import parsear_celda_exacta
 
 
 def _validar_forma_matriz(nombre: str, datos_matriz: dict) -> tuple[int, int, list]:

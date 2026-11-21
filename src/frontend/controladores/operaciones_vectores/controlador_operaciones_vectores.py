@@ -4,7 +4,7 @@ import logging
 
 from src.backend.excepciones import AlgebraLinealError
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices.formateadores import matriz_a_latex
+from src.backend.resolutores.operaciones_matrices.compartido.formateadores import matriz_a_latex
 from src.backend.resolutores.operaciones_vectores.operaciones.combinacion_lineal import (
     ResolutorCombinacionLineal,
 )

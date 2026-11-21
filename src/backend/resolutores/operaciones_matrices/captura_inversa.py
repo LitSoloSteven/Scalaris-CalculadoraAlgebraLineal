@@ -6,9 +6,9 @@ from src.backend.constantes import (
     DIMENSION_MAXIMA_LATEX_INVERSA,
 )
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices.formateadores import matriz_a_latex
+from src.backend.resolutores.operaciones_matrices.compartido.formateadores import matriz_a_latex
 from src.backend.utilidades.formato.formateadores import formatear_fraccion_texto
-from .celdas_exactas import parsear_celda_exacta
+from .compartido.celdas_exactas import parsear_celda_exacta
 from .opciones_resultado import OpcionesResultadoVacio
 
 

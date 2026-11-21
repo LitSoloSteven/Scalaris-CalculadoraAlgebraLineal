@@ -7,7 +7,7 @@ from src.backend.modelos.matriz import Matriz
 from src.backend.modelos.operaciones.calculo_matricial import multiplicar_matrices
 from src.backend.geometria.base.coordenadas import a_flotante_seguro
 from src.backend.utilidades.formato.formateadores import numero_a_latex
-from .comprobacion_productos import crear_paso_analisis
+from .compartido.comprobacion_productos import crear_paso_analisis
 
 def aplicar_vector(matriz: Matriz, vector: Matriz) -> dict:
     """Calcula T(v) = A·v con exactitud racional y devuelve el contrato serializable."""

@@ -10,8 +10,8 @@ from src.backend.modelos.operaciones.calculo_matricial import multiplicar_matric
 from src.backend.resolutores.sistemas_lineales.reduccion.configuracion_reduccion import ConfiguracionReduccion
 from src.backend.resolutores.sistemas_lineales.reduccion.reduccion import ReductorFilas
 from .pasos_determinante import RegistroPasosDeterminante
-from .comprobacion_productos import comprobar_producto, crear_paso_analisis, desarrollar_producto
-from .formateadores import matriz_a_latex
+from .compartido.comprobacion_productos import comprobar_producto, crear_paso_analisis, desarrollar_producto
+from .compartido.formateadores import matriz_a_latex
 from .sustitucion_lu import sustituir_adelante, sustituir_atras
 from .traza_sistema_lu import crear_traza_sistema_lu
 

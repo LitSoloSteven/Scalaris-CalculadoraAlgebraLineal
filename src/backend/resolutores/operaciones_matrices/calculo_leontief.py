@@ -5,8 +5,8 @@ from src.backend.modelos.operaciones.construcciones import identidad
 from src.backend.modelos.matriz import Matriz
 from src.backend.modelos.operaciones.calculo_matricial import restar_matrices, multiplicar_matrices
 from .determinante import ResolutorDeterminante
-from .comprobacion_productos import crear_paso_analisis
-from .formateadores import matriz_a_latex
+from .compartido.comprobacion_productos import crear_paso_analisis
+from .compartido.formateadores import matriz_a_latex
 from src.backend.utilidades.formato.formateadores import numero_a_latex
 from .comprobacion_leontief import comprobar_balance
 from src.backend.resolutores.operaciones_matrices.calculo_inversa import calcular_inversa

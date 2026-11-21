@@ -6,7 +6,7 @@ import time
 
 from src.backend.constantes import DIMENSION_MAXIMA_LATEX_INVERSA
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices.formateadores import matriz_a_latex
+from src.backend.resolutores.operaciones_matrices.compartido.formateadores import matriz_a_latex
 from src.backend.resolutores.operaciones_matrices.inversa import ResolutorInversa
 from src.backend.utilidades.formato.formateadores import formatear_fraccion_texto
 from src.frontend.controladores.agrupador_pasos import agrupar_pasos_eliminacion

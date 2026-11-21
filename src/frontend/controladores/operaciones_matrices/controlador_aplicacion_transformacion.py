@@ -5,7 +5,7 @@ from fractions import Fraction
 from src.backend.constantes import DIMENSION_MAXIMA_MODELOS
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_matrices.captura_modelos import parsear_matriz_modelo
-from src.backend.resolutores.operaciones_matrices.comprobacion_productos import comprobar_producto
+from src.backend.resolutores.operaciones_matrices.compartido.comprobacion_productos import comprobar_producto
 from src.backend.resolutores.operaciones_matrices.transformaciones import ResolutorTransformacionesLineales
 from src.frontend.controladores.utilidades import parsear_carga_json, serializar_matriz
 

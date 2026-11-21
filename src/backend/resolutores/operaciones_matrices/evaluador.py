@@ -14,7 +14,7 @@ from src.backend.resolutores.operaciones_matrices.analizador_expresiones import 
     exponente_de,
     tokenizar_expresion,
 )
-from src.backend.resolutores.operaciones_matrices.formateadores import (
+from src.backend.resolutores.operaciones_matrices.compartido.formateadores import (
     matriz_a_latex,
     multiplicar_matriz_a_latex,
     sumar_restar_matriz_a_latex,

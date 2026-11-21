@@ -9,7 +9,7 @@ from src.backend.resolutores.operaciones_matrices.evaluador import (
     EvaluadorExpresionesMatriciales,
 )
 from src.backend.resolutores.operaciones_matrices.captura_matrices import obtener_diccionario_matrices
-from src.backend.resolutores.operaciones_matrices.estado_resultado import (
+from src.backend.resolutores.operaciones_matrices.compartido.estado_resultado import (
     calcular_banderas_resultado, preparar_transferencia_inversa,
 )
 from src.frontend.controladores.operaciones_matrices.codificador import (

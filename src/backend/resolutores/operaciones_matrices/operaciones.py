@@ -9,7 +9,7 @@ from src.backend.modelos.matriz import Matriz
 from src.backend.modelos.operaciones.construcciones import identidad, transpuesta
 from src.backend.modelos.operaciones.calculo_matricial import multiplicar_matrices, operar_celda, producto_celda
 from src.backend.resolutores.operaciones_matrices.calculo_inversa import calcular_inversa
-from src.backend.resolutores.operaciones_matrices.presentacion_producto import describir_producto_celda
+from src.backend.resolutores.operaciones_matrices.compartido.presentacion_producto import describir_producto_celda
 from src.backend.resolutores.operaciones_matrices.presupuesto_expresiones import validar_magnitud
 from src.backend.resolutores.operaciones_matrices.determinante import (
     ResolutorDeterminante,
