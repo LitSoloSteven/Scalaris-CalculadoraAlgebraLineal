@@ -1,7 +1,7 @@
 """Selector y regiones de las tareas de captura de una raíz."""
 from nicegui import ui
 
-from src.frontend.componentes.selector_opciones import SelectorOpciones
+from src.frontend.componentes.aplicacion.controles.selector_opciones import SelectorOpciones
 
 MODO_INTERVALO = "intervalo"
 MODO_BUSQUEDA = "busqueda"

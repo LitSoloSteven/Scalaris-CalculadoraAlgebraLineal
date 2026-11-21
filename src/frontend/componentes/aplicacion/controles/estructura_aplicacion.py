@@ -3,8 +3,8 @@ from __future__ import annotations
 
 from typing import Any, Callable
 from src.frontend.navegacion import RUTA_INICIO
-from src.frontend.componentes.barra_navegacion import crear_barra_navegacion
-from src.frontend.componentes.control_sonido import renderizar_control_sonido
+from src.frontend.componentes.aplicacion.controles.barra_navegacion import crear_barra_navegacion
+from src.frontend.componentes.aplicacion.controles.control_sonido import renderizar_control_sonido
 
 
 def crear_estructura_aplicacion(interfaz_activa: Any = None, ruta_activa: str = "/", clave_activa: str | None = None,

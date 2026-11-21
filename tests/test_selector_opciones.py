@@ -5,7 +5,7 @@ from unittest.mock import Mock
 
 import pytest
 from nicegui import ui
-from src.frontend.componentes.selector_opciones import SelectorOpciones
+from src.frontend.componentes.aplicacion.controles.selector_opciones import SelectorOpciones
 from src.frontend.nucleo.textos.textos import OPCIONES_OPERACIONES_VECTORES
 from tests.comun_construccion_vistas import construir_pagina
 from tests.comun_estilos import analizar_tokens, hexadecimal_a_rgb, razon_contraste

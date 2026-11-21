@@ -1,6 +1,6 @@
 """Composicion de la vista de sistemas lineales."""
 from nicegui import ui
-from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
+from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.navegacion import ruta_de
 from src.frontend.componentes.cuadricula_ecuaciones import CuadriculaEcuaciones
 from src.frontend.componentes.calculadora import PanelCalculadora

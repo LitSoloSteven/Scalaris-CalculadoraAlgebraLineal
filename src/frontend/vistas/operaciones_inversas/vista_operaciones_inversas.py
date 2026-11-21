@@ -7,7 +7,7 @@ from src.frontend.controladores.operaciones_inversas.contexto import obtener_con
 
 from src.frontend.componentes.panel_ia import PanelIA
 from src.frontend.componentes.calculadora import PanelCalculadora
-from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
+from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.navegacion import ruta_de
 from src.frontend.componentes.panel_matriz_cuadrada import PanelMatrizCuadrada
 from src.frontend.componentes.cuadricula_base import ubicar_celda_matriz

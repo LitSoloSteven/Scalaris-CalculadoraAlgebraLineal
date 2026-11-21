@@ -52,7 +52,7 @@ def test_componente_y_referencias_de_mas_algebra_retirados():
 def test_visita_directa_se_registra_al_conectar(monkeypatch):
     """La construcción previa al socket no pierde la herramienta del historial."""
     from nicegui import Client, core, ui
-    from src.frontend.componentes.barra_navegacion import _registrar_navegacion_reciente
+    from src.frontend.componentes.aplicacion.controles.barra_navegacion import _registrar_navegacion_reciente
     monkeypatch.setattr(core, "script_mode", False)
     cliente = Client(ui.page("/prueba_historial_determinantes"))
     enviar = Mock()

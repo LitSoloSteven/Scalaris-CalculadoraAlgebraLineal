@@ -8,8 +8,8 @@ import pytest
 from nicegui import Client, core, ui
 
 from src.frontend.componentes.aplicacion.base import sonido
-from src.frontend.componentes.control_sonido import renderizar_control_sonido
-from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
+from src.frontend.componentes.aplicacion.controles.control_sonido import renderizar_control_sonido
+from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.presentacion.tema import _CABECERA_HTML
 from src.frontend.presentacion.recursos_vistas import seleccionar_recursos
 from tests.comun import RAIZ
@@ -106,7 +106,7 @@ def test_control_nativo_con_nombre_estable_estado_e_iconos(monkeypatch):
 def test_navegacion_e_inicio_montan_el_mismo_control(monkeypatch, actualizada, ruta):
     """Cada pantalla monta un único control fuera de la cabecera en ambas navegaciones."""
     monkeypatch.setattr(core, 'script_mode', False)
-    monkeypatch.setattr('src.frontend.componentes.barra_navegacion.banderas.navegacion_actualizada', lambda: actualizada)
+    monkeypatch.setattr('src.frontend.componentes.aplicacion.controles.barra_navegacion.banderas.navegacion_actualizada', lambda: actualizada)
     cliente = Client(ui.page('/prueba_sonido_navegacion'))
     try:
         with cliente:

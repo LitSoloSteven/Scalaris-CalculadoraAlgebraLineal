@@ -5,7 +5,7 @@ from unittest.mock import Mock
 from nicegui import Client, core, ui
 import pytest
 
-from src.frontend.componentes.barra_navegacion import crear_barra_navegacion
+from src.frontend.componentes.aplicacion.controles.barra_navegacion import crear_barra_navegacion
 from src.frontend.componentes.aplicacion.base.iconos import icono_svg
 from src.frontend.navegacion import consultas, enlace_elemento_navegacion
 from src.frontend.navegacion.secciones_inicio import seccion_por_clave, secciones_inicio

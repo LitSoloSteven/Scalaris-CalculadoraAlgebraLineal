@@ -5,7 +5,7 @@ from unittest.mock import Mock
 
 import pytest
 from nicegui import ui
-from src.frontend.componentes.selector_opciones import SelectorOpciones
+from src.frontend.componentes.aplicacion.controles.selector_opciones import SelectorOpciones
 from src.frontend.controladores.operaciones_matrices.recomendacion_determinante import metodo_recomendado_disponible
 from tests.comun_construccion_vistas import construir_pagina
 

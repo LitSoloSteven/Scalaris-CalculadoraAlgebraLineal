@@ -6,7 +6,7 @@ from unittest.mock import Mock
 import pytest
 from nicegui import ui
 
-from src.frontend.componentes.selector_opciones import COLUMNAS_COMPACTAS, SelectorOpciones
+from src.frontend.componentes.aplicacion.controles.selector_opciones import COLUMNAS_COMPACTAS, SelectorOpciones
 from tests.comun_construccion_vistas import construir_pagina
 
 

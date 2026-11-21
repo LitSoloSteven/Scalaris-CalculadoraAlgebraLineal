@@ -7,7 +7,7 @@ from xml.etree.ElementTree import fromstring
 from nicegui import Client, core, ui
 import pytest
 
-from src.frontend.componentes.barra_navegacion import crear_barra_navegacion
+from src.frontend.componentes.aplicacion.controles.barra_navegacion import crear_barra_navegacion
 from src.frontend.componentes.aplicacion.base.iconos import icono_svg
 from src.frontend.navegacion import (
     consultas,

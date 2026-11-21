@@ -9,7 +9,7 @@ from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
 from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
 
 from src.frontend.componentes.panel_ia import PanelIA
-from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
+from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.captura_matrices import PanelCapturaMatrices
 from src.frontend.navegacion import ruta_de
 from src.frontend.controladores.operaciones_matrices import ControladorOperacionesMatrices

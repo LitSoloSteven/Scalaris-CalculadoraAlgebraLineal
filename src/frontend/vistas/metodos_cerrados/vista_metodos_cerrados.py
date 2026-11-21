@@ -1,7 +1,7 @@
 """Composición interna de Bisección y Regla falsa."""
 from nicegui import ui
 
-from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
+from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.modos_captura_raices import MODO_BUSQUEDA, MODO_INTERVALO
 from src.frontend.componentes.panel_ia import PanelIA
 from src.frontend.controladores.actualizacion_cancelable import cancelar_actualizacion
