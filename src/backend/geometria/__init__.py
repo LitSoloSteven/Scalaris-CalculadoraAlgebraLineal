@@ -1,10 +1,10 @@
 """Módulo de geometría lineal y analítica para el backend."""
-from src.backend.geometria.clasificacion import (
+from src.backend.geometria.analisis.clasificacion import (
     clasificar_ecuacion,
     detectar_paralelismo,
     son_proporcionales,
 )
-from src.backend.geometria.conjunto_solucion import (
+from src.backend.geometria.analisis.conjunto_solucion import (
     ConjuntoSolucion,
     TipoSolucionGeometria,
     clasificar_conjunto_solucion,
@@ -13,7 +13,7 @@ from src.backend.geometria.conjunto_solucion import (
     obtener_parametros_solucion,
     validar_solucion_parametrica,
 )
-from src.backend.geometria.planos import calcular_geometria_plano
+from src.backend.geometria.analisis.planos import calcular_geometria_plano
 from src.backend.geometria.base.recorte import (
     calcular_rango_automatico,
     recortar_recta_a_caja,

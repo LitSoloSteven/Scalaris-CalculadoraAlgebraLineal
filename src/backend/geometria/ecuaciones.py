@@ -1,5 +1,5 @@
 """Preparación analítica y serialización de ecuaciones geométricas."""
-from src.backend.geometria.clasificacion import clasificar_ecuacion
+from src.backend.geometria.analisis.clasificacion import clasificar_ecuacion
 from src.backend.geometria.base.coordenadas import a_flotante_seguro
 from src.backend.resolutores.operaciones_vectores.formateadores import formatear_expresion_lineal
 from src.backend.utilidades.formato.formateadores import numero_a_latex

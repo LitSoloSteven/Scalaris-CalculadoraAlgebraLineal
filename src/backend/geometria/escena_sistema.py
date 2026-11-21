@@ -2,8 +2,8 @@
 import json
 
 from src.backend.geometria.captura import ubicar_error_celda
-from src.backend.geometria.clasificacion import detectar_paralelismo
-from src.backend.geometria.conjunto_solucion import (
+from src.backend.geometria.analisis.clasificacion import detectar_paralelismo
+from src.backend.geometria.analisis.conjunto_solucion import (
     construir_conjunto_desde_gauss, construir_conjunto_desde_parametros,
     obtener_parametros_solucion, validar_solucion_parametrica,
 )
@@ -11,7 +11,7 @@ from src.backend.geometria.base.coordenadas import a_flotante_seguro
 from src.backend.geometria.ecuaciones import construir_ecuaciones
 from src.backend.geometria.base.errores import respuesta_error
 from src.backend.geometria.base.recorte import calcular_rango_automatico
-from src.backend.geometria.representacion_conjunto import representar_conjunto
+from src.backend.geometria.analisis.representacion_conjunto import representar_conjunto
 from src.backend.resolutores.sistemas_lineales.captura import validar_y_construir_aumentada
 from src.backend.resolutores.sistemas_lineales.gauss import ResolutorGauss
 
