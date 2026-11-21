@@ -3,7 +3,7 @@ from dataclasses import asdict, dataclass
 
 from ..contratos.contrato_biseccion import EntradaBiseccion, ResultadoBiseccion, validar_entrada
 from ...continuidad.dominio.contrato_continuidad import InformeContinuidad
-from ...contrato_exploracion import AVISO_EXPLORACION, CandidatoExploracion
+from ...exploracion.base.contrato_exploracion import AVISO_EXPLORACION, CandidatoExploracion
 from ...compartido.unidades_angulares import validar_unidad_angular
 from .limites_resolucion_multiple import (
     LONGITUD_IDENTIFICADOR_CANDIDATO, MAXIMO_CANDIDATOS_MULTIPLE, MAXIMO_EVALUACIONES_MULTIPLE,

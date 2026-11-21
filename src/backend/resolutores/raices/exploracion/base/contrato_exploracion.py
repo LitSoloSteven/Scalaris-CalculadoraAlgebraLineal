@@ -2,8 +2,8 @@
 import math
 from dataclasses import dataclass, field
 
-from .compartido.limites_biseccion import LONGITUD_MAXIMA_EXPRESION
-from .compartido.unidades_angulares import validar_unidad_angular
+from ...compartido.limites_biseccion import LONGITUD_MAXIMA_EXPRESION
+from ...compartido.unidades_angulares import validar_unidad_angular
 
 AVISO_EXPLORACION = (
     "La exploración finita puede omitir raíces. Los candidatos no certifican raíces "

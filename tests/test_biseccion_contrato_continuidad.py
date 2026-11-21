@@ -5,7 +5,7 @@ import pytest
 
 from src.backend.resolutores.raices.biseccion.motor.biseccion import biseccion
 from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import EntradaBiseccion
-from src.backend.resolutores.raices.contrato_exploracion import CandidatoExploracion
+from src.backend.resolutores.raices.exploracion.base.contrato_exploracion import CandidatoExploracion
 from src.backend.resolutores.raices.biseccion.lote.contrato_resolucion_multiple import CandidatoResolucion, EntradaResolucionMultiple
 from src.backend.resolutores.raices.biseccion.motor.diagnostico_biseccion import analizar_continuidad_intervalo
 from src.backend.resolutores.raices.funcion_real.evaluacion.evaluador_funcion import compilar

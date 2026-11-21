@@ -4,11 +4,11 @@ from dataclasses import asdict
 
 import pytest
 
-from src.backend.resolutores.raices.contrato_exploracion import (
+from src.backend.resolutores.raices.exploracion.base.contrato_exploracion import (
     CandidatoExploracion, EntradaExploracion, EvidenciaContacto, ResultadoExploracion,
 )
-from src.backend.resolutores.raices.exploracion_intervalos import explorar_intervalos
-from src.backend.resolutores.raices.limites_exploracion import (
+from src.backend.resolutores.raices.exploracion.busqueda.exploracion_intervalos import explorar_intervalos
+from src.backend.resolutores.raices.exploracion.base.limites_exploracion import (
     EVALUACIONES_POR_REFINAMIENTO, MAXIMO_EVALUACIONES_CONTACTO,
     MAXIMO_EVALUACIONES_EXPLORACION, MAXIMO_EVALUACIONES_REFINAMIENTO,
     MAXIMO_REFINAMIENTOS_CONTACTO, MAXIMO_REGISTROS_EXPLORACION,
@@ -37,7 +37,7 @@ def test_contrato_antiguo_y_evidencia_son_aditivos_y_serializables():
 
 def test_maximo_combinado_malla_y_auxiliares(monkeypatch):
     """El máximo de 4097 muestras y 512 sondeos está acotado a 4609 evaluaciones reales."""
-    from src.backend.resolutores.raices import evaluacion_exploracion
+    from src.backend.resolutores.raices.exploracion.base import evaluacion_exploracion
     original = evaluacion_exploracion.evaluar
     llamadas = []
     def evaluar_contada(funcion, abscisa):

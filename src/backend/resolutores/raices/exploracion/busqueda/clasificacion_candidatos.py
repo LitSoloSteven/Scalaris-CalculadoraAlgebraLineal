@@ -1,9 +1,9 @@
 """Clasificación conservadora de vecinos sin multiplicar sus valores ni unir huecos."""
 import math
 
-from .contrato_exploracion import CandidatoExploracion, MuestraExploracion
-from .continuidad.dominio.dominio_intervalo import comprobar_dominio_intervalo
-from .limites_exploracion import MAXIMO_REGISTROS_EXPLORACION
+from ..base.contrato_exploracion import CandidatoExploracion, MuestraExploracion
+from ...continuidad.dominio.dominio_intervalo import comprobar_dominio_intervalo
+from ..base.limites_exploracion import MAXIMO_REGISTROS_EXPLORACION
 
 CONTRASTE_CONTACTO = 0.25
 AVISO_CRUCE = "Cambio de signo muestreado; continuidad no certificada."

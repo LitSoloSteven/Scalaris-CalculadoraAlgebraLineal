@@ -5,11 +5,11 @@ from importlib import import_module
 
 import pytest
 
-from src.backend.resolutores.raices import contactos_eje
-from src.backend.resolutores.raices.contrato_exploracion import EntradaExploracion
-from src.backend.resolutores.raices.exploracion_intervalos import explorar_intervalos
+from src.backend.resolutores.raices.exploracion.busqueda import contactos_eje
+from src.backend.resolutores.raices.exploracion.base.contrato_exploracion import EntradaExploracion
+from src.backend.resolutores.raices.exploracion.busqueda.exploracion_intervalos import explorar_intervalos
 from src.backend.resolutores.raices.funcion_real.evaluacion.evaluador_funcion import compilar
-from src.backend.resolutores.raices.limites_exploracion import MAXIMO_EVALUACIONES_REFINAMIENTO
+from src.backend.resolutores.raices.exploracion.base.limites_exploracion import MAXIMO_EVALUACIONES_REFINAMIENTO
 
 
 @pytest.mark.parametrize("expresion,intervalo,paso,tipo", [
@@ -38,7 +38,7 @@ def test_ceros_o_contactos_segun_la_malla(expresion, intervalo, paso, tipo):
 @pytest.mark.parametrize("presupuesto", [0, 1, 2, 23, 24, 25, 511, 512])
 def test_global_instrumentado_conserva_pendientes(monkeypatch, presupuesto):
     """El global se comparte en orden y cuenta intentos reales sin omitir semillas sin reserva."""
-    modulo = import_module("src.backend.resolutores.raices.exploracion_intervalos")
+    modulo = import_module("src.backend.resolutores.raices.exploracion.busqueda.exploracion_intervalos")
     llamadas = []
     def compilar_contada(expresion):
         """Registra cada llamada real del cierre compartido sin agregar evaluaciones propias."""

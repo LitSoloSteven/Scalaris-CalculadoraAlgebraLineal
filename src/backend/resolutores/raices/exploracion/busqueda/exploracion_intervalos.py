@@ -1,13 +1,13 @@
 """Exploración real acotada mediante el mismo evaluador seguro de bisección."""
 from .clasificacion_candidatos import clasificar_candidatos
 from .contactos_eje import refinar_contactos
-from .contrato_exploracion import (
+from ..base.contrato_exploracion import (
     EntradaExploracion, ResultadoExploracion, validar_exploracion,
 )
-from .evaluacion_exploracion import muestrear_punto
-from .funcion_real.evaluacion.evaluador_funcion import compilar
+from ..base.evaluacion_exploracion import muestrear_punto
+from ...funcion_real.evaluacion.evaluador_funcion import compilar
 from .muestreo_intervalos import generar_posiciones
-from .compartido.unidades_angulares import opciones_unidad
+from ...compartido.unidades_angulares import opciones_unidad
 
 
 def explorar_intervalos(entrada: EntradaExploracion) -> ResultadoExploracion:

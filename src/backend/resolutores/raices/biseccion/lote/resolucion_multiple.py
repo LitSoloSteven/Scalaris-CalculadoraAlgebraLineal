@@ -6,7 +6,7 @@ from dataclasses import asdict, replace
 
 from ..motor.biseccion import resolver_intervalo_preparado
 from ..contratos.contrato_biseccion import EntradaBiseccion, validar_entrada
-from ...contrato_exploracion import CandidatoExploracion
+from ...exploracion.base.contrato_exploracion import CandidatoExploracion
 from .contrato_resolucion_multiple import (
     CandidatoResolucion, EntradaResolucionMultiple, ResolucionCandidato,
     ResultadoResolucionMultiple, validar_resolucion_multiple,

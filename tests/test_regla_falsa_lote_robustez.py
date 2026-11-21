@@ -6,7 +6,7 @@ from importlib import import_module
 
 import pytest
 
-from src.backend.resolutores.raices.contrato_exploracion import CandidatoExploracion
+from src.backend.resolutores.raices.exploracion.base.contrato_exploracion import CandidatoExploracion
 from src.backend.resolutores.raices.contrato_lote_regla_falsa import EntradaLoteReglaFalsa
 from src.backend.resolutores.raices.contrato_regla_falsa import EntradaReglaFalsa
 from src.backend.resolutores.raices.contrato_regla_falsa_ampliada import ConfiguracionReglaFalsa

@@ -1,5 +1,5 @@
 """Conversión estructural de candidatos exploratorios para los contratos de lote."""
-from src.backend.resolutores.raices.contrato_exploracion import CandidatoExploracion
+from src.backend.resolutores.raices.exploracion.base.contrato_exploracion import CandidatoExploracion
 from src.backend.resolutores.raices.biseccion.lote.contrato_resolucion_multiple import CandidatoResolucion
 
 

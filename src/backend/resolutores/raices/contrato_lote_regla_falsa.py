@@ -3,7 +3,7 @@ from dataclasses import asdict, dataclass
 from typing import Literal
 
 from .continuidad.dominio.contrato_continuidad import InformeContinuidad
-from .contrato_exploracion import AVISO_EXPLORACION
+from .exploracion.base.contrato_exploracion import AVISO_EXPLORACION
 from .contrato_regla_falsa import EntradaReglaFalsa
 from .contrato_regla_falsa_ampliada import ConfiguracionReglaFalsa, ResultadoReglaFalsaAmpliado
 from .biseccion.lote.contrato_resolucion_multiple import CandidatoResolucion, validar_seleccion_multiple

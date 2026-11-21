@@ -2,11 +2,11 @@
 from collections.abc import Callable
 from dataclasses import replace
 
-from .biseccion.contratos.aritmetica_biseccion import punto_medio
+from ...biseccion.contratos.aritmetica_biseccion import punto_medio
 from .clasificacion_candidatos import AVISO_CONTACTO, clasificar_candidatos
-from .contrato_exploracion import CandidatoExploracion, EntradaExploracion, EvidenciaContacto, MuestraExploracion
-from .evaluacion_exploracion import muestrear_punto
-from .limites_exploracion import (
+from ..base.contrato_exploracion import CandidatoExploracion, EntradaExploracion, EvidenciaContacto, MuestraExploracion
+from ..base.evaluacion_exploracion import muestrear_punto
+from ..base.limites_exploracion import (
     EVALUACIONES_POR_REFINAMIENTO, MAXIMO_EVALUACIONES_REFINAMIENTO, MAXIMO_REFINAMIENTOS_CONTACTO,
 )
 

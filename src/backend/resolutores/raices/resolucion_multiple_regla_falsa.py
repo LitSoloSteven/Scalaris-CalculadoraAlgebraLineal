@@ -1,7 +1,7 @@
 """Resolución de candidatos por falsa posición con reserva previa y fallos aislados."""
 from dataclasses import replace
 
-from .contrato_exploracion import CandidatoExploracion
+from .exploracion.base.contrato_exploracion import CandidatoExploracion
 from .contrato_lote_regla_falsa import (
     EntradaLoteReglaFalsa, ResolucionCandidatoReglaFalsa, ResultadoLoteReglaFalsa,
     validar_lote_regla_falsa,

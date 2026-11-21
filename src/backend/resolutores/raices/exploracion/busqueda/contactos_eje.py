@@ -1,10 +1,10 @@
 """Refinamiento de semillas locales con consumo global y registros conservados."""
 from collections.abc import Callable
 
-from .contrato_exploracion import (
+from ..base.contrato_exploracion import (
     AVISO_EXPLORACION, CandidatoExploracion, EntradaExploracion, MuestraExploracion, ResultadoExploracion,
 )
-from .limites_exploracion import MAXIMO_EVALUACIONES_REFINAMIENTO, MAXIMO_REGISTROS_EXPLORACION
+from ..base.limites_exploracion import MAXIMO_EVALUACIONES_REFINAMIENTO, MAXIMO_REGISTROS_EXPLORACION
 from .refinamiento_contactos import refinar_contacto
 
 AVISO_REFINAMIENTO_AGOTADO = (

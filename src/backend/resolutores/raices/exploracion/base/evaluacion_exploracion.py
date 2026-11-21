@@ -2,7 +2,7 @@
 from collections.abc import Callable
 
 from .contrato_exploracion import MuestraExploracion
-from .funcion_real.evaluacion.evaluador_funcion import evaluar
+from ...funcion_real.evaluacion.evaluador_funcion import evaluar
 
 
 def muestrear_punto(funcion: Callable[[float], float], posicion: float) -> MuestraExploracion:

@@ -5,10 +5,10 @@ from dataclasses import asdict
 
 import pytest
 
-from src.backend.resolutores.raices.contrato_exploracion import EntradaExploracion, MuestraExploracion
-from src.backend.resolutores.raices.evaluacion_exploracion import muestrear_punto
+from src.backend.resolutores.raices.exploracion.base.contrato_exploracion import EntradaExploracion, MuestraExploracion
+from src.backend.resolutores.raices.exploracion.base.evaluacion_exploracion import muestrear_punto
 from src.backend.resolutores.raices.funcion_real.evaluacion.evaluador_funcion import compilar
-from src.backend.resolutores.raices.refinamiento_contactos import refinar_contacto
+from src.backend.resolutores.raices.exploracion.busqueda.refinamiento_contactos import refinar_contacto
 
 
 def _refinar(expresion, presupuesto=24):

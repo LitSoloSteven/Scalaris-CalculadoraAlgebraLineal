@@ -1,8 +1,8 @@
 """Malla por índice con presupuesto comprobado antes de reservar posiciones."""
 from fractions import Fraction
 
-from .contrato_exploracion import EntradaExploracion, validar_exploracion
-from .limites_exploracion import MAXIMO_EVALUACIONES_EXPLORACION
+from ..base.contrato_exploracion import EntradaExploracion, validar_exploracion
+from ..base.limites_exploracion import MAXIMO_EVALUACIONES_EXPLORACION
 
 
 def generar_posiciones(entrada: EntradaExploracion) -> tuple[float, ...]:

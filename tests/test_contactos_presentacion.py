@@ -4,7 +4,7 @@ import json
 import pytest
 from nicegui import ui
 
-from src.backend.resolutores.raices import contactos_eje
+from src.backend.resolutores.raices.exploracion.busqueda import contactos_eje
 from src.frontend.controladores.biseccion.exploracion import (
     detalles_contacto, presentar_candidato, resolver_exploracion, texto_consumo_exploracion,
 )

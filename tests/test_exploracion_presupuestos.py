@@ -4,12 +4,12 @@ from unittest.mock import patch
 
 import pytest
 
-from src.backend.resolutores.raices.contrato_exploracion import EntradaExploracion
-from src.backend.resolutores.raices.exploracion_intervalos import explorar_intervalos
-from src.backend.resolutores.raices.limites_exploracion import (
+from src.backend.resolutores.raices.exploracion.base.contrato_exploracion import EntradaExploracion
+from src.backend.resolutores.raices.exploracion.busqueda.exploracion_intervalos import explorar_intervalos
+from src.backend.resolutores.raices.exploracion.base.limites_exploracion import (
     MAXIMO_EVALUACIONES_EXPLORACION, MAXIMO_REGISTROS_EXPLORACION,
 )
-from src.backend.resolutores.raices.muestreo_intervalos import generar_posiciones
+from src.backend.resolutores.raices.exploracion.busqueda.muestreo_intervalos import generar_posiciones
 
 
 def test_presupuesto_exacto_de_evaluaciones():
@@ -21,7 +21,7 @@ def test_presupuesto_exacto_de_evaluaciones():
 def test_presupuesto_rechazado_antes_de_compilar_o_evaluar():
     """Un rango abusivo falla antes del trabajo matemático y sin reservar una malla enorme."""
     entrada = EntradaExploracion("x", -1e308, 1e308, math.ulp(0.0))
-    with patch("src.backend.resolutores.raices.exploracion_intervalos.compilar") as compilar:
+    with patch("src.backend.resolutores.raices.exploracion.busqueda.exploracion_intervalos.compilar") as compilar:
         with pytest.raises(ValueError, match="demasiadas evaluaciones"):
             explorar_intervalos(entrada)
         compilar.assert_not_called()
