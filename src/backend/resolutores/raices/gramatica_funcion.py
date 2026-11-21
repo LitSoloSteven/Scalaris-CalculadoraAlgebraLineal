@@ -8,7 +8,9 @@ from .constantes_funcion import CONSTANTES_REALES as CONSTANTES_REALES
 from .errores_numericos import ErrorCapacidadNumerica
 from .expansion_calculo import desarrollar_calculo
 from .normalizacion_funcion import normalizar_expresion
-from .notacion_calculo import AGREGADOS, DERIVADAS, MAXIMO_TERMINOS_AGREGADO, NOMBRES_ANGULARES, POSTFIJOS, entero_literal
+from .notacion_calculo import (
+    AGREGADOS, DERIVADAS, GUARDIA_DERIVADA, MAXIMO_TERMINOS_AGREGADO, NOMBRES_ANGULARES, POSTFIJOS, entero_literal,
+)
 from .unidades_angulares import validar_unidad_angular
 
 FUNCIONES_REALES = {"sin": math.sin, "cos": math.cos, "tan": math.tan, "exp": math.exp,
@@ -89,6 +91,10 @@ def _validar_llamada(nodo: ast.Call, profundidad: int, variables: frozenset[str]
     nombre = nodo.func.id
     if nombre in _AGREGADOS and "x" in variables:
         _validar_agregado(nodo, profundidad, variables)
+        return
+    if nombre == GUARDIA_DERIVADA and "x" in variables and len(nodo.args) == 2:
+        for argumento in nodo.args:
+            _validar_nodo(argumento, profundidad + 1, variables)
         return
     if nombre not in _FUNCIONES_UNARIAS or (nombre in DERIVADAS and "x" not in variables):
         raise ValueError("Llamada no permitida. Usa una función real del catálogo.")

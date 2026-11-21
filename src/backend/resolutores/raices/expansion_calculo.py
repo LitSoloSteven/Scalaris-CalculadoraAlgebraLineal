@@ -3,9 +3,10 @@
 import ast
 from itertools import islice
 
-from .nodos_derivada import constante, llamada
+from .errores_numericos import ErrorCapacidadNumerica
+from .nodos_derivada import constante, llamada, proteger_derivada
 from .notacion_calculo import (
-    AGREGADOS, ANGULARES_RADIANES, DERIVADAS, GRADOS_POR_MEDIA_VUELTA, POSTFIJOS,
+    AGREGADOS, ANGULARES_RADIANES, DERIVADAS, GRADOS_POR_MEDIA_VUELTA, GUARDIA_DERIVADA, POSTFIJOS,
     TRIGONOMETRICAS_DIRECTAS, TRIGONOMETRICAS_INVERSAS, UNIDADES_POR_MIL, entero_literal,
 )
 from .reglas_derivacion import derivar_nodo
@@ -48,6 +49,8 @@ class _Expansion:
         if nombre in (_SUMATORIA, _PRODUCTORIA):
             return self._expandir_agregado(nodo, indices, en_derivada)
         argumento = self.expandir(nodo.args[0], indices, en_derivada or nombre in DERIVADAS)
+        if nombre == GUARDIA_DERIVADA:
+            return proteger_derivada(argumento, self.expandir(nodo.args[1], indices, en_derivada))
         if nombre in DERIVADAS:
             return self._expandir_derivada(argumento, DERIVADAS[nombre])
         if nombre == _GRADOS:
@@ -70,11 +73,16 @@ class _Expansion:
         return resultado
 
     def _expandir_derivada(self, argumento: ast.AST, orden: int) -> ast.AST:
+        resultado = argumento
         for _ in range(orden):
-            argumento = derivar_nodo(argumento)
-            cantidad = sum(1 for _ in islice(ast.walk(argumento), self._maximo + 1))
+            try:
+                argumento = derivar_nodo(argumento)
+            except OverflowError as error:
+                raise ErrorCapacidadNumerica("La derivada excede la capacidad numérica.") from error
+            resultado = proteger_derivada(resultado, argumento)
+            cantidad = sum(1 for _ in islice(ast.walk(resultado), self._maximo + 1))
             self._consumir(cantidad)
-        return argumento
+        return resultado
 
     def _expandir_angular(self, nombre: str, original: ast.AST, argumento: ast.AST, en_derivada: bool) -> ast.AST:
         if nombre in TRIGONOMETRICAS_DIRECTAS and _tiene_grados_explicitos(original):
@@ -104,6 +112,8 @@ def _tiene_grados_explicitos(nodo: ast.AST) -> bool:
         nombre = nodo.func.id
         if nombre == _GRADOS:
             return True
+        if nombre == GUARDIA_DERIVADA:
+            return _tiene_grados_explicitos(nodo.args[1])
         if nombre in _ANGULARES or nombre in ANGULARES_RADIANES.values() or nombre in DERIVADAS:
             return False
         return any(_tiene_grados_explicitos(argumento) for argumento in nodo.args)

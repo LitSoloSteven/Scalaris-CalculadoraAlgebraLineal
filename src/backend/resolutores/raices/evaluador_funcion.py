@@ -3,6 +3,7 @@ import ast
 from collections.abc import Callable
 
 from .gramatica_funcion import analizar_expresion, FUNCIONES_REALES, CONSTANTES_REALES
+from .notacion_calculo import GUARDIA_DERIVADA
 from .operaciones_reales import aplicar_funcion, aplicar_operador, comprobar_real, ejecutar_operacion
 from .unidades_angulares import validar_unidad_angular
 
@@ -44,5 +45,8 @@ def _evaluar_nodo(nodo: ast.AST, valor: float, unidad: str) -> float:
     if isinstance(nodo, ast.BinOp):
         return aplicar_operador(nodo.op, _evaluar_nodo(nodo.left, valor, unidad), _evaluar_nodo(nodo.right, valor, unidad))
     if isinstance(nodo, ast.Call):
+        if nodo.func.id == GUARDIA_DERIVADA:
+            _evaluar_nodo(nodo.args[0], valor, unidad)
+            return _evaluar_nodo(nodo.args[1], valor, unidad)
         return aplicar_funcion(nodo.func.id, _evaluar_nodo(nodo.args[0], valor, unidad), unidad_angular=unidad)
     raise ValueError("La expresión contiene un nodo no evaluable.")
