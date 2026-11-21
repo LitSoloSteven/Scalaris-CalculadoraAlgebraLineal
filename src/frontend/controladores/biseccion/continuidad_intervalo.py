@@ -1,6 +1,6 @@
 """Adapta una captura parcial a la consulta de continuidad del dominio."""
 from src.backend.resolutores.raices.biseccion.motor.diagnostico_biseccion import analizar_continuidad_intervalo
-from .captura_criterio import real_capturado
+from src.frontend.controladores.raices.biseccion.captura.captura_criterio import real_capturado
 
 
 def consultar_continuidad(captura: dict) -> dict:

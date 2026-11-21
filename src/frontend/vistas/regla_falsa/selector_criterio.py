@@ -1,7 +1,7 @@
 """Selector de condición con un parámetro visible y borradores independientes."""
 from nicegui import ui
 
-from src.frontend.controladores.biseccion.catalogo_criterios import CRITERIOS, condicion_criterio
+from src.frontend.controladores.raices.biseccion.captura.catalogo_criterios import CRITERIOS, condicion_criterio
 from src.frontend.controladores.regla_falsa.configuracion_ampliada import criterio_capturado
 
 

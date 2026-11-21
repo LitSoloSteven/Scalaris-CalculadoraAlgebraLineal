@@ -1,7 +1,7 @@
 """Coherencia de estado, criterio, unidades y copias con los datos del motor."""
 import pytest
 
-from src.frontend.controladores.biseccion.captura_criterio import preparar_entrada, texto_condicion, texto_estimacion
+from src.frontend.controladores.raices.biseccion.captura.captura_criterio import preparar_entrada, texto_condicion, texto_estimacion
 from src.frontend.controladores.biseccion.controlador import resolver_captura
 from src.frontend.controladores.biseccion.presentacion import construir_pasos
 from src.frontend.controladores.biseccion.presentacion_criterio import metricas_resumen, texto_resumen, titulo_estado

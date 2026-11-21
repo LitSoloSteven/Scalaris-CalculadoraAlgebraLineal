@@ -1,7 +1,7 @@
 """Formato de magnitudes y pasos a partir de la traza del motor."""
 from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import ESTADO_DISCONTINUIDAD
 from src.frontend.componentes.reproductor_pasos.nucleo.modelo import GrupoReproductor, PasoReproductor
-from .catalogo_criterios import condicion_criterio
+from src.frontend.controladores.raices.biseccion.captura.catalogo_criterios import condicion_criterio
 from src.frontend.controladores.raices.compartido.formato.formato_numerico_raices import numero
 
 COLUMNAS = (

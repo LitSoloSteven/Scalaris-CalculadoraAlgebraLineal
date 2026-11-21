@@ -4,7 +4,7 @@ from collections.abc import Mapping
 from src.backend.resolutores.raices.regla_falsa.contratos.contrato_regla_falsa import EntradaReglaFalsa
 from src.backend.resolutores.raices.regla_falsa.contratos.contrato_regla_falsa_ampliada import ConfiguracionReglaFalsa
 from src.backend.resolutores.raices.regla_falsa.contratos.criterios_regla_falsa import validar_criterio_regla_falsa
-from src.frontend.controladores.biseccion.catalogo_criterios import CRITERIOS
+from src.frontend.controladores.raices.biseccion.captura.catalogo_criterios import CRITERIOS
 from src.frontend.controladores.raices.compartido.formato.captura_real import entero_capturado, real_capturado
 from .captura import preparar_entrada
 

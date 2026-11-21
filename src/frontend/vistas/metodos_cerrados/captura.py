@@ -9,9 +9,9 @@ from src.frontend.componentes.raices.captura.modos_captura_raices import MODO_BU
 from src.frontend.componentes.raices.captura.previa_expresion_raices import PreviaExpresion
 from src.frontend.componentes.aplicacion.controles.selector_opciones import SelectorOpciones
 from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
-from src.frontend.controladores.biseccion.captura_criterio import texto_estimacion
-from src.frontend.controladores.biseccion.catalogo_criterios import CRITERIOS
-from src.frontend.controladores.biseccion.metadatos_expresion import sensible_a_unidad
+from src.frontend.controladores.raices.biseccion.captura.captura_criterio import texto_estimacion
+from src.frontend.controladores.raices.biseccion.captura.catalogo_criterios import CRITERIOS
+from src.frontend.controladores.raices.biseccion.captura.metadatos_expresion import sensible_a_unidad
 from src.frontend.controladores.metodos_cerrados.adaptadores import (
     BISECCION, METODOS, REGLA_FALSA, captura_del_metodo, criterio_inicial, guia_parada, parametros_iniciales,
 )

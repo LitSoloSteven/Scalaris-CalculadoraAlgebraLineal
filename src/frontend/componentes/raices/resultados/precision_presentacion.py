@@ -1,7 +1,7 @@
 """Validación y comunicación del formato numérico de los resultados."""
 from nicegui import ui
 
-from src.frontend.controladores.biseccion.captura_criterio import precision_presentacion
+from src.frontend.controladores.raices.biseccion.captura.captura_criterio import precision_presentacion
 
 
 def leer_precision_presentacion(campo: ui.number, error: ui.label) -> int | None:

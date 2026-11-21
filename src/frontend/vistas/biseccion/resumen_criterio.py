@@ -6,7 +6,7 @@ from nicegui import ui
 from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import D_MAXIMO
 from src.frontend.componentes.resultados.acciones.copia_resultado import renderizar_copia_resultado
 from src.frontend.componentes.raices.resultados.precision_presentacion import leer_precision_presentacion
-from src.frontend.controladores.biseccion.catalogo_criterios import DECIMALES_PRESENTACION_DEFECTO
+from src.frontend.controladores.raices.biseccion.captura.catalogo_criterios import DECIMALES_PRESENTACION_DEFECTO
 from src.frontend.controladores.biseccion.presentacion import motivo
 from src.frontend.controladores.biseccion.presentacion_criterio import (
     aproximacion_presentada, avisos_resumen, datos_copia_biseccion, etiqueta_aproximacion, metricas_principales,

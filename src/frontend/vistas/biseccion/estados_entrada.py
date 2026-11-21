@@ -1,6 +1,6 @@
 """Orientación de la captura sin evaluar la función ni afirmar continuidad."""
-from src.frontend.controladores.biseccion.captura_criterio import preparar_entrada
-from src.frontend.controladores.biseccion.metadatos_expresion import sensible_a_unidad
+from src.frontend.controladores.raices.biseccion.captura.captura_criterio import preparar_entrada
+from src.frontend.controladores.raices.biseccion.captura.metadatos_expresion import sensible_a_unidad
 
 
 def actualizar_expresion(vista, *, validar: bool = False) -> None:

@@ -1,7 +1,7 @@
 """Restauración de criterios explícitos y capturas decimales anteriores."""
 import pytest
 
-from src.frontend.controladores.biseccion.captura_criterio import preparar_entrada
+from src.frontend.controladores.raices.biseccion.captura.captura_criterio import preparar_entrada
 from tests.comun_biseccion_criterios import captura_criterio, ejecutar_escenario
 
 

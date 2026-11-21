@@ -2,7 +2,7 @@
 from nicegui import ui
 
 from src.frontend.componentes.resultados.acciones.copia_resultado import renderizar_copia_resultado
-from src.frontend.controladores.biseccion.catalogo_criterios import DECIMALES_PRESENTACION_DEFECTO
+from src.frontend.controladores.raices.biseccion.captura.catalogo_criterios import DECIMALES_PRESENTACION_DEFECTO
 from src.frontend.controladores.biseccion.presentacion_criterio import datos_copia_biseccion, texto_resumen, titulo_estado
 from src.frontend.controladores.biseccion.salidas_biseccion import texto_copia_biseccion
 from .modo_examen import crear_control_examen_lote

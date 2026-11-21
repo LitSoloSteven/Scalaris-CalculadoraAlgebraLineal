@@ -1,5 +1,5 @@
 """Textos y métricas publicados por el motor de regla falsa."""
-from src.frontend.controladores.biseccion.captura_criterio import precision_presentacion
+from src.frontend.controladores.raices.biseccion.captura.captura_criterio import precision_presentacion
 from src.frontend.controladores.biseccion.presentacion import numero
 from src.frontend.controladores.biseccion.presentacion_diagnostico import texto_intervalo
 

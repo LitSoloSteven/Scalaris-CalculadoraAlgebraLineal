@@ -3,7 +3,7 @@ from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion impor
 from src.backend.resolutores.raices.biseccion.contratos.criterios_biseccion import validar_criterio
 from src.backend.resolutores.raices.biseccion.contratos.estimacion_biseccion import estimar_iteraciones
 from src.frontend.controladores.raices.compartido.formato.captura_real import entero_capturado, real_capturado
-from .catalogo_criterios import CRITERIOS, DECIMALES_PRESENTACION_DEFECTO, condicion_criterio
+from src.frontend.controladores.raices.biseccion.captura.catalogo_criterios import CRITERIOS, DECIMALES_PRESENTACION_DEFECTO, condicion_criterio
 
 
 def preparar_entrada(captura: dict) -> EntradaBiseccion:

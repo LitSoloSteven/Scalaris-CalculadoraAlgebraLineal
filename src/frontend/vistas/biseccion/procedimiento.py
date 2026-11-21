@@ -4,7 +4,7 @@ from nicegui import ui
 from src.frontend.componentes.glosa.interaccion.glosa_foco import crear_accion_explicacion
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos
 from src.frontend.componentes.reproductor_pasos.formato.cuerpos import renderizar_latex
-from src.frontend.controladores.biseccion.catalogo_criterios import condicion_criterio
+from src.frontend.controladores.raices.biseccion.captura.catalogo_criterios import condicion_criterio
 from src.frontend.controladores.biseccion.formato_expresion import formatear_expresion
 from src.frontend.controladores.biseccion.formulas_procedimiento import formulas_iteracion
 from src.frontend.controladores.biseccion.presentacion import COLUMNAS, construir_pasos, valor_columna
