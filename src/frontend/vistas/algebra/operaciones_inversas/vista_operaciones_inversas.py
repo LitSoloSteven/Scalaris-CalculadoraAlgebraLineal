@@ -11,9 +11,9 @@ from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import 
 from src.frontend.navegacion import ruta_de
 from src.frontend.componentes.captura.paneles.panel_matriz_cuadrada import PanelMatrizCuadrada
 from src.frontend.componentes.captura.nucleo.cuadricula_base import ubicar_celda_matriz
-from src.frontend.vistas.operaciones_inversas.mixin_historial import MixinHistorialOperacionesInversas
-from src.frontend.vistas.operaciones_inversas.mixin_resultados import MixinResultadosOperacionesInversas
-from src.frontend.vistas.operaciones_inversas.mixin_pasos import MixinPasosOperacionesInversas
+from src.frontend.vistas.algebra.operaciones_inversas.mixins.mixin_historial import MixinHistorialOperacionesInversas
+from src.frontend.vistas.algebra.operaciones_inversas.mixins.mixin_resultados import MixinResultadosOperacionesInversas
+from src.frontend.vistas.algebra.operaciones_inversas.mixins.mixin_pasos import MixinPasosOperacionesInversas
 
 
 

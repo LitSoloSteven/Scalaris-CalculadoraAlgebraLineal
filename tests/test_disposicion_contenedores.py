@@ -25,7 +25,7 @@ def test_vistas_utilizan_disposicion_por_contenedor():
         "src/frontend/vistas/algebra/sistemas_lineales/vista_sistemas_lineales.py",
         "src/frontend/vistas/operaciones_vectores/vista_operaciones_vectores.py",
         "src/frontend/vistas/algebra/operaciones_matrices/expresiones/vista_operaciones_matrices.py",
-        "src/frontend/vistas/operaciones_inversas/vista_operaciones_inversas.py",
+        "src/frontend/vistas/algebra/operaciones_inversas/vista_operaciones_inversas.py",
         "src/frontend/vistas/sistemas_numericos/bases/vista_sistemas_numericos.py",
         "src/frontend/vistas/sistemas_numericos/romanos/vista_calculadora_romana.py",
     ]

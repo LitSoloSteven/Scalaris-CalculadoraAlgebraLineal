@@ -10,10 +10,10 @@ from src.frontend.controladores.algebra.operaciones_inversas import (
 )
 from src.frontend.controladores.algebra.operaciones_inversas.contexto.presentacion import preparar_opciones_inversa
 from src.ai.huellas import calcular_huella
-from src.frontend.vistas.operaciones_inversas._tarjeta_inversa import (
+from src.frontend.vistas.algebra.operaciones_inversas.piezas._tarjeta_inversa import (
     renderizar_resultado_inversa,
 )
-from ._vista_previa_inversa import actualizar_vista_previa
+from src.frontend.vistas.algebra.operaciones_inversas.piezas._vista_previa_inversa import actualizar_vista_previa
 
 
 

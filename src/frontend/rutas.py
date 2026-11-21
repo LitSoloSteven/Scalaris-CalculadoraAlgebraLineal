@@ -70,7 +70,7 @@ def _registrar_paginas_algebra() -> None:
     @ui.page(ruta_de("inversa"), title=herramienta_por_identificador("inversa").titulo_pagina)
     def pagina_inversa(handoff: str = ""):
         """Construye la página de inversa con sus controles y contexto."""
-        from src.frontend.vistas.operaciones_inversas.vista_operaciones_inversas import VistaOperacionesInversas
+        from src.frontend.vistas.algebra.operaciones_inversas.vista_operaciones_inversas import VistaOperacionesInversas
 
         configurar_tema("inversa")
         VistaOperacionesInversas().construir(token_transferencia=handoff)

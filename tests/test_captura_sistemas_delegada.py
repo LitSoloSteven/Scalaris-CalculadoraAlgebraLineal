@@ -84,14 +84,14 @@ _RUTAS_VISTAS_FAMILIAS = (
     "algebra/sistemas_lineales/resultados/mixin_resolucion.py",
     "algebra/sistemas_lineales/resultados/mixin_resultados.py",
     "algebra/sistemas_lineales/vista_sistemas_lineales.py",
-    "operaciones_inversas/__init__.py",
-    "operaciones_inversas/_adaptador_pasos.py",
-    "operaciones_inversas/_tarjeta_inversa.py",
-    "operaciones_inversas/_vista_previa_inversa.py",
-    "operaciones_inversas/mixin_historial.py",
-    "operaciones_inversas/mixin_pasos.py",
-    "operaciones_inversas/mixin_resultados.py",
-    "operaciones_inversas/vista_operaciones_inversas.py",
+    "algebra/operaciones_inversas/__init__.py",
+    "algebra/operaciones_inversas/piezas/_adaptador_pasos.py",
+    "algebra/operaciones_inversas/piezas/_tarjeta_inversa.py",
+    "algebra/operaciones_inversas/piezas/_vista_previa_inversa.py",
+    "algebra/operaciones_inversas/mixins/mixin_historial.py",
+    "algebra/operaciones_inversas/mixins/mixin_pasos.py",
+    "algebra/operaciones_inversas/mixins/mixin_resultados.py",
+    "algebra/operaciones_inversas/vista_operaciones_inversas.py",
 )
 
 

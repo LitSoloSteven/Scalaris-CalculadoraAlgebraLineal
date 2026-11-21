@@ -19,7 +19,7 @@ from src.frontend.componentes.reproductor_pasos.interfaz import reproductor as m
 from src.frontend.controladores.algebra.operaciones_inversas import (
     ControladorOperacionesInversas,
 )
-from src.frontend.vistas.operaciones_inversas._adaptador_pasos import (
+from src.frontend.vistas.algebra.operaciones_inversas.piezas._adaptador_pasos import (
     adaptar_pasos_inversa,
 )
 
