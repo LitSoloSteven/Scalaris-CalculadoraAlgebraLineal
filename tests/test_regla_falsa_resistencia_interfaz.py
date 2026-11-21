@@ -1,5 +1,5 @@
 """Navegación de la traza más larga admitida en la captura."""
-from src.backend.resolutores.raices.limites_raices import LIMITE_ITERACIONES_MAXIMO
+from src.backend.resolutores.raices.compartido.limites_raices import LIMITE_ITERACIONES_MAXIMO
 from src.frontend.componentes.tabla_iteraciones import FILAS_POR_PAGINA
 from tests.comun_regla_falsa_vista import captura_regla_falsa, ejecutar_escenario
 

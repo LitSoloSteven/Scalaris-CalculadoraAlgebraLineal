@@ -2,7 +2,7 @@
 import math
 from dataclasses import dataclass, field
 
-from .limites_biseccion import LONGITUD_MAXIMA_EXPRESION
+from .compartido.limites_biseccion import LONGITUD_MAXIMA_EXPRESION
 from .compartido.unidades_angulares import validar_unidad_angular
 
 AVISO_EXPLORACION = (

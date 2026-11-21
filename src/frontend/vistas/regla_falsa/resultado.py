@@ -1,7 +1,7 @@
 """Resumen y copia del resultado vigente, con precisión exclusivamente visual."""
 from nicegui import ui
 
-from src.backend.resolutores.raices.limites_raices import D_MAXIMO
+from src.backend.resolutores.raices.compartido.limites_raices import D_MAXIMO
 from src.frontend.componentes.copia_resultado import renderizar_copia_resultado
 from src.frontend.componentes.precision_presentacion import leer_precision_presentacion
 from src.frontend.controladores.regla_falsa.diagnostico import detalles_diagnostico

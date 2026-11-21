@@ -10,19 +10,19 @@ from src.backend.resolutores.raices.contrato_biseccion import (
     validar_entrada,
     validar_precision,
 )
-from src.backend.resolutores.raices.limites_biseccion import (
+from src.backend.resolutores.raices.compartido.limites_biseccion import (
     D_MAXIMO as D_MAXIMO_FACHADA,
     LIMITE_ITERACIONES_DEFECTO,
     LIMITE_ITERACIONES_MAXIMO as LIMITE_MAX_FACHADA,
     LONGITUD_MAXIMA_EXPRESION,
 )
-from src.backend.resolutores.raices.limites_raices import (
+from src.backend.resolutores.raices.compartido.limites_raices import (
     D_MAXIMO as D_MAXIMO_RAICES,
     LIMITE_ITERACIONES_DEFECTO as LIMITE_DEFECTO_RAICES,
     LIMITE_ITERACIONES_MAXIMO as LIMITE_MAX_RAICES,
     LONGITUD_MAXIMA_EXPRESION as LONGITUD_MAX_RAICES,
 )
-from src.backend.resolutores.raices.validacion_raices import (
+from src.backend.resolutores.raices.compartido.validacion_raices import (
     validar_expresion,
     validar_extremo,
     validar_limite_iteraciones,

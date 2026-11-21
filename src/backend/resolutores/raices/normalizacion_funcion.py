@@ -4,7 +4,7 @@ import re
 import tokenize
 from unicodedata import normalize
 
-from .limites_biseccion import LONGITUD_MAXIMA_EXPRESION
+from .compartido.limites_biseccion import LONGITUD_MAXIMA_EXPRESION
 from .nodos_integral import NOMBRE_INFINITO, NOMBRE_INTEGRAL, SIMBOLO_INFINITO, SIMBOLO_INTEGRAL
 from .notacion_calculo import AGREGADOS, POSTFIJOS, envolver_postfijo
 

@@ -1,5 +1,5 @@
 """Preparación acotada de una gráfica sin resolver ni validar criterios de parada."""
-from src.backend.resolutores.raices.limites_raices import LONGITUD_MAXIMA_EXPRESION
+from src.backend.resolutores.raices.compartido.limites_raices import LONGITUD_MAXIMA_EXPRESION
 from src.backend.resolutores.raices.normalizacion_funcion import normalizar_expresion
 from src.backend.resolutores.raices.compartido.unidades_angulares import opciones_unidad
 from src.frontend.controladores.rango_exploracion_raices import (

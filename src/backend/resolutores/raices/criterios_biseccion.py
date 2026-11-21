@@ -2,8 +2,8 @@
 from dataclasses import dataclass
 from fractions import Fraction
 
-from .limites_biseccion import D_MAXIMO
-from .validacion_raices import validar_tolerancia_positiva
+from .compartido.limites_biseccion import D_MAXIMO
+from .compartido.validacion_raices import validar_tolerancia_positiva
 
 _UNIDADES = {"relativo": "%", "ancho": "unidades de x", "decimales": "unidades de x",
              "residuo": "unidades de f(x)", "iteraciones": "iteraciones"}

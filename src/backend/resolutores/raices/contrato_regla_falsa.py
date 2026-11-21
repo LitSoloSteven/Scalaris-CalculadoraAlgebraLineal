@@ -5,7 +5,7 @@ from typing import Literal
 from .contrato_biseccion import AVISO_INTERVALO_INVERTIDO, ContextoFallo
 from .contrato_continuidad import InformeContinuidad
 from .decision_biseccion import SignoProducto
-from .limites_raices import LIMITE_ITERACIONES_DEFECTO
+from .compartido.limites_raices import LIMITE_ITERACIONES_DEFECTO
 
 AccionReglaFalsa = Literal["reemplazar_a", "reemplazar_b", "raiz", "sin_cambio"]
 DiagnosticoReglaFalsa = dict

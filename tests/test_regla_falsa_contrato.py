@@ -8,7 +8,7 @@ from src.backend.resolutores.raices.contrato_regla_falsa import (
     IteracionReglaFalsa,
     ResultadoReglaFalsa,
 )
-from src.backend.resolutores.raices.limites_raices import (
+from src.backend.resolutores.raices.compartido.limites_raices import (
     LIMITE_ITERACIONES_DEFECTO,
     LIMITE_ITERACIONES_MAXIMO,
 )

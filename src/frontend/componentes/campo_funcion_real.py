@@ -1,7 +1,7 @@
 """Campo compartido para capturar funciones reales con el teclado."""
 from nicegui import ui
 
-from src.backend.resolutores.raices.limites_raices import LONGITUD_MAXIMA_EXPRESION
+from src.backend.resolutores.raices.compartido.limites_raices import LONGITUD_MAXIMA_EXPRESION
 from src.frontend.componentes.simbolos import habilitar_simbolos
 
 
