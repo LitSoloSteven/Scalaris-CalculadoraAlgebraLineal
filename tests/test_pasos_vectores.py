@@ -205,7 +205,7 @@ def test_textos_vectoriales_sin_raya_larga_ni_voseo():
         Path("src/frontend/vistas/operaciones_vectores/_pasos_reproductor.py"),
         Path("src/frontend/vistas/operaciones_vectores/mixin_pasos.py"),
         Path("src/frontend/vistas/operaciones_vectores/mixin_resultados.py"),
-        Path("src/frontend/controladores/operaciones_vectores/controlador_operaciones_vectores.py"),
+        Path("src/frontend/controladores/algebra/operaciones_vectores/controlador_operaciones_vectores.py"),
     ]
 
     patron_voseo = re.compile(

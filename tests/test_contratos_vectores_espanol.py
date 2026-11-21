@@ -9,9 +9,9 @@ from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_vectores.base.captura import construir_vector_desde_diccionario
 from src.backend.resolutores.operaciones_vectores.operaciones.combinacion_lineal import ResolutorCombinacionLineal
 from src.backend.resolutores.operaciones_vectores.operaciones.operaciones import ResolutorOperacionesVectores
-from src.frontend.controladores.operaciones_vectores.captura import capturar_vectores, preparar_transferencia
-from src.frontend.controladores.operaciones_vectores.controlador_operaciones_vectores import ControladorOperacionesVectores
-from src.frontend.controladores.operaciones_vectores.presentacion_pasos import construir_tabla_paso_vectorial
+from src.frontend.controladores.algebra.operaciones_vectores.captura import capturar_vectores, preparar_transferencia
+from src.frontend.controladores.algebra.operaciones_vectores.controlador_operaciones_vectores import ControladorOperacionesVectores
+from src.frontend.controladores.algebra.operaciones_vectores.presentacion_pasos import construir_tabla_paso_vectorial
 from src.frontend.componentes.captura.vectores.captura_vectores import _formatear_nombre_vector
 from tests.comun import RAIZ
 from tests.comun_vista_vectorial import vista_vectorial_montada

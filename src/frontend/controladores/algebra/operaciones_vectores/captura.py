@@ -2,8 +2,8 @@
 import json
 
 from src.backend.geometria.preparacion.transferencia import preparar_vectores_visualizador
-from .controlador_operaciones_vectores import ControladorOperacionesVectores
-from .controlador_independencia import procesar_independencia
+from src.frontend.controladores.algebra.operaciones_vectores.controlador_operaciones_vectores import ControladorOperacionesVectores
+from src.frontend.controladores.algebra.operaciones_vectores.controlador_independencia import procesar_independencia
 
 
 def capturar_vectores(vectores: dict, dimension: int) -> dict:

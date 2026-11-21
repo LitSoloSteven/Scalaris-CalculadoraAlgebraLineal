@@ -7,7 +7,7 @@ from unittest.mock import Mock
 import pytest
 from nicegui import ui
 
-from src.frontend.controladores.operaciones_vectores.captura import resolver_captura
+from src.frontend.controladores.algebra.operaciones_vectores.captura import resolver_captura
 from tests.comun_vista_vectorial import vista_vectorial_montada
 
 

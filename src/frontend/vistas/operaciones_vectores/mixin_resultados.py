@@ -3,7 +3,7 @@ import html
 
 from nicegui import ui
 
-from src.frontend.controladores.operaciones_vectores.captura import preparar_transferencia
+from src.frontend.controladores.algebra.operaciones_vectores.captura import preparar_transferencia
 from ._pasos_reproductor import construir_pasos_combinacion_lineal, construir_pasos_vector_basico
 from .mixin_pasos import MixinPasosVectores, OpcionesReproductorVectores
 from src.frontend.componentes.resultados.analisis.presentacion_analisis import montar_analisis

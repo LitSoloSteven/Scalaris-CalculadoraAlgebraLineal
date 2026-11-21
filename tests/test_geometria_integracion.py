@@ -11,7 +11,7 @@ from src.frontend.controladores.geometria.escenas.controlador_geometria import (
 from src.frontend.controladores.operaciones_inversas.controlador_operaciones_inversas import (
     ControladorOperacionesInversas,
 )
-from src.frontend.controladores.operaciones_vectores.controlador_operaciones_vectores import (
+from src.frontend.controladores.algebra.operaciones_vectores.controlador_operaciones_vectores import (
     ControladorOperacionesVectores,
 )
 from src.frontend.navegacion import RedireccionHeredada, ubicacion_redireccion

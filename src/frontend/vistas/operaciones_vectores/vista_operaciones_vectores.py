@@ -15,7 +15,7 @@ from src.frontend.navegacion import ruta_de
 from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto
 from . import contexto, controles
 from .mixin_resultados import MixinResultadosVectores
-from src.frontend.controladores.operaciones_vectores.captura import (
+from src.frontend.controladores.algebra.operaciones_vectores.captura import (
     capturar_vectores, resolver_captura,
 )
 
