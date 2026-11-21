@@ -4,7 +4,7 @@ from unittest.mock import Mock
 
 import pytest
 from nicegui import run
-from src.frontend.vistas.operaciones_matrices import recomendacion_determinante
+from src.frontend.vistas.algebra.operaciones_matrices.determinante import recomendacion_determinante
 from src.frontend.controladores.algebra.operaciones_matrices.determinante.controlador_determinante import ControladorDeterminante
 from tests.comun_construccion_vistas import construir_pagina
 

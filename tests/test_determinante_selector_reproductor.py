@@ -6,7 +6,7 @@ from unittest.mock import Mock
 import pytest
 from nicegui import ui
 
-from src.frontend.vistas.operaciones_matrices._presentacion_determinante import adaptar_traza
+from src.frontend.vistas.algebra.operaciones_matrices.determinante._presentacion_determinante import adaptar_traza
 from tests.comun_construccion_vistas import construir_pagina
 from tests.comun_calculo_determinante import retener_calculo
 

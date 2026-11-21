@@ -62,7 +62,7 @@ def _registrar_paginas_algebra() -> None:
 
         configurar_tema("determinantes" if operacion == OPERACION_DETERMINANTE else "matrices")
         if operacion == OPERACION_DETERMINANTE:
-            from src.frontend.vistas.operaciones_matrices.vista_determinante import VistaDeterminante
+            from src.frontend.vistas.algebra.operaciones_matrices.determinante.vista_determinante import VistaDeterminante
             VistaDeterminante().construir(token_transferencia=handoff)
             return
         VistaOperacionesMatrices().construir(token_transferencia=handoff)
@@ -93,7 +93,7 @@ def _registrar_paginas_avanzadas() -> None:
     @ui.page(ruta_de("determinantes"), title=herramienta_por_identificador("determinantes").titulo_pagina)
     def pagina_determinantes(handoff: str = ""):
         """Construye la captura pública de determinantes mediante triangulación LU."""
-        from src.frontend.vistas.operaciones_matrices.vista_determinante import VistaDeterminante
+        from src.frontend.vistas.algebra.operaciones_matrices.determinante.vista_determinante import VistaDeterminante
 
         configurar_tema("determinantes")
         VistaDeterminante().construir(token_transferencia=handoff)
