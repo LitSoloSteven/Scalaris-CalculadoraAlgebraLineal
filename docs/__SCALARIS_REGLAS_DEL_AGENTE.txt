@@ -288,6 +288,8 @@ Codex y Antigravity pueden implementar, revisar y verificar el mismo alcance. Ca
 
 Para comenzar por Antigravity añade `--primario agy`. Para una tarea acotada en Codex añade `--esfuerzo low`. Usa `--simular` para comprobar los ejecutables y la revisión de partida sin consumir cuota. La ejecución real necesita credenciales locales válidas en los clientes que entren en uso. Una sesión normal abierta directamente en una aplicación queda fuera del lanzador. [Antigravity CLI en modo no interactivo](https://antigravity.google/docs/cli/headless/)
 
+El lanzador usa el modo predeterminado de Antigravity con sandbox y permisos de sesión para Git local, consultas acotadas y pruebas. Las restricciones más estrictas del cliente prevalecen. [Permisos de Antigravity CLI](https://antigravity.google/docs/permissions?tab=cli)
+
 ### 16.3 Recuperación de código con poco contexto
 
 1. **Empieza con el entregable y el estado real.** Identifica el símbolo, consumidor o relación que falta antes de buscar. En una comprobación funcional parte del guion y del síntoma. Para un selector, mensaje, configuración u otro literal, usa `rg -n` en las rutas pertinentes. Reserva `search_code` para búsqueda textual acotada.

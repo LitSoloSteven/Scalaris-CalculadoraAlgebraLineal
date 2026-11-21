@@ -15,6 +15,17 @@ CLIENTES = ("codex", "agy")
 MODELO_CODEX = "gpt-6.2-sol"
 MODELO_ANTIGRAVITY = "gemini-pro-orchestrator-neon"
 LINEAS_DE_ESTADO = 30
+PERMISOS_ANTIGRAVITY = (
+    "command(git status)", "command(git log)", "command(git diff)",
+    "command(git rev-parse)", "command(git add)", "command(git commit)",
+    "command(rg)", "command(node --test)",
+    "command(python -m pytest)", "command(python -m compileall)",
+    "command(.\\venv\\Scripts\\python.exe -m pytest)",
+    "command(.\\venv\\Scripts\\python.exe -m compileall)",
+    "command(graphify query)", "command(graphify explain)",
+    "mcp(codebase-memory/search_graph)", "mcp(codebase-memory/trace_path)",
+    "mcp(codebase-memory/get_code_snippet)", "mcp(codebase-memory/check_index_coverage)",
+)
 PATRON_CUOTA = re.compile(
     r"usage[_ -]?limit[_ -]?(?:reached|exceeded)|"
     r"(?:hit|reach(?:ed)?|exceed(?:ed)?) (?:your |the )?(?:weekly |hourly )?usage limit|"
@@ -44,8 +55,9 @@ def comando(cliente: str, esfuerzo: str, encargo: str) -> tuple[list[str], str]:
             "-c", f'model_reasoning_effort="{esfuerzo}"', "-",
         ]
         return argumentos, encargo
+    ajustes = json.dumps({"permissions": {"allow": PERMISOS_ANTIGRAVITY}})
     return (
-        [ejecutable, "--model", MODELO_ANTIGRAVITY, "--sandbox", "--mode", "auto",
+        [ejecutable, "--model", MODELO_ANTIGRAVITY, "--sandbox", "--settings", ajustes,
          "--disable-slash-commands", "--input-format", "stream-json",
          "--output-format", "stream-json"],
         json.dumps({"event": "user", "message": {"content": encargo}}, ensure_ascii=False) + "\n",
