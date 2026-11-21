@@ -1,8 +1,8 @@
 """Cuadratura adaptativa de Gauss (7 puntos) y Kronrod (15 puntos)."""
 
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from dataclasses import dataclass, field
-from heapq import heappop, heappush
+from heapq import heapify, heappop, heappush
 from math import fsum
 from sys import float_info
 
@@ -32,16 +32,14 @@ class _Tramo:
     resultado: float = field(compare=False)
 
 
-def integrar_tramo(funcion: Callable[[float], float], inferior: float, superior: float) -> float:
+def integrar_tramo(
+    funcion: Callable[[float], float], inferior: float, superior: float, *, partir: bool = True,
+) -> float:
     """Integra en extremos finitos ordenados; lanza ErrorNoFinito si no alcanza la tolerancia."""
     if inferior == superior:
         return 0.0
-    cortes = (inferior, _centro(inferior, superior), superior)
-    if not inferior < cortes[1] < superior:
-        raise _error_convergencia()
-    tramos: list[_Tramo] = []
-    for inicio, fin in zip(cortes, cortes[1:]):
-        heappush(tramos, _estimar(funcion, inicio, fin))
+    tramos = list(_subdividir(funcion, (inferior, superior))) if partir else [_estimar(funcion, inferior, superior)]
+    heapify(tramos)
     resultado = fsum(tramo.resultado for tramo in tramos)
     error = fsum(-tramo.prioridad for tramo in tramos)
     for _ in range(_MAXIMO_SUBDIVISIONES):
@@ -83,7 +81,9 @@ def _estimar(funcion: Callable[[float], float], inferior: float, superior: float
     return _Tramo(-error * semiancho, (inferior, superior), kronrod * semiancho)
 
 
-def _muestras(funcion: Callable[[float], float], centro: float, semiancho: float, extremos: tuple[float, float]):
+def _muestras(
+    funcion: Callable[[float], float], centro: float, semiancho: float, extremos: tuple[float, float],
+) -> Iterator[tuple[float, float, float]]:
     inferior, superior = extremos
     for nodo, kronrod, gauss in _REGLA:
         abscisas = (centro - semiancho * nodo, centro + semiancho * nodo) if nodo else (centro,)
