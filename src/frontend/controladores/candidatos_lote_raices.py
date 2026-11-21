@@ -1,6 +1,6 @@
 """Conversión estructural de candidatos exploratorios para los contratos de lote."""
 from src.backend.resolutores.raices.contrato_exploracion import CandidatoExploracion
-from src.backend.resolutores.raices.contrato_resolucion_multiple import CandidatoResolucion
+from src.backend.resolutores.raices.biseccion.lote.contrato_resolucion_multiple import CandidatoResolucion
 
 
 def convertir_candidato(registro: dict, *, validar_forma: bool = True) -> CandidatoResolucion:

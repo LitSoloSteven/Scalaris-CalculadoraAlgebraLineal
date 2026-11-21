@@ -8,10 +8,10 @@ import pytest
 from src.backend.resolutores.raices.biseccion.motor.biseccion import biseccion
 from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import EntradaBiseccion, validar_entrada
 from src.backend.resolutores.raices.contrato_exploracion import EntradaExploracion, validar_exploracion
-from src.backend.resolutores.raices.contrato_resolucion_multiple import CandidatoResolucion, EntradaResolucionMultiple
+from src.backend.resolutores.raices.biseccion.lote.contrato_resolucion_multiple import CandidatoResolucion, EntradaResolucionMultiple
 from src.backend.resolutores.raices.biseccion.contratos.criterios_biseccion import CriterioParada
 from src.backend.resolutores.raices.exploracion_intervalos import explorar_intervalos
-from src.backend.resolutores.raices.resolucion_multiple import resolver_candidatos
+from src.backend.resolutores.raices.biseccion.lote.resolucion_multiple import resolver_candidatos
 from src.frontend.controladores.biseccion.controlador import calcular_presentacion, resolver_captura
 from src.frontend.controladores.biseccion.exploracion import resolver_exploracion
 from src.frontend.controladores.biseccion.presentacion import construir_pasos
@@ -80,7 +80,7 @@ def test_explorar_y_resolver_tres_candidatos_en_grados():
 def test_lote_con_unidades_contradictorias_no_evalua(monkeypatch):
     """Una discrepancia explícita se rechaza antes de compilar o consumir presupuesto de evaluaciones."""
     from importlib import import_module
-    modulo = import_module("src.backend.resolutores.raices.resolucion_multiple")
+    modulo = import_module("src.backend.resolutores.raices.biseccion.lote.resolucion_multiple")
     exploracion = explorar_intervalos(EntradaExploracion("sin(x)", 170, 190, 3, unidad_angular="grados"))
     candidato = CandidatoResolucion("primero", exploracion.candidatos[0])
     entrada = EntradaResolucionMultiple(EntradaBiseccion("sin(x)", 170, 190, 4, unidad_angular="grados"),

@@ -6,10 +6,10 @@ from .continuidad.dominio.contrato_continuidad import InformeContinuidad
 from .contrato_exploracion import AVISO_EXPLORACION
 from .contrato_regla_falsa import EntradaReglaFalsa
 from .contrato_regla_falsa_ampliada import ConfiguracionReglaFalsa, ResultadoReglaFalsaAmpliado
-from .contrato_resolucion_multiple import CandidatoResolucion, validar_seleccion_multiple
+from .biseccion.lote.contrato_resolucion_multiple import CandidatoResolucion, validar_seleccion_multiple
 from .criterios_regla_falsa import validar_criterio_regla_falsa
 from .funcion_real.evaluacion.gramatica_funcion import analizar_expresion
-from .limites_resolucion_multiple import MAXIMO_EVALUACIONES_MULTIPLE
+from .biseccion.lote.limites_resolucion_multiple import MAXIMO_EVALUACIONES_MULTIPLE
 from .validacion_regla_falsa import validar_entrada_regla_falsa
 
 EstadoCandidatoReglaFalsa = Literal[

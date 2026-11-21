@@ -1,5 +1,5 @@
 """Límites conservadores de recursos para resolver candidatos independientes."""
-from .compartido.limites_biseccion import LIMITE_ITERACIONES_MAXIMO
+from ...compartido.limites_biseccion import LIMITE_ITERACIONES_MAXIMO
 
 MAXIMO_CANDIDATOS_MULTIPLE = 16
 MAXIMO_EVALUACIONES_MULTIPLE = 4096

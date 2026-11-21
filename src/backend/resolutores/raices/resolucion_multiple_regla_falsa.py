@@ -7,7 +7,7 @@ from .contrato_lote_regla_falsa import (
     validar_lote_regla_falsa,
 )
 from .contrato_regla_falsa_ampliada import ConfiguracionReglaFalsa
-from .contrato_resolucion_multiple import CandidatoResolucion
+from .biseccion.lote.contrato_resolucion_multiple import CandidatoResolucion
 from .regla_falsa_ampliada import resolver_regla_falsa_configurada
 from .compartido.validacion_raices import validar_extremo
 

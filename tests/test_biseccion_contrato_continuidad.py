@@ -6,11 +6,11 @@ import pytest
 from src.backend.resolutores.raices.biseccion.motor.biseccion import biseccion
 from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import EntradaBiseccion
 from src.backend.resolutores.raices.contrato_exploracion import CandidatoExploracion
-from src.backend.resolutores.raices.contrato_resolucion_multiple import CandidatoResolucion, EntradaResolucionMultiple
+from src.backend.resolutores.raices.biseccion.lote.contrato_resolucion_multiple import CandidatoResolucion, EntradaResolucionMultiple
 from src.backend.resolutores.raices.biseccion.motor.diagnostico_biseccion import analizar_continuidad_intervalo
 from src.backend.resolutores.raices.funcion_real.evaluacion.evaluador_funcion import compilar
-from src.backend.resolutores.raices.limites_resolucion_multiple import EVALUACIONES_AUXILIARES_CANDIDATO
-from src.backend.resolutores.raices.resolucion_multiple import resolver_candidatos
+from src.backend.resolutores.raices.biseccion.lote.limites_resolucion_multiple import EVALUACIONES_AUXILIARES_CANDIDATO
+from src.backend.resolutores.raices.biseccion.lote.resolucion_multiple import resolver_candidatos
 
 
 @pytest.mark.parametrize("expresion,par,unidad,esperado", [
@@ -71,7 +71,7 @@ def test_fallo_interior_actualiza_politica_efectiva():
 
 def test_lote_reutiliza_extremos_y_omite_pendiente(monkeypatch):
     """La aptitud y el cálculo comparten evaluaciones por registro dentro de su reserva."""
-    modulo = import_module("src.backend.resolutores.raices.resolucion_multiple")
+    modulo = import_module("src.backend.resolutores.raices.biseccion.lote.resolucion_multiple")
     abscisas = []
 
     def _compilar_con_contador(expresion):

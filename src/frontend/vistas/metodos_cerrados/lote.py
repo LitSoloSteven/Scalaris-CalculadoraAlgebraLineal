@@ -5,7 +5,7 @@ import logging
 
 from nicegui import ui
 
-from src.backend.resolutores.raices.limites_resolucion_multiple import (
+from src.backend.resolutores.raices.biseccion.lote.limites_resolucion_multiple import (
     MAXIMO_CANDIDATOS_MULTIPLE, MAXIMO_EVALUACIONES_MULTIPLE,
 )
 from src.frontend.componentes.simbolos import habilitar_simbolos

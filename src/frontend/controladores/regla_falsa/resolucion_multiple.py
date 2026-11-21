@@ -3,7 +3,7 @@ import json
 from dataclasses import asdict
 
 from src.backend.resolutores.raices.contrato_lote_regla_falsa import EntradaLoteReglaFalsa
-from src.backend.resolutores.raices.limites_resolucion_multiple import MAXIMO_CANDIDATOS_MULTIPLE, MAXIMO_EVALUACIONES_MULTIPLE
+from src.backend.resolutores.raices.biseccion.lote.limites_resolucion_multiple import MAXIMO_CANDIDATOS_MULTIPLE, MAXIMO_EVALUACIONES_MULTIPLE
 from src.backend.resolutores.raices.resolucion_multiple_regla_falsa import resolver_candidatos_regla_falsa
 from src.frontend.controladores.candidatos_lote_raices import convertir_candidato
 from src.frontend.controladores.captura_real import entero_capturado

@@ -10,7 +10,7 @@ from src.backend.resolutores.raices.contrato_exploracion import CandidatoExplora
 from src.backend.resolutores.raices.contrato_lote_regla_falsa import EntradaLoteReglaFalsa
 from src.backend.resolutores.raices.contrato_regla_falsa import EntradaReglaFalsa
 from src.backend.resolutores.raices.contrato_regla_falsa_ampliada import ConfiguracionReglaFalsa
-from src.backend.resolutores.raices.contrato_resolucion_multiple import CandidatoResolucion
+from src.backend.resolutores.raices.biseccion.lote.contrato_resolucion_multiple import CandidatoResolucion
 from src.backend.resolutores.raices.biseccion.contratos.criterios_biseccion import CriterioParada
 from src.backend.resolutores.raices.resolucion_multiple_regla_falsa import resolver_candidatos_regla_falsa
 
@@ -101,7 +101,7 @@ def test_lote_nunca_invoca_los_resolutores_de_biseccion(monkeypatch):
         """Hace visible cualquier dependencia accidental del motor de bisección."""
         pytest.fail("Regla falsa no debe ejecutar bisección")
     biseccion = import_module("src.backend.resolutores.raices.biseccion.motor.biseccion")
-    multiple = import_module("src.backend.resolutores.raices.resolucion_multiple")
+    multiple = import_module("src.backend.resolutores.raices.biseccion.lote.resolucion_multiple")
     monkeypatch.setattr(biseccion, "biseccion", prohibir)
     monkeypatch.setattr(biseccion, "resolver_intervalo_preparado", prohibir)
     monkeypatch.setattr(multiple, "resolver_candidatos", prohibir)
