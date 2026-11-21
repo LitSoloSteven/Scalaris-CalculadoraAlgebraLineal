@@ -1,9 +1,9 @@
 """Proyección compartida a TeX de la gramática real validada."""
 import ast
 
-from src.backend.resolutores.raices.gramatica_funcion import analizar_expresion
+from src.backend.resolutores.raices.funcion_real.evaluacion.gramatica_funcion import analizar_expresion
 from src.backend.resolutores.raices.funcion_real.sintaxis.nodos_integral import NOMBRE_INTEGRAL, signo_infinito
-from src.backend.resolutores.raices.normalizacion_funcion import normalizar_expresion
+from src.backend.resolutores.raices.funcion_real.evaluacion.normalizacion_funcion import normalizar_expresion
 from src.backend.resolutores.raices.funcion_real.sintaxis.notacion_calculo import (
     AGREGADOS, GUARDIA_DERIVADA, NOMBRES_ANGULARES, POSTFIJOS, entero_literal,
 )

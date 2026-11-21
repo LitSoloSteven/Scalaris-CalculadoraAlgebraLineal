@@ -5,9 +5,9 @@ import math
 import pytest
 
 from src.backend.excepciones import ErrorNoFinito
-from src.backend.resolutores.raices.evaluador_funcion import compilar, evaluar
-from src.backend.resolutores.raices.gramatica_funcion import analizar_expresion
-from src.backend.resolutores.raices.normalizacion_funcion import normalizar_expresion
+from src.backend.resolutores.raices.funcion_real.evaluacion.evaluador_funcion import compilar, evaluar
+from src.backend.resolutores.raices.funcion_real.evaluacion.gramatica_funcion import analizar_expresion
+from src.backend.resolutores.raices.funcion_real.evaluacion.normalizacion_funcion import normalizar_expresion
 
 
 @pytest.mark.parametrize("expresion, explicita", [

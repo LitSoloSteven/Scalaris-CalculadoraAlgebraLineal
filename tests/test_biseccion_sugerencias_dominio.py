@@ -9,7 +9,7 @@ from src.backend.resolutores.raices.biseccion import biseccion
 from src.backend.resolutores.raices.contrato_biseccion import EntradaBiseccion
 from src.backend.resolutores.raices.criterios_biseccion import CriterioParada
 from src.backend.resolutores.raices.dominio_intervalo import comprobar_dominio_intervalo
-from src.backend.resolutores.raices.evaluador_funcion import compilar, evaluar
+from src.backend.resolutores.raices.funcion_real.evaluacion.evaluador_funcion import compilar, evaluar
 from src.backend.resolutores.raices.sugerencias_dominio import sugerir_intervalo_dominio
 
 

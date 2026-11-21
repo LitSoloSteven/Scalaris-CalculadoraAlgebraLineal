@@ -1,10 +1,10 @@
 """Derivación simbólica de expresiones que pueden volver a compilarse."""
 import ast
 
-from ..gramatica_funcion import analizar_expresion
+from ..funcion_real.evaluacion.gramatica_funcion import analizar_expresion
 from ..funcion_real.sintaxis.nodos_derivada import proteger_derivada
 from ..funcion_real.sintaxis.nodos_integral import es_integral
-from ..normalizacion_funcion import normalizar_expresion
+from ..funcion_real.evaluacion.normalizacion_funcion import normalizar_expresion
 from ..funcion_real.calculo.reglas_derivacion import ErrorDerivadaNoDisponible as ErrorDerivadaNoDisponible, derivar_nodo
 
 

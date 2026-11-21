@@ -4,9 +4,9 @@ import re
 import tokenize
 from unicodedata import normalize
 
-from .compartido.limites_biseccion import LONGITUD_MAXIMA_EXPRESION
-from .funcion_real.sintaxis.nodos_integral import NOMBRE_INFINITO, NOMBRE_INTEGRAL, SIMBOLO_INFINITO, SIMBOLO_INTEGRAL
-from .funcion_real.sintaxis.notacion_calculo import AGREGADOS, POSTFIJOS, envolver_postfijo
+from ...compartido.limites_biseccion import LONGITUD_MAXIMA_EXPRESION
+from ..sintaxis.nodos_integral import NOMBRE_INFINITO, NOMBRE_INTEGRAL, SIMBOLO_INFINITO, SIMBOLO_INTEGRAL
+from ..sintaxis.notacion_calculo import AGREGADOS, POSTFIJOS, envolver_postfijo
 
 _OPERADORES = {"+", "-", "*", "/", "**", "^", "(", ")", ","}
 _OMITIDOS = {tokenize.NL, tokenize.NEWLINE, tokenize.ENDMARKER}

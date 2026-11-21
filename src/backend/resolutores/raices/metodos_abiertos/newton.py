@@ -2,7 +2,7 @@
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, replace
 
-from ..evaluador_funcion import compilar
+from ..funcion_real.evaluacion.evaluador_funcion import compilar
 from .aritmetica_abierta import (
     advertencias_por_cambio,
     criterio_parada,

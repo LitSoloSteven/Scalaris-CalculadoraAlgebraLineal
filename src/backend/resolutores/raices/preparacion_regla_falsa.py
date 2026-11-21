@@ -14,8 +14,8 @@ from .contrato_regla_falsa import (
 )
 from .diagnostico_biseccion import error_extremos, evaluar_extremos
 from .dominio_intervalo import comprobar_dominio_arbol
-from .evaluador_funcion import compilar
-from .gramatica_funcion import analizar_expresion
+from .funcion_real.evaluacion.evaluador_funcion import compilar
+from .funcion_real.evaluacion.gramatica_funcion import analizar_expresion
 from .informe_continuidad import crear_informe, observacion
 from .traza_regla_falsa import construir_error
 from .compartido.unidades_angulares import opciones_unidad

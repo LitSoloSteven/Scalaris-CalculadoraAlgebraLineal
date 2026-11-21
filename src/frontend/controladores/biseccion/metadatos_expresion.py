@@ -1,7 +1,7 @@
 """Metadatos de captura obtenidos de la gramática de funciones reales."""
 import ast
 
-from src.backend.resolutores.raices.gramatica_funcion import analizar_expresion
+from src.backend.resolutores.raices.funcion_real.evaluacion.gramatica_funcion import analizar_expresion
 from src.backend.resolutores.raices.compartido.unidades_angulares import funcion_sensible_a_unidad
 
 

@@ -6,9 +6,9 @@ import pytest
 
 from src.backend.excepciones import ErrorDominio, ErrorNoFinito
 from src.backend.resolutores.raices.dominio_intervalo import comprobar_dominio_intervalo
-from src.backend.resolutores.raices.evaluador_funcion import compilar
+from src.backend.resolutores.raices.funcion_real.evaluacion.evaluador_funcion import compilar
 from src.backend.resolutores.raices.metodos_abiertos import derivar_expresion
-from src.backend.resolutores.raices.normalizacion_funcion import normalizar_expresion
+from src.backend.resolutores.raices.funcion_real.evaluacion.normalizacion_funcion import normalizar_expresion
 from src.frontend.controladores.captura_real import real_capturado
 from src.frontend.controladores.formato_funcion_real import formatear_expresion
 from src.frontend.controladores.metodos_abiertos import resolver_captura

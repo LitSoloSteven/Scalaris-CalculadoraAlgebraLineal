@@ -4,10 +4,10 @@ import math
 from collections.abc import Callable
 
 from src.backend.excepciones import ErrorDominio, ErrorNoFinito
-from .compartido.errores_numericos import ErrorCapacidadNumerica
+from ...compartido.errores_numericos import ErrorCapacidadNumerica
 from .gramatica_funcion import FUNCIONES_REALES
-from .funcion_real.sintaxis.notacion_calculo import NOMBRES_ANGULARES
-from .compartido.unidades_angulares import argumento_angular, resultado_angular, validar_unidad_angular
+from ..sintaxis.notacion_calculo import NOMBRES_ANGULARES
+from ...compartido.unidades_angulares import argumento_angular, resultado_angular, validar_unidad_angular
 
 _OPERACIONES = {ast.Add: lambda izquierda, derecha: izquierda + derecha,
                 ast.Sub: lambda izquierda, derecha: izquierda - derecha,

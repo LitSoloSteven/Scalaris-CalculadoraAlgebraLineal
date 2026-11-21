@@ -7,7 +7,7 @@ import pytest
 
 from src.backend.resolutores.raices.contrato_exploracion import EntradaExploracion, MuestraExploracion
 from src.backend.resolutores.raices.evaluacion_exploracion import muestrear_punto
-from src.backend.resolutores.raices.evaluador_funcion import compilar
+from src.backend.resolutores.raices.funcion_real.evaluacion.evaluador_funcion import compilar
 from src.backend.resolutores.raices.refinamiento_contactos import refinar_contacto
 
 

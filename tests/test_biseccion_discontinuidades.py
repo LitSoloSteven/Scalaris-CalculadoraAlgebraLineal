@@ -7,7 +7,7 @@ import pytest
 from src.backend.resolutores.raices.biseccion import biseccion
 from src.backend.resolutores.raices.contrato_biseccion import EntradaBiseccion
 from src.backend.resolutores.raices.criterios_biseccion import CriterioParada
-from src.backend.resolutores.raices.evaluador_funcion import compilar
+from src.backend.resolutores.raices.funcion_real.evaluacion.evaluador_funcion import compilar
 from src.frontend.controladores.biseccion.controlador import serializar_resultado
 
 

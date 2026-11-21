@@ -1,7 +1,7 @@
 """Proyección segura y precedencia de fórmulas de bisección."""
 import pytest
 
-from src.backend.resolutores.raices.gramatica_funcion import FUNCIONES_REALES
+from src.backend.resolutores.raices.funcion_real.evaluacion.gramatica_funcion import FUNCIONES_REALES
 from src.frontend.controladores.biseccion.formato_expresion import formatear_expresion
 from src.frontend.controladores.biseccion.formulas_procedimiento import formulas_iteracion
 

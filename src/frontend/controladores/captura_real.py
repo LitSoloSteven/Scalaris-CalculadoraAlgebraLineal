@@ -2,7 +2,7 @@
 import math
 from decimal import Decimal, DecimalException
 
-from src.backend.resolutores.raices.evaluador_funcion import evaluar_constante_real
+from src.backend.resolutores.raices.funcion_real.evaluacion.evaluador_funcion import evaluar_constante_real
 
 def entero_capturado(valor: object, etiqueta: str) -> int:
     """Convierte un campo con su etiqueta a entero sin truncar; lanza ValueError."""

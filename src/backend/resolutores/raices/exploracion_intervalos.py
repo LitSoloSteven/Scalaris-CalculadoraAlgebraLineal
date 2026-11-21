@@ -5,7 +5,7 @@ from .contrato_exploracion import (
     EntradaExploracion, ResultadoExploracion, validar_exploracion,
 )
 from .evaluacion_exploracion import muestrear_punto
-from .evaluador_funcion import compilar
+from .funcion_real.evaluacion.evaluador_funcion import compilar
 from .muestreo_intervalos import generar_posiciones
 from .compartido.unidades_angulares import opciones_unidad
 

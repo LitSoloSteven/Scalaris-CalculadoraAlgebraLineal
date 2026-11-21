@@ -4,7 +4,7 @@ from collections.abc import Callable
 
 from src.backend.excepciones import ErrorDominio, ErrorNoFinito
 
-from ..evaluador_funcion import evaluar
+from ..funcion_real.evaluacion.evaluador_funcion import evaluar
 from .contrato_abiertos import AVISO_CAMBIO_SIN_RESIDUO, CriterioParada
 
 UMBRAL_DERIVADA = 1e-12

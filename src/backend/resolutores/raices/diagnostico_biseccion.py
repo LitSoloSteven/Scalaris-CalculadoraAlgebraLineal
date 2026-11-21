@@ -12,8 +12,8 @@ from .contrato_biseccion import (
 from .contrato_continuidad import InformeContinuidad
 from .discontinuidades import calificar_discontinuidad
 from .dominio_intervalo import comprobar_dominio_arbol
-from .evaluador_funcion import compilar, evaluar
-from .gramatica_funcion import analizar_expresion
+from .funcion_real.evaluacion.evaluador_funcion import compilar, evaluar
+from .funcion_real.evaluacion.gramatica_funcion import analizar_expresion
 from .informe_continuidad import crear_informe, incorporar_traza, observacion
 from .traza_biseccion import construir_error
 from .sugerencias_dominio import sugerir_acciones

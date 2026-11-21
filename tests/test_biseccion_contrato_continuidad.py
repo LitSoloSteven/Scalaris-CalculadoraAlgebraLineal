@@ -8,7 +8,7 @@ from src.backend.resolutores.raices.contrato_biseccion import EntradaBiseccion
 from src.backend.resolutores.raices.contrato_exploracion import CandidatoExploracion
 from src.backend.resolutores.raices.contrato_resolucion_multiple import CandidatoResolucion, EntradaResolucionMultiple
 from src.backend.resolutores.raices.diagnostico_biseccion import analizar_continuidad_intervalo
-from src.backend.resolutores.raices.evaluador_funcion import compilar
+from src.backend.resolutores.raices.funcion_real.evaluacion.evaluador_funcion import compilar
 from src.backend.resolutores.raices.limites_resolucion_multiple import EVALUACIONES_AUXILIARES_CANDIDATO
 from src.backend.resolutores.raices.resolucion_multiple import resolver_candidatos
 

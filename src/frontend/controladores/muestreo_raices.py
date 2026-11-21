@@ -4,7 +4,7 @@ from statistics import median
 
 from src.backend.excepciones import ErrorDominio, ErrorNoFinito
 from src.backend.resolutores.raices.dominio_intervalo import comprobar_dominio_intervalo
-from src.backend.resolutores.raices.evaluador_funcion import compilar, evaluar
+from src.backend.resolutores.raices.funcion_real.evaluacion.evaluador_funcion import compilar, evaluar
 from src.backend.resolutores.raices.compartido.unidades_angulares import opciones_unidad
 
 MUESTRAS_GRAFICA = 401

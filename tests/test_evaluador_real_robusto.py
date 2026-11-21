@@ -5,7 +5,7 @@ import pytest
 
 from src.backend.excepciones import ErrorDominio, ErrorNoFinito
 from src.backend.resolutores.raices.dominio_intervalo import comprobar_dominio_intervalo
-from src.backend.resolutores.raices.evaluador_funcion import compilar, evaluar
+from src.backend.resolutores.raices.funcion_real.evaluacion.evaluador_funcion import compilar, evaluar
 
 
 @pytest.mark.parametrize("expresion", ["sin()", "pi(1)", "sin", "sin(x, x)", "log(x, 10)",

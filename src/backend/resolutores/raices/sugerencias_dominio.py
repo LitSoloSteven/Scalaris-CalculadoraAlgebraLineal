@@ -7,8 +7,8 @@ from fractions import Fraction
 from .aritmetica_biseccion import ancho_intervalo, cota_intervalo
 from .contrato_biseccion import EntradaBiseccion, ResultadoBiseccion, SugerenciaBiseccion, validar_entrada
 from .dominio_intervalo import argumento_afin, comprobar_dominio_intervalo
-from .evaluador_funcion import compilar, evaluar
-from .gramatica_funcion import analizar_expresion
+from .funcion_real.evaluacion.evaluador_funcion import compilar, evaluar
+from .funcion_real.evaluacion.gramatica_funcion import analizar_expresion
 from .funcion_real.sintaxis.nodos_integral import nodos_exteriores
 from .compartido.unidades_angulares import opciones_unidad
 

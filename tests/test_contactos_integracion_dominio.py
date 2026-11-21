@@ -8,7 +8,7 @@ import pytest
 from src.backend.resolutores.raices import contactos_eje
 from src.backend.resolutores.raices.contrato_exploracion import EntradaExploracion
 from src.backend.resolutores.raices.exploracion_intervalos import explorar_intervalos
-from src.backend.resolutores.raices.evaluador_funcion import compilar
+from src.backend.resolutores.raices.funcion_real.evaluacion.evaluador_funcion import compilar
 from src.backend.resolutores.raices.limites_exploracion import MAXIMO_EVALUACIONES_REFINAMIENTO
 
 

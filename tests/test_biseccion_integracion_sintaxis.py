@@ -11,7 +11,7 @@ from src.backend.resolutores.raices.contrato_exploracion import EntradaExploraci
 from src.backend.resolutores.raices.contrato_resolucion_multiple import CandidatoResolucion, EntradaResolucionMultiple
 from src.backend.resolutores.raices.dominio_intervalo import comprobar_dominio_intervalo
 from src.backend.resolutores.raices.exploracion_intervalos import explorar_intervalos
-from src.backend.resolutores.raices.normalizacion_funcion import normalizar_expresion
+from src.backend.resolutores.raices.funcion_real.evaluacion.normalizacion_funcion import normalizar_expresion
 from src.backend.resolutores.raices.resolucion_multiple import resolver_candidatos
 from src.frontend.controladores.biseccion.controlador import calcular_presentacion, resolver_captura
 from src.frontend.controladores.biseccion.exploracion import resolver_exploracion

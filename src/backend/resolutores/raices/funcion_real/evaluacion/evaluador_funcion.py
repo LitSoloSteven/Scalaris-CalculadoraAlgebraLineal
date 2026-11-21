@@ -4,11 +4,11 @@ from collections.abc import Callable
 from math import inf
 
 from .gramatica_funcion import analizar_expresion, FUNCIONES_REALES, CONSTANTES_REALES
-from .funcion_real.calculo.integracion_real import integrar_real, PresupuestoIntegral
-from .funcion_real.sintaxis.nodos_integral import NOMBRE_INTEGRAL, nombres_libres, signo_infinito
-from .funcion_real.sintaxis.notacion_calculo import GUARDIA_DERIVADA
+from ..calculo.integracion_real import integrar_real, PresupuestoIntegral
+from ..sintaxis.nodos_integral import NOMBRE_INTEGRAL, nombres_libres, signo_infinito
+from ..sintaxis.notacion_calculo import GUARDIA_DERIVADA
 from .operaciones_reales import aplicar_funcion, aplicar_operador, comprobar_real, ejecutar_operacion
-from .compartido.unidades_angulares import validar_unidad_angular
+from ...compartido.unidades_angulares import validar_unidad_angular
 
 FUNCIONES_PERMITIDAS = {**FUNCIONES_REALES, **CONSTANTES_REALES}
 

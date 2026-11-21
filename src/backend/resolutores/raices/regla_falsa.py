@@ -12,7 +12,7 @@ from .contrato_regla_falsa import (
 from .decision_biseccion import signo_producto
 from .criterios_biseccion import CriterioParada
 from .parada_regla_falsa import decidir_parada_regla_falsa
-from .evaluador_funcion import evaluar
+from .funcion_real.evaluacion.evaluador_funcion import evaluar
 from .preparacion_regla_falsa import (
     IntervaloReglaFalsaPreparado,
     preparar_intervalo_regla_falsa,

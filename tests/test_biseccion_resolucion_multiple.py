@@ -12,7 +12,7 @@ from src.backend.resolutores.raices.contrato_exploracion import CandidatoExplora
 from src.backend.resolutores.raices.contrato_resolucion_multiple import CandidatoResolucion, EntradaResolucionMultiple
 from src.backend.resolutores.raices.criterios_biseccion import CriterioParada
 from src.backend.resolutores.raices.exploracion_intervalos import explorar_intervalos
-from src.backend.resolutores.raices.evaluador_funcion import compilar
+from src.backend.resolutores.raices.funcion_real.evaluacion.evaluador_funcion import compilar
 from src.backend.resolutores.raices.limites_resolucion_multiple import (
     EVALUACIONES_AUXILIARES_CANDIDATO, MAXIMO_CANDIDATOS_MULTIPLE, MAXIMO_EVALUACIONES_CANDIDATO,
 )

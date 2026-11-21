@@ -12,8 +12,8 @@ from .contrato_resolucion_multiple import (
     ResultadoResolucionMultiple, validar_resolucion_multiple,
 )
 from .diagnostico_biseccion import preparar_intervalo
-from .evaluador_funcion import compilar
-from .gramatica_funcion import analizar_expresion
+from .funcion_real.evaluacion.evaluador_funcion import compilar
+from .funcion_real.evaluacion.gramatica_funcion import analizar_expresion
 from .limites_resolucion_multiple import EVALUACIONES_AUXILIARES_CANDIDATO
 from .compartido.unidades_angulares import opciones_unidad
 
