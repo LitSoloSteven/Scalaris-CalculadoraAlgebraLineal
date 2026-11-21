@@ -29,7 +29,9 @@ def comprobar_real(valor: object) -> float:
     return numero
 
 
-def aplicar_operador(operador: ast.operator, izquierda: float, derecha: float) -> float:
+def aplicar_operador(
+    operador: ast.operator, izquierda: float, derecha: float, *, admitir_subdesbordamiento: bool = False,
+) -> float:
     """Aplica un operador permitido; traduce fallos y detecta ceros por subdesbordamiento."""
     operacion = _OPERACIONES.get(type(operador))
     if operacion is None:
@@ -37,18 +39,22 @@ def aplicar_operador(operador: ast.operator, izquierda: float, derecha: float) -
     resultado = ejecutar_operacion(lambda: operacion(izquierda, derecha))
     producto_no_nulo = isinstance(operador, ast.Mult) and izquierda != 0 and derecha != 0
     cociente_o_potencia = isinstance(operador, (ast.Div, ast.Pow)) and izquierda != 0
-    _comprobar_subdesbordamiento(resultado, producto_no_nulo or cociente_o_potencia)
+    if not admitir_subdesbordamiento:
+        _comprobar_subdesbordamiento(resultado, producto_no_nulo or cociente_o_potencia)
     return resultado
 
 
-def aplicar_funcion(nombre: str, argumento: float, *, unidad_angular: str = "radianes") -> float:
+def aplicar_funcion(
+    nombre: str, argumento: float, *, unidad_angular: str = "radianes", admitir_subdesbordamiento: bool = False,
+) -> float:
     """Evalúa una función real de un argumento y detecta la pérdida total de exp."""
     unidad = validar_unidad_angular(unidad_angular)
     if nombre in NOMBRES_ANGULARES:
         nombre, unidad = NOMBRES_ANGULARES[nombre], "radianes"
     argumento = argumento_angular(nombre, comprobar_real(argumento), unidad)
     resultado = ejecutar_operacion(lambda: FUNCIONES_REALES[nombre](argumento))
-    _comprobar_subdesbordamiento(resultado, nombre == "exp")
+    if not admitir_subdesbordamiento:
+        _comprobar_subdesbordamiento(resultado, nombre == "exp")
     return comprobar_real(resultado_angular(nombre, resultado, unidad))
 
 

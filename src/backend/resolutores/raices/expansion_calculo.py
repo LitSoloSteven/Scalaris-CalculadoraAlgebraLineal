@@ -5,6 +5,7 @@ from itertools import islice
 
 from .errores_numericos import ErrorCapacidadNumerica
 from .nodos_derivada import constante, llamada, proteger_derivada
+from .nodos_integral import NOMBRE_INTEGRAL, construir_integral
 from .notacion_calculo import (
     AGREGADOS, ANGULARES_RADIANES, DERIVADAS, GRADOS_POR_MEDIA_VUELTA, GUARDIA_DERIVADA, POSTFIJOS,
     TRIGONOMETRICAS_DIRECTAS, TRIGONOMETRICAS_INVERSAS, UNIDADES_POR_MIL, entero_literal,
@@ -48,6 +49,8 @@ class _Expansion:
         nombre = nodo.func.id
         if nombre in (_SUMATORIA, _PRODUCTORIA):
             return self._expandir_agregado(nodo, indices, en_derivada)
+        if nombre == NOMBRE_INTEGRAL:
+            return self._expandir_integral(nodo, indices, en_derivada)
         argumento = self._expandir(nodo.args[0], indices, en_derivada or nombre in DERIVADAS)
         if nombre == GUARDIA_DERIVADA:
             return proteger_derivada(argumento, self._expandir(nodo.args[1], indices, en_derivada))
@@ -71,6 +74,14 @@ class _Expansion:
             self._consumir()
             resultado = ast.BinOp(left=resultado, op=operador(), right=termino)
         return resultado
+
+    def _expandir_integral(self, nodo: ast.Call, indices: dict[str, int], en_derivada: bool) -> ast.Call:
+        cuerpo, variable, inferior, superior = nodo.args
+        indices_cuerpo = {nombre: valor for nombre, valor in indices.items() if nombre != variable.id}
+        return construir_integral(
+            self._expandir(cuerpo, indices_cuerpo, en_derivada), variable,
+            self._expandir(inferior, indices, en_derivada), self._expandir(superior, indices, en_derivada),
+        )
 
     def _expandir_derivada(self, argumento: ast.AST, orden: int) -> ast.AST:
         resultado = argumento
@@ -115,6 +126,8 @@ def _tiene_grados_explicitos(nodo: ast.AST) -> bool:
         if nombre == GUARDIA_DERIVADA:
             return _tiene_grados_explicitos(nodo.args[1])
         if nombre in _ANGULARES or nombre in ANGULARES_RADIANES.values() or nombre in DERIVADAS:
+            return False
+        if nombre == NOMBRE_INTEGRAL:
             return False
         return any(_tiene_grados_explicitos(argumento) for argumento in nodo.args)
     return any(_tiene_grados_explicitos(hijo) for hijo in ast.iter_child_nodes(nodo))
