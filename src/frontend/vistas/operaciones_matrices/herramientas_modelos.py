@@ -2,7 +2,7 @@
 from nicegui import ui
 
 from src.frontend.nucleo.textos import textos
-from src.frontend.componentes.reproductor_pasos.cuerpos import renderizar_latex
+from src.frontend.componentes.reproductor_pasos.formato.cuerpos import renderizar_latex
 from src.frontend.controladores.operaciones_matrices.contexto_modelos import capturar_modelo
 from src.frontend.controladores.operaciones_matrices.vista_previa_modelos import preparar_vista_previa_modelo
 from src.frontend.controladores.sesion_matricial import registrar_calculo, programar_vista_previa

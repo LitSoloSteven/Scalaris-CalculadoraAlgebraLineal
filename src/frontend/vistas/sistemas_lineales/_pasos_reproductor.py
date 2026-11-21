@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 from src.frontend.controladores.sistemas_lineales.presentacion_solucion import preparar_matriz_paso
-from src.frontend.componentes.reproductor_pasos.cuerpos import CuerpoLatex
-from src.frontend.componentes.reproductor_pasos.textos import limpiar_latex_plano
-from src.frontend.componentes.reproductor_pasos.html_tablas import html_tabla_aumentada
+from src.frontend.componentes.reproductor_pasos.formato.cuerpos import CuerpoLatex
+from src.frontend.componentes.reproductor_pasos.formato.textos import limpiar_latex_plano
+from src.frontend.componentes.reproductor_pasos.formato.html_tablas import html_tabla_aumentada
 from src.frontend.componentes.reproductor_pasos.nucleo.modelo import GrupoReproductor, PasoReproductor
 from src.frontend.nucleo.ayudas import formatear_paso_mathjax
 from src.frontend.componentes.resultados.analisis.presentacion_analisis import anexar_analisis

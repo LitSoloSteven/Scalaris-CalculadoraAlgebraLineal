@@ -7,8 +7,8 @@ from src.frontend.componentes.reproductor_pasos.nucleo.catalogo import (
     VELOCIDADES_AUTOREPRODUCCION,
     html_sugerencia_tipo,
 )
-from src.frontend.componentes.reproductor_pasos.cuerpos import renderizar_latex
-from src.frontend.componentes.reproductor_pasos.html_tablas import (
+from src.frontend.componentes.reproductor_pasos.formato.cuerpos import renderizar_latex
+from src.frontend.componentes.reproductor_pasos.formato.html_tablas import (
     etiqueta_variable_html,
     formatear_decimal,
     formatear_valor,

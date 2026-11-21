@@ -2,7 +2,7 @@
 from collections.abc import Callable
 from typing import Any
 from nicegui import ui
-from src.frontend.componentes.reproductor_pasos.cuerpos import renderizar_latex
+from src.frontend.componentes.reproductor_pasos.formato.cuerpos import renderizar_latex
 from src.frontend.componentes.reproductor_pasos.nucleo.modelo import PasoReproductor
 
 

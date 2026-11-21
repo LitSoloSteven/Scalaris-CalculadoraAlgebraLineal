@@ -1,5 +1,5 @@
 """Captura del HTML y las solicitudes MathJax producidas por el reproductor."""
-from src.frontend.componentes.reproductor_pasos import cuerpos
+from src.frontend.componentes.reproductor_pasos.formato import cuerpos
 
 
 def capturar_renderizado_latex(monkeypatch, latex):

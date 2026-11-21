@@ -1,9 +1,9 @@
 """Presentacion de comprobaciones preparadas por el backend sin reinterpretar sus datos."""
 from nicegui import ui
 from src.frontend.componentes.resultados.analisis.datos_desarrollo import es_traza_producto, agrupar_filas_producto
-from src.frontend.componentes.reproductor_pasos.cuerpos import renderizar_latex
-from src.frontend.componentes.reproductor_pasos import textos
-from src.frontend.componentes.reproductor_pasos.textos import formatear_descripcion_html
+from src.frontend.componentes.reproductor_pasos.formato.cuerpos import renderizar_latex
+from src.frontend.componentes.reproductor_pasos.formato import textos
+from src.frontend.componentes.reproductor_pasos.formato.textos import formatear_descripcion_html
 
 
 def mostrar_desarrollo(traza: list[dict], titulo: str = "Ver desarrollo de la comprobacion") -> None:

@@ -5,7 +5,7 @@ from src.frontend.nucleo.textos import textos
 
 from src.frontend.componentes.glosa.interaccion.glosa_foco import crear_accion_explicacion
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos
-from src.frontend.componentes.reproductor_pasos.cuerpos import CuerpoLatex, renderizar_latex
+from src.frontend.componentes.reproductor_pasos.formato.cuerpos import CuerpoLatex, renderizar_latex
 from src.frontend.componentes.reproductor_pasos.nucleo.modelo import PasoReproductor, GrupoReproductor
 from src.frontend.controladores.agrupacion_trazas import agrupar_traza
 

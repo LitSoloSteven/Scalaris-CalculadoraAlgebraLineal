@@ -3,7 +3,7 @@
 from nicegui import ui
 
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos
-from src.frontend.componentes.reproductor_pasos.html_tablas import html_tabla_aumentada
+from src.frontend.componentes.reproductor_pasos.formato.html_tablas import html_tabla_aumentada
 from src.frontend.vistas.operaciones_inversas._adaptador_pasos import _CuerpoPasoInversa, adaptar_pasos_inversa
 
 

@@ -6,10 +6,10 @@ from src.frontend.controladores.operaciones_matrices.foco_determinante import co
 
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos
 from src.frontend.componentes.reproductor_pasos.nucleo.modelo import GrupoReproductor, PasoReproductor
-from src.frontend.componentes.reproductor_pasos.cuerpos import renderizar_latex
-from src.frontend.componentes.reproductor_pasos.html_tablas import html_tabla_aumentada
+from src.frontend.componentes.reproductor_pasos.formato.cuerpos import renderizar_latex
+from src.frontend.componentes.reproductor_pasos.formato.html_tablas import html_tabla_aumentada
 from src.frontend.componentes.glosa.interaccion.glosa_foco import crear_accion_explicacion
-from src.frontend.componentes.reproductor_pasos.textos import limpiar_latex_plano
+from src.frontend.componentes.reproductor_pasos.formato.textos import limpiar_latex_plano
 
 
 def adaptar_traza(resultado: dict) -> tuple[tuple, tuple]:

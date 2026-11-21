@@ -19,7 +19,7 @@ from src.frontend.componentes.reproductor_pasos.nucleo.modelo import GrupoReprod
 from src.frontend.componentes.reproductor_pasos.vista import construir_vista
 from .nucleo.opciones import OpcionesReproductor
 from .nucleo.temporizacion import reiniciar_espera
-from .textos import formatear_descripcion_html, limpiar_latex_plano
+from .formato.textos import formatear_descripcion_html, limpiar_latex_plano
 
 
 _CONTADOR_EXPLICACION = itertools.count()
