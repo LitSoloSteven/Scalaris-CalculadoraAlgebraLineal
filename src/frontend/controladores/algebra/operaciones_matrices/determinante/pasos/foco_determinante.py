@@ -1,6 +1,6 @@
 """Extractos acotados de las matrices y menores del paso seleccionado."""
 from src.ai.contexto.contexto import describir_matriz, extraer_filas
-from .fases_determinante import columna_determinante
+from src.frontend.controladores.algebra.operaciones_matrices.determinante.pasos.fases_determinante import columna_determinante
 
 
 def construir_meta_determinante(traza: list[dict], indice: int) -> dict:

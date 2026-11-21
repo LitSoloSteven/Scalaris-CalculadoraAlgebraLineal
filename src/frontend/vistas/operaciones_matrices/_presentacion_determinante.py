@@ -1,8 +1,8 @@
 """Adaptacion y renderizado de trazas de determinante sin operaciones matematicas."""
 from nicegui import ui
 from src.frontend.nucleo.textos import textos
-from src.frontend.controladores.operaciones_matrices.fases_determinante import agrupar_determinante
-from src.frontend.controladores.operaciones_matrices.foco_determinante import construir_meta_determinante
+from src.frontend.controladores.algebra.operaciones_matrices.determinante.pasos.fases_determinante import agrupar_determinante
+from src.frontend.controladores.algebra.operaciones_matrices.determinante.pasos.foco_determinante import construir_meta_determinante
 
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos
 from src.frontend.componentes.reproductor_pasos.nucleo.modelo import GrupoReproductor, PasoReproductor
