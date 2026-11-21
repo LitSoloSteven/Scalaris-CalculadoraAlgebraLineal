@@ -10,7 +10,7 @@ _RUTAS = (
     "componentes/raices/exploracion/paso_exploracion_raices.py", "componentes/raices/exploracion/exploracion_raices.py",
     "vistas/raices/biseccion/exploracion/exploracion.py", "vistas/raices/regla_falsa/base/modos_captura.py",
     "vistas/raices/regla_falsa/exploracion/seleccion_candidato.py", "vistas/raices/regla_falsa/exploracion/exploracion.py",
-    "vistas/raices/regla_falsa/captura/captura.py", "vistas/regla_falsa/composicion.py",
+    "vistas/raices/regla_falsa/captura/captura.py", "vistas/raices/regla_falsa/resultados/composicion.py",
     "vistas/regla_falsa/vista_regla_falsa.py",
 )
 

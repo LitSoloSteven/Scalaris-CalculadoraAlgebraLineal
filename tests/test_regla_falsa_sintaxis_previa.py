@@ -21,7 +21,7 @@ _MODULOS = (
     "vistas/raices/biseccion/grafica/rango_grafica.py", "vistas/raices/biseccion/grafica/vista_previa.py",
     "vistas/raices/biseccion/base/previa_expresion.py", "vistas/raices/biseccion/grafica/seleccion_grafico.py", "vistas/raices/biseccion/grafica/figura.py",
     "vistas/raices/regla_falsa/grafica/rango_previo.py", "vistas/raices/regla_falsa/grafica/vista_previa.py",
-    "vistas/raices/regla_falsa/grafica/seleccion_grafico.py", "vistas/regla_falsa/composicion.py",
+    "vistas/raices/regla_falsa/grafica/seleccion_grafico.py", "vistas/raices/regla_falsa/resultados/composicion.py",
     "vistas/raices/regla_falsa/exploracion/exploracion.py", "vistas/regla_falsa/vista_regla_falsa.py",
     "vistas/raices/regla_falsa/procedimiento/procedimiento.py",
 )
