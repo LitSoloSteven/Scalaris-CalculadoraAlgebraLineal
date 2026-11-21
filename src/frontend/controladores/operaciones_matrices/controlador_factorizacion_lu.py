@@ -1,7 +1,7 @@
 """Validación y delegación de la factorización LU."""
 from typing import Any
 
-from src.backend.resolutores.operaciones_matrices.factorizacion_lu import factorizar_lu
+from src.backend.resolutores.operaciones_matrices.factorizacion_lu.factorizacion_lu import factorizar_lu
 from src.backend.resolutores.sistemas_lineales.captura.captura_coeficientes import capturar_coeficientes
 
 

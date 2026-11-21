@@ -6,7 +6,7 @@ import pytest
 from src.backend.constantes import DIMENSION_MAXIMA_MATRICES
 from src.backend.modelos.operaciones.calculo_matricial import multiplicar_matrices
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices.factorizacion_lu import resolver_sistema_lu
+from src.backend.resolutores.operaciones_matrices.factorizacion_lu.factorizacion_lu import resolver_sistema_lu
 
 
 @pytest.mark.parametrize("datos,terminos,esperada", [

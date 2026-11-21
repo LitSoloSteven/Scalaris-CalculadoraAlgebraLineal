@@ -5,7 +5,7 @@ import pytest
 
 from src.backend.modelos.operaciones.construcciones import identidad
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices.factorizacion_lu import factorizar_lu
+from src.backend.resolutores.operaciones_matrices.factorizacion_lu.factorizacion_lu import factorizar_lu
 
 
 @pytest.mark.parametrize("datos", [

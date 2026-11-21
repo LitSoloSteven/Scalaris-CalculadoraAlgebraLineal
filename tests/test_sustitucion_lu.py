@@ -2,7 +2,7 @@
 from fractions import Fraction
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices.sustitucion_lu import sustituir_adelante, sustituir_atras
+from src.backend.resolutores.operaciones_matrices.factorizacion_lu.sustitucion_lu import sustituir_adelante, sustituir_atras
 
 
 def test_sustituciones_con_fracciones():

@@ -5,7 +5,7 @@ from random import Random
 import pytest
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices.factorizacion_lu import factorizar_lu
+from src.backend.resolutores.operaciones_matrices.factorizacion_lu.factorizacion_lu import factorizar_lu
 
 
 def _producto(izquierda, derecha):

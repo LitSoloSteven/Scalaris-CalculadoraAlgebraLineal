@@ -9,9 +9,9 @@ from src.backend.modelos.operaciones.construcciones import identidad
 from src.backend.modelos.operaciones.calculo_matricial import multiplicar_matrices
 from src.backend.resolutores.sistemas_lineales.reduccion.configuracion_reduccion import ConfiguracionReduccion
 from src.backend.resolutores.sistemas_lineales.reduccion.reduccion import ReductorFilas
-from .determinante.pasos_determinante import RegistroPasosDeterminante
-from .compartido.comprobacion_productos import comprobar_producto, crear_paso_analisis, desarrollar_producto
-from .compartido.formateadores import matriz_a_latex
+from src.backend.resolutores.operaciones_matrices.determinante.pasos_determinante import RegistroPasosDeterminante
+from src.backend.resolutores.operaciones_matrices.compartido.comprobacion_productos import comprobar_producto, crear_paso_analisis, desarrollar_producto
+from src.backend.resolutores.operaciones_matrices.compartido.formateadores import matriz_a_latex
 from .sustitucion_lu import sustituir_adelante, sustituir_atras
 from .traza_sistema_lu import crear_traza_sistema_lu
 
