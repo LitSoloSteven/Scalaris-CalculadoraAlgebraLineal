@@ -2,7 +2,7 @@
 from src.backend.resolutores.operaciones_matrices.captura_modelos import parsear_matriz_modelo
 from src.backend.resolutores.operaciones_matrices.compartido.formateadores import matriz_a_latex
 from src.backend.utilidades.validacion.validadores import validar_dimensiones_multiplicacion
-from .contexto_modelos import capturar_modelo
+from src.frontend.controladores.algebra.operaciones_matrices.modelos.contexto_modelos import capturar_modelo
 
 
 def preparar_vista_previa_modelo(vista) -> str:

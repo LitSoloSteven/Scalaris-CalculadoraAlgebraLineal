@@ -7,7 +7,7 @@ from src.frontend.controladores.operaciones_matrices.controlador_aplicacion_tran
 from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto
 from src.frontend.nucleo.textos import textos_transformaciones as textos
 from src.frontend.controladores.compartido.sesion.calculo_vigente import ejecutar_calculo_vigente
-from src.frontend.controladores.operaciones_matrices.capturas_modelos import capturar_transformaciones
+from src.frontend.controladores.algebra.operaciones_matrices.modelos.capturas_modelos import capturar_transformaciones
 from ._renderizado_transformaciones import renderizar_resultado_transformaciones
 from .resultado_aplicacion_transformacion import renderizar_resultado_aplicacion
 

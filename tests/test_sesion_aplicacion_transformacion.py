@@ -5,7 +5,7 @@ import copy
 import pytest
 
 from src.frontend.nucleo.textos import textos_transformaciones as textos
-from src.frontend.controladores.operaciones_matrices.contexto_modelos import capturar_modelo
+from src.frontend.controladores.algebra.operaciones_matrices.modelos.contexto_modelos import capturar_modelo
 from src.frontend.vistas.operaciones_matrices.carga_modelos import cargar_captura_modelo
 from src.frontend.vistas.operaciones_matrices.transferencia_modelos import _cargar_matriz
 from tests.comun_construccion_vistas import construir_pagina
