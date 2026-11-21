@@ -12,7 +12,7 @@ from src.frontend.controladores.raices.biseccion.presentacion.presentacion_crite
     aproximacion_presentada, avisos_resumen, datos_copia_biseccion, etiqueta_aproximacion, metricas_principales,
     metricas_resumen, titulo_estado,
 )
-from src.frontend.controladores.biseccion.salidas_biseccion import texto_copia_biseccion
+from src.frontend.controladores.raices.biseccion.salidas.salidas_biseccion import texto_copia_biseccion
 from .avisos_diagnostico import mostrar_avisos_diagnostico
 from .continuidad_intervalo import mostrar_informe
 from .movimiento import animar_entrada

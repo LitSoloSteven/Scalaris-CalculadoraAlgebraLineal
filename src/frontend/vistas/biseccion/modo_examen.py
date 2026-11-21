@@ -1,7 +1,7 @@
 """Controles y detalle visible del modo examen de bisección."""
 from nicegui import ui
 
-from src.frontend.controladores.biseccion.salidas_biseccion import COLUMNAS_EXAMEN, datos_examen
+from src.frontend.controladores.raices.biseccion.salidas.salidas_biseccion import COLUMNAS_EXAMEN, datos_examen
 
 
 _CLASE_CONTROL_EXAMEN = "biseccion-interruptor-examen texto-principal"

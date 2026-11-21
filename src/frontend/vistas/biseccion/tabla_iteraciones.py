@@ -3,7 +3,7 @@ from nicegui import ui
 
 from src.frontend.componentes.raices.resultados.tabla_iteraciones import PaginacionIteraciones
 from src.frontend.controladores.raices.biseccion.presentacion.presentacion import COLUMNAS, filas_tabla
-from src.frontend.controladores.biseccion.salidas_biseccion import COLUMNAS_EXAMEN, datos_examen
+from src.frontend.controladores.raices.biseccion.salidas.salidas_biseccion import COLUMNAS_EXAMEN, datos_examen
 
 
 def mostrar_tabla(respuesta: dict, examen: ui.switch | ui.checkbox | None = None) -> None:

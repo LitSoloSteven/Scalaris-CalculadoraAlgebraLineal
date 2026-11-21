@@ -3,7 +3,7 @@ import pytest
 
 from src.backend.resolutores.raices.funcion_real.evaluacion.gramatica_funcion import FUNCIONES_REALES
 from src.frontend.controladores.raices.biseccion.adaptadores.formato_expresion import formatear_expresion
-from src.frontend.controladores.biseccion.formulas_procedimiento import formulas_iteracion
+from src.frontend.controladores.raices.biseccion.salidas.formulas_procedimiento import formulas_iteracion
 
 
 def test_precedencia_y_fracciones():
