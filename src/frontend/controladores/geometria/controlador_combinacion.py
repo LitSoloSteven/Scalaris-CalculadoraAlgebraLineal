@@ -1,6 +1,6 @@
 """Delegación de cargas de combinación lineal al dominio geométrico."""
 from src.backend.geometria.escenas.escena_combinacion import preparar_escena_combinacion
-from src.frontend.controladores.geometria.carga import procesar_carga
+from src.frontend.controladores.geometria.base.carga import procesar_carga
 
 
 def procesar_combinacion(carga_json: str) -> dict:

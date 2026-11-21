@@ -8,7 +8,7 @@ from src.frontend.controladores.geometria.controlador_rectas_planos import (
 from src.frontend.controladores.geometria.controlador_vectores import (
     procesar_vectores,
 )
-from src.frontend.controladores.geometria.utilidades import selector_celda_error
+from src.frontend.controladores.geometria.base.utilidades import selector_celda_error
 
 
 class ControladorGeometria:

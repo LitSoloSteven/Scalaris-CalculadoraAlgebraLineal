@@ -6,7 +6,7 @@ from src.frontend.componentes.captura.ecuaciones.limpieza_captura import crear_b
 from src.frontend.nucleo.textos.textos import LIMPIEZA_VISUALIZAR
 from src.backend.geometria.preparacion.transferencia import LIMITES_VECTORES_ESCENA
 from src.frontend.componentes.captura.ecuaciones.cuadricula_ecuaciones import CuadriculaEcuaciones
-from src.frontend.controladores.geometria.captura import construir_carga_sistema, construir_carga_vectores
+from src.frontend.controladores.geometria.base.captura import construir_carga_sistema, construir_carga_vectores
 from ._panel_vectores import PanelVectoresGeometria
 
 

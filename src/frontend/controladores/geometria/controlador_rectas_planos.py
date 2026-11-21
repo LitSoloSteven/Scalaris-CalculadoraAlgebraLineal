@@ -1,6 +1,6 @@
 """Delegación de cargas de sistemas al dominio geométrico."""
 from src.backend.geometria.escenas.escena_sistema import preparar_escena_sistema
-from src.frontend.controladores.geometria.carga import procesar_carga
+from src.frontend.controladores.geometria.base.carga import procesar_carga
 
 
 def procesar_rectas_planos(carga_json: str) -> dict:
