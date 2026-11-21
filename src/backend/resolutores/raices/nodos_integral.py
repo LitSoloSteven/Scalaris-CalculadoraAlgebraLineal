@@ -48,6 +48,16 @@ def sustituir_variable(cuerpo: ast.AST, variable: ast.Name, limite: ast.AST) -> 
     return _Sustitucion(variable.id, limite, ocupadas).visit(cuerpo)
 
 
+def nombres_libres(nodo: ast.AST) -> set[str]:
+    """Devuelve nombres que no están ligados por una integral dentro del subárbol."""
+    if isinstance(nodo, ast.Name):
+        return {nodo.id}
+    if es_integral(nodo):
+        cuerpo, variable, inferior, superior = nodo.args
+        return (nombres_libres(cuerpo) - {variable.id}) | nombres_libres(inferior) | nombres_libres(superior)
+    return {nombre for hijo in ast.iter_child_nodes(nodo) for nombre in nombres_libres(hijo)}
+
+
 def _nombres(nodo: ast.AST) -> set[str]:
     return {hijo.id for hijo in ast.walk(nodo) if isinstance(hijo, ast.Name)}
 
@@ -57,7 +67,7 @@ class _Sustitucion(ast.NodeTransformer):
         self._variable = variable
         self._reemplazo = reemplazo
         self._ocupadas = ocupadas
-        self._nombres_reemplazo = _nombres(reemplazo)
+        self._nombres_reemplazo = nombres_libres(reemplazo)
 
     def visit_Name(self, nodo: ast.Name) -> ast.AST:
         """Sustituye la variable objetivo por el subárbol de reemplazo."""

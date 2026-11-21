@@ -5,7 +5,7 @@ from math import inf
 
 from .gramatica_funcion import analizar_expresion, FUNCIONES_REALES, CONSTANTES_REALES
 from .integracion_real import integrar_real, PresupuestoIntegral
-from .nodos_integral import NOMBRE_INTEGRAL, signo_infinito
+from .nodos_integral import NOMBRE_INTEGRAL, nombres_libres, signo_infinito
 from .notacion_calculo import GUARDIA_DERIVADA
 from .operaciones_reales import aplicar_funcion, aplicar_operador, comprobar_real, ejecutar_operacion
 from .unidades_angulares import validar_unidad_angular
@@ -42,46 +42,59 @@ class _Evaluacion:
         self._unidad = unidad
         self._presupuesto: PresupuestoIntegral | None = None
 
-    def nodo(self, nodo: ast.AST, valores: dict[str, float], en_cola: bool = False) -> float:
+    def nodo(
+        self, nodo: ast.AST, valores: dict[str, float], variables_cola: frozenset[str] = frozenset(),
+    ) -> float:
         """Evalúa un nodo validado en su alcance y unidad angular."""
         if isinstance(nodo, ast.Constant):
             return comprobar_real(nodo.value)
         if isinstance(nodo, ast.Name):
             return valores[nodo.id] if nodo.id in valores else CONSTANTES_REALES[nodo.id]
         if isinstance(nodo, ast.UnaryOp):
-            operando = self.nodo(nodo.operand, valores, en_cola)
+            operando = self.nodo(nodo.operand, valores, variables_cola)
             return -operando if isinstance(nodo.op, ast.USub) else operando
         if isinstance(nodo, ast.BinOp):
-            izquierda = self.nodo(nodo.left, valores, en_cola)
-            derecha = self.nodo(nodo.right, valores, en_cola)
-            return aplicar_operador(nodo.op, izquierda, derecha, admitir_subdesbordamiento=en_cola)
+            izquierda = self.nodo(nodo.left, valores, variables_cola)
+            derecha = self.nodo(nodo.right, valores, variables_cola)
+            return aplicar_operador(
+                nodo.op, izquierda, derecha, admitir_subdesbordamiento=_admitir_redondeo(nodo, variables_cola),
+            )
         if isinstance(nodo, ast.Call):
-            return self._llamada(nodo, valores, en_cola)
+            return self._llamada(nodo, valores, variables_cola)
         raise ValueError("La expresión contiene un nodo no evaluable.")
 
-    def _llamada(self, nodo: ast.Call, valores: dict[str, float], en_cola: bool) -> float:
+    def _llamada(self, nodo: ast.Call, valores: dict[str, float], variables_cola: frozenset[str]) -> float:
         nombre = nodo.func.id
         if nombre == NOMBRE_INTEGRAL:
-            return self._integral(nodo, valores, en_cola)
-        argumento = self.nodo(nodo.args[0], valores, en_cola)
+            return self._integral(nodo, valores, variables_cola)
+        argumento = self.nodo(nodo.args[0], valores, variables_cola)
         if nombre == GUARDIA_DERIVADA:
-            return self.nodo(nodo.args[1], valores, en_cola)
-        return aplicar_funcion(nombre, argumento, unidad_angular=self._unidad, admitir_subdesbordamiento=en_cola)
+            return self.nodo(nodo.args[1], valores, variables_cola)
+        return aplicar_funcion(
+            nombre, argumento, unidad_angular=self._unidad,
+            admitir_subdesbordamiento=_admitir_redondeo(nodo.args[0], variables_cola),
+        )
 
-    def _integral(self, nodo: ast.Call, valores: dict[str, float], en_cola: bool) -> float:
+    def _integral(self, nodo: ast.Call, valores: dict[str, float], variables_cola: frozenset[str]) -> float:
         cuerpo, variable, inferior, superior = nodo.args
         signos = signo_infinito(inferior), signo_infinito(superior)
         inicio, fin = (
-            signo * inf if signo else self.nodo(limite, valores, en_cola)
+            signo * inf if signo else self.nodo(limite, valores, variables_cola)
             for signo, limite in zip(signos, (inferior, superior))
         )
         if self._presupuesto is None:
             self._presupuesto = PresupuestoIntegral()
         presupuesto = self._presupuesto
-        permitir_subdesbordamiento = en_cola or any(signos)
+        variables_cuerpo = variables_cola | {variable.id} if any(signos) else variables_cola - {variable.id}
 
         def integrando(muestra: float) -> float:
             presupuesto.consumir()
-            return self.nodo(cuerpo, {**valores, variable.id: muestra}, permitir_subdesbordamiento)
+            return self.nodo(cuerpo, {**valores, variable.id: muestra}, variables_cuerpo)
 
         return integrar_real(integrando, inicio, fin)
+
+
+def _admitir_redondeo(nodo: ast.AST, variables_cola: frozenset[str]) -> Callable[[], bool] | None:
+    if not variables_cola:
+        return None
+    return lambda: not variables_cola.isdisjoint(nombres_libres(nodo))
