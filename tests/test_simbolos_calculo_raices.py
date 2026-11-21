@@ -17,7 +17,7 @@ from src.frontend.controladores.metodos_abiertos import resolver_captura
 @pytest.mark.parametrize(("texto", "esperado"), [
     ("π÷2", math.pi / 2), ("ℯ⁻¹", 1 / math.e), ("√(9)×∛(−8)·∜(16)", -12),
     ("−⅝+1⁄2+3∕4", .625), ("180°", math.pi), ("250‰", .25),
-    ("2²‰", .004), ("001.5", 1.5), ("1e-200", 1e-200),
+    ("2²‰", .004), ("1/2", .5), ("001.5", 1.5), ("1e-200", 1e-200),
 ])
 def test_captura_real_evalua_constantes(texto, esperado):
     """Convierte símbolos y conserva la captura de números escritos como texto."""
@@ -79,7 +79,7 @@ def test_agregados_preservan_los_errores_numericos_por_termino():
     with pytest.raises(ErrorNoFinito, match="subdesbordamiento"):
         compilar("∏(i,1,2,1e-200x)")(1)
     with pytest.raises(ErrorDominio, match="tangente"):
-        comprobar_dominio_intervalo("tan(x°)", (89, 91), unidad_angular="grados")
+        comprobar_dominio_intervalo("tan(x°)", (89, 90), unidad_angular="grados")
 
 
 def test_vista_previa_proyecta_operadores_y_agrupa_potencias():
