@@ -4,8 +4,8 @@ from typing import Any
 
 from src.ai.constantes import MAXIMO_CARACTERES_MENSAJE, MAXIMO_HISTORIAL_MENSAJES
 from src.ai.contexto.contexto import sanear_cadena_usuario
-from src.ai.historial import es_contrato_historial
-from src.ai.presupuesto_mensajes import validar_longitud_mensaje
+from src.ai.presupuesto.historial import es_contrato_historial
+from src.ai.presupuesto.presupuesto_mensajes import validar_longitud_mensaje
 
 INSTRUCCIONES_SISTEMA = """Eres Glosa, asistente experta en álgebra lineal y sistemas numéricos para estudiantes de ingeniería. Responde en español y tutea al estudiante. Sé directa y cálida.
 Usa los datos del bloque [CONTEXTO] como la verdad del ejercicio actual. No recalcules lo que ya está resuelto en el contexto; úsalo. NO uses LaTeX ni símbolos de dólar ($$). Usa texto plano limpio y corchetes para matrices (p. ej. `[1 2; 3 4]`). Usa `≈` para fracciones exactas aproximadas.

@@ -4,7 +4,7 @@ from dataclasses import asdict
 
 import pytest
 
-from src.ai.historial import limpiar_historial_almacenado
+from src.ai.presupuesto.historial import limpiar_historial_almacenado
 from src.ai.mensajes import construir_mensajes, recortar_historial
 from src.frontend.catalogo_sugerencias import Seguimiento
 from src.frontend.sugerencias import CeldaInvalida, Senales, Sugerencia

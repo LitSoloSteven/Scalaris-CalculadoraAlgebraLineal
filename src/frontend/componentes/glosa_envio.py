@@ -9,7 +9,7 @@ from src.frontend.componentes.sonido import emitir_sonido, notificar
 
 from src.ai.respuestas import OpcionesConsulta, ResultadoIA, TipoErrorIA
 from src.ai.textos import CONSULTA_CANCELADA, ERROR_SERVICIO, RESPUESTA_DEMASIADO_EXTENSA
-from src.ai.presupuesto_mensajes import validar_longitud_mensaje
+from src.ai.presupuesto.presupuesto_mensajes import validar_longitud_mensaje
 from src.frontend.componentes.glosa_preguntas import PreguntasGlosaMixin
 from src.frontend.componentes.glosa_espera import iniciar_temporizador_cancelar, finalizar_envio
 from src.frontend import banderas

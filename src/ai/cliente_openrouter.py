@@ -18,7 +18,7 @@ from src.ai.constantes import (
     TIEMPO_RESERVADO_POR_MODELO_SEGUNDOS,
 )
 from src.ai.mensajes import construir_mensajes
-from src.ai.presupuesto_mensajes import validar_longitud_mensaje
+from src.ai.presupuesto.presupuesto_mensajes import validar_longitud_mensaje
 from src.ai.respuestas import OpcionesConsulta, ResultadoIA, TipoErrorIA
 from src.ai.textos import CONSULTA_CANCELADA, ERROR_SERVICIO
 

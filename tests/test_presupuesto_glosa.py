@@ -8,7 +8,7 @@ import pytest
 from src.ai.clasificador_respuestas import procesar_respuesta_exitosa
 from src.ai.cliente_openrouter import ClienteOpenRouter
 from src.ai.constantes import MAXIMO_CARACTERES_MENSAJE
-from src.ai.historial import limpiar_historial_almacenado
+from src.ai.presupuesto.historial import limpiar_historial_almacenado
 from src.ai.mensajes import construir_mensajes, recortar_historial
 from src.ai.respuestas import TipoErrorIA
 from src.ai.textos import RESPUESTA_DEMASIADO_EXTENSA

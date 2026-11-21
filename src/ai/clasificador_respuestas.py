@@ -11,7 +11,7 @@ from src.ai.constantes import (
 
 from src.ai.respuestas import ResultadoIA, TipoErrorIA
 from src.ai.textos import ERROR_SERVICIO, RESPUESTA_DEMASIADO_EXTENSA
-from src.ai.presupuesto_mensajes import validar_longitud_mensaje
+from src.ai.presupuesto.presupuesto_mensajes import validar_longitud_mensaje
 
 registro = logging.getLogger(__name__)
 
