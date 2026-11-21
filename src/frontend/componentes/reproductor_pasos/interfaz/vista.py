@@ -8,11 +8,11 @@ from nicegui import ui
 from src.frontend.nucleo.textos.textos import PASOS_AYUDA_TITULO
 
 from src.frontend.componentes.reproductor_pasos.nucleo.catalogo import html_sugerencia_tipo
-from src.frontend.componentes.reproductor_pasos.controles import construir_controles
-from src.frontend.componentes.reproductor_pasos.indice import construir_indice
+from src.frontend.componentes.reproductor_pasos.interfaz.controles import construir_controles
+from src.frontend.componentes.reproductor_pasos.interfaz.indice import construir_indice
 
 if TYPE_CHECKING:
-    from src.frontend.componentes.reproductor_pasos.reproductor import ReproductorPasos
+    from src.frontend.componentes.reproductor_pasos.interfaz.reproductor import ReproductorPasos
 
 
 def construir_vista(reproductor: ReproductorPasos) -> None:

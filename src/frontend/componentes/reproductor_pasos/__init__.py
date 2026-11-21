@@ -16,7 +16,7 @@ from src.frontend.componentes.reproductor_pasos.formato.html_tablas import (
     html_tabla_matriz,
 )
 from src.frontend.componentes.reproductor_pasos.nucleo.modelo import GrupoReproductor, PasoReproductor
-from src.frontend.componentes.reproductor_pasos.reproductor import ReproductorPasos
+from src.frontend.componentes.reproductor_pasos.interfaz.reproductor import ReproductorPasos
 
 __all__ = [
     "CATALOGO_TIPOS",

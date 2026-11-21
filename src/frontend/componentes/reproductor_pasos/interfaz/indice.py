@@ -8,10 +8,10 @@ from nicegui import ui
 from src.frontend.nucleo.textos.textos import PASOS_INDICE_TITULO
 
 from src.frontend.componentes.reproductor_pasos.nucleo.catalogo import html_sugerencia_tipo
-from src.frontend.componentes.reproductor_pasos.controles import vincular_accion
+from src.frontend.componentes.reproductor_pasos.interfaz.controles import vincular_accion
 
 if TYPE_CHECKING:
-    from src.frontend.componentes.reproductor_pasos.reproductor import ReproductorPasos
+    from src.frontend.componentes.reproductor_pasos.interfaz.reproductor import ReproductorPasos
 
 
 def construir_indice(reproductor: ReproductorPasos) -> None:

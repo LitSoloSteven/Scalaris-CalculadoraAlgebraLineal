@@ -16,10 +16,10 @@ from src.frontend.componentes.reproductor_pasos.nucleo.catalogo import (
     html_sugerencia_tipo,
 )
 from src.frontend.componentes.reproductor_pasos.nucleo.modelo import GrupoReproductor, PasoReproductor
-from src.frontend.componentes.reproductor_pasos.vista import construir_vista
-from .nucleo.opciones import OpcionesReproductor
-from .nucleo.temporizacion import reiniciar_espera
-from .formato.textos import formatear_descripcion_html, limpiar_latex_plano
+from src.frontend.componentes.reproductor_pasos.interfaz.vista import construir_vista
+from src.frontend.componentes.reproductor_pasos.nucleo.opciones import OpcionesReproductor
+from src.frontend.componentes.reproductor_pasos.nucleo.temporizacion import reiniciar_espera
+from src.frontend.componentes.reproductor_pasos.formato.textos import formatear_descripcion_html, limpiar_latex_plano
 
 
 _CONTADOR_EXPLICACION = itertools.count()
