@@ -6,7 +6,7 @@ from src.frontend.controladores.raices.biseccion.captura.catalogo_criterios impo
 from src.frontend.controladores.raices.biseccion.presentacion.presentacion_criterio import datos_copia_biseccion, texto_resumen, titulo_estado
 from src.frontend.controladores.raices.biseccion.salidas.salidas_biseccion import texto_copia_biseccion
 from .modo_examen import crear_control_examen_lote
-from .continuidad_intervalo import mostrar_informe
+from src.frontend.vistas.raices.biseccion.exploracion.continuidad_intervalo import mostrar_informe
 from .procedimiento import mostrar_traza
 
 

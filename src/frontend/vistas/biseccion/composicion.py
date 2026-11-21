@@ -3,8 +3,8 @@ from nicegui import ui
 
 from src.frontend.vistas.raices.biseccion.captura.acciones_captura import construir_acciones, construir_limite, desplegable
 from src.frontend.vistas.raices.biseccion.captura.captura import construir_boton_calculo, construir_captura, construir_intervalo
-from .continuidad_intervalo import PanelContinuidad
-from .exploracion import PanelExploracion
+from src.frontend.vistas.raices.biseccion.exploracion.continuidad_intervalo import PanelContinuidad
+from src.frontend.vistas.raices.biseccion.exploracion.exploracion import PanelExploracion
 from src.frontend.vistas.raices.biseccion.base.modos_captura import MODO_BUSQUEDA, MODO_INTERVALO, construir_modos, region_modo
 from src.frontend.vistas.raices.biseccion.base.previa_expresion import PreviaExpresion
 from .resolucion_multiple import PanelResolucionMultiple

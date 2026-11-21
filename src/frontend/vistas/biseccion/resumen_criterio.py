@@ -14,7 +14,7 @@ from src.frontend.controladores.raices.biseccion.presentacion.presentacion_crite
 )
 from src.frontend.controladores.raices.biseccion.salidas.salidas_biseccion import texto_copia_biseccion
 from .avisos_diagnostico import mostrar_avisos_diagnostico
-from .continuidad_intervalo import mostrar_informe
+from src.frontend.vistas.raices.biseccion.exploracion.continuidad_intervalo import mostrar_informe
 from src.frontend.vistas.raices.biseccion.base.movimiento import animar_entrada
 
 
