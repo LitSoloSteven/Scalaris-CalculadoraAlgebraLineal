@@ -2,6 +2,7 @@
 
 from typing import Any
 from src.backend.constantes import LONGITUD_MAXIMA_ENTRADA_BASES
+from src.backend.modelos.entrada_numerica import SIGNO_MENOS_TIPOGRAFICO
 
 BASES_NUMERICAS = {"decimal": 10, "binario": 2, "octal": 8, "hexadecimal": 16}
 
@@ -24,7 +25,7 @@ def capturar_entrada_base(valor: Any, base: int) -> tuple[bool, str, int]:
             "Introduce un número más corto."
         )
     limpio = texto.strip().replace(" ", "").replace("_", "").upper()
-    es_negativo = limpio.startswith("-")
+    es_negativo = limpio.startswith(("-", SIGNO_MENOS_TIPOGRAFICO))
     if es_negativo or limpio.startswith("+"):
         limpio = limpio[1:]
     prefijo = {2: "0B", 8: "0O", 16: "0X"}.get(base)

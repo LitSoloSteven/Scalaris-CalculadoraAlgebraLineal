@@ -1,11 +1,25 @@
 """Conversion de entradas escalares y limites comunes sin dependencias matriciales."""
 from fractions import Fraction
 from typing import Any
+from unicodedata import normalize
 
 from src.backend.constantes import (
     LIMITE_RECONSTRUCCION_ESTRICTA, LONGITUD_MAXIMA_CADENA_NUMERO,
     MENSAJE_NOTACION_CIENTIFICA_NO_SOPORTADA, MENSAJE_NUMERO_DEMASIADO_LARGO,
 )
+
+SIGNO_MENOS_TIPOGRAFICO = "−"
+DIVISIONES_TIPOGRAFICAS = "÷⁄∕"
+FRACCIONES_TIPOGRAFICAS = "¼½¾⅐⅑⅒⅓⅔⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞↉"
+SIMBOLO_POR_MIL = "‰"
+_ESCALA_POR_MIL = 1000
+_NORMALIZACION_OPERADORES = str.maketrans(
+    SIGNO_MENOS_TIPOGRAFICO + DIVISIONES_TIPOGRAFICAS, "-///"
+)
+_RAZONES_TIPOGRAFICAS = {
+    simbolo: normalize("NFKC", simbolo).replace("⁄", "/")
+    for simbolo in FRACCIONES_TIPOGRAFICAS
+}
 
 
 def motivo_cadena_no_soportada(texto: str) -> str | None:
@@ -35,11 +49,22 @@ def _convertir_texto(valor: str) -> tuple[bool, Fraction, str]:
     if rechazo is not None:
         return False, Fraction(0), rechazo
     try:
-        return True, Fraction(texto), ""
+        return True, fraccion_desde_texto(texto), ""
     except ZeroDivisionError:
         return False, Fraction(0), "División por cero en la fracción ingresada."
     except ValueError:
         return False, Fraction(0), "El valor ingresado no es un número o fracción válida."
+
+
+def fraccion_desde_texto(texto: str) -> Fraction:
+    """Interpreta un literal exacto ya acotado; lanza ValueError o ZeroDivisionError si falla."""
+    texto = texto.translate(_NORMALIZACION_OPERADORES)
+    literal = texto.removesuffix(SIMBOLO_POR_MIL)
+    signo = literal[:1] if literal.startswith(("+", "-")) else ""
+    magnitud = literal[len(signo):]
+    razon = _RAZONES_TIPOGRAFICAS.get(magnitud, magnitud)
+    valor = Fraction(signo + razon)
+    return valor if literal == texto else valor / _ESCALA_POR_MIL
 
 
 def convertir_numero_exacto(valor: Any) -> tuple[bool, Fraction, str]:
