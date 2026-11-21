@@ -1,6 +1,6 @@
 """Conversión exacta de una celda con ubicación y política de vacío explícitas."""
 from fractions import Fraction
-from src.backend.utilidades.validadores import ValidadorMatriz
+from src.backend.utilidades.validacion.validadores import ValidadorMatriz
 
 
 def parsear_celda_exacta(valor: object, coordenada: str, vacio_como_cero: bool = False) -> Fraction:

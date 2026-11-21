@@ -1,6 +1,6 @@
 """Validación exacta y localización de errores en entradas geométricas."""
 from src.backend.geometria.errores import respuesta_error
-from src.backend.utilidades.validadores import ValidadorMatriz
+from src.backend.utilidades.validacion.validadores import ValidadorMatriz
 
 
 def ubicar_error_celda(matriz: list, vector: list) -> dict | None:

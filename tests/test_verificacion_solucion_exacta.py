@@ -1,6 +1,6 @@
 """Verificación de soluciones racionales y errores de celda."""
 from fractions import Fraction
-from src.backend.utilidades.validadores import ValidadorMatriz
+from src.backend.utilidades.validacion.validadores import ValidadorMatriz
 
 
 def test_verificacion_acepta_fraccion_exacta():

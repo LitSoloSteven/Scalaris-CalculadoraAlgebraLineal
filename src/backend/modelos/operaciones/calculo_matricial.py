@@ -3,7 +3,7 @@ from fractions import Fraction
 
 from src.backend.modelos.matriz import Matriz
 from src.backend.modelos.operaciones.construcciones import identidad
-from src.backend.utilidades.validadores import validar_dimensiones_multiplicacion, validar_mismas_dimensiones
+from src.backend.utilidades.validacion.validadores import validar_dimensiones_multiplicacion, validar_mismas_dimensiones
 
 
 def operar_celda(izquierda, derecha, simbolo: str):

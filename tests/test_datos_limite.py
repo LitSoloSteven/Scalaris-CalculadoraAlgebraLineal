@@ -10,7 +10,7 @@ from src.backend.resolutores.sistemas_numericos.calculadora_romana import (
     CalculadoraRomana,
     ErrorNumeroRomano,
 )
-from src.backend.utilidades.validadores import ValidadorMatriz
+from src.backend.utilidades.validacion.validadores import ValidadorMatriz
 from src.frontend.componentes.glosa_renderizado import renderizar_texto_glosa
 from src.frontend.controladores.geometria.controlador_geometria import (
     ControladorGeometria,

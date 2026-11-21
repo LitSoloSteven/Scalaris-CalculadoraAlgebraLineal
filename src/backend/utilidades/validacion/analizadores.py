@@ -7,7 +7,7 @@ from src.backend.modelos.escalares.entrada_numerica import (
     DIVISIONES_TIPOGRAFICAS, FRACCIONES_TIPOGRAFICAS, SIGNO_MENOS_TIPOGRAFICO, SIMBOLO_POR_MIL,
 )
 from src.backend.modelos.matriz import Matriz
-from src.backend.utilidades.validadores import ValidadorMatriz
+from src.backend.utilidades.validacion.validadores import ValidadorMatriz
 
 _LETRAS_VARIABLE = "a-zA-ZΑ-Ωα-ω"
 _DIGITOS_SUBINDICE = "₀₁₂₃₄₅₆₇₈₉"

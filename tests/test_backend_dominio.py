@@ -5,7 +5,7 @@ from fractions import Fraction
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.sistemas_lineales.gauss import ResolutorGauss
 from src.backend.resolutores.operaciones_matrices.inversa import ResolutorInversa
-from src.backend.utilidades.validadores import ValidadorMatriz
+from src.backend.utilidades.validacion.validadores import ValidadorMatriz
 
 
 def test_gauss_modulo():

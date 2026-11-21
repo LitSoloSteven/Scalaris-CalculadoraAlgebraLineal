@@ -11,7 +11,7 @@ from src.backend.resolutores.operaciones_vectores.formateadores import (
 )
 from src.backend.utilidades.formato.formateadores import formatear_variable_para_latex, numero_a_latex
 from src.backend.utilidades.validacion.analizadores import AnalizadorSistema
-from src.backend.utilidades.validadores import ValidadorMatriz
+from src.backend.utilidades.validacion.validadores import ValidadorMatriz
 from src.backend.resolutores.sistemas_lineales.captura_ecuaciones import contar_ecuaciones
 
 from src.backend.constantes import DIMENSION_MAXIMA_SISTEMAS, MAXIMO_CARACTERES_ECUACIONES, MAXIMO_CELDAS_SISTEMA

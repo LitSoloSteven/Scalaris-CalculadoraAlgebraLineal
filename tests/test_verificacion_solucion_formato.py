@@ -1,6 +1,6 @@
 """Formato exacto de los informes de verificación de soluciones."""
 from fractions import Fraction
-from src.backend.utilidades.validadores import ValidadorMatriz
+from src.backend.utilidades.validacion.validadores import ValidadorMatriz
 
 
 def test_informe_latex_conserva_fracciones_exactas():

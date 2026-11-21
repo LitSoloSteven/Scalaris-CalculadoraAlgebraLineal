@@ -9,7 +9,7 @@ from src.backend.resolutores.operaciones_matrices.determinante import ResolutorD
 from src.backend.resolutores.operaciones_matrices.transformaciones import ResolutorTransformacionesLineales
 from src.backend.resolutores.sistemas_lineales.gauss import ResolutorGauss
 from src.backend.resolutores.sistemas_lineales.gauss_jordan import ResolutorGaussJordan
-from src.backend.utilidades.verificacion import verificar_solucion
+from src.backend.utilidades.validacion.verificacion import verificar_solucion
 from src.frontend.controladores.sistemas_lineales.controlador_gauss import ControladorGauss
 from src.frontend.controladores.sistemas_lineales.controlador_gauss_jordan import ControladorGaussJordan
 

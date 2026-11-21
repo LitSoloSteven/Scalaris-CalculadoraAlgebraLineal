@@ -4,7 +4,7 @@ from __future__ import annotations
 from typing import Any
 
 from src.backend.constantes import MENSAJE_TRANSFERENCIA_DATOS_INVALIDOS
-from src.backend.utilidades.validadores import ValidadorMatriz
+from src.backend.utilidades.validacion.validadores import ValidadorMatriz
 
 
 def _envoltura_valida(carga: Any, tipo: str) -> bool:

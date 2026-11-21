@@ -13,12 +13,12 @@ from .validacion.reglas_dominio import (
     validar_entrada_base,
 )
 from .formato.utilidades_matematicas import mcd, mcd_lista, mcm, simplificar_fila
-from .validadores import (
+from .validacion.validadores import (
     ValidadorMatriz,
     validar_dimensiones_multiplicacion,
     validar_mismas_dimensiones,
 )
-from .verificacion import verificar_solucion
+from .validacion.verificacion import verificar_solucion
 
 __all__ = [
     "AnalizadorSistema",

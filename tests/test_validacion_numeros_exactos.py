@@ -1,6 +1,6 @@
 """Validación exacta de números y conservación de precisión en ecuaciones."""
 from fractions import Fraction
-from src.backend.utilidades.validadores import ValidadorMatriz
+from src.backend.utilidades.validacion.validadores import ValidadorMatriz
 from src.backend.utilidades.validacion.analizadores import AnalizadorSistema
 
 

@@ -17,7 +17,7 @@ from src.backend.utilidades.formato.formateadores import (
     formatear_fraccion_texto,
     numero_a_latex,
 )
-from src.backend.utilidades.validadores import ValidadorMatriz
+from src.backend.utilidades.validacion.validadores import ValidadorMatriz
 
 
 def _formatear_latex_binario(

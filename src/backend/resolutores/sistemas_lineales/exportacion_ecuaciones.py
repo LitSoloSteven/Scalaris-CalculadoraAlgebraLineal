@@ -1,7 +1,7 @@
 """Exportación de coeficientes y términos independientes a ecuaciones algebraicas."""
 from __future__ import annotations
 
-from src.backend.utilidades.validadores import ValidadorMatriz
+from src.backend.utilidades.validacion.validadores import ValidadorMatriz
 
 
 def _formatear_termino_variable(valor: str, j: int, tiene_terminos: bool) -> str | None:

@@ -1,7 +1,7 @@
 """Construcción exacta de vectores a partir de celdas de entrada."""
 from src.backend.constantes import LONGITUD_MAXIMA_CADENA_NUMERO
 from src.backend.modelos.matriz import Matriz
-from src.backend.utilidades.validadores import ValidadorMatriz
+from src.backend.utilidades.validacion.validadores import ValidadorMatriz
 
 
 def validar_carga_vectorial(datos: dict, operacion: str) -> None:

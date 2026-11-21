@@ -4,7 +4,7 @@ import pytest
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_matrices.operaciones import ResolutorOperacionesMatrices
 from src.backend.excepciones import ErrorDiscrepanciaDimension, ErrorDatosMatriz
-from src.backend.utilidades.validadores import (
+from src.backend.utilidades.validacion.validadores import (
     validar_mismas_dimensiones, validar_dimensiones_multiplicacion,
 )
 

@@ -1,7 +1,7 @@
 """Preparación numérica y LaTeX de la vista previa de inversa."""
 import html
 from src.backend.constantes import DIMENSION_MAXIMA_AUMENTADA_PREVIA_INVERSA
-from src.backend.utilidades.validadores import ValidadorMatriz
+from src.backend.utilidades.validacion.validadores import ValidadorMatriz
 
 
 def sanitizar_valor_latex(valor: str) -> str:

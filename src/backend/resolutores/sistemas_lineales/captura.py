@@ -5,7 +5,7 @@ import json
 from src.backend.excepciones import ErrorDatosMatriz
 from src.backend.constantes import DIMENSION_MAXIMA_SISTEMAS
 from src.backend.modelos.matriz import Matriz
-from src.backend.utilidades.validadores import ValidadorMatriz
+from src.backend.utilidades.validacion.validadores import ValidadorMatriz
 from src.backend.resolutores.operaciones_matrices.celdas_exactas import parsear_celda_exacta
 
 

@@ -1,7 +1,7 @@
 """Coeficientes y texto explicativo de soluciones paramétricas LaTeX."""
 from fractions import Fraction
 from src.backend.utilidades.formato.formateadores import formatear_expresion_parametrica
-from src.backend.utilidades.validadores import ValidadorMatriz
+from src.backend.utilidades.validacion.validadores import ValidadorMatriz
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.sistemas_lineales.gauss import ResolutorGauss
 

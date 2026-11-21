@@ -36,7 +36,7 @@ from src.backend.utilidades.formato.utilidades_matematicas import (
     mcm,
     simplificar_fila,
 )
-from src.backend.utilidades.validadores import (
+from src.backend.utilidades.validacion.validadores import (
     ValidadorMatriz,
     validar_dimensiones_multiplicacion,
     validar_mismas_dimensiones,

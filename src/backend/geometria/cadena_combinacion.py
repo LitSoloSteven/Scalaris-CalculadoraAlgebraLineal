@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from fractions import Fraction
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.utilidades.validadores import ValidadorMatriz
+from src.backend.utilidades.validacion.validadores import ValidadorMatriz
 
 
 @dataclass(frozen=True)

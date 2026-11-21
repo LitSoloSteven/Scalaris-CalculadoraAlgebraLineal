@@ -19,7 +19,7 @@ from src.backend.utilidades.formato.formateadores import (
     formatear_fraccion_texto,
     numero_a_latex,
 )
-from src.backend.utilidades.validadores import (
+from src.backend.utilidades.validacion.validadores import (
     ValidadorMatriz,
     validar_dimensiones_multiplicacion,
     validar_mismas_dimensiones,

@@ -1,7 +1,7 @@
 """Construcción de la vista previa usada por las pruebas de caracterización."""
 import html
 import re
-from src.backend.utilidades.validadores import ValidadorMatriz
+from src.backend.utilidades.validacion.validadores import ValidadorMatriz
 
 
 def construir_vista_previa_latex(matriz_a, vector_b):

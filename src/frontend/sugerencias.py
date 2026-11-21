@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 import os
 from typing import Any
 
-from src.backend.utilidades.validadores import ValidadorMatriz
+from src.backend.utilidades.validacion.validadores import ValidadorMatriz
 from src.frontend import banderas
 from src.frontend.catalogo_sugerencias import CATALOGO_SUGERENCIAS
 
