@@ -28,6 +28,7 @@
         { "action": "read", "resource": "docs/__SCALARIS_REGLAS_DEL_AGENTE.txt", "effect": "allow" },
         { "action": "read", "resource": "src/**", "effect": "allow" },
         { "action": "read", "resource": "tests/**", "effect": "allow" },
+        { "action": "read", "resource": "relevos/**", "effect": "allow" },
         { "action": "read", "resource": "**/.env*", "effect": "deny" }
       ]
     }
