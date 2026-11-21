@@ -4,7 +4,7 @@ from dataclasses import asdict
 import pytest
 
 from src.backend.constantes import MENSAJE_TRANSFERENCIA_DATOS_INVALIDOS
-from src.backend.utilidades import transferencias
+from src.backend.utilidades.captura import transferencias
 from src.frontend.componentes import transferencia
 
 
