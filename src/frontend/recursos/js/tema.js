@@ -50,7 +50,7 @@
   }
 
   function movimientoDisponible() {
-    if (!document.startViewTransition || typeof raiz.animate !== 'function') return false;
+    if (!revelado || !document.startViewTransition || typeof raiz.animate !== 'function') return false;
     if (!window.scalaris.movimiento.permitido()) return false;
     if (window.scalaris.presentacion?.activa) return false;
     return !raiz.hasAttribute('data-navegacion-circular');

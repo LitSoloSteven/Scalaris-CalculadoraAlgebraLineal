@@ -27,6 +27,7 @@
       fondo?.remove();
       raiz.removeAttribute('data-presentacion-activa');
       window.removeEventListener('pagehide', finalizar);
+      window.removeEventListener('resize', finalizar);
       document.removeEventListener('keydown', finalizarPorGesto, true);
       document.removeEventListener('pointerdown', finalizarPorGesto, true);
       document.removeEventListener('visibilitychange', alOcultar);
@@ -38,8 +39,13 @@
     function alOcultar() { if (document.hidden) finalizar(); }
     function alReducir(evento) { if (evento.matches) finalizar(); }
 
+    function sonarEntrada() {
+      try { window.scalaris.sonido?.reproducir('entrada'); }
+      catch (_) { /* El audio no condiciona la presentación ni su cierre. */ }
+    }
+
     function finalizarPorGesto(evento) {
-      if (evento?.isTrusted) window.scalaris.sonido?.reproducir('entrada');
+      if (evento?.isTrusted) sonarEntrada();
       finalizar();
     }
 
@@ -110,6 +116,7 @@
       const directorioListo = await window.scalaris.entradaInicio?.directorioListo;
       if (!directorioListo || completada || performance.now() + tramos.resto >= plazo) return;
       const abertura = prepararAbertura(imagen);
+      window.addEventListener('resize', finalizar);
       await elevarLogotipo(imagen);
       if (completada) return;
       await animar(imagen, [{ transform: posicionElevada }, { transform: 'translateY(0) scale(0.95)' }], tramos.impacto);
@@ -121,7 +128,7 @@
 
     function reproducir(imagen) {
       if (completada) return;
-      window.scalaris.sonido?.reproducir('entrada');
+      sonarEntrada();
       if (tramos.fundido) return animar(fondo, [{ opacity: 1 }, { opacity: 0 }], tramos.fundido);
       return reproducirSecuencia(imagen);
     }
@@ -149,6 +156,7 @@
       fondo.toggleAttribute('data-movimiento-reducido', reducido);
       estado.activa = true;
       raiz.setAttribute('data-presentacion-activa', '');
+      // El fundido base sigue desactivado al retirar la máscara.
       raiz.setAttribute('data-vista-revelada', '');
       raiz.appendChild(fondo);
       escucharInterrupciones();
