@@ -23,7 +23,7 @@ VISTAS_RUTAS = {
     "transformaciones": ("algebra.operaciones_matrices.transformaciones.vista_transformaciones", "VistaTransformaciones"),
     "bases": ("sistemas_numericos.bases.vista_sistemas_numericos", "VistaSistemasNumericos"),
     "romanos": ("sistemas_numericos.romanos.vista_calculadora_romana", "VistaCalculadoraRomana"),
-    "metodos_abiertos": ("metodos_abiertos.vista_metodos_abiertos", "VistaMetodosAbiertos"),
+    "metodos_abiertos": ("raices.metodos_abiertos.vista_metodos_abiertos", "VistaMetodosAbiertos"),
 }
 
 

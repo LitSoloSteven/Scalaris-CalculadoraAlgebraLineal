@@ -7,7 +7,7 @@ import pytest
 
 from src.frontend.controladores.raices.metodos_abiertos import resolver_captura
 from src.frontend.controladores.raices.compartido.exploracion.vista_previa_raices import preparar_vista_previa
-from src.frontend.vistas.metodos_abiertos.figura import crear_figura_metodos_abiertos
+from src.frontend.vistas.raices.metodos_abiertos.grafica.figura import crear_figura_metodos_abiertos
 from tests.comun_construccion_vistas import construir_pagina
 
 

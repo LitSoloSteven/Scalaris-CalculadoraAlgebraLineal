@@ -168,7 +168,7 @@ def _registrar_pagina_metodos_abiertos() -> None:
     @ui.page(ruta_de("metodos_abiertos"), title=herramienta_por_identificador("metodos_abiertos").titulo_pagina)
     def pagina_metodos_abiertos():
         """Construye la vista de métodos abiertos y configura su tema."""
-        from src.frontend.vistas.metodos_abiertos.vista_metodos_abiertos import VistaMetodosAbiertos
+        from src.frontend.vistas.raices.metodos_abiertos.vista_metodos_abiertos import VistaMetodosAbiertos
 
         configurar_tema("metodos_abiertos")
         VistaMetodosAbiertos().construir()

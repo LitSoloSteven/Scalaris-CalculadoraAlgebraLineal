@@ -9,9 +9,9 @@ from src.frontend.componentes.aplicacion.controles.selector_opciones import Sele
 from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
 from src.frontend.controladores.raices.metodos_abiertos import LONGITUD_MAXIMA_NUMERICA, resolver_captura
 from src.frontend.navegacion import ruta_de
-from .figura import crear_figura_metodos_abiertos
-from .salida import SalidaMetodosAbiertos
-from .vista_previa import PanelVistaPrevia
+from src.frontend.vistas.raices.metodos_abiertos.grafica.figura import crear_figura_metodos_abiertos
+from src.frontend.vistas.raices.metodos_abiertos.salida.salida import SalidaMetodosAbiertos
+from src.frontend.vistas.raices.metodos_abiertos.grafica.vista_previa import PanelVistaPrevia
 
 _TOLERANCIA_POR_DEFECTO = "1e-6"
 _LIMITE_POR_DEFECTO = "100"
