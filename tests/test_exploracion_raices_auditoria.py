@@ -13,8 +13,8 @@ _COMPARTIDOS = (
     "controladores/raices/compartido/formato/rango_exploracion_raices.py",
 )
 _FACHADAS = (
-    "controladores/biseccion/exploracion.py", "controladores/biseccion/presentacion.py",
-    "controladores/biseccion/presentacion_diagnostico.py", "controladores/biseccion/vista_previa.py",
+    "controladores/raices/biseccion/adaptadores/exploracion.py", "controladores/biseccion/presentacion.py",
+    "controladores/biseccion/presentacion_diagnostico.py", "controladores/raices/biseccion/adaptadores/vista_previa.py",
     "vistas/biseccion/candidatos.py", "vistas/biseccion/exploracion.py", "vistas/biseccion/rango_grafica.py",
 )
 

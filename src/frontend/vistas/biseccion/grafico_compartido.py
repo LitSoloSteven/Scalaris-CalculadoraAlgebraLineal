@@ -4,8 +4,8 @@ import json
 from nicegui import ui
 from plotly import graph_objects as go
 
-from src.frontend.controladores.biseccion.muestreo import separar_intervalo_sospechoso
-from src.frontend.controladores.biseccion.vista_previa import RANGO_GRAFICA_DEFECTO
+from src.frontend.controladores.raices.biseccion.adaptadores.muestreo import separar_intervalo_sospechoso
+from src.frontend.controladores.raices.biseccion.adaptadores.vista_previa import RANGO_GRAFICA_DEFECTO
 from src.frontend.presentacion.tema import COLOR_SOLUCION, PALETA_GRAFICOS
 from src.frontend.vistas.geometria._colores_figuras import aplicar_colores_figura
 from .figura import crear_figura_previa, _ordenada_marcador

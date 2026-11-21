@@ -5,7 +5,7 @@ import logging
 from nicegui import ui
 
 from src.backend.resolutores.raices.biseccion.lote.limites_resolucion_multiple import MAXIMO_CANDIDATOS_MULTIPLE
-from src.frontend.controladores.biseccion.exploracion import presentar_candidato
+from src.frontend.controladores.raices.biseccion.adaptadores.exploracion import presentar_candidato
 from src.frontend.controladores.biseccion.resolucion_multiple import resolver_lote
 from src.frontend.controladores.raices.biseccion.captura.vigencia_panel import invalidar_panel
 from src.frontend.controladores.compartido.sesion.calculo_vigente import ejecutar_calculo_vigente

@@ -1,5 +1,5 @@
 """Fórmulas de una iteración obtenidas de sus valores publicados."""
-from .formato_expresion import numero_tex
+from src.frontend.controladores.raices.biseccion.adaptadores.formato_expresion import numero_tex
 from .presentacion import numero
 
 

@@ -13,11 +13,11 @@ from src.backend.resolutores.raices.biseccion.contratos.criterios_biseccion impo
 from src.backend.resolutores.raices.exploracion.busqueda.exploracion_intervalos import explorar_intervalos
 from src.backend.resolutores.raices.biseccion.lote.resolucion_multiple import resolver_candidatos
 from src.frontend.controladores.biseccion.controlador import calcular_presentacion, resolver_captura
-from src.frontend.controladores.biseccion.exploracion import resolver_exploracion
+from src.frontend.controladores.raices.biseccion.adaptadores.exploracion import resolver_exploracion
 from src.frontend.controladores.biseccion.presentacion import construir_pasos
 from src.frontend.controladores.biseccion.presentacion_criterio import metricas_resumen, texto_resumen
 from src.frontend.controladores.biseccion.resolucion_multiple import resolver_lote
-from src.frontend.controladores.biseccion.vista_previa import preparar_vista_previa
+from src.frontend.controladores.raices.biseccion.adaptadores.vista_previa import preparar_vista_previa
 from tests.comun_biseccion_criterios import captura_criterio, ejecutar_escenario
 
 

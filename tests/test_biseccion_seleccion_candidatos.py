@@ -4,7 +4,7 @@ import json
 import pytest
 from nicegui import ui
 
-from src.frontend.controladores.biseccion.exploracion import resolver_exploracion
+from src.frontend.controladores.raices.biseccion.adaptadores.exploracion import resolver_exploracion
 from tests.comun_biseccion_criterios import ejecutar_escenario
 from tests.comun_exploracion_biseccion import preparar_exploracion, acciones_exploracion, activar_accion
 

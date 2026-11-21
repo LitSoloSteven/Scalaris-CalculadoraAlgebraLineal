@@ -1,8 +1,8 @@
 """Restauración agrupada de datos de captura y limpieza de rangos."""
 from contextlib import contextmanager
 
-from src.frontend.controladores.biseccion.exploracion import PASO_EXPLORACION_DEFECTO
-from src.frontend.controladores.biseccion.vista_previa import RANGO_GRAFICA_DEFECTO
+from src.frontend.controladores.raices.biseccion.adaptadores.exploracion import PASO_EXPLORACION_DEFECTO
+from src.frontend.controladores.raices.biseccion.adaptadores.vista_previa import RANGO_GRAFICA_DEFECTO
 from .selector_unidad import restaurar_unidad
 
 _EXTREMOS = ("extremo_izquierdo", "extremo_derecho")

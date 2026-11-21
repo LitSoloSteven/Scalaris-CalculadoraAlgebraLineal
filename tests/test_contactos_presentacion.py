@@ -5,7 +5,7 @@ import pytest
 from nicegui import ui
 
 from src.backend.resolutores.raices.exploracion.busqueda import contactos_eje
-from src.frontend.controladores.biseccion.exploracion import (
+from src.frontend.controladores.raices.biseccion.adaptadores.exploracion import (
     detalles_contacto, presentar_candidato, resolver_exploracion, texto_consumo_exploracion,
 )
 from tests.comun_biseccion_criterios import ejecutar_escenario

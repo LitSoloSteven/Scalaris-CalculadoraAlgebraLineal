@@ -5,7 +5,7 @@ import logging
 from nicegui import ui
 
 from src.frontend.controladores.raices.biseccion.captura.vigencia_panel import invalidar_panel
-from src.frontend.controladores.biseccion.exploracion import (
+from src.frontend.controladores.raices.biseccion.adaptadores.exploracion import (
     LONGITUD_CAMPO_EXPLORACION, resolver_exploracion,
 )
 from src.frontend.controladores.raices.compartido.exploracion.captura_exploratoria_raices import capturar_exploracion, intervalo_seleccionable

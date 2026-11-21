@@ -6,11 +6,11 @@ import pytest
 
 from src.frontend.controladores.biseccion.contexto_biseccion import resumir_contexto_biseccion
 from src.frontend.controladores.biseccion.controlador import calcular_presentacion
-from src.frontend.controladores.biseccion.exploracion import presentar_candidato, resolver_exploracion
+from src.frontend.controladores.raices.biseccion.adaptadores.exploracion import presentar_candidato, resolver_exploracion
 from src.frontend.controladores.biseccion.presentacion import construir_pasos, filas_tabla
 from src.frontend.controladores.biseccion.resolucion_multiple import resolver_lote
 from src.frontend.controladores.biseccion.salidas_biseccion import texto_copia_biseccion
-from src.frontend.controladores.biseccion.vista_previa import preparar_vista_previa
+from src.frontend.controladores.raices.biseccion.adaptadores.vista_previa import preparar_vista_previa
 from tests.comun_biseccion_criterios import captura_criterio, ejecutar_escenario
 from tests.comun_exploracion_biseccion import acciones_exploracion, activar_accion
 
