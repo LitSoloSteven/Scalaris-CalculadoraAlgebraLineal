@@ -66,11 +66,11 @@ _CONFIGURACION_GRAFICOS_JSON = json.dumps(
 )
 
 def _etiquetas_recursos_cliente(nombre_catalogo: str) -> str:
-    catalogo = Path(__file__).parent / "recursos" / nombre_catalogo
+    catalogo = Path(__file__).parents[1] / "recursos" / nombre_catalogo
     return "\n".join(f'<script src="/assets/js/{nombre}"></script>'
                      for nombre in json.loads(catalogo.read_text(encoding="utf-8")))
 
-_PLANTILLAS = Path(__file__).parent / "recursos" / "plantillas"
+_PLANTILLAS = Path(__file__).parents[1] / "recursos" / "plantillas"
 _CONFIGURACION_SONIDOS = json.loads(
     (_PLANTILLAS.parent / "catalogo_sonidos.json").read_text(encoding="utf-8"))
 _CABECERA_HTML = Template((_PLANTILLAS / "cabecera.html").read_text(encoding="utf-8")).substitute(

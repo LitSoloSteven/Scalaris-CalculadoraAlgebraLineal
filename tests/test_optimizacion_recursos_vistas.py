@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from src.frontend import tema
+from src.frontend.presentacion import tema
 from src.frontend.presentacion import versionado_recursos
 from src.frontend.presentacion.recursos_vistas import seleccionar_recursos
 from tests.comun_construccion_vistas import VISTAS_RUTAS, construir_pagina

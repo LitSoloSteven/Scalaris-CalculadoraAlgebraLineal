@@ -3,7 +3,7 @@ import json
 
 import pytest
 
-from src.frontend import tema
+from src.frontend.presentacion import tema
 from src.frontend.componentes import cuadricula_base
 from src.frontend.componentes.cuadricula_ecuaciones import CuadriculaEcuaciones
 from src.frontend.componentes.captura_matrices import PanelCapturaMatrices

@@ -1,6 +1,6 @@
 """Carga de todos los sucesores del módulo de interacciones y alcance de auditoría."""
 import json
-from src.frontend import tema
+from src.frontend.presentacion import tema
 from tests.comun import RAIZ
 from tests.comun_javascript import leer_interacciones_cliente
 

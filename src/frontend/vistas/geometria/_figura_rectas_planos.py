@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Any
 from src.backend.geometria.base.muestreo import extremos_recta, superficie_plano
-from src.frontend.tema import (
+from src.frontend.presentacion.tema import (
     PALETA_GRAFICOS, COLOR_MARCADOR_CLARO, COLOR_MARCADOR_BORDE, COLORES_TEXTO_GRAFICOS, COLOR_SOLUCION, OPACIDAD_PLANOS,
 )
 from ._figuras_comunes import disposicion_2d, disposicion_3d

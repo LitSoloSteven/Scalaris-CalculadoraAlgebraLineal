@@ -8,7 +8,7 @@ import pytest
 
 from src.frontend.componentes.sonido import _SONIDOS
 from src.frontend.presentacion.recursos_vistas import seleccionar_recursos
-from src.frontend.tema import _CABECERA_HTML
+from src.frontend.presentacion.tema import _CABECERA_HTML
 from tests.comun import RAIZ
 
 _RUTA = RAIZ / 'src/frontend/recursos/catalogo_sonidos.json'
@@ -80,7 +80,7 @@ def test_inyeccion_escapa_cierre_de_script(monkeypatch):
     datos = {**_CATALOGO, 'muestra': '</script><script>alert(1)</script>'}
     monkeypatch.setattr(Path, 'read_text', lambda ruta, **opciones:
                         json.dumps(datos) if ruta == _RUTA else leer(ruta, **opciones))
-    modulo = runpy.run_path(str(RAIZ / 'src/frontend/tema.py'))
+    modulo = runpy.run_path(str(RAIZ / 'src/frontend/presentacion/tema.py'))
     cabecera = modulo['_CABECERA_HTML']
     assert '</script><script>alert(1)' not in cabecera
     bloque = re.search(r'id="scalaris-configuracion-sonidos" type="application/json">(.*?)</script>', cabecera)

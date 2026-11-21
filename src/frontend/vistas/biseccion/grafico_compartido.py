@@ -6,7 +6,7 @@ from plotly import graph_objects as go
 
 from src.frontend.controladores.biseccion.muestreo import separar_intervalo_sospechoso
 from src.frontend.controladores.biseccion.vista_previa import RANGO_GRAFICA_DEFECTO
-from src.frontend.tema import COLOR_SOLUCION, PALETA_GRAFICOS
+from src.frontend.presentacion.tema import COLOR_SOLUCION, PALETA_GRAFICOS
 from src.frontend.vistas.geometria._colores_figuras import aplicar_colores_figura
 from .figura import crear_figura_previa, _ordenada_marcador
 from .modos_captura import MODO_BUSQUEDA

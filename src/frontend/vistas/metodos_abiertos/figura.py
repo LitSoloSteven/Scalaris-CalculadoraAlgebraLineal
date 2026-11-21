@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 
 from src.frontend.componentes.colores_figuras import aplicar_colores_figura
 from src.frontend.componentes.figura_funcion_real import crear_figura_previa
-from src.frontend.tema import COLOR_SOLUCION, PALETA_GRAFICOS
+from src.frontend.presentacion.tema import COLOR_SOLUCION, PALETA_GRAFICOS
 from .coordenadas import numero_finito
 from .figura_base import crear_figura_vacia
 from .puntos_iniciales import agregar_puntos_iniciales

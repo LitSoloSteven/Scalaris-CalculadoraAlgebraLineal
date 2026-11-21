@@ -1,5 +1,5 @@
 """Roles cromáticos compartidos para conservar las trazas al cambiar de tema."""
-from src.frontend.tema import (
+from src.frontend.presentacion.tema import (
     PALETA_GRAFICOS, COLOR_SOLUCION, COLOR_MARCADOR_CLARO, COLOR_MARCADOR_BORDE,
     COLORES_TEXTO_GRAFICOS, COLORES_CUADRICULA_GRAFICOS,
     obtener_paleta_tema, obtener_color_solucion,

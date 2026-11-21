@@ -2,7 +2,7 @@
 import json
 import re
 
-from src.frontend import tema
+from src.frontend.presentacion import tema
 from tests.comun import RAIZ, ARCHIVOS_CSS
 
 

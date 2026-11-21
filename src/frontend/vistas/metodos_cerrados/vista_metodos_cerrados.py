@@ -7,7 +7,7 @@ from src.frontend.componentes.panel_ia import PanelIA
 from src.frontend.controladores.actualizacion_cancelable import cancelar_actualizacion
 from src.frontend.controladores.metodos_cerrados.adaptadores import BISECCION
 from src.frontend.navegacion import ruta_de
-from src.frontend.tema import configurar_tema
+from src.frontend.presentacion.tema import configurar_tema
 from .acciones import AccionesMetodosCerrados
 from .calculo import CalculoIndividual
 from .captura import CapturaMetodosCerrados, captura_vacia, limpiar_captura

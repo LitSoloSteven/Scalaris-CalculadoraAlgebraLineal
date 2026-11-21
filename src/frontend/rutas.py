@@ -15,7 +15,7 @@ from src.frontend.navegacion import (
     ruta_de,
     herramienta_por_identificador,
 )
-from src.frontend.tema import configurar_tema
+from src.frontend.presentacion.tema import configurar_tema
 from src.frontend.nucleo.constantes import OPERACION_DETERMINANTE
 
 

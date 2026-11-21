@@ -1,7 +1,7 @@
 """Orden de tema, estilos, presentación y coordinación de entrada del inicio."""
 from pathlib import Path
 
-from src.frontend import tema
+from src.frontend.presentacion import tema
 
 
 def test_presentacion_carga_despues_de_tema_y_estilos():

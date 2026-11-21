@@ -6,7 +6,7 @@ from unittest.mock import Mock
 import pytest
 from nicegui import ui
 
-from src.frontend import tema
+from src.frontend.presentacion import tema
 from src.frontend.nucleo.constantes import CARACTERES_ENTRADA_NUMERICA
 from src.frontend.nucleo.textos.textos import MENSAJE_ENTRADA_NUMERICA
 from src.frontend.componentes.carga_numerica import preparar_matriz_numerica

@@ -4,7 +4,7 @@ from types import SimpleNamespace
 
 from nicegui import ui
 
-from src.frontend import tema
+from src.frontend.presentacion import tema
 from src.frontend.componentes.borrador_intervalo_raices import construir_borrador
 from src.frontend.componentes.captura_exploracion_raices import campos_rango
 from tests.comun_construccion_vistas import VISTAS_RUTAS, construir_pagina

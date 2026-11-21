@@ -14,7 +14,7 @@ from src.frontend.controladores.actualizacion_cancelable import cancelar_actuali
 from src.frontend.controladores.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
 from src.frontend.controladores.rango_exploracion_raices import RANGO_GRAFICA_DEFECTO, rango_evento_distinto
 from src.frontend.controladores.vista_previa_raices import preparar_vista_previa
-from src.frontend.tema import PALETA_GRAFICOS
+from src.frontend.presentacion.tema import PALETA_GRAFICOS
 from src.frontend.vistas.biseccion.estado_captura import transaccion
 from .rango_previo import construir_rango, sincronizar_rango
 

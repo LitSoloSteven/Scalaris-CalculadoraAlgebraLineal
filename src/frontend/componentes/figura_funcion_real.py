@@ -1,7 +1,7 @@
 """Figura temática compartida para muestras reales con huecos."""
 import plotly.graph_objects as go
 
-from src.frontend.tema import COLOR_TRANSPARENTE, PALETA_GRAFICOS
+from src.frontend.presentacion.tema import COLOR_TRANSPARENTE, PALETA_GRAFICOS
 from src.frontend.componentes.colores_figuras import aplicar_colores_figura
 
 

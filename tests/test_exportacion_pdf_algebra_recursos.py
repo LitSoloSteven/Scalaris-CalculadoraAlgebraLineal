@@ -2,7 +2,7 @@
 import pytest
 
 from src.frontend.presentacion.recursos_vistas import seleccionar_recursos
-from src.frontend import tema
+from src.frontend.presentacion import tema
 from tests.comun_exportacion_algebra import HERRAMIENTAS
 
 

@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from src.frontend import tema
+from src.frontend.presentacion import tema
 from src.frontend.navegacion import (
     ORDEN_NAVEGACION_PLANA, elementos_navegacion, herramienta_por_identificador,
     herramienta_por_ruta, herramientas_visibles, ruta_de, ruta_navegacion,

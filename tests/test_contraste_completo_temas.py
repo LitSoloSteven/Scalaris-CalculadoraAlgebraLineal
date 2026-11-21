@@ -4,7 +4,7 @@ import asyncio
 
 import pytest
 
-from src.frontend.tema import (
+from src.frontend.presentacion.tema import (
     PALETAS_POR_TEMA, COLORES_SOLUCION_POR_TEMA,
     COLORES_TEXTO_GRAFICOS, COLORES_CUADRICULA_GRAFICOS, OPACIDAD_PLANOS,
 )

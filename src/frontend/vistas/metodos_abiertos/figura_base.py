@@ -1,7 +1,7 @@
 """Figuras vacías que conservan las dimensiones y el tema de Scalaris."""
 import plotly.graph_objects as go
 
-from src.frontend.tema import COLOR_TRANSPARENTE
+from src.frontend.presentacion.tema import COLOR_TRANSPARENTE
 
 
 def crear_figura_vacia() -> go.Figure:

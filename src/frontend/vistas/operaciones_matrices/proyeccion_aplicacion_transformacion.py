@@ -1,5 +1,5 @@
 """Traza de apoyo que identifica una componente sin interpolar la transformación."""
-from src.frontend.tema import PALETA_GRAFICOS
+from src.frontend.presentacion.tema import PALETA_GRAFICOS
 
 
 def anexar_proyeccion(opciones: dict) -> None:

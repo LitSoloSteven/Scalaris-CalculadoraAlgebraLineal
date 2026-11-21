@@ -3,7 +3,7 @@ import math
 
 import plotly.graph_objects as go
 
-from src.frontend.tema import PALETA_GRAFICOS
+from src.frontend.presentacion.tema import PALETA_GRAFICOS
 from .coordenadas import numero_finito
 
 
