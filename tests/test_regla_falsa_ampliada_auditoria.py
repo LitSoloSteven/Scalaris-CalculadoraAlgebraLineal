@@ -6,7 +6,7 @@ from tests import test_cumplimiento_reglas as reglas
 
 
 _VISTAS_REGLA_FALSA = (
-    "src/frontend/vistas/regla_falsa/__init__.py",
+    "src/frontend/vistas/raices/regla_falsa/__init__.py",
     "src/frontend/vistas/raices/regla_falsa/captura/acciones_captura.py",
     "src/frontend/vistas/raices/regla_falsa/captura/captura.py",
     "src/frontend/vistas/raices/regla_falsa/resultados/composicion.py",
@@ -19,7 +19,7 @@ _VISTAS_REGLA_FALSA = (
     "src/frontend/vistas/raices/regla_falsa/grafica/figura.py",
     "src/frontend/vistas/raices/regla_falsa/procedimiento/modo_examen.py",
     "src/frontend/vistas/raices/regla_falsa/base/modos_captura.py",
-    "src/frontend/vistas/regla_falsa/pagina.py",
+    "src/frontend/vistas/raices/regla_falsa/pagina.py",
     "src/frontend/vistas/raices/regla_falsa/procedimiento/procedimiento.py",
     "src/frontend/vistas/raices/regla_falsa/grafica/rango_previo.py",
     "src/frontend/vistas/raices/regla_falsa/resultados/resolucion_multiple.py",
@@ -32,7 +32,7 @@ _VISTAS_REGLA_FALSA = (
     "src/frontend/vistas/raices/regla_falsa/procedimiento/tabla_iteraciones.py",
     "src/frontend/vistas/raices/regla_falsa/base/vigencia_solicitud.py",
     "src/frontend/vistas/raices/regla_falsa/grafica/vista_previa.py",
-    "src/frontend/vistas/regla_falsa/vista_regla_falsa.py",
+    "src/frontend/vistas/raices/regla_falsa/vista_regla_falsa.py",
 )
 
 @pytest.mark.parametrize("comprobar", [reglas.test_limites_tamanio_y_complejidad, reglas.test_docstrings_publicos,

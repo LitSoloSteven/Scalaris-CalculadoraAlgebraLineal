@@ -158,7 +158,7 @@ def _registrar_pagina_metodos_cerrados() -> None:
     @ui.page(ruta_de("regla_falsa"), title=titulo)
     def pagina_regla_falsa():
         """Construye la vista común con Regla falsa preseleccionada."""
-        from src.frontend.vistas.regla_falsa.pagina import construir_pagina_regla_falsa
+        from src.frontend.vistas.raices.regla_falsa.pagina import construir_pagina_regla_falsa
 
         construir_pagina_regla_falsa()
 
