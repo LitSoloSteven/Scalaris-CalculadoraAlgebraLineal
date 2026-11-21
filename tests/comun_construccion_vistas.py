@@ -13,7 +13,7 @@ from tests.comun import ejecutar_trabajador_simulado
 
 VISTAS_RUTAS = {
     "inicio": ("inicio.vista_inicio", "VistaInicio"),
-    "sistemas": ("sistemas_lineales.vista_sistemas_lineales", "VistaSistemasLineales"),
+    "sistemas": ("algebra.sistemas_lineales.vista_sistemas_lineales", "VistaSistemasLineales"),
     "vectores": ("operaciones_vectores.vista_operaciones_vectores", "VistaOperacionesVectores"),
     "matrices": ("algebra.operaciones_matrices.expresiones.vista_operaciones_matrices", "VistaOperacionesMatrices"),
     "inversa": ("operaciones_inversas.vista_operaciones_inversas", "VistaOperacionesInversas"),

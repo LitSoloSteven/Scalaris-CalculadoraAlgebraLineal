@@ -5,17 +5,17 @@ from src.frontend.navegacion import ruta_de
 from src.frontend.componentes.captura.ecuaciones.cuadricula_ecuaciones import CuadriculaEcuaciones
 from src.frontend.componentes.captura.paneles.calculadora import PanelCalculadora
 from src.frontend.componentes.glosa.panel.panel_ia import PanelIA
-from .mixin_sincronizacion import MixinSincronizacionSistemasLineales
+from src.frontend.vistas.algebra.sistemas_lineales.captura.mixin_sincronizacion import MixinSincronizacionSistemasLineales
 from .mixin_historial import MixinHistorialSistemasLineales
-from .mixin_pasos import MixinPasosSistemasLineales
-from .mixin_resultados import MixinResultadosSistemasLineales
-from .mixin_vista_previa import MixinVistaPreviaSistemasLineales
-from ._transferencia_sistemas import procesar_transferencia_matriz
+from src.frontend.vistas.algebra.sistemas_lineales.resultados.mixin_pasos import MixinPasosSistemasLineales
+from src.frontend.vistas.algebra.sistemas_lineales.resultados.mixin_resultados import MixinResultadosSistemasLineales
+from src.frontend.vistas.algebra.sistemas_lineales.captura.mixin_vista_previa import MixinVistaPreviaSistemasLineales
+from src.frontend.vistas.algebra.sistemas_lineales.captura._transferencia_sistemas import procesar_transferencia_matriz
 from src.frontend.controladores.algebra.sistemas_lineales.resolucion.contexto import (
     obtener_contexto_sistema, obtener_senales_sistema,
 )
 from src.frontend.controladores.algebra.sistemas_lineales.nucleo.estado_captura import cambiar_modo
-from .modo_homogeneo import cambiar_modo_homogeneo
+from src.frontend.vistas.algebra.sistemas_lineales.captura.modo_homogeneo import cambiar_modo_homogeneo
 
 
 class VistaSistemasLineales(

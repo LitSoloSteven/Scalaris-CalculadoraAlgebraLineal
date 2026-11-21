@@ -15,7 +15,7 @@ def test_disposicion_estrecha_conserva_numeros_y_dialogos():
     assert 'font-variant-numeric: tabular-nums' in css
     assert '@media (max-width: 400px)' in css
     assert 'prefers-reduced-motion: reduce' in css
-    for paquete in ('sistemas_lineales', 'operaciones_inversas'):
+    for paquete in ('algebra/sistemas_lineales', 'operaciones_inversas'):
         archivos = (RAIZ / 'src/frontend/vistas' / paquete).glob('vista_*.py')
         assert any('sesion-vista' in archivo.read_text(encoding='utf-8') for archivo in archivos)
 
@@ -34,7 +34,7 @@ def test_paquetes_canonicos_sin_fachadas_inglesas():
     raiz = RAIZ / 'src/frontend/vistas'
     for nombre in ('hub', 'linear_systems', 'inverse_ops'):
         assert not (raiz / nombre).exists()
-    for paquete in ('inicio', 'sistemas_lineales', 'operaciones_inversas'):
+    for paquete in ('inicio', 'algebra/sistemas_lineales', 'operaciones_inversas'):
         assert (raiz / paquete).is_dir()
-        assert not list((raiz / paquete).glob('view_*.py'))
-        assert not list((raiz / paquete).glob('*_mixin.py'))
+        assert not list((raiz / paquete).rglob('view_*.py'))
+        assert not list((raiz / paquete).rglob('*_mixin.py'))

@@ -6,7 +6,7 @@ import pytest
 from nicegui import ui
 
 from src.frontend.componentes.resultados.acciones import transferencia
-from src.frontend.vistas.sistemas_lineales._transferencia_sistemas import procesar_transferencia_matriz
+from src.frontend.vistas.algebra.sistemas_lineales.captura._transferencia_sistemas import procesar_transferencia_matriz
 from tests.comun_construccion_vistas import construir_pagina
 from tests.comun_transferencia_matriz import preparar_ruta_lu, leer_matriz, activar_boton, token_desde_url
 

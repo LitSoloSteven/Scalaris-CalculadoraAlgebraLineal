@@ -42,7 +42,7 @@ def _registrar_paginas_algebra() -> None:
     def pagina_sistemas(method: str = "gauss", handoff: str = ""):
         """Construye la página de sistemas con sus controles y contexto."""
         metodo = method if method in ("gauss", "gauss-jordan") else "gauss"
-        from src.frontend.vistas.sistemas_lineales.vista_sistemas_lineales import VistaSistemasLineales
+        from src.frontend.vistas.algebra.sistemas_lineales.vista_sistemas_lineales import VistaSistemasLineales
 
         configurar_tema("sistemas")
         VistaSistemasLineales(metodo_inicial=metodo).construir(token_transferencia=handoff)

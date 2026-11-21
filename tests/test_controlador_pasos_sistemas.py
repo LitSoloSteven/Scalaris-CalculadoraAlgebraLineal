@@ -11,7 +11,7 @@ from src.frontend.controladores.algebra.sistemas_lineales.resolucion.controlador
 from src.frontend.controladores.algebra.sistemas_lineales.resolucion.controlador_gauss_jordan import (
     ControladorGaussJordan,
 )
-from src.frontend.vistas.sistemas_lineales._pasos_reproductor import (
+from src.frontend.vistas.algebra.sistemas_lineales.resultados._pasos_reproductor import (
     construir_pasos_reproductor,
 )
 

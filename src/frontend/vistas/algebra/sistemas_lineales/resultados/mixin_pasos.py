@@ -8,7 +8,7 @@ from src.frontend.componentes.glosa.interaccion.glosa_foco import crear_accion_e
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos
 from src.frontend.componentes.reproductor_pasos.formato.cuerpos import renderizar_latex
 from src.frontend.componentes.reproductor_pasos.nucleo.modelo import PasoReproductor
-from src.frontend.vistas.sistemas_lineales._pasos_reproductor import construir_pasos_reproductor
+from src.frontend.vistas.algebra.sistemas_lineales.resultados._pasos_reproductor import construir_pasos_reproductor
 
 
 _TIPOS_LEYENDA_SISTEMAS = (
