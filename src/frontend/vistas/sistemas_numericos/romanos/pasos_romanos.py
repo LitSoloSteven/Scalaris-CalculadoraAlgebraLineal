@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 from functools import partial
-from ._cuerpo_numerico import _CuerpoNumerico
+from src.frontend.vistas.sistemas_numericos.compartido._cuerpo_numerico import _CuerpoNumerico
 
 
 from src.frontend.componentes.reproductor_pasos.nucleo.modelo import (
@@ -14,7 +14,7 @@ from src.frontend.componentes.reproductor_pasos.nucleo.modelo import (
 
 from src.backend.resolutores.sistemas_numericos import calculadora_romana
 from src.backend.resolutores.sistemas_numericos.pasos_didacticos import desglosar_sumas_sucesivas
-from ._plantillas_numericas import renderizar_plantilla, renderizar_tabla
+from src.frontend.vistas.sistemas_numericos.compartido._plantillas_numericas import renderizar_plantilla, renderizar_tabla
 
 
 def _crear_tarjeta_operando(etiqueta: str, romano: str, decimal: int) -> str:

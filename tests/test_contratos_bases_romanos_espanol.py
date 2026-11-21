@@ -16,12 +16,12 @@ from src.backend.resolutores.sistemas_numericos.pasos_didacticos import (
 )
 from src.backend.utilidades.validacion.reglas_dominio import BASES_NUMERICAS, validar_entrada_base
 from src.frontend.presentacion.sugerencias import Senales, generar_candidatas
-from src.frontend.vistas.sistemas_numericos._pasos_bases import construir_pasos_bases
-from src.frontend.vistas.sistemas_numericos._plantillas_numericas import renderizar_plantilla
-from src.frontend.vistas.sistemas_numericos.mixin_contexto_romanos import _primera_entrada_invalida
-from src.frontend.vistas.sistemas_numericos.vista_sistemas_numericos import VistaSistemasNumericos
-from src.frontend.vistas.sistemas_numericos.vista_calculadora_romana import VistaCalculadoraRomana
-from src.frontend.vistas.sistemas_numericos.pasos_romanos import construir_pasos_romanos
+from src.frontend.vistas.sistemas_numericos.bases._pasos_bases import construir_pasos_bases
+from src.frontend.vistas.sistemas_numericos.compartido._plantillas_numericas import renderizar_plantilla
+from src.frontend.vistas.sistemas_numericos.romanos.captura.mixin_contexto_romanos import _primera_entrada_invalida
+from src.frontend.vistas.sistemas_numericos.bases.vista_sistemas_numericos import VistaSistemasNumericos
+from src.frontend.vistas.sistemas_numericos.romanos.vista_calculadora_romana import VistaCalculadoraRomana
+from src.frontend.vistas.sistemas_numericos.romanos.pasos_romanos import construir_pasos_romanos
 
 
 def test_codigos_romanos_y_error_sin_alias():
@@ -148,12 +148,12 @@ def test_calculos_didacticos_exactos_sin_mutar_entrada():
 def test_vistas_sin_regex_de_dominio_y_renderizadores_sin_html_largo():
     """Las vistas delegan dominio y los reproductores cargan plantillas separadas."""
     carpeta = Path("src/frontend/vistas/sistemas_numericos")
-    for nombre in ("vista_sistemas_numericos.py", "mixin_interaccion.py", "mixin_contexto_romanos.py"):
+    for nombre in ("bases/vista_sistemas_numericos.py", "bases/mixin_interaccion.py", "romanos/captura/mixin_contexto_romanos.py"):
         arbol = ast.parse((carpeta / nombre).read_text(encoding="utf-8"))
         assert not any(isinstance(nodo, ast.Import) and any(alias.name == "re" for alias in nodo.names)
                        for nodo in ast.walk(arbol))
     assert not hasattr(VistaSistemasNumericos(), "regex_bases")
-    for nombre in ("pasos_romanos.py", "_pasos_bases.py"):
+    for nombre in ("romanos/pasos_romanos.py", "bases/_pasos_bases.py"):
         texto = (carpeta / nombre).read_text(encoding="utf-8")
         assert "<table" not in texto and "<div" not in texto and "<span" not in texto
 
@@ -194,7 +194,7 @@ def test_operando_romano_vacio_limpia_resultado_y_muestra_error_del_backend():
 @pytest.mark.anyio
 async def test_conversion_vacia_orienta_con_mensaje_backend(monkeypatch):
     """El botón usa también el mensaje del validador único para la entrada vacía."""
-    from src.frontend.vistas.sistemas_numericos import mixin_interaccion
+    from src.frontend.vistas.sistemas_numericos.bases import mixin_interaccion
     avisos = []
     monkeypatch.setattr(mixin_interaccion.ui, "notify", lambda mensaje, **opciones: avisos.append(mensaje))
     vista = VistaSistemasNumericos()

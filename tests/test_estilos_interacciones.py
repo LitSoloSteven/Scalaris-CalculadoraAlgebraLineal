@@ -137,7 +137,7 @@ def test_componentes_celdas_resistentes_y_animaciones():
 
 def test_vistas_sanean_resultados_y_contienen_contenido_ancho():
     """Las vistas contienen fórmulas anchas y escapan texto del resultado."""
-    mixin_numerico = Path("src/frontend/vistas/sistemas_numericos/mixin_interaccion.py").read_text(encoding="utf-8")
+    mixin_numerico = Path("src/frontend/vistas/sistemas_numericos/bases/mixin_interaccion.py").read_text(encoding="utf-8")
     assert "movimiento-sacudida" not in mixin_numerico
 
     resultados_lineales = Path("src/frontend/vistas/sistemas_lineales/mixin_resultados.py").read_text(encoding="utf-8")

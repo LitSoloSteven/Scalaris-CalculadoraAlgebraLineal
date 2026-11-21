@@ -1,7 +1,7 @@
 """Vista principal del Conversor de Sistemas Numéricos en Scalaris."""
 from nicegui import ui
 from src.frontend.componentes.captura.ecuaciones.limpieza_captura import crear_boton_limpieza
-from .limpieza_numerica import MixinLimpiezaBases
+from src.frontend.vistas.sistemas_numericos.compartido.limpieza_numerica import MixinLimpiezaBases
 from src.backend.resolutores.sistemas_numericos.conversor_bases import ConversorBases
 from src.backend.utilidades.validacion.reglas_dominio import BASES_NUMERICAS, validar_entrada_base
 from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion

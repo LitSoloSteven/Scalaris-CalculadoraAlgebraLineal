@@ -12,8 +12,8 @@ from src.frontend.componentes.reproductor_pasos.nucleo.modelo import (
 )
 
 _NOMBRES_BASE = {2: "Binario", 8: "Octal", 10: "Decimal", 16: "Hexadecimal"}
-from ._plantillas_numericas import renderizar_plantilla, renderizar_tabla, renderizar_lectura
-from ._cuerpo_numerico import _CuerpoNumerico
+from src.frontend.vistas.sistemas_numericos.compartido._plantillas_numericas import renderizar_plantilla, renderizar_tabla, renderizar_lectura
+from src.frontend.vistas.sistemas_numericos.compartido._cuerpo_numerico import _CuerpoNumerico
 
 
 def _crear_tabla_expansion(terminos: list[dict], hasta_indice: int, base: int) -> str:

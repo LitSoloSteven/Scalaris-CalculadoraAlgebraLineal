@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from nicegui import ui
 from src.frontend.componentes.aplicacion.base.sonido import notificar
-from ._cuerpo_numerico import renderizar_cuerpo_numerico
+from src.frontend.vistas.sistemas_numericos.compartido._cuerpo_numerico import renderizar_cuerpo_numerico
 from src.frontend.componentes.glosa.interaccion.glosa_foco import crear_accion_explicacion
 
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos

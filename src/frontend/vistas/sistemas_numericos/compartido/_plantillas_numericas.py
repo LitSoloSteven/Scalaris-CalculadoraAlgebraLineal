@@ -6,7 +6,7 @@ from pathlib import Path
 from string import Template
 from typing import Any
 
-_RUTA_PLANTILLAS = Path(__file__).resolve().parents[2] / "recursos" / "plantillas" / "numericos"
+_RUTA_PLANTILLAS = Path(__file__).resolve().parents[3] / "recursos" / "plantillas" / "numericos"
 _RUTAS_POR_NOMBRE = {
     "tabla": "tablas/numericos_tabla.html",
     "lectura": "tablas/numericos_lectura.html",

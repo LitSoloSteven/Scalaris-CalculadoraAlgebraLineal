@@ -129,7 +129,7 @@ def _registrar_paginas_utilidades() -> None:
     @ui.page(ruta_de("bases"), title=herramienta_por_identificador("bases").titulo_pagina)
     def pagina_bases():
         """Construye la página de bases con sus controles y contexto."""
-        from src.frontend.vistas.sistemas_numericos.vista_sistemas_numericos import VistaSistemasNumericos
+        from src.frontend.vistas.sistemas_numericos.bases.vista_sistemas_numericos import VistaSistemasNumericos
 
         configurar_tema("bases")
         VistaSistemasNumericos().construir()
@@ -137,7 +137,7 @@ def _registrar_paginas_utilidades() -> None:
     @ui.page(ruta_de("romanos"), title=herramienta_por_identificador("romanos").titulo_pagina)
     def pagina_romanos():
         """Construye la página de romanos con sus controles y contexto."""
-        from src.frontend.vistas.sistemas_numericos.vista_calculadora_romana import VistaCalculadoraRomana
+        from src.frontend.vistas.sistemas_numericos.romanos.vista_calculadora_romana import VistaCalculadoraRomana
 
         configurar_tema("romanos")
         VistaCalculadoraRomana().construir()

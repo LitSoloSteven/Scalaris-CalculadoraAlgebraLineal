@@ -9,10 +9,10 @@ from src.backend.resolutores.sistemas_numericos.calculadora_romana import (
     ErrorNumeroRomano,
     desglosar_pasos_canonicos,
 )
-from src.frontend.vistas.sistemas_numericos.pasos_romanos import (
+from src.frontend.vistas.sistemas_numericos.romanos.pasos_romanos import (
     construir_pasos_romanos,
 )
-from src.frontend.vistas.sistemas_numericos.vista_calculadora_romana import (
+from src.frontend.vistas.sistemas_numericos.romanos.vista_calculadora_romana import (
     VistaCalculadoraRomana,
 )
 
@@ -149,9 +149,9 @@ def test_clasificacion_errores_no_genera_pasos():
 def test_sin_raya_larga_ni_voseo_en_textos_romanos():
     """Garantiza puntuación sobria y tuteo en los módulos de números romanos."""
     archivos = [
-        Path("src/frontend/vistas/sistemas_numericos/pasos_romanos.py"),
-        Path("src/frontend/vistas/sistemas_numericos/mixin_resultado_romano.py"),
-        Path("src/frontend/vistas/sistemas_numericos/vista_calculadora_romana.py"),
+        Path("src/frontend/vistas/sistemas_numericos/romanos/pasos_romanos.py"),
+        Path("src/frontend/vistas/sistemas_numericos/romanos/mixin_resultado_romano.py"),
+        Path("src/frontend/vistas/sistemas_numericos/romanos/vista_calculadora_romana.py"),
     ]
 
     patrones_voseo = [

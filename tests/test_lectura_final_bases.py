@@ -1,7 +1,7 @@
 """Concordancia entre el numeral convertido y la lectura final del procedimiento."""
 import pytest
 from src.backend.resolutores.sistemas_numericos.conversor_bases import ConversorBases
-from src.frontend.vistas.sistemas_numericos._pasos_bases import construir_pasos_bases
+from src.frontend.vistas.sistemas_numericos.bases._pasos_bases import construir_pasos_bases
 
 
 @pytest.mark.parametrize("valor,base,esperado", [

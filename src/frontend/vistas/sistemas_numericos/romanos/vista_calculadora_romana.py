@@ -8,7 +8,7 @@ from typing import Any
 
 from nicegui import ui
 from src.frontend.componentes.captura.ecuaciones.limpieza_captura import crear_boton_limpieza
-from .limpieza_numerica import MixinLimpiezaRomanos
+from src.frontend.vistas.sistemas_numericos.compartido.limpieza_numerica import MixinLimpiezaRomanos
 
 from src.ai.huellas import calcular_huella
 from src.backend.resolutores.sistemas_numericos.calculadora_romana import (
@@ -20,8 +20,8 @@ from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import 
 from src.frontend.navegacion import ruta_de
 from src.frontend.controladores.compartido.sesion.captura_contexto import capturar_romanos
 from .mixin_resultado_romano import MixinResultadoRomano
-from .mixin_contexto_romanos import MixinContextoRomano
-from .mixin_captura_romanos import MixinCapturaRomanos
+from src.frontend.vistas.sistemas_numericos.romanos.captura.mixin_contexto_romanos import MixinContextoRomano
+from src.frontend.vistas.sistemas_numericos.romanos.captura.mixin_captura_romanos import MixinCapturaRomanos
 from .presentacion_romana import PresentacionRomana
 from src.frontend.componentes.exportacion_pdf.montaje.utilidades import montar_utilidad_pdf
 

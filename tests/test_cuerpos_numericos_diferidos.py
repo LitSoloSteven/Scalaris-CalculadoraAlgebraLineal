@@ -4,8 +4,8 @@ from pathlib import Path
 
 import pytest
 from src.backend.resolutores.sistemas_numericos.conversor_bases import ConversorBases
-from src.frontend.vistas.sistemas_numericos import _pasos_bases
-from src.frontend.vistas.sistemas_numericos.pasos_romanos import construir_pasos_romanos
+from src.frontend.vistas.sistemas_numericos.bases import _pasos_bases
+from src.frontend.vistas.sistemas_numericos.romanos.pasos_romanos import construir_pasos_romanos
 from src.backend.resolutores.sistemas_numericos.calculadora_romana import CalculadoraRomana
 
 
