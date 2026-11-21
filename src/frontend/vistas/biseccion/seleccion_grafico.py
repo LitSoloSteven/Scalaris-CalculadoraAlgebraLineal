@@ -5,7 +5,7 @@ from src.frontend.componentes.raices.captura.borrador_intervalo_raices import co
 
 from src.frontend.controladores.raices.biseccion.captura.captura_criterio import real_capturado
 from src.frontend.controladores.raices.compartido.ejecucion.seleccion_muestra_raices import puntos_borrador
-from .modos_captura import MODO_BUSQUEDA
+from src.frontend.vistas.raices.biseccion.base.modos_captura import MODO_BUSQUEDA
 
 
 class SeleccionGrafico:

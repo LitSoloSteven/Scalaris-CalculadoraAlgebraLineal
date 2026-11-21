@@ -8,7 +8,7 @@ from src.backend.resolutores.raices.compartido.unidades_angulares import funcion
 from src.frontend.controladores.raices.biseccion.adaptadores.exploracion import PASO_EXPLORACION_DEFECTO
 from src.frontend.controladores.raices.biseccion.adaptadores.vista_previa import RANGO_GRAFICA_DEFECTO
 from src.frontend.vistas.biseccion.ejemplos import EJEMPLOS
-from src.frontend.vistas.biseccion.modos_captura import MODO_BUSQUEDA, MODO_INTERVALO
+from src.frontend.vistas.raices.biseccion.base.modos_captura import MODO_BUSQUEDA, MODO_INTERVALO
 from tests.comun_biseccion_criterios import captura_criterio, ejecutar_escenario
 
 

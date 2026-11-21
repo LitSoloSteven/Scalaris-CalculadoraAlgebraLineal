@@ -2,7 +2,7 @@
 from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import LIMITE_ITERACIONES_DEFECTO
 from src.backend.resolutores.raices.compartido.unidades_angulares import UNIDAD_ANGULAR_DEFECTO
 from src.frontend.controladores.raices.biseccion.captura.catalogo_criterios import CRITERIOS
-from .modos_captura import MODO_INTERVALO
+from src.frontend.vistas.raices.biseccion.base.modos_captura import MODO_INTERVALO
 
 
 def _ejercicio(expresion: str, inferior: str, superior: str,

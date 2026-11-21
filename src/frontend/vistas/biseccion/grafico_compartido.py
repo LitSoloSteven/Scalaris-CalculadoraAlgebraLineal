@@ -9,7 +9,7 @@ from src.frontend.controladores.raices.biseccion.adaptadores.vista_previa import
 from src.frontend.presentacion.tema import COLOR_SOLUCION, PALETA_GRAFICOS
 from src.frontend.vistas.geometria._colores_figuras import aplicar_colores_figura
 from .figura import crear_figura_previa, _ordenada_marcador
-from .modos_captura import MODO_BUSQUEDA
+from src.frontend.vistas.raices.biseccion.base.modos_captura import MODO_BUSQUEDA
 
 
 def mostrar_paso_principal(vista, respuesta: dict, paso=None) -> None:

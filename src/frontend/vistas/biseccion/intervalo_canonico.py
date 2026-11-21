@@ -1,6 +1,6 @@
 """Aplicación de extremos canónicos después de comprobar la vigencia del cálculo."""
 from src.ai.huellas import calcular_huella
-from .selector_criterio import actualizar_guia
+from src.frontend.vistas.raices.biseccion.base.selector_criterio import actualizar_guia
 
 
 def reflejar_intervalo(vista, respuesta: dict) -> str | None:

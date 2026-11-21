@@ -15,7 +15,7 @@ from src.frontend.controladores.raices.biseccion.presentacion.presentacion_crite
 from src.frontend.controladores.raices.biseccion.salidas.salidas_biseccion import texto_copia_biseccion
 from .avisos_diagnostico import mostrar_avisos_diagnostico
 from .continuidad_intervalo import mostrar_informe
-from .movimiento import animar_entrada
+from src.frontend.vistas.raices.biseccion.base.movimiento import animar_entrada
 
 
 def mostrar_resumen(vista, respuesta: dict, examen: ui.switch | None = None, *,

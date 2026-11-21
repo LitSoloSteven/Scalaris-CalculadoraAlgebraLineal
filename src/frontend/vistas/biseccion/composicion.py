@@ -5,8 +5,8 @@ from .acciones_captura import construir_acciones, construir_limite, desplegable
 from .captura import construir_boton_calculo, construir_captura, construir_intervalo
 from .continuidad_intervalo import PanelContinuidad
 from .exploracion import PanelExploracion
-from .modos_captura import MODO_BUSQUEDA, MODO_INTERVALO, construir_modos, region_modo
-from .previa_expresion import PreviaExpresion
+from src.frontend.vistas.raices.biseccion.base.modos_captura import MODO_BUSQUEDA, MODO_INTERVALO, construir_modos, region_modo
+from src.frontend.vistas.raices.biseccion.base.previa_expresion import PreviaExpresion
 from .resolucion_multiple import PanelResolucionMultiple
 from .seleccion_grafico import SeleccionGrafico
 from .vista_previa import PanelVistaPrevia

@@ -9,7 +9,7 @@ from src.frontend.controladores.raices.biseccion.adaptadores.formato_expresion i
 from src.frontend.controladores.raices.biseccion.salidas.formulas_procedimiento import formulas_iteracion
 from src.frontend.controladores.raices.biseccion.presentacion.presentacion import COLUMNAS, construir_pasos, valor_columna
 from .modo_examen import mostrar_accion_examen
-from .movimiento import REGISTRAR_ENTRADA, publicar_formula
+from src.frontend.vistas.raices.biseccion.base.movimiento import REGISTRAR_ENTRADA, publicar_formula
 from .reproductor import ReproductorBiseccion
 from .tabla_iteraciones import mostrar_tabla
 

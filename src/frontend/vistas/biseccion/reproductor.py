@@ -7,7 +7,7 @@ from nicegui import background_tasks, ui
 
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos
 from src.frontend.componentes.reproductor_pasos.nucleo.temporizacion import reiniciar_espera
-from .movimiento import REGISTRAR_ENTRADA, modalidad_puntero, vincular_envio
+from src.frontend.vistas.raices.biseccion.base.movimiento import REGISTRAR_ENTRADA, modalidad_puntero, vincular_envio
 
 _TOKEN_PASO = {"Rápida": "--dur-panel", "Normal": "--dur-view", "Lenta": "--dur-didactic"}
 registro = logging.getLogger(__name__)

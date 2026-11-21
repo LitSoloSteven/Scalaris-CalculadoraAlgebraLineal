@@ -17,9 +17,9 @@ from .composicion import componer_herramienta
 from .estado_captura import hay_rangos_editados, restaurar_captura, vaciar_captura
 from .estados_entrada import actualizar_expresion, actualizar_intervalo
 from .grafico_compartido import restaurar_grafico_principal
-from .modos_captura import MODO_BUSQUEDA, MODO_INTERVALO
+from src.frontend.vistas.raices.biseccion.base.modos_captura import MODO_BUSQUEDA, MODO_INTERVALO
 from .resultado import mostrar_resultado
-from .selector_criterio import actualizar_guia, enlazar_parametros
+from src.frontend.vistas.raices.biseccion.base.selector_criterio import actualizar_guia, enlazar_parametros
 from .intervalo_canonico import reflejar_intervalo
 
 class VistaBiseccion:

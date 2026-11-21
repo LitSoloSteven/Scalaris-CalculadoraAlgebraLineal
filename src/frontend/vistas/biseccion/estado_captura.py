@@ -3,7 +3,7 @@ from contextlib import contextmanager
 
 from src.frontend.controladores.raices.biseccion.adaptadores.exploracion import PASO_EXPLORACION_DEFECTO
 from src.frontend.controladores.raices.biseccion.adaptadores.vista_previa import RANGO_GRAFICA_DEFECTO
-from .selector_unidad import restaurar_unidad
+from src.frontend.vistas.raices.biseccion.base.selector_unidad import restaurar_unidad
 
 _EXTREMOS = ("extremo_izquierdo", "extremo_derecho")
 _CLAVES_CERO = ("expresion", *_EXTREMOS, "unidad_angular", "cero_preferido")

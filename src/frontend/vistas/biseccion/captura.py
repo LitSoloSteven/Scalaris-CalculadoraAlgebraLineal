@@ -2,9 +2,9 @@
 from nicegui import ui
 
 from src.frontend.componentes.raices.captura.campo_funcion_real import crear_campo_funcion
-from .movimiento import modalidad_puntero, vincular_envio
-from .selector_criterio import construir_selector
-from .selector_unidad import construir_selector_unidad
+from src.frontend.vistas.raices.biseccion.base.movimiento import modalidad_puntero, vincular_envio
+from src.frontend.vistas.raices.biseccion.base.selector_criterio import construir_selector
+from src.frontend.vistas.raices.biseccion.base.selector_unidad import construir_selector_unidad
 
 GUIA_CONTINUIDAD = "La garantía requiere continuidad en todo [a, b]. Un cambio de signo y una gráfica muestreada no demuestran continuidad."
 
