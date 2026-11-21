@@ -128,7 +128,7 @@ prueba("oculta simbolos incompatibles y categorias vacias en cada perfil", () =>
     const entorno = crearEntornoFiltrado();
     const expectativas = [
         ["funcion", ["√", "⁰", "π", "ℯ", "¼"], ["ᵀ", "⊕", "∞", "∫", "₀"], ["", "Operadores", "Raíces, potencias y subíndices", "Fracciones", "Letras griegas", "Cálculo y geometría"]],
-        ["matriz", ["−", "×", "·", "⋅", "∙", "ᵀ"], ["√", "π", "∞", "₀", "½"], ["", "Operadores"]],
+        ["matriz", ["−", "×", "·", "⋅", "∙", "ᵀ", "½"], ["√", "π", "∞", "₀"], ["", "Operadores", "Raíces, potencias y subíndices", "Fracciones", "Cálculo y geometría"]],
         ["numero", ["−", "⁄", "∕", "¼", "½"], ["×", "√", "π", "ᵀ", "∞"], ["", "Operadores", "Fracciones", "Cálculo y geometría"]],
         ["ecuacion", ["−", "⁄", "∕", "¼"], ["√", "⁰", "ᵀ", "∞"], ["", "Operadores", "Raíces, potencias y subíndices", "Fracciones", "Letras griegas", "Cálculo y geometría"]],
         ["real", ["−"], ["√", "π", "∞", "ᵀ", "∫"], ["", "Operadores"]],
