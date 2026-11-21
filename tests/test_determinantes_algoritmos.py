@@ -1,6 +1,6 @@
 from fractions import Fraction
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices.determinante import ResolutorDeterminante
+from src.backend.resolutores.operaciones_matrices.determinante.determinante import ResolutorDeterminante
 
 
 def test_determinante_casos_base_2x2():

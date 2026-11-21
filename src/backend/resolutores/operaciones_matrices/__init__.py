@@ -1,6 +1,6 @@
 """Modulo de resolutores de operaciones con matrices."""
 
-from src.backend.resolutores.operaciones_matrices.determinante import (
+from src.backend.resolutores.operaciones_matrices.determinante.determinante import (
     ResolutorDeterminante,
 )
 from src.backend.resolutores.operaciones_matrices.evaluador import (

@@ -7,7 +7,7 @@ from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.sistemas_lineales.reduccion.configuracion_reduccion import ConfiguracionReduccion
 from src.backend.resolutores.sistemas_lineales.reduccion.reduccion import ReductorFilas
 from src.backend.resolutores.sistemas_lineales.reduccion.pasos_reduccion import RegistroPasosSistema
-from src.backend.resolutores.operaciones_matrices.pasos_determinante import RegistroPasosDeterminante
+from src.backend.resolutores.operaciones_matrices.determinante.pasos_determinante import RegistroPasosDeterminante
 
 
 @pytest.mark.parametrize("estrategia", ["parcial", "primer_no_nulo", "sin_intercambios"])

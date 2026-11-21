@@ -8,7 +8,7 @@ from src.backend.geometria.base.muestreo import extremos_recta, TOLERANCIA_CERO_
 from src.backend.geometria.base.recorte import recortar_recta_a_caja
 from src.backend.modelos.operaciones.construcciones import identidad
 from src.backend.resolutores.operaciones_matrices.captura_modelos import validar_nombres
-from src.backend.resolutores.operaciones_matrices.determinante import ResolutorDeterminante
+from src.backend.resolutores.operaciones_matrices.determinante.determinante import ResolutorDeterminante
 
 
 def test_recorte_y_muestreo_conservan_convenciones_de_frontera():

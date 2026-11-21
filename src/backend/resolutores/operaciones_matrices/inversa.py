@@ -11,7 +11,7 @@ from src.backend.resolutores.operaciones_matrices.presentacion_inversa import (
     formatear_pasos_inversa, presentar_inversa, presentar_producto_inversa, presentar_propiedad_transpuesta,
 )
 from src.backend.resolutores.sistemas_lineales.reduccion.pasos_reduccion import RegistroPasosSistema
-from .pasos_determinante import RegistroPasosDeterminante
+from .determinante.pasos_determinante import RegistroPasosDeterminante
 from .compartido.formateadores import matriz_a_latex
 from .compartido.comprobacion_productos import crear_paso_analisis
 

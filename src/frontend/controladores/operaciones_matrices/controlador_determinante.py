@@ -3,7 +3,7 @@ from typing import Any
 from time import perf_counter
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices.determinante import (
+from src.backend.resolutores.operaciones_matrices.determinante.determinante import (
     ResolutorDeterminante,
 )
 from src.backend.resolutores.operaciones_matrices.captura_inversa import validar_y_parsear_matriz_cuadrada

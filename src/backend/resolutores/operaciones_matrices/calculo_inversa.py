@@ -3,7 +3,7 @@ from collections.abc import Callable
 
 from src.backend.modelos.operaciones.construcciones import aumentar_con_identidad
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices.calculo_determinante import triangular_y_determinante
+from src.backend.resolutores.operaciones_matrices.determinante.calculo_determinante import triangular_y_determinante
 from src.backend.resolutores.sistemas_lineales.reduccion.configuracion_reduccion import ConfiguracionReduccion
 from src.backend.resolutores.sistemas_lineales.reduccion.reduccion import ReductorFilas
 
