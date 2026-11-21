@@ -5,6 +5,7 @@ from fractions import Fraction
 from src.backend.excepciones import ErrorDominio
 from .errores_numericos import ErrorSingularidad
 from .gramatica_funcion import analizar_expresion, CONSTANTES_REALES
+from .notacion_calculo import NOMBRES_ANGULARES
 from .polos_trigonometricos import comprobar_polos_tangente
 from .unidades_angulares import validar_unidad_angular
 
@@ -20,7 +21,8 @@ def argumento_afin(nodo: ast.AST) -> Afin | None:
 def comprobar_dominio_intervalo(expresion: str, intervalo: tuple[float, float], *, unidad_angular: str = "radianes") -> None:
     """Rechaza polos verificables; no certifica continuidad de expresiones generales."""
     validar_unidad_angular(unidad_angular)
-    comprobar_dominio_arbol(analizar_expresion(expresion), intervalo, unidad_angular)
+    arbol = analizar_expresion(expresion, unidad_angular=unidad_angular)
+    comprobar_dominio_arbol(arbol, intervalo, unidad_angular)
 
 
 def comprobar_dominio_arbol(arbol: ast.Expression, intervalo: tuple[float, float], unidad_angular: str) -> None:
@@ -52,6 +54,8 @@ def _comprobar_potencia(base: ast.AST, exponente: Fraction, extremos: tuple) -> 
 
 def _comprobar_funcion(nodo: ast.Call, extremos: tuple, unidad: str) -> None:
     nombre = nodo.func.id
+    if nombre in NOMBRES_ANGULARES:
+        nombre, unidad = NOMBRES_ANGULARES[nombre], "radianes"
     rango = _rango_afin(nodo.args[0], extremos)
     if rango is None:
         return
