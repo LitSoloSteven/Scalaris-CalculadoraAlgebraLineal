@@ -6,7 +6,7 @@ import pytest
 
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_matrices.expresiones.evaluador import EvaluadorExpresionesMatriciales
-from src.frontend.controladores.operaciones_matrices import (
+from src.frontend.controladores.algebra.operaciones_matrices import (
     ControladorLeontief, ControladorOperacionesMatrices, ControladorTransformaciones,
 )
 from src.frontend.vistas.operaciones_matrices._ejemplos_leontief import EJEMPLOS_LEONTIEF

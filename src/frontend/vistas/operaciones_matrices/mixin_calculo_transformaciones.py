@@ -2,7 +2,7 @@
 import json
 from nicegui import ui
 from ._estados_modelos import mostrar_estado
-from src.frontend.controladores.operaciones_matrices import ControladorTransformaciones
+from src.frontend.controladores.algebra.operaciones_matrices import ControladorTransformaciones
 from src.frontend.controladores.algebra.operaciones_matrices.transformaciones.controlador_aplicacion_transformacion import ControladorAplicacionTransformacion
 from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto
 from src.frontend.nucleo.textos import textos_transformaciones as textos

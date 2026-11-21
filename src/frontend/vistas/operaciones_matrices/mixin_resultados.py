@@ -22,7 +22,7 @@ from src.frontend.controladores.compartido.sesion.captura_contexto import captur
 from src.frontend.controladores.compartido.sesion.calculo_vigente import ejecutar_calculo_vigente
 
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos
-from src.frontend.controladores.operaciones_matrices import (
+from src.frontend.controladores.algebra.operaciones_matrices import (
     ControladorOperacionesMatrices,
 )
 from src.frontend.vistas.operaciones_matrices._pasos_reproductor import construir_pasos_matrices

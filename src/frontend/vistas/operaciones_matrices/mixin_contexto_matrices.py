@@ -1,5 +1,5 @@
 """Contexto y señales del asistente para la vista de matrices."""
-from src.frontend.controladores.operaciones_matrices import ControladorOperacionesMatrices
+from src.frontend.controladores.algebra.operaciones_matrices import ControladorOperacionesMatrices
 from src.frontend.controladores.compartido.sesion.captura_contexto import capturar_matrices
 
 

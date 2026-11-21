@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 
 from src.frontend.componentes.reproductor_pasos.nucleo.modelo import GrupoReproductor, PasoReproductor
-from src.frontend.controladores.operaciones_matrices import (
+from src.frontend.controladores.algebra.operaciones_matrices import (
     ControladorOperacionesMatrices,
 )
 

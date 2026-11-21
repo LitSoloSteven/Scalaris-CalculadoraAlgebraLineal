@@ -9,7 +9,7 @@ from src.backend.constantes import DIMENSION_MAXIMA_MATRICES
 from src.backend.resolutores.operaciones_matrices.expresiones.captura_matrices import obtener_diccionario_matrices
 from src.backend.utilidades.validacion.validadores import ValidadorMatriz
 from src.frontend.componentes.captura.matrices.captura_matrices import PanelCapturaMatrices
-from src.frontend.controladores.operaciones_matrices import ControladorOperacionesMatrices
+from src.frontend.controladores.algebra.operaciones_matrices import ControladorOperacionesMatrices
 from src.frontend.vistas.operaciones_matrices.mixin_contexto_matrices import _estado_sugerencias
 
 

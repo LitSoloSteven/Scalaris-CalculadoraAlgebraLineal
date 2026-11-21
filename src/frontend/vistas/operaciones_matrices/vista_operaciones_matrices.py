@@ -12,7 +12,7 @@ from src.frontend.componentes.glosa.panel.panel_ia import PanelIA
 from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.captura.matrices.captura_matrices import PanelCapturaMatrices
 from src.frontend.navegacion import ruta_de
-from src.frontend.controladores.operaciones_matrices import ControladorOperacionesMatrices
+from src.frontend.controladores.algebra.operaciones_matrices import ControladorOperacionesMatrices
 from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto
 from src.frontend.componentes.resultados.acciones.transferencia import recibir_matriz
 from src.frontend.vistas.operaciones_matrices.mixin_resultados import MixinResultadosOperacionesMatrices

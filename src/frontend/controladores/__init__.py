@@ -9,7 +9,7 @@ from src.frontend.controladores.algebra.operaciones_inversas import (
     ControladorOperacionesInversas,
     construir_foco_paso,
 )
-from src.frontend.controladores.operaciones_matrices import (
+from src.frontend.controladores.algebra.operaciones_matrices import (
     CodificadorMatriz,
     ControladorDeterminante,
     ControladorFactorizacionLU,
