@@ -1,7 +1,7 @@
 """Acciones de pegado y redimensión para la captura rectangular."""
 from functools import partial
 from nicegui import ui
-from src.frontend.componentes.sonido import notificar
+from src.frontend.componentes.aplicacion.base.sonido import notificar
 
 from src.backend.constantes import DIMENSION_MAXIMA_MATRICES, DIMENSION_MINIMA
 from src.frontend.componentes.cuadricula_base import (CambioCuadricula, actualizar_estados_botones_dimension,
@@ -10,7 +10,7 @@ from src.frontend.componentes.cuadricula_base import (CambioCuadricula, actualiz
 from src.frontend.componentes.animacion_matriz import animar_redimension_matriz
 from src.frontend.componentes.portapapeles_matricial import parsear_portapapeles_rectangular
 from src.frontend.componentes.redimension_rectangular import actualizar_rectangulo
-from src.frontend.componentes.tareas import lanzar_tarea
+from src.frontend.componentes.aplicacion.base.tareas import lanzar_tarea
 from src.frontend.nucleo.textos.textos import CAPTURA_PORTAPAPELES_ERROR, CAPTURA_RECTANGULAR_RECORTADA
 
 

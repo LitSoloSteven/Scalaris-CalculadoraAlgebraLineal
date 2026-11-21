@@ -1,7 +1,7 @@
 """Mixin de interacción de usuario y gestión de entradas para Sistemas Numéricos."""
 import asyncio
 from nicegui import ui
-from src.frontend.componentes.sonido import emitir_sonido, notificar
+from src.frontend.componentes.aplicacion.base.sonido import emitir_sonido, notificar
 from src.backend.utilidades.validacion.reglas_dominio import BASES_NUMERICAS, validar_entrada_base
 from src.frontend.controladores.sesion_matricial import actualizar_contexto, notificar_edicion
 

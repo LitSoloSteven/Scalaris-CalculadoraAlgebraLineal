@@ -8,7 +8,7 @@ from nicegui import ui
 from src.backend.resolutores.raices.biseccion.lote.limites_resolucion_multiple import (
     MAXIMO_CANDIDATOS_MULTIPLE, MAXIMO_EVALUACIONES_MULTIPLE,
 )
-from src.frontend.componentes.simbolos import habilitar_simbolos
+from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
 from src.frontend.controladores.biseccion.resolucion_multiple import resolver_lote as resolver_biseccion
 from src.frontend.controladores.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
 from src.frontend.controladores.exploracion_raices import LONGITUD_CAMPO_EXPLORACION, presentar_candidato

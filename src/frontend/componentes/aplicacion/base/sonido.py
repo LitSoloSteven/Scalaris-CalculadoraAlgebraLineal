@@ -5,7 +5,7 @@ from typing import Any
 
 from nicegui import context, ui
 
-_CATALOGO = json.loads((Path(__file__).parents[1] / 'recursos' / 'catalogo_sonidos.json').read_text(encoding='utf-8'))
+_CATALOGO = json.loads((Path(__file__).parents[3] / 'recursos' / 'catalogo_sonidos.json').read_text(encoding='utf-8'))
 _SONIDOS = frozenset(_CATALOGO['perfiles'])
 _POR_TIPO = _CATALOGO['notificaciones']
 

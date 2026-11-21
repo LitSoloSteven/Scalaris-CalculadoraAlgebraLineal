@@ -5,7 +5,7 @@ from functools import partial
 import html
 from typing import Any, Callable
 from nicegui import ui
-from src.frontend.componentes.sonido import notificar
+from src.frontend.componentes.aplicacion.base.sonido import notificar
 from .opciones_captura_vectores import OpcionesCapturaVectores
 from .transicion_vectores import MixinTransicionVectores
 from .carga_numerica import preparar_matriz_numerica

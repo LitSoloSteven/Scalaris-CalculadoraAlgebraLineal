@@ -3,7 +3,7 @@ import json
 import logging
 
 from nicegui import run, ui
-from src.frontend.componentes.sonido import notificar
+from src.frontend.componentes.aplicacion.base.sonido import notificar
 from src.backend.utilidades.captura.estado_captura import captura_vacia
 
 from src.ai.huellas import calcular_huella

@@ -5,7 +5,7 @@ from src.backend.utilidades.captura.estado_captura import captura_vacia
 from functools import partial
 from typing import Any, Callable
 from nicegui import ui
-from src.frontend.componentes.sonido import notificar
+from src.frontend.componentes.aplicacion.base.sonido import notificar
 
 from src.frontend.componentes.cuadricula_base import (
     DIMENSION_MINIMA,

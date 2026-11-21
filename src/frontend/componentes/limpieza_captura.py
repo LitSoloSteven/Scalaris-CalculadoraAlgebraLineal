@@ -6,7 +6,7 @@ from collections.abc import Callable
 from typing import Protocol
 
 from nicegui import ui
-from src.frontend.componentes.sonido import emitir_sonido, notificar
+from src.frontend.componentes.aplicacion.base.sonido import emitir_sonido, notificar
 from src.frontend.nucleo.textos.textos import (
     LIMPIAR, LIMPIEZA_CANCELAR, LIMPIEZA_DESCRIPCION, LIMPIEZA_TITULO,
     LIMPIEZA_SIN_DATOS,

@@ -8,7 +8,7 @@ from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
 from src.frontend.componentes.modos_captura_raices import MODO_BUSQUEDA, MODO_INTERVALO, construir_modos, region_modo
 from src.frontend.componentes.previa_expresion_raices import PreviaExpresion
 from src.frontend.componentes.selector_opciones import SelectorOpciones
-from src.frontend.componentes.simbolos import habilitar_simbolos
+from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
 from src.frontend.controladores.biseccion.captura_criterio import texto_estimacion
 from src.frontend.controladores.biseccion.catalogo_criterios import CRITERIOS
 from src.frontend.controladores.biseccion.metadatos_expresion import sensible_a_unidad

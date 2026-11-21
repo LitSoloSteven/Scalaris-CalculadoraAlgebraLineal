@@ -2,7 +2,7 @@
 import json
 from collections.abc import Callable
 from nicegui import ui
-from src.frontend.componentes.sonido import notificar
+from src.frontend.componentes.aplicacion.base.sonido import notificar
 
 from src.frontend.nucleo.textos import textos
 

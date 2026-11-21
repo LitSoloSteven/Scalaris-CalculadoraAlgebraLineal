@@ -1,5 +1,5 @@
 """Tarjetas y restauracion del historial de sistemas lineales."""
-from src.frontend.componentes.sonido import notificar
+from src.frontend.componentes.aplicacion.base.sonido import notificar
 from src.frontend.vistas.compartido.mixin_sesion_matricial import MixinSesionMatricial
 
 

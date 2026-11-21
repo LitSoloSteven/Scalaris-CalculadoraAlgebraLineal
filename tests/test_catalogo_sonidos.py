@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from src.frontend.componentes.sonido import _SONIDOS
+from src.frontend.componentes.aplicacion.base.sonido import _SONIDOS
 from src.frontend.presentacion.recursos_vistas import seleccionar_recursos
 from src.frontend.presentacion.tema import _CABECERA_HTML
 from tests.comun import RAIZ

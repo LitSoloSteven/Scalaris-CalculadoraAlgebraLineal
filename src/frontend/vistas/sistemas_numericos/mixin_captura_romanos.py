@@ -1,7 +1,7 @@
 """Operandos, operación y ejemplos de la calculadora romana."""
 from nicegui import ui
-from src.frontend.componentes.simbolos import habilitar_simbolos
-from src.frontend.componentes.sonido import notificar
+from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
+from src.frontend.componentes.aplicacion.base.sonido import notificar
 from src.frontend.controladores.sesion_matricial import actualizar_contexto, notificar_edicion
 
 

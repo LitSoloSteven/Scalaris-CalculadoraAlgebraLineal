@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 from nicegui import ui
-from src.frontend.componentes.sonido import notificar
+from src.frontend.componentes.aplicacion.base.sonido import notificar
 from src.backend.utilidades.captura.estado_captura import captura_vacia
 from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
-from src.frontend.componentes.simbolos import habilitar_simbolos
+from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
 
 from src.frontend.componentes.panel_ia import PanelIA
 from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion

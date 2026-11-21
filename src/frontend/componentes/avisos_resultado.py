@@ -1,6 +1,6 @@
 """Avisos compartidos de resultado y orientación ante fallos de presentación."""
 from nicegui import ui
-from src.frontend.componentes.sonido import emitir_sonido, notificar
+from src.frontend.componentes.aplicacion.base.sonido import emitir_sonido, notificar
 
 MENSAJE_ERROR_INESPERADO = 'Error inesperado. No se pudo completar el cálculo. Revisa los datos e inténtalo de nuevo.'
 CLASES_AVISO_ERROR = 'items-center gap-2 px-4 py-2 distintivo-error mb-4 w-fit'

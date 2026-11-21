@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from nicegui import ui
-from src.frontend.componentes.sonido import notificar
+from src.frontend.componentes.aplicacion.base.sonido import notificar
 from src.frontend.componentes.avisos_resultado import renderizar_aviso_resultado
 
 from src.backend.constantes import DIMENSION_MAXIMA_SISTEMAS

@@ -1,6 +1,6 @@
 """Coordinacion de los controles de captura de sistemas lineales."""
 from nicegui import ui
-from src.frontend.componentes.sonido import notificar
+from src.frontend.componentes.aplicacion.base.sonido import notificar
 from functools import partial
 from src.backend.constantes import DIMENSION_MAXIMA_SISTEMAS, DIMENSION_MINIMA
 from src.frontend.componentes.cuadricula_base import ejecutar_transicion_cuadricula, selectores_cambio_dimension, actualizar_estados_botones_dimension

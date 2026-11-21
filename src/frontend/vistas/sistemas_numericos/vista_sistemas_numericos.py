@@ -5,7 +5,7 @@ from .limpieza_numerica import MixinLimpiezaBases
 from src.backend.resolutores.sistemas_numericos.conversor_bases import ConversorBases
 from src.backend.utilidades.validacion.reglas_dominio import BASES_NUMERICAS, validar_entrada_base
 from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
-from src.frontend.componentes.simbolos import habilitar_simbolos
+from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
 from src.frontend.navegacion import ruta_de
 from src.frontend.componentes.panel_ia import PanelIA
 from src.frontend.controladores.captura_contexto import capturar_bases

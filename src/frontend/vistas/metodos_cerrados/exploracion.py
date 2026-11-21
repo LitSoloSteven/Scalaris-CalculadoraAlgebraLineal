@@ -8,7 +8,7 @@ from src.frontend.componentes.candidatos_raices import PresentacionCandidatos, m
 from src.frontend.componentes.captura_exploracion_raices import campos_rango
 from src.frontend.componentes.exploracion_raices import ESTADO_INICIAL
 from src.frontend.componentes.paso_exploracion_raices import PasoExploracion
-from src.frontend.componentes.simbolos import habilitar_simbolos
+from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
 from src.frontend.controladores.captura_exploratoria_raices import intervalo_seleccionable
 from src.frontend.controladores.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
 from src.frontend.controladores.exploracion_raices import (

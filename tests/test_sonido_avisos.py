@@ -7,7 +7,7 @@ from unittest.mock import Mock
 import pytest
 from nicegui import Client, core, ui
 
-from src.frontend.componentes import sonido
+from src.frontend.componentes.aplicacion.base import sonido
 from src.frontend.componentes.control_sonido import renderizar_control_sonido
 from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.presentacion.tema import _CABECERA_HTML
@@ -77,7 +77,7 @@ def test_los_avisos_python_tienen_un_unico_emisor():
                     and isinstance(nodo.func.value, ast.Name)
                     and nodo.func.value.id == 'ui' and nodo.func.attr == 'notify'):
                 emisores.append(ruta.relative_to(RAIZ).as_posix())
-    assert emisores == ['src/frontend/componentes/sonido.py']
+    assert emisores == ['src/frontend/componentes/aplicacion/base/sonido.py']
 
 
 def test_control_nativo_con_nombre_estable_estado_e_iconos(monkeypatch):

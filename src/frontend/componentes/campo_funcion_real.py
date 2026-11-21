@@ -2,7 +2,7 @@
 from nicegui import ui
 
 from src.backend.resolutores.raices.compartido.limites_raices import LONGITUD_MAXIMA_EXPRESION
-from src.frontend.componentes.simbolos import habilitar_simbolos
+from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
 
 
 def crear_campo_funcion(*, valor: str = "", ejemplo: str | None = "Ejemplo: x^2 - 2") -> ui.input:

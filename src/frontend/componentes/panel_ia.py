@@ -5,7 +5,7 @@ import asyncio
 import logging
 from typing import Any
 from nicegui import app, ui
-from src.frontend.componentes.sonido import notificar
+from src.frontend.componentes.aplicacion.base.sonido import notificar
 
 from src.ai.contexto.contexto import CapturaPaso, ReferenciaPaso, serializar_contexto
 from src.ai.cliente.cliente_openrouter import ClienteOpenRouter

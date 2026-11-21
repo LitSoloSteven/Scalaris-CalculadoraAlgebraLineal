@@ -6,7 +6,7 @@ from functools import partial
 from typing import Callable
 
 from nicegui import ui
-from src.frontend.componentes.sonido import notificar
+from src.frontend.componentes.aplicacion.base.sonido import notificar
 
 from src.frontend.componentes.cuadricula_base import (
     DIMENSION_MINIMA,
@@ -18,7 +18,7 @@ from src.frontend.componentes.cuadricula_base import (
     CambioCuadricula, indice_cambio_dimension,
 )
 from .redimension_matriz_cuadrada import redimensionar_celdas, actualizar_etiqueta_dimension, DIMENSION_MAXIMA_CELDA_NORMAL
-from .tareas import lanzar_tarea
+from .aplicacion.base.tareas import lanzar_tarea
 from .animacion_matriz import animar_redimension_matriz
 from .portapapeles_matricial import parsear_portapapeles_rectangular
 from .carga_numerica import preparar_matriz_numerica

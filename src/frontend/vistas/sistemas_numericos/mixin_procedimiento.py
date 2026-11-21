@@ -4,7 +4,7 @@ from __future__ import annotations
 
 
 from nicegui import ui
-from src.frontend.componentes.sonido import notificar
+from src.frontend.componentes.aplicacion.base.sonido import notificar
 from ._cuerpo_numerico import renderizar_cuerpo_numerico
 from src.frontend.componentes.glosa_foco import crear_accion_explicacion
 

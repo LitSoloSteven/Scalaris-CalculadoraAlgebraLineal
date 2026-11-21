@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import logging
-from src.frontend.componentes.sonido import notificar
+from src.frontend.componentes.aplicacion.base.sonido import notificar
 from src.frontend.vistas.compartido.mixin_sesion_matricial import MixinSesionMatricial
 
 registro = logging.getLogger(__name__)

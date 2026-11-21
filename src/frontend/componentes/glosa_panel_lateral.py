@@ -20,7 +20,7 @@ from src.frontend.componentes.glosa_pie import (
     construir_pie_lateral,
     renderizar_pildora_contexto,
 )
-from src.frontend.componentes.tareas import lanzar_tarea
+from src.frontend.componentes.aplicacion.base.tareas import lanzar_tarea
 from src.frontend.presentacion.sugerencias import sugerencias_activas, sugerir
 
 registro = logging.getLogger(__name__)

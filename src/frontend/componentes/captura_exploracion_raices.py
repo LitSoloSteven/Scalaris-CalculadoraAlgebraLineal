@@ -1,7 +1,7 @@
 """Campos de rango visual con etiquetas y límites compartidos."""
 from nicegui import ui
 
-from src.frontend.componentes.simbolos import habilitar_simbolos
+from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
 from src.frontend.controladores.rango_exploracion_raices import LONGITUD_CAMPO_GRAFICA, RANGO_GRAFICA_DEFECTO
 
 

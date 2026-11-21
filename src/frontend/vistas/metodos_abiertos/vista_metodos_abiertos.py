@@ -6,7 +6,7 @@ from src.frontend.componentes.estructura_aplicacion import crear_estructura_apli
 from src.frontend.componentes.estructura_metodos_raices import montar_estructura_metodos_raices
 from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
 from src.frontend.componentes.selector_opciones import SelectorOpciones
-from src.frontend.componentes.simbolos import habilitar_simbolos
+from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
 from src.frontend.controladores.metodos_abiertos import LONGITUD_MAXIMA_NUMERICA, resolver_captura
 from src.frontend.navegacion import ruta_de
 from .figura import crear_figura_metodos_abiertos

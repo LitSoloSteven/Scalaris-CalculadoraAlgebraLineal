@@ -1,7 +1,7 @@
 """Controles comunes para confirmar extremos sin ejecutar un método."""
 from collections.abc import Callable
 from nicegui import ui
-from src.frontend.componentes.simbolos import habilitar_simbolos
+from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
 from src.frontend.controladores.rango_exploracion_raices import rango_grafica
 
 

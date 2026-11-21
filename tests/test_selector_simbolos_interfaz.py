@@ -4,7 +4,7 @@ import re
 from nicegui import ui
 
 from src.frontend.componentes.campo_funcion_real import crear_campo_funcion
-from src.frontend.componentes.simbolos import habilitar_simbolos
+from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
 from tests.comun import RAIZ
 
 

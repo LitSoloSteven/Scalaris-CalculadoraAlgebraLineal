@@ -5,7 +5,7 @@ import logging
 import threading
 import time
 from nicegui import run, ui
-from src.frontend.componentes.sonido import emitir_sonido, notificar
+from src.frontend.componentes.aplicacion.base.sonido import emitir_sonido, notificar
 
 from src.ai.respuestas.respuestas import OpcionesConsulta, ResultadoIA, TipoErrorIA
 from src.ai.textos import CONSULTA_CANCELADA, ERROR_SERVICIO, RESPUESTA_DEMASIADO_EXTENSA

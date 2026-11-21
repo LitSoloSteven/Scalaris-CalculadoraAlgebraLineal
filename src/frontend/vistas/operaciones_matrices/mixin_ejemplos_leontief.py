@@ -1,5 +1,5 @@
 """Selección y carga de ejemplos de Leontief."""
-from src.frontend.componentes.sonido import notificar
+from src.frontend.componentes.aplicacion.base.sonido import notificar
 from src.frontend.componentes.captura_modelos import construir_ejemplos
 from ._ejemplos_leontief import EJEMPLOS_LEONTIEF
 from .carga_modelos import cargar_captura_modelo
