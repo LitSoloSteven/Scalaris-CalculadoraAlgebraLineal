@@ -7,7 +7,7 @@ from src.frontend.componentes.raices.captura.estructura_metodos_raices import mo
 from src.frontend.componentes.captura.ecuaciones.limpieza_captura import crear_boton_limpieza
 from src.frontend.componentes.aplicacion.controles.selector_opciones import SelectorOpciones
 from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
-from src.frontend.controladores.metodos_abiertos import LONGITUD_MAXIMA_NUMERICA, resolver_captura
+from src.frontend.controladores.raices.metodos_abiertos import LONGITUD_MAXIMA_NUMERICA, resolver_captura
 from src.frontend.navegacion import ruta_de
 from .figura import crear_figura_metodos_abiertos
 from .salida import SalidaMetodosAbiertos

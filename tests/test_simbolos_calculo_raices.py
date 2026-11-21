@@ -11,7 +11,7 @@ from src.backend.resolutores.raices.metodos_abiertos import derivar_expresion
 from src.backend.resolutores.raices.funcion_real.evaluacion.normalizacion_funcion import normalizar_expresion
 from src.frontend.controladores.raices.compartido.formato.captura_real import real_capturado
 from src.frontend.controladores.raices.compartido.formato.formato_funcion_real import formatear_expresion
-from src.frontend.controladores.metodos_abiertos import resolver_captura
+from src.frontend.controladores.raices.metodos_abiertos import resolver_captura
 
 
 @pytest.mark.parametrize(("texto", "esperado"), [
