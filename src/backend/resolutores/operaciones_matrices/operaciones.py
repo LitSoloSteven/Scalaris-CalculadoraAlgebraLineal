@@ -6,9 +6,11 @@ from typing import Any
 from src.backend.constantes import ERROR, EXITO
 from src.backend.excepciones import ErrorDiscrepanciaDimension
 from src.backend.modelos.matriz import Matriz
-from src.backend.modelos.construcciones import transpuesta
-from src.backend.modelos.calculo_matricial import operar_celda, producto_celda
+from src.backend.modelos.construcciones import identidad, transpuesta
+from src.backend.modelos.calculo_matricial import multiplicar_matrices, operar_celda, producto_celda
+from src.backend.resolutores.operaciones_matrices.calculo_inversa import calcular_inversa
 from src.backend.resolutores.operaciones_matrices.presentacion_producto import describir_producto_celda
+from src.backend.resolutores.operaciones_matrices.presupuesto_expresiones import validar_magnitud
 from src.backend.resolutores.operaciones_matrices.determinante import (
     ResolutorDeterminante,
 )
@@ -182,3 +184,43 @@ class ResolutorOperacionesMatrices(TrazadorPasos):
             )
         resultado = ResolutorDeterminante.resolver_lu(matriz_a)
         return resultado["determinante"]
+
+
+def sumar_directa(izquierda: Matriz, derecha: Matriz) -> Matriz:
+    """Coloca las matrices en la diagonal de bloques y rellena los demás bloques con ceros."""
+    datos = [fila + [0] * derecha.columnas for fila in izquierda.datos]
+    datos.extend([0] * izquierda.columnas + fila for fila in derecha.datos)
+    return Matriz(izquierda.filas + derecha.filas, izquierda.columnas + derecha.columnas, datos)
+
+
+def producto_kronecker(izquierda: Matriz, derecha: Matriz) -> Matriz:
+    """Devuelve el producto por bloques, con una copia escalada de derecha por celda izquierda."""
+    datos = [
+        _fila_kronecker(fila_izquierda, fila_derecha)
+        for fila_izquierda in izquierda.datos
+        for fila_derecha in derecha.datos
+    ]
+    return Matriz(izquierda.filas * derecha.filas, izquierda.columnas * derecha.columnas, datos)
+
+
+def _fila_kronecker(izquierda: list, derecha: list) -> list:
+    return [factor * valor for factor in izquierda for valor in derecha]
+
+
+def elevar_matriz(matriz: Matriz, exponente: int) -> Matriz:
+    """Eleva una matriz cuadrada a un entero acotado o lanza ValueError si no es posible."""
+    if matriz.filas != matriz.columnas:
+        raise ValueError("La potencia matricial requiere una matriz cuadrada.")
+    if exponente == 0:
+        return identidad(matriz.filas)
+    if exponente < 0:
+        validar_magnitud(matriz, matriz.filas)
+        matriz = calcular_inversa(matriz)["inversa"]
+        if matriz is None:
+            raise ValueError("La matriz es singular y no tiene inversa.")
+
+    resultado = matriz
+    for _ in range(1, abs(exponente)):
+        resultado = multiplicar_matrices(resultado, matriz)
+        validar_magnitud(resultado)
+    return resultado
