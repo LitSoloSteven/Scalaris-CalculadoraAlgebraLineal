@@ -14,7 +14,7 @@ from src.backend.geometria.conjunto_solucion import (
     validar_solucion_parametrica,
 )
 from src.backend.geometria.planos import calcular_geometria_plano
-from src.backend.geometria.recorte import (
+from src.backend.geometria.base.recorte import (
     calcular_rango_automatico,
     recortar_recta_a_caja,
 )

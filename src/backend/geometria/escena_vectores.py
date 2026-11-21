@@ -1,9 +1,9 @@
 """Preparación exacta de la escena de escalamiento y suma de dos vectores."""
 from src.backend.geometria.captura import parsear_par_vectores
-from src.backend.geometria.coordenadas import a_flotante_seguro
+from src.backend.geometria.base.coordenadas import a_flotante_seguro
 from src.backend.geometria.cuadros_vectores import calcular_cuadros_vectores, calcular_suma_vectores
-from src.backend.geometria.errores import respuesta_error
-from src.backend.geometria.recorte import calcular_rango_automatico
+from src.backend.geometria.base.errores import respuesta_error
+from src.backend.geometria.base.recorte import calcular_rango_automatico
 from src.backend.geometria.transferencia import LIMITES_VECTORES_ESCENA
 
 CUADRO_PREDETERMINADO = 16

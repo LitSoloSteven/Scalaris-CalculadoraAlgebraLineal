@@ -1,8 +1,8 @@
 """Representación paramétrica y recorte del conjunto solución geométrico."""
 from src.backend.geometria.conjunto_solucion import ConjuntoSolucion
-from src.backend.geometria.coordenadas import a_flotante_seguro
+from src.backend.geometria.base.coordenadas import a_flotante_seguro
 from src.backend.geometria.planos import calcular_geometria_plano
-from src.backend.geometria.recorte import recortar_recta_a_caja
+from src.backend.geometria.base.recorte import recortar_recta_a_caja
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_matrices.formateadores import matriz_a_latex
 

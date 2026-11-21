@@ -1,5 +1,5 @@
 """Validación exacta y localización de errores en entradas geométricas."""
-from src.backend.geometria.errores import respuesta_error
+from src.backend.geometria.base.errores import respuesta_error
 from src.backend.utilidades.validacion.validadores import ValidadorMatriz
 
 

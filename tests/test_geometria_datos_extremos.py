@@ -4,7 +4,7 @@ import json
 import pytest
 from nicegui import ui
 
-from src.backend.geometria.muestreo import extremos_recta, superficie_plano
+from src.backend.geometria.base.muestreo import extremos_recta, superficie_plano
 from src.backend.constantes import LONGITUD_MAXIMA_CADENA_NUMERO
 from src.backend.geometria.transferencia import validar_transferencia_escena
 from src.frontend.controladores.geometria import ControladorGeometria

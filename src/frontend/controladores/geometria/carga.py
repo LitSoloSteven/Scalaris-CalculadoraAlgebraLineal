@@ -2,7 +2,7 @@
 import json
 from collections.abc import Callable
 
-from src.backend.geometria.errores import respuesta_error
+from src.backend.geometria.base.errores import respuesta_error
 from src.frontend.controladores.utilidades import parsear_carga_json
 
 
