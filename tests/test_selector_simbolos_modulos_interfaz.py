@@ -32,29 +32,32 @@ def test_configurar_tema_inyecta_meta_modulo_escapada_en_una_cabecera(monkeypatc
 
 def test_campos_de_bases_y_romanos_declaran_sus_perfiles(monkeypatch):
     """El conversor de bases y la calculadora romana asignan perfiles propios."""
-    async def comprobar_bases(vista, cliente):
+    async def _comprobar_bases(vista, cliente):
+        """Verifica metadato de módulo y perfil del campo en bases."""
         assert '<meta name="scalaris-modulo" content="bases">' in cliente.head_html
         assert vista.entrada_valor._props.get("data-simbolos") == "base"
 
-    async def comprobar_romanos(vista, cliente):
+    async def _comprobar_romanos(vista, cliente):
+        """Verifica metadato de módulo y perfil de operandos romanos."""
         assert '<meta name="scalaris-modulo" content="romanos">' in cliente.head_html
         assert vista.entrada_a._props.get("data-simbolos") == "romano"
         assert vista.entrada_b._props.get("data-simbolos") == "romano"
 
-    asyncio.run(construir_pagina(monkeypatch, "bases", comprobar_bases))
-    asyncio.run(construir_pagina(monkeypatch, "romanos", comprobar_romanos))
+    asyncio.run(construir_pagina(monkeypatch, "bases", _comprobar_bases))
+    asyncio.run(construir_pagina(monkeypatch, "romanos", _comprobar_romanos))
 
 
 def test_campos_de_metodos_abiertos_declaran_perfiles_real_y_entero(monkeypatch):
     """Newton-Raphson y secante distinguen función, reales e iteraciones enteras."""
-    async def comprobar(vista, cliente):
+    async def _comprobar(vista, cliente):
+        """Verifica perfiles de función, reales y enteros en métodos abiertos."""
         assert '<meta name="scalaris-modulo" content="metodos_abiertos">' in cliente.head_html
         assert vista.expresion._props.get("data-simbolos") == "funcion"
         for campo in (vista.x0, vista.x1, vista.tolerancia):
             assert campo._props.get("data-simbolos") == "real"
         assert vista.limite._props.get("data-simbolos") == "entero"
 
-    asyncio.run(construir_pagina(monkeypatch, "metodos_abiertos", comprobar))
+    asyncio.run(construir_pagina(monkeypatch, "metodos_abiertos", _comprobar))
 
 
 def test_campos_de_metodos_cerrados_declaran_perfiles_real_y_entero(monkeypatch):
@@ -63,7 +66,8 @@ def test_campos_de_metodos_cerrados_declaran_perfiles_real_y_entero(monkeypatch)
         VISTAS_RUTAS, "metodos_cerrados", ("metodos_cerrados.vista_metodos_cerrados", "VistaMetodosCerrados"),
     )
 
-    async def comprobar(vista, cliente):
+    async def _comprobar(vista, cliente):
+        """Verifica perfiles en captura, exploración y lote de métodos cerrados."""
         assert '<meta name="scalaris-modulo" content="metodos_cerrados">' in cliente.head_html
         captura = vista.captura
         assert captura.expresion._props.get("data-simbolos") == "funcion"
@@ -77,7 +81,7 @@ def test_campos_de_metodos_cerrados_declaran_perfiles_real_y_entero(monkeypatch)
                              captura.parametros_criterio["iteraciones"]):
             assert campo_entero._props.get("data-simbolos") == "entero"
 
-    asyncio.run(construir_pagina(monkeypatch, "metodos_cerrados", comprobar))
+    asyncio.run(construir_pagina(monkeypatch, "metodos_cerrados", _comprobar))
 
 
 def test_componentes_compartidos_de_raices_declaran_perfil_real():
