@@ -3,7 +3,7 @@ import json
 from src.backend.resolutores.operaciones_matrices.captura_modelos import (
     parsear_matriz_modelo, parsear_vector_demanda, validar_nombres,
 )
-from src.backend.resolutores.operaciones_matrices.leontief import ResolutorModeloLeontief
+from src.backend.resolutores.operaciones_matrices.leontief.leontief import ResolutorModeloLeontief
 from src.frontend.controladores.utilidades import parsear_carga_json
 
 

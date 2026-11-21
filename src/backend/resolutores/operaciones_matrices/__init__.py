@@ -7,7 +7,7 @@ from src.backend.resolutores.operaciones_matrices.expresiones.evaluador import (
     EvaluadorExpresionesMatriciales,
 )
 from src.backend.resolutores.operaciones_matrices.inversa.inversa import ResolutorInversa
-from src.backend.resolutores.operaciones_matrices.leontief import (
+from src.backend.resolutores.operaciones_matrices.leontief.leontief import (
     ResolutorModeloLeontief,
 )
 from src.backend.resolutores.operaciones_matrices.expresiones.operaciones import (

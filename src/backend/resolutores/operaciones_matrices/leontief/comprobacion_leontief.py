@@ -2,7 +2,7 @@
 from src.backend.modelos.matriz import Matriz
 from fractions import Fraction
 from src.backend.utilidades.formato.formateadores import numero_a_latex
-from .compartido.comprobacion_productos import comprobar_producto, crear_paso_analisis
+from src.backend.resolutores.operaciones_matrices.compartido.comprobacion_productos import comprobar_producto, crear_paso_analisis
 
 
 def comprobar_balance(coeficientes: Matriz, demanda: list, calculo: dict) -> list[dict]:

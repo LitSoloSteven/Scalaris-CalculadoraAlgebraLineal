@@ -3,8 +3,8 @@ from fractions import Fraction
 
 from src.backend.constantes import ERROR
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices.calculo_leontief import calcular_leontief
-from src.backend.resolutores.operaciones_matrices.presentacion_leontief import presentar_leontief
+from src.backend.resolutores.operaciones_matrices.leontief.calculo_leontief import calcular_leontief
+from src.backend.resolutores.operaciones_matrices.leontief.presentacion_leontief import presentar_leontief
 
 
 class ResolutorModeloLeontief:

@@ -2,7 +2,7 @@
 from src.backend.constantes import ERROR, EXITO, SIN_SOLUCION
 from src.backend.resolutores.operaciones_matrices.compartido.formateadores import matriz_a_latex
 from src.backend.utilidades.formato.formateadores import formatear_fraccion_texto
-from .compartido.comprobacion_productos import crear_paso_analisis
+from src.backend.resolutores.operaciones_matrices.compartido.comprobacion_productos import crear_paso_analisis
 
 
 def _conclusion_viabilidad(es_viable: bool, menores: list[dict]) -> str:

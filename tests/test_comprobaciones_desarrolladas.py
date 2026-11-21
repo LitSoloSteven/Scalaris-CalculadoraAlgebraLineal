@@ -10,7 +10,7 @@ from src.backend.resolutores.operaciones_matrices.compartido.comprobacion_produc
 from src.backend.resolutores.operaciones_matrices.inversa.inversa import ResolutorInversa
 from src.backend.resolutores.operaciones_matrices.inversa.captura_inversa import extraer_comprobaciones_inversa
 from src.backend.resolutores.operaciones_matrices.transformaciones import ResolutorTransformacionesLineales
-from src.backend.resolutores.operaciones_matrices.leontief import ResolutorModeloLeontief
+from src.backend.resolutores.operaciones_matrices.leontief.leontief import ResolutorModeloLeontief
 from src.backend.resolutores.operaciones_vectores.operaciones.combinacion_lineal import ResolutorCombinacionLineal
 from src.backend.resolutores.sistemas_lineales.solucion.comprobacion_sistemas import comprobar_familia
 from src.backend.resolutores.sistemas_lineales.eliminacion.gauss import ResolutorGauss
