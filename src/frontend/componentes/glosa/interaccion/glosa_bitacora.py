@@ -7,7 +7,7 @@ from nicegui import ui
 
 from src.frontend.componentes.aplicacion.base.iconos import icono_svg
 from src.frontend.componentes.glosa.elementos.glosa_renderizado import crear_contenido_glosa
-from src.frontend.componentes.glosa_sugerencias import renderizar_seguimientos
+from src.frontend.componentes.glosa.interaccion.glosa_sugerencias import renderizar_seguimientos
 from src.frontend.presentacion.sugerencias import sugerencias_activas
 from src.frontend.presentacion.catalogo_sugerencias import SEGUIMIENTOS
 

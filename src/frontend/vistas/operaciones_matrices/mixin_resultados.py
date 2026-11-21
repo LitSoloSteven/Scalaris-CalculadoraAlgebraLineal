@@ -12,7 +12,7 @@ from ._cuerpo_reproductor_matrices import renderizar_cuerpo_matrices
 from nicegui import ui
 from src.frontend.componentes.aplicacion.base.sonido import notificar
 from src.frontend.componentes.resultados.acciones.avisos_resultado import mostrar_error_inesperado, renderizar_aviso_resultado
-from src.frontend.componentes.glosa_foco import crear_accion_explicacion
+from src.frontend.componentes.glosa.interaccion.glosa_foco import crear_accion_explicacion
 from src.frontend.componentes.exportacion_pdf.integracion import region_pdf, completar_exportacion, identificador_raiz
 from src.frontend.controladores.exportacion_pdf.vigencia import EnlacePDF
 from src.frontend.componentes.resultados.acciones.acciones_matriz import renderizar_acciones_matriz

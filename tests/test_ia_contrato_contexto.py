@@ -15,7 +15,7 @@ from src.ai.contexto.contexto import (
 )
 from src.ai.contexto.estrategias_recorte import construir_contexto_minimo
 from src.backend.modelos.matriz import Matriz
-from src.frontend.componentes.glosa_pie import renderizar_pildora_contexto
+from src.frontend.componentes.glosa.interaccion.glosa_pie import renderizar_pildora_contexto
 
 
 def _leer_datos(serializado):

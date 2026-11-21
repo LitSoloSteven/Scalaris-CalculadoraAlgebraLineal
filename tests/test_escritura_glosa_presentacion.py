@@ -8,7 +8,7 @@ from nicegui.observables import ObservableDict
 
 from src.ai.respuestas.respuestas import ResultadoIA, TipoErrorIA
 from src.frontend.componentes.glosa_envio import EnvioGlosaMixin
-from src.frontend.componentes.glosa_bitacora import _renderizar_mensaje_lateral
+from src.frontend.componentes.glosa.interaccion.glosa_bitacora import _renderizar_mensaje_lateral
 from src.frontend.componentes.panel_ia_clasico import renderizar_mensaje_clasico
 from tests.comun_clientes import PanelIASimulado
 
@@ -16,7 +16,7 @@ from tests.comun_clientes import PanelIASimulado
 @pytest.mark.parametrize("lateral", [False, True])
 def test_ambas_presentaciones_consumen_marca_y_conservan_escape(monkeypatch, lateral):
     """Solo el primer montaje se marca, y pre conserva el contenido hostil escapado."""
-    monkeypatch.setattr('src.frontend.componentes.glosa_bitacora.sugerencias_activas', lambda: False)
+    monkeypatch.setattr('src.frontend.componentes.glosa.interaccion.glosa_bitacora.sugerencias_activas', lambda: False)
     mensaje = {"texto": 'Texto```<script>alert(1)</script>```Final', "animar": True}
     contenedor = ui.column()
     instancia = SimpleNamespace()
@@ -60,7 +60,7 @@ def test_solo_respuestas_exitosas_solicitan_revelado(monkeypatch, exito):
 def test_reconstruir_almacen_observable_no_repite_revelado(monkeypatch, lateral):
     """La marca se consume en el objeto persistido por NiceGUI, también tras reconstruir."""
     monkeypatch.setattr('src.frontend.nucleo.banderas.panel_lateral_habilitado', lambda: lateral)
-    monkeypatch.setattr('src.frontend.componentes.glosa_bitacora.sugerencias_activas', lambda: False)
+    monkeypatch.setattr('src.frontend.componentes.glosa.interaccion.glosa_bitacora.sugerencias_activas', lambda: False)
     monkeypatch.setattr(ui, 'run_javascript', Mock())
     almacen = ObservableDict({})
     panel = PanelIASimulado(almacen=almacen)

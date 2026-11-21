@@ -10,7 +10,7 @@ from src.frontend.componentes.aplicacion.base.sonido import emitir_sonido, notif
 from src.ai.respuestas.respuestas import OpcionesConsulta, ResultadoIA, TipoErrorIA
 from src.ai.textos import CONSULTA_CANCELADA, ERROR_SERVICIO, RESPUESTA_DEMASIADO_EXTENSA
 from src.ai.presupuesto.presupuesto_mensajes import validar_longitud_mensaje
-from src.frontend.componentes.glosa_preguntas import PreguntasGlosaMixin
+from src.frontend.componentes.glosa.interaccion.glosa_preguntas import PreguntasGlosaMixin
 from src.frontend.componentes.glosa.elementos.glosa_espera import iniciar_temporizador_cancelar, finalizar_envio
 from src.frontend.nucleo import banderas
 from src.frontend.nucleo.constantes import ANTI_REBOTE_GLOSA_SEGUNDOS
@@ -127,7 +127,7 @@ class EnvioGlosaMixin(PreguntasGlosaMixin):
     def _dibujar_ultimo_mensaje(self) -> None:
         """Pinta el mensaje mas reciente del usuario en el area correspondiente."""
         if banderas.panel_lateral_habilitado():
-            from src.frontend.componentes.glosa_bitacora import _renderizar_mensaje_lateral
+            from src.frontend.componentes.glosa.interaccion.glosa_bitacora import _renderizar_mensaje_lateral
             _renderizar_mensaje_lateral(self, self.historial_chat[-1], es_ultimo=False)
         elif hasattr(self, "_renderizar_mensaje"):
             self._renderizar_mensaje(self.historial_chat[-1], indice=len(self.historial_chat) - 1)
@@ -173,7 +173,7 @@ class EnvioGlosaMixin(PreguntasGlosaMixin):
 
         with self.area_chat:
             if banderas.panel_lateral_habilitado():
-                from src.frontend.componentes.glosa_bitacora import _renderizar_mensaje_lateral
+                from src.frontend.componentes.glosa.interaccion.glosa_bitacora import _renderizar_mensaje_lateral
                 _renderizar_mensaje_lateral(self, mensaje, es_ultimo=True)
             elif hasattr(self, "_renderizar_mensaje"):
                 self._renderizar_mensaje(mensaje, indice=len(self.historial_chat) - 1)

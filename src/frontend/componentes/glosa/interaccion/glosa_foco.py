@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Any
 from nicegui import ui
-from src.frontend.componentes.glosa_sugerencias import renderizar_capsula_foco
+from src.frontend.componentes.glosa.interaccion.glosa_sugerencias import renderizar_capsula_foco
 
 
 def crear_accion_explicacion(panel: Any, pasos: Any, *, sigue_vigente=None):

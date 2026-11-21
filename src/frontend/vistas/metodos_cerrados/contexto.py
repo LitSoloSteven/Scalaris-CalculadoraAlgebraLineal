@@ -1,6 +1,6 @@
 """Contexto de Glosa para el resultado y el paso que se están consultando."""
 from src.ai.contexto.contexto import ContextoIA, EstadoContexto
-from src.frontend.componentes.glosa_foco import crear_accion_explicacion
+from src.frontend.componentes.glosa.interaccion.glosa_foco import crear_accion_explicacion
 from src.frontend.controladores.biseccion.contexto_biseccion import resumir_contexto_biseccion
 from src.frontend.controladores.metodos_cerrados.adaptadores import BISECCION, METODOS
 from src.frontend.controladores.regla_falsa.contexto_regla_falsa import resumir_contexto_regla_falsa

@@ -5,7 +5,7 @@ from unittest.mock import Mock
 import pytest
 from nicegui import Client, ui
 
-from src.frontend.componentes.glosa_pie import construir_pie_lateral
+from src.frontend.componentes.glosa.interaccion.glosa_pie import construir_pie_lateral
 from src.frontend.componentes.panel_ia_clasico import _construir_pie_clasico
 from src.frontend.controladores.manejadores_pasos import _asociar_grupo_eliminacion, manejar_otro
 

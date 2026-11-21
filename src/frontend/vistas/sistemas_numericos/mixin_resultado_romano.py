@@ -6,7 +6,7 @@ from typing import Any
 
 from nicegui import ui
 from ._cuerpo_numerico import renderizar_cuerpo_numerico
-from src.frontend.componentes.glosa_foco import crear_accion_explicacion
+from src.frontend.componentes.glosa.interaccion.glosa_foco import crear_accion_explicacion
 
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos
 from .pasos_romanos import construir_pasos_romanos

@@ -2,7 +2,7 @@
 from dataclasses import replace
 
 from src.frontend.nucleo.textos import textos
-from src.frontend.componentes.glosa_foco import crear_accion_explicacion
+from src.frontend.componentes.glosa.interaccion.glosa_foco import crear_accion_explicacion
 from src.frontend.componentes.resultados.analisis.presentacion_analisis import adaptar_analisis
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos
 from src.frontend.componentes.reproductor_pasos.modelo import GrupoReproductor

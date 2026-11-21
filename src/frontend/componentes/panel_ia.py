@@ -213,7 +213,7 @@ class PanelIA(PanelLateralGlosaMixin):
         if not sugerencias:
             return
 
-        from src.frontend.componentes.glosa_sugerencias import renderizar_fila_sugerencias
+        from src.frontend.componentes.glosa.interaccion.glosa_sugerencias import renderizar_fila_sugerencias
         enviando = getattr(self, "_esta_enviando", False)
         renderizar_fila_sugerencias(sugerencias, self.preguntar_sugerencia, variante="en_linea", deshabilitado=enviando)
 

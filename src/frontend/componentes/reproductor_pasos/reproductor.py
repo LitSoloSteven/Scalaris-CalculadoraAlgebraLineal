@@ -139,7 +139,7 @@ class ReproductorPasos:
         self.contenedor_glosa.clear()
         if not self.al_explicar or not paso.meta_explicar:
             return
-        from src.frontend.componentes.glosa_sugerencias import renderizar_boton_explicacion
+        from src.frontend.componentes.glosa.interaccion.glosa_sugerencias import renderizar_boton_explicacion
 
         metadatos = dict(paso.meta_explicar)
         metadatos["operacion"] = limpiar_latex_plano(metadatos.get("operacion", paso.descripcion))

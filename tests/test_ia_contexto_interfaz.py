@@ -4,7 +4,7 @@ from fractions import Fraction
 from src.ai.cliente.mensajes import construir_mensajes
 from src.ai.contexto.contexto import serializar_contexto, ContextoIA, EstadoContexto, MAXIMO_CARACTERES_CONTEXTO
 from src.ai.huellas import calcular_huella, esta_desactualizado
-from src.frontend.componentes.glosa_sugerencias import _es_evento_teclado
+from src.frontend.componentes.glosa.interaccion.glosa_sugerencias import _es_evento_teclado
 from src.backend.modelos.matriz import Matriz
 
 def test_mensajes_roles_y_pregunta():

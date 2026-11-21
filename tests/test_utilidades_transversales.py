@@ -15,11 +15,11 @@ from src.backend.resolutores.operaciones_vectores.base.formateadores import (
     formatear_combinacion_lineal_vector, formatear_expresion_lineal,
 )
 from src.frontend.componentes.resultados.acciones.avisos_resultado import mostrar_error_inesperado
-from src.frontend.componentes.glosa_foco import crear_accion_explicacion
+from src.frontend.componentes.glosa.interaccion.glosa_foco import crear_accion_explicacion
 from src.frontend.controladores.captura_contexto import capturar_bases, capturar_matrices, capturar_romanos
 from src.frontend.controladores.sesion_matricial import actualizar_contexto
 from src.frontend.controladores.utilidades import extraer_datos_matriz, parsear_carga_json
-from src.frontend.componentes.glosa_preguntas import PreguntasGlosaMixin
+from src.frontend.componentes.glosa.interaccion.glosa_preguntas import PreguntasGlosaMixin
 from src.frontend.componentes.glosa_panel_lateral import PanelLateralGlosaMixin
 from tests.comun import RAIZ
 from tests.comun_clientes import ClienteSimulado

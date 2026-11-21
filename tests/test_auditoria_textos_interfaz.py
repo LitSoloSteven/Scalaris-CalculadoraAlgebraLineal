@@ -64,7 +64,7 @@ def _infracciones_literal(ruta, nodo, fragmentos, patrones):
 
 def test_saludo_glosa_unificado():
     """El saludo de Glosa conserva tuteo y puntuación sobria."""
-    ruta = os.path.join('src', 'frontend', 'componentes', 'glosa_bitacora.py')
+    ruta = os.path.join('src', 'frontend', 'componentes', 'glosa', 'interaccion', 'glosa_bitacora.py')
     with open(ruta, 'r', encoding='utf-8') as archivo:
         contenido = archivo.read()
     assert "¡Hola! Soy Glosa." not in contenido, "Aún contiene '¡Hola! Soy Glosa.'"
