@@ -179,7 +179,7 @@ def _construir_foco_diccionario(foco: Any) -> dict:
 
 def _construir_meta_contexto(contexto: Any, truncado: bool) -> dict:
     """Construye metadatos de ventana, obsolescencia y truncado."""
-    from src.ai.matrices_contexto import generar_nota_ventana
+    from src.ai.contexto.extraccion.matrices_contexto import generar_nota_ventana
 
     metadatos = {}
     if contexto.nota_ventana:

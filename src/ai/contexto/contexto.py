@@ -2,8 +2,8 @@
 from src.ai.constantes import MAXIMO_CARACTERES_CONTEXTO
 from src.ai.contexto.datos_contexto import CapturaPaso, ContextoIA, EstadoContexto, ReferenciaPaso
 from src.ai.contexto.estrategias_recorte import construir_contexto_minimo, ejecutar_cascada_recortes
-from src.ai.matrices_contexto import describir_matriz, extraer_filas, generar_nota_ventana
-from src.ai.texto_contexto import compactar_numero, recortar_texto, sanear_cadena_usuario
+from src.ai.contexto.extraccion.matrices_contexto import describir_matriz, extraer_filas, generar_nota_ventana
+from src.ai.contexto.extraccion.texto_contexto import compactar_numero, recortar_texto, sanear_cadena_usuario
 
 __all__ = [
     'CapturaPaso', 'ContextoIA', 'EstadoContexto', 'ReferenciaPaso',

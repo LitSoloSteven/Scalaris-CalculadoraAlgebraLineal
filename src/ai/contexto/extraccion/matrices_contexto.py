@@ -3,8 +3,8 @@ from typing import Any, Sequence
 from src.ai.constantes import (
     COLUMNAS_MAXIMAS_RECORTE, MAXIMO_MATRIZ_COMPLETA, TAMANIO_VENTANA_MATRIZ,
 )
-from src.ai.texto_contexto import compactar_numero
-from src.ai.ventana_matriz import extraer_ventana_matriz
+from src.ai.contexto.extraccion.texto_contexto import compactar_numero
+from src.ai.contexto.extraccion.ventana_matriz import extraer_ventana_matriz
 
 
 def _es_celda_invalida(valor: str) -> bool:
