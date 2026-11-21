@@ -1,6 +1,6 @@
 """Captura acotada y exacta de ecuaciones para resolución y sincronización."""
 from src.backend.constantes import DIMENSION_MAXIMA_SISTEMAS, MAXIMO_CARACTERES_ECUACIONES
-from src.backend.utilidades.analizadores import AnalizadorSistema
+from src.backend.utilidades.validacion.analizadores import AnalizadorSistema
 
 
 def preparar_ecuaciones(lineas: list[str]) -> dict:

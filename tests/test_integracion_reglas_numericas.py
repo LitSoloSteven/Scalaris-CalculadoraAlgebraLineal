@@ -1,7 +1,7 @@
 """Integración de análisis de ecuaciones, evaluación y errores de controladores."""
 import json
 from fractions import Fraction
-from src.backend.utilidades.analizadores import AnalizadorSistema
+from src.backend.utilidades.validacion.analizadores import AnalizadorSistema
 from src.backend.resolutores.operaciones_matrices.evaluador import EvaluadorExpresionesMatriciales
 from src.backend.modelos.matriz import Matriz
 from src.backend.utilidades.formato.formateadores import formatear_fraccion_texto, numero_a_latex

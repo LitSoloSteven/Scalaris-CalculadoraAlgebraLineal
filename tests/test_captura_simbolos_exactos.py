@@ -10,8 +10,8 @@ from src.backend.resolutores.operaciones_matrices.celdas_exactas import parsear_
 from src.backend.resolutores.sistemas_lineales.captura_ecuaciones import preparar_ecuaciones
 from src.backend.resolutores.sistemas_lineales.vista_previa import preparar_vista_previa
 from src.backend.resolutores.sistemas_numericos.conversor_bases import ConversorBases
-from src.backend.utilidades.analizadores import AnalizadorSistema
-from src.backend.utilidades.reglas_dominio import validar_entrada_base
+from src.backend.utilidades.validacion.analizadores import AnalizadorSistema
+from src.backend.utilidades.validacion.reglas_dominio import validar_entrada_base
 from src.frontend.componentes.portapapeles_matricial import filtrar_matriz_numerica
 from src.frontend.controladores.sistemas_lineales.presentacion_solucion import formatear_elemento_solucion
 

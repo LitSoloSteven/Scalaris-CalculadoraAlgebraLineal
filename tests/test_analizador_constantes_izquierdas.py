@@ -1,7 +1,7 @@
 """Traslado de constantes izquierdas y rechazo de variables derechas."""
 from fractions import Fraction
 
-from src.backend.utilidades.analizadores import AnalizadorSistema
+from src.backend.utilidades.validacion.analizadores import AnalizadorSistema
 
 
 def test_constante_izquierda_se_traslada():

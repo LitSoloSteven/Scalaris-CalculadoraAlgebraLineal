@@ -13,7 +13,7 @@ from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_matrices.evaluador import EvaluadorExpresionesMatriciales
 from src.backend.resolutores.operaciones_matrices.presupuesto_expresiones import validar_presupuesto_operaciones
 from src.backend.resolutores.sistemas_numericos.conversor_bases import ConversorBases
-from src.backend.utilidades.reglas_dominio import capturar_entrada_base, validar_entrada_base
+from src.backend.utilidades.validacion.reglas_dominio import capturar_entrada_base, validar_entrada_base
 
 
 def test_expresion_larga_se_rechaza_antes_de_tokenizar(monkeypatch):
@@ -65,7 +65,7 @@ def test_presupuesto_considera_dimensiones_reales_y_solo_matrices_usadas():
 def test_bases_rechaza_ceros_excesivos_antes_de_convertir(monkeypatch, base):
     """Ni los ceros ni separadores eluden la validación compartida de captura."""
     convertir = Mock(side_effect=AssertionError("No debe calcular una magnitud excesiva"))
-    monkeypatch.setattr("src.backend.utilidades.reglas_dominio._capturar_magnitud_base", convertir)
+    monkeypatch.setattr("src.backend.utilidades.validacion.reglas_dominio._capturar_magnitud_base", convertir)
     texto = "0" * (LONGITUD_MAXIMA_ENTRADA_BASES + 1)
     with pytest.raises(ValueError, match="caracteres"):
         capturar_entrada_base(texto, base)

@@ -3,7 +3,7 @@
 from typing import Any
 
 from src.backend.constantes import ERROR, EXITO
-from src.backend.utilidades.reglas_dominio import BASES_NUMERICAS, capturar_entrada_base
+from src.backend.utilidades.validacion.reglas_dominio import BASES_NUMERICAS, capturar_entrada_base
 
 
 class ConversorBases:

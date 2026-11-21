@@ -2,7 +2,7 @@
 import asyncio
 from nicegui import ui
 from src.frontend.componentes.sonido import emitir_sonido, notificar
-from src.backend.utilidades.reglas_dominio import BASES_NUMERICAS, validar_entrada_base
+from src.backend.utilidades.validacion.reglas_dominio import BASES_NUMERICAS, validar_entrada_base
 from src.frontend.controladores.sesion_matricial import actualizar_contexto, notificar_edicion
 
 

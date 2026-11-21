@@ -1,5 +1,5 @@
 """Bases disponibles y validación centralizada del conversor numérico."""
-from src.backend.utilidades.reglas_dominio import BASES_NUMERICAS, validar_entrada_base
+from src.backend.utilidades.validacion.reglas_dominio import BASES_NUMERICAS, validar_entrada_base
 
 
 def test_catalogo_conserva_las_cuatro_bases_numericas():

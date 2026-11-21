@@ -1,13 +1,13 @@
 """Módulo de utilidades matemáticas, formateadores, validadores y reglas."""
 
-from .analizadores import AnalizadorSistema
+from .validacion.analizadores import AnalizadorSistema
 from .formato.formateadores import (
     formatear_expresion_parametrica,
     formatear_fraccion_texto,
     formatear_variable_para_latex,
     numero_a_latex,
 )
-from .reglas_dominio import (
+from .validacion.reglas_dominio import (
     validar_datos_transferencia_matriz,
     validar_datos_transferencia_vectores,
     validar_entrada_base,

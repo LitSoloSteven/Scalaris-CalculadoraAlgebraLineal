@@ -18,14 +18,14 @@ from src.backend.excepciones import (
     ErrorVectorInvalido,
 )
 from src.backend.modelos.matriz import Matriz
-from src.backend.utilidades.analizadores import AnalizadorSistema
+from src.backend.utilidades.validacion.analizadores import AnalizadorSistema
 from src.backend.utilidades.formato.formateadores import (
     formatear_expresion_parametrica,
     formatear_fraccion_texto,
     formatear_variable_para_latex,
     numero_a_latex,
 )
-from src.backend.utilidades.reglas_dominio import (
+from src.backend.utilidades.validacion.reglas_dominio import (
     validar_datos_transferencia_matriz,
     validar_datos_transferencia_vectores,
     validar_entrada_base,

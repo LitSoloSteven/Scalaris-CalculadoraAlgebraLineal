@@ -3,7 +3,7 @@ from nicegui import ui
 from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
 from .limpieza_numerica import MixinLimpiezaBases
 from src.backend.resolutores.sistemas_numericos.conversor_bases import ConversorBases
-from src.backend.utilidades.reglas_dominio import BASES_NUMERICAS, validar_entrada_base
+from src.backend.utilidades.validacion.reglas_dominio import BASES_NUMERICAS, validar_entrada_base
 from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.simbolos import habilitar_simbolos
 from src.frontend.navegacion import ruta_de

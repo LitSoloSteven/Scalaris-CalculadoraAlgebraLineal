@@ -5,7 +5,7 @@ import pytest
 
 from src.frontend.vistas.sistemas_numericos.vista_sistemas_numericos import VistaSistemasNumericos
 from src.backend.resolutores.sistemas_numericos.conversor_bases import ConversorBases
-from src.backend.utilidades.reglas_dominio import BASES_NUMERICAS
+from src.backend.utilidades.validacion.reglas_dominio import BASES_NUMERICAS
 
 
 class ElementoSimulado:
