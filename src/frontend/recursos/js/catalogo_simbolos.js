@@ -5,11 +5,11 @@
     window.scalaris = window.scalaris || {};
     const operadores = [
         ['−', 'Signo menos', {funcion: '−', matriz: '−', numero: '-', ecuacion: '-', base: '-', real: '-'}],
-        ['×', 'Multiplicación', {funcion: '×', matriz: '×'}],
-        ['·', 'Producto con punto', {funcion: '·', matriz: '·'}],
-        ['⋅', 'Punto de multiplicación', {funcion: '⋅', matriz: '⋅'}],
-        ['∙', 'Punto operador', {funcion: '∙', matriz: '∙'}],
-        ['÷', 'División', {funcion: '÷'}],
+        ['×', 'Multiplicación', {funcion: '×', matriz: '×', ecuacion: '×'}],
+        ['·', 'Producto con punto', {funcion: '·', matriz: '·', ecuacion: '·'}],
+        ['⋅', 'Punto de multiplicación', {funcion: '⋅', matriz: '⋅', ecuacion: '⋅'}],
+        ['∙', 'Punto operador', {funcion: '∙', matriz: '∙', ecuacion: '∙'}],
+        ['÷', 'División', {funcion: '÷', numero: '/', ecuacion: '/'}],
         ['⁄', 'Barra de fracción', {funcion: '⁄', numero: '/', ecuacion: '/'}],
         ['∕', 'Barra de división', {funcion: '∕', numero: '/', ecuacion: '/'}],
         ['±', 'Más o menos'], ['∓', 'Menos o más'], ['⊕', 'Suma directa'],
@@ -25,7 +25,7 @@
         [simbolo, 'Superíndice ' + indice, {funcion: simbolo}]);
     const negativos = [['⁻¹', 'Exponente menos uno', {funcion: '⁻¹'}]];
     const subindices = Array.from('₀₁₂₃₄₅₆₇₈₉', (simbolo, indice) =>
-        [simbolo, 'Subíndice ' + indice]);
+        [simbolo, 'Subíndice ' + indice, {ecuacion: simbolo}]);
     const fracciones = [
         ['¼', '1/4'], ['½', '1/2'], ['¾', '3/4'], ['⅐', '1/7'], ['⅑', '1/9'], ['⅒', '1/10'],
         ['⅓', '1/3'], ['⅔', '2/3'], ['⅕', '1/5'], ['⅖', '2/5'], ['⅗', '3/5'], ['⅘', '4/5'],
@@ -34,10 +34,10 @@
     const nombresGriegos = 'alfa beta gamma delta épsilon zeta eta theta iota kappa lambda mu nu xi ómicron pi rho sigma tau ípsilon fi ji psi omega'.split(' ');
     const griegas = Array.from('αβγδεζηθικλμνξοπρστυφχψω').flatMap((simbolo, indice) => {
         const nombre = nombresGriegos[indice];
-        return [
-            [simbolo, nombre + ' minúscula', simbolo === 'π' ? {funcion: simbolo} : undefined],
-            [simbolo.toUpperCase(), nombre + ' mayúscula'],
-        ];
+        const mayuscula = simbolo.toUpperCase();
+        const perfiles = simbolo === 'π' ? {funcion: simbolo, ecuacion: simbolo} : {ecuacion: simbolo};
+        return [[simbolo, nombre + ' minúscula', perfiles],
+            [mayuscula, nombre + ' mayúscula', {ecuacion: mayuscula}]];
     });
     const relaciones = [
         ['≤', 'Menor o igual'], ['≥', 'Mayor o igual'], ['≠', 'Distinto de'], ['≈', 'Aproximadamente igual'],
@@ -56,7 +56,8 @@
         ['ℯ', 'Número de Euler', {funcion: 'ℯ'}], ['∞', 'Infinito'], ['∑', 'Sumatoria'], ['∏', 'Productoria'],
         ['∫', 'Integral'], ['∬', 'Integral doble'], ['∭', 'Integral triple'], ['∮', 'Integral de contorno'],
         ['∂', 'Derivada parcial'], ['∇', 'Nabla'], ['′', 'Prima'], ['″', 'Doble prima'],
-        ['°', 'Grados'], ['∠', 'Ángulo'], ['△', 'Triángulo'], ['∴', 'Por lo tanto'], ['∵', 'Porque'], ['‰', 'Por mil'],
+        ['°', 'Grados'], ['∠', 'Ángulo'], ['△', 'Triángulo'], ['∴', 'Por lo tanto'], ['∵', 'Porque'],
+        ['‰', 'Por mil', {numero: '‰', ecuacion: '‰'}],
     ];
     const grupos = {
         'Operadores': operadores,
