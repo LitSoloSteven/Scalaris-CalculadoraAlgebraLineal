@@ -4,14 +4,14 @@ from nicegui import ui
 from src.backend.resolutores.raices.compartido.limites_raices import D_MAXIMO
 from src.frontend.componentes.resultados.acciones.copia_resultado import renderizar_copia_resultado
 from src.frontend.componentes.raices.resultados.precision_presentacion import leer_precision_presentacion
-from src.frontend.controladores.regla_falsa.diagnostico import detalles_diagnostico
-from src.frontend.controladores.regla_falsa.presentacion import (
+from src.frontend.controladores.raices.regla_falsa.presentacion.diagnostico import detalles_diagnostico
+from src.frontend.controladores.raices.regla_falsa.presentacion.presentacion import (
     aproximacion_presentada, avisos_resumen,
 )
 from src.frontend.controladores.regla_falsa.salidas_regla_falsa import (
     datos_copia_regla_falsa, datos_copia_examen_regla_falsa, datos_copia_configurada,
 )
-from src.frontend.controladores.regla_falsa.presentacion_ampliada import etiqueta_configurada, metricas_configuradas, titulo_configurado
+from src.frontend.controladores.raices.regla_falsa.presentacion.presentacion_ampliada import etiqueta_configurada, metricas_configuradas, titulo_configurado
 from .modo_examen import crear_interruptor_examen
 
 

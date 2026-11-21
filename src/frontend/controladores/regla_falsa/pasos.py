@@ -4,8 +4,8 @@ from dataclasses import replace
 from src.ai.contexto.contexto import CapturaPaso, ReferenciaPaso
 from src.frontend.componentes.reproductor_pasos.nucleo.modelo import GrupoReproductor, PasoReproductor
 from src.frontend.controladores.raices.biseccion.presentacion.presentacion import numero
-from .presentacion import titulo_estado
-from .tabla import ACCIONES
+from src.frontend.controladores.raices.regla_falsa.presentacion.presentacion import titulo_estado
+from src.frontend.controladores.raices.regla_falsa.presentacion.tabla import ACCIONES
 
 
 def construir_pasos(respuesta: dict) -> tuple[tuple[PasoReproductor, ...], tuple[GrupoReproductor, ...]]:

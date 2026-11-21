@@ -1,10 +1,10 @@
 """Salida copiable de los resultados y diagnósticos de regla falsa."""
-from .diagnostico import detalles_diagnostico
-from .presentacion_examen import texto_filas_examen
-from .presentacion import (
+from src.frontend.controladores.raices.regla_falsa.presentacion.diagnostico import detalles_diagnostico
+from src.frontend.controladores.raices.regla_falsa.presentacion.presentacion_examen import texto_filas_examen
+from src.frontend.controladores.raices.regla_falsa.presentacion.presentacion import (
     aproximacion_presentada, avisos_resumen,
 )
-from .presentacion_ampliada import etiqueta_configurada, metricas_configuradas, titulo_configurado
+from src.frontend.controladores.raices.regla_falsa.presentacion.presentacion_ampliada import etiqueta_configurada, metricas_configuradas, titulo_configurado
 
 
 def texto_copia_regla_falsa(respuesta: dict, decimales: int) -> str:

@@ -1,6 +1,6 @@
 """Razonamiento didáctico obtenido exclusivamente de la fila original de regla falsa."""
 from src.frontend.controladores.raices.compartido.formato.formato_numerico_raices import texto_intervalo
-from .tabla import ACCIONES, valor_columna
+from src.frontend.controladores.raices.regla_falsa.presentacion.tabla import ACCIONES, valor_columna
 
 _EXTREMOS = {"reemplazar_a": "Se reemplaza a por c.", "reemplazar_b": "Se reemplaza b por c.",
              "raiz": "Ambos extremos pasan a c, un cero evaluado.",

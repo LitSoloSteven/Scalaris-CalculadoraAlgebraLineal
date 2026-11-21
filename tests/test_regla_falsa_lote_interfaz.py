@@ -3,7 +3,7 @@ import pytest
 from nicegui import ui
 
 from src.backend.resolutores.raices.regla_falsa.lote.resolucion_multiple_regla_falsa import EVALUACIONES_EXTREMOS_REGLA_FALSA
-from src.frontend.controladores.regla_falsa.tabla import filas_tabla
+from src.frontend.controladores.raices.regla_falsa.presentacion.tabla import filas_tabla
 from src.frontend.vistas.regla_falsa import resultado
 from src.frontend.vistas.regla_falsa.modos_captura import MODO_BUSQUEDA
 from tests.comun_exploracion_biseccion import activar_accion

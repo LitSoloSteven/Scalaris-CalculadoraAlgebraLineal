@@ -2,7 +2,7 @@
 from src.frontend.controladores.raices.biseccion.captura.catalogo_criterios import CRITERIOS, condicion_criterio
 from src.backend.resolutores.raices.biseccion.contratos.criterios_biseccion import CriterioParada
 from src.frontend.controladores.raices.compartido.formato.formato_numerico_raices import numero
-from .presentacion import etiqueta_aproximacion, metricas_resumen, titulo_estado
+from src.frontend.controladores.raices.regla_falsa.presentacion.presentacion import etiqueta_aproximacion, metricas_resumen, titulo_estado
 
 _CUMPLIMIENTOS = {"CUMPLIDO": "Condición cumplida", "NO_CUMPLIDO": "Condición no cumplida",
                   "CONTEO_COMPLETADO": "Conteo completado; no certifica precisión", "NO_APLICA": "No aplica"}

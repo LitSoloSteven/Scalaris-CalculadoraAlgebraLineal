@@ -6,7 +6,7 @@ import pytest
 
 from src.frontend.controladores.raices.regla_falsa.ejecucion import resolucion_multiple
 from src.frontend.controladores.raices.regla_falsa.ejecucion.ejecucion_ampliada import resolver_presentacion
-from src.frontend.controladores.regla_falsa.presentacion_ampliada import etiqueta_configurada
+from src.frontend.controladores.raices.regla_falsa.presentacion.presentacion_ampliada import etiqueta_configurada
 from tests.comun_regla_falsa_vista import captura_regla_falsa
 
 

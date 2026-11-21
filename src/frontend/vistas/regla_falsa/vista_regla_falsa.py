@@ -6,7 +6,7 @@ from src.frontend.controladores.raices.biseccion.captura.catalogo_criterios impo
 from src.frontend.controladores.raices.compartido.ejecucion.calculo_raices import ConfiguracionCalculoRaices, resolver_calculo_raices
 from src.frontend.controladores.regla_falsa.contexto_regla_falsa import resumir_contexto_regla_falsa
 from src.frontend.controladores.raices.regla_falsa.ejecucion.presentacion_grafica import calcular_presentacion
-from src.frontend.controladores.regla_falsa.presentacion_ampliada import titulo_configurado
+from src.frontend.controladores.raices.regla_falsa.presentacion.presentacion_ampliada import titulo_configurado
 from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto, invalidar_resultado, registrar_calculo
 from .acciones_captura import mostrar_recientes
 from .composicion import componer_herramienta

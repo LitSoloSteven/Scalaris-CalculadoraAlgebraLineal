@@ -1,7 +1,7 @@
 """Vista didáctica opcional de la decisión de cada secante."""
 from nicegui import ui
 
-from src.frontend.controladores.regla_falsa.presentacion_examen import datos_examen
+from src.frontend.controladores.raices.regla_falsa.presentacion.presentacion_examen import datos_examen
 
 
 def crear_interruptor_examen(vista) -> ui.switch:

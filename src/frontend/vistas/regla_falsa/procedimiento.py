@@ -7,7 +7,7 @@ from src.frontend.controladores.raices.compartido.formato.formato_funcion_real i
 from src.frontend.controladores.regla_falsa.formulas_procedimiento import formulas_iteracion
 from src.frontend.controladores.regla_falsa.pasos import construir_pasos, referencia_paso
 from src.frontend.controladores.regla_falsa.pasos_ampliados import construir_pasos_configurados
-from src.frontend.controladores.regla_falsa.tabla import COLUMNAS, valor_columna
+from src.frontend.controladores.raices.regla_falsa.presentacion.tabla import COLUMNAS, valor_columna
 from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto
 from .figura import crear_figura
 from .tabla_iteraciones import TablaReglaFalsa

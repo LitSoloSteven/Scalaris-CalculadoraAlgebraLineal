@@ -1,7 +1,7 @@
 """Lista de estados del lote con apertura explícita por identificador estable."""
 from nicegui import ui
 
-from src.frontend.controladores.regla_falsa.presentacion_ampliada import titulo_configurado
+from src.frontend.controladores.raices.regla_falsa.presentacion.presentacion_ampliada import titulo_configurado
 
 
 def mostrar_resultados_multiples(lote: dict, al_abrir) -> None:

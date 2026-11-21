@@ -2,7 +2,7 @@
 from dataclasses import replace
 
 from .pasos import construir_pasos
-from .presentacion_ampliada import datos_criterio, titulo_configurado
+from src.frontend.controladores.raices.regla_falsa.presentacion.presentacion_ampliada import datos_criterio, titulo_configurado
 
 
 def construir_pasos_configurados(ampliado: dict) -> tuple:

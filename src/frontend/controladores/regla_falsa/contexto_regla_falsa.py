@@ -1,8 +1,8 @@
 """Resumen independiente del resultado para el contexto pedagógico."""
 from copy import deepcopy
 
-from .presentacion import etiqueta_aproximacion, titulo_estado
-from .presentacion_ampliada import datos_criterio, etiqueta_configurada, titulo_configurado
+from src.frontend.controladores.raices.regla_falsa.presentacion.presentacion import etiqueta_aproximacion, titulo_estado
+from src.frontend.controladores.raices.regla_falsa.presentacion.presentacion_ampliada import datos_criterio, etiqueta_configurada, titulo_configurado
 
 
 def resumir_contexto_regla_falsa(respuesta: dict | None, ampliado: dict | None = None) -> dict | None:

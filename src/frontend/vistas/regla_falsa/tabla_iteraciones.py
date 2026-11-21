@@ -1,6 +1,6 @@
 """Tabla de regla falsa con el formato y los textos de su traza."""
 from src.frontend.componentes.raices.resultados.tabla_raices_seleccionable import FormatoTablaRaices, TablaRaicesSeleccionable
-from src.frontend.controladores.regla_falsa.tabla import COLUMNAS, filas_tabla
+from src.frontend.controladores.raices.regla_falsa.presentacion.tabla import COLUMNAS, filas_tabla
 
 _FORMATO = FormatoTablaRaices(
     descripcion="Selecciona una fila para ver su secante. El error relativo no está disponible en la primera fila o si c = 0.",

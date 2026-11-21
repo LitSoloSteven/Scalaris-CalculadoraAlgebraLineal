@@ -12,7 +12,7 @@ from src.frontend.controladores.metodos_cerrados.adaptadores import BISECCION, M
 from src.frontend.controladores.regla_falsa.formulas_procedimiento import formulas_iteracion as formulas_regla_falsa
 from src.frontend.controladores.regla_falsa.pasos import construir_pasos
 from src.frontend.controladores.regla_falsa.pasos_ampliados import construir_pasos_configurados
-from src.frontend.controladores.regla_falsa.tabla import COLUMNAS, filas_tabla
+from src.frontend.controladores.raices.regla_falsa.presentacion.tabla import COLUMNAS, filas_tabla
 from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto
 from src.frontend.vistas.biseccion.modo_examen import crear_interruptor_examen, mostrar_accion_examen as examen_biseccion
 from src.frontend.vistas.biseccion.resumen_criterio import mostrar_resumen
