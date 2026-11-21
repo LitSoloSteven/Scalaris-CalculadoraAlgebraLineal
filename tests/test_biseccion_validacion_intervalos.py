@@ -9,7 +9,7 @@ from src.backend.resolutores.raices.biseccion.motor.biseccion import biseccion
 from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import (
     AVISO_INTERVALO_INVERTIDO, EntradaBiseccion, validar_entrada,
 )
-from src.frontend.controladores.biseccion.controlador import resolver_captura
+from src.frontend.controladores.raices.biseccion.ejecucion.controlador import resolver_captura
 from tests.comun_biseccion_criterios import captura_criterio
 
 

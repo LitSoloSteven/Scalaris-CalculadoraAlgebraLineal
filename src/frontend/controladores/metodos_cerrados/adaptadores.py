@@ -2,7 +2,7 @@
 from src.backend.resolutores.raices.regla_falsa.contratos.contrato_regla_falsa import EntradaReglaFalsa
 from src.frontend.controladores.raices.biseccion.captura.captura_criterio import texto_condicion
 from src.frontend.controladores.raices.biseccion.captura.catalogo_criterios import CRITERIOS
-from src.frontend.controladores.biseccion.controlador import calcular_presentacion as calcular_biseccion
+from src.frontend.controladores.raices.biseccion.ejecucion.controlador import calcular_presentacion as calcular_biseccion
 from src.frontend.controladores.regla_falsa.configuracion_ampliada import criterio_capturado
 from src.frontend.controladores.regla_falsa.presentacion_grafica import calcular_presentacion as calcular_regla_falsa
 from src.frontend.controladores.raices.biseccion.captura.catalogo_criterios import condicion_criterio

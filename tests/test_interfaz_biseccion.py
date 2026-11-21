@@ -6,7 +6,7 @@ import math
 import pytest
 from nicegui import Client, core, run, ui
 
-from src.frontend.controladores.biseccion.controlador import calcular_presentacion, resolver_captura, texto_tolerancia
+from src.frontend.controladores.raices.biseccion.ejecucion.controlador import calcular_presentacion, resolver_captura, texto_tolerancia
 from src.frontend.controladores.raices.biseccion.adaptadores.muestreo import muestrear_funcion
 from src.frontend.controladores.biseccion.presentacion import construir_pasos, filas_tabla
 from src.frontend.navegacion import ruta_de, pilar_de

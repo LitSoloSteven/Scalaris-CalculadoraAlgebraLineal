@@ -17,7 +17,7 @@ from src.backend.resolutores.raices.biseccion.lote.limites_resolucion_multiple i
     EVALUACIONES_AUXILIARES_CANDIDATO, MAXIMO_CANDIDATOS_MULTIPLE, MAXIMO_EVALUACIONES_CANDIDATO,
 )
 from src.backend.resolutores.raices.biseccion.lote.resolucion_multiple import resolver_candidatos
-from src.frontend.controladores.biseccion.resolucion_multiple import resolver_lote
+from src.frontend.controladores.raices.biseccion.ejecucion.resolucion_multiple import resolver_lote
 from tests.comun_biseccion_criterios import captura_criterio
 
 

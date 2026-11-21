@@ -4,7 +4,7 @@ from src.backend.resolutores.raices.biseccion.lote.limites_resolucion_multiple i
 from src.backend.resolutores.raices.biseccion.lote.resolucion_multiple import resolver_candidatos
 from src.frontend.controladores.raices.compartido.ejecucion.candidatos_lote_raices import convertir_candidato as _convertir_candidato
 from src.frontend.controladores.raices.biseccion.captura.captura_criterio import preparar_entrada
-from .controlador import serializar_resultado
+from src.frontend.controladores.raices.biseccion.ejecucion.controlador import serializar_resultado
 
 
 def resolver_lote(captura: dict) -> dict:

@@ -6,7 +6,7 @@ import pytest
 from src.backend.resolutores.raices.biseccion.motor.biseccion import biseccion
 from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import EntradaBiseccion
 from src.backend.resolutores.raices.biseccion.contratos.criterios_biseccion import CriterioParada
-from src.frontend.controladores.biseccion.controlador import serializar_resultado
+from src.frontend.controladores.raices.biseccion.ejecucion.controlador import serializar_resultado
 
 
 @pytest.mark.parametrize("escala", ["1e-300", "1", "1e300", "-1e300"])

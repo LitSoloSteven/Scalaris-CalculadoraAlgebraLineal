@@ -4,7 +4,7 @@ import json
 import pytest
 
 from src.frontend.controladores.raices.biseccion.adaptadores import muestreo
-from src.frontend.controladores.biseccion.controlador import calcular_presentacion, resolver_captura
+from src.frontend.controladores.raices.biseccion.ejecucion.controlador import calcular_presentacion, resolver_captura
 from src.frontend.controladores.biseccion.presentacion import construir_pasos
 from src.frontend.controladores.biseccion.presentacion_criterio import texto_resumen, titulo_estado
 from src.frontend.controladores.raices.biseccion.adaptadores.vista_previa import preparar_vista_previa

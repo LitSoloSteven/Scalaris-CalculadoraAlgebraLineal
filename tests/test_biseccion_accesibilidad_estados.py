@@ -8,7 +8,7 @@ from nicegui import ui
 from src.ai.contexto.contexto import serializar_contexto
 from src.frontend.componentes.resultados.acciones.copia_resultado import texto_resultado_copiable
 from src.frontend.controladores.biseccion.presentacion_criterio import titulo_estado
-from src.frontend.controladores.biseccion.resolucion_multiple import resolver_lote
+from src.frontend.controladores.raices.biseccion.ejecucion.resolucion_multiple import resolver_lote
 from src.frontend.controladores.biseccion.salidas_biseccion import datos_examen
 from src.frontend.vistas.biseccion import resultados_multiples
 from tests.comun_biseccion_criterios import captura_criterio, ejecutar_escenario

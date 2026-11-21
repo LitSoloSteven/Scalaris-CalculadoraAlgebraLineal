@@ -5,7 +5,7 @@ from dataclasses import replace
 import pytest
 
 from src.backend.resolutores.raices.biseccion.motor.biseccion import biseccion
-from src.frontend.controladores.biseccion import controlador
+from src.frontend.controladores.raices.biseccion.ejecucion import controlador
 from src.frontend.controladores.biseccion.presentacion import construir_pasos, filas_tabla
 
 

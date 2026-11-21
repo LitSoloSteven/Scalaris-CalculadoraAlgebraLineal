@@ -3,7 +3,7 @@ import asyncio
 
 from nicegui import run
 
-from src.frontend.controladores.biseccion.continuidad_intervalo import consultar_continuidad
+from src.frontend.controladores.raices.biseccion.ejecucion.continuidad_intervalo import consultar_continuidad
 from tests.comun_biseccion_criterios import captura_criterio, ejecutar_escenario
 
 

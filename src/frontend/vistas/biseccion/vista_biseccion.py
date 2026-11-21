@@ -5,7 +5,7 @@ from src.ai.contexto.contexto import ContextoIA, EstadoContexto
 from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import ESTADO_DISCONTINUIDAD
 from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.glosa.panel.panel_ia import PanelIA
-from src.frontend.controladores.biseccion.controlador import calcular_presentacion
+from src.frontend.controladores.raices.biseccion.ejecucion.controlador import calcular_presentacion
 from src.frontend.controladores.raices.biseccion.captura.catalogo_criterios import DECIMALES_PRESENTACION_DEFECTO
 from src.frontend.controladores.biseccion.contexto_biseccion import resumir_contexto_biseccion
 from src.frontend.controladores.biseccion.presentacion_criterio import etiqueta_aproximacion, titulo_estado

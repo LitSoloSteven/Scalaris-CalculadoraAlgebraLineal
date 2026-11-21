@@ -5,7 +5,7 @@ import pytest
 from nicegui import Client, core, ui
 
 from src.frontend.componentes.raices.resultados.tabla_iteraciones import PaginacionIteraciones
-from src.frontend.controladores.biseccion.controlador import resolver_captura
+from src.frontend.controladores.raices.biseccion.ejecucion.controlador import resolver_captura
 from src.frontend.controladores.biseccion.presentacion import COLUMNAS, filas_tabla
 from src.frontend.controladores.biseccion.salidas_biseccion import COLUMNAS_EXAMEN, datos_examen
 from src.frontend.vistas.biseccion.tabla_iteraciones import mostrar_tabla

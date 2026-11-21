@@ -8,7 +8,7 @@ from src.backend.resolutores.raices.biseccion.motor.biseccion import biseccion
 from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import EntradaBiseccion
 from src.backend.resolutores.raices.biseccion.contratos.criterios_biseccion import CriterioParada
 from src.backend.resolutores.raices.continuidad.dominio.dominio_intervalo import comprobar_dominio_intervalo
-from src.frontend.controladores.biseccion.controlador import resolver_captura
+from src.frontend.controladores.raices.biseccion.ejecucion.controlador import resolver_captura
 
 
 def _resolver(expresion, intervalo):
