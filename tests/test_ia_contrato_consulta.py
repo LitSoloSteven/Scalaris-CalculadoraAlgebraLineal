@@ -10,7 +10,7 @@ import pytest
 
 from src.ai.cliente_openrouter import ClienteOpenRouter
 from src.ai.mensajes import SUFIJO_MAS_SIMPLE
-from src.ai.respuestas import OpcionesConsulta, ResultadoIA, TipoErrorIA
+from src.ai.respuestas.respuestas import OpcionesConsulta, ResultadoIA, TipoErrorIA
 from src.ai.textos import CONSULTA_CANCELADA, ERROR_SERVICIO
 from src.frontend.componentes import glosa_envio
 from tests.comun_openrouter import RespuestaSimulada, limpiar_estado_openrouter

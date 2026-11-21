@@ -8,7 +8,7 @@ from unittest.mock import AsyncMock, Mock
 import pytest
 from nicegui import ui
 
-from src.ai.clasificador_respuestas import ContextoIntento, clasificar_error_http
+from src.ai.respuestas.clasificador_respuestas import ContextoIntento, clasificar_error_http
 from src.ai.huellas import calcular_huella
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_vectores.formateadores import (

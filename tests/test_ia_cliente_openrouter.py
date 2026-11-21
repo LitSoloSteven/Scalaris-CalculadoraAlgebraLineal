@@ -3,7 +3,7 @@ import threading
 import requests
 
 from src.ai.cliente_openrouter import ClienteOpenRouter
-from src.ai.respuestas import TipoErrorIA
+from src.ai.respuestas.respuestas import TipoErrorIA
 from tests.comun_openrouter import RespuestaSimulada, limpiar_estado_openrouter
 from tests.comun_openrouter import consultar_con_respuestas_simuladas
 

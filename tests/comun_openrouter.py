@@ -21,7 +21,7 @@ class RespuestaSimulada:
 @pytest.fixture(autouse=True)
 def limpiar_estado_openrouter(monkeypatch):
     """Aísla la caché y los modelos de reserva antes y después de cada caso."""
-    import src.ai.cache_respuestas as modulo_cache
+    import src.ai.respuestas.cache_respuestas as modulo_cache
     with modulo_cache._bloqueo_cache:
         modulo_cache._cache_respuestas.clear()
     monkeypatch.setattr(ClienteOpenRouter, "MODELOS_RESERVA", [])

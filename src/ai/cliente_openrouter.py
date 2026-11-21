@@ -7,8 +7,8 @@ import uuid
 from dotenv import load_dotenv
 import requests
 
-from src.ai.cache_respuestas import calcular_hash_cache, guardar_en_cache, leer_cache
-from src.ai.clasificador_respuestas import (
+from src.ai.respuestas.cache_respuestas import calcular_hash_cache, guardar_en_cache, leer_cache
+from src.ai.respuestas.clasificador_respuestas import (
     ContextoIntento, clasificar_excepcion_red, clasificar_respuesta,
 )
 from src.ai.constantes import (
@@ -19,7 +19,7 @@ from src.ai.constantes import (
 )
 from src.ai.mensajes import construir_mensajes
 from src.ai.presupuesto.presupuesto_mensajes import validar_longitud_mensaje
-from src.ai.respuestas import OpcionesConsulta, ResultadoIA, TipoErrorIA
+from src.ai.respuestas.respuestas import OpcionesConsulta, ResultadoIA, TipoErrorIA
 from src.ai.textos import CONSULTA_CANCELADA, ERROR_SERVICIO
 
 load_dotenv(".env")

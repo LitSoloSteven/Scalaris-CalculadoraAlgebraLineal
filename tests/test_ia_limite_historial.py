@@ -3,7 +3,7 @@ from unittest.mock import AsyncMock
 from unittest.mock import Mock
 import pytest
 from nicegui import ui
-from src.ai.respuestas import ResultadoIA
+from src.ai.respuestas.respuestas import ResultadoIA
 from src.frontend.constantes import MAXIMO_HISTORIAL
 from src.frontend import banderas
 from src.frontend.componentes import glosa_bitacora

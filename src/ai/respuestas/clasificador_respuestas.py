@@ -9,7 +9,7 @@ from src.ai.constantes import (
     TIEMPO_RESTANTE_MINIMO_PARA_REINTENTO,
 )
 
-from src.ai.respuestas import ResultadoIA, TipoErrorIA
+from src.ai.respuestas.respuestas import ResultadoIA, TipoErrorIA
 from src.ai.textos import ERROR_SERVICIO, RESPUESTA_DEMASIADO_EXTENSA
 from src.ai.presupuesto.presupuesto_mensajes import validar_longitud_mensaje
 

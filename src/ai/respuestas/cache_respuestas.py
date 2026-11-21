@@ -4,7 +4,7 @@ import json
 import threading
 
 from src.ai.constantes import CAPACIDAD_MAXIMA_CACHE, TIEMPO_VIDA_CACHE_SEGUNDOS
-from src.ai.respuestas import ResultadoIA
+from src.ai.respuestas.respuestas import ResultadoIA
 
 _bloqueo_cache = threading.Lock()
 _cache_respuestas: dict[str, tuple[ResultadoIA, float]] = {}

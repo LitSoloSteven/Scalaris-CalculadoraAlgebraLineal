@@ -6,7 +6,7 @@ import pytest
 from nicegui import ui
 from nicegui.observables import ObservableDict
 
-from src.ai.respuestas import ResultadoIA, TipoErrorIA
+from src.ai.respuestas.respuestas import ResultadoIA, TipoErrorIA
 from src.frontend.componentes.glosa_envio import EnvioGlosaMixin
 from src.frontend.componentes.glosa_bitacora import _renderizar_mensaje_lateral
 from src.frontend.componentes.panel_ia_clasico import renderizar_mensaje_clasico
