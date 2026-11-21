@@ -4,7 +4,7 @@ from collections.abc import Callable
 from nicegui import ui
 from src.frontend.componentes.sonido import notificar
 
-from src.frontend import textos
+from src.frontend.nucleo.textos import textos
 
 
 def texto_resultado_copiable(resultado: dict) -> str:

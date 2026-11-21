@@ -2,7 +2,7 @@
 from contextlib import contextmanager
 
 from nicegui import ui
-from src.frontend import textos
+from src.frontend.nucleo.textos import textos
 from src.frontend.componentes.reproductor_pasos.textos import formatear_descripcion_html
 from src.frontend.controladores.exportacion_pdf.secuencia import seleccionar_intermedios, seleccionar_comprobaciones
 from .entrada import renderizar_entrada

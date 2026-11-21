@@ -16,7 +16,7 @@ from src.frontend.controladores.sesion_matricial import invalidar_resultado, act
 from src.frontend.navegacion import ruta_de
 from src.frontend.vistas.mixin_sesion_matricial import MixinSesionMatricial
 from src.frontend.vistas.vista_previa_matricial import actualizar_vista_previa
-from src.frontend import textos
+from src.frontend.nucleo.textos import textos
 from .recomendacion_determinante import RecomendacionDeterminante
 from .resultados_determinante import ResultadosDeterminante
 

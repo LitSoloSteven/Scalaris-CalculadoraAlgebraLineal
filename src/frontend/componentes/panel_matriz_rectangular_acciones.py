@@ -11,7 +11,7 @@ from src.frontend.componentes.animacion_matriz import animar_redimension_matriz
 from src.frontend.componentes.portapapeles_matricial import parsear_portapapeles_rectangular
 from src.frontend.componentes.redimension_rectangular import actualizar_rectangulo
 from src.frontend.componentes.tareas import lanzar_tarea
-from src.frontend.textos import CAPTURA_PORTAPAPELES_ERROR, CAPTURA_RECTANGULAR_RECORTADA
+from src.frontend.nucleo.textos.textos import CAPTURA_PORTAPAPELES_ERROR, CAPTURA_RECTANGULAR_RECORTADA
 
 
 class AccionesMatrizRectangular:

@@ -2,7 +2,7 @@
 from html import escape
 
 from nicegui import ui
-from src.frontend import textos
+from src.frontend.nucleo.textos import textos
 
 
 def renderizar_entrada(entrada: dict, herramienta: str) -> None:

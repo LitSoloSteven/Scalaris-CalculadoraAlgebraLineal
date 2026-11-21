@@ -5,7 +5,7 @@ from reportlab.lib.enums import TA_CENTER, TA_LEFT
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.platypus import Paragraph
 from src.frontend.nucleo import constantes as medidas
-from src.frontend import textos
+from src.frontend.nucleo.textos import textos
 from .glifos import texto_admitido
 
 

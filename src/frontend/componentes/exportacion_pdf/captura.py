@@ -3,7 +3,7 @@ import json
 
 from nicegui import ui
 from src.frontend.nucleo import constantes as limites
-from src.frontend import textos
+from src.frontend.nucleo.textos import textos
 
 
 async def capturar_regiones(identificador: str) -> list:

@@ -2,7 +2,7 @@
 from functools import partial
 from nicegui import ui
 
-from src.frontend import textos
+from src.frontend.nucleo.textos import textos
 from src.frontend.componentes.transferencia import guardar_matriz, url_transferencia
 from src.frontend.controladores.destinos_matriz import destinos_compatibles
 from src.frontend.navegacion import herramienta_por_identificador, ruta_de

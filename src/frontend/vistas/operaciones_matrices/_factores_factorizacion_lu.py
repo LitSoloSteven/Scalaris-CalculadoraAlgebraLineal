@@ -2,7 +2,7 @@
 from nicegui import ui
 
 from src.backend.constantes import DIMENSION_MAXIMA_LATEX_INVERSA
-from src.frontend import textos
+from src.frontend.nucleo.textos import textos
 from src.frontend.componentes.reproductor_pasos.cuerpos import renderizar_latex
 from src.frontend.componentes.reproductor_pasos.html_tablas import html_tabla_matriz
 

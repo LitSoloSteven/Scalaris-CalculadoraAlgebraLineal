@@ -2,7 +2,7 @@
 from nicegui import ui
 
 from src.backend.utilidades.formato.formateadores import numero_a_latex, formatear_fraccion_texto
-from src.frontend import textos
+from src.frontend.nucleo.textos import textos
 from src.frontend.componentes.reproductor_pasos.cuerpos import renderizar_latex
 
 

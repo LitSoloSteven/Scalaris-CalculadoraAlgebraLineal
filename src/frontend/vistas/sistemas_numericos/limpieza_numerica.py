@@ -3,7 +3,7 @@ from nicegui import ui
 from src.frontend.controladores.limpieza_captura import (
     campos_vacios, vaciar_campos, retirar_estado_calculado,
 )
-from src.frontend.textos import LIMPIEZA_ESTADO_BASES, LIMPIEZA_ESTADO_ROMANOS
+from src.frontend.nucleo.textos.textos import LIMPIEZA_ESTADO_BASES, LIMPIEZA_ESTADO_ROMANOS
 
 
 class MixinLimpiezaBases:

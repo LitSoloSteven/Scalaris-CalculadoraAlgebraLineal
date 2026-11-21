@@ -7,7 +7,7 @@ from src.backend.constantes import DIMENSION_MAXIMA_MATRICES, DIMENSION_MINIMA
 from src.frontend.componentes.cuadricula_base import propiedades_celda_accesible
 from src.frontend.componentes.panel_matriz_rectangular_acciones import AccionesMatrizRectangular
 from src.frontend.componentes.carga_numerica import preparar_matriz_numerica
-from src.frontend.textos import (CAPTURA_RECTANGULAR_AYUDA, CAPTURA_RECTANGULAR_MATRIZ,
+from src.frontend.nucleo.textos.textos import (CAPTURA_RECTANGULAR_AYUDA, CAPTURA_RECTANGULAR_MATRIZ,
     CAPTURA_RECTANGULAR_PEGAR, CAPTURA_RECTANGULAR_TOOLTIP, CAPTURA_RECTANGULAR_EJES,
     CAPTURA_RECTANGULAR_ACCIONES)
 

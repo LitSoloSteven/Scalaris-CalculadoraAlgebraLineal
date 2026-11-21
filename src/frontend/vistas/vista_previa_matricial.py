@@ -4,7 +4,7 @@ import logging
 from collections.abc import Callable
 
 from nicegui import ui
-from src.frontend.textos import VISTA_PREVIA_ERROR
+from src.frontend.nucleo.textos.textos import VISTA_PREVIA_ERROR
 
 registro = logging.getLogger(__name__)
 

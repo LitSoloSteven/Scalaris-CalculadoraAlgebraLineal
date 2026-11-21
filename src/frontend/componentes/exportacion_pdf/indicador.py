@@ -1,7 +1,7 @@
 """Indicadores de progreso compuestos sin el spinner SVG del botón Quasar."""
 from nicegui import ui
 
-from src.frontend import textos
+from src.frontend.nucleo.textos import textos
 
 
 def crear_indicador():

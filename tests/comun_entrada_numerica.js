@@ -8,7 +8,7 @@ const { cargarAssetCliente } = require('./comun_cliente_javascript.js');
 function configuracionNumerica() {
     const raiz = rutas.join(__dirname, '../src/frontend');
     const constantes = archivos.readFileSync(rutas.join(raiz, 'nucleo/constantes.py'), 'utf8');
-    const textos = archivos.readFileSync(rutas.join(raiz, 'textos.py'), 'utf8');
+    const textos = archivos.readFileSync(rutas.join(raiz, 'nucleo/textos/textos.py'), 'utf8');
     return { caracteres: constantes.match(/CARACTERES_ENTRADA_NUMERICA = "([^"]+)"/)[1],
         mensaje: textos.match(/MENSAJE_ENTRADA_NUMERICA = "([^"]+)"/)[1] };
 }

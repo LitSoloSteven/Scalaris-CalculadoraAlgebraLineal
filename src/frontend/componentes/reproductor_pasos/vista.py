@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from nicegui import ui
-from src.frontend.textos import PASOS_AYUDA_TITULO
+from src.frontend.nucleo.textos.textos import PASOS_AYUDA_TITULO
 
 from src.frontend.componentes.reproductor_pasos.catalogo import html_sugerencia_tipo
 from src.frontend.componentes.reproductor_pasos.controles import construir_controles

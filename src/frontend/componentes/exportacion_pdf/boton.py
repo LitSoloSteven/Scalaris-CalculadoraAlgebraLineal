@@ -2,7 +2,7 @@
 import copy
 
 from nicegui import run, ui
-from src.frontend import textos
+from src.frontend.nucleo.textos import textos
 from src.frontend.componentes.sonido import emitir_sonido
 from src.frontend.controladores.exportacion_pdf.documento import generar_pdf
 from src.frontend.controladores.exportacion_pdf.portada import nombre_archivo

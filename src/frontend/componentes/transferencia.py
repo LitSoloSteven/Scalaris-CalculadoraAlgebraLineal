@@ -14,7 +14,7 @@ from src.backend.utilidades.captura import transferencias
 from src.frontend.nucleo.constantes import MAXIMO_ENTRADAS_TRANSFERENCIA, TIEMPO_VIDA_TRANSFERENCIA_SEGUNDOS
 from src.frontend.navegacion import herramienta_por_identificador
 from src.frontend.controladores.destinos_matriz import LIMITES_DESTINOS_MATRIZ, DESTINOS_MATRIZ_RECTANGULAR
-from src.frontend import textos
+from src.frontend.nucleo.textos import textos
 
 _ALMACEN: dict[str, tuple[float, dict[str, Any]]] = {}
 _BLOQUEO = threading.Lock()

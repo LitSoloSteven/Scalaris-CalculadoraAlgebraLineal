@@ -3,7 +3,7 @@ import asyncio
 
 import pytest
 from nicegui import ui
-from src.frontend import textos
+from src.frontend.nucleo.textos import textos
 from src.frontend.controladores.exportacion_pdf.documento import generar_pdf
 from tests.comun_exportacion_pdf import PORTADA, crear_captura
 from tests.comun_exportacion_algebra import (

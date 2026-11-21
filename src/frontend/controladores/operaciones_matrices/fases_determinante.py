@@ -1,6 +1,6 @@
 """Fases del determinante según eventos y coordenadas de la traza original."""
 from src.backend.utilidades.formato.formateadores import formatear_fraccion_texto
-from src.frontend import textos
+from src.frontend.nucleo.textos import textos
 from src.frontend.controladores.agrupacion_trazas import agrupar_traza
 
 

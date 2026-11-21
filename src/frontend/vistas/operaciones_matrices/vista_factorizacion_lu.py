@@ -1,7 +1,7 @@
 """Vista de captura, sesión y resultados de factorización LU."""
 from nicegui import ui
 
-from src.frontend import textos
+from src.frontend.nucleo.textos import textos
 from src.frontend.componentes.calculadora import PanelCalculadora
 from src.frontend.componentes.cuadricula_base import ubicar_celda_matriz
 from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion

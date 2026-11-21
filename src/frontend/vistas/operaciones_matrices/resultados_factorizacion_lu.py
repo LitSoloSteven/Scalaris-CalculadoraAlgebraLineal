@@ -1,7 +1,7 @@
 """Cálculo vigente y presentación de resultados de factorización LU."""
 from nicegui import ui
 
-from src.frontend import textos
+from src.frontend.nucleo.textos import textos
 from src.frontend.componentes.cuadricula_base import ubicar_celda_matriz
 from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
 from src.frontend.controladores.operaciones_matrices import ControladorFactorizacionLU

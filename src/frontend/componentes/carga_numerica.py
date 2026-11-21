@@ -2,7 +2,7 @@
 from src.frontend.componentes.sonido import notificar
 
 from src.frontend.componentes.portapapeles_matricial import filtrar_matriz_numerica
-from src.frontend.textos import MENSAJE_ENTRADA_NUMERICA
+from src.frontend.nucleo.textos.textos import MENSAJE_ENTRADA_NUMERICA
 
 
 def preparar_matriz_numerica(datos: list[list[str]]) -> list[list[str]]:

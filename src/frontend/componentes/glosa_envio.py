@@ -15,7 +15,7 @@ from src.frontend.componentes.glosa_espera import iniciar_temporizador_cancelar,
 from src.frontend.nucleo import banderas
 from src.frontend.nucleo.constantes import ANTI_REBOTE_GLOSA_SEGUNDOS
 from src.frontend.componentes.historial_glosa import incorporar_mensaje
-from src.frontend.textos import MENSAJE_ANTI_REBOTE_GLOSA
+from src.frontend.nucleo.textos.textos import MENSAJE_ANTI_REBOTE_GLOSA
 
 registro = logging.getLogger(__name__)
 

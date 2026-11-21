@@ -1,7 +1,7 @@
 """Vista previa e historial de capturas completas de modelos matriciales."""
 from nicegui import ui
 
-from src.frontend import textos
+from src.frontend.nucleo.textos import textos
 from src.frontend.componentes.reproductor_pasos.cuerpos import renderizar_latex
 from src.frontend.controladores.operaciones_matrices.contexto_modelos import capturar_modelo
 from src.frontend.controladores.operaciones_matrices.vista_previa_modelos import preparar_vista_previa_modelo

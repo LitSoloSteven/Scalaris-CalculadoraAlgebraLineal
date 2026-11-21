@@ -2,7 +2,7 @@
 import re
 
 import pytest
-from src.frontend import textos
+from src.frontend.nucleo.textos import textos
 from src.frontend.controladores.exportacion_pdf.documento import generar_pdf
 from src.frontend.controladores.exportacion_pdf.figuras import preparar_figuras
 from tests.comun_exportacion_pdf import PORTADA, crear_captura

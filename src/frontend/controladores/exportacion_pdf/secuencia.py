@@ -2,7 +2,7 @@
 from collections.abc import Sequence
 
 from src.frontend.nucleo import constantes
-from src.frontend import textos
+from src.frontend.nucleo.textos import textos
 
 
 def seleccionar_intermedios(pasos: Sequence) -> tuple:

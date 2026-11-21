@@ -16,7 +16,7 @@ from src.frontend.componentes.glosa_foco import crear_accion_explicacion
 from src.frontend.componentes.exportacion_pdf.integracion import region_pdf, completar_exportacion, identificador_raiz
 from src.frontend.controladores.exportacion_pdf.vigencia import EnlacePDF
 from src.frontend.componentes.acciones_matriz import renderizar_acciones_matriz
-from src.frontend import textos
+from src.frontend.nucleo.textos import textos
 from src.frontend.controladores.sesion_matricial import actualizar_contexto
 from src.frontend.controladores.captura_contexto import capturar_matrices, capturar_matrices_documento
 from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente

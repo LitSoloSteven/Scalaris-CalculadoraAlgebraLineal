@@ -1,7 +1,8 @@
 """Registro de clones y obligatoriedad condicional de las comprobaciones de inversa."""
 import pytest
 
-from src.frontend import tema, textos
+from src.frontend import tema
+from src.frontend.nucleo.textos import textos
 from src.frontend.controladores.exportacion_pdf.figuras import preparar_figuras
 from src.frontend.recursos_vistas import seleccionar_recursos
 from tests.comun_exportacion_pdf import crear_captura

@@ -1,7 +1,7 @@
 """Presentacion comun de analisis algebraicos calculados integramente en backend."""
 from nicegui import ui
 from dataclasses import replace
-from src.frontend import textos
+from src.frontend.nucleo.textos import textos
 
 from src.frontend.componentes.glosa_foco import crear_accion_explicacion
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos
