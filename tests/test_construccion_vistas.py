@@ -74,7 +74,7 @@ def test_arnes_matricial_rechaza_resultado_sin_renderizado(monkeypatch):
 @pytest.mark.parametrize("herramienta", ["sistemas", "inversa"])
 def test_transferencia_matricial_monta_y_carga_el_panel(monkeypatch, herramienta):
     """El import diferido y la carga consumen el token sin alias inexistentes."""
-    from src.frontend.componentes.transferencia import guardar_matriz
+    from src.frontend.componentes.resultados.acciones.transferencia import guardar_matriz
     token = guardar_matriz("matrices", [["2", "0"], ["0", "3"]])
 
     async def comprobar(vista, cliente):

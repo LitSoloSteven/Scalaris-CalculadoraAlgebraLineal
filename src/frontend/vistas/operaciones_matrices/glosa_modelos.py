@@ -10,7 +10,7 @@ from ._presentacion_modelos import montar_pasos_modelo
 from .herramientas_modelos import MixinHerramientasModelos
 from src.frontend.componentes.exportacion_pdf.integracion import completar_exportacion, identificador_raiz
 from src.frontend.controladores.exportacion_pdf.vigencia import EnlacePDF
-from src.frontend.componentes.acciones_matriz import renderizar_acciones_matriz
+from src.frontend.componentes.resultados.acciones.acciones_matriz import renderizar_acciones_matriz
 
 
 class MixinGlosaModelos(MixinHerramientasModelos):

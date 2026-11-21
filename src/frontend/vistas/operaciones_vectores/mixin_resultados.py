@@ -112,7 +112,7 @@ class MixinResultadosVectores(MixinPasosVectores):
     def _renderizar_boton_visualizador(self, resultado: dict) -> None:
         if resultado.get("estado") == "ERROR":
             return
-        from src.frontend.componentes.transferencia import url_transferencia, guardar_vectores
+        from src.frontend.componentes.resultados.acciones.transferencia import url_transferencia, guardar_vectores
         from src.frontend.navegacion import ruta_de
         vectores, escena = preparar_transferencia(self.operacion_activa, self._capturar())
         if not vectores:

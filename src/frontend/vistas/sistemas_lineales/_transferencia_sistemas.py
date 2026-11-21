@@ -1,6 +1,6 @@
 """Carga de una matriz transferida a los controles del sistema lineal."""
 from functools import partial
-from src.frontend.componentes.transferencia import recibir_matriz
+from src.frontend.componentes.resultados.acciones.transferencia import recibir_matriz
 
 
 def procesar_transferencia_matriz(vista, token: str) -> None:

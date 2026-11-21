@@ -84,7 +84,7 @@ class VistaOperacionesInversas(MixinResultadosOperacionesInversas, MixinPasosOpe
 
     def _procesar_transferencia_inicial(self, token_transferencia: str) -> None:
         """Recupera la matriz desde navegación entrante si existe token."""
-        from src.frontend.componentes.transferencia import recibir_matriz
+        from src.frontend.componentes.resultados.acciones.transferencia import recibir_matriz
         recibir_matriz(token_transferencia, "inversa", self.panel_matriz_cuadrada.cargar_matriz,
                        self.contenedor_transferencia)
 

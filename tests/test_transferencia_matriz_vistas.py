@@ -4,7 +4,7 @@ from unittest.mock import Mock
 import pytest
 from nicegui import ui
 
-from src.frontend.componentes import transferencia
+from src.frontend.componentes.resultados.acciones import transferencia
 from src.frontend.vistas.sistemas_lineales._transferencia_sistemas import procesar_transferencia_matriz
 from tests.comun_construccion_vistas import construir_pagina, VISTAS_RUTAS
 from tests.comun_transferencia_matriz import (

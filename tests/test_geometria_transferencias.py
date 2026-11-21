@@ -2,7 +2,7 @@
 from unittest.mock import patch
 from tests.comun import limpiar_almacen_transferencia
 
-from src.frontend.componentes.transferencia import (
+from src.frontend.componentes.resultados.acciones.transferencia import (
     ResultadoTransferencia,
     TIEMPO_VIDA_TRANSFERENCIA_SEGUNDOS,
     _ALMACEN,
@@ -40,7 +40,7 @@ def test_consumir_sistema_vencido():
     """El sistema vencido devuelve el estado de expiración."""
     limpiar_almacen_transferencia()
     token = guardar_sistema("test", [["1", "1"]], ["2"])
-    with patch("src.frontend.componentes.transferencia._ahora", return_value=_ahora() + TIEMPO_VIDA_TRANSFERENCIA_SEGUNDOS + 10):
+    with patch("src.frontend.componentes.resultados.acciones.transferencia._ahora", return_value=_ahora() + TIEMPO_VIDA_TRANSFERENCIA_SEGUNDOS + 10):
         resultado = consumir_sistema(token, maximo_ecuaciones=10, dimensiones_permitidas={2, 3})
     assert resultado.estado == "expirada"
 
@@ -91,7 +91,7 @@ def test_consumir_vectores_vencidos():
     """Los vectores vencidos devuelven el estado de expiración."""
     limpiar_almacen_transferencia()
     token = guardar_vectores("test", "vectores", [["1", "0"]])
-    with patch("src.frontend.componentes.transferencia._ahora", return_value=_ahora() + TIEMPO_VIDA_TRANSFERENCIA_SEGUNDOS + 10):
+    with patch("src.frontend.componentes.resultados.acciones.transferencia._ahora", return_value=_ahora() + TIEMPO_VIDA_TRANSFERENCIA_SEGUNDOS + 10):
         resultado = consumir_vectores(token, dimensiones_permitidas={2, 3})
     assert resultado.estado == "expirada"
 
@@ -123,8 +123,8 @@ def test_guardar_y_consumir_matriz():
 
 def test_modulo_transferencias_exporta_funciones():
     """Verifica la exportacion del modulo handoff con funciones en espanol."""
-    import src.frontend.componentes.transferencia
-    assert hasattr(src.frontend.componentes.transferencia, "guardar_sistema")
-    assert hasattr(src.frontend.componentes.transferencia, "consumir_sistema")
-    assert hasattr(src.frontend.componentes.transferencia, "guardar_vectores")
-    assert hasattr(src.frontend.componentes.transferencia, "consumir_vectores")
+    import src.frontend.componentes.resultados.acciones.transferencia
+    assert hasattr(src.frontend.componentes.resultados.acciones.transferencia, "guardar_sistema")
+    assert hasattr(src.frontend.componentes.resultados.acciones.transferencia, "consumir_sistema")
+    assert hasattr(src.frontend.componentes.resultados.acciones.transferencia, "guardar_vectores")
+    assert hasattr(src.frontend.componentes.resultados.acciones.transferencia, "consumir_vectores")

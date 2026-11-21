@@ -2,7 +2,7 @@
 from unittest.mock import MagicMock, Mock
 import pytest
 
-from src.frontend.componentes import transferencia
+from src.frontend.componentes.resultados.acciones import transferencia
 from src.frontend.nucleo.constantes import TIEMPO_VIDA_TRANSFERENCIA_SEGUNDOS
 
 

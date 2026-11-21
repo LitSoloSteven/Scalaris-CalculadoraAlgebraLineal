@@ -4,7 +4,7 @@ from __future__ import annotations
 from src.backend.geometria.preparacion.transferencia import validar_transferencia_escena
 from src.frontend.componentes.captura.nucleo.cuadricula_base import DIMENSION_MINIMA, actualizar_estados_botones_dimension
 from src.backend.constantes import DIMENSION_MAXIMA_VECTORES
-from src.frontend.componentes.transferencia import (
+from src.frontend.componentes.resultados.acciones.transferencia import (
     ResultadoTransferencia, consumir_sistema, consumir_vectores,
     renderizar_aviso_transferencia, limpiar_url_transferencia,
 )

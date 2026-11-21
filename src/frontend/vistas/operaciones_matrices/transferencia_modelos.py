@@ -1,6 +1,6 @@
 """Adaptación de una matriz transferida a la captura de cada modelo."""
 from functools import partial
-from src.frontend.componentes.transferencia import recibir_matriz
+from src.frontend.componentes.resultados.acciones.transferencia import recibir_matriz
 from .carga_modelos import cargar_captura_modelo
 
 

@@ -10,7 +10,7 @@ from src.frontend.controladores.operaciones_inversas.presentacion import prepara
 from src.backend.utilidades.formato.formateadores import formatear_fraccion_texto
 from src.frontend.componentes.reproductor_pasos.html_tablas import html_tabla_matriz
 from src.frontend.componentes.desarrollo_comprobacion import mostrar_desarrollo
-from src.frontend.componentes.acciones_matriz import renderizar_acciones_matriz
+from src.frontend.componentes.resultados.acciones.acciones_matriz import renderizar_acciones_matriz
 from src.frontend.componentes.exportacion_pdf.integracion import region_pdf, completar_exportacion, identificador_raiz
 from src.frontend.controladores.exportacion_pdf.vigencia import EnlacePDF
 
@@ -124,7 +124,7 @@ def _agregar_botones_acciones(resultado: dict, dimension: int) -> None:
             notificar(f"Sistemas de ecuaciones admite hasta {DIMENSION_MAXIMA_SISTEMAS}×{DIMENSION_MAXIMA_SISTEMAS}; tu matriz es de {dimension}×{dimension}.", type='warning')
             return
         datos = [[formatear_fraccion_texto(resultado['inversa'].obtener(r, c)) for c in range(dimension)] for r in range(dimension)]
-        from src.frontend.componentes.transferencia import guardar_matriz, url_transferencia
+        from src.frontend.componentes.resultados.acciones.transferencia import guardar_matriz, url_transferencia
         from src.frontend.navegacion import ruta_de
         token = guardar_matriz('inversa', datos)
         ui.navigate.to(url_transferencia(ruta_de('sistemas'), token))

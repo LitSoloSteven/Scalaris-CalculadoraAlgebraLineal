@@ -5,7 +5,7 @@ import json
 import pytest
 
 from src.frontend.controladores.geometria import ControladorGeometria
-from src.frontend.componentes.transferencia import guardar_vectores, consumir_vectores
+from src.frontend.componentes.resultados.acciones.transferencia import guardar_vectores, consumir_vectores
 from tests.comun import RAIZ, limpiar_almacen_transferencia
 
 

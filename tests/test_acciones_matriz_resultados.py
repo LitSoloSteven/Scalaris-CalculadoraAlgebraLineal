@@ -5,8 +5,8 @@ from urllib.parse import urlsplit
 import pytest
 from nicegui import ui
 
-from src.frontend.componentes import transferencia
-from src.frontend.componentes.acciones_matriz import renderizar_acciones_matriz
+from src.frontend.componentes.resultados.acciones import transferencia
+from src.frontend.componentes.resultados.acciones.acciones_matriz import renderizar_acciones_matriz
 from tests.comun_calculos_vistas import calcular_minimo
 from tests.comun_construccion_vistas import construir_pagina
 from tests.comun_transferencia_matriz import preparar_ruta_lu, activar_boton, token_desde_url

@@ -8,7 +8,7 @@ from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import 
 from src.frontend.componentes.captura.ecuaciones.limpieza_captura import crear_boton_limpieza
 from src.frontend.componentes.panel_ia import PanelIA
 from src.frontend.componentes.captura.paneles.panel_matriz_rectangular import PanelMatrizRectangular
-from src.frontend.componentes.transferencia import recibir_matriz
+from src.frontend.componentes.resultados.acciones.transferencia import recibir_matriz
 from src.frontend.controladores.operaciones_matrices.vista_previa_factorizacion_lu import preparar_presentacion_factorizacion_lu
 from src.frontend.controladores.operaciones_matrices.contexto_factorizacion_lu import obtener_contexto_ia, obtener_senales_ia
 from src.frontend.controladores.sesion_matricial import invalidar_resultado, actualizar_contexto

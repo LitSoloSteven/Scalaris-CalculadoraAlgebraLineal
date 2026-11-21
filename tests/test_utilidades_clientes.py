@@ -1,7 +1,7 @@
 """Contratos de aislamiento y registro de los clientes de pruebas."""
 from tests.comun_clientes import ClienteSimulado, PanelIASimulado
 from tests.comun import limpiar_almacen_transferencia
-from src.frontend.componentes.transferencia import _ALMACEN, guardar_matriz
+from src.frontend.componentes.resultados.acciones.transferencia import _ALMACEN, guardar_matriz
 
 
 def test_cliente_registra_contexto_y_javascript():

@@ -71,7 +71,7 @@ async def ejecutar_trabajador_simulado(funcion, *argumentos, **opciones):
 
 def limpiar_almacen_transferencia():
     """Vacía el almacén de transferencias para aislar un escenario de prueba."""
-    from src.frontend.componentes.transferencia import _ALMACEN
+    from src.frontend.componentes.resultados.acciones.transferencia import _ALMACEN
     _ALMACEN.clear()
 
 

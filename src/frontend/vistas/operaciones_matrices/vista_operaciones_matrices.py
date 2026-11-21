@@ -14,7 +14,7 @@ from src.frontend.componentes.captura.matrices.captura_matrices import PanelCapt
 from src.frontend.navegacion import ruta_de
 from src.frontend.controladores.operaciones_matrices import ControladorOperacionesMatrices
 from src.frontend.controladores.sesion_matricial import actualizar_contexto
-from src.frontend.componentes.transferencia import recibir_matriz
+from src.frontend.componentes.resultados.acciones.transferencia import recibir_matriz
 from src.frontend.vistas.operaciones_matrices.mixin_resultados import MixinResultadosOperacionesMatrices
 
 from .mixin_contexto_matrices import MixinContextoMatrices
@@ -85,7 +85,7 @@ class VistaOperacionesMatrices(MixinResultadosOperacionesMatrices, MixinContexto
             notificar(transferencia["mensaje"], type='warning')
             return
 
-        from src.frontend.componentes.transferencia import url_transferencia, guardar_matriz
+        from src.frontend.componentes.resultados.acciones.transferencia import url_transferencia, guardar_matriz
         from src.frontend.navegacion import ruta_de
         token = guardar_matriz('matrices', transferencia["datos"])
         ui.navigate.to(url_transferencia(ruta_de('inversa'), token))

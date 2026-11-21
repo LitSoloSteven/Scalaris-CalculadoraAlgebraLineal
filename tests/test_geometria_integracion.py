@@ -4,7 +4,7 @@ import json
 import pytest
 from tests.comun import limpiar_almacen_transferencia
 
-from src.frontend.componentes import transferencia
+from src.frontend.componentes.resultados.acciones import transferencia
 from src.frontend.controladores.geometria.controlador_geometria import (
     ControladorGeometria,
 )

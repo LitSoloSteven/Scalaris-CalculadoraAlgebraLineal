@@ -12,7 +12,7 @@ from ._factores_factorizacion_lu import mostrar_factores_lu
 from ._presentacion_factorizacion_lu import montar_reproductor_lu
 from src.frontend.componentes.exportacion_pdf.integracion import region_pdf, completar_exportacion
 from src.frontend.controladores.exportacion_pdf.vigencia import EnlacePDF
-from src.frontend.componentes.acciones_matriz import renderizar_acciones_matriz
+from src.frontend.componentes.resultados.acciones.acciones_matriz import renderizar_acciones_matriz
 
 
 class ResultadosFactorizacionLU:
