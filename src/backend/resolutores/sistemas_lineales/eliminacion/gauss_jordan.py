@@ -1,6 +1,6 @@
 """Resolutor de Gauss-Jordan con forma escalonada reducida y aritmetica exacta."""
 
-from src.backend.resolutores.sistemas_lineales.gauss import ResolutorGauss
+from src.backend.resolutores.sistemas_lineales.eliminacion.gauss import ResolutorGauss
 
 
 class ResolutorGaussJordan(ResolutorGauss):

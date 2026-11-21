@@ -13,7 +13,7 @@ from src.backend.resolutores.operaciones_matrices.transformaciones import Resolu
 from src.backend.resolutores.operaciones_matrices.leontief import ResolutorModeloLeontief
 from src.backend.resolutores.operaciones_vectores.operaciones.combinacion_lineal import ResolutorCombinacionLineal
 from src.backend.resolutores.sistemas_lineales.solucion.comprobacion_sistemas import comprobar_familia
-from src.backend.resolutores.sistemas_lineales.gauss import ResolutorGauss
+from src.backend.resolutores.sistemas_lineales.eliminacion.gauss import ResolutorGauss
 from src.frontend.controladores.sistemas_lineales import ControladorGauss, ControladorGaussJordan
 
 

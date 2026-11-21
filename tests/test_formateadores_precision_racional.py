@@ -5,7 +5,7 @@ from src.backend.resolutores.operaciones_matrices.formateadores import (
     matriz_a_latex, sumar_restar_matriz_a_latex, multiplicar_matriz_a_latex,
 )
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.sistemas_lineales.gauss import ResolutorGauss
+from src.backend.resolutores.sistemas_lineales.eliminacion.gauss import ResolutorGauss
 
 
 def test_fraccion_textual_conserva_denominador_mayor_que_mil():

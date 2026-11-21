@@ -7,8 +7,8 @@ from importlib import import_module
 from src.backend.modelos.matriz import Matriz
 
 MODULOS = {
-    "gauss": ("sistemas_lineales.gauss", "ResolutorGauss"),
-    "gauss_jordan": ("sistemas_lineales.gauss_jordan", "ResolutorGaussJordan"),
+    "gauss": ("sistemas_lineales.eliminacion.gauss", "ResolutorGauss"),
+    "gauss_jordan": ("sistemas_lineales.eliminacion.gauss_jordan", "ResolutorGaussJordan"),
     "operaciones": ("operaciones_matrices.operaciones", "ResolutorOperacionesMatrices"),
     "determinante": ("operaciones_matrices.determinante", "ResolutorDeterminante"),
     "inversa": ("operaciones_matrices.inversa", "ResolutorInversa"),

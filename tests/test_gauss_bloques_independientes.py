@@ -3,8 +3,8 @@ from tests.comun_entradas import copiar_entrada_prueba
 from fractions import Fraction
 import pytest
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.sistemas_lineales.gauss import ResolutorGauss
-from src.backend.resolutores.sistemas_lineales.gauss_jordan import ResolutorGaussJordan
+from src.backend.resolutores.sistemas_lineales.eliminacion.gauss import ResolutorGauss
+from src.backend.resolutores.sistemas_lineales.eliminacion.gauss_jordan import ResolutorGaussJordan
 
 
 def _aumentar_con_identidad(valores, dimension):

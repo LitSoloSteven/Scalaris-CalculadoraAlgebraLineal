@@ -6,7 +6,7 @@ from src.backend.resolutores.operaciones_matrices.formateadores import matriz_a_
 from src.backend.utilidades.validacion.validadores import ValidadorMatriz
 from src.backend.modelos.matriz import Matriz
 from src.frontend.controladores.operaciones_matrices.codificador import CodificadorMatriz
-from src.backend.resolutores.sistemas_lineales.homogeneos import analizar_resultado_homogeneo
+from src.backend.resolutores.sistemas_lineales.eliminacion.homogeneos import analizar_resultado_homogeneo
 from src.backend.resolutores.sistemas_lineales.solucion.comprobacion_sistemas import comprobar_familia
 from src.frontend.controladores.agrupador_pasos import agrupar_pasos_eliminacion
 from src.backend.resolutores.sistemas_lineales.captura.captura import validar_y_construir_aumentada

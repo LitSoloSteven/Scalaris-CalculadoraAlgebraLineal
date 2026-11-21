@@ -25,7 +25,7 @@ from src.backend.resolutores.operaciones_vectores.operaciones.planteamiento impo
     construir_paso_comprobacion,
     construir_pasos_planteamiento,
 )
-from src.backend.resolutores.sistemas_lineales.gauss import ResolutorGauss
+from src.backend.resolutores.sistemas_lineales.eliminacion.gauss import ResolutorGauss
 
 
 def _limpiar_pasos_gauss(pasos_brutos: list[dict], numero_vectores: int) -> list[dict]:

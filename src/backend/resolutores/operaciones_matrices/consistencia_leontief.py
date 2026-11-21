@@ -2,7 +2,7 @@
 from fractions import Fraction
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.sistemas_lineales.gauss import ResolutorGauss
+from src.backend.resolutores.sistemas_lineales.eliminacion.gauss import ResolutorGauss
 
 
 def resolver_balance_singular(matriz: Matriz, demanda: list[Fraction]) -> dict:

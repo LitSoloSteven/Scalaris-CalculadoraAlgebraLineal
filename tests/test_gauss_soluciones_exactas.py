@@ -2,8 +2,8 @@
 from fractions import Fraction
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.sistemas_lineales.gauss import ResolutorGauss
-from src.backend.resolutores.sistemas_lineales.gauss_jordan import ResolutorGaussJordan
+from src.backend.resolutores.sistemas_lineales.eliminacion.gauss import ResolutorGauss
+from src.backend.resolutores.sistemas_lineales.eliminacion.gauss_jordan import ResolutorGaussJordan
 from src.backend.utilidades.formato.formateadores import formatear_fraccion_texto
 
 

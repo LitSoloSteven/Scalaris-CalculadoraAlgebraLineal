@@ -10,7 +10,7 @@ import pytest
 from src.backend.excepciones import ErrorDiscrepanciaDimension, ErrorNumeroInvalido
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_matrices.inversa import ResolutorInversa
-from src.backend.resolutores.sistemas_lineales.gauss import ResolutorGauss
+from src.backend.resolutores.sistemas_lineales.eliminacion.gauss import ResolutorGauss
 from src.backend.resolutores.sistemas_numericos.calculadora_romana import ErrorNumeroRomano
 from src.frontend.controladores.operaciones_matrices.codificador import CodificadorMatriz
 from src.frontend.controladores.utilidades import serializar_matriz

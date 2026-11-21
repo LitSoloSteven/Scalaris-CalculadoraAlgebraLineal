@@ -1,6 +1,6 @@
 """Precisión de soluciones únicas y paramétricas obtenidas por Gauss."""
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.sistemas_lineales.gauss import ResolutorGauss
+from src.backend.resolutores.sistemas_lineales.eliminacion.gauss import ResolutorGauss
 
 
 def test_sustitucion_regresiva_conserva_fracciones_exactas():
