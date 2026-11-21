@@ -6,7 +6,7 @@ from .nodos_derivada import (
     constante as _constante, depende_de_x as _depende_de_x, llamada as _llamada, valor_constante as _valor_constante,
     proteger_derivada,
 )
-from .nodos_integral import NOMBRE_INTEGRAL, construir_integral, signo_infinito, sustituir_variable
+from .nodos_integral import NOMBRE_INTEGRAL, construir_integral, sustituir_variable
 from .notacion_calculo import ANGULARES_RADIANES, GUARDIA_DERIVADA, TRIGONOMETRICAS_INVERSAS
 
 _MENSAJE_POTENCIA_VARIABLE = (
@@ -110,8 +110,6 @@ def _derivar_integral(nodo: ast.Call) -> ast.AST:
 
 
 def _derivar_extremo(cuerpo: ast.AST, variable: ast.Name, limite: ast.AST) -> ast.AST:
-    if signo_infinito(limite):
-        return _constante(0)
     cambio = derivar_nodo(limite)
     if _es_cero(cambio):
         return cambio

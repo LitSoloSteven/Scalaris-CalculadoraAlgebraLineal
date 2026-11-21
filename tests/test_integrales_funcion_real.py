@@ -28,6 +28,8 @@ from src.frontend.controladores.formato_funcion_real import formatear_expresion
     ("∫(exp(−t),t,0,+∞)", 1),
     ("∫(exp(t),t,−∞,0)", 1),
     ("∫(exp(−t)/√(t),t,0,∞)", math.sqrt(math.pi)),
+    ("∫(exp(−t²),t,−1e8,∞)", math.sqrt(math.pi)),
+    ("∫(exp(−t²),t,−∞,1e8)", math.sqrt(math.pi)),
     ("∫(exp(−t²),t,∞,−∞)", -math.sqrt(math.pi)),
     ("∫(1/(1+t²),t,−∞,∞)", math.pi),
     ("∫(t×∫(t,t,0,t),t,0,x)", 2),
