@@ -12,7 +12,7 @@ from .reglas_dominio import (
     validar_datos_transferencia_vectores,
     validar_entrada_base,
 )
-from .utilidades_matematicas import mcd, mcd_lista, mcm, simplificar_fila
+from .formato.utilidades_matematicas import mcd, mcd_lista, mcm, simplificar_fila
 from .validadores import (
     ValidadorMatriz,
     validar_dimensiones_multiplicacion,

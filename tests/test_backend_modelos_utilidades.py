@@ -30,7 +30,7 @@ from src.backend.utilidades.reglas_dominio import (
     validar_datos_transferencia_vectores,
     validar_entrada_base,
 )
-from src.backend.utilidades.utilidades_matematicas import (
+from src.backend.utilidades.formato.utilidades_matematicas import (
     mcd,
     mcd_lista,
     mcm,
