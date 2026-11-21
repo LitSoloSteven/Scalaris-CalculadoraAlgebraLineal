@@ -3,7 +3,7 @@ from fractions import Fraction
 from types import MappingProxyType
 
 from src.backend.constantes import SIN_SOLUCION
-from src.backend.modelos.construcciones import matriz_de_columnas
+from src.backend.modelos.operaciones.construcciones import matriz_de_columnas
 from src.backend.modelos.escalares.conversion_fracciones import convertir_fila_fracciones
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.sistemas_lineales.calculo_solucion import (

@@ -5,7 +5,7 @@ from typing import Any
 from src.backend.constantes import ERROR, EXITO
 from src.backend.excepciones import ErrorVectorInvalido
 from src.backend.modelos.matriz import Matriz, Numerico
-from src.backend.modelos.calculo_matricial import operar_celda
+from src.backend.modelos.operaciones.calculo_matricial import operar_celda
 from src.backend.resolutores.operaciones_vectores.base import (
     _BaseResolutorVectores,
 )

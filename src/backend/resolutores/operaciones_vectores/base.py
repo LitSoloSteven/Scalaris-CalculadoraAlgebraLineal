@@ -2,7 +2,7 @@
 
 from src.backend.excepciones import ErrorVectorInvalido
 from src.backend.modelos.matriz import Matriz
-from src.backend.modelos.construcciones import transpuesta
+from src.backend.modelos.operaciones.construcciones import transpuesta
 from src.backend.resolutores.trazado import TrazadorPasos
 
 

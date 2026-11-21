@@ -3,8 +3,8 @@ from fractions import Fraction
 
 import pytest
 
-from src.backend.modelos.construcciones import identidad
-from src.backend.modelos.calculo_matricial import multiplicar_matrices
+from src.backend.modelos.operaciones.construcciones import identidad
+from src.backend.modelos.operaciones.calculo_matricial import multiplicar_matrices
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.sistemas_lineales.configuracion_reduccion import ConfiguracionReduccion
 from src.backend.resolutores.sistemas_lineales.reduccion import ReductorFilas

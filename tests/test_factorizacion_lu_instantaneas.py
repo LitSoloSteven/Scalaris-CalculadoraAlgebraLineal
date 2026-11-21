@@ -3,7 +3,7 @@ from fractions import Fraction
 
 import pytest
 
-from src.backend.modelos.construcciones import identidad
+from src.backend.modelos.operaciones.construcciones import identidad
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_matrices.factorizacion_lu import factorizar_lu
 

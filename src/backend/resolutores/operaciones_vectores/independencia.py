@@ -1,6 +1,6 @@
 """Independencia lineal por el sistema homogeneo de las columnas capturadas."""
 from src.backend.constantes import DIMENSION_MAXIMA_VECTORES
-from src.backend.modelos.construcciones import matriz_de_columnas
+from src.backend.modelos.operaciones.construcciones import matriz_de_columnas
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.sistemas_lineales.homogeneos import resolver_homogeneo
 from src.backend.resolutores.operaciones_matrices.comprobacion_productos import crear_paso_analisis

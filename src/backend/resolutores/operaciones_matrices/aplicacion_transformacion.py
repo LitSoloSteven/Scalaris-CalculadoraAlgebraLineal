@@ -4,7 +4,7 @@ from fractions import Fraction
 
 from src.backend.excepciones import ErrorDiscrepanciaDimension
 from src.backend.modelos.matriz import Matriz
-from src.backend.modelos.calculo_matricial import multiplicar_matrices
+from src.backend.modelos.operaciones.calculo_matricial import multiplicar_matrices
 from src.backend.geometria.coordenadas import a_flotante_seguro
 from src.backend.utilidades.formateadores import numero_a_latex
 from .comprobacion_productos import crear_paso_analisis

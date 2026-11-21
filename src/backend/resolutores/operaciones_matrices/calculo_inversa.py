@@ -1,7 +1,7 @@
 """Inversion pura sobre el motor compartido de Gauss-Jordan."""
 from collections.abc import Callable
 
-from src.backend.modelos.construcciones import aumentar_con_identidad
+from src.backend.modelos.operaciones.construcciones import aumentar_con_identidad
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_matrices.calculo_determinante import triangular_y_determinante
 from src.backend.resolutores.sistemas_lineales.configuracion_reduccion import ConfiguracionReduccion

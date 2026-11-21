@@ -1,5 +1,5 @@
 """Comprobaciones exactas con desarrollo de cada celda del producto."""
-from src.backend.modelos.calculo_matricial import multiplicar_matrices
+from src.backend.modelos.operaciones.calculo_matricial import multiplicar_matrices
 from src.backend.modelos.matriz import Matriz
 from .formateadores import matriz_a_latex
 from .presentacion_producto import describir_producto_celda

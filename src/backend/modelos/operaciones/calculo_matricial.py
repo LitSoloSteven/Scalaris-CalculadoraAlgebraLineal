@@ -2,7 +2,7 @@
 from fractions import Fraction
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.modelos.construcciones import identidad
+from src.backend.modelos.operaciones.construcciones import identidad
 from src.backend.utilidades.validadores import validar_dimensiones_multiplicacion, validar_mismas_dimensiones
 
 

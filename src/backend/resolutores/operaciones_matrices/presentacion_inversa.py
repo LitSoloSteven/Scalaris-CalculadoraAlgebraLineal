@@ -1,7 +1,7 @@
 """Presentacion de pasos y comprobaciones numericas de una inversa."""
 from src.backend.constantes import EXITO
 from src.backend.modelos.matriz import Matriz
-from src.backend.modelos.calculo_matricial import es_identidad
+from src.backend.modelos.operaciones.calculo_matricial import es_identidad
 from src.backend.resolutores.operaciones_matrices.formateadores import matriz_a_latex, matriz_particionada_a_latex
 
 

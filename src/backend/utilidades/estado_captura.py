@@ -1,5 +1,5 @@
 """Reglas de presencia y dimensiones de la captura matricial."""
-from src.backend.modelos.construcciones import identidad
+from src.backend.modelos.operaciones.construcciones import identidad
 from src.backend.constantes import (
     DIMENSION_MAXIMA_SISTEMAS, DIMENSION_MAXIMA_LATEX_INVERSA, DIMENSION_CONFIRMACION_INVERSA,
 )

@@ -2,7 +2,7 @@
 from src.backend.constantes import ERROR, SINGULAR
 from src.backend.constantes import DIMENSION_MAXIMA_LATEX_INVERSA
 from src.backend.modelos.matriz import Matriz
-from src.backend.modelos.construcciones import identidad
+from src.backend.modelos.operaciones.construcciones import identidad
 from .comprobacion_productos import comprobar_producto, desarrollar_producto
 from src.backend.resolutores.operaciones_matrices.calculo_inversa import calcular_inversa
 from src.backend.resolutores.operaciones_matrices.formateadores import matriz_particionada_a_latex

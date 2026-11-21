@@ -6,7 +6,7 @@ import pytest
 from src.backend.constantes import DIMENSION_MAXIMA_COFACTORES, LONGITUD_MAXIMA_NOMBRE_MODELO
 from src.backend.geometria.muestreo import extremos_recta, TOLERANCIA_CERO_GRAFICO
 from src.backend.geometria.recorte import recortar_recta_a_caja
-from src.backend.modelos.construcciones import identidad
+from src.backend.modelos.operaciones.construcciones import identidad
 from src.backend.resolutores.operaciones_matrices.captura_modelos import validar_nombres
 from src.backend.resolutores.operaciones_matrices.determinante import ResolutorDeterminante
 

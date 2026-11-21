@@ -5,8 +5,8 @@ from typing import Any
 
 from src.backend.constantes import DIMENSION_MAXIMA_MATRICES, DIMENSION_MINIMA, EXITO
 from src.backend.modelos.matriz import Matriz
-from src.backend.modelos.construcciones import identidad
-from src.backend.modelos.calculo_matricial import multiplicar_matrices
+from src.backend.modelos.operaciones.construcciones import identidad
+from src.backend.modelos.operaciones.calculo_matricial import multiplicar_matrices
 from src.backend.resolutores.sistemas_lineales.configuracion_reduccion import ConfiguracionReduccion
 from src.backend.resolutores.sistemas_lineales.reduccion import ReductorFilas
 from .pasos_determinante import RegistroPasosDeterminante
