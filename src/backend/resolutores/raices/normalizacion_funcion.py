@@ -5,8 +5,9 @@ import tokenize
 from unicodedata import normalize
 
 from .limites_biseccion import LONGITUD_MAXIMA_EXPRESION
+from .notacion_calculo import AGREGADOS, POSTFIJOS, envolver_postfijo
 
-_OPERADORES = {"+", "-", "*", "/", "**", "^", "(", ")"}
+_OPERADORES = {"+", "-", "*", "/", "**", "^", "(", ")", ","}
 _OMITIDOS = {tokenize.NL, tokenize.NEWLINE, tokenize.ENDMARKER}
 _DIGITOS_SUPERIORES = "⁰¹²³⁴⁵⁶⁷⁸⁹"
 _SUPERINDICES = str.maketrans(_DIGITOS_SUPERIORES + "⁺⁻", "0123456789+-")
@@ -16,6 +17,7 @@ _SIMBOLOS = str.maketrans({
     "−": "-", "×": "*", "·": "*", "⋅": "*", "∙": "*",
     "÷": "/", "⁄": "/", "∕": "/", "√": " sqrt", "∛": " cbrt", "∜": " raiz4",
     "π": " pi ", "ℯ": " e ",
+    **{simbolo: " " + nombre for simbolo, nombre in AGREGADOS.items()},
     **{fraccion: "(" + normalize("NFKC", fraccion).replace("⁄", "/") + ")" for fraccion in _FRACCIONES},
 })
 
@@ -24,12 +26,16 @@ def normalizar_expresion(expresion: str) -> str:
     """Devuelve sintaxis explícita; lanza ValueError ante símbolos o longitud inválidos."""
     _comprobar_longitud(expresion)
     texto = expresion.translate(_SIMBOLOS).strip()
-    texto = _POTENCIA_TIPOGRAFICA.sub(lambda grupo: "**" + grupo[0].translate(_SUPERINDICES), texto)
+    texto = _POTENCIA_TIPOGRAFICA.sub(_explicitar_potencia, texto)
     _comprobar_longitud(texto)
     tokens = _obtener_tokens(texto)
     partes = []
     anterior = None
     for actual in tokens:
+        if actual.string in POSTFIJOS:
+            envolver_postfijo(partes, actual.string)
+            anterior = actual._replace(type=tokenize.OP, string=")")
+            continue
         if anterior is not None and _requiere_producto(anterior, actual):
             partes.append("*")
         elif anterior is not None and _requiere_espacio(anterior, actual):
@@ -39,6 +45,12 @@ def normalizar_expresion(expresion: str) -> str:
     normalizada = "".join(partes)
     _comprobar_longitud(normalizada)
     return normalizada
+
+
+def _explicitar_potencia(grupo: re.Match[str]) -> str:
+    exponente = grupo[0].translate(_SUPERINDICES)
+    resto = grupo.string[grupo.end():].lstrip()
+    return f"**({exponente})" if resto[:1] in ("′", "″") else "**" + exponente
 
 
 def _comprobar_longitud(expresion: str) -> None:
@@ -67,6 +79,10 @@ def _token_admitido(token: tokenize.TokenInfo) -> bool:
         return True
     if token.type == tokenize.OP and token.string in _OPERADORES:
         return True
+    if token.type == tokenize.ERRORTOKEN and token.string in POSTFIJOS:
+        return True
+    if token.type == tokenize.ERRORTOKEN and token.string in (" ", "\t"):
+        return False
     raise ValueError("La expresión contiene un símbolo u operación no permitidos.")
 
 
