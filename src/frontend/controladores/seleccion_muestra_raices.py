@@ -1,6 +1,6 @@
 """Validación de eventos nativos contra la curva vigente del servidor."""
 from math import isfinite
-from src.frontend.controladores.captura_real import real_capturado
+from src.frontend.controladores.raices.compartido.formato.captura_real import real_capturado
 
 
 def abscisa_muestreada(datos: object, muestra: dict, identidad: str) -> float | None:

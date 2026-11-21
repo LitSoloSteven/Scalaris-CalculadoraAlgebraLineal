@@ -1,7 +1,7 @@
 """Conversión del rango visual compartido por herramientas de raíces."""
 import math
 
-from src.frontend.controladores.captura_real import real_capturado
+from src.frontend.controladores.raices.compartido.formato.captura_real import real_capturado
 
 RANGO_GRAFICA_DEFECTO = (-10, 10)
 LONGITUD_CAMPO_GRAFICA = 64

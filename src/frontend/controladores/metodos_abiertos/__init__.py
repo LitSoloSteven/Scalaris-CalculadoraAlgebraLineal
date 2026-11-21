@@ -6,7 +6,7 @@ from collections.abc import Mapping
 from src.backend.resolutores.raices.metodos_abiertos import (
     EntradaMetodoAbierto, newton, secante, validar_entrada_abierta,
 )
-from src.frontend.controladores.captura_real import entero_capturado, real_capturado
+from src.frontend.controladores.raices.compartido.formato.captura_real import entero_capturado, real_capturado
 
 LONGITUD_MAXIMA_NUMERICA = 64
 _ETIQUETAS_NUMERICAS = {

@@ -11,7 +11,7 @@ from src.frontend.componentes.raices.graficos.figura_funcion_real import crear_b
 from src.frontend.nucleo.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
 from src.frontend.controladores.compartido.sesion.actualizacion_cancelable import cancelar_actualizacion, programar_actualizacion
 from src.frontend.controladores.biseccion.muestreo import separar_intervalo_sospechoso
-from src.frontend.controladores.captura_real import real_capturado
+from src.frontend.controladores.raices.compartido.formato.captura_real import real_capturado
 from src.frontend.controladores.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
 from src.frontend.controladores.metodos_cerrados.adaptadores import BISECCION
 from src.frontend.controladores.rango_exploracion_raices import RANGO_GRAFICA_DEFECTO, rango_evento_distinto, rango_grafica

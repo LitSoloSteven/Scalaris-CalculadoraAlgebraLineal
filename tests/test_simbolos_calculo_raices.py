@@ -9,7 +9,7 @@ from src.backend.resolutores.raices.continuidad.dominio.dominio_intervalo import
 from src.backend.resolutores.raices.funcion_real.evaluacion.evaluador_funcion import compilar
 from src.backend.resolutores.raices.metodos_abiertos import derivar_expresion
 from src.backend.resolutores.raices.funcion_real.evaluacion.normalizacion_funcion import normalizar_expresion
-from src.frontend.controladores.captura_real import real_capturado
+from src.frontend.controladores.raices.compartido.formato.captura_real import real_capturado
 from src.frontend.controladores.formato_funcion_real import formatear_expresion
 from src.frontend.controladores.metodos_abiertos import resolver_captura
 

@@ -4,7 +4,7 @@ from dataclasses import asdict
 from src.backend.resolutores.raices.exploracion.base.contrato_exploracion import EntradaExploracion
 from src.backend.resolutores.raices.exploracion.busqueda.exploracion_intervalos import explorar_intervalos
 from src.backend.resolutores.raices.exploracion.base.limites_exploracion import MAXIMO_EVALUACIONES_REFINAMIENTO
-from src.frontend.controladores.captura_real import real_capturado
+from src.frontend.controladores.raices.compartido.formato.captura_real import real_capturado
 from src.frontend.controladores.formato_numerico_raices import numero, texto_intervalo
 from src.frontend.controladores.rango_exploracion_raices import RANGO_GRAFICA_DEFECTO, rango_grafica
 
