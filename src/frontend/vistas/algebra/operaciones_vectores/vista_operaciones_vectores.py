@@ -13,7 +13,8 @@ from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import 
 from src.frontend.componentes.captura.vectores.captura_vectores import PanelCapturaVectores
 from src.frontend.navegacion import ruta_de
 from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto
-from . import contexto, controles
+from src.frontend.vistas.algebra.operaciones_vectores.panel import contexto
+from src.frontend.vistas.algebra.operaciones_vectores.panel import controles
 from .mixin_resultados import MixinResultadosVectores
 from src.frontend.controladores.algebra.operaciones_vectores.captura import (
     capturar_vectores, resolver_captura,

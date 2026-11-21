@@ -12,7 +12,7 @@ from src.backend.resolutores.operaciones_vectores.operaciones.operaciones import
 from src.frontend.controladores.algebra.operaciones_vectores import (
     ControladorOperacionesVectores,
 )
-from src.frontend.vistas.operaciones_vectores._pasos_reproductor import (
+from src.frontend.vistas.algebra.operaciones_vectores.panel._pasos_reproductor import (
     construir_pasos_combinacion_lineal,
     construir_pasos_vector_basico,
 )
@@ -202,9 +202,9 @@ def test_controlador_conserva_claves_contratadas():
 def test_textos_vectoriales_sin_raya_larga_ni_voseo():
     """Los módulos vectoriales mantienen textos directos en español."""
     archivos_a_comprobar = [
-        Path("src/frontend/vistas/operaciones_vectores/_pasos_reproductor.py"),
-        Path("src/frontend/vistas/operaciones_vectores/mixin_pasos.py"),
-        Path("src/frontend/vistas/operaciones_vectores/mixin_resultados.py"),
+        Path("src/frontend/vistas/algebra/operaciones_vectores/panel/_pasos_reproductor.py"),
+        Path("src/frontend/vistas/algebra/operaciones_vectores/panel/mixin_pasos.py"),
+        Path("src/frontend/vistas/algebra/operaciones_vectores/mixin_resultados.py"),
         Path("src/frontend/controladores/algebra/operaciones_vectores/controlador_operaciones_vectores.py"),
     ]
 

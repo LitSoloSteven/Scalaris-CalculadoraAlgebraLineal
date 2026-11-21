@@ -150,9 +150,20 @@ def test_panel_captura_y_herramienta_unicos(vista_vectorial_montada):
     assert vista.obtener_contexto_ia().herramienta == vista.obtener_senales_ia().herramienta == "vectores"
 
 
+_VISTAS_VECTORES = (
+    "algebra/operaciones_vectores/__init__.py",
+    "algebra/operaciones_vectores/mixin_resultados.py",
+    "algebra/operaciones_vectores/vista_operaciones_vectores.py",
+    "algebra/operaciones_vectores/panel/_pasos_reproductor.py",
+    "algebra/operaciones_vectores/panel/contexto.py",
+    "algebra/operaciones_vectores/panel/controles.py",
+    "algebra/operaciones_vectores/panel/mixin_pasos.py",
+)
+
+
 def test_vistas_delegan_dominio_y_transferencia():
     """Las vistas no construyen números/matrices ni importan el preparador de dominio."""
-    for ruta in (RAIZ / "src/frontend/vistas/operaciones_vectores").glob("*.py"):
+    for ruta in (RAIZ / "src/frontend/vistas" / relativo for relativo in _VISTAS_VECTORES):
         arbol = ast.parse(ruta.read_text(encoding="utf-8"))
         llamadas = {nodo.func.id for nodo in ast.walk(arbol) if isinstance(nodo, ast.Call) and isinstance(nodo.func, ast.Name)}
         assert not llamadas & {"Fraction", "Matriz", "float", "preparar_vectores_visualizador"}

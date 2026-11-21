@@ -91,7 +91,7 @@ def test_pestana_nueva_retira_resultado_sin_perder_celdas(vista_vectorial_montad
 
 def test_fallo_imprevisto_restaura_boton_y_no_registra_datos(monkeypatch, caplog, vista_vectorial_montada):
     """Un fallo deja el cálculo disponible y registra solo un diagnóstico genérico."""
-    from src.frontend.vistas.operaciones_vectores import vista_operaciones_vectores as modulo
+    from src.frontend.vistas.algebra.operaciones_vectores import vista_operaciones_vectores as modulo
     vista = vista_vectorial_montada
     monkeypatch.setattr(modulo, "resolver_captura", Mock(side_effect=RuntimeError("dato privado ficticio")))
     avisos = Mock()

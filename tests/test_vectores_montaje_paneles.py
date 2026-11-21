@@ -2,8 +2,8 @@
 import pytest
 from nicegui import ui
 
-from src.frontend.vistas.operaciones_vectores.vista_operaciones_vectores import VistaOperacionesVectores
-from src.frontend.vistas.operaciones_vectores import controles
+from src.frontend.vistas.algebra.operaciones_vectores.vista_operaciones_vectores import VistaOperacionesVectores
+from src.frontend.vistas.algebra.operaciones_vectores.panel import controles
 
 
 @pytest.mark.parametrize("metodo,nombre_panel", [

@@ -145,7 +145,7 @@ def test_vistas_sanean_resultados_y_contienen_contenido_ancho():
     assert "overflow-wrap: anywhere;" in bloque_css(css_sesion, '.sesion-numero') and "sesion-numero" in resultados_lineales
     assert "min-w-0 max-w-full" in resultados_lineales
 
-    resultados_vectoriales = Path("src/frontend/vistas/operaciones_vectores/mixin_resultados.py").read_text(encoding="utf-8")
+    resultados_vectoriales = Path("src/frontend/vistas/algebra/operaciones_vectores/mixin_resultados.py").read_text(encoding="utf-8")
     assert "matematicas-desplazamiento" in resultados_vectoriales
     assert "html.escape(coeficientes)" in resultados_vectoriales
     assert "html.escape(solucion)" in resultados_vectoriales

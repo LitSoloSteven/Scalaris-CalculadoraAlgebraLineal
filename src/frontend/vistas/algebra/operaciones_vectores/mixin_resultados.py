@@ -4,12 +4,12 @@ import html
 from nicegui import ui
 
 from src.frontend.controladores.algebra.operaciones_vectores.captura import preparar_transferencia
-from ._pasos_reproductor import construir_pasos_combinacion_lineal, construir_pasos_vector_basico
-from .mixin_pasos import MixinPasosVectores, OpcionesReproductorVectores
+from src.frontend.vistas.algebra.operaciones_vectores.panel._pasos_reproductor import construir_pasos_combinacion_lineal, construir_pasos_vector_basico
+from src.frontend.vistas.algebra.operaciones_vectores.panel.mixin_pasos import MixinPasosVectores, OpcionesReproductorVectores
 from src.frontend.componentes.resultados.analisis.presentacion_analisis import montar_analisis
 from src.frontend.componentes.exportacion_pdf.montaje.integracion import region_pdf, completar_exportacion
 from src.frontend.controladores.exportacion_pdf.documento.vigencia import EnlacePDF
-from .contexto import entrada_actual
+from src.frontend.vistas.algebra.operaciones_vectores.panel.contexto import entrada_actual
 
 
 class MixinResultadosVectores(MixinPasosVectores):

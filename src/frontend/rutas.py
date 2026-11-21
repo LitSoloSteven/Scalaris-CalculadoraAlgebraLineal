@@ -50,7 +50,7 @@ def _registrar_paginas_algebra() -> None:
     @ui.page(ruta_de("vectores"), title=herramienta_por_identificador("vectores").titulo_pagina)
     def pagina_vectores():
         """Construye la página de vectores con sus controles y contexto."""
-        from src.frontend.vistas.operaciones_vectores.vista_operaciones_vectores import VistaOperacionesVectores
+        from src.frontend.vistas.algebra.operaciones_vectores.vista_operaciones_vectores import VistaOperacionesVectores
 
         configurar_tema("vectores")
         VistaOperacionesVectores().construir()
