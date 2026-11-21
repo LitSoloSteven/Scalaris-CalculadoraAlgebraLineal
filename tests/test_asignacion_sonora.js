@@ -13,7 +13,7 @@ function preparar() {
     const ventana = { scalaris: { sonido: { reproducir: nombre => sonidos.push(nombre) } } };
     const entorno = { window: ventana, document: documento };
     const cargar = nombre => ejecutar(leerArchivo(`src/frontend/recursos/js/${nombre}.js`, 'utf8'), entorno);
-    ['catalogo_sonidos', 'asignacion_sonora', 'interacciones_sonoras', 'sonido_escritura'].forEach(cargar);
+    ['sonido/motor/catalogo_sonidos', 'sonido/motor/asignacion_sonora', 'sonido/eventos/interacciones_sonoras', 'sonido/eventos/sonido_escritura'].forEach(cargar);
     return { documento, ventana, sonidos, resolver: ventana.scalaris.asignacionSonora.resolver };
 }
 

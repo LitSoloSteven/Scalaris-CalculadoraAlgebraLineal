@@ -12,10 +12,10 @@ function preparar() {
     const sonidos = [];
     const ventana = { scalaris: { sonido: { reproducir: nombre => sonidos.push(nombre) } } };
     const entorno = { window: ventana, document: documento };
-    for (const nombre of ['catalogo_sonidos', 'asignacion_sonora']) {
+    for (const nombre of ['sonido/motor/catalogo_sonidos', 'sonido/motor/asignacion_sonora']) {
         ejecutar(leerArchivo(`src/frontend/recursos/js/${nombre}.js`, 'utf8'), entorno);
     }
-    const cargar = () => ejecutar(leerArchivo('src/frontend/recursos/js/sonido_escritura.js', 'utf8'), entorno);
+    const cargar = () => ejecutar(leerArchivo('src/frontend/recursos/js/sonido/eventos/sonido_escritura.js', 'utf8'), entorno);
     cargar();
     return { documento, sonidos, ventana, cargar };
 }

@@ -13,7 +13,7 @@ function preparar() {
     const ventana = { scalaris: { sonido: { reproducir: nombre => { sonidos.push(nombre); return true; } } } };
     const entorno = { window: ventana, document: documento };
     const cargar = nombre => ejecutar(leerArchivo(`src/frontend/recursos/js/${nombre}.js`, 'utf8'), entorno);
-    ['catalogo_sonidos', 'eventos_sonoros'].forEach(cargar);
+    ['sonido/motor/catalogo_sonidos', 'sonido/eventos/eventos_sonoros'].forEach(cargar);
     return { documento, ventana, sonidos, cargar };
 }
 
@@ -22,7 +22,7 @@ test('Glosa usa su evento para abrir cerrar y Escape sin depender del clic', () 
     for (const abierto of [true, false, false]) caso.documento.emitir('scalaris:glosa', { detail: { abierto } });
     caso.documento.emitir('scalaris:glosa', { detail: {} });
     comprobar.deepEqual(caso.sonidos, ['glosa_abrir', 'glosa_cerrar', 'glosa_cerrar']);
-    caso.cargar('eventos_sonoros');
+    caso.cargar('sonido/eventos/eventos_sonoros');
     comprobar.equal(caso.documento.contar('scalaris:glosa'), 1);
     caso.ventana.scalaris.eventosSonoros.destruir();
     comprobar.equal(caso.documento.contar('scalaris:glosa'), 0);

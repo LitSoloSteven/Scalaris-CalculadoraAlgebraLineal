@@ -14,10 +14,10 @@ _ALGEBRA = frozenset({"sistemas", "vectores", "matrices", "inversa", "determinan
 _VISTAS = _INICIO | _NUMERICAS | _ALGEBRA | _RAICES
 _EXPORTACION_PDF = _ALGEBRA | _NUMERICAS
 _POR_RECURSO = {
-    "catalogo_sonidos.js": _VISTAS,
-    "sintesis_sonora.js": _VISTAS,
-    "asignacion_sonora.js": _VISTAS,
-    "eventos_sonoros.js": _VISTAS,
+    "sonido/motor/catalogo_sonidos.js": _VISTAS,
+    "sonido/motor/sintesis_sonora.js": _VISTAS,
+    "sonido/motor/asignacion_sonora.js": _VISTAS,
+    "sonido/eventos/eventos_sonoros.js": _VISTAS,
     "utilidades/exportacion_pdf.css": _EXPORTACION_PDF,
     "clon_pdf.js": _EXPORTACION_PDF,
     "captura_pdf.js": _EXPORTACION_PDF,

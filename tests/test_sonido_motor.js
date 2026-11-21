@@ -64,9 +64,9 @@ function preparar(opciones = {}) {
     if (opciones.sinAudio) delete ventana.AudioContext;
     const entorno = { window: ventana, document: documento, performance: { now: () => ahora } };
     const cargar = nombre => ejecutar(leerArchivo(`src/frontend/recursos/js/${nombre}.js`, 'utf8'), entorno);
-    cargar('catalogo_sonidos');
-    cargar('sintesis_sonora');
-    cargar('sonido');
+    cargar('sonido/motor/catalogo_sonidos');
+    cargar('sonido/motor/sintesis_sonora');
+    cargar('sonido/motor/sonido');
     return { documento, ventana, contextos, cargar, avanzar: cantidad => { ahora += cantidad; },
         motor: ventana.scalaris.sonido,
         activar: () => documento.emitir('pointerdown', { isTrusted: true }) };
@@ -164,7 +164,7 @@ test('pagehide libera el contexto y una vuelta desde caché exige otro gesto', (
 test('recargar el motor elimina listeners y no acumula contextos', () => {
     const caso = preparar();
     caso.activar();
-    caso.cargar('sonido');
+    caso.cargar('sonido/motor/sonido');
     comprobar.equal(caso.contextos[0].state, 'closed');
     comprobar.equal(caso.documento.contar('pointerdown'), 1);
     caso.ventana.scalaris.sonido.destruir();

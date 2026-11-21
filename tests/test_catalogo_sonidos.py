@@ -65,8 +65,8 @@ def test_asignaciones_solo_referencian_perfiles_conocidos():
                                  'determinantes', 'bases', 'romanos', 'visualizador', 'leontief', 'transformaciones'])
 def test_orden_de_recursos_sonoros_en_cada_vista(vista):
     """Todos los consumidores reciben la configuración y dependencias una sola vez."""
-    nombres = ['catalogo_sonidos', 'sintesis_sonora', 'asignacion_sonora', 'sonido', 'eventos_sonoros',
-               'preferencia_sonido', 'interacciones_sonoras', 'sonido_escritura']
+    nombres = ['sonido/motor/catalogo_sonidos', 'sonido/motor/sintesis_sonora', 'sonido/motor/asignacion_sonora', 'sonido/motor/sonido', 'sonido/eventos/eventos_sonoros',
+               'sonido/eventos/preferencia_sonido', 'sonido/eventos/interacciones_sonoras', 'sonido/eventos/sonido_escritura']
     cabecera = seleccionar_recursos(_CABECERA_HTML, vista)
     posiciones = [cabecera.index(f'/assets/js/{nombre}.js') for nombre in nombres]
     assert posiciones == sorted(posiciones)

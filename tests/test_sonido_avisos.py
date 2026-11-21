@@ -123,7 +123,7 @@ def test_navegacion_e_inicio_montan_el_mismo_control(monkeypatch, actualizada, r
                                  'visualizador', 'leontief', 'transformaciones'])
 def test_recursos_sonoros_se_cargan_una_vez_en_todas_las_vistas(vista):
     """La selección de recursos conserva el orden de motor, preferencia y consumidores."""
-    nombres = ['catalogo_sonidos.js', 'sonido.js', 'preferencia_sonido.js', 'interacciones_sonoras.js']
+    nombres = ['sonido/motor/catalogo_sonidos.js', 'sonido/motor/sonido.js', 'sonido/eventos/preferencia_sonido.js', 'sonido/eventos/interacciones_sonoras.js']
     cabecera = seleccionar_recursos(_CABECERA_HTML, vista)
     posiciones = [cabecera.index('/assets/js/' + nombre) for nombre in nombres]
     assert posiciones == sorted(posiciones)
