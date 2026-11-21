@@ -45,3 +45,4 @@ htmlcov/git add .
 .nicegui
 /.agents/
 /graphify-out/
+/relevos/automatizados/
