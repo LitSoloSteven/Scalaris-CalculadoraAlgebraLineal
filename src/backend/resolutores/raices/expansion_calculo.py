@@ -21,7 +21,7 @@ _MENSAJE_PRESUPUESTO = "La expresión contiene demasiadas operaciones al desarro
 
 def desarrollar_calculo(arbol: ast.Expression, maximo: int, unidad: str) -> ast.Expression:
     """Devuelve el AST desarrollado; lanza ValueError si el cálculo excede el presupuesto."""
-    return ast.Expression(body=_Expansion(maximo, unidad).expandir(arbol.body, {}))
+    return ast.Expression(body=_Expansion(maximo, unidad)._expandir(arbol.body, {}))
 
 
 class _Expansion:
@@ -29,17 +29,17 @@ class _Expansion:
         self._maximo = self._restante = maximo
         self._unidad = unidad
 
-    def expandir(self, nodo: ast.AST, indices: dict[str, int], en_derivada: bool = False) -> ast.AST:
+    def _expandir(self, nodo: ast.AST, indices: dict[str, int], en_derivada: bool = False) -> ast.AST:
         self._consumir()
         if isinstance(nodo, ast.Name) and nodo.id in indices:
             return constante(indices[nodo.id])
         if isinstance(nodo, ast.BinOp):
             return ast.BinOp(
-                left=self.expandir(nodo.left, indices, en_derivada), op=nodo.op,
-                right=self.expandir(nodo.right, indices, en_derivada),
+                left=self._expandir(nodo.left, indices, en_derivada), op=nodo.op,
+                right=self._expandir(nodo.right, indices, en_derivada),
             )
         if isinstance(nodo, ast.UnaryOp):
-            return ast.UnaryOp(op=nodo.op, operand=self.expandir(nodo.operand, indices, en_derivada))
+            return ast.UnaryOp(op=nodo.op, operand=self._expandir(nodo.operand, indices, en_derivada))
         if isinstance(nodo, ast.Call):
             return self._expandir_llamada(nodo, indices, en_derivada)
         return nodo
@@ -48,9 +48,9 @@ class _Expansion:
         nombre = nodo.func.id
         if nombre in (_SUMATORIA, _PRODUCTORIA):
             return self._expandir_agregado(nodo, indices, en_derivada)
-        argumento = self.expandir(nodo.args[0], indices, en_derivada or nombre in DERIVADAS)
+        argumento = self._expandir(nodo.args[0], indices, en_derivada or nombre in DERIVADAS)
         if nombre == GUARDIA_DERIVADA:
-            return proteger_derivada(argumento, self.expandir(nodo.args[1], indices, en_derivada))
+            return proteger_derivada(argumento, self._expandir(nodo.args[1], indices, en_derivada))
         if nombre in DERIVADAS:
             return self._expandir_derivada(argumento, DERIVADAS[nombre])
         if nombre == _GRADOS:
@@ -63,7 +63,7 @@ class _Expansion:
         indice, inferior, superior, expresion = nodo.args
         operador = ast.Add if nodo.func.id == _SUMATORIA else ast.Mult
         terminos = (
-            self.expandir(expresion, {**indices, indice.id: valor}, en_derivada)
+            self._expandir(expresion, {**indices, indice.id: valor}, en_derivada)
             for valor in range(entero_literal(inferior), entero_literal(superior) + 1)
         )
         resultado = next(terminos)

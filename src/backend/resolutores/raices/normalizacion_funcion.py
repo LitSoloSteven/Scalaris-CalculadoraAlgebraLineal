@@ -30,6 +30,12 @@ def normalizar_expresion(expresion: str) -> str:
     texto = _POTENCIA_TIPOGRAFICA.sub(_explicitar_potencia, texto)
     _comprobar_longitud(texto)
     tokens = _obtener_tokens(texto.translate(_SEPARAR_POSTFIJOS).strip())
+    normalizada = _unir_tokens(tokens)
+    _comprobar_longitud(normalizada)
+    return normalizada
+
+
+def _unir_tokens(tokens: list[tokenize.TokenInfo]) -> str:
     partes = []
     anterior = None
     for actual in tokens:
@@ -37,17 +43,20 @@ def normalizar_expresion(expresion: str) -> str:
             envolver_postfijo(partes, actual.string)
             anterior = actual._replace(type=tokenize.OP, string=")")
             continue
-        if actual.string == ")" and anterior is not None and anterior.string == ",":
-            raise ValueError("Escribe un argumento después de la última coma.")
-        if anterior is not None and _requiere_producto(anterior, actual):
-            partes.append("*")
-        elif anterior is not None and _requiere_espacio(anterior, actual):
-            partes.append(" ")
-        partes.append("**" if actual.type == tokenize.OP and actual.string == "^" else actual.string)
+        _anexar_token(partes, anterior, actual)
         anterior = actual
-    normalizada = "".join(partes)
-    _comprobar_longitud(normalizada)
-    return normalizada
+    return "".join(partes)
+
+
+def _anexar_token(partes: list[str], anterior: tokenize.TokenInfo | None, actual: tokenize.TokenInfo) -> None:
+    if anterior is not None:
+        if actual.string == ")" and anterior.string == ",":
+            raise ValueError("Escribe un argumento después de la última coma.")
+        if _requiere_producto(anterior, actual):
+            partes.append("*")
+        elif _requiere_espacio(anterior, actual):
+            partes.append(" ")
+    partes.append("**" if actual.type == tokenize.OP and actual.string == "^" else actual.string)
 
 
 def _explicitar_potencia(grupo: re.Match[str]) -> str:
@@ -76,17 +85,17 @@ def _token_admitido(token: tokenize.TokenInfo) -> bool:
         raise ValueError("Escribe una sola expresión; usa paréntesis para continuarla en otra línea.")
     if token.type in _OMITIDOS:
         return False
-    if token.type == tokenize.NUMBER:
-        return True
-    if token.type == tokenize.NAME and re.fullmatch(r"[A-Za-z_][A-Za-z_0-9]*", token.string):
-        return True
-    if token.type == tokenize.OP and token.string in _OPERADORES:
-        return True
-    if token.string in POSTFIJOS:
+    if token.type == tokenize.NUMBER or token.string in POSTFIJOS or _nombre_u_operador(token):
         return True
     if token.type == tokenize.ERRORTOKEN and token.string in (" ", "\t"):
         return False
     raise ValueError("La expresión contiene un símbolo u operación no permitidos.")
+
+
+def _nombre_u_operador(token: tokenize.TokenInfo) -> bool:
+    if token.type == tokenize.NAME:
+        return re.fullmatch(r"[A-Za-z_][A-Za-z_0-9]*", token.string) is not None
+    return token.type == tokenize.OP and token.string in _OPERADORES
 
 
 def _requiere_producto(anterior: tokenize.TokenInfo, actual: tokenize.TokenInfo) -> bool:
