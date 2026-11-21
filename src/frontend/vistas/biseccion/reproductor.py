@@ -6,7 +6,7 @@ from asyncio import Task
 from nicegui import background_tasks, ui
 
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos
-from src.frontend.componentes.reproductor_pasos.temporizacion import reiniciar_espera
+from src.frontend.componentes.reproductor_pasos.nucleo.temporizacion import reiniciar_espera
 from .movimiento import REGISTRAR_ENTRADA, modalidad_puntero, vincular_envio
 
 _TOKEN_PASO = {"Rápida": "--dur-panel", "Normal": "--dur-view", "Lenta": "--dur-didactic"}

@@ -8,7 +8,7 @@ from nicegui import ui
 
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.trazado import TrazadorPasos
-from src.frontend.componentes.reproductor_pasos.modelo import PasoReproductor
+from src.frontend.componentes.reproductor_pasos.nucleo.modelo import PasoReproductor
 from src.frontend.controladores.utilidades import parsear_carga_json
 from src.frontend.vistas.operaciones_matrices._cuerpo_reproductor_matrices import renderizar_cuerpo_matrices
 from tests.comun_caracterizacion_backend import ejecutar_caso

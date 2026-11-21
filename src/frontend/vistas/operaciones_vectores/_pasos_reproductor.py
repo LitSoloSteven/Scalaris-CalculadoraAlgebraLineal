@@ -11,7 +11,7 @@ from nicegui import ui
 from src.frontend.componentes.reproductor_pasos.cuerpos import CuerpoLatex
 from src.frontend.componentes.reproductor_pasos.textos import limpiar_latex_plano
 from src.frontend.controladores.operaciones_vectores.presentacion_pasos import construir_tabla_paso_vectorial
-from src.frontend.componentes.reproductor_pasos.modelo import GrupoReproductor, PasoReproductor
+from src.frontend.componentes.reproductor_pasos.nucleo.modelo import GrupoReproductor, PasoReproductor
 
 
 class _CuerpoTexto:

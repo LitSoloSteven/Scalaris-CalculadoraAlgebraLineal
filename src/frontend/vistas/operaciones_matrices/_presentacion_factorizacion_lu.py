@@ -5,7 +5,7 @@ from src.frontend.nucleo.textos import textos
 from src.frontend.componentes.glosa.interaccion.glosa_foco import crear_accion_explicacion
 from src.frontend.componentes.resultados.analisis.presentacion_analisis import adaptar_analisis
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos
-from src.frontend.componentes.reproductor_pasos.modelo import GrupoReproductor
+from src.frontend.componentes.reproductor_pasos.nucleo.modelo import GrupoReproductor
 
 _FASES = {"planteamiento": 0, "inicial": 1, "pivote": 1, "intercambio": 1,
           "eliminacion": 1, "resultado": 2, "operacion": 3, "verificacion": 3}

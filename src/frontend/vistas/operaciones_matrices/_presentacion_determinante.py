@@ -5,7 +5,7 @@ from src.frontend.controladores.operaciones_matrices.fases_determinante import a
 from src.frontend.controladores.operaciones_matrices.foco_determinante import construir_meta_determinante
 
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos
-from src.frontend.componentes.reproductor_pasos.modelo import GrupoReproductor, PasoReproductor
+from src.frontend.componentes.reproductor_pasos.nucleo.modelo import GrupoReproductor, PasoReproductor
 from src.frontend.componentes.reproductor_pasos.cuerpos import renderizar_latex
 from src.frontend.componentes.reproductor_pasos.html_tablas import html_tabla_aumentada
 from src.frontend.componentes.glosa.interaccion.glosa_foco import crear_accion_explicacion

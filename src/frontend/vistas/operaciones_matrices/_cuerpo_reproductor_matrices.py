@@ -1,6 +1,6 @@
 """Presentación de suboperaciones y detalle diferido de matrices."""
 from nicegui import ui
-from src.frontend.componentes.reproductor_pasos.modelo import PasoReproductor
+from src.frontend.componentes.reproductor_pasos.nucleo.modelo import PasoReproductor
 from src.frontend.componentes.reproductor_pasos import renderizar_latex
 
 

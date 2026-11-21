@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 from nicegui import ui
 from src.frontend.nucleo.textos.textos import PASOS_INDICE_TITULO
 
-from src.frontend.componentes.reproductor_pasos.catalogo import html_sugerencia_tipo
+from src.frontend.componentes.reproductor_pasos.nucleo.catalogo import html_sugerencia_tipo
 from src.frontend.componentes.reproductor_pasos.controles import vincular_accion
 
 if TYPE_CHECKING:

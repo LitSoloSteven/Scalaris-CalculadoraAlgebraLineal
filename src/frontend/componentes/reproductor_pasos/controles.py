@@ -4,7 +4,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 from nicegui import ui
 
-from src.frontend.componentes.reproductor_pasos.catalogo import MULTIPLICADORES_LECTURA
+from src.frontend.componentes.reproductor_pasos.nucleo.catalogo import MULTIPLICADORES_LECTURA
 
 if TYPE_CHECKING:
     from src.frontend.componentes.reproductor_pasos.reproductor import ReproductorPasos

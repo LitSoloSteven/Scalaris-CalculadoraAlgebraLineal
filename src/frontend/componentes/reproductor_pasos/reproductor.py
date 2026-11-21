@@ -11,14 +11,14 @@ from typing import Any
 
 from nicegui import ui
 
-from src.frontend.componentes.reproductor_pasos.catalogo import (
+from src.frontend.componentes.reproductor_pasos.nucleo.catalogo import (
     intervalo_lectura,
     html_sugerencia_tipo,
 )
-from src.frontend.componentes.reproductor_pasos.modelo import GrupoReproductor, PasoReproductor
+from src.frontend.componentes.reproductor_pasos.nucleo.modelo import GrupoReproductor, PasoReproductor
 from src.frontend.componentes.reproductor_pasos.vista import construir_vista
-from .opciones import OpcionesReproductor
-from .temporizacion import reiniciar_espera
+from .nucleo.opciones import OpcionesReproductor
+from .nucleo.temporizacion import reiniciar_espera
 from .textos import formatear_descripcion_html, limpiar_latex_plano
 
 

@@ -6,7 +6,7 @@ from unittest.mock import Mock
 from nicegui import Client, core, ui
 
 from src.frontend.componentes.reproductor_pasos import PasoReproductor, ReproductorPasos
-from src.frontend.componentes.reproductor_pasos.temporizacion import reiniciar_espera
+from src.frontend.componentes.reproductor_pasos.nucleo.temporizacion import reiniciar_espera
 
 
 def test_reinicio_retira_espera_anterior_y_no_avanza_inmediatamente(monkeypatch):

@@ -7,7 +7,7 @@ from functools import partial
 from ._cuerpo_numerico import _CuerpoNumerico
 
 
-from src.frontend.componentes.reproductor_pasos.modelo import (
+from src.frontend.componentes.reproductor_pasos.nucleo.modelo import (
     GrupoReproductor,
     PasoReproductor,
 )

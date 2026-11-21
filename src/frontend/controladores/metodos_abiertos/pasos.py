@@ -1,5 +1,5 @@
 """Secuencias de procedimiento para la interfaz de métodos abiertos."""
-from src.frontend.componentes.reproductor_pasos.modelo import GrupoReproductor, PasoReproductor
+from src.frontend.componentes.reproductor_pasos.nucleo.modelo import GrupoReproductor, PasoReproductor
 
 
 def construir_secuencia(datos: dict) -> tuple[tuple[PasoReproductor, ...], tuple[GrupoReproductor, ...]]:

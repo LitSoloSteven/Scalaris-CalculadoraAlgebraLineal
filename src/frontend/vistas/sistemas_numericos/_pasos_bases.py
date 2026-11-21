@@ -6,7 +6,7 @@ from typing import Any
 from functools import partial
 from src.backend.resolutores.sistemas_numericos.pasos_didacticos import calcular_subtotal_expansion
 
-from src.frontend.componentes.reproductor_pasos.modelo import (
+from src.frontend.componentes.reproductor_pasos.nucleo.modelo import (
     GrupoReproductor,
     PasoReproductor,
 )

@@ -9,8 +9,8 @@ from typing import Any, Sequence
 
 from src.backend.modelos.matriz import Matriz
 from src.backend.constantes import DECIMALES_VISUALIZACION
-from src.frontend.componentes.reproductor_pasos.catalogo import DIMENSION_MAXIMA_FRACCIONES_APILADAS
-from .opciones import OpcionesTablaAumentada
+from src.frontend.componentes.reproductor_pasos.nucleo.catalogo import DIMENSION_MAXIMA_FRACCIONES_APILADAS
+from .nucleo.opciones import OpcionesTablaAumentada
 
 
 def _filas_matriz(matriz: Matriz) -> int:

@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 from typing import Mapping
 
-from src.frontend.componentes.reproductor_pasos.modelo import GrupoReproductor, PasoReproductor
+from src.frontend.componentes.reproductor_pasos.nucleo.modelo import GrupoReproductor, PasoReproductor
 
 
 @dataclass(frozen=True)
