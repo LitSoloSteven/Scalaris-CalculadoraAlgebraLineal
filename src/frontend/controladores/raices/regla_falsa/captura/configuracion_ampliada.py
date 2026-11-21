@@ -6,7 +6,7 @@ from src.backend.resolutores.raices.regla_falsa.contratos.contrato_regla_falsa_a
 from src.backend.resolutores.raices.regla_falsa.contratos.criterios_regla_falsa import validar_criterio_regla_falsa
 from src.frontend.controladores.raices.biseccion.captura.catalogo_criterios import CRITERIOS
 from src.frontend.controladores.raices.compartido.formato.captura_real import entero_capturado, real_capturado
-from .captura import preparar_entrada
+from src.frontend.controladores.raices.regla_falsa.captura.captura import preparar_entrada
 
 
 def criterio_capturado(captura: Mapping[str, object]):

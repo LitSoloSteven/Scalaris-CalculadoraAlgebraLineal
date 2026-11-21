@@ -2,7 +2,7 @@
 from nicegui import ui
 
 from src.frontend.controladores.raices.biseccion.captura.catalogo_criterios import CRITERIOS, condicion_criterio
-from src.frontend.controladores.regla_falsa.configuracion_ampliada import criterio_capturado
+from src.frontend.controladores.raices.regla_falsa.captura.configuracion_ampliada import criterio_capturado
 
 
 def construir_selector(vista) -> None:

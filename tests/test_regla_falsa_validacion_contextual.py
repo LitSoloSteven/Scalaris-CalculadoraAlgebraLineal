@@ -1,7 +1,7 @@
 """Validación delegada al dominio con errores por campo y sin alterar contratos del cálculo."""
 import pytest
 
-from src.frontend.controladores.regla_falsa.validacion_contextual import errores_captura
+from src.frontend.controladores.raices.regla_falsa.captura.validacion_contextual import errores_captura
 from tests.comun_regla_falsa_vista import captura_regla_falsa, ejecutar_escenario
 
 

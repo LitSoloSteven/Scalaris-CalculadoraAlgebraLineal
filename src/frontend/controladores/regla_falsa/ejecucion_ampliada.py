@@ -5,9 +5,9 @@ from dataclasses import asdict
 from src.backend.resolutores.raices.regla_falsa.contratos.contrato_regla_falsa import ResultadoReglaFalsa
 from src.backend.resolutores.raices.regla_falsa.motor.regla_falsa_ampliada import resolver_regla_falsa_configurada
 from src.backend.resolutores.raices.regla_falsa.lote.sugerencias_regla_falsa import sugerir_acciones_regla_falsa
-from .configuracion_ampliada import preparar_configuracion
+from src.frontend.controladores.raices.regla_falsa.captura.configuracion_ampliada import preparar_configuracion
 from .controlador import resolver_captura_tipado
-from .serializacion import serializar_resultado
+from src.frontend.controladores.raices.regla_falsa.captura.serializacion import serializar_resultado
 
 
 def resolver_presentacion(captura: dict) -> dict:

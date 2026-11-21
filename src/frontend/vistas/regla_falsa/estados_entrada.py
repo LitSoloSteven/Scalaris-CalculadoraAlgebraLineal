@@ -1,7 +1,7 @@
 """Errores junto al campo y foco de la primera corrección pendiente."""
 from nicegui import ui
 
-from src.frontend.controladores.regla_falsa.validacion_contextual import errores_captura
+from src.frontend.controladores.raices.regla_falsa.captura.validacion_contextual import errores_captura
 from .estado_captura import CAMPOS
 
 

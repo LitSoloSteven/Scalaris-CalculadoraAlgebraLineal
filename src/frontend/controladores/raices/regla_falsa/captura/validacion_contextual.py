@@ -3,9 +3,9 @@ from src.backend.resolutores.raices.compartido.validacion_raices import validar_
 from src.backend.resolutores.raices.compartido.unidades_angulares import validar_unidad_angular
 from src.frontend.controladores.raices.compartido.formato.captura_real import real_capturado
 from src.frontend.controladores.raices.compartido.formato.formato_funcion_real import formatear_expresion
-from .captura import preparar_entrada
-from .continuidad_intervalo import CLAVES_CONTINUIDAD
-from .configuracion_ampliada import criterio_capturado
+from src.frontend.controladores.raices.regla_falsa.captura.captura import preparar_entrada
+from src.frontend.controladores.raices.regla_falsa.captura.continuidad_intervalo import CLAVES_CONTINUIDAD
+from src.frontend.controladores.raices.regla_falsa.captura.configuracion_ampliada import criterio_capturado
 
 
 def errores_captura(captura: dict) -> dict[str, str]:

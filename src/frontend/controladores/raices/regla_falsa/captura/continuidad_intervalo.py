@@ -2,8 +2,8 @@
 import json
 
 from src.backend.resolutores.raices.regla_falsa.motor.preparacion_regla_falsa import preparar_intervalo_regla_falsa
-from .captura import preparar_entrada
-from .serializacion import serializar_resultado
+from src.frontend.controladores.raices.regla_falsa.captura.captura import preparar_entrada
+from src.frontend.controladores.raices.regla_falsa.captura.serializacion import serializar_resultado
 
 CLAVES_CONTINUIDAD = ("expresion", "extremo_izquierdo", "extremo_derecho", "unidad_angular")
 

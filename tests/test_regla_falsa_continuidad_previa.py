@@ -5,7 +5,7 @@ import json
 import pytest
 from nicegui import run
 
-from src.frontend.controladores.regla_falsa.continuidad_intervalo import consultar_continuidad
+from src.frontend.controladores.raices.regla_falsa.captura.continuidad_intervalo import consultar_continuidad
 from tests.comun_regla_falsa_vista import captura_regla_falsa, ejecutar_escenario
 
 

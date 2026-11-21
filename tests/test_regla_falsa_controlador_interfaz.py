@@ -8,9 +8,9 @@ import pytest
 
 from src.backend.resolutores.raices.regla_falsa.contratos.contrato_regla_falsa import ResultadoReglaFalsa
 from src.backend.resolutores.raices.regla_falsa.motor.regla_falsa import regla_falsa
-from src.frontend.controladores.regla_falsa.captura import preparar_entrada
+from src.frontend.controladores.raices.regla_falsa.captura.captura import preparar_entrada
 from src.frontend.controladores.regla_falsa.controlador import resolver_captura
-from src.frontend.controladores.regla_falsa.serializacion import serializar_resultado
+from src.frontend.controladores.raices.regla_falsa.captura.serializacion import serializar_resultado
 
 
 def _captura():

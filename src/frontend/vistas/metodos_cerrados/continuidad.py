@@ -9,7 +9,7 @@ from src.frontend.controladores.compartido.sesion.actualizacion_cancelable impor
 from src.frontend.controladores.raices.biseccion.ejecucion.continuidad_intervalo import consultar_continuidad as consultar_biseccion
 from src.frontend.controladores.raices.compartido.ejecucion.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
 from src.frontend.controladores.metodos_cerrados.adaptadores import BISECCION, REGLA_FALSA
-from src.frontend.controladores.regla_falsa.continuidad_intervalo import CLAVES_CONTINUIDAD, consultar_continuidad
+from src.frontend.controladores.raices.regla_falsa.captura.continuidad_intervalo import CLAVES_CONTINUIDAD, consultar_continuidad
 
 _REGISTRO = logging.getLogger(__name__)
 _CONSULTAS = {BISECCION: consultar_biseccion, REGLA_FALSA: consultar_continuidad}

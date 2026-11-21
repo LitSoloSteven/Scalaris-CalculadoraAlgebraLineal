@@ -3,7 +3,7 @@ import json
 
 import pytest
 
-from src.frontend.controladores.regla_falsa.configuracion_ampliada import preparar_configuracion
+from src.frontend.controladores.raices.regla_falsa.captura.configuracion_ampliada import preparar_configuracion
 from src.frontend.controladores.regla_falsa.presentacion_grafica import calcular_presentacion
 from src.frontend.controladores.regla_falsa.presentacion_ampliada import datos_criterio
 from src.frontend.controladores.regla_falsa.salidas_regla_falsa import datos_copia_configurada
