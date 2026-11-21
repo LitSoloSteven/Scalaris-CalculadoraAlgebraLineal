@@ -4,7 +4,7 @@ from collections.abc import Callable
 from nicegui import ui
 
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos
-from src.frontend.controladores.metodos_abiertos.pasos import construir_secuencia
+from src.frontend.controladores.raices.metodos_abiertos.pasos import construir_secuencia
 from .procedimiento import renderizar_iteracion, renderizar_resumen_paso
 from .resumen import mostrar_resumen
 from .tabla import TablaIteraciones
