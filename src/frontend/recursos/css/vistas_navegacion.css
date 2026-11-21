@@ -112,7 +112,6 @@ html[data-entrada="teclado"] .navegacion-accion::after {
     color: var(--accent) !important;
     box-shadow: var(--elev-inset) !important;
 }
-
 .navegacion-accion.navegacion-activa::after {
     opacity: 0 !important;
 }
@@ -201,14 +200,16 @@ html[data-entrada="teclado"] .navegacion-accion::after {
     outline-offset: 2px;
 }
 
-.navegacion-centro[data-opciones-despues] .navegacion-elementos {
-    mask-image: linear-gradient(to right, var(--text-main) calc(100% - 12px), transparent);
-}
-.navegacion-centro[data-opciones-antes] .navegacion-elementos {
-    mask-image: linear-gradient(to right, transparent, var(--text-main) 12px);
-}
-.navegacion-centro[data-opciones-antes][data-opciones-despues] .navegacion-elementos {
-    mask-image: linear-gradient(to right, transparent, var(--text-main) 12px, var(--text-main) calc(100% - 12px), transparent);
+@media (min-width: 560px) {
+    .navegacion-centro[data-opciones-despues] .navegacion-elementos {
+        mask-image: linear-gradient(to right, var(--text-main) calc(100% - 12px), transparent);
+    }
+    .navegacion-centro[data-opciones-antes] .navegacion-elementos {
+        mask-image: linear-gradient(to right, transparent, var(--text-main) 12px);
+    }
+    .navegacion-centro[data-opciones-antes][data-opciones-despues] .navegacion-elementos {
+        mask-image: linear-gradient(to right, transparent, var(--text-main) 12px, var(--text-main) calc(100% - 12px), transparent);
+    }
 }
 
 @container barra-navegacion (min-width: 960px) {
@@ -223,13 +224,11 @@ html[data-entrada="teclado"] .navegacion-accion::after {
         height: auto;
         max-height: none;
     }
-
     .navegacion-centro {
         flex-direction: column;
         align-items: stretch;
         gap: 0;
     }
-
     .navegacion-seccion {
         align-self: center;
         height: auto;
@@ -262,10 +261,11 @@ html[data-entrada="teclado"] .navegacion-accion::after {
     .navegacion-capsula {
         padding-inline: var(--space-2);
     }
-
+    .navegacion-recorrido { padding-inline: var(--space-2); }
     .navegacion-elemento {
         max-inline-size: 100%;
         height: auto;
+        min-height: 2.75rem;
         gap: var(--space-1);
         padding: var(--space-1) var(--space-2);
         font-size: var(--fs-small);
