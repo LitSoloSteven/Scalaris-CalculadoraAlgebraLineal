@@ -3,7 +3,7 @@ import logging
 
 from nicegui import ui
 from src.frontend.componentes.avisos_resultado import mostrar_error_inesperado
-from src.frontend.componentes.limpieza_captura import LimpiezaCaptura
+from src.frontend.componentes.captura.ecuaciones.limpieza_captura import LimpiezaCaptura
 
 from src.frontend.controladores.sesion_matricial import (
     actualizar_contexto, cancelar_vista_previa, describir_registro,

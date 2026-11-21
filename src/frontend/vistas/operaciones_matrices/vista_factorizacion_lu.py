@@ -5,7 +5,7 @@ from src.frontend.nucleo.textos import textos
 from src.frontend.componentes.captura.paneles.calculadora import PanelCalculadora
 from src.frontend.componentes.captura.nucleo.cuadricula_base import ubicar_celda_matriz
 from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
-from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
+from src.frontend.componentes.captura.ecuaciones.limpieza_captura import crear_boton_limpieza
 from src.frontend.componentes.panel_ia import PanelIA
 from src.frontend.componentes.captura.paneles.panel_matriz_rectangular import PanelMatrizRectangular
 from src.frontend.componentes.transferencia import recibir_matriz

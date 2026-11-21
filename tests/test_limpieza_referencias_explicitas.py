@@ -6,7 +6,7 @@ from unittest.mock import AsyncMock, Mock
 import pytest
 from nicegui import ui
 
-from src.frontend.componentes.limpieza_captura import LimpiezaCaptura
+from src.frontend.componentes.captura.ecuaciones.limpieza_captura import LimpiezaCaptura
 
 
 def test_limpieza_envia_referencias_y_restaura_despues_de_vaciar(monkeypatch):

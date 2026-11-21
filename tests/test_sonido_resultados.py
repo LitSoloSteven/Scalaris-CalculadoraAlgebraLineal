@@ -7,7 +7,8 @@ from unittest.mock import AsyncMock, Mock
 import pytest
 
 from src.ai.respuestas.respuestas import ResultadoIA, TipoErrorIA
-from src.frontend.componentes import glosa_envio, limpieza_captura
+from src.frontend.componentes import glosa_envio
+from src.frontend.componentes.captura.ecuaciones import limpieza_captura
 from src.frontend.componentes.exportacion_pdf import boton as pdf
 
 

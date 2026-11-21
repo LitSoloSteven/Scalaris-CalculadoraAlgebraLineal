@@ -1,7 +1,7 @@
 """Ejemplos, limpieza y restauración explícita de cálculos de esta sesión."""
 from nicegui import ui
 
-from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
+from src.frontend.componentes.captura.ecuaciones.limpieza_captura import crear_boton_limpieza
 from src.frontend.vistas.biseccion.acciones_captura import desplegable
 from .ejemplos import EJEMPLOS
 from src.frontend.controladores.regla_falsa.presentacion_ampliada import descripcion_captura

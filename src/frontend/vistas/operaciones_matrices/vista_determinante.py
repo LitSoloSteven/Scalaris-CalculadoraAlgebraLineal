@@ -2,7 +2,7 @@
 from nicegui import ui
 
 from src.backend.utilidades.captura.estado_captura import captura_vacia
-from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
+from src.frontend.componentes.captura.ecuaciones.limpieza_captura import crear_boton_limpieza
 from src.frontend.componentes.captura.paneles.calculadora import PanelCalculadora
 from src.frontend.componentes.aplicacion.controles.selector_opciones import SelectorOpciones
 from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion

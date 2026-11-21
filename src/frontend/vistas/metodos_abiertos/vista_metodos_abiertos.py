@@ -4,7 +4,7 @@ from nicegui import ui
 from src.frontend.componentes.campo_funcion_real import crear_campo_funcion
 from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.estructura_metodos_raices import montar_estructura_metodos_raices
-from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
+from src.frontend.componentes.captura.ecuaciones.limpieza_captura import crear_boton_limpieza
 from src.frontend.componentes.aplicacion.controles.selector_opciones import SelectorOpciones
 from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
 from src.frontend.controladores.metodos_abiertos import LONGITUD_MAXIMA_NUMERICA, resolver_captura

@@ -1,6 +1,6 @@
 """Montaje de pestañas, entradas y acciones de la herramienta vectorial."""
 from nicegui import ui
-from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
+from src.frontend.componentes.captura.ecuaciones.limpieza_captura import crear_boton_limpieza
 from src.frontend.componentes.aplicacion.controles.selector_opciones import SelectorOpciones
 from src.frontend.nucleo.textos.textos import OPCIONES_OPERACIONES_VECTORES, NOMBRE_SELECTOR_VECTORES
 

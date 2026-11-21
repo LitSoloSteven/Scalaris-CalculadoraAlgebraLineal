@@ -19,7 +19,7 @@ from src.frontend.componentes.captura.nucleo.cuadricula_base import (
 from src.backend.resolutores.sistemas_lineales.captura.exportacion_ecuaciones import exportar_ecuaciones_desde_datos
 from src.backend.constantes import DIMENSION_MAXIMA_SISTEMAS
 from .redimension_ecuaciones import crear_fila_ecuaciones, redimensionar_ecuaciones, actualizar_presentacion
-from .captura.nucleo.carga_numerica import preparar_matriz_numerica
+from src.frontend.componentes.captura.nucleo.carga_numerica import preparar_matriz_numerica
 
 
 def _renderizar_cabecera_columnas(numero_columnas: int) -> ui.row:

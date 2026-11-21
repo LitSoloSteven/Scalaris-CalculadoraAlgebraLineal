@@ -2,10 +2,10 @@
 from __future__ import annotations
 
 from nicegui import ui
-from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
+from src.frontend.componentes.captura.ecuaciones.limpieza_captura import crear_boton_limpieza
 from src.frontend.nucleo.textos.textos import LIMPIEZA_VISUALIZAR
 from src.backend.geometria.preparacion.transferencia import LIMITES_VECTORES_ESCENA
-from src.frontend.componentes.cuadricula_ecuaciones import CuadriculaEcuaciones
+from src.frontend.componentes.captura.ecuaciones.cuadricula_ecuaciones import CuadriculaEcuaciones
 from src.frontend.controladores.geometria.captura import construir_carga_sistema, construir_carga_vectores
 from ._panel_vectores import PanelVectoresGeometria
 

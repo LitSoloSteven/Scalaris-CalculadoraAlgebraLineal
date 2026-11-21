@@ -2,7 +2,7 @@
 
 from nicegui import ui
 from src.frontend.nucleo.textos import textos_transformaciones as textos
-from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
+from src.frontend.componentes.captura.ecuaciones.limpieza_captura import crear_boton_limpieza
 from .limpieza_modelos import MixinLimpiezaModelos
 
 from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion

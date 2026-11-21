@@ -2,7 +2,7 @@
 from nicegui import ui
 
 from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import D_MAXIMO, LIMITE_ITERACIONES_DEFECTO
-from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
+from src.frontend.componentes.captura.ecuaciones.limpieza_captura import crear_boton_limpieza
 from src.frontend.controladores.biseccion.catalogo_criterios import CRITERIOS
 from src.frontend.controladores.biseccion.controlador import LIMITE_ITERACIONES_INTERFAZ
 from .captura import GUIA_CONTINUIDAD

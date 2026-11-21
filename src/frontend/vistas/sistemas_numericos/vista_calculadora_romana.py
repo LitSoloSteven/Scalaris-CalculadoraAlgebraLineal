@@ -7,7 +7,7 @@ import asyncio
 from typing import Any
 
 from nicegui import ui
-from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
+from src.frontend.componentes.captura.ecuaciones.limpieza_captura import crear_boton_limpieza
 from .limpieza_numerica import MixinLimpiezaRomanos
 
 from src.ai.huellas import calcular_huella
