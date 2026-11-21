@@ -5,8 +5,8 @@ from nicegui import run, ui
 
 from src.frontend.nucleo.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
 from src.frontend.controladores.compartido.sesion.actualizacion_cancelable import cancelar_actualizacion, programar_actualizacion
-from src.frontend.controladores.operaciones_matrices.controlador_determinante import ControladorDeterminante
-from src.frontend.controladores.operaciones_matrices.recomendacion_determinante import metodo_recomendado_disponible
+from src.frontend.controladores.algebra.operaciones_matrices.determinante.controlador_determinante import ControladorDeterminante
+from src.frontend.controladores.algebra.operaciones_matrices.determinante.recomendacion_determinante import metodo_recomendado_disponible
 from src.frontend.nucleo.textos import textos
 
 registro = logging.getLogger(__name__)

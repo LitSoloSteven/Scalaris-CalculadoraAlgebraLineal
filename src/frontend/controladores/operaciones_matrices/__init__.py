@@ -2,7 +2,7 @@
 from src.frontend.controladores.algebra.operaciones_matrices.base.codificador import (
     CodificadorMatriz,
 )
-from src.frontend.controladores.operaciones_matrices.controlador_determinante import (
+from src.frontend.controladores.algebra.operaciones_matrices.determinante.controlador_determinante import (
     ControladorDeterminante,
 )
 from src.frontend.controladores.operaciones_matrices.controlador_factorizacion_lu import ControladorFactorizacionLU

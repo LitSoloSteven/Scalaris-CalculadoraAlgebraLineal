@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from types import SimpleNamespace
 
 from nicegui import run
-from src.frontend.controladores.operaciones_matrices.controlador_determinante import ControladorDeterminante
+from src.frontend.controladores.algebra.operaciones_matrices.determinante.controlador_determinante import ControladorDeterminante
 
 
 @asynccontextmanager

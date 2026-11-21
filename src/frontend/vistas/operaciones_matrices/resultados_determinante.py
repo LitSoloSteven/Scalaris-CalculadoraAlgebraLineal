@@ -3,7 +3,7 @@ from nicegui import run, ui
 
 from src.ai.huellas import calcular_huella
 from src.backend.utilidades.formato.formateadores import formatear_fraccion_texto
-from src.frontend.controladores.operaciones_matrices.controlador_determinante import ControladorDeterminante
+from src.frontend.controladores.algebra.operaciones_matrices.determinante.controlador_determinante import ControladorDeterminante
 from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto, captura_sigue_vigente, calculo_sigue_vigente
 from src.frontend.nucleo.textos import textos
 from ._presentacion_determinante import montar_reproductor
