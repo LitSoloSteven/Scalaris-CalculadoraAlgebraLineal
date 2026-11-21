@@ -1,10 +1,31 @@
 """Vocabulario y normalización de operadores tipográficos de cálculo."""
 
+import ast
 import re
 
 POSTFIJOS = {"°": "grados", "‰": "por_mil", "′": "derivada", "″": "derivada_segunda"}
 AGREGADOS = {"∑": "sumatoria", "∏": "productoria"}
 DERIVADAS = {POSTFIJOS["′"]: 1, POSTFIJOS["″"]: 2}
+TRIGONOMETRICAS_DIRECTAS = ("sin", "cos", "tan")
+TRIGONOMETRICAS_INVERSAS = ("asin", "acos", "atan")
+ANGULARES_RADIANES = {
+    nombre: nombre + "_radianes"
+    for nombre in (*TRIGONOMETRICAS_DIRECTAS, *TRIGONOMETRICAS_INVERSAS)
+}
+NOMBRES_ANGULARES = {alias: nombre for nombre, alias in ANGULARES_RADIANES.items()}
+GRADOS_POR_MEDIA_VUELTA = 180
+UNIDADES_POR_MIL = 1000
+MAXIMO_TERMINOS_AGREGADO = 32
+
+
+def entero_literal(nodo: ast.AST) -> int:
+    """Extrae un entero literal con signo opcional; lanza ValueError si es una expresión."""
+    signo = -1 if isinstance(nodo, ast.UnaryOp) and isinstance(nodo.op, ast.USub) else 1
+    if isinstance(nodo, ast.UnaryOp):
+        nodo = nodo.operand
+    if isinstance(nodo, ast.Constant) and type(nodo.value) is int:
+        return signo * nodo.value
+    raise ValueError("Usa límites enteros en la sumatoria o productoria.")
 
 
 def envolver_postfijo(partes: list[str], simbolo: str) -> None:

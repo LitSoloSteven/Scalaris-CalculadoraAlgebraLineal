@@ -1,11 +1,14 @@
 """Gramática acotada de expresiones reales de una variable, sin ejecutar código."""
 import ast
 import math
+import re
 from decimal import Decimal
 
 from .constantes_funcion import CONSTANTES_REALES as CONSTANTES_REALES
 from .errores_numericos import ErrorCapacidadNumerica
+from .expansion_calculo import desarrollar_calculo
 from .normalizacion_funcion import normalizar_expresion
+from .notacion_calculo import AGREGADOS, DERIVADAS, MAXIMO_TERMINOS_AGREGADO, NOMBRES_ANGULARES, POSTFIJOS, entero_literal
 
 FUNCIONES_REALES = {"sin": math.sin, "cos": math.cos, "tan": math.tan, "exp": math.exp,
                    "log": math.log, "ln": math.log, "log10": math.log10, "log2": math.log2,
@@ -16,53 +19,99 @@ FUNCIONES_REALES = {"sin": math.sin, "cos": math.cos, "tan": math.tan, "exp": ma
 MAXIMO_NODOS_EXPRESION = 256
 MAXIMA_PROFUNDIDAD_EXPRESION = 32
 _OPERADORES = (ast.Add, ast.Sub, ast.Mult, ast.Div, ast.Pow)
+_AGREGADOS = frozenset(AGREGADOS.values())
+_FUNCIONES_UNARIAS = frozenset((*FUNCIONES_REALES, *NOMBRES_ANGULARES, *POSTFIJOS.values()))
+_VARIABLE_INDEPENDIENTE = frozenset({"x"})
 
 
-def analizar_expresion(expresion: str) -> ast.Expression:
-    """Valida sintaxis y recursos; devuelve AST o lanza ValueError/ErrorNoFinito."""
+def analizar_expresion(
+    expresion: str, *, conservar_calculo: bool = False, solo_constantes: bool = False,
+    unidad_angular: str = "radianes",
+) -> ast.Expression:
+    """Devuelve AST validado para evaluar o proyectar; lanza ValueError/ErrorNoFinito."""
+    arbol = _leer_expresion(expresion)
+    variables = frozenset() if solo_constantes else _VARIABLE_INDEPENDIENTE
+    _validar_arbol(arbol, variables)
+    desarrollado = desarrollar_calculo(arbol, MAXIMO_NODOS_EXPRESION, unidad_angular)
+    _validar_arbol(desarrollado, variables)
+    return arbol if conservar_calculo else desarrollado
+
+
+def _leer_expresion(expresion: str) -> ast.Expression:
     normalizada = normalizar_expresion(expresion)
     try:
         arbol = ast.parse(normalizada, mode="eval")
     except (SyntaxError, RecursionError) as error:
         raise ValueError("Sintaxis inválida. Revisa operadores, paréntesis y llamadas a funciones.") from error
-    if sum(1 for _ in ast.walk(arbol)) > MAXIMO_NODOS_EXPRESION:
-        raise ValueError("La expresión contiene demasiadas operaciones.")
-    _validar_nodo(arbol.body, 0)
     _comprobar_literales(arbol, normalizada)
     return arbol
 
 
-def _validar_nodo(nodo: ast.AST, profundidad: int) -> None:
+def _validar_arbol(arbol: ast.Expression, variables: frozenset[str]) -> None:
+    if sum(1 for _ in ast.walk(arbol)) > MAXIMO_NODOS_EXPRESION:
+        raise ValueError("La expresión contiene demasiadas operaciones.")
+    _validar_nodo(arbol.body, 0, variables)
+
+
+def _validar_nodo(nodo: ast.AST, profundidad: int, variables: frozenset[str]) -> None:
     if profundidad > MAXIMA_PROFUNDIDAD_EXPRESION:
         raise ValueError("La expresión contiene demasiados niveles de operaciones.")
     if isinstance(nodo, ast.Constant):
         _validar_constante(nodo.value)
     elif isinstance(nodo, ast.Name):
-        if nodo.id != "x" and nodo.id not in CONSTANTES_REALES:
+        if nodo.id not in variables and nodo.id not in CONSTANTES_REALES:
             raise ValueError(f"Nombre no permitido como valor: {nodo.id}. Las funciones requieren un argumento.")
     elif isinstance(nodo, ast.BinOp):
-        _validar_binario(nodo, profundidad)
+        _validar_binario(nodo, profundidad, variables)
     elif isinstance(nodo, ast.UnaryOp) and isinstance(nodo.op, (ast.USub, ast.UAdd)):
-        _validar_nodo(nodo.operand, profundidad + 1)
+        _validar_nodo(nodo.operand, profundidad + 1, variables)
     elif isinstance(nodo, ast.Call):
-        _validar_llamada(nodo, profundidad)
+        _validar_llamada(nodo, profundidad, variables)
     else:
         raise ValueError("La expresión contiene una operación no permitida.")
 
 
-def _validar_binario(nodo: ast.BinOp, profundidad: int) -> None:
+def _validar_binario(nodo: ast.BinOp, profundidad: int, variables: frozenset[str]) -> None:
     if not isinstance(nodo.op, _OPERADORES):
         raise ValueError("La expresión contiene un operador no permitido.")
-    _validar_nodo(nodo.left, profundidad + 1)
-    _validar_nodo(nodo.right, profundidad + 1)
+    _validar_nodo(nodo.left, profundidad + 1, variables)
+    _validar_nodo(nodo.right, profundidad + 1, variables)
 
 
-def _validar_llamada(nodo: ast.Call, profundidad: int) -> None:
-    if not isinstance(nodo.func, ast.Name) or nodo.func.id not in FUNCIONES_REALES:
+def _validar_llamada(nodo: ast.Call, profundidad: int, variables: frozenset[str]) -> None:
+    if not isinstance(nodo.func, ast.Name) or nodo.keywords:
         raise ValueError("Llamada no permitida. Usa una función real del catálogo.")
-    if len(nodo.args) != 1 or nodo.keywords:
-        raise ValueError(f"{nodo.func.id} requiere exactamente un argumento, sin nombres de parámetros.")
-    _validar_nodo(nodo.args[0], profundidad + 1)
+    nombre = nodo.func.id
+    if nombre in _AGREGADOS and "x" in variables:
+        _validar_agregado(nodo, profundidad, variables)
+        return
+    if nombre not in _FUNCIONES_UNARIAS or (nombre in DERIVADAS and "x" not in variables):
+        raise ValueError("Llamada no permitida. Usa una función real del catálogo.")
+    if len(nodo.args) != 1:
+        raise ValueError(f"{nombre} requiere exactamente un argumento, sin nombres de parámetros.")
+    _validar_nodo(nodo.args[0], profundidad + 1, variables)
+
+
+def _validar_agregado(nodo: ast.Call, profundidad: int, variables: frozenset[str]) -> None:
+    if len(nodo.args) != 4:
+        raise ValueError("Escribe el índice, el límite inferior, el superior y la expresión.")
+    indice, inferior, superior, expresion = nodo.args
+    if not isinstance(indice, ast.Name) or not _indice_disponible(indice.id):
+        raise ValueError("Usa una letra minúscula libre, por ejemplo i, como índice.")
+    primero, ultimo = entero_literal(inferior), entero_literal(superior)
+    if not 1 <= ultimo - primero + 1 <= MAXIMO_TERMINOS_AGREGADO:
+        raise ValueError(f"Usa límites ordenados con un máximo de {MAXIMO_TERMINOS_AGREGADO} términos.")
+    _validar_constante(primero)
+    _validar_constante(ultimo)
+    _validar_nodo(expresion, profundidad + 1, variables | {indice.id})
+
+
+def _indice_disponible(nombre: str) -> bool:
+    return (
+        re.fullmatch(r"[a-z]", nombre) is not None
+        and nombre not in _VARIABLE_INDEPENDIENTE
+        and nombre not in CONSTANTES_REALES
+    )
 
 
 def _validar_constante(valor: object) -> None:
