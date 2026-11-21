@@ -172,9 +172,11 @@ prueba("inserta raiz cuadrada y simbolo no evaluable en funcion cerrando el dial
     afirmar.deepEqual([campo.selectionStart, campo.selectionEnd], [6, 6]);
 
     entorno.abrirEn(campo);
-    entorno.buscarYElegir("Infinito", "∞");
-    afirmar.equal(campo.value, "√(x+1)∞");
-    afirmar.equal(entorno.dialogo.open, false);
+    entorno.busqueda.value = "Infinito";
+    entorno.busqueda.dispatchEvent({ type: "input" });
+    afirmar.equal(entorno.lista.children.length, 0);
+    afirmar.equal(campo.value, "√(x+1)");
+    entorno.dialogo.close();
 });
 
 prueba("inserta y cierra en perfiles matriz, numero, ecuacion y texto generico", () => {
@@ -208,13 +210,16 @@ prueba("conserva cursor tras saneado en input, prioriza compatibles y respeta ma
     const entorno = crearEntornoSelector();
     const campoNumero = crearCampoSimulado(entorno.documento, { dataset: { soloNumerico: "true" }, valor: "1" });
     campoNumero.addEventListener("input", () => {
-        campoNumero.value = campoNumero.value.replace(/[^0-9/+-]/g, "");
+        campoNumero.value = campoNumero.value.replace(/[^0-9+-]/g, "");
         campoNumero.setSelectionRange(campoNumero.value.length, campoNumero.value.length);
     });
     entorno.abrirEn(campoNumero);
-    entorno.buscarYElegir("Infinito", "∞");
-    afirmar.equal(campoNumero.value, "1");
-    afirmar.deepEqual([campoNumero.selectionStart, campoNumero.selectionEnd], [1, 1]);
+    entorno.busqueda.value = "Infinito";
+    entorno.busqueda.dispatchEvent({ type: "input" });
+    afirmar.equal(entorno.lista.children.length, 0);
+    entorno.buscarYElegir("1/2", "½");
+    afirmar.equal(campoNumero.value, "112");
+    afirmar.deepEqual([campoNumero.selectionStart, campoNumero.selectionEnd], [3, 3]);
 
     const campoCorto = crearCampoSimulado(entorno.documento, {
         dataset: { simbolos: "funcion" }, valor: "x", maxLength: 1,
@@ -224,8 +229,10 @@ prueba("conserva cursor tras saneado en input, prioriza compatibles y respeta ma
     botonPagina.focus();
     entorno.emitirDocumento("keydown", { ctrlKey: true, shiftKey: true, code: "Space", target: botonPagina });
     afirmar.equal(entorno.lista.children[0].children[2].textContent, "Insertar");
-    const botonInfinito = entorno.buscarYElegir("Infinito", "∞");
-    afirmar.equal(botonInfinito.children[2].textContent, "Insertar · solo texto");
+    entorno.busqueda.value = "Infinito";
+    entorno.busqueda.dispatchEvent({ type: "input" });
+    afirmar.equal(entorno.lista.children.length, 0);
+    entorno.buscarYElegir("pi minúscula", "π");
     afirmar.equal(entorno.dialogo.open, true);
     afirmar.equal(entorno.estado.textContent, "El símbolo no cabe en el campo o el campo ya no está disponible.");
 });
