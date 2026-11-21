@@ -120,7 +120,7 @@ def test_enum_y_conjunto_no_publican_alias():
 
 def test_modulo_conjunto_no_publica_funciones_o_clases_alternativas():
     """Las funciones y clases retiradas no quedan disponibles como alias."""
-    from src.backend.geometria import conjunto_solucion
+    from src.backend.geometria.analisis import conjunto_solucion
     retirados = (
         "SolutionKind", "SolutionSet", "classify", "has_solution_param", "get_solution_param",
         "from_solution_param", "from_gauss_result",
