@@ -4,7 +4,7 @@ from __future__ import annotations
 from html import escape
 import json
 from nicegui import ui
-from src.frontend.componentes.exportacion_pdf.integracion import region_pdf
+from src.frontend.componentes.exportacion_pdf.montaje.integracion import region_pdf
 
 
 def _mostrar_formula(vista, formula: str, nombre: str):

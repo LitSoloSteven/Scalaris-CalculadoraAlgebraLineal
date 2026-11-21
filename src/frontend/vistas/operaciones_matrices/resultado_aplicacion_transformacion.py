@@ -1,7 +1,7 @@
 """Presentación de coordenadas exactas de una transformación aplicada."""
 from nicegui import ui
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos
-from src.frontend.componentes.exportacion_pdf.integracion import region_pdf
+from src.frontend.componentes.exportacion_pdf.montaje.integracion import region_pdf
 
 from src.frontend.nucleo.textos import textos_transformaciones as textos
 from src.frontend.componentes.reproductor_pasos.cuerpos import renderizar_latex

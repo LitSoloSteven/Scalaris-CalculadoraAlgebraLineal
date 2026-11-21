@@ -11,7 +11,7 @@ from src.backend.utilidades.formato.formateadores import formatear_fraccion_text
 from src.frontend.componentes.reproductor_pasos.html_tablas import html_tabla_matriz
 from src.frontend.componentes.resultados.analisis.desarrollo_comprobacion import mostrar_desarrollo
 from src.frontend.componentes.resultados.acciones.acciones_matriz import renderizar_acciones_matriz
-from src.frontend.componentes.exportacion_pdf.integracion import region_pdf, completar_exportacion, identificador_raiz
+from src.frontend.componentes.exportacion_pdf.montaje.integracion import region_pdf, completar_exportacion, identificador_raiz
 from src.frontend.controladores.exportacion_pdf.vigencia import EnlacePDF
 
 

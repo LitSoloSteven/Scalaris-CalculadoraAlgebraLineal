@@ -5,7 +5,7 @@ from src.backend.resolutores.sistemas_numericos.pasos_didacticos import desglosa
 from src.frontend.controladores.sesion_matricial import actualizar_contexto
 from src.frontend.controladores.captura_contexto import capturar_bases
 from .mixin_procedimiento import MixinProcedimientoSistemasNumericos
-from src.frontend.componentes.exportacion_pdf.utilidades import montar_utilidad_pdf
+from src.frontend.componentes.exportacion_pdf.montaje.utilidades import montar_utilidad_pdf
 
 
 class MixinRenderizadoSistemasNumericos(MixinProcedimientoSistemasNumericos):

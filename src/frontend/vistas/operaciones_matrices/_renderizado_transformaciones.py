@@ -5,7 +5,7 @@ import html
 from nicegui import ui
 from src.frontend.componentes.resultados.acciones.avisos_resultado import CLASES_AVISO_ERROR, renderizar_aviso_resultado
 from src.frontend.componentes.resultados.analisis.desarrollo_comprobacion import mostrar_desarrollo
-from src.frontend.componentes.exportacion_pdf.integracion import region_pdf
+from src.frontend.componentes.exportacion_pdf.montaje.integracion import region_pdf
 
 
 def renderizar_resultado_transformaciones(resultado: dict) -> None:

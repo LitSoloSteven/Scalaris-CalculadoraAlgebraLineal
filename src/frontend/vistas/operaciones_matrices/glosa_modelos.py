@@ -8,7 +8,7 @@ from src.frontend.controladores.sesion_matricial import invalidar_resultado, act
 from src.frontend.controladores.operaciones_matrices.contexto_modelos import obtener_contexto_modelo, obtener_senales_modelo, capturar_modelo, resultado_modelo_vigente
 from ._presentacion_modelos import montar_pasos_modelo
 from .herramientas_modelos import MixinHerramientasModelos
-from src.frontend.componentes.exportacion_pdf.integracion import completar_exportacion, identificador_raiz
+from src.frontend.componentes.exportacion_pdf.montaje.integracion import completar_exportacion, identificador_raiz
 from src.frontend.controladores.exportacion_pdf.vigencia import EnlacePDF
 from src.frontend.componentes.resultados.acciones.acciones_matriz import renderizar_acciones_matriz
 

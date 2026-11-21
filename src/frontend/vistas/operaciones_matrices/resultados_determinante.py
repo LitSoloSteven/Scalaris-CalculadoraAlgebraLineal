@@ -8,7 +8,7 @@ from src.frontend.controladores.sesion_matricial import actualizar_contexto, cap
 from src.frontend.nucleo.textos import textos
 from ._presentacion_determinante import montar_reproductor
 from ._tarjeta_determinante import mostrar_tarjeta_determinante, mostrar_interpretacion_determinante
-from src.frontend.componentes.exportacion_pdf.integracion import region_pdf, completar_exportacion
+from src.frontend.componentes.exportacion_pdf.montaje.integracion import region_pdf, completar_exportacion
 from src.frontend.controladores.exportacion_pdf.vigencia import EnlacePDF
 from src.frontend.componentes.resultados.acciones.acciones_matriz import renderizar_acciones_matriz
 

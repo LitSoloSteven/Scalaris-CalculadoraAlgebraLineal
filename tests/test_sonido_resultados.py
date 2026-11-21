@@ -9,7 +9,7 @@ import pytest
 from src.ai.respuestas.respuestas import ResultadoIA, TipoErrorIA
 from src.frontend.componentes.glosa.panel import glosa_envio
 from src.frontend.componentes.captura.ecuaciones import limpieza_captura
-from src.frontend.componentes.exportacion_pdf import boton as pdf
+from src.frontend.componentes.exportacion_pdf.montaje import boton as pdf
 
 
 @pytest.mark.parametrize('vacia,fallo_movimiento', [(False, False), (False, True), (True, False)])

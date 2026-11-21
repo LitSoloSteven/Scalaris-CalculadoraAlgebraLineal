@@ -10,7 +10,7 @@ from src.ai.huellas import calcular_huella
 from src.frontend.controladores.geometria import ControladorGeometria
 from src.frontend.controladores.sesion_matricial import actualizar_contexto
 from ._estados_geometria import aplicar_estado_carga
-from src.frontend.componentes.exportacion_pdf.utilidades import montar_utilidad_pdf
+from src.frontend.componentes.exportacion_pdf.montaje.utilidades import montar_utilidad_pdf
 
 registro = logging.getLogger(__name__)
 ERROR_RENDERIZADO = {

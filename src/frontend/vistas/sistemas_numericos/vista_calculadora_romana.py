@@ -23,7 +23,7 @@ from .mixin_resultado_romano import MixinResultadoRomano
 from .mixin_contexto_romanos import MixinContextoRomano
 from .mixin_captura_romanos import MixinCapturaRomanos
 from .presentacion_romana import PresentacionRomana
-from src.frontend.componentes.exportacion_pdf.utilidades import montar_utilidad_pdf
+from src.frontend.componentes.exportacion_pdf.montaje.utilidades import montar_utilidad_pdf
 
 registro = logging.getLogger(__name__)
 

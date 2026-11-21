@@ -10,7 +10,7 @@ from src.frontend.controladores.sesion_matricial import actualizar_contexto, inv
 from src.frontend.componentes.resultados.acciones.transferencia import guardar_sistema, url_transferencia
 from src.frontend.componentes.resultados.acciones.acciones_matriz import renderizar_acciones_matriz
 from src.frontend.navegacion import ruta_de
-from src.frontend.componentes.exportacion_pdf.boton import renderizar_boton_pdf
+from src.frontend.componentes.exportacion_pdf.montaje.boton import renderizar_boton_pdf
 from src.frontend.controladores.exportacion_pdf.vigencia import EnlacePDF
 
 

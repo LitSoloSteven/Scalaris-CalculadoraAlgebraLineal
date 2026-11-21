@@ -5,7 +5,7 @@ from nicegui import ui
 from src.frontend.nucleo.textos import textos
 from src.frontend.componentes.reproductor_pasos.textos import formatear_descripcion_html
 from src.frontend.controladores.exportacion_pdf.secuencia import seleccionar_intermedios, seleccionar_comprobaciones
-from .piezas.entrada import renderizar_entrada
+from src.frontend.componentes.exportacion_pdf.piezas.entrada import renderizar_entrada
 
 
 @contextmanager
