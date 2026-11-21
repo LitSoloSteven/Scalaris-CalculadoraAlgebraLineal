@@ -8,7 +8,7 @@ from .integracion_real import integrar_real, PresupuestoIntegral
 from .nodos_integral import NOMBRE_INTEGRAL, nombres_libres, signo_infinito
 from .notacion_calculo import GUARDIA_DERIVADA
 from .operaciones_reales import aplicar_funcion, aplicar_operador, comprobar_real, ejecutar_operacion
-from .unidades_angulares import validar_unidad_angular
+from .compartido.unidades_angulares import validar_unidad_angular
 
 FUNCIONES_PERMITIDAS = {**FUNCIONES_REALES, **CONSTANTES_REALES}
 

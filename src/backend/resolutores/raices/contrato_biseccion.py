@@ -12,7 +12,7 @@ from .limites_raices import (
     LIMITE_ITERACIONES_MAXIMO,
     LONGITUD_MAXIMA_EXPRESION,
 )
-from .unidades_angulares import validar_unidad_angular
+from .compartido.unidades_angulares import validar_unidad_angular
 from .validacion_raices import (
     validar_expresion,
     validar_extremo,

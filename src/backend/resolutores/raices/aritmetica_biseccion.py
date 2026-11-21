@@ -1,7 +1,7 @@
 """Aritmética acotada del intervalo y las métricas de bisección."""
 import math
 
-from .errores_numericos import ErrorCapacidadNumerica
+from .compartido.errores_numericos import ErrorCapacidadNumerica
 
 
 def ancho_intervalo(inferior: float, superior: float) -> float:

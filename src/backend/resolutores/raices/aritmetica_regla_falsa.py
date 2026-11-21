@@ -2,7 +2,7 @@
 import math
 
 from .aritmetica_biseccion import ancho_intervalo, error_relativo_numerico  # noqa: F401  reexport para traza_regla_falsa
-from .errores_numericos import ErrorCapacidadNumerica
+from .compartido.errores_numericos import ErrorCapacidadNumerica
 
 
 def peso_escalado(valor_inferior: float, valor_superior: float) -> float:

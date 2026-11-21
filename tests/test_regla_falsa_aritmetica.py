@@ -6,7 +6,7 @@ from src.backend.resolutores.raices.aritmetica_regla_falsa import (
     peso_escalado,
     punto_cruce,
 )
-from src.backend.resolutores.raices.errores_numericos import ErrorCapacidadNumerica
+from src.backend.resolutores.raices.compartido.errores_numericos import ErrorCapacidadNumerica
 
 
 def test_peso_escalado_lineal():

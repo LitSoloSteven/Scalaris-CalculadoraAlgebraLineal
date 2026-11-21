@@ -3,7 +3,7 @@ import asyncio
 import logging
 
 from nicegui import ui
-from src.backend.resolutores.raices.unidades_angulares import opciones_unidad
+from src.backend.resolutores.raices.compartido.unidades_angulares import opciones_unidad
 
 from src.frontend.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
 from src.frontend.controladores.actualizacion_cancelable import programar_actualizacion

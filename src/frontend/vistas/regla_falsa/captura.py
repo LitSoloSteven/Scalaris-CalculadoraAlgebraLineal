@@ -1,7 +1,7 @@
 """Controles etiquetados para la captura cruda del método de regla falsa."""
 from nicegui import ui
 
-from src.backend.resolutores.raices.unidades_angulares import UNIDADES_ANGULARES
+from src.backend.resolutores.raices.compartido.unidades_angulares import UNIDADES_ANGULARES
 from src.frontend.componentes.campo_funcion_real import crear_campo_funcion
 from .estado_captura import PREFERENCIAS_INICIALES
 from .modos_captura import MODO_INTERVALO, construir_modos, region_modo

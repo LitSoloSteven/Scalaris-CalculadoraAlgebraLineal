@@ -1,6 +1,6 @@
 """Asocia errores del dominio con campos de captura sin calcular raíces."""
 from src.backend.resolutores.raices.validacion_raices import validar_expresion, validar_extremo
-from src.backend.resolutores.raices.unidades_angulares import validar_unidad_angular
+from src.backend.resolutores.raices.compartido.unidades_angulares import validar_unidad_angular
 from src.frontend.controladores.captura_real import real_capturado
 from src.frontend.controladores.formato_funcion_real import formatear_expresion
 from .captura import preparar_entrada

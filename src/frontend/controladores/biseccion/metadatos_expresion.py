@@ -2,7 +2,7 @@
 import ast
 
 from src.backend.resolutores.raices.gramatica_funcion import analizar_expresion
-from src.backend.resolutores.raices.unidades_angulares import funcion_sensible_a_unidad
+from src.backend.resolutores.raices.compartido.unidades_angulares import funcion_sensible_a_unidad
 
 
 def sensible_a_unidad(expresion: str) -> bool:

@@ -1,5 +1,5 @@
 """Captura y pertenencia de intervalos exploratorios independientes del método."""
-from src.backend.resolutores.raices.unidades_angulares import opciones_unidad
+from src.backend.resolutores.raices.compartido.unidades_angulares import opciones_unidad
 from src.frontend.controladores.exploracion_raices import presentar_candidato
 
 

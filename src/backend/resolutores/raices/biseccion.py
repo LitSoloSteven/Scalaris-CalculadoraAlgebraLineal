@@ -11,7 +11,7 @@ from .gramatica_funcion import analizar_expresion
 from .parada_biseccion import completar_criterio, motivo_criterio
 from .traza_biseccion import _CIERRES, construir_error, construir_resultado, crear_iteracion
 from .traza_comun_raices import registrar_accion
-from .unidades_angulares import opciones_unidad
+from .compartido.unidades_angulares import opciones_unidad
 
 
 def biseccion(entrada: EntradaBiseccion, *, cero_preferido: float | None = None) -> ResultadoBiseccion:

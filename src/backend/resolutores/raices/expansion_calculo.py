@@ -3,7 +3,7 @@
 import ast
 from itertools import islice
 
-from .errores_numericos import ErrorCapacidadNumerica
+from .compartido.errores_numericos import ErrorCapacidadNumerica
 from .nodos_derivada import constante, llamada, proteger_derivada
 from .nodos_integral import NOMBRE_INTEGRAL, construir_integral
 from .notacion_calculo import (

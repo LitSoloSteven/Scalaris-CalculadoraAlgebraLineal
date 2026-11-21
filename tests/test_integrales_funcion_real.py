@@ -8,7 +8,7 @@ from src.backend.excepciones import ErrorDominio
 from src.backend.resolutores.raices.biseccion import biseccion
 from src.backend.resolutores.raices.contrato_biseccion import EntradaBiseccion
 from src.backend.resolutores.raices.dominio_intervalo import comprobar_dominio_intervalo
-from src.backend.resolutores.raices.errores_numericos import ErrorCapacidadNumerica, ErrorSingularidad
+from src.backend.resolutores.raices.compartido.errores_numericos import ErrorCapacidadNumerica, ErrorSingularidad
 from src.backend.resolutores.raices.evaluador_funcion import compilar, evaluar_constante_real
 from src.backend.resolutores.raices.metodos_abiertos import EntradaMetodoAbierto, newton
 from src.backend.resolutores.raices.metodos_abiertos.derivada_simbolica import derivar_expresion

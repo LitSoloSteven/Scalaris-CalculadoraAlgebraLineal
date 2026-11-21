@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock
 import pytest
 
 from src.backend.resolutores.raices.contrato_biseccion import LIMITE_ITERACIONES_DEFECTO
-from src.backend.resolutores.raices.unidades_angulares import funcion_sensible_a_unidad
+from src.backend.resolutores.raices.compartido.unidades_angulares import funcion_sensible_a_unidad
 from src.frontend.controladores.biseccion.exploracion import PASO_EXPLORACION_DEFECTO
 from src.frontend.controladores.biseccion.vista_previa import RANGO_GRAFICA_DEFECTO
 from src.frontend.vistas.biseccion.ejemplos import EJEMPLOS

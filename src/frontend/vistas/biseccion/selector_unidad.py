@@ -1,7 +1,7 @@
 """Selector angular y restauración compatible de preferencias matemáticas."""
 from nicegui import ui
 
-from src.backend.resolutores.raices.unidades_angulares import UNIDADES_ANGULARES, UNIDAD_ANGULAR_DEFECTO
+from src.backend.resolutores.raices.compartido.unidades_angulares import UNIDADES_ANGULARES, UNIDAD_ANGULAR_DEFECTO
 
 
 def construir_selector_unidad(vista) -> None:

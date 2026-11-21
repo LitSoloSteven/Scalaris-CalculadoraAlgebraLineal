@@ -4,14 +4,14 @@ import math
 from decimal import Decimal
 
 from .constantes_funcion import CONSTANTES_REALES as CONSTANTES_REALES
-from .errores_numericos import ErrorCapacidadNumerica
+from .compartido.errores_numericos import ErrorCapacidadNumerica
 from .expansion_calculo import desarrollar_calculo
 from .nodos_integral import NOMBRE_INTEGRAL, signo_infinito, variable_ligable
 from .normalizacion_funcion import normalizar_expresion
 from .notacion_calculo import (
     AGREGADOS, DERIVADAS, GUARDIA_DERIVADA, MAXIMO_TERMINOS_AGREGADO, NOMBRES_ANGULARES, POSTFIJOS, entero_literal,
 )
-from .unidades_angulares import validar_unidad_angular
+from .compartido.unidades_angulares import validar_unidad_angular
 
 FUNCIONES_REALES = {"sin": math.sin, "cos": math.cos, "tan": math.tan, "exp": math.exp,
                    "log": math.log, "ln": math.log, "log10": math.log10, "log2": math.log2,

@@ -17,7 +17,7 @@ from .gramatica_funcion import analizar_expresion
 from .informe_continuidad import crear_informe, incorporar_traza, observacion
 from .traza_biseccion import construir_error
 from .sugerencias_dominio import sugerir_acciones
-from .unidades_angulares import opciones_unidad
+from .compartido.unidades_angulares import opciones_unidad
 
 
 @dataclass(frozen=True)

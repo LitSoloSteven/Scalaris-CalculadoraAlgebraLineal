@@ -1,6 +1,6 @@
 """Ejercicios agrupados con preferencias explícitas de captura."""
 from src.backend.resolutores.raices.contrato_biseccion import LIMITE_ITERACIONES_DEFECTO
-from src.backend.resolutores.raices.unidades_angulares import UNIDAD_ANGULAR_DEFECTO
+from src.backend.resolutores.raices.compartido.unidades_angulares import UNIDAD_ANGULAR_DEFECTO
 from src.frontend.controladores.biseccion.catalogo_criterios import CRITERIOS
 from .modos_captura import MODO_INTERVALO
 

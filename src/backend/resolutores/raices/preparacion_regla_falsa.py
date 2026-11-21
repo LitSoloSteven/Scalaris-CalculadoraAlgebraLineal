@@ -18,7 +18,7 @@ from .evaluador_funcion import compilar
 from .gramatica_funcion import analizar_expresion
 from .informe_continuidad import crear_informe, observacion
 from .traza_regla_falsa import construir_error
-from .unidades_angulares import opciones_unidad
+from .compartido.unidades_angulares import opciones_unidad
 from .validacion_regla_falsa import validar_entrada_regla_falsa
 
 

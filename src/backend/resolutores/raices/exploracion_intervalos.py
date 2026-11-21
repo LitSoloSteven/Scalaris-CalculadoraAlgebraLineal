@@ -7,7 +7,7 @@ from .contrato_exploracion import (
 from .evaluacion_exploracion import muestrear_punto
 from .evaluador_funcion import compilar
 from .muestreo_intervalos import generar_posiciones
-from .unidades_angulares import opciones_unidad
+from .compartido.unidades_angulares import opciones_unidad
 
 
 def explorar_intervalos(entrada: EntradaExploracion) -> ResultadoExploracion:
