@@ -1,5 +1,5 @@
 """Delegación de cargas de sistemas al dominio geométrico."""
-from src.backend.geometria.escena_sistema import preparar_escena_sistema
+from src.backend.geometria.escenas.escena_sistema import preparar_escena_sistema
 from src.frontend.controladores.geometria.carga import procesar_carga
 
 

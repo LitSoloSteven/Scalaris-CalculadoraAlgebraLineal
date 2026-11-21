@@ -1,5 +1,5 @@
 """Delegación de cargas vectoriales al dominio geométrico."""
-from src.backend.geometria.escena_vectores import preparar_escena_vectores
+from src.backend.geometria.escenas.escena_vectores import preparar_escena_vectores
 from src.frontend.controladores.geometria.carga import procesar_carga
 
 

@@ -1,5 +1,5 @@
 """Delegación de cargas de combinación lineal al dominio geométrico."""
-from src.backend.geometria.escena_combinacion import preparar_escena_combinacion
+from src.backend.geometria.escenas.escena_combinacion import preparar_escena_combinacion
 from src.frontend.controladores.geometria.carga import procesar_carga
 
 
