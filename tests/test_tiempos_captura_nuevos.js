@@ -62,7 +62,7 @@ prueba('texto largo termina con un número acotado de temporizadores', () => {
   const contexto = vm.createContext({ window: ventana, document: { getElementById: () => elemento },
     Date: { now: () => ahora }, clearTimeout() {},
     setTimeout: (funcion, espera) => { cantidad++; pendientes.push({ funcion, espera }); return cantidad; } });
-  cargarAssetCliente('escritura_progresiva.js', contexto);
+  cargarAssetCliente('nucleo/escritura/escritura_progresiva.js', contexto);
   ventana.scalaris.efectoMaquinaEscribir('texto', 'x'.repeat(10000), 18);
   while (pendientes.length) { const tarea = pendientes.shift(); ahora += tarea.espera; tarea.funcion(); }
   afirmar.equal(ahora, 900);

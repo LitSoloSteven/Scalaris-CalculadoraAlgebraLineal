@@ -22,7 +22,7 @@ class SelectorOpciones(ValueElement):
         self._valores = valores
         self.botones = {}
         ui.add_head_html('<link rel="stylesheet" href="/assets/css/componentes/selector_opciones.css">')
-        ui.add_head_html('<script src="/assets/js/selector_opciones.js"></script>')
+        ui.add_head_html('<script src="/assets/js/nucleo/navegacion/selector_opciones.js"></script>')
         with ui.element('div').classes('selector-opciones-contenedor'):
             super().__init__(tag='div', value=valor_inicial)
         self.classes('pestanas-controles pestanas-metodo selector-opciones')

@@ -37,7 +37,7 @@ function crearCeldaCuadricula(control = crearControlAnimado()) {
 /** Carga la política de movimiento y la cuadrícula en el orden de producción. */
 function crearCuadriculaSimulada() {
     const cliente = crearTemaSimulado();
-    cargarAssetCliente("interacciones_globales.js", cliente.contexto);
+    cargarAssetCliente("nucleo/interacciones/interacciones_globales.js", cliente.contexto);
     cargarAssetCliente("cuadricula_compartida.js", cliente.contexto);
     return cliente;
 }

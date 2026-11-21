@@ -17,7 +17,7 @@ prueba("el puente consulta los tokens vigentes en cada llamada", () => {
         document: documento,
         getComputedStyle: () => ({ getPropertyValue: nombre => valores.get(nombre) || "" }),
     });
-    cargarAssetCliente("interacciones_globales.js", contexto);
+    cargarAssetCliente("nucleo/interacciones/interacciones_globales.js", contexto);
     const movimiento = ventana.scalaris.movimiento;
     afirmar.equal(movimiento.duracion("--dur-panel"), 450);
     afirmar.equal(movimiento.medio, undefined);

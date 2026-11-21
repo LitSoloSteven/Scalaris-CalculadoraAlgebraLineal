@@ -27,7 +27,7 @@ function crearLista() {
         MutationObserver: class { observe() {} },
         ResizeObserver: class { observe() {} },
     });
-    cargarAssetCliente("navegacion_herramientas.js", contexto);
+    cargarAssetCliente("nucleo/navegacion/navegacion_herramientas.js", contexto);
     return { lista, activo, atributos, eventos, documentoEventos, documento, contexto };
 }
 

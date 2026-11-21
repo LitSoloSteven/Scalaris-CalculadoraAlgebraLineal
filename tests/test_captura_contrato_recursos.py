@@ -54,7 +54,7 @@ def test_cabecera_carga_dependencias_de_captura_en_orden():
     posiciones = [tema._CABECERA_HTML.index(f'/assets/js/{nombre}') for nombre in nombres]
     assert posiciones == sorted(posiciones)
     assert posiciones[0] > tema._CABECERA_HTML.index('/assets/js/cuadricula_compartida.js')
-    assert posiciones[-1] < tema._CABECERA_HTML.index('/assets/js/recoleccion_basura.js')
+    assert posiciones[-1] < tema._CABECERA_HTML.index('/assets/js/nucleo/navegacion/recoleccion_basura.js')
     assert nombres == ["rechazo_entrada_numerica.js", "entrada_numerica.js", "captura_celdas.js",
                        "navegacion_captura.js", "pegado_captura.js", "foco_captura.js", "eventos_captura.js"]
     assert all((activos / "js" / nombre).is_file() for nombre in nombres)

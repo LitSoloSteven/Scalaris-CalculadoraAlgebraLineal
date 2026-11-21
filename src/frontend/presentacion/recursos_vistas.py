@@ -41,7 +41,7 @@ _POR_RECURSO = {
     "inicio.js": _INICIO,
     "ejemplos_inicio.js": _INICIO,
     "sistemas_metodo.js": frozenset({"sistemas"}),
-    "tema_graficos.js": frozenset({"visualizador"}) | _RAICES,
+    "nucleo/tema/tema_graficos.js": frozenset({"visualizador"}) | _RAICES,
     "grafico_biseccion.js": _BISECCION,
     "movimiento_biseccion.js": _BISECCION,
     "banda_biseccion.js": _BISECCION,

@@ -26,7 +26,7 @@ function cliente() {
   const contexto = vm.createContext({ window: ventana, document: documento,
     setTimeout: (funcion, espera) => { const tarea = { funcion, momento: tiempo + espera }; tareas.push(tarea); return tarea; },
     clearTimeout: tarea => { const indice = tareas.indexOf(tarea); if (indice >= 0) tareas.splice(indice, 1); } });
-  cargarAssetCliente('recoleccion_basura.js', contexto);
+  cargarAssetCliente('nucleo/navegacion/recoleccion_basura.js', contexto);
   return { ventana, propias, ajena, tareas, clones, avanzar() {
     tareas.sort((primera, segunda) => primera.momento - segunda.momento);
     const tarea = tareas.shift(); tiempo = tarea.momento; tarea.funcion(); return tiempo;

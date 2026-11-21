@@ -15,7 +15,7 @@ def test_cabecera_carga_catalogo_antes_de_tema_y_consumidores(monkeypatch):
     nombres = json.loads((RAIZ / "src/frontend/recursos/catalogo_interacciones.json").read_text(encoding="utf-8"))
     posiciones = [cabeceras[0].index(f'/assets/js/{nombre}') for nombre in nombres]
     assert posiciones == sorted(posiciones)
-    assert posiciones[-1] < cabeceras[0].index('/assets/js/tema.js')
+    assert posiciones[-1] < cabeceras[0].index('/assets/js/nucleo/tema/tema.js')
     assert posiciones[-1] < cabeceras[0].index('/assets/js/cuadricula_compartida.js')
     assert all(cabeceras[0].count(f'/assets/js/{nombre}') == 1 for nombre in nombres)
 

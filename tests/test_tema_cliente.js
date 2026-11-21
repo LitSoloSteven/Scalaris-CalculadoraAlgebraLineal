@@ -8,7 +8,7 @@ const { crearTemaSimulado, cargarTemaCompleto, simularTransicion } = require("./
 prueba("los valores canónicos se leen antes de cargar los estilos", () => {
     for (const [almacenado, esperado] of [["papel", "papel"], ["marea", "marea"], ["medianoche", "medianoche"]]) {
         const cliente = crearTemaSimulado(almacenado);
-        cargarAssetCliente("inicializacion_tema.js", cliente.contexto);
+        cargarAssetCliente("nucleo/tema/inicializacion_tema.js", cliente.contexto);
         afirmar.equal(cliente.atributos.get("data-tema"), esperado);
         afirmar.equal(cliente.almacen.get("tema"), esperado);
         afirmar.equal(cliente.documento.documentElement.style.colorScheme, esperado === "medianoche" ? "dark" : "light");
@@ -98,7 +98,7 @@ prueba("el fallo de almacenamiento de Glosa conserva el atributo anterior", () =
 prueba("la activación por teclado aplica el tema sin transición", async () => {
     const cliente = crearTemaSimulado();
     cargarTemaCompleto(cliente);
-    cargarAssetCliente("interacciones_globales.js", cliente.contexto);
+    cargarAssetCliente("nucleo/interacciones/interacciones_globales.js", cliente.contexto);
     cliente.documento.startViewTransition = cambiar => simularTransicion(cambiar);
     cliente.eventos.get("keydown")();
     afirmar.doesNotThrow(() => cliente.ventana.scalaris.tema.establecer("marea"));
@@ -110,7 +110,7 @@ prueba("la activación por teclado aplica el tema sin transición", async () => 
 prueba("la preferencia de movimiento reducido aplica el tema sin transición", () => {
     const cliente = crearTemaSimulado();
     cargarTemaCompleto(cliente);
-    cargarAssetCliente("interacciones_globales.js", cliente.contexto);
+    cargarAssetCliente("nucleo/interacciones/interacciones_globales.js", cliente.contexto);
     cliente.ventana.matchMedia = consulta => ({ matches: consulta === '(prefers-reduced-motion: reduce)' });
     cliente.documento.startViewTransition = () => { throw new Error("no debe iniciar transición"); };
     afirmar.doesNotThrow(() => cliente.ventana.scalaris.tema.establecer("medianoche"));

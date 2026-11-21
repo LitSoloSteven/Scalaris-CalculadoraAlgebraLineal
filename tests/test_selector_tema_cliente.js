@@ -31,7 +31,7 @@ function crearSelector(temaInicial, montar = true) {
             observe() {}
         },
     });
-    cargarAssetCliente("selector_tema.js", contexto);
+    cargarAssetCliente("nucleo/tema/selector_tema.js", contexto);
     return {
         opciones, eventos, llamadas,
         cambiar: valor => { tema = valor; notificar(); },

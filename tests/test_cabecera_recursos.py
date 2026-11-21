@@ -45,8 +45,8 @@ def test_codigo_cliente_de_cabecera_son_recursos_existentes():
 def test_inicializacion_precede_estilos_y_consumidores():
     """El tema se prepara antes de CSS y Glosa antes de sus interacciones."""
     cabecera = tema._CABECERA_HTML
-    assert cabecera.index('scalaris-configuracion-graficos') < cabecera.index('/assets/js/inicializacion_tema.js')
-    assert cabecera.index('/assets/js/inicializacion_tema.js') < cabecera.index('<link rel="stylesheet"')
-    assert cabecera.index('/assets/js/tema.js') > cabecera.index('/assets/css/utilidades/reproductor_pasos.css')
+    assert cabecera.index('scalaris-configuracion-graficos') < cabecera.index('/assets/js/nucleo/tema/inicializacion_tema.js')
+    assert cabecera.index('/assets/js/nucleo/tema/inicializacion_tema.js') < cabecera.index('<link rel="stylesheet"')
+    assert cabecera.index('/assets/js/nucleo/tema/tema.js') > cabecera.index('/assets/css/utilidades/reproductor_pasos.css')
     glosa = tema._CABECERA_GLOSA_HTML
     assert glosa.index('/assets/js/inicializacion_glosa.js') < glosa.index('/assets/js/glosa_panel_lateral.js')

@@ -86,7 +86,7 @@ def _comprobar_movimiento_reducido_y_sugerencias(contenido, raiz):
 def test_cliente_delega_ayuda_y_no_anima_teclado():
     """La ayuda de entradas largas se delega y la recolección conserva su curva."""
     javascript_aplicacion = leer_interacciones_cliente()
-    recoleccion_js = Path("src/frontend/recursos/js/recoleccion_basura.js").read_text(encoding="utf-8")
+    recoleccion_js = Path("src/frontend/recursos/js/nucleo/navegacion/recoleccion_basura.js").read_text(encoding="utf-8")
     assert "key-pulse" not in javascript_aplicacion
     assert "scrollWidth > objetivo.clientWidth" in javascript_aplicacion
     assert "objetivo.title = objetivo.value" in javascript_aplicacion

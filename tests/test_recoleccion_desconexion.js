@@ -22,7 +22,7 @@ prueba('una desconexión restaura los campos y cancela los temporizadores', asyn
     createElement: () => ({ style: {}, remove() {} }), body: { appendChild() {} } };
   const contexto = vm.createContext({ window: ventana, document: documento,
     setTimeout: funcion => { tareas.add(funcion); return funcion; }, clearTimeout: funcion => tareas.delete(funcion) });
-  cargarAssetCliente('recoleccion_basura.js', contexto);
+  cargarAssetCliente('nucleo/navegacion/recoleccion_basura.js', contexto);
   const espera = ventana.scalaris.animarRecoleccionBasura(['captura']);
   afirmar.equal(visible, 'hidden');
   desconectar();

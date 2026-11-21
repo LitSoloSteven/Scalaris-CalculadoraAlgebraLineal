@@ -5,7 +5,7 @@ const archivos = require('node:fs');
 const rutas = require('node:path');
 const maquina = require('node:vm');
 const fuente = archivos.readFileSync(rutas.join(__dirname,
-    '../src/frontend/recursos/js/selector_opciones.js'), 'utf8');
+    '../src/frontend/recursos/js/nucleo/navegacion/selector_opciones.js'), 'utf8');
 
 function crearSelector(cantidad, columnas) {
     const propiedades = {};

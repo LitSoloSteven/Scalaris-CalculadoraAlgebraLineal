@@ -1,9 +1,9 @@
 [
-    "foco_modal.js",
-    "catalogo_simbolos.js",
-    "selector_simbolos.js",
-    "interacciones_globales.js",
-    "observacion_dom.js",
+    "nucleo/interacciones/foco_modal.js",
+    "nucleo/escritura/catalogo_simbolos.js",
+    "nucleo/escritura/selector_simbolos.js",
+    "nucleo/interacciones/interacciones_globales.js",
+    "nucleo/interacciones/observacion_dom.js",
     "catalogo_sonidos.js",
     "sintesis_sonora.js",
     "asignacion_sonora.js",
@@ -13,11 +13,11 @@
     "interacciones_sonoras.js",
     "sonido_escritura.js",
     "sistemas_metodo.js",
-    "navegacion_herramientas.js",
-    "selector_tema.js",
-    "renderizado_mathjax.js",
-    "escritura_progresiva.js",
+    "nucleo/navegacion/navegacion_herramientas.js",
+    "nucleo/tema/selector_tema.js",
+    "nucleo/interacciones/renderizado_mathjax.js",
+    "nucleo/escritura/escritura_progresiva.js",
     "revelado_glosa.js",
-    "efecto_escritura.js",
-    "tema_graficos.js"
+    "nucleo/escritura/efecto_escritura.js",
+    "nucleo/tema/tema_graficos.js"
 ]

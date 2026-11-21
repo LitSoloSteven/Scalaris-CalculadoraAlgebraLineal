@@ -23,7 +23,7 @@ function preparar(permitido) {
         } } } };
     const documento = { getElementById: nombre => nombre === 'captura' ? { querySelectorAll: () => [entrada] } : boton,
         body: { appendChild() {} }, createElement: () => ({ style: {}, remove() {} }) };
-    ejecutar(leerArchivo('src/frontend/recursos/js/recoleccion_basura.js', 'utf8'), {
+    ejecutar(leerArchivo('src/frontend/recursos/js/nucleo/navegacion/recoleccion_basura.js', 'utf8'), {
         window: ventana, document: documento, setTimeout: tarea => { tareas.push(tarea); return tareas.length; }, clearTimeout() {} });
     return { ventana, eventos, clases, tareas };
 }

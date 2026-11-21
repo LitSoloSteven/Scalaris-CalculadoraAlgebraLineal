@@ -69,7 +69,7 @@ def test_tokens_de_duracion_en_banda():
 
 def test_javascript_sin_duraciones_o_curvas_literales_en_animaciones():
     """Rechaza duraciones directas y curvas literales en JavaScript."""
-    rutas = [str(ruta) for ruta in (RECURSOS / 'js').glob('*.js')]
+    rutas = [str(ruta) for ruta in (RECURSOS / 'js').rglob('*.js')]
     analizador = Path(__file__).with_name('comun_auditoria_tiempos.js')
     salida = subprocess.run(['node', '--expose-internals', str(analizador)], input=json.dumps(rutas),
                             text=True, capture_output=True, check=True, encoding='utf-8')

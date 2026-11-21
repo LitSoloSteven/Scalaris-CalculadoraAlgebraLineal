@@ -70,9 +70,9 @@ function crearCliente(almacen = new Map(), url = DESTINO, { sinRevelado = false 
         requestAnimationFrame: funcion => { cuadros.set(++secuencia, funcion); return secuencia; },
         cancelAnimationFrame: id => cuadros.delete(id),
     });
-    cargarAssetCliente('interacciones_globales.js', contexto);
-    if (!sinRevelado) cargarAssetCliente('revelado_circular.js', contexto);
-    cargarAssetCliente('navegacion_circular.js', contexto);
+    cargarAssetCliente('nucleo/interacciones/interacciones_globales.js', contexto);
+    if (!sinRevelado) cargarAssetCliente('nucleo/tema/revelado_circular.js', contexto);
+    cargarAssetCliente('nucleo/navegacion/navegacion_circular.js', contexto);
     return { eventos, clics, atributos, animaciones, cuadros, temporizadores, observadores,
         preferencia, ventana, documento, contexto, raiz, almacen };
 }

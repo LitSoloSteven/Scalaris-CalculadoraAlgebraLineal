@@ -10,7 +10,7 @@ from .procedimiento_aplicacion_transformacion import URL_COMPONENTES
 from .proyeccion_aplicacion_transformacion import anexar_proyeccion
 
 registro = logging.getLogger(__name__)
-_URL_TEMA = versionar_html('src="/assets/js/tema_graficos.js"').split('"')[1]
+_URL_TEMA = versionar_html('src="/assets/js/nucleo/tema/tema_graficos.js"').split('"')[1]
 _SINCRONIZAR_TEMA = (
     f'async () => {{ await import("{_URL_TEMA}"); '
     'window.scalaris.sincronizarTemaPlotly(); }'

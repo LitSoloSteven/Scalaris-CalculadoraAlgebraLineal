@@ -13,7 +13,7 @@ prueba('un callback en cola no reanuda una escritura saltada', () => {
   const ventana = { scalaris: { movimiento } };
   const contexto = vm.createContext({ window: ventana, document: { getElementById: () => elemento },
     Date: { now: () => 0 }, setTimeout: funcion => { tarea = funcion; return 1; }, clearTimeout() {} });
-  cargarAssetCliente('escritura_progresiva.js', contexto);
+  cargarAssetCliente('nucleo/escritura/escritura_progresiva.js', contexto);
   ventana.scalaris.efectoMaquinaEscribir('texto', 'Contenido completo', 18);
   clic();
   tarea();

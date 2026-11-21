@@ -85,8 +85,8 @@ function cargarScriptsSelector(documento, navigatorSimulado) {
         Option: class { constructor(t, v) { this.text = t; this.value = v; } },
     });
     const base = path.join(__dirname, "../src/frontend/recursos/js");
-    vm.runInContext(fs.readFileSync(path.join(base, "catalogo_simbolos.js"), "utf8"), contexto);
-    vm.runInContext(fs.readFileSync(path.join(base, "selector_simbolos.js"), "utf8"), contexto);
+    vm.runInContext(fs.readFileSync(path.join(base, "nucleo/escritura/catalogo_simbolos.js"), "utf8"), contexto);
+    vm.runInContext(fs.readFileSync(path.join(base, "nucleo/escritura/selector_simbolos.js"), "utf8"), contexto);
 }
 
 function crearAccionesEntorno(eventosDocumento, partes) {

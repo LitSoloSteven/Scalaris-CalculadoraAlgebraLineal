@@ -47,7 +47,7 @@ test("limpia MathJax por región y omite trabajo encolado ya desmontado", async 
         observe() {}
         disconnect() {}
     }
-    const ventana = cargar("renderizado_mathjax.js", {
+    const ventana = cargar("nucleo/interacciones/renderizado_mathjax.js", {
         document: { body: {}, getElementById: id => regiones.get(id) },
         MutationObserver: Observador,
     });

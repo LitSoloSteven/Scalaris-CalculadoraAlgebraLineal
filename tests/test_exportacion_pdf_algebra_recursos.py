@@ -12,7 +12,7 @@ def test_exportadores_reciben_script_y_estilos_pdf(herramienta):
     cabecera = seleccionar_recursos(tema._CABECERA_HTML, herramienta)
     assert '/assets/js/captura_pdf.js' in cabecera
     assert '/assets/css/utilidades/exportacion_pdf.css' in cabecera
-    assert '/assets/js/html2canvas.min.js' not in cabecera
+    assert '/assets/js/vendor/html2canvas.min.js' not in cabecera
 
 
 @pytest.mark.parametrize('herramienta', ('inicio',))

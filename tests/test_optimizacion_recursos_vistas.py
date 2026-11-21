@@ -63,12 +63,12 @@ def test_seleccion_conserva_plantillas_recursos_desconocidos_y_orden():
 
 def test_versionado_es_idempotente_y_no_reescribe_entradas_ajenas():
     """Solo URL propias conocidas reciben una huella; consultas y rutas ajenas se conservan."""
-    cabecera = '<script src="/assets/js/tema.js"></script>'
+    cabecera = '<script src="/assets/js/nucleo/tema/tema.js"></script>'
     versionada = versionado_recursos.versionar_html(cabecera)
     assert versionada != cabecera
     assert versionado_recursos.versionar_html(versionada) == versionada
-    for url in ("https://externo/js/tema.js", "/assets/js/../tema.js", "/assets/js/ausente.js",
-                "/assets/js/tema.js?x=1", "/assets/css/tema.js"):
+    for url in ("https://externo/js/nucleo/tema/tema.js", "/assets/js/../tema.js", "/assets/js/ausente.js",
+                "/assets/js/nucleo/tema/tema.js?x=1", "/assets/css/tema.js"):
         etiqueta = f'<script src="{url}"></script>'
         assert versionado_recursos.versionar_html(etiqueta) == etiqueta
 
@@ -85,4 +85,4 @@ def test_huellas_cambian_solo_con_el_contenido(monkeypatch):
 
     monkeypatch.setattr(Path, "read_bytes", leer_cambio)
     nuevas = versionado_recursos._calcular_versiones()
-    assert [url for url in versiones if versiones[url] != nuevas[url]] == ["/assets/js/tema.js"]
+    assert [url for url in versiones if versiones[url] != nuevas[url]] == ["/assets/js/nucleo/tema/tema.js"]

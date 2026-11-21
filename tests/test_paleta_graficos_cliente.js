@@ -21,7 +21,7 @@ function crearFiguraTematica() {
         restyle: async (_, cambios, indices) => llamadas.push({ cambios, indices }),
     } };
     const documento = { querySelectorAll: () => [figura], documentElement: { getAttribute: () => 'marea' } };
-    cargarAssetCliente('tema_graficos.js', maquinaVirtual.createContext({ window: ventana, document: documento }));
+    cargarAssetCliente('nucleo/tema/tema_graficos.js', maquinaVirtual.createContext({ window: ventana, document: documento }));
     return { figura, llamadas, actualizar: ventana.scalaris.actualizarTemaPlotly,
         sincronizar: ventana.scalaris.sincronizarTemaPlotly };
 }

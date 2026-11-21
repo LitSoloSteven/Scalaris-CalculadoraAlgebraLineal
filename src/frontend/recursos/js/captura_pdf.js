@@ -21,7 +21,7 @@
     let etiqueta;
     const pendiente = new Promise((resolver, rechazar) => {
       etiqueta = document.createElement('script');
-      etiqueta.src = '/assets/js/html2canvas.min.js';
+      etiqueta.src = '/assets/js/vendor/html2canvas.min.js';
       etiqueta.onload = () => resolver(window.html2canvas);
       etiqueta.onerror = () => rechazar(new Error('biblioteca'));
       document.head.appendChild(etiqueta);
