@@ -131,7 +131,7 @@ prueba("oculta simbolos incompatibles y categorias vacias en cada perfil", () =>
         ["matriz", ["−", "×", "·", "⋅", "∙", "ᵀ", "½"], ["√", "π", "∞", "₀"], ["", "Operadores", "Raíces, potencias y subíndices", "Fracciones", "Cálculo y geometría"]],
         ["numero", ["−", "⁄", "∕", "¼", "½"], ["×", "√", "π", "ᵀ", "∞"], ["", "Operadores", "Fracciones", "Cálculo y geometría"]],
         ["ecuacion", ["−", "⁄", "∕", "¼"], ["√", "⁰", "ᵀ", "∞"], ["", "Operadores", "Raíces, potencias y subíndices", "Fracciones", "Letras griegas", "Cálculo y geometría"]],
-        ["real", ["−"], ["√", "π", "∞", "ᵀ", "∫"], ["", "Operadores"]],
+        ["real", ["−", "√", "π", "‰", "°"], ["∞", "ᵀ", "∫"], ["", "Operadores", "Raíces, potencias y subíndices", "Fracciones", "Letras griegas", "Cálculo y geometría"]],
         ["base", ["−"], ["×", "√", "π", "½", "∞"], ["", "Operadores"]],
     ];
     for (const [perfil, incluidos, excluidos, grupos] of expectativas) {
