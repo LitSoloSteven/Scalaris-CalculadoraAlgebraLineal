@@ -3,7 +3,7 @@ from fractions import Fraction
 
 import pytest
 
-from src.backend.resolutores.sistemas_lineales.jacobi.jacobi import aritmetica_jacobi
+from src.backend.resolutores.sistemas_lineales.jacobi import aritmetica_jacobi
 from src.backend.resolutores.sistemas_lineales.jacobi.jacobi import resolver_jacobi_desde_captura
 
 
