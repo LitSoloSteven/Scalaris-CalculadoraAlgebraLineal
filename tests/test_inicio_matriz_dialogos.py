@@ -14,7 +14,7 @@ from tests.comun_estilos import (
 )
 
 
-RUTA_CSS_TEMAS = Path("src/frontend/recursos/css/tokens.css")
+RUTA_CSS_TEMAS = Path("src/frontend/recursos/css/base/tokens.css")
 RUTA_JS_INICIO = Path("src/frontend/recursos/js/inicio.js")
 
 

@@ -2,7 +2,7 @@
 const archivos = require('node:fs');
 const rutas = require('node:path');
 
-const css = archivos.readFileSync(rutas.join(__dirname, '../src/frontend/recursos/css/tokens.css'), 'utf8');
+const css = archivos.readFileSync(rutas.join(__dirname, '../src/frontend/recursos/css/base/tokens.css'), 'utf8');
 
 /** Expone a los simuladores los valores declarados en la hoja de tokens. */
 function estilosMovimiento() {

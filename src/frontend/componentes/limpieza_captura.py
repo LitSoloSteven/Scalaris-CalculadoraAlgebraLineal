@@ -49,7 +49,7 @@ class LimpiezaCaptura:
 
     def construir(self) -> None:
         """Monta la acción accesible, con espacio estable en filas estrechas."""
-        ui.add_head_html('<link rel="stylesheet" href="/assets/css/limpieza_captura.css">')
+        ui.add_head_html('<link rel="stylesheet" href="/assets/css/componentes/limpieza_captura.css">')
         ui.context.slot.parent.classes('limpieza-acciones')
         self._contenedor_captura = ui.context.client.content
         self.boton = ui.button(icon='delete', on_click=self.confirmar, color=None).classes(

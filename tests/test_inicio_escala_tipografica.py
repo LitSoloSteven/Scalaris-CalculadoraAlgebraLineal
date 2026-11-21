@@ -5,7 +5,7 @@ import re
 from tests.comun_estilos import leer_css_inicio
 
 
-RUTA_CSS_TEMAS = Path("src/frontend/recursos/css/tokens.css")
+RUTA_CSS_TEMAS = Path("src/frontend/recursos/css/base/tokens.css")
 RUTA_VISTA_INICIO = Path("src/frontend/vistas/inicio/vista_inicio.py")
 
 

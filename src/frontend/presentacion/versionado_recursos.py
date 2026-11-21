@@ -4,12 +4,15 @@ import re
 from pathlib import Path
 
 _RECURSOS = Path(__file__).parents[1] / "recursos"
-_URL_RECURSO = re.compile(r'(?P<atributo>\b(?:src|href)=")(?P<url>/assets/(?:js|css)/[\w-]+\.(?:js|css))"')
+_URL_RECURSO = re.compile(
+    r'(?P<atributo>\b(?:src|href)=")'
+    r'(?P<url>/assets/(?:js|css)/(?:[\w-]+/)*[\w-]+(?:\.[\w-]+)*\.(?:js|css))"'
+)
 
 
 def _calcular_versiones() -> dict[str, str]:
     return {f"/assets/{ruta.relative_to(_RECURSOS).as_posix()}": hashlib.sha256(ruta.read_bytes()).hexdigest()
-            for carpeta in ("js", "css") for ruta in (_RECURSOS / carpeta).iterdir()
+            for carpeta in ("js", "css") for ruta in (_RECURSOS / carpeta).rglob(f"*.{carpeta}")
             if ruta.is_file() and ruta.suffix == f".{carpeta}"}
 
 

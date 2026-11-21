@@ -18,13 +18,13 @@ _POR_RECURSO = {
     "sintesis_sonora.js": _VISTAS,
     "asignacion_sonora.js": _VISTAS,
     "eventos_sonoros.js": _VISTAS,
-    "exportacion_pdf.css": _EXPORTACION_PDF,
+    "utilidades/exportacion_pdf.css": _EXPORTACION_PDF,
     "clon_pdf.js": _EXPORTACION_PDF,
     "captura_pdf.js": _EXPORTACION_PDF,
-    "presentacion.css": _INICIO,
-    "vistas_inicio_directorio.css": _INICIO,
-    "vistas_inicio_ejemplos.css": _INICIO,
-    "vistas_inicio_adaptable.css": frozenset({"sistemas", "inversa", "visualizador"}),
+    "inicio/presentacion.css": _INICIO,
+    "inicio/vistas_inicio_directorio.css": _INICIO,
+    "inicio/vistas_inicio_ejemplos.css": _INICIO,
+    "inicio/vistas_inicio_adaptable.css": frozenset({"sistemas", "inversa", "visualizador"}),
     "vistas_matrices.css": frozenset({"matrices"}),
     "vistas_vectores.css": frozenset({"vectores", "visualizador"}),
     "vistas_geometria.css": frozenset({"visualizador"}),
@@ -49,8 +49,8 @@ _POR_RECURSO = {
     "sincronizacion_diseno.js": frozenset({"visualizador"}),
 }
 _ETIQUETAS = re.compile(
-    r'<script\b[^>]*\bsrc="/assets/js/(?P<js>[^"/]+)"[^>]*>\s*</script>'
-    r'|<link\b[^>]*\bhref="/assets/css/(?P<css>[^"/]+)"[^>]*>'
+    r'<script\b[^>]*\bsrc="/assets/js/(?P<js>[^"]+)"[^>]*>\s*</script>'
+    r'|<link\b[^>]*\bhref="/assets/css/(?P<css>[^"]+)"[^>]*>'
 )
 
 

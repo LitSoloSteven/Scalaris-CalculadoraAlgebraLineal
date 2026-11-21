@@ -60,7 +60,7 @@ def test_plantilla_simbolos_mantiene_cabecera_fija_y_dialogo_nativo():
 
 def test_estilos_selector_simbolos_acotan_flex_y_scroll_interno():
     """Los estilos acotan display al estado abierto y contienen el scroll en cuerpo y backdrop."""
-    ruta_css = RAIZ / "src/frontend/recursos/css/selector_simbolos.css"
+    ruta_css = RAIZ / "src/frontend/recursos/css/componentes/selector_simbolos.css"
     texto_css = ruta_css.read_text(encoding="utf-8")
 
     regla_dialogo = _bloque_css(texto_css, ".simbolos-dialogo")

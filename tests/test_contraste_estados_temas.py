@@ -2,7 +2,7 @@
 import pytest
 from tests.comun_estilos import analizar_tokens, hexadecimal_a_rgb, razon_contraste
 
-RUTA_CSS = 'src/frontend/recursos/css/tokens.css'
+RUTA_CSS = 'src/frontend/recursos/css/base/tokens.css'
 
 PARES = [
     ('text-main', 'bg-page', 4.5),

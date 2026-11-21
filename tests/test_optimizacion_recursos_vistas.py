@@ -32,8 +32,8 @@ def test_paginas_versionan_cabecera_sin_cambiar_recursos_de_componentes(monkeypa
         assert cabecera.index("interacciones_globales.js") < cabecera.index("cuadricula_compartida.js")
         assert cabecera.index("escritura_progresiva.js") < cabecera.index("reproductor_pasos.js")
         urls = {url for url, _ in recursos}
-        for recurso_inicio in ("js/inicio.js", "css/vistas_inicio_directorio.css",
-                              "css/vistas_inicio_ejemplos.css", "js/ejemplos_inicio.js"):
+        for recurso_inicio in ("js/inicio.js", "css/inicio/vistas_inicio_directorio.css",
+                              "css/inicio/vistas_inicio_ejemplos.css", "js/ejemplos_inicio.js"):
             assert (f"/assets/{recurso_inicio}" in urls) == (vista == "inicio")
         assert ("tema_graficos.js" in cabecera) == (vista in {"visualizador", "biseccion", "regla_falsa", "metodos_abiertos"})
         assert ("sincronizacion_diseno.js" in cabecera) == (vista == "visualizador")

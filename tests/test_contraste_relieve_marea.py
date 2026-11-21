@@ -6,7 +6,7 @@ from tests.comun_estilos import (
     analizar_tokens, hexadecimal_a_rgb, luminancia_relativa, razon_contraste,
 )
 
-RUTA_CSS = Path(__file__).resolve().parent.parent / "src" / "frontend" / "recursos" / "css" / "tokens.css"
+RUTA_CSS = Path(__file__).resolve().parent.parent / "src" / "frontend" / "recursos" / "css" / "base/tokens.css"
 
 
 SUPERFICIES_TEXTO_MAREA = [

@@ -13,7 +13,7 @@ from tests.comun_estilos import analizar_tokens, hexadecimal_a_rgb, razon_contra
 from tests.comun_construccion_vistas import construir_pagina
 
 
-TEMAS = analizar_tokens('src/frontend/recursos/css/tokens.css')
+TEMAS = analizar_tokens('src/frontend/recursos/css/base/tokens.css')
 SUPERFICIES = ['bg-page', 'bg-panel', 'bg-elevated', 'input-bg', 'accent-soft', 'bg-calc-btn']
 TEXTOS = ['text-main', 'text-sec', 'text-placeholder', 'accent', 'error', 'success', 'warning']
 DISTINTIVOS = [('badge-err-text', 'badge-err-bg'), ('badge-suc-text', 'badge-suc-bg'),
@@ -124,11 +124,11 @@ def test_inversa_anuncia_obsolescencia_sin_duplicar_aviso(monkeypatch):
 def test_opacidades_estables_no_reducen_textos_y_marcadores():
     """Se protegen placeholders y estados que antes componían dos atenuaciones."""
     carpeta = Path('src/frontend/recursos/css')
-    entradas = (carpeta / 'componentes_entradas.css').read_text(encoding='utf-8')
-    glosa = (carpeta / 'vistas_glosa_componentes.css').read_text(encoding='utf-8')
+    entradas = (carpeta / 'componentes/componentes_entradas.css').read_text(encoding='utf-8')
+    glosa = (carpeta / 'glosa/vistas_glosa_componentes.css').read_text(encoding='utf-8')
     assert 'opacity: 0.6' not in entradas + glosa
     assert 'opacity: 0.5' not in entradas + glosa
-    base = (carpeta / 'base.css').read_text(encoding='utf-8')
+    base = (carpeta / 'base/base.css').read_text(encoding='utf-8')
     assert 'html .q-field--float .q-field__native::placeholder' in base
     assert '.sesion-obsoleta {' in base
     assert 'html .glosa-sugerencia[disabled]' in base

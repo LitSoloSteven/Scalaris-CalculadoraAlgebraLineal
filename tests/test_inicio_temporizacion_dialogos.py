@@ -14,7 +14,7 @@ def duracion_milisegundos(bloque: str, nombre_propiedad: str) -> int:
     declaracion = coincidencia.group(1)
     token = re.search(r"var\((--dur-[a-z-]+)\)", declaracion)
     if token:
-        tokens = Path("src/frontend/recursos/css/tokens.css").read_text(encoding="utf-8")
+        tokens = Path("src/frontend/recursos/css/base/tokens.css").read_text(encoding="utf-8")
         duracion = re.search(rf"{re.escape(token.group(1))}:\s*(\d+)ms\b", tokens)
     else:
         duracion = re.search(r"(\d+)ms\b", declaracion)
@@ -45,7 +45,7 @@ def _comprobar_duraciones_permitidas(css):
     ]
     assert declaraciones_transicion
     assert max(duraciones, default=0) <= 900
-    tokens = Path("src/frontend/recursos/css/tokens.css").read_text(encoding="utf-8")
+    tokens = Path("src/frontend/recursos/css/base/tokens.css").read_text(encoding="utf-8")
     nombres = set(re.findall(r"var\((--dur-[a-z-]+)\)", " ".join(declaraciones_transicion)))
     assert nombres
     for nombre in nombres:

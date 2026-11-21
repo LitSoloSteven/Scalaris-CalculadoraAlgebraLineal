@@ -45,8 +45,8 @@ def test_menu_tema_tiene_opciones_de_seleccion_exclusiva(monkeypatch):
 def test_estilos_no_heredan_marcas_activas_de_papel():
     """La marca visual depende de aria-checked y no de tokens acumulables."""
     recursos = Path("src/frontend/recursos")
-    controles = (recursos / "css/componentes_controles.css").read_text(encoding="utf-8")
-    tokens = (recursos / "css/tokens.css").read_text(encoding="utf-8")
+    controles = (recursos / "css/componentes/componentes_controles.css").read_text(encoding="utf-8")
+    tokens = (recursos / "css/base/tokens.css").read_text(encoding="utf-8")
     vectores = (recursos / "css/vistas_vectores.css").read_text(encoding="utf-8")
     assert "--show-" not in tokens + controles
     assert '[data-tema-opcion][aria-checked="true"] .tema-marca-activa' in controles

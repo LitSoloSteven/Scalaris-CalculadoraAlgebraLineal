@@ -65,7 +65,7 @@ def _comprobar_movimiento_reducido_y_sugerencias(contenido, raiz):
     assert "max-width: 16ch" not in css_celda_inversa
     assert "text-overflow: ellipsis" not in css_celda_inversa
 
-    parte_movimiento_reducido = (raiz / "src" / "frontend" / "recursos" / "css" / "movimiento.css").read_text(encoding="utf-8")
+    parte_movimiento_reducido = (raiz / "src" / "frontend" / "recursos" / "css" / "base/movimiento.css").read_text(encoding="utf-8")
     assert "@media (prefers-reduced-motion: reduce)" in parte_movimiento_reducido
     assert ".escritura-cursor" in parte_movimiento_reducido
     assert ".glosa-indicador-escritura span" in parte_movimiento_reducido

@@ -5,7 +5,7 @@ import pytest
 
 from tests.comun_estilos import analizar_tokens
 
-RUTA_CSS = Path("src/frontend/recursos/css/tokens.css")
+RUTA_CSS = Path("src/frontend/recursos/css/base/tokens.css")
 
 MUESTRAS_ESPERADAS = {
     "--swatch-papel": "#F2F0EB",

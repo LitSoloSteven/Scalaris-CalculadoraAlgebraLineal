@@ -74,7 +74,7 @@ def test_selector_rechaza_configuraciones_ambiguas(opciones, inicial):
 @pytest.mark.parametrize('tema', ['papel', 'marea', 'medianoche'])
 def test_contraste_calculado_del_selector(tema):
     """Los colores de texto y foco superan WCAG AA en los tres temas."""
-    tokens = analizar_tokens('src/frontend/recursos/css/tokens.css')[tema]
+    tokens = analizar_tokens('src/frontend/recursos/css/base/tokens.css')[tema]
     pares = [('text-sec', 'bg-panel', 4.5), ('btn-primary-text', 'btn-primary-bg', 4.5),
              ('focus-ring', 'bg-panel', 3), ('btn-primary-text', 'btn-primary-bg', 3)]
     for frente, fondo, minimo in pares:
@@ -88,7 +88,7 @@ def test_selector_reemplaza_scroll_y_respeta_movimiento():
     raiz = Path('src/frontend')
     controles = (raiz / 'vistas/operaciones_vectores/controles.py').read_text(encoding='utf-8')
     estilos = (raiz / 'recursos/css/vistas_vectores.css').read_text(encoding='utf-8')
-    selector = (raiz / 'recursos/css/selector_opciones.css').read_text(encoding='utf-8')
+    selector = (raiz / 'recursos/css/componentes/selector_opciones.css').read_text(encoding='utf-8')
     for anterior in ['pestanas-vectores', 'q-tabs__arrow', 'q-tabs--scrollable', 'q-tabs__content']:
         assert anterior not in controles + estilos + selector
     assert 'mobile-arrows' not in controles and 'outside-arrows' not in controles

@@ -21,7 +21,7 @@ class SelectorOpciones(ValueElement):
             raise ValueError('El selector necesita valores únicos y una opción inicial válida.')
         self._valores = valores
         self.botones = {}
-        ui.add_head_html('<link rel="stylesheet" href="/assets/css/selector_opciones.css">')
+        ui.add_head_html('<link rel="stylesheet" href="/assets/css/componentes/selector_opciones.css">')
         ui.add_head_html('<script src="/assets/js/selector_opciones.js"></script>')
         with ui.element('div').classes('selector-opciones-contenedor'):
             super().__init__(tag='div', value=valor_inicial)

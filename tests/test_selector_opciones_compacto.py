@@ -57,7 +57,7 @@ def test_secciones_vectoriales_comparten_un_gap_semantico(monkeypatch):
 
 def test_indicador_compacto_se_mueve_sin_transiciones_de_redimensionado():
     """Solo activar la clase de seleccion inicia movimiento, con accesibilidad conservada."""
-    estilos = Path('src/frontend/recursos/css/selector_opciones.css').read_text(encoding='utf-8')
+    estilos = Path('src/frontend/recursos/css/componentes/selector_opciones.css').read_text(encoding='utf-8')
     assert 'grid-auto-rows: 1fr' in estilos
     assert 'height: calc(100% / var(--selector-filas-compactas))' in estilos
     assert 'width: calc(100% / var(--selector-columnas-compactas))' in estilos
