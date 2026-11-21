@@ -7,9 +7,9 @@ from src.frontend.componentes.aplicacion.base.sonido import emitir_sonido
 from src.frontend.controladores.exportacion_pdf.documento import generar_pdf
 from src.frontend.controladores.exportacion_pdf.portada import nombre_archivo
 from src.frontend.controladores.exportacion_pdf.vigencia import EnlacePDF
-from .captura import capturar_regiones
-from .dialogo import DialogoPortada
-from .indicador import crear_indicador, cargar_indicador
+from .piezas.captura import capturar_regiones
+from .piezas.dialogo import DialogoPortada
+from .piezas.indicador import crear_indicador, cargar_indicador
 from .secuencia import preparar_secuencia
 
 

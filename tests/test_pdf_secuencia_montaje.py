@@ -4,7 +4,7 @@ import asyncio
 import pytest
 from nicegui import ui
 
-from src.frontend.componentes.exportacion_pdf.entrada import renderizar_entrada
+from src.frontend.componentes.exportacion_pdf.piezas.entrada import renderizar_entrada
 from src.frontend.componentes.exportacion_pdf.secuencia import preparar_secuencia
 from tests.comun_exportacion_algebra import HERRAMIENTAS, calcular_algebra, construir_algebra
 from tests.comun_exportacion_utilidades import CASOS, calcular_utilidad, construir_utilidad

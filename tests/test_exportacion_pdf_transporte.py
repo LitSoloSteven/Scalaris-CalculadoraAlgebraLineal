@@ -4,8 +4,8 @@ import json
 
 import pytest
 from src.frontend.nucleo import constantes
-from src.frontend.componentes.exportacion_pdf.captura import capturar_regiones
-from src.frontend.componentes.exportacion_pdf import captura as modulo
+from src.frontend.componentes.exportacion_pdf.piezas.captura import capturar_regiones
+from src.frontend.componentes.exportacion_pdf.piezas import captura as modulo
 
 
 def _preparar_transporte(monkeypatch, manifiesto=None, truncar=False):
