@@ -54,9 +54,9 @@
         ['∧', 'Conjunción'], ['∨', 'Disyunción'], ['¬', 'Negación'],
     ];
     const calculo = [
-        ['ℯ', 'Número de Euler', {funcion: 'ℯ', real: 'ℯ'}], ['∞', 'Infinito'],
+        ['ℯ', 'Número de Euler', {funcion: 'ℯ', real: 'ℯ'}], ['∞', 'Infinito (límite de integración)', {funcion: '∞'}],
         ['∑', 'Sumatoria', {funcion: '∑(i,1,3,i×x)'}], ['∏', 'Productoria', {funcion: '∏(i,1,3,i×x)'}],
-        ['∫', 'Integral'], ['∬', 'Integral doble'], ['∭', 'Integral triple'], ['∮', 'Integral de contorno'],
+        ['∫', 'Integral', {funcion: '∫(t,t,0,x)'}], ['∬', 'Integral doble'], ['∭', 'Integral triple'], ['∮', 'Integral de contorno'],
         ['∂', 'Derivada parcial'], ['∇', 'Nabla'],
         ['′', 'Prima (primera derivada)', {funcion: '′'}], ['″', 'Doble prima (segunda derivada)', {funcion: '″'}],
         ['°', 'Grados', {funcion: '°', real: '°'}], ['∠', 'Ángulo'], ['△', 'Triángulo'],

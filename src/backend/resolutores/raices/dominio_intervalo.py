@@ -5,6 +5,7 @@ from fractions import Fraction
 from src.backend.excepciones import ErrorDominio
 from .errores_numericos import ErrorSingularidad
 from .gramatica_funcion import analizar_expresion, CONSTANTES_REALES
+from .nodos_integral import es_integral, nodos_exteriores
 from .notacion_calculo import ANGULARES_RADIANES, GRADOS_POR_MEDIA_VUELTA, NOMBRES_ANGULARES
 from .polos_trigonometricos import comprobar_polos_tangente
 from .unidades_angulares import validar_unidad_angular
@@ -28,10 +29,10 @@ def comprobar_dominio_intervalo(expresion: str, intervalo: tuple[float, float], 
 def comprobar_dominio_arbol(arbol: ast.Expression, intervalo: tuple[float, float], unidad_angular: str) -> None:
     """Comprueba restricciones estructurales con un AST y una unidad ya validados."""
     extremos = tuple(Fraction(valor) for valor in intervalo)
-    for nodo in ast.walk(arbol):
+    for nodo in nodos_exteriores(arbol):
         if isinstance(nodo, ast.BinOp):
             _comprobar_operacion(nodo, extremos)
-        elif isinstance(nodo, ast.Call):
+        elif isinstance(nodo, ast.Call) and not es_integral(nodo):
             _comprobar_funcion(nodo, extremos, unidad_angular)
 
 
