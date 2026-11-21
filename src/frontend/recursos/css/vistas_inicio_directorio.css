@@ -8,6 +8,7 @@
 
 .inicio-cabecera,
 .inicio-marca,
+.inicio-controles,
 .inicio-seccion-cabecera {
     display: flex;
     align-items: center;
@@ -18,10 +19,13 @@
 .inicio-cabecera {
     min-height: 3.75rem;
     justify-content: space-between;
+    flex-wrap: wrap;
+    row-gap: 0;
     border-block-end: 1px solid var(--border-input);
 }
 
 .inicio-marca {
+    flex-wrap: wrap;
     font-size: var(--fs-h2);
     font-weight: var(--fw-display);
 }
@@ -41,6 +45,8 @@
     font-weight: var(--fw-small);
     text-decoration: none;
 }
+
+.inicio-controles { flex-wrap: wrap; margin-inline-start: auto; }
 
 .inicio-tema .selector-tema-textual {
     min-height: 2.75rem;
@@ -255,6 +261,7 @@ html[data-entrada="teclado"] :is(.inicio-seccion, .inicio-simbolo),
 }
 
 @container (max-width: 40rem) {
+    .inicio-controles .sonido-control { position: static; }
     .inicio-presentacion,
     .inicio-secciones { grid-template-columns: minmax(0, 1fr); }
     .inicio-titulo { font-size: clamp(2.25rem, 9vw, 3.625rem); }

@@ -4,12 +4,12 @@ import html
 
 from nicegui import Client, ui
 
-from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
+from src.frontend.componentes.control_sonido import renderizar_control_sonido
 from src.frontend.componentes.iconos import icono_svg
 from src.frontend.componentes.panel_ia import PanelIA
 from src.frontend.componentes.selector_tema import renderizar_boton_tema
 from src.frontend.controladores.inicio._modelo import EstadoPortada, estado_portada
-from src.frontend.navegacion import ElementoNavegacion, RUTA_INICIO, enlace_elemento_navegacion
+from src.frontend.navegacion import ElementoNavegacion, enlace_elemento_navegacion
 from src.frontend.navegacion.secciones_inicio import GrupoInicio, SeccionInicio, secciones_inicio
 from .panel_ejemplo import construir_html_ejemplo, renderizar_panel_ejemplo
 
@@ -38,8 +38,10 @@ def _renderizar_cabecera() -> None:
                 )
             _texto("span", "Scalaris")
             _texto("abbr", "UAM", "inicio-universidad").props('title="Universidad Americana"')
-        with ui.element("div").classes("inicio-tema"):
-            renderizar_boton_tema(mostrar_nombre=True)
+        with ui.element("div").classes("inicio-controles"):
+            renderizar_control_sonido()
+            with ui.element("div").classes("inicio-tema"):
+                renderizar_boton_tema(mostrar_nombre=True)
 
 
 def _renderizar_acceso(acceso: ElementoNavegacion) -> None:
@@ -159,7 +161,6 @@ class VistaInicio:
         """Monta la portada en el cliente y actualiza el último acceso al conectar."""
         ui.query("body").classes("inicio-pagina")
         self.panel_ia = PanelIA(self)
-        crear_estructura_aplicacion(self, ruta_activa=RUTA_INICIO)
         estado_inicial = estado_portada()
         with ui.element("main").classes("inicio-raiz vista-raiz"):
             _renderizar_cabecera()
