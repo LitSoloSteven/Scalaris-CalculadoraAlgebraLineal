@@ -9,7 +9,7 @@ from src.frontend.controladores.raices.biseccion.presentacion.presentacion impor
 from src.frontend.controladores.raices.biseccion.presentacion.presentacion_criterio import texto_resumen
 from src.frontend.controladores.raices.biseccion.ejecucion.resolucion_multiple import resolver_lote
 from src.frontend.vistas.raices.biseccion.grafica.figura import crear_figura
-from src.frontend.vistas.biseccion import resumen_criterio, resultados_multiples
+from src.frontend.vistas.raices.biseccion.resultados import resumen_criterio, resultados_multiples
 from tests.comun_biseccion_criterios import captura_criterio, ejecutar_escenario
 
 

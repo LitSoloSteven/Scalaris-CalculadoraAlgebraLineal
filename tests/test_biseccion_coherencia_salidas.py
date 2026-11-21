@@ -3,7 +3,7 @@ from nicegui import ui
 
 from src.frontend.componentes.resultados.acciones.copia_resultado import texto_resultado_copiable
 from src.frontend.controladores.raices.biseccion.salidas.salidas_biseccion import COLUMNAS_EXAMEN
-from src.frontend.vistas.biseccion import resumen_criterio
+from src.frontend.vistas.raices.biseccion.resultados import resumen_criterio
 from src.frontend.vistas.biseccion.vista_biseccion import VistaBiseccion
 from tests.comun_biseccion_criterios import captura_criterio, ejecutar_escenario
 

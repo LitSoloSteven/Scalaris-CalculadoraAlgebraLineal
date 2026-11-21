@@ -15,7 +15,7 @@ from src.frontend.controladores.raices.regla_falsa.procedimiento.pasos_ampliados
 from src.frontend.controladores.raices.regla_falsa.presentacion.tabla import COLUMNAS, filas_tabla
 from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto
 from src.frontend.vistas.raices.biseccion.procedimiento.modo_examen import crear_interruptor_examen, mostrar_accion_examen as examen_biseccion
-from src.frontend.vistas.biseccion.resumen_criterio import mostrar_resumen
+from src.frontend.vistas.raices.biseccion.resultados.resumen_criterio import mostrar_resumen
 from src.frontend.vistas.regla_falsa.modo_examen import mostrar_accion_examen
 from src.frontend.vistas.regla_falsa.resultado import mostrar_resultado
 from src.frontend.vistas.regla_falsa.sugerencias import mostrar_sugerencias

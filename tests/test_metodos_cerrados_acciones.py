@@ -6,7 +6,7 @@ from nicegui import Client, core, ui
 from src.frontend.componentes.resultados.acciones.copia_resultado import texto_resultado_copiable
 from src.frontend.controladores.raices.biseccion.captura.catalogo_criterios import DECIMALES_PRESENTACION_DEFECTO
 from src.frontend.controladores.raices.metodos_cerrados.adaptadores import BISECCION, REGLA_FALSA, resolver_presentacion
-from src.frontend.vistas.biseccion import resumen_criterio
+from src.frontend.vistas.raices.biseccion.resultados import resumen_criterio
 from src.frontend.vistas.metodos_cerrados.acciones import AccionesMetodosCerrados
 from src.frontend.vistas.regla_falsa import resultado
 from tests.comun_construccion_vistas import cerrar_cliente

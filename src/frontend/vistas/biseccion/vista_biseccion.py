@@ -18,7 +18,7 @@ from src.frontend.vistas.raices.biseccion.captura.estado_captura import hay_rang
 from src.frontend.vistas.raices.biseccion.captura.estados_entrada import actualizar_expresion, actualizar_intervalo
 from src.frontend.vistas.raices.biseccion.grafica.grafico_compartido import restaurar_grafico_principal
 from src.frontend.vistas.raices.biseccion.base.modos_captura import MODO_BUSQUEDA, MODO_INTERVALO
-from .resultado import mostrar_resultado
+from src.frontend.vistas.raices.biseccion.resultados.resultado import mostrar_resultado
 from src.frontend.vistas.raices.biseccion.base.selector_criterio import actualizar_guia, enlazar_parametros
 from .intervalo_canonico import reflejar_intervalo
 

@@ -9,7 +9,7 @@ from nicegui import ui
 from src.frontend.componentes.raices.captura.modos_captura_raices import MODO_BUSQUEDA, MODO_INTERVALO
 from src.frontend.componentes.resultados.acciones.copia_resultado import texto_resultado_copiable
 from src.frontend.controladores.raices.metodos_cerrados.adaptadores import BISECCION, REGLA_FALSA
-from src.frontend.vistas.biseccion import resumen_criterio
+from src.frontend.vistas.raices.biseccion.resultados import resumen_criterio
 from src.frontend.vistas.regla_falsa import resultado as salida_regla_falsa
 from tests.test_metodos_cerrados_calculo import captura_ejercicio, montar_vista
 
