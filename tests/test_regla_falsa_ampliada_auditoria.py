@@ -11,7 +11,7 @@ def test_modulos_ampliados_cumplen_reglas(monkeypatch, comprobar):
     """Audita todos los módulos ampliados con las reglas comunes sin cambiar sus manifiestos."""
     rutas = list((RAIZ / "src/backend/resolutores/raices").rglob("*regla_falsa*.py"))
     rutas.extend(RAIZ / ruta for ruta in (
-        "src/frontend/controladores/regla_falsa/__init__.py",
+        "src/frontend/controladores/raices/regla_falsa/__init__.py",
         "src/frontend/controladores/raices/regla_falsa/captura/captura.py",
         "src/frontend/controladores/raices/regla_falsa/captura/configuracion_ampliada.py",
         "src/frontend/controladores/raices/regla_falsa/procedimiento/contexto_regla_falsa.py",
