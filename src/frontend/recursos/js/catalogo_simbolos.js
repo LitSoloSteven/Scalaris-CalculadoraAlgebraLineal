@@ -4,7 +4,7 @@
 {
     window.scalaris = window.scalaris || {};
     const operadores = [
-        ['−', 'Signo menos', {funcion: '−', matriz: '−', numero: '-', ecuacion: '-'}],
+        ['−', 'Signo menos', {funcion: '−', matriz: '−', numero: '-', ecuacion: '-', base: '-', real: '-'}],
         ['×', 'Multiplicación', {funcion: '×', matriz: '×'}],
         ['·', 'Producto con punto', {funcion: '·', matriz: '·'}],
         ['⋅', 'Punto de multiplicación', {funcion: '⋅', matriz: '⋅'}],
@@ -67,6 +67,85 @@
         'Conjuntos y lógica': conjuntos,
         'Cálculo y geometría': calculo,
     };
-    window.scalaris.catalogoSimbolos = Object.entries(grupos).flatMap(([grupo, entradas]) =>
+    const catalogo = Object.entries(grupos).flatMap(([grupo, entradas]) =>
         entradas.map(([simbolo, nombre, campos = {}, tecla]) => ({grupo, simbolo, nombre, campos, tecla})));
+    const PERFILES_POR_MODULO = {
+        inicio: ['texto'],
+        sistemas: ['ecuacion', 'numero'],
+        matrices: ['matriz', 'numero'],
+        vectores: ['numero'],
+        inversa: ['numero'],
+        determinantes: ['numero'],
+        factorizacion_lu: ['numero'],
+        leontief: ['numero'],
+        transformaciones: ['numero'],
+        visualizador: ['numero'],
+        bases: ['base'],
+        romanos: ['romano'],
+        metodos_cerrados: ['funcion', 'real'],
+        biseccion: ['funcion', 'real'],
+        regla_falsa: ['funcion', 'real'],
+        metodos_abiertos: ['funcion', 'real'],
+    };
+    const MENSAJES_SIN_SIMBOLOS = {
+        romano: 'Este campo solo admite números romanos (I, V, X, L, C, D, M).',
+        entero: 'Este campo solo admite números enteros positivos.',
+    };
+
+    function perfilesActivos(destino, modulo) {
+        if (destino?.tipo) return [destino.tipo];
+        if (modulo && Object.hasOwn(PERFILES_POR_MODULO, modulo)) return [...PERFILES_POR_MODULO[modulo]];
+        return ['texto'];
+    }
+
+    function admiteTodos(perfiles) {
+        return Array.isArray(perfiles) && perfiles.includes('texto');
+    }
+
+    function esCompatibleConPerfiles(entrada, perfiles) {
+        if (!entrada || !Array.isArray(perfiles)) return false;
+        if (admiteTodos(perfiles)) return true;
+        const campos = entrada.campos || {};
+        return perfiles.some(perfil => Boolean(campos[perfil]));
+    }
+
+    function simbolosDisponibles(listaCatalogo, perfiles) {
+        if (admiteTodos(perfiles)) return [...listaCatalogo];
+        return listaCatalogo.filter(entrada => esCompatibleConPerfiles(entrada, perfiles));
+    }
+
+    function gruposDisponibles(disponibles) {
+        return [...new Set(disponibles.map(entrada => entrada.grupo))];
+    }
+
+    function textoInsercion(entrada, destino) {
+        if (!destino) return undefined;
+        if (destino.tipo === 'texto') return entrada.simbolo;
+        return entrada.campos?.[destino.tipo];
+    }
+
+    function mensajeVacio(perfiles, consulta) {
+        if (!simbolosDisponibles(catalogo, perfiles).length) {
+            return MENSAJES_SIN_SIMBOLOS[perfiles[0]] || 'Este campo no admite símbolos matemáticos adicionales.';
+        }
+        if (admiteTodos(perfiles)) {
+            return 'Sin resultados. Busca por nombre, símbolo o código Unicode, como U+221E.';
+        }
+        return consulta
+            ? 'Sin resultados compatibles. Prueba otro nombre o símbolo.'
+            : 'Este campo no admite símbolos matemáticos adicionales.';
+    }
+
+    window.scalaris.catalogoSimbolos = catalogo;
+    window.scalaris.perfilesSimbolos = {
+        PERFILES_POR_MODULO,
+        MENSAJES_SIN_SIMBOLOS,
+        perfilesActivos,
+        admiteTodos,
+        esCompatibleConPerfiles,
+        simbolosDisponibles,
+        gruposDisponibles,
+        textoInsercion,
+        mensajeVacio,
+    };
 }

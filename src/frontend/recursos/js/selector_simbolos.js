@@ -3,6 +3,7 @@
 
 {
     const catalogo = window.scalaris.catalogoSimbolos;
+    const perfiles = window.scalaris.perfilesSimbolos;
     const selectorCampo = 'textarea, input:is([type="text"], [type="search"], :not([type]))';
     const pagina = 24;
     let controles;
@@ -10,6 +11,8 @@
     let ultimoCampo = null;
     let posicionPendiente = null;
     let cantidad;
+    let perfilesVigentes = ['texto'];
+    let catalogoVigente = catalogo;
 
     function tipoDesdeAtributos(campo) {
         const datos = campo.dataset;
@@ -42,14 +45,8 @@
         return tipo ? {campo, tipo, inicio: campo.selectionStart, fin: campo.selectionEnd} : null;
     }
 
-    function esCompatible(entrada, seleccion) {
-        return Boolean(seleccion) && (seleccion.tipo === 'texto' || Boolean(entrada.campos[seleccion.tipo]));
-    }
-
-    function insercion(entrada, seleccion) {
-        if (!seleccion) return undefined;
-        if (seleccion.tipo === 'texto') return entrada.simbolo;
-        return entrada.campos[seleccion.tipo] ?? entrada.simbolo;
+    function obtenerModuloActivo() {
+        return document.querySelector?.('meta[name="scalaris-modulo"]')?.getAttribute?.('content')?.trim() || '';
     }
 
     function limitesSeleccion(seleccion, longitudCampo) {
@@ -93,8 +90,9 @@
         const codigo = coincidencia ? Number.parseInt(coincidencia[1], 16) : -1;
         const simbolo = codigo >= 0 && codigo <= 0x10ffff ? String.fromCodePoint(codigo) : consulta;
         if (Array.from(simbolo).length !== 1 || /[\p{C}\p{Z}]/u.test(simbolo)) return null;
-        return catalogo.find(entrada => entrada.simbolo === simbolo) ||
-            {simbolo, nombre: codigoDe(simbolo), campos: {}};
+        const encontrada = catalogoVigente.find(entrada => entrada.simbolo === simbolo);
+        if (encontrada) return encontrada;
+        return perfiles.admiteTodos(perfilesVigentes) ? {simbolo, nombre: codigoDe(simbolo), campos: {}} : null;
     }
 
     function obtenerResultados() {
@@ -103,12 +101,11 @@
         const porCodigo = consulta && !grupo ? porUnicode(consulta) : null;
         if (porCodigo && /^(?:U\+)?[0-9A-F]{4,6}$/i.test(consulta)) return [porCodigo];
         const criterio = simplificar(consulta);
-        const filtradas = catalogo.filter(({simbolo, nombre, grupo: seccion}) =>
+        const filtradas = catalogoVigente.filter(({simbolo, nombre, grupo: seccion}) =>
             (!grupo || grupo === seccion) &&
             (!consulta || simbolo.includes(consulta) || simplificar(nombre + ' ' + seccion).includes(criterio)));
         if (!filtradas.length && porCodigo) return [porCodigo];
-        return filtradas.sort((primera, segunda) =>
-            Number(esCompatible(segunda, destino)) - Number(esCompatible(primera, destino)));
+        return filtradas;
     }
 
     function etiquetaModo(entrada, texto) {
@@ -117,12 +114,11 @@
             return 'Insertar · Ctrl+Mayús+' + entrada.tecla.slice(-1);
         }
         if (texto !== entrada.simbolo) return 'Insertar ' + texto;
-        if (!esCompatible(entrada, destino)) return 'Insertar · solo texto';
         return 'Insertar';
     }
 
     function crearOpcion(entrada) {
-        const texto = insercion(entrada, destino);
+        const texto = perfiles.textoInsercion(entrada, destino);
         const accion = texto === undefined ? 'Copiar' : 'Insertar';
         const boton = document.createElement('button');
         boton.type = 'button';
@@ -146,7 +142,7 @@
         controles.mas.hidden = resultados.length <= cantidad;
         controles.estado.textContent = resultados.length
             ? 'Se muestran ' + Math.min(cantidad, resultados.length) + ' de ' + resultados.length + ' símbolos.'
-            : 'Sin resultados. Busca por nombre, símbolo o código Unicode, como U+221E.';
+            : perfiles.mensajeVacio(perfilesVigentes, controles.busqueda.value.trim());
     }
 
     async function elegir(entrada, texto) {
@@ -215,6 +211,12 @@
         destino = null;
     }
 
+    function actualizarGrupos(disponibles) {
+        const opciones = [new Option('Todas', ''), ...perfiles.gruposDisponibles(disponibles).map(grupo => new Option(grupo, grupo))];
+        controles.grupo.replaceChildren(...opciones);
+        controles.grupo.disabled = opciones.length <= 1;
+    }
+
     function construir() {
         const plantilla = document.getElementById('plantilla-simbolos');
         const dialogo = plantilla.content.firstElementChild.cloneNode(true);
@@ -229,8 +231,6 @@
             mas: dialogo.querySelector('[data-mas-simbolos]'),
             copia: dialogo.querySelector('[data-copia-simbolo]'),
         };
-        const grupos = new Set(catalogo.map(entrada => entrada.grupo));
-        grupos.forEach(grupo => controles.grupo.add(new Option(grupo, grupo)));
         controles.busqueda.addEventListener('input', reiniciarResultados);
         controles.grupo.addEventListener('change', reiniciarResultados);
         controles.mas.addEventListener('click', () => {
@@ -254,8 +254,11 @@
         if (!controles) construir();
         if (controles.dialogo.open) return;
         destino = guardarSeleccion(resolverCampoDestino(candidato));
+        perfilesVigentes = perfiles.perfilesActivos(destino, obtenerModuloActivo());
+        catalogoVigente = perfiles.simbolosDisponibles(catalogo, perfilesVigentes);
         posicionPendiente = null;
         controles.busqueda.value = '';
+        actualizarGrupos(catalogoVigente);
         controles.grupo.value = '';
         reiniciarResultados();
         if (controles.cuerpo) controles.cuerpo.scrollTop = 0;
