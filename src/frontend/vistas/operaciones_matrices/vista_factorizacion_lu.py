@@ -15,7 +15,7 @@ from src.frontend.controladores.compartido.sesion.sesion_matricial import invali
 from src.frontend.navegacion import ruta_de
 from src.frontend.vistas.compartido.mixin_sesion_matricial import MixinSesionMatricial
 from src.frontend.vistas.compartido.vista_previa_matricial import actualizar_vista_previa
-from ._estados_modelos import mostrar_estado
+from src.frontend.vistas.algebra.operaciones_matrices.compartido._estados_modelos import mostrar_estado
 from .resultados_factorizacion_lu import ResultadosFactorizacionLU
 
 

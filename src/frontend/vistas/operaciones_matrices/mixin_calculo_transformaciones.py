@@ -1,7 +1,7 @@
 """Cálculo y estados de resultado para transformaciones lineales."""
 import json
 from nicegui import ui
-from ._estados_modelos import mostrar_estado
+from src.frontend.vistas.algebra.operaciones_matrices.compartido._estados_modelos import mostrar_estado
 from src.frontend.controladores.algebra.operaciones_matrices import ControladorTransformaciones
 from src.frontend.controladores.algebra.operaciones_matrices.transformaciones.controlador_aplicacion_transformacion import ControladorAplicacionTransformacion
 from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto
@@ -11,7 +11,7 @@ from src.frontend.controladores.algebra.operaciones_matrices.modelos.capturas_mo
 from ._renderizado_transformaciones import renderizar_resultado_transformaciones
 from .resultado_aplicacion_transformacion import renderizar_resultado_aplicacion
 
-from ._estados_modelos import ejecutar_modelo
+from src.frontend.vistas.algebra.operaciones_matrices.compartido._estados_modelos import ejecutar_modelo
 
 
 class MixinCalculoTransformaciones:

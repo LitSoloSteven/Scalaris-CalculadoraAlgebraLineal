@@ -2,8 +2,8 @@
 
 from nicegui import ui
 from src.frontend.componentes.captura.ecuaciones.limpieza_captura import crear_boton_limpieza
-from .limpieza_modelos import MixinLimpiezaModelos
-from ._estados_modelos import mostrar_estado
+from src.frontend.vistas.algebra.operaciones_matrices.compartido.limpieza_modelos import MixinLimpiezaModelos
+from src.frontend.vistas.algebra.operaciones_matrices.compartido._estados_modelos import mostrar_estado
 
 from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.aplicacion.base.iconos import icono_svg

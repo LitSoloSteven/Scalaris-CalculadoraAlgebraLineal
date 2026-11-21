@@ -7,7 +7,7 @@ from src.frontend.controladores.compartido.sesion.calculo_vigente import ejecuta
 from src.frontend.controladores.algebra.operaciones_matrices import ControladorFactorizacionLU
 from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto, invalidar_resultado
 from src.frontend.controladores.algebra.operaciones_matrices.base.captura_factorizacion_lu import localizar_invalida
-from ._estados_modelos import ejecutar_modelo, mostrar_estado
+from src.frontend.vistas.algebra.operaciones_matrices.compartido._estados_modelos import ejecutar_modelo, mostrar_estado
 from ._factores_factorizacion_lu import mostrar_factores_lu
 from ._presentacion_factorizacion_lu import montar_reproductor_lu
 from src.frontend.componentes.exportacion_pdf.montaje.integracion import region_pdf, completar_exportacion

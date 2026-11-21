@@ -1,7 +1,7 @@
 """Adaptación de una matriz transferida a la captura de cada modelo."""
 from functools import partial
 from src.frontend.componentes.resultados.acciones.transferencia import recibir_matriz
-from .carga_modelos import cargar_captura_modelo
+from src.frontend.vistas.algebra.operaciones_matrices.compartido.carga_modelos import cargar_captura_modelo
 
 
 def recibir_matriz_modelo(vista, token: str) -> None:

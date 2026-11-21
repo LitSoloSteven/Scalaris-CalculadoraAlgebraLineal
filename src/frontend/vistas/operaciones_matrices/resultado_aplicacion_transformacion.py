@@ -6,7 +6,7 @@ from src.frontend.componentes.exportacion_pdf.montaje.integracion import region_
 from src.frontend.nucleo.textos import textos_transformaciones as textos
 from src.frontend.componentes.reproductor_pasos.formato.cuerpos import renderizar_latex
 from src.frontend.controladores.algebra.operaciones_matrices.modelos.vista_previa_modelos import preparar_vista_previa_aplicacion
-from ._estados_modelos import mostrar_estado
+from src.frontend.vistas.algebra.operaciones_matrices.compartido._estados_modelos import mostrar_estado
 from .grafica_aplicacion_transformacion import renderizar_grafica_aplicacion
 from .procedimiento_aplicacion_transformacion import montar_procedimiento_aplicacion
 

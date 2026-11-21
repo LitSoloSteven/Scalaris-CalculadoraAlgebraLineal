@@ -8,7 +8,7 @@ from src.frontend.controladores.compartido.sesion.calculo_vigente import ejecuta
 from src.frontend.controladores.algebra.operaciones_matrices.modelos.capturas_modelos import capturar_leontief
 from ._renderizado_leontief import renderizar_resultado_leontief
 
-from ._estados_modelos import ejecutar_modelo
+from src.frontend.vistas.algebra.operaciones_matrices.compartido._estados_modelos import ejecutar_modelo
 
 
 class MixinCalculoLeontief:

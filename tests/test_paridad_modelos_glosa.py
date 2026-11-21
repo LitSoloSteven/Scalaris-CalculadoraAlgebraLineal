@@ -6,7 +6,7 @@ import pytest
 from nicegui import ui
 
 from src.frontend.controladores.algebra.operaciones_matrices.modelos.contexto_modelos import capturar_modelo
-from src.frontend.vistas.operaciones_matrices.carga_modelos import cargar_captura_modelo
+from src.frontend.vistas.algebra.operaciones_matrices.compartido.carga_modelos import cargar_captura_modelo
 from tests.comun_construccion_vistas import construir_pagina
 from tests.comun_calculos_vistas import calcular_minimo
 

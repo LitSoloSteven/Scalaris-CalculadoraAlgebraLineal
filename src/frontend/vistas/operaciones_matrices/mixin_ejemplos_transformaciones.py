@@ -5,7 +5,7 @@ from src.frontend.nucleo.textos import textos_transformaciones as textos
 from nicegui import ui
 from ._ejemplos_transformaciones import EJEMPLOS_TRANSFORMACIONES
 from ._ejemplos_aplicacion_transformacion import EJEMPLOS_APLICACION
-from .carga_modelos import cargar_captura_modelo
+from src.frontend.vistas.algebra.operaciones_matrices.compartido.carga_modelos import cargar_captura_modelo
 
 
 class MixinEjemplosTransformaciones:

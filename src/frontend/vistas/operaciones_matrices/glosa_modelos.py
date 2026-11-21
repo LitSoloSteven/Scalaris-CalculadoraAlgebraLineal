@@ -6,7 +6,7 @@ from src.frontend.componentes.captura.nucleo.cuadricula_base import ubicar_celda
 from src.frontend.controladores.compartido.matrices.limpieza_captura import retirar_estado_calculado
 from src.frontend.controladores.compartido.sesion.sesion_matricial import invalidar_resultado, actualizar_contexto, programar_vista_previa, cancelar_vista_previa
 from src.frontend.controladores.algebra.operaciones_matrices.modelos.contexto_modelos import obtener_contexto_modelo, obtener_senales_modelo, capturar_modelo, resultado_modelo_vigente
-from ._presentacion_modelos import montar_pasos_modelo
+from src.frontend.vistas.algebra.operaciones_matrices.compartido._presentacion_modelos import montar_pasos_modelo
 from .herramientas_modelos import MixinHerramientasModelos
 from src.frontend.componentes.exportacion_pdf.montaje.integracion import completar_exportacion, identificador_raiz
 from src.frontend.controladores.exportacion_pdf.documento.vigencia import EnlacePDF
