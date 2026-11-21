@@ -3,6 +3,7 @@ import ast
 import math
 from decimal import Decimal
 
+from .constantes_funcion import CONSTANTES_REALES as CONSTANTES_REALES
 from .errores_numericos import ErrorCapacidadNumerica
 from .normalizacion_funcion import normalizar_expresion
 
@@ -12,7 +13,6 @@ FUNCIONES_REALES = {"sin": math.sin, "cos": math.cos, "tan": math.tan, "exp": ma
                    "sinh": math.sinh, "cosh": math.cosh, "tanh": math.tanh,
                    "sqrt": math.sqrt, "cbrt": math.cbrt, "raiz4": lambda valor: math.sqrt(math.sqrt(valor)),
                    "abs": abs}
-CONSTANTES_REALES = {"pi": math.pi, "e": math.e}
 MAXIMO_NODOS_EXPRESION = 256
 MAXIMA_PROFUNDIDAD_EXPRESION = 32
 _OPERADORES = (ast.Add, ast.Sub, ast.Mult, ast.Div, ast.Pow)
