@@ -261,7 +261,7 @@ html[data-entrada="teclado"] .navegacion-accion::after {
     .navegacion-capsula {
         padding-inline: var(--space-2);
     }
-    .navegacion-recorrido { padding-inline: var(--space-2); }
+    .navegacion-recorrido { padding-inline: var(--space-3); }
     .navegacion-elemento {
         max-inline-size: 100%;
         height: auto;
