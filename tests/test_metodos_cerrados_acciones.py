@@ -3,7 +3,7 @@ import asyncio
 
 from nicegui import Client, core, ui
 
-from src.frontend.componentes.copia_resultado import texto_resultado_copiable
+from src.frontend.componentes.resultados.acciones.copia_resultado import texto_resultado_copiable
 from src.frontend.controladores.biseccion.catalogo_criterios import DECIMALES_PRESENTACION_DEFECTO
 from src.frontend.controladores.metodos_cerrados.adaptadores import BISECCION, REGLA_FALSA, resolver_presentacion
 from src.frontend.vistas.biseccion import resumen_criterio

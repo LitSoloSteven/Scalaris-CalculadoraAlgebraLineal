@@ -4,7 +4,7 @@ from collections.abc import Callable
 from nicegui import ui
 
 from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import D_MAXIMO
-from src.frontend.componentes.copia_resultado import renderizar_copia_resultado
+from src.frontend.componentes.resultados.acciones.copia_resultado import renderizar_copia_resultado
 from src.frontend.componentes.precision_presentacion import leer_precision_presentacion
 from src.frontend.controladores.biseccion.catalogo_criterios import DECIMALES_PRESENTACION_DEFECTO
 from src.frontend.controladores.biseccion.presentacion import motivo

@@ -1,7 +1,7 @@
 """Verifica la sincronización del modo examen en la vista montada."""
 from nicegui import ui
 
-from src.frontend.componentes.copia_resultado import texto_resultado_copiable
+from src.frontend.componentes.resultados.acciones.copia_resultado import texto_resultado_copiable
 from src.frontend.controladores.biseccion.salidas_biseccion import COLUMNAS_EXAMEN
 from src.frontend.vistas.biseccion import resumen_criterio
 from src.frontend.vistas.biseccion.vista_biseccion import VistaBiseccion

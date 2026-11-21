@@ -14,7 +14,7 @@ from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_vectores.base.formateadores import (
     formatear_combinacion_lineal_vector, formatear_expresion_lineal,
 )
-from src.frontend.componentes.avisos_resultado import mostrar_error_inesperado
+from src.frontend.componentes.resultados.acciones.avisos_resultado import mostrar_error_inesperado
 from src.frontend.componentes.glosa_foco import crear_accion_explicacion
 from src.frontend.controladores.captura_contexto import capturar_bases, capturar_matrices, capturar_romanos
 from src.frontend.controladores.sesion_matricial import actualizar_contexto

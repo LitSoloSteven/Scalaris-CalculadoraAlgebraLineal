@@ -3,7 +3,7 @@ import json
 
 from nicegui import ui
 
-from src.frontend.componentes.copia_resultado import texto_resultado_copiable
+from src.frontend.componentes.resultados.acciones.copia_resultado import texto_resultado_copiable
 from src.frontend.controladores.biseccion import controlador
 from src.frontend.controladores.biseccion.presentacion import construir_pasos, filas_tabla, motivo
 from src.frontend.controladores.biseccion.presentacion_criterio import texto_resumen

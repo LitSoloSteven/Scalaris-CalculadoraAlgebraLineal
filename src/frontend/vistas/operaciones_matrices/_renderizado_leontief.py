@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import html
 from nicegui import ui
-from src.frontend.componentes.avisos_resultado import CLASES_AVISO_ERROR, renderizar_aviso_resultado
+from src.frontend.componentes.resultados.acciones.avisos_resultado import CLASES_AVISO_ERROR, renderizar_aviso_resultado
 from src.frontend.componentes.desarrollo_comprobacion import mostrar_desarrollo
 from src.frontend.componentes.exportacion_pdf.integracion import region_pdf
 

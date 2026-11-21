@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from nicegui import ui
 from src.frontend.componentes.aplicacion.base.sonido import notificar
-from src.frontend.componentes.avisos_resultado import renderizar_aviso_resultado
+from src.frontend.componentes.resultados.acciones.avisos_resultado import renderizar_aviso_resultado
 
 from src.backend.constantes import DIMENSION_MAXIMA_SISTEMAS
 from src.frontend.controladores.operaciones_inversas.presentacion import preparar_opciones_inversa

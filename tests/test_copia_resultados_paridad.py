@@ -2,7 +2,7 @@
 from fractions import Fraction
 
 from src.backend.modelos.matriz import Matriz
-from src.frontend.componentes.copia_resultado import texto_resultado_copiable
+from src.frontend.componentes.resultados.acciones.copia_resultado import texto_resultado_copiable
 
 
 def test_copia_valores_exactos_y_no_incluye_la_traza():
