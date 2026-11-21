@@ -4,7 +4,7 @@ from fractions import Fraction
 import re
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.utilidades.formateadores import numero_a_latex
+from src.backend.utilidades.formato.formateadores import numero_a_latex
 
 
 def vector_a_latex(vector: Matriz) -> str:

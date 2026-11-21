@@ -2,7 +2,7 @@
 import json
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.utilidades.formateadores import formatear_fraccion_texto
+from src.backend.utilidades.formato.formateadores import formatear_fraccion_texto
 
 
 def parsear_carga_json(

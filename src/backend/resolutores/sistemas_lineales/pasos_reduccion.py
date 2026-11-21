@@ -1,6 +1,6 @@
 """Presentacion historica de eventos de reduccion para los consumidores de sistemas."""
 from src.backend.modelos.matriz import Matriz
-from src.backend.utilidades.formateadores import formatear_fraccion_texto
+from src.backend.utilidades.formato.formateadores import formatear_fraccion_texto
 
 
 class RegistroPasosSistema:

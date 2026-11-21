@@ -14,7 +14,7 @@ from src.backend.resolutores.operaciones_vectores.formateadores import (
     matriz_aumentada_a_latex,
     vector_a_latex,
 )
-from src.backend.utilidades.formateadores import (
+from src.backend.utilidades.formato.formateadores import (
     formatear_fraccion_texto,
     numero_a_latex,
 )

@@ -3,7 +3,7 @@ from fractions import Fraction
 from src.backend.constantes import EXITO
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_matrices.formateadores import matriz_a_latex
-from src.backend.utilidades.formateadores import formatear_fraccion_texto
+from src.backend.utilidades.formato.formateadores import formatear_fraccion_texto
 from .comprobacion_transformaciones import comprobar_transformacion
 
 

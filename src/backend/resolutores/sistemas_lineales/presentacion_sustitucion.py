@@ -1,6 +1,6 @@
 """Etiquetas y pasos de sustitucion a partir de soluciones ya calculadas."""
 from src.backend.resolutores.sistemas_lineales.modelo_solucion import ParametrosSolucion
-from src.backend.utilidades.formateadores import formatear_expresion_parametrica, formatear_variable_para_latex
+from src.backend.utilidades.formato.formateadores import formatear_expresion_parametrica, formatear_variable_para_latex
 
 NOMBRES_PARAMETROS = ("t", "s", "r", "u", "v")
 

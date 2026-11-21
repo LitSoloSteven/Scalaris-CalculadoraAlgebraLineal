@@ -1,6 +1,6 @@
 """Contexto de Glosa basado exclusivamente en la captura y el resultado vigente."""
 from src.ai.contexto.contexto import ContextoIA, EstadoContexto, describir_matriz, sanear_cadena_usuario
-from src.backend.utilidades.formateadores import formatear_fraccion_texto
+from src.backend.utilidades.formato.formateadores import formatear_fraccion_texto
 from src.ai.huellas import calcular_huella
 from src.frontend.sugerencias import Senales
 from .captura_factorizacion_lu import localizar_invalida

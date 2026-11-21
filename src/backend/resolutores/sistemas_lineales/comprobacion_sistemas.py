@@ -1,7 +1,7 @@
 """Sustitucion simbolica exacta de una familia afin en cada ecuacion original."""
 from fractions import Fraction
 
-from src.backend.utilidades.formateadores import numero_a_latex, formatear_variable_para_latex
+from src.backend.utilidades.formato.formateadores import numero_a_latex, formatear_variable_para_latex
 
 
 def comprobar_familia(

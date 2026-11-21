@@ -1,7 +1,7 @@
 """Presentacion economica del balance de produccion calculado por Leontief."""
 from src.backend.constantes import ERROR, EXITO, SIN_SOLUCION
 from src.backend.resolutores.operaciones_matrices.formateadores import matriz_a_latex
-from src.backend.utilidades.formateadores import formatear_fraccion_texto
+from src.backend.utilidades.formato.formateadores import formatear_fraccion_texto
 from .comprobacion_productos import crear_paso_analisis
 
 

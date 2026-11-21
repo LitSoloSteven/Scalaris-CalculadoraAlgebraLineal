@@ -4,7 +4,7 @@ from src.backend.modelos.operaciones.construcciones import matriz_de_columnas
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.sistemas_lineales.homogeneos import resolver_homogeneo
 from src.backend.resolutores.operaciones_matrices.comprobacion_productos import crear_paso_analisis
-from src.backend.utilidades.formateadores import numero_a_latex
+from src.backend.utilidades.formato.formateadores import numero_a_latex
 
 
 def analizar_independencia(vectores: list[Matriz]) -> dict:

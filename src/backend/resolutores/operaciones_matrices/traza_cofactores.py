@@ -1,6 +1,6 @@
 """Presentacion matematica de la expansion, generada junto al dominio."""
 from src.backend.modelos.matriz import Matriz
-from src.backend.utilidades.formateadores import numero_a_latex
+from src.backend.utilidades.formato.formateadores import numero_a_latex
 
 
 def construir_traza_cofactores(matriz: Matriz, expansion: dict) -> list[dict]:

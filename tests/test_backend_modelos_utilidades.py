@@ -19,7 +19,7 @@ from src.backend.excepciones import (
 )
 from src.backend.modelos.matriz import Matriz
 from src.backend.utilidades.analizadores import AnalizadorSistema
-from src.backend.utilidades.formateadores import (
+from src.backend.utilidades.formato.formateadores import (
     formatear_expresion_parametrica,
     formatear_fraccion_texto,
     formatear_variable_para_latex,

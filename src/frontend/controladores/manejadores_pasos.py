@@ -2,7 +2,7 @@
 from dataclasses import dataclass
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.utilidades.formateadores import formatear_fraccion_texto
+from src.backend.utilidades.formato.formateadores import formatear_fraccion_texto
 
 
 @dataclass(frozen=True)

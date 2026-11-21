@@ -4,7 +4,7 @@ from fractions import Fraction
 from typing import Any
 from src.backend.modelos.escalares.entrada_numerica import convertir_numero_exacto
 
-from src.backend.utilidades.formateadores import (
+from src.backend.utilidades.formato.formateadores import (
     formatear_fraccion_texto,
     numero_a_latex,
 )

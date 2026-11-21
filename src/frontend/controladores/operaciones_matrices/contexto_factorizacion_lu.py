@@ -1,7 +1,7 @@
 """Contexto y señales vigentes de la factorización LU para Glosa."""
 from src.ai.contexto.contexto import ContextoIA, EstadoContexto, describir_matriz, generar_nota_ventana, sanear_cadena_usuario
 from src.ai.huellas import calcular_huella
-from src.backend.utilidades.formateadores import formatear_fraccion_texto
+from src.backend.utilidades.formato.formateadores import formatear_fraccion_texto
 from src.frontend.sugerencias import Senales
 from .captura_factorizacion_lu import localizar_invalida
 

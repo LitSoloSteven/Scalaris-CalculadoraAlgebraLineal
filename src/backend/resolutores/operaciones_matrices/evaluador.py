@@ -31,7 +31,7 @@ from src.backend.resolutores.operaciones_matrices.presupuesto_expresiones import
     validar_magnitud,
     validar_presupuesto_operaciones,
 )
-from src.backend.utilidades.formateadores import numero_a_latex
+from src.backend.utilidades.formato.formateadores import numero_a_latex
 
 _Operandos = tuple[str, Fraction | Matriz]
 _Resultado = tuple[Matriz, list, str, str]

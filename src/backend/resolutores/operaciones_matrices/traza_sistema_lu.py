@@ -2,7 +2,7 @@
 from fractions import Fraction
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.utilidades.formateadores import numero_a_latex
+from src.backend.utilidades.formato.formateadores import numero_a_latex
 from .comprobacion_productos import crear_paso_analisis
 from .formateadores import matriz_a_latex
 from .sustitucion_lu import DatosFilaSustitucion

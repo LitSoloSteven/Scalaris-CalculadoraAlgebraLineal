@@ -1,7 +1,7 @@
 """Formateadores especificos de LaTeX para operaciones con matrices."""
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.utilidades.formateadores import numero_a_latex
+from src.backend.utilidades.formato.formateadores import numero_a_latex
 
 
 def matriz_a_latex(matriz: Matriz) -> str:

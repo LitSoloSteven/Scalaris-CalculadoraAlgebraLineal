@@ -7,7 +7,7 @@ from src.backend.modelos.operaciones.calculo_matricial import restar_matrices, m
 from .determinante import ResolutorDeterminante
 from .comprobacion_productos import crear_paso_analisis
 from .formateadores import matriz_a_latex
-from src.backend.utilidades.formateadores import numero_a_latex
+from src.backend.utilidades.formato.formateadores import numero_a_latex
 from .comprobacion_leontief import comprobar_balance
 from src.backend.resolutores.operaciones_matrices.calculo_inversa import calcular_inversa
 from .consistencia_leontief import resolver_balance_singular

@@ -15,7 +15,7 @@ from src.backend.resolutores.operaciones_matrices.determinante import (
     ResolutorDeterminante,
 )
 from src.backend.resolutores.trazado import TrazadorPasos
-from src.backend.utilidades.formateadores import (
+from src.backend.utilidades.formato.formateadores import (
     formatear_fraccion_texto,
     numero_a_latex,
 )

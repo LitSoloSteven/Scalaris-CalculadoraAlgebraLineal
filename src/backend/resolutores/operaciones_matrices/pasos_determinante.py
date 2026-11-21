@@ -2,7 +2,7 @@
 from fractions import Fraction
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.utilidades.formateadores import numero_a_latex, formatear_fraccion_texto
+from src.backend.utilidades.formato.formateadores import numero_a_latex, formatear_fraccion_texto
 
 RELACION_LU = (
     "La eliminacion obtiene una triangular U. Es la base de PA = LU si se guardan "

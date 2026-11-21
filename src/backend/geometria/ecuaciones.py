@@ -2,7 +2,7 @@
 from src.backend.geometria.clasificacion import clasificar_ecuacion
 from src.backend.geometria.coordenadas import a_flotante_seguro
 from src.backend.resolutores.operaciones_vectores.formateadores import formatear_expresion_lineal
-from src.backend.utilidades.formateadores import numero_a_latex
+from src.backend.utilidades.formato.formateadores import numero_a_latex
 
 
 def construir_ecuaciones(coeficientes: list, independientes: list, dimension: int) -> tuple[list | None, list]:

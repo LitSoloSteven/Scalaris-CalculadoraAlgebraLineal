@@ -1,7 +1,7 @@
 """Desarrollo del balance de Leontief y su comparacion con la demanda original."""
 from src.backend.modelos.matriz import Matriz
 from fractions import Fraction
-from src.backend.utilidades.formateadores import numero_a_latex
+from src.backend.utilidades.formato.formateadores import numero_a_latex
 from .comprobacion_productos import comprobar_producto, crear_paso_analisis
 
 

@@ -1,6 +1,6 @@
 """Descripcion de productos matriciales a partir de celdas ya calculadas."""
 from src.backend.modelos.matriz import Matriz
-from src.backend.utilidades.formateadores import formatear_fraccion_texto, numero_a_latex
+from src.backend.utilidades.formato.formateadores import formatear_fraccion_texto, numero_a_latex
 
 
 def describir_producto_celda(izquierda: Matriz, derecha: Matriz, fila: int, columna: int, valor) -> tuple[str, str]:

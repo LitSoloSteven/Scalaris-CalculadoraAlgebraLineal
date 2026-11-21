@@ -1,7 +1,7 @@
 """Módulo de utilidades matemáticas, formateadores, validadores y reglas."""
 
 from .analizadores import AnalizadorSistema
-from .formateadores import (
+from .formato.formateadores import (
     formatear_expresion_parametrica,
     formatear_fraccion_texto,
     formatear_variable_para_latex,

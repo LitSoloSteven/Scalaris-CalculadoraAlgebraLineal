@@ -1,7 +1,7 @@
 """Preparacion de etiquetas y valores escapados de la solucion de un sistema."""
 import html
 from src.backend.modelos.matriz import Matriz
-from src.backend.utilidades.formateadores import formatear_variable_para_latex, separar_indice_variable
+from src.backend.utilidades.formato.formateadores import formatear_variable_para_latex, separar_indice_variable
 from src.backend.utilidades.reconstruccion_matrices import reconstruir_matriz
 
 

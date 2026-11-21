@@ -149,7 +149,7 @@ class Matriz:
 
     def __str__(self) -> str:
         """Genera una representación en texto con números formateados."""
-        from src.backend.utilidades.formateadores import formatear_fraccion_texto
+        from src.backend.utilidades.formato.formateadores import formatear_fraccion_texto
 
         filas_texto = []
         for fila in self.datos:

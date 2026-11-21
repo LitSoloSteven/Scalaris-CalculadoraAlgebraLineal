@@ -9,7 +9,7 @@ from src.backend.resolutores.operaciones_vectores.formateadores import (
     matriz_aumentada_gauss_a_latex,
     formatear_expresion_lineal,
 )
-from src.backend.utilidades.formateadores import formatear_variable_para_latex, numero_a_latex
+from src.backend.utilidades.formato.formateadores import formatear_variable_para_latex, numero_a_latex
 from src.backend.utilidades.analizadores import AnalizadorSistema
 from src.backend.utilidades.validadores import ValidadorMatriz
 from src.backend.resolutores.sistemas_lineales.captura_ecuaciones import contar_ecuaciones
