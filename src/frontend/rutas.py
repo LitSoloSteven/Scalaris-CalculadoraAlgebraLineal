@@ -81,7 +81,7 @@ def _registrar_pagina_factorizacion_lu() -> None:
     @ui.page(ruta_de("factorizacion_lu"), title=herramienta_por_identificador("factorizacion_lu").titulo_pagina)
     def pagina_factorizacion_lu(handoff: str = ""):
         """Construye la página de factorización matricial con pivoteo parcial."""
-        from src.frontend.vistas.operaciones_matrices.vista_factorizacion_lu import VistaFactorizacionLU
+        from src.frontend.vistas.algebra.operaciones_matrices.factorizacion_lu.vista_factorizacion_lu import VistaFactorizacionLU
 
         configurar_tema("factorizacion_lu")
         VistaFactorizacionLU().construir(token_transferencia=handoff)
