@@ -3,10 +3,10 @@ from nicegui import ui
 
 from src.backend.resolutores.raices.compartido.limites_raices import LIMITE_ITERACIONES_DEFECTO
 from src.backend.resolutores.raices.compartido.unidades_angulares import UNIDADES_ANGULARES, UNIDAD_ANGULAR_DEFECTO
-from src.frontend.componentes.campo_funcion_real import crear_campo_funcion
+from src.frontend.componentes.raices.captura.campo_funcion_real import crear_campo_funcion
 from src.frontend.componentes.captura.ecuaciones.limpieza_captura import crear_boton_limpieza
-from src.frontend.componentes.modos_captura_raices import MODO_BUSQUEDA, MODO_INTERVALO, construir_modos, region_modo
-from src.frontend.componentes.previa_expresion_raices import PreviaExpresion
+from src.frontend.componentes.raices.captura.modos_captura_raices import MODO_BUSQUEDA, MODO_INTERVALO, construir_modos, region_modo
+from src.frontend.componentes.raices.captura.previa_expresion_raices import PreviaExpresion
 from src.frontend.componentes.aplicacion.controles.selector_opciones import SelectorOpciones
 from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
 from src.frontend.controladores.biseccion.captura_criterio import texto_estimacion

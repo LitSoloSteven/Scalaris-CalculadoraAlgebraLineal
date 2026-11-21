@@ -6,7 +6,7 @@ from types import SimpleNamespace
 import pytest
 from nicegui import ui
 
-from src.frontend.componentes.modos_captura_raices import MODO_BUSQUEDA, MODO_INTERVALO
+from src.frontend.componentes.raices.captura.modos_captura_raices import MODO_BUSQUEDA, MODO_INTERVALO
 from src.frontend.componentes.resultados.acciones.copia_resultado import texto_resultado_copiable
 from src.frontend.controladores.metodos_cerrados.adaptadores import BISECCION, REGLA_FALSA
 from src.frontend.vistas.biseccion import resumen_criterio

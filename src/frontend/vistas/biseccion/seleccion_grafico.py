@@ -1,7 +1,7 @@
 """Borrador editable para confirmar dos extremos elegidos en el gráfico."""
 from math import isfinite
 
-from src.frontend.componentes.borrador_intervalo_raices import construir_borrador, confirmar_borrador, siguiente_extremo
+from src.frontend.componentes.raices.captura.borrador_intervalo_raices import construir_borrador, confirmar_borrador, siguiente_extremo
 
 from src.frontend.controladores.biseccion.captura_criterio import real_capturado
 from src.frontend.controladores.seleccion_muestra_raices import puntos_borrador

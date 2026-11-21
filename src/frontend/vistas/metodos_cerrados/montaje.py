@@ -4,8 +4,8 @@ from types import SimpleNamespace
 
 from nicegui import ui
 
-from src.frontend.componentes.estructura_metodos_raices import montar_estructura_metodos_raices
-from src.frontend.componentes.modos_captura_raices import MODO_BUSQUEDA, MODO_INTERVALO
+from src.frontend.componentes.raices.captura.estructura_metodos_raices import montar_estructura_metodos_raices
+from src.frontend.componentes.raices.captura.modos_captura_raices import MODO_BUSQUEDA, MODO_INTERVALO
 from src.frontend.controladores.metodos_cerrados.adaptadores import REGLA_FALSA, captura_del_metodo
 from src.frontend.vistas.regla_falsa.estados_entrada import EstadosEntrada
 

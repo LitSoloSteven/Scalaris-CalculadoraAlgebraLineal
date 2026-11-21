@@ -1,5 +1,5 @@
 """Selector de tarea y regiones persistentes de bisección."""
-from src.frontend.componentes.modos_captura_raices import (
+from src.frontend.componentes.raices.captura.modos_captura_raices import (
     MODO_BUSQUEDA, MODO_INTERVALO, construir_modos as construir_modos_compartidos, region_modo,
 )
 

@@ -1,6 +1,6 @@
 """Orden de lectura y disposición adaptable de captura y resultados."""
 from nicegui import ui
-from src.frontend.componentes.previa_expresion_raices import PreviaExpresion
+from src.frontend.componentes.raices.captura.previa_expresion_raices import PreviaExpresion
 
 from src.frontend.vistas.biseccion.captura import GUIA_CONTINUIDAD
 from .acciones_captura import construir_acciones, mostrar_recientes

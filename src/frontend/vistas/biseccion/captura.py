@@ -1,7 +1,7 @@
 """Función compartida y captura del intervalo individual."""
 from nicegui import ui
 
-from src.frontend.componentes.campo_funcion_real import crear_campo_funcion
+from src.frontend.componentes.raices.captura.campo_funcion_real import crear_campo_funcion
 from .movimiento import modalidad_puntero, vincular_envio
 from .selector_criterio import construir_selector
 from .selector_unidad import construir_selector_unidad
