@@ -1,8 +1,8 @@
 """Adaptacion de la captura vectorial a la prueba exacta de independencia."""
 import json
 
-from src.backend.resolutores.operaciones_vectores.captura_independencia import capturar_independencia
-from src.backend.resolutores.operaciones_vectores.independencia import analizar_independencia
+from src.backend.resolutores.operaciones_vectores.independencia.captura_independencia import capturar_independencia
+from src.backend.resolutores.operaciones_vectores.independencia.independencia import analizar_independencia
 from src.frontend.controladores.operaciones_matrices.codificador import CodificadorMatriz
 
 

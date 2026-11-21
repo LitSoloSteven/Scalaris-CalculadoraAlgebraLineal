@@ -6,10 +6,10 @@ from random import Random
 import pytest
 
 from src.backend.modelos.escalares.conversion_fracciones import texto_fraccion_exacta
-from src.backend.resolutores.operaciones_vectores.captura_subespacios import (
+from src.backend.resolutores.operaciones_vectores.subespacios.captura_subespacios import (
     capturar_restricciones,
 )
-from src.backend.resolutores.operaciones_vectores.subespacios import analizar_subespacio
+from src.backend.resolutores.operaciones_vectores.subespacios.subespacios import analizar_subespacio
 from src.frontend.controladores.operaciones_matrices.codificador import CodificadorMatriz
 
 

@@ -2,11 +2,11 @@
 from fractions import Fraction
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_vectores.captura_subespacios import (
+from src.backend.resolutores.operaciones_vectores.subespacios.captura_subespacios import (
     capturar_restricciones,
 )
-from src.backend.resolutores.operaciones_vectores import subespacios as motor
-from src.backend.resolutores.operaciones_vectores.subespacios import analizar_subespacio
+from src.backend.resolutores.operaciones_vectores.subespacios import subespacios as motor
+from src.backend.resolutores.operaciones_vectores.subespacios.subespacios import analizar_subespacio
 
 
 def _analizar(matriz_a, vector_b):

@@ -4,10 +4,10 @@ from fractions import Fraction
 import pytest
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_vectores.captura_subespacios import (
+from src.backend.resolutores.operaciones_vectores.subespacios.captura_subespacios import (
     capturar_generadores,
 )
-from src.backend.resolutores.operaciones_vectores.subespacios import analizar_subespacio
+from src.backend.resolutores.operaciones_vectores.subespacios.subespacios import analizar_subespacio
 
 
 def _analizar(columnas, etiquetas=None):

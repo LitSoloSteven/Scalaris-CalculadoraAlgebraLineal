@@ -6,7 +6,7 @@ import pytest
 
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.sistemas_lineales.homogeneos import resolver_homogeneo
-from src.backend.resolutores.operaciones_vectores.independencia import analizar_independencia
+from src.backend.resolutores.operaciones_vectores.independencia.independencia import analizar_independencia
 from src.frontend.controladores.operaciones_vectores.controlador_independencia import procesar_independencia
 from src.frontend.controladores.sistemas_lineales import ControladorGauss, ControladorGaussJordan
 
