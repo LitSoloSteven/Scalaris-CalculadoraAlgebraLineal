@@ -2,7 +2,7 @@
 from src.backend.resolutores.sistemas_lineales.eliminacion.gauss_jordan import (
     ResolutorGaussJordan,
 )
-from src.frontend.controladores.sistemas_lineales.flujo_comun import (
+from src.frontend.controladores.algebra.sistemas_lineales.nucleo.flujo_comun import (
     ejecutar_flujo_sistema,
 )
 

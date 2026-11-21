@@ -4,7 +4,7 @@ from src.ai.contexto.contexto import (
 )
 from src.ai.huellas import esta_desactualizado
 from src.frontend.presentacion.sugerencias import Senales, primera_celda_invalida
-from .estado_captura import modo_homogeneo_activo
+from src.frontend.controladores.algebra.sistemas_lineales.nucleo.estado_captura import modo_homogeneo_activo
 
 
 def _contiene_coeficientes(matriz: list) -> bool:

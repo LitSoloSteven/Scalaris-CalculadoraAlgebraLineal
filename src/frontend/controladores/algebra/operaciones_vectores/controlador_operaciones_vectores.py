@@ -18,7 +18,7 @@ from src.frontend.controladores.compartido.pasos.agrupador_pasos import agrupar_
 from src.frontend.controladores.operaciones_matrices.codificador import (
     CodificadorMatriz,
 )
-from src.frontend.controladores.sistemas_lineales.compartido import (
+from src.frontend.controladores.algebra.sistemas_lineales.nucleo.compartido import (
     construir_metadatos_pasos,
 )
 from src.frontend.controladores.compartido.pasos.utilidades import (

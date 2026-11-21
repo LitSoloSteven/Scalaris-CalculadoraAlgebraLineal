@@ -13,7 +13,7 @@ from src.backend.resolutores.sistemas_numericos.conversor_bases import Conversor
 from src.backend.utilidades.validacion.analizadores import AnalizadorSistema
 from src.backend.utilidades.validacion.reglas_dominio import validar_entrada_base
 from src.frontend.componentes.captura.nucleo.portapapeles_matricial import filtrar_matriz_numerica
-from src.frontend.controladores.sistemas_lineales.presentacion_solucion import formatear_elemento_solucion
+from src.frontend.controladores.algebra.sistemas_lineales.nucleo.presentacion_solucion import formatear_elemento_solucion
 
 
 @pytest.mark.parametrize(("texto", "razon"), [

@@ -6,7 +6,7 @@ import logging
 
 from nicegui import ui
 
-from src.frontend.controladores.sistemas_lineales.captura import preparar_vista_previa
+from src.frontend.controladores.algebra.sistemas_lineales.nucleo.captura import preparar_vista_previa
 
 registro = logging.getLogger(__name__)
 

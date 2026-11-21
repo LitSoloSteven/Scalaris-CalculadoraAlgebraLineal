@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from src.frontend.controladores.sistemas_lineales.presentacion_solucion import preparar_matriz_paso
+from src.frontend.controladores.algebra.sistemas_lineales.nucleo.presentacion_solucion import preparar_matriz_paso
 from src.frontend.componentes.reproductor_pasos.formato.cuerpos import CuerpoLatex
 from src.frontend.componentes.reproductor_pasos.formato.textos import limpiar_latex_plano
 from src.frontend.componentes.reproductor_pasos.formato.html_tablas import html_tabla_aumentada

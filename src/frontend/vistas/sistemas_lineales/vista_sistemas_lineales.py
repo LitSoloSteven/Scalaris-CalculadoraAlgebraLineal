@@ -14,7 +14,7 @@ from ._transferencia_sistemas import procesar_transferencia_matriz
 from src.frontend.controladores.sistemas_lineales.contexto import (
     obtener_contexto_sistema, obtener_senales_sistema,
 )
-from src.frontend.controladores.sistemas_lineales.estado_captura import cambiar_modo
+from src.frontend.controladores.algebra.sistemas_lineales.nucleo.estado_captura import cambiar_modo
 from .modo_homogeneo import cambiar_modo_homogeneo
 
 

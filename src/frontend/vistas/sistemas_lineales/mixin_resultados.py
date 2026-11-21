@@ -1,11 +1,11 @@
 """Presentacion de resultados y estados de sistemas lineales."""
 
 from nicegui import ui
-from src.frontend.controladores.sistemas_lineales.presentacion_solucion import formatear_elemento_solucion
+from src.frontend.controladores.algebra.sistemas_lineales.nucleo.presentacion_solucion import formatear_elemento_solucion
 from src.frontend.controladores.compartido.sesion.sesion_matricial import invalidar_resultado, actualizar_contexto, calculo_sigue_vigente
 
-from src.frontend.controladores.sistemas_lineales.captura import preparar_captura_ecuaciones
-from src.frontend.controladores.sistemas_lineales.estado_captura import modo_homogeneo_activo
+from src.frontend.controladores.algebra.sistemas_lineales.nucleo.captura import preparar_captura_ecuaciones
+from src.frontend.controladores.algebra.sistemas_lineales.nucleo.estado_captura import modo_homogeneo_activo
 from src.frontend.componentes.resultados.analisis.presentacion_analisis import mostrar_resumen_analisis
 from .mixin_resolucion import MixinResolucionSistemas
 

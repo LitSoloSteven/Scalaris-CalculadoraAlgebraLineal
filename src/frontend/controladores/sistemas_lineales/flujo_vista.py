@@ -1,6 +1,6 @@
 """Captura estable y delegacion de la resolucion de sistemas para la vista."""
 from . import ControladorGauss, ControladorGaussJordan
-from .estado_captura import modo_homogeneo_activo
+from src.frontend.controladores.algebra.sistemas_lineales.nucleo.estado_captura import modo_homogeneo_activo
 
 
 def entrada_actual(vista) -> dict:

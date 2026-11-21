@@ -1,5 +1,5 @@
 """Controladores para resolución de sistemas de ecuaciones lineales."""
-from src.frontend.controladores.sistemas_lineales.compartido import (
+from src.frontend.controladores.algebra.sistemas_lineales.nucleo.compartido import (
     construir_metadatos_pasos,
 )
 from src.frontend.controladores.sistemas_lineales.controlador_gauss import (

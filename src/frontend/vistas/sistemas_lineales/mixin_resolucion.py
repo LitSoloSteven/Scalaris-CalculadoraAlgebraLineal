@@ -5,7 +5,7 @@ from nicegui import run, ui
 
 from src.ai.huellas import calcular_huella
 from src.frontend.controladores.sistemas_lineales.flujo_vista import entrada_actual, procesar_carga_sistema
-from src.frontend.controladores.sistemas_lineales.estado_captura import opciones_transferencia
+from src.frontend.controladores.algebra.sistemas_lineales.nucleo.estado_captura import opciones_transferencia
 from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto, invalidar_resultado, captura_sigue_vigente, calculo_sigue_vigente
 from src.frontend.componentes.resultados.acciones.transferencia import guardar_sistema, url_transferencia
 from src.frontend.componentes.resultados.acciones.acciones_matriz import renderizar_acciones_matriz

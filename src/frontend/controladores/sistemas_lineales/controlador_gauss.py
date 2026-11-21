@@ -1,6 +1,6 @@
 """Controlador para la resolución de sistemas lineales mediante eliminación de Gauss."""
 from src.backend.resolutores.sistemas_lineales.eliminacion.gauss import ResolutorGauss
-from src.frontend.controladores.sistemas_lineales.flujo_comun import (
+from src.frontend.controladores.algebra.sistemas_lineales.nucleo.flujo_comun import (
     ejecutar_flujo_sistema,
 )
 

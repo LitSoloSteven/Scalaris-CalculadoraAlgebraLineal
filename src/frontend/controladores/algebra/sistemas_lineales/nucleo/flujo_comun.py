@@ -10,7 +10,7 @@ from src.backend.resolutores.sistemas_lineales.eliminacion.homogeneos import ana
 from src.backend.resolutores.sistemas_lineales.solucion.comprobacion_sistemas import comprobar_familia
 from src.frontend.controladores.compartido.pasos.agrupador_pasos import agrupar_pasos_eliminacion
 from src.backend.resolutores.sistemas_lineales.captura.captura import validar_y_construir_aumentada
-from src.frontend.controladores.sistemas_lineales.compartido import (
+from src.frontend.controladores.algebra.sistemas_lineales.nucleo.compartido import (
     construir_metadatos_pasos,
 )
 from src.frontend.controladores.compartido.pasos.utilidades import (
