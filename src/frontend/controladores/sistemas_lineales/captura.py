@@ -1,6 +1,6 @@
 """Delegación de captura y serialización de vistas previas de sistemas."""
-from src.backend.resolutores.sistemas_lineales.captura_ecuaciones import preparar_ecuaciones
-from src.backend.resolutores.sistemas_lineales import vista_previa
+from src.backend.resolutores.sistemas_lineales.captura.captura_ecuaciones import preparar_ecuaciones
+from src.backend.resolutores.sistemas_lineales.captura import vista_previa
 
 
 def preparar_captura_ecuaciones(lineas: list[str]) -> dict:

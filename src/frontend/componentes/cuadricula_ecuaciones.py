@@ -16,7 +16,7 @@ from src.frontend.componentes.cuadricula_base import (
     purgar_cache_bidimensional,
     purgar_cache_unidimensional,
 )
-from src.backend.resolutores.sistemas_lineales.exportacion_ecuaciones import exportar_ecuaciones_desde_datos
+from src.backend.resolutores.sistemas_lineales.captura.exportacion_ecuaciones import exportar_ecuaciones_desde_datos
 from src.backend.constantes import DIMENSION_MAXIMA_SISTEMAS
 from .redimension_ecuaciones import crear_fila_ecuaciones, redimensionar_ecuaciones, actualizar_presentacion
 from .carga_numerica import preparar_matriz_numerica

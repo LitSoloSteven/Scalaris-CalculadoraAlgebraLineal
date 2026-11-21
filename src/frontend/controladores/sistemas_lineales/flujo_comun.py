@@ -9,7 +9,7 @@ from src.frontend.controladores.operaciones_matrices.codificador import Codifica
 from src.backend.resolutores.sistemas_lineales.homogeneos import analizar_resultado_homogeneo
 from src.backend.resolutores.sistemas_lineales.comprobacion_sistemas import comprobar_familia
 from src.frontend.controladores.agrupador_pasos import agrupar_pasos_eliminacion
-from src.backend.resolutores.sistemas_lineales.captura import validar_y_construir_aumentada
+from src.backend.resolutores.sistemas_lineales.captura.captura import validar_y_construir_aumentada
 from src.frontend.controladores.sistemas_lineales.compartido import (
     construir_metadatos_pasos,
 )

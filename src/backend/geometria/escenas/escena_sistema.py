@@ -12,7 +12,7 @@ from src.backend.geometria.preparacion.ecuaciones import construir_ecuaciones
 from src.backend.geometria.base.errores import respuesta_error
 from src.backend.geometria.base.recorte import calcular_rango_automatico
 from src.backend.geometria.analisis.representacion_conjunto import representar_conjunto
-from src.backend.resolutores.sistemas_lineales.captura import validar_y_construir_aumentada
+from src.backend.resolutores.sistemas_lineales.captura.captura import validar_y_construir_aumentada
 from src.backend.resolutores.sistemas_lineales.gauss import ResolutorGauss
 
 

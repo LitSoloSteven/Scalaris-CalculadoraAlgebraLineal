@@ -6,7 +6,7 @@ from unittest.mock import Mock
 import pytest
 
 from src.backend.resolutores.operaciones_matrices.captura_inversa import validar_y_parsear_matriz_cuadrada
-from src.backend.resolutores.sistemas_lineales.captura import validar_y_construir_aumentada
+from src.backend.resolutores.sistemas_lineales.captura.captura import validar_y_construir_aumentada
 
 
 @pytest.mark.parametrize("valor,esperado", [(None, Fraction(0)), (" ", Fraction(0)),
@@ -43,7 +43,7 @@ def test_inversa_conserva_coordenada_y_mensaje_del_primer_error():
 def test_los_dos_adaptadores_invocan_el_parser_compartido(monkeypatch):
     """La instrumentación comprueba delegación de celdas y política de vacíos."""
     parser = Mock(return_value=Fraction(3, 2))
-    monkeypatch.setattr("src.backend.resolutores.sistemas_lineales.captura.parsear_celda_exacta", parser)
+    monkeypatch.setattr("src.backend.resolutores.sistemas_lineales.captura.captura.parsear_celda_exacta", parser)
     monkeypatch.setattr("src.backend.resolutores.operaciones_matrices.captura_inversa.parsear_celda_exacta", parser)
     validar_y_construir_aumentada({"matriz_a": [[None]], "vector_b": [""]})
     validar_y_parsear_matriz_cuadrada({"dimension": 1, "datos": [[None]]})

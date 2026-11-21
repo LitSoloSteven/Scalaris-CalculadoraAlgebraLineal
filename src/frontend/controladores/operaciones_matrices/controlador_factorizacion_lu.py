@@ -2,7 +2,7 @@
 from typing import Any
 
 from src.backend.resolutores.operaciones_matrices.factorizacion_lu import factorizar_lu
-from src.backend.resolutores.sistemas_lineales.captura_coeficientes import capturar_coeficientes
+from src.backend.resolutores.sistemas_lineales.captura.captura_coeficientes import capturar_coeficientes
 
 
 class ControladorFactorizacionLU:

@@ -1,5 +1,5 @@
 """Pruebas para validación de carga y construcción de matrices aumentadas."""
-from src.backend.resolutores.sistemas_lineales.captura import validar_y_construir_aumentada
+from src.backend.resolutores.sistemas_lineales.captura.captura import validar_y_construir_aumentada
 from fractions import Fraction
 import json
 

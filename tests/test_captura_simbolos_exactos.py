@@ -7,8 +7,8 @@ from src.backend.constantes import LONGITUD_MAXIMA_CADENA_NUMERO
 from src.backend.geometria.preparacion.captura import parsear_par_vectores
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_matrices.celdas_exactas import parsear_celda_exacta
-from src.backend.resolutores.sistemas_lineales.captura_ecuaciones import preparar_ecuaciones
-from src.backend.resolutores.sistemas_lineales.vista_previa import preparar_vista_previa
+from src.backend.resolutores.sistemas_lineales.captura.captura_ecuaciones import preparar_ecuaciones
+from src.backend.resolutores.sistemas_lineales.captura.vista_previa import preparar_vista_previa
 from src.backend.resolutores.sistemas_numericos.conversor_bases import ConversorBases
 from src.backend.utilidades.validacion.analizadores import AnalizadorSistema
 from src.backend.utilidades.validacion.reglas_dominio import validar_entrada_base
