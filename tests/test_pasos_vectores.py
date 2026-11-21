@@ -9,7 +9,7 @@ import pytest
 
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.operaciones_vectores.operaciones.operaciones import ResolutorOperacionesVectores
-from src.frontend.controladores.operaciones_vectores import (
+from src.frontend.controladores.algebra.operaciones_vectores import (
     ControladorOperacionesVectores,
 )
 from src.frontend.vistas.operaciones_vectores._pasos_reproductor import (

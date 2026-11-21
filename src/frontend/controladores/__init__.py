@@ -17,7 +17,7 @@ from src.frontend.controladores.operaciones_matrices import (
     ControladorOperacionesMatrices,
     ControladorTransformaciones,
 )
-from src.frontend.controladores.operaciones_vectores import (
+from src.frontend.controladores.algebra.operaciones_vectores import (
     ControladorOperacionesVectores,
 )
 from src.frontend.controladores.sistemas_lineales import (

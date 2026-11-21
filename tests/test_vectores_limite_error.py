@@ -1,7 +1,7 @@
 """Límite de presentación de errores para celdas vectoriales excesivas."""
 import json
 
-from src.frontend.controladores.operaciones_vectores import ControladorOperacionesVectores
+from src.frontend.controladores.algebra.operaciones_vectores import ControladorOperacionesVectores
 
 
 def test_error_vectorial_no_refleja_celda_excesiva():
