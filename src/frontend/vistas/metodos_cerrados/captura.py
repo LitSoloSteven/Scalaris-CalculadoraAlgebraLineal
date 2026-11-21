@@ -8,6 +8,7 @@ from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
 from src.frontend.componentes.modos_captura_raices import MODO_BUSQUEDA, MODO_INTERVALO, construir_modos, region_modo
 from src.frontend.componentes.previa_expresion_raices import PreviaExpresion
 from src.frontend.componentes.selector_opciones import SelectorOpciones
+from src.frontend.componentes.simbolos import habilitar_simbolos
 from src.frontend.controladores.biseccion.captura_criterio import texto_estimacion
 from src.frontend.controladores.biseccion.catalogo_criterios import CRITERIOS
 from src.frontend.controladores.biseccion.metadatos_expresion import sensible_a_unidad
@@ -80,7 +81,8 @@ class CapturaMetodosCerrados:
             iniciales = parametros_iniciales(self._metodo)
             self.parametros_criterio = {}
             for tipo, (_, etiqueta, _) in CRITERIOS.items():
-                campo = _campo(etiqueta, iniciales[tipo])
+                perfil = "entero" if tipo in ("decimales", "iteraciones") else "real"
+                campo = _campo(etiqueta, iniciales[tipo], perfil)
                 campo.bind_visibility_from(self.criterio, "value", backward=lambda actual, tipo=tipo: actual == tipo)
                 self.parametros_criterio[tipo] = campo
         self.guia = ui.label().classes("text-sm texto-secundario").props("aria-live=polite")
@@ -104,7 +106,7 @@ class CapturaMetodosCerrados:
     def _construir_opciones(self) -> None:
         with ui.expansion("Avanzado").classes("w-full"):
             with ui.row().classes("metodos-raices-campos w-full"):
-                self.limite = _campo("Límite de iteraciones", str(LIMITE_ITERACIONES_DEFECTO))
+                self.limite = _campo("Límite de iteraciones", str(LIMITE_ITERACIONES_DEFECTO), "entero")
                 minimo, maximo = RANGO_GRAFICA_DEFECTO
                 self.minimo = _campo("Mínimo de la gráfica", str(minimo))
                 self.maximo = _campo("Máximo de la gráfica", str(maximo))
@@ -249,6 +251,8 @@ def limpiar_captura(captura: CapturaMetodosCerrados) -> None:
     captura.definir_rango(RANGO_GRAFICA_DEFECTO, sincronizar=False)
 
 
-def _campo(etiqueta: str, valor: str = ""):
-    return ui.input(etiqueta, value=valor).classes("matriz-entrada min-w-0").props(
+def _campo(etiqueta: str, valor: str = "", perfil: str = "real"):
+    campo = ui.input(etiqueta, value=valor).classes("matriz-entrada min-w-0").props(
         f"inputmode=decimal maxlength={LONGITUD_CAMPO_GRAFICA} autocomplete=off")
+    habilitar_simbolos(campo, perfil)
+    return campo
