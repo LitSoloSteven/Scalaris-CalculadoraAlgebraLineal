@@ -8,7 +8,7 @@ import pytest
 from nicegui import run, ui
 
 from src.frontend.controladores.compartido.sesion import sesion_matricial
-from src.frontend.controladores.operaciones_inversas.vista_previa import preparar_presentacion_previa
+from src.frontend.controladores.algebra.operaciones_inversas.calculo.vista_previa import preparar_presentacion_previa
 from src.frontend.controladores.sistemas_lineales.presentacion_solucion import formatear_elemento_solucion
 from src.frontend.vistas.compartido.mixin_sesion_matricial import MixinSesionMatricial
 from tests.comun_construccion_vistas import construir_pagina

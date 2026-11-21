@@ -10,7 +10,7 @@ from src.backend.resolutores.operaciones_matrices.compartido.formateadores impor
 from src.backend.resolutores.operaciones_matrices.inversa.inversa import ResolutorInversa
 from src.backend.utilidades.formato.formateadores import formatear_fraccion_texto
 from src.frontend.controladores.compartido.pasos.agrupador_pasos import agrupar_pasos_eliminacion
-from src.frontend.controladores.operaciones_inversas.foco_paso import (
+from src.frontend.controladores.algebra.operaciones_inversas.calculo.foco_paso import (
     construir_foco_paso,
 )
 from src.backend.resolutores.operaciones_matrices.inversa.captura_inversa import (

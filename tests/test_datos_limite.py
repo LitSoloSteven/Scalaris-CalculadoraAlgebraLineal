@@ -15,7 +15,7 @@ from src.frontend.componentes.glosa.elementos.glosa_renderizado import renderiza
 from src.frontend.controladores.geometria.escenas.controlador_geometria import (
     ControladorGeometria,
 )
-from src.frontend.controladores.operaciones_inversas.controlador_operaciones_inversas import (
+from src.frontend.controladores.algebra.operaciones_inversas.calculo.controlador_operaciones_inversas import (
     ControladorOperacionesInversas,
 )
 from src.frontend.controladores.algebra.operaciones_vectores.controlador_operaciones_vectores import (

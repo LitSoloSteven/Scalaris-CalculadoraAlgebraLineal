@@ -2,7 +2,7 @@
 from pathlib import Path
 
 from src.backend.utilidades.captura.estado_captura import opciones_transferencia_sistema
-from src.frontend.controladores.operaciones_inversas.vista_previa import preparar_presentacion_previa
+from src.frontend.controladores.algebra.operaciones_inversas.calculo.vista_previa import preparar_presentacion_previa
 from tests.comun import RAIZ
 
 
