@@ -112,7 +112,7 @@ class PanelCapturaVectores(MixinTransicionVectores):
     @staticmethod
     def inyectar_recursos_cliente() -> None:
         """Inyecta los scripts para animaciones vectoriales."""
-        ui.add_head_html('<script src="/assets/js/captura_vectores.js"></script>')
+        ui.add_head_html('<script src="/assets/js/captura/adaptadores/captura_vectores.js"></script>')
 
     def obtener_siguiente_nombre_disponible(self) -> str:
         """Determina la siguiente etiqueta alfabetica o subindicada para un vector."""

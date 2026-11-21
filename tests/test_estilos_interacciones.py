@@ -96,21 +96,21 @@ def test_cliente_delega_ayuda_y_no_anima_teclado():
 
 def test_cliente_resaltado_cruzado_sin_desenfoque():
     """Las cuadrículas resaltan celdas sin cambiar fondo ni aplicar desenfoque."""
-    cuadricula_ecuaciones = leer_captura_cliente("captura_ecuaciones.js")
+    cuadricula_ecuaciones = leer_captura_cliente("captura/adaptadores/captura_ecuaciones.js")
     assert "cuadricula-resaltado-cruzado" in cuadricula_ecuaciones
     assert "filter: blur" not in cuadricula_ecuaciones
     assert "style.background =" not in cuadricula_ecuaciones
 
-    captura_matrices = leer_captura_cliente("captura_matrices.js")
+    captura_matrices = leer_captura_cliente("captura/adaptadores/captura_matrices.js")
     assert "cuadricula-resaltado-cruzado" in captura_matrices
     assert "style.background =" not in captura_matrices
 
-    captura_vectores = leer_captura_cliente("captura_vectores.js")
+    captura_vectores = leer_captura_cliente("captura/adaptadores/captura_vectores.js")
     assert "cuadricula-resaltado-cruzado" in captura_vectores
     assert "filter: blur" not in captura_vectores
     assert "style.background =" not in captura_vectores
 
-    matriz_cuadrada = Path("src/frontend/recursos/js/matriz_cuadrada.js").read_text(encoding="utf-8")
+    matriz_cuadrada = Path("src/frontend/recursos/js/captura/adaptadores/matriz_cuadrada.js").read_text(encoding="utf-8")
     assert "filter: blur" not in matriz_cuadrada
 
 

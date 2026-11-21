@@ -42,7 +42,7 @@ def test_configuracion_json_coincide_con_fuentes_python():
     assert json.loads(bloque.group(1)) == {'caracteres': CARACTERES_ENTRADA_NUMERICA,
                                          'mensaje': MENSAJE_ENTRADA_NUMERICA}
     assert set(CARACTERES_ENTRADA_NUMERICA) == set('0123456789./-+−÷⁄∕¼½¾⅐⅑⅒⅓⅔⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞↉‰')
-    assert tema._CABECERA_HTML.index('scalaris-configuracion-numerica') < tema._CABECERA_HTML.index('/assets/js/entrada_numerica.js')
+    assert tema._CABECERA_HTML.index('scalaris-configuracion-numerica') < tema._CABECERA_HTML.index('/assets/js/captura/entrada/entrada_numerica.js')
 
 
 def test_propiedades_separan_celdas_y_texto_libre():

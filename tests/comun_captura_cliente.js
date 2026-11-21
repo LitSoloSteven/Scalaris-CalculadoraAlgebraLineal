@@ -78,7 +78,7 @@ function entradasPanel(cliente, panel, selector) {
 
 /** Carga juntos los tres adaptadores para detectar interferencias entre ellos. */
 function cargarCapturas(cliente) {
-    for (const nombre of [...catalogo, "captura_ecuaciones.js", "captura_matrices.js", "captura_vectores.js"]) {
+    for (const nombre of [...catalogo, "captura/adaptadores/captura_ecuaciones.js", "captura/adaptadores/captura_matrices.js", "captura/adaptadores/captura_vectores.js"]) {
         cargarAssetCliente(nombre, cliente.contexto);
     }
 }

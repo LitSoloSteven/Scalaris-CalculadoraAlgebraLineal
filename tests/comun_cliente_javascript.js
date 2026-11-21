@@ -33,7 +33,7 @@ function crearCalculadoraSimulada(primeraEntrada = null) {
         querySelector: () => primeraEntrada,
     };
     const contexto = maquinaVirtual.createContext({ window: ventana, document: documento, Event });
-    cargarAssetCliente("calculadora.js", contexto);
+    cargarAssetCliente("captura/entrada/calculadora.js", contexto);
     return { ventana, eventos, contexto };
 }
 

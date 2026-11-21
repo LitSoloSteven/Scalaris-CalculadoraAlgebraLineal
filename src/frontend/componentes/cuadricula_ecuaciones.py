@@ -84,7 +84,7 @@ class CuadriculaEcuaciones:
     @staticmethod
     def inyectar_recursos_cliente() -> None:
         """Inyecta el script asociado para animaciones de la cuadricula de ecuaciones."""
-        ui.add_head_html('<script src="/assets/js/captura_ecuaciones.js"></script>')
+        ui.add_head_html('<script src="/assets/js/captura/adaptadores/captura_ecuaciones.js"></script>')
 
     async def ajustar_tamano(self, incremento_filas: int = 0, incremento_columnas: int = 0) -> None:
         """Ajusta las dimensiones de ecuaciones o variables con animacion."""

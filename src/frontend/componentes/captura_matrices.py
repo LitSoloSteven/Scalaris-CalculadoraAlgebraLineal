@@ -97,7 +97,7 @@ class PanelCapturaMatrices:
     @staticmethod
     def inyectar_recursos_cliente() -> None:
         """Inyecta el script asociado para animaciones de celdas matriciales."""
-        ui.add_head_html('<script src="/assets/js/captura_matrices.js"></script>')
+        ui.add_head_html('<script src="/assets/js/captura/adaptadores/captura_matrices.js"></script>')
 
     def obtener_siguiente_nombre_disponible(self) -> str | None:
         """Obtiene la primera letra disponible del abecedario para nombrar una nueva matriz."""

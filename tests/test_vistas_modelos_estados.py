@@ -11,7 +11,7 @@ def test_cuadricula_compartida_tiene_coordenadas_y_desplazamiento(monkeypatch, h
     async def comprobar(vista, cliente):
         """Inspecciona propiedades de las celdas reales montadas."""
         assert "modelos-captura" in vista.contenedor_coeficientes._classes
-        assert '<script src="/assets/js/captura_matrices.js"></script>' in cliente.head_html
+        assert '<script src="/assets/js/captura/adaptadores/captura_matrices.js"></script>' in cliente.head_html
         for fila, entradas in enumerate(vista.entradas_coeficientes):
             for columna, entrada in enumerate(entradas):
                 assert entrada._props["data-matriz-fila"] == str(fila)

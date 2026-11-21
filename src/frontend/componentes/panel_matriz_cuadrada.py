@@ -51,8 +51,8 @@ class PanelMatrizCuadrada:
     @staticmethod
     def inyectar_recursos_cliente() -> None:
         """Inyecta los scripts necesarios para navegación y animación de matriz cuadrada."""
-        ui.add_head_html('<script src="/assets/js/captura_matrices.js"></script>')
-        ui.add_head_html('<script src="/assets/js/matriz_cuadrada.js"></script>')
+        ui.add_head_html('<script src="/assets/js/captura/adaptadores/captura_matrices.js"></script>')
+        ui.add_head_html('<script src="/assets/js/captura/adaptadores/matriz_cuadrada.js"></script>')
 
     def construir_contenedor(self) -> ui.column:
         """Construye el contenedor UI completo del panel."""

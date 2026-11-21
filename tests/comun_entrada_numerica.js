@@ -49,7 +49,7 @@ function crearClienteNumerico(opciones = {}) {
             eventos.get(nombre).set(funcion, opcionesEvento);
         }, removeEventListener: (nombre, funcion) => eventos.get(nombre)?.delete(funcion) };
     const contexto = vm.createContext({ window: ventana, document: documento, Event });
-    for (const nombre of ['rechazo_entrada_numerica.js', 'entrada_numerica.js', 'captura_celdas.js']) {
+    for (const nombre of ['captura/entrada/rechazo_entrada_numerica.js', 'captura/entrada/entrada_numerica.js', 'captura/cuadricula/captura_celdas.js']) {
         cargarAssetCliente(nombre, contexto);
     }
     return { ventana, documento, elementos, eventos, contexto, configuracion,

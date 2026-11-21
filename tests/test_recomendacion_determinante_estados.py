@@ -38,7 +38,7 @@ def test_vacio_selector_y_teclado_sin_historial(monkeypatch):
         assert pestanas == {'teclado', 'vista_previa', 'historial'}
         assert vista.pestanas_herramientas.value == 'teclado'
         assert not vista.historial
-        assert '/assets/js/calculadora.js' in cliente.head_html
+        assert '/assets/js/captura/entrada/calculadora.js' in cliente.head_html
         assert sum(isinstance(elemento, ui.button) and elemento.text == '7'
                    for elemento in cliente.elements.values()) == 1
     asyncio.run(construir_pagina(monkeypatch, 'determinantes', comprobar))

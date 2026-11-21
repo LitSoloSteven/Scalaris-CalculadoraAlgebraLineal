@@ -88,7 +88,7 @@ prueba('falta de configuración conserva el texto y registrar de nuevo no duplic
     const cliente = crearClienteNumerico({ sinConfiguracion: true }), entrada = crearCeldaNumerica(cliente, 'A');
     cliente.emitir('input', { target: entrada });
     afirmar.equal(entrada.value, 'A');
-    cargarAssetCliente('entrada_numerica.js', cliente.contexto);
+    cargarAssetCliente('captura/entrada/entrada_numerica.js', cliente.contexto);
     for (const nombre of ['beforeinput', 'input', 'compositionstart', 'compositionend']) {
         afirmar.equal(cliente.eventos.get(nombre).size, 1);
     }

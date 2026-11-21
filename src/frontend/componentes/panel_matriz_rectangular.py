@@ -37,8 +37,8 @@ class PanelMatrizRectangular(AccionesMatrizRectangular):
     @staticmethod
     def inyectar_recursos_cliente() -> None:
         """Carga los recursos existentes de navegación y transición matricial."""
-        ui.add_head_html('<script src="/assets/js/captura_matrices.js"></script>')
-        ui.add_head_html('<script src="/assets/js/matriz_cuadrada.js"></script>')
+        ui.add_head_html('<script src="/assets/js/captura/adaptadores/captura_matrices.js"></script>')
+        ui.add_head_html('<script src="/assets/js/captura/adaptadores/matriz_cuadrada.js"></script>')
 
     def construir_contenedor(self) -> ui.column:
         """Construye el panel, sus controles y la cuadrícula de captura."""

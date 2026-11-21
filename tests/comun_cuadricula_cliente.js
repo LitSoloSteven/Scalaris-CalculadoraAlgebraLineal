@@ -38,7 +38,7 @@ function crearCeldaCuadricula(control = crearControlAnimado()) {
 function crearCuadriculaSimulada() {
     const cliente = crearTemaSimulado();
     cargarAssetCliente("nucleo/interacciones/interacciones_globales.js", cliente.contexto);
-    cargarAssetCliente("cuadricula_compartida.js", cliente.contexto);
+    cargarAssetCliente("captura/entrada/cuadricula_compartida.js", cliente.contexto);
     return cliente;
 }
 

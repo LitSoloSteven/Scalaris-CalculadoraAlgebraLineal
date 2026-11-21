@@ -25,7 +25,7 @@ class PanelCalculadora:
     @staticmethod
     def inyectar_recursos_cliente() -> None:
         """Inyecta la etiqueta script del teclado virtual en la cabecera."""
-        ui.add_head_html('<script src="/assets/js/calculadora.js" defer></script>')
+        ui.add_head_html('<script src="/assets/js/captura/entrada/calculadora.js" defer></script>')
 
     def _teclado_matriz(self) -> None:
         """Renderiza la cuadrícula de botones para modo matricial."""
