@@ -1,5 +1,5 @@
 """Adapta una captura parcial a la consulta de continuidad del dominio."""
-from src.backend.resolutores.raices.diagnostico_biseccion import analizar_continuidad_intervalo
+from src.backend.resolutores.raices.biseccion.motor.diagnostico_biseccion import analizar_continuidad_intervalo
 from .captura_criterio import real_capturado
 
 

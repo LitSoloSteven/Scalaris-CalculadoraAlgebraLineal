@@ -100,7 +100,7 @@ def test_lote_nunca_invoca_los_resolutores_de_biseccion(monkeypatch):
     def prohibir(*_argumentos, **_opciones):
         """Hace visible cualquier dependencia accidental del motor de bisección."""
         pytest.fail("Regla falsa no debe ejecutar bisección")
-    biseccion = import_module("src.backend.resolutores.raices.biseccion")
+    biseccion = import_module("src.backend.resolutores.raices.biseccion.motor.biseccion")
     multiple = import_module("src.backend.resolutores.raices.resolucion_multiple")
     monkeypatch.setattr(biseccion, "biseccion", prohibir)
     monkeypatch.setattr(biseccion, "resolver_intervalo_preparado", prohibir)

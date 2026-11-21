@@ -84,7 +84,7 @@ def test_unidad_propagada_a_sondeos(unidad):
 
 def test_explorar_contactos_no_ejecuta_biseccion(monkeypatch):
     """La búsqueda entrega candidatos sin ejecutar ni mezclar trazas del motor individual."""
-    modulo = import_module("src.backend.resolutores.raices.biseccion")
+    modulo = import_module("src.backend.resolutores.raices.biseccion.motor.biseccion")
     def impedir_motor(*argumentos, **opciones):
         """Falla si la exploración intenta resolver un contacto automáticamente."""
         pytest.fail("La exploración no debe ejecutar bisección.")

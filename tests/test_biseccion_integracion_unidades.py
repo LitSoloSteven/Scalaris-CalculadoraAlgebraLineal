@@ -5,7 +5,7 @@ from dataclasses import asdict, replace
 
 import pytest
 
-from src.backend.resolutores.raices.biseccion import biseccion
+from src.backend.resolutores.raices.biseccion.motor.biseccion import biseccion
 from src.backend.resolutores.raices.contrato_biseccion import EntradaBiseccion, validar_entrada
 from src.backend.resolutores.raices.contrato_exploracion import EntradaExploracion, validar_exploracion
 from src.backend.resolutores.raices.contrato_resolucion_multiple import CandidatoResolucion, EntradaResolucionMultiple

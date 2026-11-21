@@ -1,7 +1,7 @@
 """Comportamiento de los cinco criterios y prioridad de las salidas excepcionales."""
 import pytest
 
-from src.backend.resolutores.raices.biseccion import biseccion
+from src.backend.resolutores.raices.biseccion.motor.biseccion import biseccion
 from src.backend.resolutores.raices.contrato_biseccion import EntradaBiseccion
 from src.backend.resolutores.raices.criterios_biseccion import CriterioParada
 

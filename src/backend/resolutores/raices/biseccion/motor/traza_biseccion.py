@@ -3,9 +3,9 @@ from collections.abc import Sequence
 from dataclasses import replace
 
 from src.backend.excepciones import ErrorDominio, ErrorNoFinito
-from .aritmetica_biseccion import ancho_intervalo, cota_intervalo, error_relativo_numerico
-from .contrato_biseccion import CONTINUIDAD_CONDICIONAL, EntradaBiseccion, IteracionBiseccion, ResultadoBiseccion
-from .decision_biseccion import signo_producto
+from ...aritmetica_biseccion import ancho_intervalo, cota_intervalo, error_relativo_numerico
+from ...contrato_biseccion import CONTINUIDAD_CONDICIONAL, EntradaBiseccion, IteracionBiseccion, ResultadoBiseccion
+from ...decision_biseccion import signo_producto
 from .traza_comun_raices import registrar_accion, texto_error_relativo
 
 _CIERRES = {

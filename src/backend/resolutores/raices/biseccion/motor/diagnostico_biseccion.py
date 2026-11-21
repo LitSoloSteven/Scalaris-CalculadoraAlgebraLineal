@@ -3,21 +3,21 @@ import ast
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass, replace
 
-from .aritmetica_biseccion import cota_intervalo
-from .continuidad.dominio.cobertura_continuidad import cubre_intervalo_cerrado
-from .contrato_biseccion import (
+from ...aritmetica_biseccion import cota_intervalo
+from ...continuidad.dominio.cobertura_continuidad import cubre_intervalo_cerrado
+from ...contrato_biseccion import (
     CONTINUIDAD_CONDICIONAL, ContextoFallo, DiagnosticoBiseccion, EntradaBiseccion,
     EvaluacionExtremo, IteracionBiseccion, ResultadoBiseccion, validar_entrada,
 )
-from .continuidad.dominio.contrato_continuidad import InformeContinuidad
-from .continuidad.analisis.discontinuidades import calificar_discontinuidad
-from .continuidad.dominio.dominio_intervalo import comprobar_dominio_arbol
-from .funcion_real.evaluacion.evaluador_funcion import compilar, evaluar
-from .funcion_real.evaluacion.gramatica_funcion import analizar_expresion
-from .continuidad.analisis.informe_continuidad import crear_informe, incorporar_traza, observacion
+from ...continuidad.dominio.contrato_continuidad import InformeContinuidad
+from ...continuidad.analisis.discontinuidades import calificar_discontinuidad
+from ...continuidad.dominio.dominio_intervalo import comprobar_dominio_arbol
+from ...funcion_real.evaluacion.evaluador_funcion import compilar, evaluar
+from ...funcion_real.evaluacion.gramatica_funcion import analizar_expresion
+from ...continuidad.analisis.informe_continuidad import crear_informe, incorporar_traza, observacion
 from .traza_biseccion import construir_error
-from .continuidad.analisis.sugerencias_dominio import sugerir_acciones
-from .compartido.unidades_angulares import opciones_unidad
+from ...continuidad.analisis.sugerencias_dominio import sugerir_acciones
+from ...compartido.unidades_angulares import opciones_unidad
 
 
 @dataclass(frozen=True)

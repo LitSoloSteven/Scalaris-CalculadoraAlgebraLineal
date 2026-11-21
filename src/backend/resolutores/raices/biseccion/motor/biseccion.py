@@ -2,16 +2,16 @@
 from collections.abc import Callable
 from dataclasses import asdict, replace
 
-from .aritmetica_biseccion import punto_medio
-from .contrato_biseccion import EntradaBiseccion, IteracionBiseccion, ResultadoBiseccion, validar_entrada
-from .decision_biseccion import signo_producto
+from ...aritmetica_biseccion import punto_medio
+from ...contrato_biseccion import EntradaBiseccion, IteracionBiseccion, ResultadoBiseccion, validar_entrada
+from ...decision_biseccion import signo_producto
 from .diagnostico_biseccion import IntervaloPreparado, completar_diagnostico, error_contextual, preparar_intervalo
-from .funcion_real.evaluacion.evaluador_funcion import compilar, evaluar
-from .funcion_real.evaluacion.gramatica_funcion import analizar_expresion
+from ...funcion_real.evaluacion.evaluador_funcion import compilar, evaluar
+from ...funcion_real.evaluacion.gramatica_funcion import analizar_expresion
 from .parada_biseccion import completar_criterio, motivo_criterio
 from .traza_biseccion import _CIERRES, construir_error, construir_resultado, crear_iteracion
 from .traza_comun_raices import registrar_accion
-from .compartido.unidades_angulares import opciones_unidad
+from ...compartido.unidades_angulares import opciones_unidad
 
 
 def biseccion(entrada: EntradaBiseccion, *, cero_preferido: float | None = None) -> ResultadoBiseccion:

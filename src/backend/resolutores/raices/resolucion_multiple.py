@@ -4,14 +4,14 @@ import math
 from collections.abc import Callable
 from dataclasses import asdict, replace
 
-from .biseccion import resolver_intervalo_preparado
+from .biseccion.motor.biseccion import resolver_intervalo_preparado
 from .contrato_biseccion import EntradaBiseccion, validar_entrada
 from .contrato_exploracion import CandidatoExploracion
 from .contrato_resolucion_multiple import (
     CandidatoResolucion, EntradaResolucionMultiple, ResolucionCandidato,
     ResultadoResolucionMultiple, validar_resolucion_multiple,
 )
-from .diagnostico_biseccion import preparar_intervalo
+from .biseccion.motor.diagnostico_biseccion import preparar_intervalo
 from .funcion_real.evaluacion.evaluador_funcion import compilar
 from .funcion_real.evaluacion.gramatica_funcion import analizar_expresion
 from .limites_resolucion_multiple import EVALUACIONES_AUXILIARES_CANDIDATO

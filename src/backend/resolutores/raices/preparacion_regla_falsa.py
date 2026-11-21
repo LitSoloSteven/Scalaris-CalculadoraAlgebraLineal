@@ -12,7 +12,7 @@ from .contrato_regla_falsa import (
     IteracionReglaFalsa,
     ResultadoReglaFalsa,
 )
-from .diagnostico_biseccion import error_extremos, evaluar_extremos
+from .biseccion.motor.diagnostico_biseccion import error_extremos, evaluar_extremos
 from .continuidad.dominio.dominio_intervalo import comprobar_dominio_arbol
 from .funcion_real.evaluacion.evaluador_funcion import compilar
 from .funcion_real.evaluacion.gramatica_funcion import analizar_expresion

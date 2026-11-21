@@ -4,7 +4,7 @@ from importlib import import_module
 
 import pytest
 
-from src.backend.resolutores.raices.biseccion import biseccion
+from src.backend.resolutores.raices.biseccion.motor.biseccion import biseccion
 from src.backend.resolutores.raices.contrato_biseccion import EntradaBiseccion
 from src.backend.resolutores.raices.criterios_biseccion import CriterioParada
 from src.backend.resolutores.raices.funcion_real.evaluacion.evaluador_funcion import compilar
@@ -58,7 +58,7 @@ def test_fallo_observado_conserva_codigo_y_abscisa_con_evidencia_adicional():
 
 def test_presupuesto_nulo_de_evaluaciones_adicionales(monkeypatch):
     """La inferencia reutiliza los dos extremos y las evaluaciones de cada fila."""
-    modulo = import_module("src.backend.resolutores.raices.biseccion")
+    modulo = import_module("src.backend.resolutores.raices.biseccion.motor.biseccion")
     llamadas = []
     def compilar_contada(expresion):
         """Envuelve el evaluador real con un contador sin alterar sus valores."""

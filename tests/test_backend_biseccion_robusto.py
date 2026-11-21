@@ -6,7 +6,7 @@ from dataclasses import asdict
 import pytest
 
 from src.backend.resolutores.raices.aritmetica_biseccion import punto_medio, error_relativo_numerico
-from src.backend.resolutores.raices.biseccion import biseccion
+from src.backend.resolutores.raices.biseccion.motor.biseccion import biseccion
 from src.backend.resolutores.raices.contrato_biseccion import EntradaBiseccion
 
 
