@@ -1,7 +1,7 @@
 """Integración real orientada con límites finitos o infinitos."""
 
 from collections.abc import Callable
-from math import fsum, isfinite
+from math import fsum, isfinite, sqrt
 
 from src.backend.excepciones import ErrorDominio
 from .cuadratura_kronrod import integrar_tramo
@@ -47,9 +47,19 @@ def _integrar_ordenado(funcion: Callable[[float], float], inicio: float, fin: fl
         return _integrar_finito(funcion, inicio, fin)
     # Separa ambas colas para evitar que su cancelación parezca convergencia.
     if inicio < 0 < fin:
-        return fsum((_integrar_ordenado(funcion, inicio, 0), _integrar_ordenado(funcion, 0, fin)))
+        return fsum((_integrar_desde_cero(funcion, -inicio, -1), _integrar_desde_cero(funcion, fin, 1)))
     extremo, direccion = (inicio, 1) if isfinite(inicio) else (fin, -1)
     return integrar_tramo(_transformar_cola(funcion, extremo, direccion), 0.0, 1.0)
+
+
+def _integrar_desde_cero(funcion: Callable[[float], float], distancia: float, direccion: int) -> float:
+    if distancia <= 1.0:
+        inicio, fin = sorted((0.0, direccion * distancia))
+        return _integrar_finito(funcion, inicio, fin)
+    # Invierte el cambio racional para conservar resolución cerca de cero en tramos finitos largos.
+    mitad = distancia / 2
+    corte = 1.0 / (1.0 + mitad + sqrt(mitad) * sqrt(mitad + 2.0))
+    return integrar_tramo(_transformar_cola(funcion, 0.0, direccion), corte, 1.0)
 
 
 def _integrar_finito(funcion: Callable[[float], float], inicio: float, fin: float) -> float:
@@ -70,7 +80,7 @@ def _transformar_segmento(
 ) -> Callable[[float], float]:
     ancho = superior - inferior
 
-    def transformada(posicion: float) -> float:
+    def _transformada(posicion: float) -> float:
         # El cambio cúbico suaviza singularidades integrables en ambos extremos.
         distancia = min(posicion, 1.0 - posicion)
         proporcion = distancia**2 * (3.0 - 2.0 * distancia)
@@ -83,11 +93,11 @@ def _transformar_segmento(
             raise _error_capacidad()
         return valor
 
-    return transformada
+    return _transformada
 
 
 def _transformar_cola(funcion: Callable[[float], float], extremo: float, direccion: int) -> Callable[[float], float]:
-    def transformada(distancia: float) -> float:
+    def _transformada(distancia: float) -> float:
         # La distancia a cero se conserva aunque el refinamiento se acerque al infinito.
         complemento = 1.0 - distancia
         desplazamiento = complemento**2 / distancia
@@ -99,7 +109,7 @@ def _transformar_cola(funcion: Callable[[float], float], extremo: float, direcci
             raise _error_capacidad()
         return valor
 
-    return transformada
+    return _transformada
 
 
 def _error_capacidad() -> ErrorCapacidadNumerica:

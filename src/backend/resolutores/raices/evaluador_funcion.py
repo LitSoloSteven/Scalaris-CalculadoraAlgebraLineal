@@ -87,11 +87,11 @@ class _Evaluacion:
         presupuesto = self._presupuesto
         variables_cuerpo = variables_cola | {variable.id} if any(signos) else variables_cola - {variable.id}
 
-        def integrando(muestra: float) -> float:
+        def _integrando(muestra: float) -> float:
             presupuesto.consumir()
             return self.nodo(cuerpo, {**valores, variable.id: muestra}, variables_cuerpo)
 
-        return integrar_real(integrando, inicio, fin)
+        return integrar_real(_integrando, inicio, fin)
 
 
 def _admitir_redondeo(nodo: ast.AST, variables_cola: frozenset[str]) -> Callable[[], bool] | None:

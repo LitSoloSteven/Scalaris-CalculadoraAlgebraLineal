@@ -23,7 +23,7 @@ MAXIMO_NODOS_EXPRESION = 256
 MAXIMA_PROFUNDIDAD_EXPRESION = 32
 _OPERADORES = (ast.Add, ast.Sub, ast.Mult, ast.Div, ast.Pow)
 _AGREGADOS = frozenset(AGREGADOS.values())
-_CALCULO_MULTIPLE = _AGREGADOS | {GUARDIA_DERIVADA}
+_CALCULO_MULTIPLE = _AGREGADOS | {GUARDIA_DERIVADA, NOMBRE_INTEGRAL}
 _CALCULO = _AGREGADOS | frozenset(POSTFIJOS.values())
 _FUNCIONES_UNARIAS = frozenset((*FUNCIONES_REALES, *NOMBRES_ANGULARES, *POSTFIJOS.values()))
 _VARIABLE_INDEPENDIENTE = frozenset({"x"})
@@ -90,9 +90,6 @@ def _validar_llamada(nodo: ast.Call, profundidad: int, variables: frozenset[str]
     if not isinstance(nodo.func, ast.Name) or nodo.keywords:
         raise ValueError("Llamada no permitida. Usa una función real del catálogo.")
     nombre = nodo.func.id
-    if nombre == NOMBRE_INTEGRAL and "x" in variables:
-        _validar_integral(nodo, profundidad, variables)
-        return
     if nombre in _CALCULO_MULTIPLE and "x" in variables:
         _validar_calculo_multiple(nodo, profundidad, variables)
         return
@@ -104,6 +101,9 @@ def _validar_llamada(nodo: ast.Call, profundidad: int, variables: frozenset[str]
 
 
 def _validar_calculo_multiple(nodo: ast.Call, profundidad: int, variables: frozenset[str]) -> None:
+    if nodo.func.id == NOMBRE_INTEGRAL:
+        _validar_integral(nodo, profundidad, variables)
+        return
     if nodo.func.id in _AGREGADOS:
         _validar_agregado(nodo, profundidad, variables)
         return
