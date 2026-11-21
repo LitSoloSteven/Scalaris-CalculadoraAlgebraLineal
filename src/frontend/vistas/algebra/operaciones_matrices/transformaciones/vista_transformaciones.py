@@ -17,7 +17,7 @@ from .mixin_captura_transformaciones import MixinCapturaTransformaciones
 from .mixin_ejemplos_transformaciones import MixinEjemplosTransformaciones
 from src.frontend.vistas.algebra.operaciones_matrices.compartido.herramientas.glosa_modelos import MixinGlosaModelos
 from src.frontend.vistas.algebra.operaciones_matrices.compartido.herramientas.transferencia_modelos import recibir_matriz_modelo
-from .captura_aplicacion_transformacion import MixinAplicacionTransformacion
+from src.frontend.vistas.operaciones_matrices.captura_aplicacion_transformacion import MixinAplicacionTransformacion
 
 
 class VistaTransformaciones(MixinAplicacionTransformacion, MixinGlosaModelos, MixinLimpiezaModelos, MixinCalculoTransformaciones, MixinCapturaTransformaciones, MixinEjemplosTransformaciones):

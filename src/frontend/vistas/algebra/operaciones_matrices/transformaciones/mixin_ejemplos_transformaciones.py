@@ -3,8 +3,8 @@ from src.frontend.componentes.aplicacion.base.sonido import notificar
 from src.frontend.componentes.captura.matrices.captura_modelos import construir_ejemplos
 from src.frontend.nucleo.textos import textos_transformaciones as textos
 from nicegui import ui
-from ._ejemplos_transformaciones import EJEMPLOS_TRANSFORMACIONES
-from ._ejemplos_aplicacion_transformacion import EJEMPLOS_APLICACION
+from src.frontend.vistas.algebra.operaciones_matrices.transformaciones.apoyo._ejemplos_transformaciones import EJEMPLOS_TRANSFORMACIONES
+from src.frontend.vistas.operaciones_matrices._ejemplos_aplicacion_transformacion import EJEMPLOS_APLICACION
 from src.frontend.vistas.algebra.operaciones_matrices.compartido.carga_modelos import cargar_captura_modelo
 
 

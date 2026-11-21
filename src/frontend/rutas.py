@@ -117,7 +117,7 @@ def _registrar_paginas_avanzadas() -> None:
     @ui.page(ruta_de("transformaciones"), title=herramienta_por_identificador("transformaciones").titulo_pagina)
     def pagina_transformaciones(handoff: str = ""):
         """Construye la página de transformaciones con sus controles y contexto."""
-        from src.frontend.vistas.operaciones_matrices.vista_transformaciones import VistaTransformaciones
+        from src.frontend.vistas.algebra.operaciones_matrices.transformaciones.vista_transformaciones import VistaTransformaciones
 
         configurar_tema("transformaciones")
         VistaTransformaciones().construir(token_transferencia=handoff)

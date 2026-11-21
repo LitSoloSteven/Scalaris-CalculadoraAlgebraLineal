@@ -74,7 +74,7 @@ def test_carga_visible_rechaza_doble_calculo_y_libera_boton(monkeypatch, herrami
 def test_todos_los_ejemplos_montan_y_calculan(monkeypatch, herramienta):
     """Cada ejemplo vigente se carga sin alias y produce el análisis esperado."""
     from src.frontend.vistas.algebra.operaciones_matrices.leontief.apoyo._ejemplos_leontief import EJEMPLOS_LEONTIEF
-    from src.frontend.vistas.operaciones_matrices._ejemplos_transformaciones import EJEMPLOS_TRANSFORMACIONES
+    from src.frontend.vistas.algebra.operaciones_matrices.transformaciones.apoyo._ejemplos_transformaciones import EJEMPLOS_TRANSFORMACIONES
     ejemplos = EJEMPLOS_LEONTIEF if herramienta == "leontief" else EJEMPLOS_TRANSFORMACIONES
     async def comprobar(vista, cliente):
         """Verifica captura, estado vacío y cálculo de cada ejemplo."""

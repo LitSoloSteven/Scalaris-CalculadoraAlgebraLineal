@@ -77,7 +77,7 @@ def test_cargar_ejemplos_actualiza_botones_previamente_limitados(monkeypatch, he
             vista._cargar_ejemplo(ejemplo)
             assert vista.boton_reducir.enabled
         else:
-            from src.frontend.vistas.operaciones_matrices._ejemplos_transformaciones import EJEMPLOS_TRANSFORMACIONES
+            from src.frontend.vistas.algebra.operaciones_matrices.transformaciones.apoyo._ejemplos_transformaciones import EJEMPLOS_TRANSFORMACIONES
             await vista._ajustar_filas(-1)
             assert not vista.boton_quitar_fila.enabled
             vista._cargar_ejemplo(EJEMPLOS_TRANSFORMACIONES[0])
