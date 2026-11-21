@@ -11,7 +11,7 @@ from src.backend.resolutores.raices.continuidad.dominio.dominio_intervalo import
 from src.backend.resolutores.raices.compartido.errores_numericos import ErrorCapacidadNumerica, ErrorSingularidad
 from src.backend.resolutores.raices.funcion_real.evaluacion.evaluador_funcion import compilar, evaluar_constante_real
 from src.backend.resolutores.raices.metodos_abiertos import EntradaMetodoAbierto, newton
-from src.backend.resolutores.raices.metodos_abiertos.derivada_simbolica import derivar_expresion
+from src.backend.resolutores.raices.metodos_abiertos.base.derivada_simbolica import derivar_expresion
 from src.frontend.controladores.formato_funcion_real import formatear_expresion
 
 

@@ -1,7 +1,7 @@
 """Validación del contrato de entrada de los métodos abiertos sobre datos crudos."""
 from collections.abc import Mapping
 
-from ..compartido.validacion_raices import (
+from ...compartido.validacion_raices import (
     validar_expresion,
     validar_extremo,
     validar_limite_iteraciones,
