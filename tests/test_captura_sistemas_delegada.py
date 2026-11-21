@@ -8,7 +8,7 @@ import pytest
 
 from src.backend.utilidades.validacion.validadores import ValidadorMatriz
 from src.frontend.controladores.sistemas_lineales.captura import preparar_captura_ecuaciones, preparar_vista_previa
-from src.frontend.sugerencias import primera_celda_invalida
+from src.frontend.presentacion.sugerencias import primera_celda_invalida
 from src.frontend.controladores.sistemas_lineales import ControladorGauss
 from tests.comun_construccion_vistas import construir_pagina
 

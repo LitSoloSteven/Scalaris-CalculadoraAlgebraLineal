@@ -1,7 +1,7 @@
 """Contexto del ejercicio vectorial y señales para las sugerencias del asistente."""
 from src.ai.contexto.contexto import ContextoIA, EstadoContexto, describir_matriz, sanear_cadena_usuario
 from src.ai.huellas import esta_desactualizado
-from src.frontend.sugerencias import Senales, primera_celda_invalida
+from src.frontend.presentacion.sugerencias import Senales, primera_celda_invalida
 
 HERRAMIENTA_VECTORES = "vectores"
 

@@ -8,8 +8,8 @@ from nicegui import ui
 from src.frontend.componentes.iconos import icono_svg
 from src.frontend.componentes.glosa_renderizado import crear_contenido_glosa
 from src.frontend.componentes.glosa_sugerencias import renderizar_seguimientos
-from src.frontend.sugerencias import sugerencias_activas
-from src.frontend.catalogo_sugerencias import SEGUIMIENTOS
+from src.frontend.presentacion.sugerencias import sugerencias_activas
+from src.frontend.presentacion.catalogo_sugerencias import SEGUIMIENTOS
 
 registro = logging.getLogger(__name__)
 

@@ -162,7 +162,7 @@ class VistaSistemasNumericos(MixinLimpiezaBases, MixinInteraccionSistemasNumeric
 
     def obtener_senales_ia(self):
         """Devuelve señales de entrada, error y resultado para elegir sugerencias."""
-        from src.frontend.sugerencias import Senales, CeldaInvalida
+        from src.frontend.presentacion.sugerencias import Senales, CeldaInvalida
         try:
             estado = "sin_resultado"
             banderas = set()

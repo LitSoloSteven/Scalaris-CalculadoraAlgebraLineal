@@ -1,6 +1,6 @@
 """Datos acotados y señales pedagógicas exclusivos de la aplicación Av."""
 from src.ai.contexto.contexto import ContextoIA, sanear_cadena_usuario
-from src.frontend.sugerencias import Senales, primera_celda_invalida
+from src.frontend.presentacion.sugerencias import Senales, primera_celda_invalida
 
 LIMITE_COMPONENTE_CONTEXTO = 32
 

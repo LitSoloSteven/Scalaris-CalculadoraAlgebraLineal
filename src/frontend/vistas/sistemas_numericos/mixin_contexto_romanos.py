@@ -43,7 +43,7 @@ def _resultado_contexto(vista: Any, desactualizado: bool) -> dict | None:
 
 
 def _primera_entrada_invalida(operando_a: str, operando_b: str):
-    from src.frontend.sugerencias import CeldaInvalida
+    from src.frontend.presentacion.sugerencias import CeldaInvalida
     for nombre, valor in (("Operando A", operando_a), ("Operando B", operando_b)):
         if valor:
             try:
@@ -110,7 +110,7 @@ class MixinContextoRomano:
 
     def obtener_senales_ia(self) -> Any:
         """Combina el estado del cálculo con la primera entrada inválida para Glosa."""
-        from src.frontend.sugerencias import Senales
+        from src.frontend.presentacion.sugerencias import Senales
         try:
             operando_a, operando_b, _ = _leer_operandos(self)
             celda_invalida = _primera_entrada_invalida(

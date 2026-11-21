@@ -2,7 +2,7 @@
 from src.ai.contexto.contexto import ContextoIA, EstadoContexto, describir_matriz, sanear_cadena_usuario
 from src.backend.utilidades.formato.formateadores import formatear_fraccion_texto
 from src.ai.huellas import calcular_huella
-from src.frontend.sugerencias import Senales
+from src.frontend.presentacion.sugerencias import Senales
 from .captura_factorizacion_lu import localizar_invalida
 
 

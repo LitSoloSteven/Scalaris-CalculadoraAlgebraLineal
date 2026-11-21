@@ -21,7 +21,7 @@ from src.frontend.componentes.glosa_pie import (
     renderizar_pildora_contexto,
 )
 from src.frontend.componentes.tareas import lanzar_tarea
-from src.frontend.sugerencias import sugerencias_activas, sugerir
+from src.frontend.presentacion.sugerencias import sugerencias_activas, sugerir
 
 registro = logging.getLogger(__name__)
 

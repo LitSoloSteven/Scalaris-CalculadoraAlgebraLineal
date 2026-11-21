@@ -6,7 +6,7 @@ from src.ai.contexto.contexto import (
 from .captura_contexto import describir_captura, localizar_invalida
 from src.backend.constantes import DIMENSION_MAXIMA_CONTEXTO_INVERSA
 from src.backend.utilidades.formato.formateadores import formatear_fraccion_texto
-from src.frontend.sugerencias import Senales
+from src.frontend.presentacion.sugerencias import Senales
 
 
 def preparar_resultado_contexto(resultado: dict | None, dimension: int) -> dict | None:

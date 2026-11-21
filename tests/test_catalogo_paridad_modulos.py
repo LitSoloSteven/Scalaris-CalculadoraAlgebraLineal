@@ -2,8 +2,8 @@
 import pytest
 
 from src.ai.cliente.mensajes import construir_pregunta_explicar_paso
-from src.frontend.catalogo_sugerencias import CATALOGO_SUGERENCIAS
-from src.frontend.sugerencias import Senales, generar_candidatas
+from src.frontend.presentacion.catalogo_sugerencias import CATALOGO_SUGERENCIAS
+from src.frontend.presentacion.sugerencias import Senales, generar_candidatas
 
 
 @pytest.mark.parametrize("herramienta", ["determinantes", "leontief", "transformaciones"])

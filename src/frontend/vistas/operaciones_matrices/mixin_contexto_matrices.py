@@ -58,7 +58,7 @@ class MixinContextoMatrices:
 
     def obtener_senales_ia(self):
         """Calcula señales heurísticas para sugerencias proactivas."""
-        from src.frontend.sugerencias import Senales, primera_celda_invalida
+        from src.frontend.presentacion.sugerencias import Senales, primera_celda_invalida
         try:
             estado = "sin_resultado"
             banderas = set()

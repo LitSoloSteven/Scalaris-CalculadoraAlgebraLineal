@@ -1,5 +1,5 @@
 """Localización de celdas inválidas en una captura rectangular."""
-from src.frontend.sugerencias import CeldaInvalida, primera_celda_invalida
+from src.frontend.presentacion.sugerencias import CeldaInvalida, primera_celda_invalida
 
 
 def localizar_invalida(datos: list[list[str]]) -> CeldaInvalida | None:

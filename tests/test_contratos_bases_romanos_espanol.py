@@ -15,7 +15,7 @@ from src.backend.resolutores.sistemas_numericos.pasos_didacticos import (
     calcular_subtotal_expansion, desglosar_sumas_sucesivas,
 )
 from src.backend.utilidades.validacion.reglas_dominio import BASES_NUMERICAS, validar_entrada_base
-from src.frontend.sugerencias import Senales, generar_candidatas
+from src.frontend.presentacion.sugerencias import Senales, generar_candidatas
 from src.frontend.vistas.sistemas_numericos._pasos_bases import construir_pasos_bases
 from src.frontend.vistas.sistemas_numericos._plantillas_numericas import renderizar_plantilla
 from src.frontend.vistas.sistemas_numericos.mixin_contexto_romanos import _primera_entrada_invalida

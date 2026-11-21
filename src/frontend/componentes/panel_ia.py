@@ -200,7 +200,7 @@ class PanelIA(PanelLateralGlosaMixin):
 
     def renderizar_sugerencias_en_linea(self, limite: int = 2) -> None:
         """Renderiza sugerencias incrustadas en el flujo principal de la pagina."""
-        from src.frontend.sugerencias import sugerencias_activas, sugerir
+        from src.frontend.presentacion.sugerencias import sugerencias_activas, sugerir
         if not sugerencias_activas() or not hasattr(self.interfaz_activa, "obtener_senales_ia"):
             return
 

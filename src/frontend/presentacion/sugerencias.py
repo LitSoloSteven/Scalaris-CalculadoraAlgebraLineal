@@ -5,7 +5,7 @@ from typing import Any
 
 from src.backend.utilidades.validacion.validadores import ValidadorMatriz
 from src.frontend.nucleo import banderas
-from src.frontend.catalogo_sugerencias import CATALOGO_SUGERENCIAS
+from src.frontend.presentacion.catalogo_sugerencias import CATALOGO_SUGERENCIAS
 
 
 @dataclass(frozen=True)
