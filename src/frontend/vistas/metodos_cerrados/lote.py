@@ -14,7 +14,7 @@ from src.frontend.controladores.raices.compartido.ejecucion.coordinacion_trabajo
 from src.frontend.controladores.raices.compartido.exploracion.exploracion_raices import LONGITUD_CAMPO_EXPLORACION, presentar_candidato
 from src.frontend.controladores.raices.metodos_cerrados.adaptadores import BISECCION, REGLA_FALSA, captura_del_metodo
 from src.frontend.controladores.raices.regla_falsa.ejecucion.resolucion_multiple import resolver_lote as resolver_regla_falsa
-from src.frontend.vistas.biseccion.modo_examen import crear_control_examen_lote
+from src.frontend.vistas.raices.biseccion.procedimiento.modo_examen import crear_control_examen_lote
 from src.frontend.vistas.regla_falsa.vigencia_solicitud import SolicitudPanel, iniciar_solicitud, revocar_solicitud
 
 from .resultados_lote import datos_detalle, mostrar_lote

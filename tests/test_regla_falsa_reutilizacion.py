@@ -12,7 +12,7 @@ _RUTAS = (
     "src/frontend/componentes/raices/resultados/tabla_iteraciones.py",
     "src/frontend/controladores/raices/biseccion/captura/captura_criterio.py",
     "src/frontend/vistas/biseccion/calculo_individual.py",
-    "src/frontend/vistas/biseccion/tabla_iteraciones.py",
+    "src/frontend/vistas/raices/biseccion/procedimiento/tabla_iteraciones.py",
     "tests/test_regla_falsa_reutilizacion_captura.py",
     "tests/test_regla_falsa_reutilizacion_calculo.py",
     "tests/test_regla_falsa_reutilizacion_tabla.py",

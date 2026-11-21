@@ -8,7 +8,7 @@ from src.frontend.componentes.raices.resultados.tabla_iteraciones import Paginac
 from src.frontend.controladores.raices.biseccion.ejecucion.controlador import resolver_captura
 from src.frontend.controladores.raices.biseccion.presentacion.presentacion import COLUMNAS, filas_tabla
 from src.frontend.controladores.raices.biseccion.salidas.salidas_biseccion import COLUMNAS_EXAMEN, datos_examen
-from src.frontend.vistas.biseccion.tabla_iteraciones import mostrar_tabla
+from src.frontend.vistas.raices.biseccion.procedimiento.tabla_iteraciones import mostrar_tabla
 from tests.comun_biseccion_criterios import captura_criterio
 from tests.comun_construccion_vistas import preparar_transporte, cerrar_cliente
 

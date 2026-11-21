@@ -5,9 +5,9 @@ from src.frontend.componentes.resultados.acciones.copia_resultado import renderi
 from src.frontend.controladores.raices.biseccion.captura.catalogo_criterios import DECIMALES_PRESENTACION_DEFECTO
 from src.frontend.controladores.raices.biseccion.presentacion.presentacion_criterio import datos_copia_biseccion, texto_resumen, titulo_estado
 from src.frontend.controladores.raices.biseccion.salidas.salidas_biseccion import texto_copia_biseccion
-from .modo_examen import crear_control_examen_lote
+from src.frontend.vistas.raices.biseccion.procedimiento.modo_examen import crear_control_examen_lote
 from src.frontend.vistas.raices.biseccion.exploracion.continuidad_intervalo import mostrar_informe
-from .procedimiento import mostrar_traza
+from src.frontend.vistas.raices.biseccion.procedimiento.procedimiento import mostrar_traza
 
 
 def mostrar_resultados_multiples(lote: dict, al_consultar, al_volver, al_montar) -> None:
