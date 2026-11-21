@@ -1,7 +1,7 @@
 """Contexto de errores y acciones opcionales sobre una respuesta aún vigente."""
 from nicegui import ui
 
-from src.frontend.controladores.biseccion.presentacion_diagnostico import (
+from src.frontend.controladores.raices.biseccion.presentacion.presentacion_diagnostico import (
     detalles_diagnostico, texto_intervalo, texto_sugerencia,
 )
 

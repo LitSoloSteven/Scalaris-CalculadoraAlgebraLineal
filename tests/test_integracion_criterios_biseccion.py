@@ -6,7 +6,7 @@ import pytest
 
 from src.backend.resolutores.raices.biseccion.motor.biseccion import biseccion
 from src.frontend.controladores.raices.biseccion.ejecucion import controlador
-from src.frontend.controladores.biseccion.presentacion import construir_pasos, filas_tabla
+from src.frontend.controladores.raices.biseccion.presentacion.presentacion import construir_pasos, filas_tabla
 
 
 def _captura(criterio=None):

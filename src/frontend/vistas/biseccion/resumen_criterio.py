@@ -7,8 +7,8 @@ from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion impor
 from src.frontend.componentes.resultados.acciones.copia_resultado import renderizar_copia_resultado
 from src.frontend.componentes.raices.resultados.precision_presentacion import leer_precision_presentacion
 from src.frontend.controladores.raices.biseccion.captura.catalogo_criterios import DECIMALES_PRESENTACION_DEFECTO
-from src.frontend.controladores.biseccion.presentacion import motivo
-from src.frontend.controladores.biseccion.presentacion_criterio import (
+from src.frontend.controladores.raices.biseccion.presentacion.presentacion import motivo
+from src.frontend.controladores.raices.biseccion.presentacion.presentacion_criterio import (
     aproximacion_presentada, avisos_resumen, datos_copia_biseccion, etiqueta_aproximacion, metricas_principales,
     metricas_resumen, titulo_estado,
 )

@@ -2,8 +2,8 @@
 from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import ESTADO_DISCONTINUIDAD
 
 from src.frontend.controladores.raices.biseccion.captura.catalogo_criterios import CRITERIOS, condicion_criterio
-from .presentacion import motivo, numero
-from .presentacion_diagnostico import detalles_diagnostico, texto_sugerencia
+from src.frontend.controladores.raices.biseccion.presentacion.presentacion import motivo, numero
+from src.frontend.controladores.raices.biseccion.presentacion.presentacion_diagnostico import detalles_diagnostico, texto_sugerencia
 
 
 def titulo_estado(respuesta: dict) -> str:

@@ -1,5 +1,5 @@
 """Columnas y acciones de la traza real de regla falsa."""
-from src.frontend.controladores.biseccion.presentacion import numero
+from src.frontend.controladores.raices.biseccion.presentacion.presentacion import numero
 
 COLUMNAS = (
     ("i", "i"), ("extremo_izquierdo", "a"), ("extremo_derecho", "b"),

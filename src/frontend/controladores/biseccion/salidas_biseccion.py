@@ -1,7 +1,7 @@
 """Formato compartido para el signo y la acción registrados en el modo examen."""
 from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import ESTADO_DISCONTINUIDAD
-from .presentacion import MOTIVOS
-from .presentacion_criterio import texto_resumen
+from src.frontend.controladores.raices.biseccion.presentacion.presentacion import MOTIVOS
+from src.frontend.controladores.raices.biseccion.presentacion.presentacion_criterio import texto_resumen
 
 COLUMNAS_EXAMEN = (("signo_examen", "Signo de f(a)·f(c)"), ("accion_examen", "Acción ejecutada"))
 _SIGNOS = {-1: "Negativo (−)", 0: "Cero (0)", 1: "Positivo (+)"}

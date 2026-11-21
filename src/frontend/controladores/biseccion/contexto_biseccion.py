@@ -1,5 +1,5 @@
 """Resumen acotado de bisección para el contexto pedagógico."""
-from .presentacion_criterio import etiqueta_aproximacion, titulo_estado
+from src.frontend.controladores.raices.biseccion.presentacion.presentacion_criterio import etiqueta_aproximacion, titulo_estado
 
 _CAMPOS_RESULTADO = (
     "estado", "mensaje", "aproximacion", "intervalo_final", "tolerancia", "cota", "motivo_parada", "metricas",

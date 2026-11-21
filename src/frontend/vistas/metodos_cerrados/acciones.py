@@ -4,7 +4,7 @@ from collections.abc import Callable
 from nicegui import ui
 
 from src.frontend.controladores.raices.biseccion.captura.catalogo_criterios import DECIMALES_PRESENTACION_DEFECTO
-from src.frontend.controladores.biseccion.presentacion_criterio import titulo_estado
+from src.frontend.controladores.raices.biseccion.presentacion.presentacion_criterio import titulo_estado
 from src.frontend.controladores.metodos_cerrados.adaptadores import BISECCION, METODOS
 from src.frontend.controladores.regla_falsa.presentacion_ampliada import descripcion_captura, titulo_configurado
 from src.frontend.controladores.compartido.sesion.sesion_matricial import registrar_calculo

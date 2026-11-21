@@ -8,7 +8,7 @@ from src.frontend.componentes.glosa.panel.panel_ia import PanelIA
 from src.frontend.controladores.raices.biseccion.ejecucion.controlador import calcular_presentacion
 from src.frontend.controladores.raices.biseccion.captura.catalogo_criterios import DECIMALES_PRESENTACION_DEFECTO
 from src.frontend.controladores.biseccion.contexto_biseccion import resumir_contexto_biseccion
-from src.frontend.controladores.biseccion.presentacion_criterio import etiqueta_aproximacion, titulo_estado
+from src.frontend.controladores.raices.biseccion.presentacion.presentacion_criterio import etiqueta_aproximacion, titulo_estado
 from src.frontend.controladores.compartido.sesion.sesion_matricial import invalidar_resultado, actualizar_contexto, registrar_calculo
 from src.frontend.navegacion import ruta_de
 from .acciones_captura import mostrar_recientes

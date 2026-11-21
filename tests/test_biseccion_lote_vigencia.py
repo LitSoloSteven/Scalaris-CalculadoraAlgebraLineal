@@ -6,7 +6,7 @@ import pytest
 from nicegui import run, ui
 
 from src.frontend.controladores.raices.biseccion.ejecucion.resolucion_multiple import resolver_lote
-from src.frontend.controladores.biseccion.presentacion import filas_tabla
+from src.frontend.controladores.raices.biseccion.presentacion.presentacion import filas_tabla
 from tests.comun_biseccion_criterios import ejecutar_escenario
 from tests.comun_exploracion_biseccion import activar_accion, preparar_exploracion
 

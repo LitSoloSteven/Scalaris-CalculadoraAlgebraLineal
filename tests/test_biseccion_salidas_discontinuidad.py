@@ -5,8 +5,8 @@ from nicegui import ui
 
 from src.frontend.componentes.resultados.acciones.copia_resultado import texto_resultado_copiable
 from src.frontend.controladores.raices.biseccion.ejecucion import controlador
-from src.frontend.controladores.biseccion.presentacion import construir_pasos, filas_tabla, motivo
-from src.frontend.controladores.biseccion.presentacion_criterio import texto_resumen
+from src.frontend.controladores.raices.biseccion.presentacion.presentacion import construir_pasos, filas_tabla, motivo
+from src.frontend.controladores.raices.biseccion.presentacion.presentacion_criterio import texto_resumen
 from src.frontend.controladores.raices.biseccion.ejecucion.resolucion_multiple import resolver_lote
 from src.frontend.vistas.biseccion.figura import crear_figura
 from src.frontend.vistas.biseccion import resumen_criterio, resultados_multiples

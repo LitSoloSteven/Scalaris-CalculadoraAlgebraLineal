@@ -2,7 +2,7 @@
 from nicegui import ui
 
 from src.frontend.componentes.raices.resultados.informe_continuidad_raices import mostrar_informe_continuidad
-from src.frontend.controladores.biseccion.presentacion_criterio import titulo_estado
+from src.frontend.controladores.raices.biseccion.presentacion.presentacion_criterio import titulo_estado
 from src.frontend.controladores.metodos_cerrados.adaptadores import BISECCION
 from src.frontend.controladores.regla_falsa.presentacion_ampliada import titulo_configurado
 

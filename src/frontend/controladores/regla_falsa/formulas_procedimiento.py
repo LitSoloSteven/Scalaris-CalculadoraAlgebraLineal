@@ -1,6 +1,6 @@
 """Proyección TeX de los valores finitos publicados por el motor de regla falsa."""
 from src.frontend.controladores.raices.compartido.formato.formato_funcion_real import numero_tex
-from src.frontend.controladores.biseccion.presentacion import numero
+from src.frontend.controladores.raices.biseccion.presentacion.presentacion import numero
 
 
 def formulas_iteracion(fila: dict) -> tuple[str, ...]:

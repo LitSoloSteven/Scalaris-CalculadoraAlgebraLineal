@@ -1,5 +1,5 @@
 """Detalle textual de los fallos reales de regla falsa sin nuevas evaluaciones."""
-from src.frontend.controladores.biseccion.presentacion_diagnostico import (
+from src.frontend.controladores.raices.biseccion.presentacion.presentacion_diagnostico import (
     detalles_diagnostico as _detalles_compartidos,
 )
 

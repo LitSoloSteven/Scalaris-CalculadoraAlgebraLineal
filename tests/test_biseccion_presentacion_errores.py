@@ -6,8 +6,8 @@ import pytest
 from nicegui import ui
 
 from src.frontend.controladores.raices.biseccion.ejecucion.controlador import resolver_captura
-from src.frontend.controladores.biseccion.presentacion_criterio import texto_resumen
-from src.frontend.controladores.biseccion.presentacion_diagnostico import detalles_diagnostico, texto_sugerencia
+from src.frontend.controladores.raices.biseccion.presentacion.presentacion_criterio import texto_resumen
+from src.frontend.controladores.raices.biseccion.presentacion.presentacion_diagnostico import detalles_diagnostico, texto_sugerencia
 from tests.comun_biseccion_criterios import captura_criterio, ejecutar_escenario
 
 

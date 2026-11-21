@@ -7,7 +7,7 @@ from src.frontend.componentes.reproductor_pasos.formato.cuerpos import renderiza
 from src.frontend.controladores.raices.biseccion.captura.catalogo_criterios import condicion_criterio
 from src.frontend.controladores.raices.biseccion.adaptadores.formato_expresion import formatear_expresion
 from src.frontend.controladores.biseccion.formulas_procedimiento import formulas_iteracion
-from src.frontend.controladores.biseccion.presentacion import COLUMNAS, construir_pasos, valor_columna
+from src.frontend.controladores.raices.biseccion.presentacion.presentacion import COLUMNAS, construir_pasos, valor_columna
 from .modo_examen import mostrar_accion_examen
 from .movimiento import REGISTRAR_ENTRADA, publicar_formula
 from .reproductor import ReproductorBiseccion

@@ -1,6 +1,6 @@
 """Fórmulas de una iteración obtenidas de sus valores publicados."""
 from src.frontend.controladores.raices.biseccion.adaptadores.formato_expresion import numero_tex
-from .presentacion import numero
+from src.frontend.controladores.raices.biseccion.presentacion.presentacion import numero
 
 
 def formulas_iteracion(fila: dict) -> tuple[str, ...]:
