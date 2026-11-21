@@ -1,5 +1,5 @@
 """Resolución real y muestreo orientativo separados del sobre matemático."""
-from src.frontend.controladores.muestreo_raices import muestrear_funcion
+from src.frontend.controladores.raices.compartido.exploracion.muestreo_raices import muestrear_funcion
 from .ejecucion_ampliada import resolver_presentacion
 
 

@@ -1,6 +1,6 @@
 """Carga explícita de intervalos pertenecientes a la exploración vigente."""
 from src.frontend.componentes.raices.exploracion.candidatos_raices import PresentacionCandidatos, mostrar_candidatos
-from src.frontend.controladores.captura_exploratoria_raices import intervalo_seleccionable
+from src.frontend.controladores.raices.compartido.exploracion.captura_exploratoria_raices import intervalo_seleccionable
 
 _PRESENTACION = PresentacionCandidatos(
     "Carga un intervalo y pulsa Calcular raíz. La búsqueda es acotada y no garantiza encontrar todas las raíces. "

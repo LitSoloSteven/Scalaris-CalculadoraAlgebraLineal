@@ -5,7 +5,7 @@ from src.backend.resolutores.raices.compartido.unidades_angulares import opcione
 from src.frontend.controladores.raices.compartido.formato.rango_exploracion_raices import (
     LONGITUD_CAMPO_GRAFICA, RANGO_GRAFICA_DEFECTO, rango_grafica,
 )
-from .muestreo_raices import muestrear_funcion
+from src.frontend.controladores.raices.compartido.exploracion.muestreo_raices import muestrear_funcion
 
 
 def preparar_vista_previa(captura: dict) -> dict:

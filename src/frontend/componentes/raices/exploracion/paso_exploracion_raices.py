@@ -1,5 +1,5 @@
 """Presentación del paso automático o manual de un panel exploratorio."""
-from src.frontend.controladores.exploracion_raices import sugerir_paso
+from src.frontend.controladores.raices.compartido.exploracion.exploracion_raices import sugerir_paso
 
 
 class PasoExploracion:

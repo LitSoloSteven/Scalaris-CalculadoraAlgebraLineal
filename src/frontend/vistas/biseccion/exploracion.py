@@ -8,7 +8,7 @@ from src.frontend.controladores.biseccion.vigencia_panel import invalidar_panel
 from src.frontend.controladores.biseccion.exploracion import (
     LONGITUD_CAMPO_EXPLORACION, resolver_exploracion,
 )
-from src.frontend.controladores.captura_exploratoria_raices import capturar_exploracion, intervalo_seleccionable
+from src.frontend.controladores.raices.compartido.exploracion.captura_exploratoria_raices import capturar_exploracion, intervalo_seleccionable
 from src.frontend.controladores.compartido.sesion.calculo_vigente import ejecutar_calculo_vigente
 from src.frontend.componentes.raices.exploracion.exploracion_raices import ESTADO_INICIAL, MontajeExploracion, construir_exploracion
 from src.frontend.componentes.raices.exploracion.paso_exploracion_raices import PasoExploracion

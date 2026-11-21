@@ -3,7 +3,7 @@ import json
 
 import pytest
 
-from src.frontend.controladores import exploracion_raices as comun
+from src.frontend.controladores.raices.compartido.exploracion import exploracion_raices as comun
 from src.frontend.controladores.biseccion import exploracion as anterior
 from src.frontend.controladores.raices.compartido.formato.rango_exploracion_raices import rango_grafica
 from tests.comun_biseccion_criterios import ejecutar_escenario

@@ -3,7 +3,7 @@ from nicegui import ui
 from collections.abc import Callable
 from dataclasses import dataclass
 
-from src.frontend.controladores.exploracion_raices import detalles_contacto, presentar_candidato, texto_consumo_exploracion
+from src.frontend.controladores.raices.compartido.exploracion.exploracion_raices import detalles_contacto, presentar_candidato, texto_consumo_exploracion
 
 
 @dataclass(frozen=True)

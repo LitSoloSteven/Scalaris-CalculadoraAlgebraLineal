@@ -8,8 +8,8 @@ from src.frontend.componentes.raices.exploracion.captura_exploracion_raices impo
 from src.frontend.componentes.raices.exploracion.exploracion_raices import ESTADO_INICIAL, MontajeExploracion, construir_exploracion
 from src.frontend.componentes.raices.exploracion.paso_exploracion_raices import PasoExploracion
 from src.frontend.controladores.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
-from src.frontend.controladores.captura_exploratoria_raices import capturar_exploracion
-from src.frontend.controladores.exploracion_raices import (
+from src.frontend.controladores.raices.compartido.exploracion.captura_exploratoria_raices import capturar_exploracion
+from src.frontend.controladores.raices.compartido.exploracion.exploracion_raices import (
     LONGITUD_CAMPO_EXPLORACION, PASO_EXPLORACION_DEFECTO, resolver_exploracion,
 )
 from src.frontend.controladores.raices.compartido.formato.rango_exploracion_raices import RANGO_GRAFICA_DEFECTO

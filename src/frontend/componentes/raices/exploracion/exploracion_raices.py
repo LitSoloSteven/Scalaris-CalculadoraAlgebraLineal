@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 from nicegui import ui
 
-from src.frontend.controladores.exploracion_raices import PASO_EXPLORACION_DEFECTO
+from src.frontend.controladores.raices.compartido.exploracion.exploracion_raices import PASO_EXPLORACION_DEFECTO
 
 ESTADO_INICIAL = "Define un rango y un paso para explorar la función."
 

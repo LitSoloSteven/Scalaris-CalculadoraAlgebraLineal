@@ -6,7 +6,7 @@ from nicegui import ui
 
 from src.backend.resolutores.raices.biseccion.lote.limites_resolucion_multiple import MAXIMO_CANDIDATOS_MULTIPLE, MAXIMO_EVALUACIONES_MULTIPLE
 from src.frontend.controladores.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
-from src.frontend.controladores.exploracion_raices import LONGITUD_CAMPO_EXPLORACION, presentar_candidato
+from src.frontend.controladores.raices.compartido.exploracion.exploracion_raices import LONGITUD_CAMPO_EXPLORACION, presentar_candidato
 from src.frontend.controladores.regla_falsa.resolucion_multiple import resolver_lote
 from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto
 from .detalle_resultado import presentar_detalle

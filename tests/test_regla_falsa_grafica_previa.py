@@ -6,7 +6,7 @@ from types import SimpleNamespace
 import pytest
 from nicegui import run
 
-from src.frontend.controladores.vista_previa_raices import preparar_vista_previa
+from src.frontend.controladores.raices.compartido.exploracion.vista_previa_raices import preparar_vista_previa
 from tests.comun_regla_falsa_vista import captura_regla_falsa, ejecutar_escenario
 
 
