@@ -3,7 +3,7 @@ from copy import deepcopy
 from src.ai.contexto.contexto import (
     ContextoIA, EstadoContexto, describir_matriz, generar_nota_ventana,
 )
-from .captura_contexto import describir_captura, localizar_invalida
+from src.frontend.controladores.algebra.operaciones_inversas.contexto.captura_contexto import describir_captura, localizar_invalida
 from src.backend.constantes import DIMENSION_MAXIMA_CONTEXTO_INVERSA
 from src.backend.utilidades.formato.formateadores import formatear_fraccion_texto
 from src.frontend.presentacion.sugerencias import Senales

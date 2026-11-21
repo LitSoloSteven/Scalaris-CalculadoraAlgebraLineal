@@ -4,7 +4,7 @@ from unittest.mock import Mock
 import pytest
 from src.ai.huellas import calcular_huella
 from src.frontend.controladores.compartido.sesion.memo_captura import reutilizar_captura
-from src.frontend.controladores.operaciones_inversas.contexto import obtener_contexto_inversa, obtener_senales_inversa
+from src.frontend.controladores.algebra.operaciones_inversas.contexto.contexto import obtener_contexto_inversa, obtener_senales_inversa
 
 
 def _vista(datos):

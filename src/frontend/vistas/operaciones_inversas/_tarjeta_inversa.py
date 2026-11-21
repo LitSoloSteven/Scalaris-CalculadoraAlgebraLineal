@@ -6,7 +6,7 @@ from src.frontend.componentes.aplicacion.base.sonido import notificar
 from src.frontend.componentes.resultados.acciones.avisos_resultado import renderizar_aviso_resultado
 
 from src.backend.constantes import DIMENSION_MAXIMA_SISTEMAS
-from src.frontend.controladores.operaciones_inversas.presentacion import preparar_opciones_inversa
+from src.frontend.controladores.algebra.operaciones_inversas.contexto.presentacion import preparar_opciones_inversa
 from src.backend.utilidades.formato.formateadores import formatear_fraccion_texto
 from src.frontend.componentes.reproductor_pasos.formato.html_tablas import html_tabla_matriz
 from src.frontend.componentes.resultados.analisis.desarrollo_comprobacion import mostrar_desarrollo

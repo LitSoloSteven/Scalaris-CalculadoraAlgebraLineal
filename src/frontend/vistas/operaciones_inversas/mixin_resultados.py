@@ -8,7 +8,7 @@ from src.frontend.controladores.compartido.sesion.sesion_matricial import invali
 from src.frontend.controladores.operaciones_inversas import (
     ControladorOperacionesInversas,
 )
-from src.frontend.controladores.operaciones_inversas.presentacion import preparar_opciones_inversa
+from src.frontend.controladores.algebra.operaciones_inversas.contexto.presentacion import preparar_opciones_inversa
 from src.ai.huellas import calcular_huella
 from src.frontend.vistas.operaciones_inversas._tarjeta_inversa import (
     renderizar_resultado_inversa,
