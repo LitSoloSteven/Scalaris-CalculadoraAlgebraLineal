@@ -1,7 +1,7 @@
 """Nodos de expresión usados para construir una derivada simbólica."""
 import ast
 
-from ..constantes_funcion import CONSTANTES_REALES
+from .constantes_funcion import CONSTANTES_REALES
 
 
 def depende_de_x(nodo: ast.AST) -> bool:
