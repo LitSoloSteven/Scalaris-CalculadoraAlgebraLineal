@@ -14,12 +14,19 @@ from src.backend.constantes import (
 )
 
 
+def separar_indice_variable(nombre_variable: str) -> tuple[str, str | None]:
+    """Devuelve el nombre y su índice final si el nombre está formado por letras."""
+    coincidencia = re.fullmatch(r"([a-zA-ZΑ-Ωα-ω]+)(\d+)", nombre_variable)
+    if coincidencia:
+        return coincidencia[1], coincidencia[2]
+    return nombre_variable, None
+
+
 def formatear_variable_para_latex(nombre_variable: str) -> str:
     """Convierte el identificador de una variable a notación LaTeX con subíndice."""
-    coincidencia = re.match(r"^([a-zA-Z]+)(\d+)$", nombre_variable)
-    if coincidencia:
-        letras, digitos = coincidencia.groups()
-        return f"{letras}_{{{digitos}}}"
+    letras, indice = separar_indice_variable(nombre_variable)
+    if indice is not None:
+        return f"{letras}_{{{indice}}}"
     if len(nombre_variable) > 1:
         return f"\\text{{{nombre_variable}}}"
     return nombre_variable
