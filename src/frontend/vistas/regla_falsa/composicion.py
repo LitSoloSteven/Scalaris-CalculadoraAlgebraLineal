@@ -5,12 +5,12 @@ from src.frontend.componentes.raices.captura.previa_expresion_raices import Prev
 from src.frontend.vistas.raices.biseccion.captura.captura import GUIA_CONTINUIDAD
 from src.frontend.vistas.raices.regla_falsa.captura.acciones_captura import construir_acciones, mostrar_recientes
 from src.frontend.vistas.raices.regla_falsa.captura.captura import construir_captura
-from .exploracion import PanelExploracion
+from src.frontend.vistas.raices.regla_falsa.exploracion.exploracion import PanelExploracion
 from .resolucion_multiple import PanelResolucionMultiple
 from src.frontend.vistas.raices.regla_falsa.base.modos_captura import MODO_BUSQUEDA, region_modo
 from src.frontend.vistas.raices.regla_falsa.grafica.vista_previa import PanelVistaPrevia
 from src.frontend.vistas.raices.regla_falsa.grafica.seleccion_grafico import SeleccionGrafico
-from .continuidad_intervalo import PanelContinuidad
+from src.frontend.vistas.raices.regla_falsa.exploracion.continuidad_intervalo import PanelContinuidad
 from src.frontend.vistas.raices.regla_falsa.captura.estados_entrada import EstadosEntrada
 
 
