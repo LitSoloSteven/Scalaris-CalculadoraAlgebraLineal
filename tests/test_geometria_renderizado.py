@@ -6,7 +6,7 @@ import pytest
 from src.backend.resolutores.sistemas_lineales.eliminacion.gauss import ResolutorGauss
 from tests.comun_geometria import comprobar_rectas_incompatibles
 from tests.comun_entradas import copiar_entrada_prueba
-from src.frontend.controladores.geometria.controlador_geometria import (
+from src.frontend.controladores.geometria.escenas.controlador_geometria import (
     ControladorGeometria,
 )
 

@@ -3,7 +3,7 @@ import json
 
 import pytest
 
-from src.frontend.controladores.geometria.controlador_geometria import ControladorGeometria
+from src.frontend.controladores.geometria.escenas.controlador_geometria import ControladorGeometria
 from src.frontend.vistas.geometria._figura_rectas_planos import construir_figura_rectas_planos
 
 

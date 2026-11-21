@@ -1,11 +1,11 @@
 """Fachada y controlador principal para el visualizador geométrico interactivo."""
-from src.frontend.controladores.geometria.controlador_combinacion import (
+from src.frontend.controladores.geometria.escenas.controlador_combinacion import (
     procesar_combinacion,
 )
-from src.frontend.controladores.geometria.controlador_rectas_planos import (
+from src.frontend.controladores.geometria.escenas.controlador_rectas_planos import (
     procesar_rectas_planos,
 )
-from src.frontend.controladores.geometria.controlador_vectores import (
+from src.frontend.controladores.geometria.escenas.controlador_vectores import (
     procesar_vectores,
 )
 from src.frontend.controladores.geometria.base.utilidades import selector_celda_error

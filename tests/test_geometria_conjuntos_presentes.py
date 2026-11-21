@@ -3,7 +3,7 @@ import json
 
 import pytest
 
-from src.frontend.controladores.geometria.controlador_geometria import ControladorGeometria
+from src.frontend.controladores.geometria.escenas.controlador_geometria import ControladorGeometria
 
 
 @pytest.mark.parametrize("coeficientes,independientes", [
