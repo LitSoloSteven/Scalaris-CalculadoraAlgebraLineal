@@ -18,7 +18,7 @@ from src.frontend.componentes.panel_ia_clasico import (
     renderizar_mensaje_clasico,
 )
 from src.frontend.componentes.glosa_panel_lateral import PanelLateralGlosaMixin
-from src.frontend.constantes import ANTIRREBOTE_IA_SEGUNDOS, MAXIMO_HISTORIAL
+from src.frontend.nucleo.constantes import ANTIRREBOTE_IA_SEGUNDOS, MAXIMO_HISTORIAL
 
 registro = logging.getLogger(__name__)
 

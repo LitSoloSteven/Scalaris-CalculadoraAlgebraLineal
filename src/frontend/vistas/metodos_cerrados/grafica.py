@@ -8,7 +8,7 @@ from plotly import graph_objects as go
 
 from src.frontend.componentes.colores_figuras import aplicar_colores_figura
 from src.frontend.componentes.figura_funcion_real import crear_base
-from src.frontend.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
+from src.frontend.nucleo.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
 from src.frontend.controladores.actualizacion_cancelable import cancelar_actualizacion, programar_actualizacion
 from src.frontend.controladores.biseccion.muestreo import separar_intervalo_sospechoso
 from src.frontend.controladores.captura_real import real_capturado

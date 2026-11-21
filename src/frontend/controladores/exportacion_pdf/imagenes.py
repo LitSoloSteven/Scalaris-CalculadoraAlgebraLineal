@@ -6,7 +6,8 @@ from dataclasses import dataclass
 from io import BytesIO
 
 from PIL import Image, UnidentifiedImageError
-from src.frontend import constantes as limites, textos
+from src.frontend.nucleo import constantes as limites
+from src.frontend import textos
 
 
 @dataclass(frozen=True)

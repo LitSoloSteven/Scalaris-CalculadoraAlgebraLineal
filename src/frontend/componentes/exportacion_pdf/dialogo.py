@@ -4,7 +4,8 @@ from collections.abc import Callable
 from html import escape
 
 from nicegui import ui
-from src.frontend import constantes as limites, textos
+from src.frontend.nucleo import constantes as limites
+from src.frontend import textos
 from src.frontend.controladores.exportacion_pdf.portada import validar_portada
 from .indicador import crear_indicador, cargar_indicador
 

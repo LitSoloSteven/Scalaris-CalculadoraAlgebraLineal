@@ -8,7 +8,7 @@ from nicegui import ui
 from src.frontend.componentes.panel_ia import PanelIA
 from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.tareas import lanzar_tarea
-from src.frontend.constantes import ANTIRREBOTE_GEOMETRIA_SEGUNDOS
+from src.frontend.nucleo.constantes import ANTIRREBOTE_GEOMETRIA_SEGUNDOS
 from src.frontend.navegacion import ruta_de
 from src.frontend.controladores.sesion_matricial import actualizar_contexto, notificar_edicion
 from .mixin_controles import MixinControlesGeometria

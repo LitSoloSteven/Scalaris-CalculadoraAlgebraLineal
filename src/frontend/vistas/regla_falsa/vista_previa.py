@@ -9,7 +9,7 @@ from nicegui import ui
 from src.ai.huellas import calcular_huella
 from src.frontend.componentes.figura_funcion_real import crear_figura_previa
 from src.frontend.componentes.colores_figuras import aplicar_colores_figura
-from src.frontend.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
+from src.frontend.nucleo.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
 from src.frontend.controladores.actualizacion_cancelable import cancelar_actualizacion, programar_actualizacion
 from src.frontend.controladores.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
 from src.frontend.controladores.rango_exploracion_raices import RANGO_GRAFICA_DEFECTO, rango_evento_distinto

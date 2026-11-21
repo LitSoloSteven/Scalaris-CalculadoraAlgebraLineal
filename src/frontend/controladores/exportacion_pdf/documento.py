@@ -4,7 +4,8 @@ from io import BytesIO
 from reportlab.lib.colors import HexColor
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import BaseDocTemplate, Frame, PageBreak, PageTemplate, Spacer
-from src.frontend import constantes as medidas, textos
+from src.frontend.nucleo import constantes as medidas
+from src.frontend import textos
 from .estilos import crear_estilos, parrafo
 from .figuras import construir_figura, preparar_figuras
 from .portada import fecha_espanola, validar_portada

@@ -4,7 +4,7 @@ import asyncio
 from nicegui import ui
 from src.frontend.componentes.informe_continuidad_raices import mostrar_consulta_continuidad
 
-from src.frontend.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
+from src.frontend.nucleo.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
 from src.frontend.controladores.actualizacion_cancelable import cancelar_actualizacion, programar_actualizacion
 from src.frontend.controladores.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
 from src.frontend.controladores.regla_falsa.continuidad_intervalo import CLAVES_CONTINUIDAD, consultar_continuidad

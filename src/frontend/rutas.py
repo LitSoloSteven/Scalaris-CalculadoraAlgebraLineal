@@ -16,7 +16,7 @@ from src.frontend.navegacion import (
     herramienta_por_identificador,
 )
 from src.frontend.tema import configurar_tema
-from src.frontend.constantes import OPERACION_DETERMINANTE
+from src.frontend.nucleo.constantes import OPERACION_DETERMINANTE
 
 
 def registrar_redirecciones_heredadas(aplicacion_destino: Any) -> None:

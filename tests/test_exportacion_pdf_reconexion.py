@@ -1,5 +1,6 @@
 """Presupuesto de reconexión durante capturas que ocupan el hilo del navegador."""
-from src.frontend import aplicacion, constantes
+from src.frontend import aplicacion
+from src.frontend.nucleo import constantes
 
 
 def test_arranque_conserva_cliente_durante_el_plazo_de_captura(monkeypatch):

@@ -6,7 +6,7 @@ from typing import Mapping
 from nicegui import app, ui
 
 from src.frontend.rutas import registrar_rutas
-from src.frontend.constantes import PDF_PLAZO_CAPTURA_SEGUNDOS
+from src.frontend.nucleo.constantes import PDF_PLAZO_CAPTURA_SEGUNDOS
 from src.frontend.nucleo.persistencia.configuracion_persistencia import configurar_persistencia
 from src.frontend.textos import (
     MENSAJE_ERROR_PRODUCCION_SIN_SECRETO,

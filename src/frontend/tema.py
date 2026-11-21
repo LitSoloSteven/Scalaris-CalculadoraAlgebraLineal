@@ -8,7 +8,7 @@ from nicegui import ui
 from src.frontend.nucleo import banderas
 from src.frontend.recursos_vistas import seleccionar_recursos
 from src.frontend.versionado_recursos import versionar_html
-from src.frontend.constantes import CARACTERES_ENTRADA_NUMERICA
+from src.frontend.nucleo.constantes import CARACTERES_ENTRADA_NUMERICA
 from src.frontend.textos import MENSAJE_ENTRADA_NUMERICA
 
 # Paletas de color con ratio de contraste no textual >= 3.0:1 verificado en cada tema

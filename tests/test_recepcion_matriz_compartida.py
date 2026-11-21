@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, Mock
 import pytest
 
 from src.frontend.componentes import transferencia
-from src.frontend.constantes import TIEMPO_VIDA_TRANSFERENCIA_SEGUNDOS
+from src.frontend.nucleo.constantes import TIEMPO_VIDA_TRANSFERENCIA_SEGUNDOS
 
 
 def _preparar(monkeypatch):

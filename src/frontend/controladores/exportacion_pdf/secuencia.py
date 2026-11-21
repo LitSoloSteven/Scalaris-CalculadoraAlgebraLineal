@@ -1,7 +1,8 @@
 """Muestreo del procedimiento y orden editorial de las figuras exportadas."""
 from collections.abc import Sequence
 
-from src.frontend import constantes, textos
+from src.frontend.nucleo import constantes
+from src.frontend import textos
 
 
 def seleccionar_intermedios(pasos: Sequence) -> tuple:

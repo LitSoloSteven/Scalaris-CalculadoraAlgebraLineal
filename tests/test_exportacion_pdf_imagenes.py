@@ -4,7 +4,7 @@ import struct
 
 import pytest
 
-from src.frontend import constantes as limites
+from src.frontend.nucleo import constantes as limites
 from src.frontend.controladores.exportacion_pdf.imagenes import validar_imagenes
 from tests.comun_exportacion_pdf import crear_captura
 

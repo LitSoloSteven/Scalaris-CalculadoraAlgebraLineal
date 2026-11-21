@@ -3,7 +3,8 @@ import re
 import unicodedata
 from datetime import date
 
-from src.frontend import constantes as limites, textos
+from src.frontend.nucleo import constantes as limites
+from src.frontend import textos
 from .glifos import texto_admitido
 
 def validar_portada(datos: dict) -> tuple[dict[str, str], dict[str, str]]:

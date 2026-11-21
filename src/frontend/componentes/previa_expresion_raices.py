@@ -2,7 +2,7 @@
 from nicegui import ui
 
 from src.frontend.componentes.reproductor_pasos.cuerpos import renderizar_latex
-from src.frontend.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
+from src.frontend.nucleo.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
 from src.frontend.controladores.actualizacion_cancelable import cancelar_actualizacion, programar_actualizacion
 from src.frontend.controladores.formato_funcion_real import formatear_expresion
 

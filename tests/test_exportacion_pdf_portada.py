@@ -1,7 +1,7 @@
 """Validación de campos, fechas españolas, nombres seguros y glifos base."""
 import pytest
 
-from src.frontend import constantes as limites
+from src.frontend.nucleo import constantes as limites
 from src.frontend.controladores.exportacion_pdf.glifos import texto_admitido
 from src.frontend.controladores.exportacion_pdf.portada import validar_portada, fecha_espanola, nombre_archivo
 from tests.comun_exportacion_pdf import PORTADA

@@ -5,7 +5,7 @@ import logging
 from nicegui import ui
 from src.backend.resolutores.raices.compartido.unidades_angulares import opciones_unidad
 
-from src.frontend.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
+from src.frontend.nucleo.constantes import ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS
 from src.frontend.controladores.actualizacion_cancelable import programar_actualizacion
 from src.frontend.controladores.biseccion.vista_previa import preparar_vista_previa, rango_grafica, RANGO_GRAFICA_DEFECTO
 from src.frontend.controladores.rango_exploracion_raices import rango_evento, rango_evento_distinto

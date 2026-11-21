@@ -1,7 +1,7 @@
 """Lectura compartida de texto tabular del portapapeles."""
 from io import StringIO
 
-from src.frontend.constantes import CARACTERES_ENTRADA_NUMERICA
+from src.frontend.nucleo.constantes import CARACTERES_ENTRADA_NUMERICA
 
 
 def filtrar_entrada_numerica(texto: str) -> str:
