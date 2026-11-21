@@ -59,6 +59,7 @@ def test_perfil_real_rechaza_ambos_simbolos():
 
 @pytest.mark.parametrize("expresion", [
     "∫(1,t,0,∞)", "∫(1/t,t,−1,1)", "∫(1/(t−0.1),t,−1,1)", "∫(t/(1+t²),t,−∞,∞)",
+    "∫(1e-80,t,0,∞)", "∫(1e-80/t,t,−1,1)",
 ])
 def test_rechaza_divergencia_sin_cancelar_lados(expresion):
     """El valor principal por simetría no se acepta como integral convergente."""

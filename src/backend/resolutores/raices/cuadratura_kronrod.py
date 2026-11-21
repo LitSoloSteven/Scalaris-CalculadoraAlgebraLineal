@@ -30,6 +30,7 @@ class _Tramo:
     prioridad: float
     extremos: tuple[float, float] = field(compare=False)
     resultado: float = field(compare=False)
+    magnitud: float = field(compare=False)
 
 
 def integrar_tramo(
@@ -42,8 +43,10 @@ def integrar_tramo(
     heapify(tramos)
     resultado = fsum(tramo.resultado for tramo in tramos)
     error = fsum(-tramo.prioridad for tramo in tramos)
+    escala_inicial = fsum(tramo.magnitud for tramo in tramos)
+    tolerancia_absoluta = _TOLERANCIA_ABSOLUTA * min(1.0, escala_inicial)
     for _ in range(_MAXIMO_SUBDIVISIONES):
-        if error <= max(_TOLERANCIA_ABSOLUTA, _TOLERANCIA_RELATIVA * abs(resultado)):
+        if error <= max(tolerancia_absoluta, _TOLERANCIA_RELATIVA * abs(resultado)):
             return fsum(tramo.resultado for tramo in tramos)
         anterior = heappop(tramos)
         izquierda, derecha = _subdividir(funcion, anterior.extremos)
@@ -78,7 +81,7 @@ def _estimar(funcion: Callable[[float], float], inferior: float, superior: float
     magnitud = fsum(peso * abs(valor) for valor, peso, _ in muestras)
     variacion = fsum(peso * abs(valor - kronrod / 2) for valor, peso, _ in muestras)
     error = _estimar_error(abs(kronrod - gauss), magnitud, variacion)
-    return _Tramo(-error * semiancho, (inferior, superior), kronrod * semiancho)
+    return _Tramo(-error * semiancho, (inferior, superior), kronrod * semiancho, magnitud * semiancho)
 
 
 def _muestras(
