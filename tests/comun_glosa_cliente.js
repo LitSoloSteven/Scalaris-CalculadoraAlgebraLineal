@@ -46,8 +46,8 @@ function crearGlosaSimulada(modo = "superposicion") {
         history: { pushState() {}, back() {} }, localStorage: { setItem() {} },
         requestAnimationFrame: manejar => manejar(), CustomEvent: function () {} });
     cargarAssetCliente("nucleo/interacciones/foco_modal.js", contexto);
-    cargarAssetCliente("glosa_foco.js", contexto);
-    cargarAssetCliente("glosa_panel_lateral.js", contexto);
+    cargarAssetCliente("glosa/glosa_foco.js", contexto);
+    cargarAssetCliente("glosa/glosa_panel_lateral.js", contexto);
     return { ventana, documento, panel, controles, origen, eventos, raiz };
 }
 

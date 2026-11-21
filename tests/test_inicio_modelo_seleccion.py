@@ -138,13 +138,13 @@ def test_seleccion_inicial_datos_corruptos(corrupto):
 
 def test_contrato_estatico_cliente_inicio():
     """El montaje conserva su API y el cliente delega el gesto sin apropiarse del foco."""
-    ruta_javascript = Path("src/frontend/recursos/js/inicio.js")
+    ruta_javascript = Path("src/frontend/recursos/js/inicio/inicio.js")
     assert ruta_javascript.exists()
     contenido = ruta_javascript.read_text(encoding="utf-8")
 
     assert "addEventListener('scroll'" not in contenido
     assert 'addEventListener("scroll"' not in contenido
-    contenido_recientes = Path("src/frontend/recursos/js/inicio_recientes.js").read_text(encoding="utf-8")
+    contenido_recientes = Path("src/frontend/recursos/js/inicio/inicio_recientes.js").read_text(encoding="utf-8")
     assert "window.scalaris.recientes =" in contenido_recientes
     assert "leer: leerRecientes" in contenido_recientes
     assert "registrar: registrarVisita" in contenido_recientes
@@ -152,7 +152,7 @@ def test_contrato_estatico_cliente_inicio():
     assert "data-gesto-inicio" in contenido
     assert "showModal(" not in contenido
     assert ".focus(" not in contenido
-    entrada = Path("src/frontend/recursos/js/inicio_entrada.js").read_text(encoding="utf-8")
+    entrada = Path("src/frontend/recursos/js/inicio/inicio_entrada.js").read_text(encoding="utf-8")
     assert "data-inicio-pendiente" in entrada
     assert ".inicio-directorio[data-directorio-listo]" in entrada
     assert "{ directorioListo, finalizar }" in entrada

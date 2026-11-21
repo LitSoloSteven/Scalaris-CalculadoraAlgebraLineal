@@ -62,7 +62,7 @@ class VistaGeometria(MixinLimpiezaGeometria, MixinControlesGeometria, MixinEscen
         self.escena = self.normalizar_escena(escena)
         self.panel_ia = PanelIA(self)
         crear_estructura_aplicacion(self, ruta_activa=ruta_de('visualizador'), clave_activa=f"vis:{self.escena}")
-        ui.add_head_html('<script src="/assets/js/geometria.js"></script>')
+        ui.add_head_html('<script src="/assets/js/herramientas/algebra/geometria.js"></script>')
         self._construir_contenedores()
         self.panel_ia.construir()
         self._construir_controles(self.escena)

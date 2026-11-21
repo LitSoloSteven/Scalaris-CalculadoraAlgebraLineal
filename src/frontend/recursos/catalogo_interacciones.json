@@ -12,12 +12,12 @@
     "sonido/eventos/preferencia_sonido.js",
     "sonido/eventos/interacciones_sonoras.js",
     "sonido/eventos/sonido_escritura.js",
-    "sistemas_metodo.js",
+    "herramientas/algebra/sistemas_metodo.js",
     "nucleo/navegacion/navegacion_herramientas.js",
     "nucleo/tema/selector_tema.js",
     "nucleo/interacciones/renderizado_mathjax.js",
     "nucleo/escritura/escritura_progresiva.js",
-    "revelado_glosa.js",
+    "glosa/revelado_glosa.js",
     "nucleo/escritura/efecto_escritura.js",
     "nucleo/tema/tema_graficos.js"
 ]

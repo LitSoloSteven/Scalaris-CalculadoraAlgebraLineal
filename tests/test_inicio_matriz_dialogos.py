@@ -15,7 +15,7 @@ from tests.comun_estilos import (
 
 
 RUTA_CSS_TEMAS = Path("src/frontend/recursos/css/base/tokens.css")
-RUTA_JS_INICIO = Path("src/frontend/recursos/js/inicio.js")
+RUTA_JS_INICIO = Path("src/frontend/recursos/js/inicio/inicio.js")
 
 
 def quitar_comentarios(css: str) -> str:
@@ -64,7 +64,7 @@ def test_contrato_cliente_directorio():
     """El cliente añade gestos a los enlaces sin sustituir su activación nativa."""
     fuente = RUTA_JS_INICIO.read_text(encoding="utf-8")
 
-    fuente_recientes = Path("src/frontend/recursos/js/inicio_recientes.js").read_text(encoding="utf-8")
+    fuente_recientes = Path("src/frontend/recursos/js/inicio/inicio_recientes.js").read_text(encoding="utf-8")
     assert "window.scalaris.recientes =" in fuente_recientes
     assert "leer: leerRecientes" in fuente_recientes
     assert "registrar: registrarVisita" in fuente_recientes
@@ -98,7 +98,7 @@ def test_acceso_predeterminado_destaca_sistemas(monkeypatch):
     seleccionado = acceso_destacado()
     assert seleccionado.identificador == "sistemas"
     assert "catch (_) { return { valido: false, identificadores: [] }; }" in Path(
-        "src/frontend/recursos/js/inicio_recientes.js"
+        "src/frontend/recursos/js/inicio/inicio_recientes.js"
     ).read_text(encoding="utf-8")
 
     async def comprobar(vista, cliente):

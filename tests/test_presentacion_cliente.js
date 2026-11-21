@@ -21,7 +21,7 @@ prueba("la primera visita encadena las animaciones y después libera el inicio",
 
 prueba("reinyectar, recargar o regresar al inicio no reproduce otra presentación", async () => {
     const cliente = crearPresentacion();
-    cliente.cargar("presentacion.js");
+    cliente.cargar("inicio/presentacion.js");
     await cliente.reloj.avanzar(2290);
     afirmar.equal(cliente.animaciones.length, 8);
     const recarga = crearPresentacion({ almacen: cliente.almacen });

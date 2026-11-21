@@ -21,7 +21,7 @@ function crearCambioSimulado() {
     const contexto = maquinaVirtual.createContext({
         window: ventana, document: { querySelector: () => estado.panel ? panel : null },
     });
-    cargarAssetCliente("sistemas_metodo.js", contexto);
+    cargarAssetCliente("herramientas/algebra/sistemas_metodo.js", contexto);
     return { clases, operaciones, estado, cambiar: ventana.scalaris.animarCambioMetodo };
 }
 

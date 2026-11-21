@@ -119,10 +119,10 @@ def test_catalogo_y_hoja_nueva_definen_todos_los_tipos():
 def test_recursos_compartidos_se_enlazan_y_destello_deja_el_script_anterior():
     """Confirma la carga global de recursos y la eliminación del nombre antiguo."""
     cabecera = Path("src/frontend/recursos/plantillas/cabecera/cabecera.html").read_text(encoding="utf-8")
-    codigo_cliente = Path("src/frontend/recursos/js/reproductor_pasos.js").read_text(encoding="utf-8")
+    codigo_cliente = Path("src/frontend/recursos/js/herramientas/documentos/reproductor_pasos.js").read_text(encoding="utf-8")
     codigo_matriz = Path("src/frontend/recursos/js/captura/adaptadores/matriz_cuadrada.js").read_text(encoding="utf-8")
     assert "/assets/css/utilidades/reproductor_pasos.css" in cabecera
-    assert "/assets/js/reproductor_pasos.js" in cabecera
+    assert "/assets/js/herramientas/documentos/reproductor_pasos.js" in cabecera
     assert "window.scalaris.pasos =" in codigo_cliente
     assert "revelar: function" in codigo_cliente or "revelar(id" in codigo_cliente
     assert "destellar: function" in codigo_cliente or "destellar(id" in codigo_cliente

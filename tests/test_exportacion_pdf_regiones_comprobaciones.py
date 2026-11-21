@@ -15,13 +15,13 @@ from tests.comun_exportacion_pdf import crear_captura
 def test_clon_se_registra_antes_del_capturador_en_todas_sus_vistas(vista):
     """El recurso extraído llega antes que su consumidor en cada página exportable."""
     cabecera = seleccionar_recursos(tema._CABECERA_HTML, vista)
-    assert cabecera.index('/assets/js/clon_pdf.js') < cabecera.index('/assets/js/captura_pdf.js')
+    assert cabecera.index('/assets/js/herramientas/documentos/clon_pdf.js') < cabecera.index('/assets/js/herramientas/documentos/captura_pdf.js')
     assert 'inversa-comprobaciones' in textos.PDF_REGIONES_POR_HERRAMIENTA['inversa']
 
 
 def test_inicio_no_carga_el_preparador_de_clones():
     """La página sin exportación no incorpora el módulo de captura extraído."""
-    assert '/assets/js/clon_pdf.js' not in seleccionar_recursos(tema._CABECERA_HTML, 'inicio')
+    assert '/assets/js/herramientas/documentos/clon_pdf.js' not in seleccionar_recursos(tema._CABECERA_HTML, 'inicio')
 
 
 @pytest.mark.parametrize('estado', ['EXITO', 'SINGULAR'])

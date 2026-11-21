@@ -15,7 +15,7 @@ function crearRecientes(almacenado = null) {
         localStorage: { getItem: clave => almacen.get(clave) ?? null,
             setItem: (clave, valor) => almacen.set(clave, valor) },
     });
-    cargarAssetCliente("inicio_recientes.js", contexto);
+    cargarAssetCliente("inicio/inicio_recientes.js", contexto);
     return { almacen, recientes: ventana.scalaris.recientes };
 }
 

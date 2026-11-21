@@ -16,7 +16,7 @@ async function crearEscenario(valores = [2, 4]) {
     const biblioteca = {restyle: async (_, cambios, indices) => llamadas.push(JSON.parse(JSON.stringify({cambios, indices})))};
     const documento = {getElementById: () => region};
     const ventana = {getElement: () => ({Plotly: biblioteca})};
-    cargarAssetCliente('aplicacion_transformacion.js', maquinaVirtual.createContext({window: ventana, document: documento}));
+    cargarAssetCliente('herramientas/algebra/aplicacion_transformacion.js', maquinaVirtual.createContext({window: ventana, document: documento}));
     const modulo = ventana.scalaris.aplicacionTransformacion;
     return {region, grafico, filas, llamadas, modulo, biblioteca};
 }

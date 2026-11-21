@@ -19,7 +19,7 @@ def test_excepcion_no_excluye_el_adaptador_ni_otro_javascript_propio():
     """La captura nueva y los demás scripts propios conservan todas las auditorías de estilo."""
     rutas = sorted((RAIZ / 'src/frontend/recursos/js').rglob('*.js'))
     auditadas = {fuente['ruta'] for fuente in fuentes_javascript(rutas)}
-    assert 'src/frontend/recursos/js/captura_pdf.js' in auditadas
+    assert 'src/frontend/recursos/js/herramientas/documentos/captura_pdf.js' in auditadas
     assert auditadas == {ruta.relative_to(RAIZ).as_posix() for ruta in rutas} - PROVEEDORES_CLIENTE
 
 

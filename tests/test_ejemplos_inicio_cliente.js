@@ -89,7 +89,7 @@ function crearEntorno(opciones = {}) {
         scalaris: { movimiento, recientes: opciones.recientes },
     });
     const contexto = maquinaVirtual.createContext({ window: ventana, document: documento });
-    cargarAssetCliente("ejemplos_inicio.js", contexto);
+    cargarAssetCliente("inicio/ejemplos_inicio.js", contexto);
     return { documento, ventana, reduccion, lecturas, recargas, contexto };
 }
 
@@ -162,7 +162,7 @@ prueba("preparar, teclado, reducido, visibilidad, desmontaje y fallos WAAPI deja
     emitir(entorno.documento, "click", { target: falla.objetivo, detail: 1 });
     afirmar.equal(falla.estado.textContent, "Fallo controlado.");
 
-    cargarAssetCliente("ejemplos_inicio.js", entorno.contexto);
+    cargarAssetCliente("inicio/ejemplos_inicio.js", entorno.contexto);
     emitir(entorno.documento, "click", { target: objetivo, detail: 1 });
     afirmar.equal(animaciones.length, 6);
     entorno.documento.hidden = true;
@@ -201,7 +201,7 @@ prueba("inicio_recientes conserva escenas, rechaza blancos o formato ajeno y res
         window: {},
         localStorage: { getItem: clave => almacen.get(clave) ?? null, setItem: (clave, valor) => almacen.set(clave, valor) },
     });
-    cargarAssetCliente("inicio_recientes.js", contexto);
+    cargarAssetCliente("inicio/inicio_recientes.js", contexto);
     const recientes = contexto.window.scalaris.recientes;
     for (const visita of ["vis:rectas-planos", "vis:vectores", "   ", "__proto__", "<script>", "a b", "x".repeat(65)]) {
         recientes.registrar(visita);
@@ -215,7 +215,7 @@ prueba("inicio_recientes conserva escenas, rechaza blancos o formato ajeno y res
         window: {},
         localStorage: { getItem: () => { throw new Error("Bloqueado"); }, setItem: () => { throw new Error("Bloqueado"); } },
     });
-    cargarAssetCliente("inicio_recientes.js", bloqueado);
+    cargarAssetCliente("inicio/inicio_recientes.js", bloqueado);
     afirmar.equal(bloqueado.window.scalaris.recientes.leer().valido, false);
     afirmar.doesNotThrow(() => bloqueado.window.scalaris.recientes.registrar("vis:combinacion"));
 });

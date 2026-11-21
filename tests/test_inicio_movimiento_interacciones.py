@@ -8,8 +8,8 @@ from tests.comun_estilos import (
 )
 
 
-RUTA_JS_INICIO = Path("src/frontend/recursos/js/inicio.js")
-RUTA_JS_ENTRADA = Path("src/frontend/recursos/js/inicio_entrada.js")
+RUTA_JS_INICIO = Path("src/frontend/recursos/js/inicio/inicio.js")
+RUTA_JS_ENTRADA = Path("src/frontend/recursos/js/inicio/inicio_entrada.js")
 
 
 def test_transiciones_inicio_solo_transformacion_y_opacidad():

@@ -13,7 +13,7 @@ function cargar(archivo, contexto = {}) {
 }
 
 test("proyecta la pulsación según la escala y descarta arrastres, barra y márgenes", () => {
-    const ventana = cargar("grafico_biseccion.js");
+    const ventana = cargar("herramientas/biseccion/grafico_biseccion.js");
     const seleccion = ventana.scalaris.graficoBiseccion;
     const grafico = {
         closest: () => ({}),

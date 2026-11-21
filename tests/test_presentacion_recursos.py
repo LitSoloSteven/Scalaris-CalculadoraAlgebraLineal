@@ -10,7 +10,7 @@ def test_presentacion_carga_despues_de_tema_y_estilos():
     assert cabecera.index("inicializacion_tema.js") < cabecera.index("tokens.css")
     assert cabecera.index("presentacion.css") < cabecera.index("presentacion.js")
     assert cabecera.index('id="presentacion-plantilla"') < cabecera.index("presentacion.js")
-    assert cabecera.index("presentacion.js") < cabecera.index("inicio_entrada.js") < cabecera.index('src="/assets/js/inicio.js"')
+    assert cabecera.index("presentacion.js") < cabecera.index("inicio_entrada.js") < cabecera.index('src="/assets/js/inicio/inicio.js"')
 
 
 def test_presentacion_decorativa_no_intercepta_la_aplicacion():

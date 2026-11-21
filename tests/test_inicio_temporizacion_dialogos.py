@@ -4,7 +4,7 @@ import re
 from tests.comun_estilos import leer_css_inicio, bloque_css
 
 
-RUTA_JS_INICIO = Path("src/frontend/recursos/js/inicio.js")
+RUTA_JS_INICIO = Path("src/frontend/recursos/js/inicio/inicio.js")
 
 
 def duracion_milisegundos(bloque: str, nombre_propiedad: str) -> int:

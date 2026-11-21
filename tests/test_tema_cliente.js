@@ -82,7 +82,7 @@ prueba("la preparación de Glosa conserva selección y límite de escritorio", (
     for (const [ancho, almacenado, esperado] of [[1024, "abierto", "abierto"], [1023, "abierto", "cerrado"], [1200, "cerrado", "cerrado"], [1200, null, "cerrado"]]) {
         const cliente = crearTemaSimulado(null, ancho);
         if (almacenado !== null) cliente.almacen.set("scalaris:glosa", almacenado);
-        cargarAssetCliente("inicializacion_glosa.js", cliente.contexto);
+        cargarAssetCliente("glosa/inicializacion_glosa.js", cliente.contexto);
         afirmar.equal(cliente.atributos.get("data-glosa"), esperado);
     }
 });
@@ -91,7 +91,7 @@ prueba("el fallo de almacenamiento de Glosa conserva el atributo anterior", () =
     const cliente = crearTemaSimulado();
     cliente.atributos.set("data-glosa", "abierto");
     cliente.almacenamiento.getItem = () => { throw new Error("almacenamiento simulado"); };
-    afirmar.doesNotThrow(() => cargarAssetCliente("inicializacion_glosa.js", cliente.contexto));
+    afirmar.doesNotThrow(() => cargarAssetCliente("glosa/inicializacion_glosa.js", cliente.contexto));
     afirmar.equal(cliente.atributos.get("data-glosa"), "abierto");
 });
 

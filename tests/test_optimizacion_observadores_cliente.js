@@ -3,7 +3,7 @@ const afirmar = require('node:assert/strict');
 const prueba = require('node:test');
 const { crearObservador, mutacionEntrada, medirConsultas } = require('./comun_optimizacion_observadores.js');
 
-for (const nombre of ['nucleo/tema/selector_tema.js', 'nucleo/navegacion/navegacion_herramientas.js', 'sincronizacion_diseno.js']) {
+for (const nombre of ['nucleo/tema/selector_tema.js', 'nucleo/navegacion/navegacion_herramientas.js', 'herramientas/algebra/sincronizacion_diseno.js']) {
     prueba(`${nombre} omite búsquedas globales al insertar cien entradas`, () => {
         afirmar.equal(medirConsultas(nombre), 0);
     });
@@ -36,7 +36,7 @@ prueba('el filtro ignora nodos de texto y admite elementos añadidos sin descend
 });
 
 prueba('los gráficos agrupan inserciones relevantes en un único fotograma', () => {
-    const cliente = crearObservador('sincronizacion_diseno.js');
+    const cliente = crearObservador('herramientas/algebra/sincronizacion_diseno.js');
     const mutacion = mutacionEntrada();
     mutacion.target.matches = () => true;
     for (let indice = 0; indice < 100; indice++) cliente.observadores[0]([mutacion]);

@@ -34,7 +34,7 @@ function crearRevelado() {
     });
     cargarAssetCliente('nucleo/interacciones/interacciones_globales.js', contexto);
     cargarAssetCliente('nucleo/escritura/escritura_progresiva.js', contexto);
-    cargarAssetCliente('revelado_glosa.js', contexto);
+    cargarAssetCliente('glosa/revelado_glosa.js', contexto);
     return { ventana, contexto, tareas, raiz, eventos,
         observar: registros => observar(registros),
         avanzar: tarea => { ahora += tarea.espera; tarea.funcion(); },

@@ -49,4 +49,4 @@ def test_inicializacion_precede_estilos_y_consumidores():
     assert cabecera.index('/assets/js/nucleo/tema/inicializacion_tema.js') < cabecera.index('<link rel="stylesheet"')
     assert cabecera.index('/assets/js/nucleo/tema/tema.js') > cabecera.index('/assets/css/utilidades/reproductor_pasos.css')
     glosa = tema._CABECERA_GLOSA_HTML
-    assert glosa.index('/assets/js/inicializacion_glosa.js') < glosa.index('/assets/js/glosa_panel_lateral.js')
+    assert glosa.index('/assets/js/glosa/inicializacion_glosa.js') < glosa.index('/assets/js/glosa/glosa_panel_lateral.js')

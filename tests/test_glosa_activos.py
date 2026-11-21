@@ -6,7 +6,7 @@ import pytest
 
 def test_contrato_cliente_glosa():
     """Verifica contratos en glosa_panel_lateral.js."""
-    ruta_javascript = Path("src/frontend/recursos/js/glosa_panel_lateral.js")
+    ruta_javascript = Path("src/frontend/recursos/js/glosa/glosa_panel_lateral.js")
     assert ruta_javascript.exists()
     contenido = ruta_javascript.read_text(encoding="utf-8")
 

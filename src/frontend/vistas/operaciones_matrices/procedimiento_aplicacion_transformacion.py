@@ -11,7 +11,7 @@ from src.frontend.presentacion.versionado_recursos import versionar_html
 from .pasos_aplicacion_transformacion import adaptar_pasos_aplicacion
 from .reproductor_aplicacion_transformacion import ReproductorAplicacion
 
-URL_COMPONENTES = versionar_html('src="/assets/js/aplicacion_transformacion.js"').split('"')[1]
+URL_COMPONENTES = versionar_html('src="/assets/js/herramientas/algebra/aplicacion_transformacion.js"').split('"')[1]
 
 
 def montar_procedimiento_aplicacion(resultado: dict, captura: dict, region, panel_ia=None) -> ReproductorPasos:
