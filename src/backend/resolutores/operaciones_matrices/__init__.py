@@ -3,14 +3,14 @@
 from src.backend.resolutores.operaciones_matrices.determinante.determinante import (
     ResolutorDeterminante,
 )
-from src.backend.resolutores.operaciones_matrices.evaluador import (
+from src.backend.resolutores.operaciones_matrices.expresiones.evaluador import (
     EvaluadorExpresionesMatriciales,
 )
 from src.backend.resolutores.operaciones_matrices.inversa.inversa import ResolutorInversa
 from src.backend.resolutores.operaciones_matrices.leontief import (
     ResolutorModeloLeontief,
 )
-from src.backend.resolutores.operaciones_matrices.operaciones import (
+from src.backend.resolutores.operaciones_matrices.expresiones.operaciones import (
     ResolutorOperacionesMatrices,
 )
 from src.backend.resolutores.operaciones_matrices.transformaciones import (

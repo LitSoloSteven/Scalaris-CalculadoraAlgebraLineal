@@ -5,10 +5,10 @@ import re
 from typing import Any
 
 from src.ai.contexto.contexto import sanear_cadena_usuario
-from src.backend.resolutores.operaciones_matrices.evaluador import (
+from src.backend.resolutores.operaciones_matrices.expresiones.evaluador import (
     EvaluadorExpresionesMatriciales,
 )
-from src.backend.resolutores.operaciones_matrices.captura_matrices import obtener_diccionario_matrices
+from src.backend.resolutores.operaciones_matrices.expresiones.captura_matrices import obtener_diccionario_matrices
 from src.backend.resolutores.operaciones_matrices.compartido.estado_resultado import (
     calcular_banderas_resultado, preparar_transferencia_inversa,
 )

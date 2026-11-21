@@ -3,7 +3,7 @@ from fractions import Fraction
 import pytest
 from src.backend.excepciones import ErrorDiscrepanciaDimension
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices.operaciones import ResolutorOperacionesMatrices
+from src.backend.resolutores.operaciones_matrices.expresiones.operaciones import ResolutorOperacionesMatrices
 
 
 @pytest.fixture

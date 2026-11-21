@@ -2,7 +2,7 @@
 from fractions import Fraction
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices.evaluador import EvaluadorExpresionesMatriciales
+from src.backend.resolutores.operaciones_matrices.expresiones.evaluador import EvaluadorExpresionesMatriciales
 
 
 def test_menos_unario_despues_de_producto():

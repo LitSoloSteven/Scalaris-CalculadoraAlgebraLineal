@@ -5,7 +5,7 @@ from fractions import Fraction
 import pytest
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices.evaluador import EvaluadorExpresionesMatriciales
+from src.backend.resolutores.operaciones_matrices.expresiones.evaluador import EvaluadorExpresionesMatriciales
 from src.frontend.controladores.operaciones_matrices import (
     ControladorLeontief, ControladorOperacionesMatrices, ControladorTransformaciones,
 )

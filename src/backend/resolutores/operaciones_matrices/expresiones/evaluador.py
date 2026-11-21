@@ -6,7 +6,7 @@ from operator import add, mul, sub, truediv
 from src.backend.constantes import ERROR, EXITO
 from src.backend.modelos.escalares.entrada_numerica import fraccion_desde_texto
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices.analizador_expresiones import (
+from src.backend.resolutores.operaciones_matrices.expresiones.analizador_expresiones import (
     OPERADORES_BINARIOS,
     convertir_a_rpn,
     es_nombre_matriz,
@@ -19,13 +19,13 @@ from src.backend.resolutores.operaciones_matrices.compartido.formateadores impor
     multiplicar_matriz_a_latex,
     sumar_restar_matriz_a_latex,
 )
-from src.backend.resolutores.operaciones_matrices.operaciones import (
+from src.backend.resolutores.operaciones_matrices.expresiones.operaciones import (
     ResolutorOperacionesMatrices,
     elevar_matriz,
     producto_kronecker,
     sumar_directa,
 )
-from src.backend.resolutores.operaciones_matrices.presupuesto_expresiones import (
+from src.backend.resolutores.operaciones_matrices.expresiones.presupuesto_expresiones import (
     PresupuestoExpresion,
     validar_longitud_expresion,
     validar_magnitud,

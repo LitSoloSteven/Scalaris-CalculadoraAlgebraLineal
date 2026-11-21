@@ -6,7 +6,7 @@ from src.backend.modelos.operaciones.construcciones import identidad
 from src.backend.resolutores.operaciones_matrices.compartido.comprobacion_productos import comprobar_producto, desarrollar_producto
 from src.backend.resolutores.operaciones_matrices.inversa.nucleo.calculo_inversa import calcular_inversa
 from src.backend.resolutores.operaciones_matrices.compartido.formateadores import matriz_particionada_a_latex
-from src.backend.resolutores.operaciones_matrices.operaciones import ResolutorOperacionesMatrices
+from src.backend.resolutores.operaciones_matrices.expresiones.operaciones import ResolutorOperacionesMatrices
 from src.backend.resolutores.operaciones_matrices.inversa.presentacion_inversa import (
     formatear_pasos_inversa, presentar_inversa, presentar_producto_inversa, presentar_propiedad_transpuesta,
 )

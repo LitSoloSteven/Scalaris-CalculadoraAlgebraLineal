@@ -2,7 +2,7 @@
 import json
 from fractions import Fraction
 from src.backend.utilidades.validacion.analizadores import AnalizadorSistema
-from src.backend.resolutores.operaciones_matrices.evaluador import EvaluadorExpresionesMatriciales
+from src.backend.resolutores.operaciones_matrices.expresiones.evaluador import EvaluadorExpresionesMatriciales
 from src.backend.modelos.matriz import Matriz
 from src.backend.utilidades.formato.formateadores import formatear_fraccion_texto, numero_a_latex
 from src.frontend.controladores.sistemas_lineales.controlador_gauss import ControladorGauss

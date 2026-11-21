@@ -9,10 +9,10 @@ from src.backend.modelos.matriz import Matriz
 MODULOS = {
     "gauss": ("sistemas_lineales.eliminacion.gauss", "ResolutorGauss"),
     "gauss_jordan": ("sistemas_lineales.eliminacion.gauss_jordan", "ResolutorGaussJordan"),
-    "operaciones": ("operaciones_matrices.operaciones", "ResolutorOperacionesMatrices"),
+    "operaciones": ("operaciones_matrices.expresiones.operaciones", "ResolutorOperacionesMatrices"),
     "determinante": ("operaciones_matrices.determinante.determinante", "ResolutorDeterminante"),
     "inversa": ("operaciones_matrices.inversa.inversa", "ResolutorInversa"),
-    "evaluador": ("operaciones_matrices.evaluador", "EvaluadorExpresionesMatriciales"),
+    "evaluador": ("operaciones_matrices.expresiones.evaluador", "EvaluadorExpresionesMatriciales"),
     "leontief": ("operaciones_matrices.leontief", "ResolutorModeloLeontief"),
     "transformaciones": ("operaciones_matrices.transformaciones", "ResolutorTransformacionesLineales"),
     "vectores": ("operaciones_vectores.operaciones.operaciones", "ResolutorOperacionesVectores"),

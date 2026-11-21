@@ -4,7 +4,7 @@ import pytest
 
 from src.ai.contexto.contexto import ContextoIA
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices.evaluador import (
+from src.backend.resolutores.operaciones_matrices.expresiones.evaluador import (
     EvaluadorExpresionesMatriciales,
 )
 from tests.comun_clientes import PanelIASimulado

@@ -10,8 +10,8 @@ from src.backend.constantes import (
     MAXIMO_OPERACIONES_EXPRESION_MATRICIAL,
 )
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices.evaluador import EvaluadorExpresionesMatriciales
-from src.backend.resolutores.operaciones_matrices.presupuesto_expresiones import validar_presupuesto_operaciones
+from src.backend.resolutores.operaciones_matrices.expresiones.evaluador import EvaluadorExpresionesMatriciales
+from src.backend.resolutores.operaciones_matrices.expresiones.presupuesto_expresiones import validar_presupuesto_operaciones
 from src.backend.resolutores.sistemas_numericos.conversor_bases import ConversorBases
 from src.backend.utilidades.validacion.reglas_dominio import capturar_entrada_base, validar_entrada_base
 

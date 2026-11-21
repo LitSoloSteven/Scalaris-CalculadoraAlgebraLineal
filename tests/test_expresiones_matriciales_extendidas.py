@@ -6,7 +6,7 @@ from unittest.mock import Mock
 import pytest
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices import evaluador as modulo_evaluador
+from src.backend.resolutores.operaciones_matrices.expresiones import evaluador as modulo_evaluador
 from src.frontend.controladores.operaciones_matrices.controlador_operaciones_matrices import (
     ControladorOperacionesMatrices,
 )
