@@ -6,7 +6,7 @@ import pytest
 
 from src.frontend.controladores.algebra.operaciones_matrices.transformaciones.controlador_aplicacion_transformacion import ControladorAplicacionTransformacion
 from src.frontend.presentacion.tema import COLORES_TEXTO_GRAFICOS, PALETAS_POR_TEMA
-from src.frontend.vistas.operaciones_matrices.figura_aplicacion_transformacion import preparar_escenas_aplicacion
+from src.frontend.vistas.algebra.operaciones_matrices.aplicacion_transformacion.presentacion.figura_aplicacion_transformacion import preparar_escenas_aplicacion
 
 
 def _aplicar(matriz, vector):

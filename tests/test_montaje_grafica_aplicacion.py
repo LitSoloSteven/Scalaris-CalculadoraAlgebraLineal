@@ -6,7 +6,7 @@ import pytest
 from nicegui import ui
 
 from src.frontend.nucleo.textos import textos_transformaciones as textos
-from src.frontend.vistas.operaciones_matrices import grafica_aplicacion_transformacion as montaje
+from src.frontend.vistas.algebra.operaciones_matrices.aplicacion_transformacion.presentacion import grafica_aplicacion_transformacion as montaje
 from src.frontend.vistas.algebra.operaciones_matrices.aplicacion_transformacion.procedimiento._ejemplos_aplicacion_transformacion import EJEMPLOS_APLICACION
 from tests.comun_construccion_vistas import construir_pagina
 

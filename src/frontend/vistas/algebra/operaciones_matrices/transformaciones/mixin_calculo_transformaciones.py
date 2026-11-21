@@ -9,7 +9,7 @@ from src.frontend.nucleo.textos import textos_transformaciones as textos
 from src.frontend.controladores.compartido.sesion.calculo_vigente import ejecutar_calculo_vigente
 from src.frontend.controladores.algebra.operaciones_matrices.modelos.capturas_modelos import capturar_transformaciones
 from src.frontend.vistas.algebra.operaciones_matrices.transformaciones.apoyo._renderizado_transformaciones import renderizar_resultado_transformaciones
-from src.frontend.vistas.operaciones_matrices.resultado_aplicacion_transformacion import renderizar_resultado_aplicacion
+from src.frontend.vistas.algebra.operaciones_matrices.aplicacion_transformacion.presentacion.resultado_aplicacion_transformacion import renderizar_resultado_aplicacion
 
 from src.frontend.vistas.algebra.operaciones_matrices.compartido._estados_modelos import ejecutar_modelo
 
