@@ -16,9 +16,9 @@ from src.frontend.controladores.raices.metodos_cerrados.adaptadores import (
     BISECCION, METODOS, REGLA_FALSA, captura_del_metodo, criterio_inicial, guia_parada, parametros_iniciales,
 )
 from src.frontend.controladores.raices.compartido.formato.rango_exploracion_raices import LONGITUD_CAMPO_GRAFICA, RANGO_GRAFICA_DEFECTO, rango_grafica
-from src.frontend.vistas.biseccion.acciones_captura import construir_ayuda
-from src.frontend.vistas.biseccion.ejemplos import EJEMPLOS as EJEMPLOS_BISECCION
-from src.frontend.vistas.biseccion.estado_captura import transaccion
+from src.frontend.vistas.raices.biseccion.captura.acciones_captura import construir_ayuda
+from src.frontend.vistas.raices.biseccion.captura.ejemplos import EJEMPLOS as EJEMPLOS_BISECCION
+from src.frontend.vistas.raices.biseccion.captura.estado_captura import transaccion
 from src.frontend.vistas.regla_falsa.ejemplos import EJEMPLOS as EJEMPLOS_REGLA_FALSA
 
 _EJEMPLOS = {

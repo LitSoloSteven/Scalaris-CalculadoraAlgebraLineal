@@ -8,7 +8,7 @@ from src.frontend.controladores.raices.biseccion.presentacion.presentacion_crite
 from src.frontend.controladores.raices.metodos_cerrados.adaptadores import BISECCION, METODOS
 from src.frontend.controladores.raices.regla_falsa.presentacion.presentacion_ampliada import descripcion_captura, titulo_configurado
 from src.frontend.controladores.compartido.sesion.sesion_matricial import registrar_calculo
-from src.frontend.vistas.biseccion.acciones_captura import desplegable
+from src.frontend.vistas.raices.biseccion.captura.acciones_captura import desplegable
 
 
 class AccionesMetodosCerrados:

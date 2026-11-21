@@ -2,7 +2,7 @@
 from nicegui import ui
 
 from src.frontend.componentes.captura.ecuaciones.limpieza_captura import crear_boton_limpieza
-from src.frontend.vistas.biseccion.acciones_captura import desplegable
+from src.frontend.vistas.raices.biseccion.captura.acciones_captura import desplegable
 from .ejemplos import EJEMPLOS
 from src.frontend.controladores.raices.regla_falsa.presentacion.presentacion_ampliada import descripcion_captura
 

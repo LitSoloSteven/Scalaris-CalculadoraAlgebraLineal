@@ -11,11 +11,11 @@ from src.frontend.controladores.raices.biseccion.salidas.contexto_biseccion impo
 from src.frontend.controladores.raices.biseccion.presentacion.presentacion_criterio import etiqueta_aproximacion, titulo_estado
 from src.frontend.controladores.compartido.sesion.sesion_matricial import invalidar_resultado, actualizar_contexto, registrar_calculo
 from src.frontend.navegacion import ruta_de
-from .acciones_captura import mostrar_recientes
+from src.frontend.vistas.raices.biseccion.captura.acciones_captura import mostrar_recientes
 from .calculo_individual import resolver_calculo
 from .composicion import componer_herramienta
-from .estado_captura import hay_rangos_editados, restaurar_captura, vaciar_captura
-from .estados_entrada import actualizar_expresion, actualizar_intervalo
+from src.frontend.vistas.raices.biseccion.captura.estado_captura import hay_rangos_editados, restaurar_captura, vaciar_captura
+from src.frontend.vistas.raices.biseccion.captura.estados_entrada import actualizar_expresion, actualizar_intervalo
 from .grafico_compartido import restaurar_grafico_principal
 from src.frontend.vistas.raices.biseccion.base.modos_captura import MODO_BUSQUEDA, MODO_INTERVALO
 from .resultado import mostrar_resultado

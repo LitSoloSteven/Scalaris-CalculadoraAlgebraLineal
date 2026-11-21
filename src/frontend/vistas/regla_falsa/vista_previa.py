@@ -15,7 +15,7 @@ from src.frontend.controladores.raices.compartido.ejecucion.coordinacion_trabajo
 from src.frontend.controladores.raices.compartido.formato.rango_exploracion_raices import RANGO_GRAFICA_DEFECTO, rango_evento_distinto
 from src.frontend.controladores.raices.compartido.exploracion.vista_previa_raices import preparar_vista_previa
 from src.frontend.presentacion.tema import PALETA_GRAFICOS
-from src.frontend.vistas.biseccion.estado_captura import transaccion
+from src.frontend.vistas.raices.biseccion.captura.estado_captura import transaccion
 from .rango_previo import construir_rango, sincronizar_rango
 
 _registro = logging.getLogger(__name__)

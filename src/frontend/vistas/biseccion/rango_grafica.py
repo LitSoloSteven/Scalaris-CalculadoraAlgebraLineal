@@ -3,7 +3,7 @@ from nicegui import ui
 
 from src.frontend.componentes.raices.exploracion.captura_exploracion_raices import campos_rango as campos_rango_raices
 from src.frontend.componentes.raices.exploracion.sincronizacion_rango_raices import sincronizar_rango as sincronizar_paneles
-from .estado_captura import transaccion
+from src.frontend.vistas.raices.biseccion.captura.estado_captura import transaccion
 
 
 def construir_rango(panel) -> None:

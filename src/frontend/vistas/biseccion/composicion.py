@@ -1,8 +1,8 @@
 """Orden de lectura y montaje de los paneles de bisección."""
 from nicegui import ui
 
-from .acciones_captura import construir_acciones, construir_limite, desplegable
-from .captura import construir_boton_calculo, construir_captura, construir_intervalo
+from src.frontend.vistas.raices.biseccion.captura.acciones_captura import construir_acciones, construir_limite, desplegable
+from src.frontend.vistas.raices.biseccion.captura.captura import construir_boton_calculo, construir_captura, construir_intervalo
 from .continuidad_intervalo import PanelContinuidad
 from .exploracion import PanelExploracion
 from src.frontend.vistas.raices.biseccion.base.modos_captura import MODO_BUSQUEDA, MODO_INTERVALO, construir_modos, region_modo

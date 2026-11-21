@@ -13,8 +13,8 @@ from src.frontend.controladores.raices.compartido.exploracion.exploracion_raices
     LONGITUD_CAMPO_EXPLORACION, PASO_EXPLORACION_DEFECTO, resolver_exploracion,
 )
 from src.frontend.controladores.raices.compartido.formato.rango_exploracion_raices import RANGO_GRAFICA_DEFECTO
-from src.frontend.vistas.biseccion.acciones_captura import desplegable
-from src.frontend.vistas.biseccion.estado_captura import transaccion
+from src.frontend.vistas.raices.biseccion.captura.acciones_captura import desplegable
+from src.frontend.vistas.raices.biseccion.captura.estado_captura import transaccion
 from .modos_captura import MODO_BUSQUEDA
 from .seleccion_candidato import presentar_candidatos, seleccionar_candidato
 from .vigencia_solicitud import iniciar_solicitud, revocar_solicitud

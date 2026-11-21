@@ -12,7 +12,7 @@ from src.frontend.controladores.raices.compartido.exploracion.captura_explorator
 from src.frontend.controladores.compartido.sesion.calculo_vigente import ejecutar_calculo_vigente
 from src.frontend.componentes.raices.exploracion.exploracion_raices import ESTADO_INICIAL, MontajeExploracion, construir_exploracion
 from src.frontend.componentes.raices.exploracion.paso_exploracion_raices import PasoExploracion
-from .acciones_captura import desplegable
+from src.frontend.vistas.raices.biseccion.captura.acciones_captura import desplegable
 from .candidatos import mostrar_candidatos
 from src.frontend.vistas.raices.biseccion.base.modos_captura import MODO_BUSQUEDA
 from src.frontend.vistas.raices.biseccion.base.movimiento import animar_entrada, cancelar_entrada, modalidad_puntero, vincular_envio
