@@ -11,7 +11,7 @@ from .contrato_jacobi import (
 )
 from .validacion_jacobi import FalloValidacionJacobi, preparar_captura, preparar_entrada
 
-_FABRICA_JACOBI = FabricaResultado(
+_FABRICA_JACOBI: FabricaResultado[ResultadoJacobi] = FabricaResultado(
     crear_paso=PasoJacobi,
     crear_resultado=ResultadoJacobi,
     crear_diagnostico=DiagnosticoJacobi,

@@ -14,7 +14,7 @@ from .validacion_gauss_seidel import (
     FalloValidacionGaussSeidel, preparar_captura, preparar_entrada,
 )
 
-_FABRICA_GAUSS_SEIDEL = FabricaResultado(
+_FABRICA_GAUSS_SEIDEL: FabricaResultado[ResultadoGaussSeidel] = FabricaResultado(
     crear_paso=PasoGaussSeidel,
     crear_resultado=ResultadoGaussSeidel,
     crear_diagnostico=DiagnosticoGaussSeidel,
