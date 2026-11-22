@@ -1,9 +1,10 @@
 """Modelos y fábricas de diagnóstico compartidos por la validación iterativa."""
 from collections.abc import Callable
 from dataclasses import dataclass
-from fractions import Fraction
 
-from .contrato_iterativo import CampoIterativo, CodigoIterativo, DiagnosticoIterativo
+from .contrato_iterativo import (
+    CampoIterativo, CodigoIterativo, DiagnosticoIterativo, EntradaCanonicaIterativa,
+)
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -17,15 +18,8 @@ class ParametrosValidacion:
 
 
 @dataclass(frozen=True, kw_only=True)
-class EntradaPreparada:
+class EntradaPreparada(EntradaCanonicaIterativa):
     """Instantánea inmutable de A, b, el inicio y los parámetros ya validados."""
-
-    matriz: tuple[tuple[Fraction, ...], ...]
-    vector_b: tuple[Fraction, ...]
-    vector_inicial: tuple[Fraction, ...]
-    tolerancia: Fraction
-    maximo_iteraciones: int
-    dominancia_estricta: bool
 
 
 @dataclass(frozen=True, kw_only=True)

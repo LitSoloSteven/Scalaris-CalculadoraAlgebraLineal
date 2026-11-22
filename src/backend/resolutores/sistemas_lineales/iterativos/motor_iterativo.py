@@ -178,6 +178,7 @@ def _resultado_con_vector(
         norma_residuo=norma_infinito(residuo),
         dominancia_estricta=contexto.preparada.dominancia_estricta,
         pasos=pasos,
+        entrada_canonica=contexto.preparada,
     )
 
 
@@ -212,6 +213,7 @@ def _resultado_limite(
             codigo="LIMITE_ARITMETICO",
             dominancia_estricta=contexto.preparada.dominancia_estricta,
             diagnostico=diagnostico,
+            entrada_canonica=contexto.preparada,
         )
     mensaje = f"{error} Se conserva la última aproximación completa."
     resultado = _resultado_con_vector(

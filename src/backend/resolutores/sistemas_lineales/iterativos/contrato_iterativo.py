@@ -33,6 +33,19 @@ class EntradaIterativa:
 
 
 @dataclass(frozen=True, kw_only=True)
+class EntradaCanonicaIterativa:
+    """Conserva A, b, el inicio y los parámetros validados como racionales inmutables.
+    Las filas mantienen el orden original para reconstruir cada sustitución de la traza."""
+
+    matriz: tuple[VectorIterativo, ...]
+    vector_b: VectorIterativo
+    vector_inicial: VectorIterativo
+    tolerancia: Fraction
+    maximo_iteraciones: int
+    dominancia_estricta: bool
+
+
+@dataclass(frozen=True, kw_only=True)
 class DiagnosticoIterativo:
     """Mensaje en español con campo y coordenadas desde 1 cuando se conocen.
     En un vector, la fila identifica la componente. La columna se usa en la matriz."""
@@ -67,6 +80,7 @@ class ResultadoIterativo:
     dominancia_estricta: bool | None = None
     pasos: tuple[PasoIterativo, ...] = ()
     diagnostico: DiagnosticoIterativo | None = None
+    entrada_canonica: EntradaCanonicaIterativa | None = None
 
     @property
     def iteraciones_realizadas(self) -> int:
