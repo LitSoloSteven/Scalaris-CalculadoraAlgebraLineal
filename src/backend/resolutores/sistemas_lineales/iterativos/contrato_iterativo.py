@@ -72,3 +72,80 @@ class ResultadoIterativo:
     def iteraciones_realizadas(self) -> int:
         """Devuelve el número de barridos completos en la traza."""
         return len(self.pasos)
+
+    @property
+    def explicacion(self) -> str:
+        """Describe en español la causa de parada y el vector verificado.
+        Con vector completo resume el cierre; sin vector devuelve el diagnóstico."""
+        if self.aproximacion is None or self.norma_residuo is None:
+            return _explicar_sin_vector(self.diagnostico)
+        if self.codigo == "SOLUCION_EXACTA":
+            return _explicar_exacta(self.aproximacion, self.iteraciones_realizadas)
+        if self.codigo == "TOLERANCIA_ALCANZADA":
+            return _explicar_tolerancia(
+                self.aproximacion, self.iteraciones_realizadas, self.norma_residuo,
+            )
+        if self.codigo == "MAXIMO_ITERACIONES":
+            return _explicar_maximo(
+                self.aproximacion, self.iteraciones_realizadas, self.norma_residuo,
+            )
+        return _explicar_limite(
+            self.aproximacion, self.iteraciones_realizadas, self.norma_residuo,
+        )
+
+
+def _explicar_sin_vector(diagnostico: DiagnosticoIterativo | None) -> str:
+    """Devuelve el diagnóstico disponible o un aviso cuando no se verificó un vector."""
+    if diagnostico is not None:
+        return diagnostico.mensaje
+    return "No se pudo verificar una aproximación del sistema."
+
+
+def _formatear_vector(vector: VectorIterativo) -> str:
+    """Presenta un vector entre paréntesis con sus componentes separadas por comas."""
+    return "(" + ", ".join(str(componente) for componente in vector) + ")"
+
+
+def _describir_barridos(iteraciones: int) -> str:
+    """Devuelve el conteo de barridos con singular o plural."""
+    unidad = "barrido" if iteraciones == 1 else "barridos"
+    return f"{iteraciones} {unidad}"
+
+
+def _explicar_exacta(vector: VectorIterativo, iteraciones: int) -> str:
+    """Describe una solución exacta y si el vector inicial ya la satisfacía."""
+    texto = _formatear_vector(vector)
+    if iteraciones == 0:
+        return f"El vector inicial ya era la solución exacta {texto}."
+    return f"El método encontró la solución exacta {texto} tras {_describir_barridos(iteraciones)}."
+
+
+def _explicar_tolerancia(
+    vector: VectorIterativo, iteraciones: int, norma: Fraction,
+) -> str:
+    """Describe la aproximación que cumple la tolerancia solicitada."""
+    return (
+        f"La aproximación {_formatear_vector(vector)} cumple la tolerancia con una "
+        f"norma del residuo de {norma} tras {_describir_barridos(iteraciones)}."
+    )
+
+
+def _explicar_maximo(
+    vector: VectorIterativo, iteraciones: int, norma: Fraction,
+) -> str:
+    """Describe el cierre por máximo sin ocultar el último residuo."""
+    return (
+        f"Se alcanzó el máximo de {_describir_barridos(iteraciones)} con la "
+        f"aproximación {_formatear_vector(vector)} y una norma del residuo de {norma}."
+    )
+
+
+def _explicar_limite(
+    vector: VectorIterativo, iteraciones: int, norma: Fraction,
+) -> str:
+    """Describe el límite aritmético que conserva la última aproximación completa."""
+    return (
+        f"El cálculo se interrumpió por el límite aritmético tras "
+        f"{_describir_barridos(iteraciones)}; se conserva la aproximación "
+        f"{_formatear_vector(vector)} con una norma del residuo de {norma}."
+    )
