@@ -1,5 +1,5 @@
 """Conexión del menú con la selección local y el origen de su activación."""
-from src.frontend.componentes import selector_tema
+from src.frontend.componentes.aplicacion.controles import selector_tema
 
 
 def test_opciones_de_tema_delegan_en_cliente_sin_viaje_al_servidor(monkeypatch):

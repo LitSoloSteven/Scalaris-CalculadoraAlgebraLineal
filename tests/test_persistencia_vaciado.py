@@ -6,8 +6,8 @@ from pathlib import Path
 
 from nicegui import core
 
-from src.frontend import archivo_atomico
-from src.frontend.persistencia_archivo import DiccionarioPersistenteSeguro
+from src.frontend.nucleo.persistencia import archivo_atomico
+from src.frontend.nucleo.persistencia.persistencia_archivo import DiccionarioPersistenteSeguro
 from tests.test_persistencia_archivo import _esperar_respaldos
 
 

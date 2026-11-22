@@ -1,4 +1,4 @@
 """Módulo de vistas para Sistemas Numéricos."""
-from .vista_sistemas_numericos import VistaSistemasNumericos
+from .bases.vista_sistemas_numericos import VistaSistemasNumericos
 
 __all__ = ["VistaSistemasNumericos"]

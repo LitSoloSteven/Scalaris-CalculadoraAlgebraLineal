@@ -5,12 +5,12 @@ from fractions import Fraction
 import pytest
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices.evaluador import EvaluadorExpresionesMatriciales
-from src.frontend.controladores.operaciones_matrices import (
+from src.backend.resolutores.operaciones_matrices.expresiones.evaluador import EvaluadorExpresionesMatriciales
+from src.frontend.controladores.algebra.operaciones_matrices import (
     ControladorLeontief, ControladorOperacionesMatrices, ControladorTransformaciones,
 )
-from src.frontend.vistas.operaciones_matrices._ejemplos_leontief import EJEMPLOS_LEONTIEF
-from src.frontend.vistas.operaciones_matrices._ejemplos_transformaciones import EJEMPLOS_TRANSFORMACIONES
+from src.frontend.vistas.algebra.operaciones_matrices.leontief.apoyo._ejemplos_leontief import EJEMPLOS_LEONTIEF
+from src.frontend.vistas.algebra.operaciones_matrices.transformaciones.apoyo._ejemplos_transformaciones import EJEMPLOS_TRANSFORMACIONES
 
 CLAVES_SEGMENTO = {
     "variable_temporal", "representacion_operacion", "tipo_operacion",

@@ -4,12 +4,12 @@ from types import SimpleNamespace
 
 import pytest
 
-from src.ai.contexto import ContextoIA
+from src.ai.contexto.contexto import ContextoIA
 from src.backend.modelos.matriz import Matriz
-from src.frontend.componentes.glosa_foco import crear_accion_explicacion
-from src.frontend.componentes.panel_ia import _recopilar_contexto_didactico
-from src.frontend.componentes.reproductor_pasos.modelo import PasoReproductor
-from src.frontend.vistas.operaciones_inversas.mixin_pasos import MixinPasosOperacionesInversas
+from src.frontend.componentes.glosa.interaccion.glosa_foco import crear_accion_explicacion
+from src.frontend.componentes.glosa.panel.panel_ia import _recopilar_contexto_didactico
+from src.frontend.componentes.reproductor_pasos.nucleo.modelo import PasoReproductor
+from src.frontend.vistas.algebra.operaciones_inversas.mixins.mixin_pasos import MixinPasosOperacionesInversas
 
 
 def _serializar_foco(herramienta, foco):

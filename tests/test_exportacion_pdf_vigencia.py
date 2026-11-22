@@ -3,8 +3,8 @@ import asyncio
 
 import pytest
 from nicegui import ui
-from src.frontend.componentes.exportacion_pdf import boton as modulo_boton
-from src.frontend.componentes.exportacion_pdf.boton import ExportacionPDF
+from src.frontend.componentes.exportacion_pdf.montaje import boton as modulo_boton
+from src.frontend.componentes.exportacion_pdf.montaje.boton import ExportacionPDF
 from tests.comun_construccion_vistas import construir_pagina
 from tests.comun_exportacion_pdf import PORTADA, crear_captura
 

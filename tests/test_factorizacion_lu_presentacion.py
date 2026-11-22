@@ -1,7 +1,7 @@
 """Contratos del procedimiento y de los ejemplos de factorización LU."""
-from src.frontend.controladores.operaciones_matrices.controlador_factorizacion_lu import ControladorFactorizacionLU
+from src.frontend.controladores.algebra.operaciones_matrices.factorizacion_lu.controlador_factorizacion_lu import ControladorFactorizacionLU
 from tests.datos_factorizacion_lu import CAPTURAS_FACTORIZACION_LU as EJEMPLOS_FACTORIZACION_LU
-from src.frontend.vistas.operaciones_matrices._presentacion_factorizacion_lu import adaptar_traza_factorizacion_lu
+from src.frontend.vistas.algebra.operaciones_matrices.factorizacion_lu._presentacion_factorizacion_lu import adaptar_traza_factorizacion_lu
 
 
 def test_ejemplos_y_traza():

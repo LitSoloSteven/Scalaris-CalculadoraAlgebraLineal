@@ -4,7 +4,7 @@ import asyncio
 import pytest
 from nicegui import run, ui
 
-from src.frontend.vistas.regla_falsa.modos_captura import MODO_INTERVALO
+from src.frontend.vistas.raices.regla_falsa.base.modos_captura import MODO_INTERVALO
 from tests.comun_regla_falsa_vista import ejecutar_escenario
 from tests.test_regla_falsa_lote_interfaz import preparar_lote_vista
 

@@ -1,6 +1,6 @@
 """Ecuaciones vectoriales completas y cálculos por componente del resultado."""
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_vectores.operaciones import ResolutorOperacionesVectores
+from src.backend.resolutores.operaciones_vectores.operaciones.operaciones import ResolutorOperacionesVectores
 
 
 def test_suma_resta_escalar_conservan_vector_y_componentes():

@@ -2,7 +2,7 @@
 from fractions import Fraction
 import pytest
 
-from src.backend.geometria.conjunto_solucion import obtener_parametros_solucion
+from src.backend.geometria.analisis.conjunto_solucion import obtener_parametros_solucion
 
 
 def _crear_parametros_validos():

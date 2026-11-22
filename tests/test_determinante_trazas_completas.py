@@ -5,9 +5,9 @@ from itertools import product
 import pytest
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices import cofactores
-from src.backend.resolutores.operaciones_matrices.determinante import ResolutorDeterminante
-from src.frontend.controladores.operaciones_matrices.controlador_determinante import ControladorDeterminante
+from src.backend.resolutores.operaciones_matrices.determinante import cofactores
+from src.backend.resolutores.operaciones_matrices.determinante.determinante import ResolutorDeterminante
+from src.frontend.controladores.algebra.operaciones_matrices.determinante.controlador_determinante import ControladorDeterminante
 
 
 @pytest.mark.parametrize("datos,esperado", [

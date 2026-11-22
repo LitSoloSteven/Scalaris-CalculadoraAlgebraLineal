@@ -8,7 +8,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from src.frontend import archivo_atomico
+from src.frontend.nucleo.persistencia import archivo_atomico
 
 
 def _error_windows(codigo: int = 5) -> PermissionError:

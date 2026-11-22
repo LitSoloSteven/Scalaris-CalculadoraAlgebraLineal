@@ -4,10 +4,10 @@ from tests.comun_entradas import copiar_entrada_prueba
 import json
 from tests.comun_textos import PATRONES_VOSEO, comprobar_textos_sobrios
 
-from src.frontend.controladores.operaciones_matrices import (
+from src.frontend.controladores.algebra.operaciones_matrices import (
     ControladorOperacionesMatrices,
 )
-from src.frontend.vistas.operaciones_matrices._pasos_reproductor import construir_pasos_matrices
+from src.frontend.vistas.algebra.operaciones_matrices.expresiones._pasos_reproductor import construir_pasos_matrices
 
 
 def _evaluar(expresion: str, matrices: dict) -> dict:

@@ -21,7 +21,7 @@ function entorno() {
             disconnect() {}
         },
     });
-    cargarAssetCliente("movimiento_biseccion.js", contexto);
+    cargarAssetCliente("herramientas/biseccion/movimiento_biseccion.js", contexto);
     return { contexto, ventana, nodos, reducido, movimiento: ventana.scalaris.movimientoBiseccion };
 }
 
@@ -78,7 +78,7 @@ prueba("la entrada por teclado o con movimiento reducido no promociona una capa"
 
 prueba("una fórmula lenta no se transfiere después de solicitar otra", async () => {
     const { contexto, ventana, nodos } = entorno();
-    cargarAssetCliente("paso_biseccion.js", contexto);
+    cargarAssetCliente("herramientas/biseccion/paso_biseccion.js", contexto);
     const conversion = Promise.withResolvers();
     ventana.MathJax = {
         tex2chtmlPromise: latex => latex === "primera" ? conversion.promise : Promise.resolve({ latex }),

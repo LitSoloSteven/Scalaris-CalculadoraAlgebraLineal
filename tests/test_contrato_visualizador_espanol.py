@@ -5,7 +5,7 @@ import json
 import pytest
 
 from src.frontend.controladores.geometria import ControladorGeometria
-from src.frontend.componentes.transferencia import guardar_vectores, consumir_vectores
+from src.frontend.componentes.resultados.acciones.transferencia import guardar_vectores, consumir_vectores
 from tests.comun import RAIZ, limpiar_almacen_transferencia
 
 
@@ -86,7 +86,7 @@ def test_transferencia_vectorial_tiene_campos_geometricos_canonicos():
 @pytest.mark.parametrize("archivo", ["controlador_rectas_planos.py", "controlador_vectores.py", "controlador_combinacion.py"])
 def test_controladores_no_contienen_calculo_de_dominio(archivo):
     """Los adaptadores no importan modelos ni operaciones aritméticas de dominio."""
-    ruta = RAIZ / "src/frontend/controladores/geometria" / archivo
+    ruta = RAIZ / "src/frontend/controladores/geometria/escenas" / archivo
     arbol = ast.parse(ruta.read_text(encoding="utf-8"))
     assert not any(isinstance(nodo, (ast.BinOp, ast.AugAssign, ast.For)) for nodo in ast.walk(arbol))
     importaciones = [nodo.module for nodo in ast.walk(arbol) if isinstance(nodo, ast.ImportFrom)]

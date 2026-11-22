@@ -39,7 +39,7 @@ prueba('si falta el directorio cliente la portada queda visible al terminar el a
 
 prueba('si falta la geometría compartida el tema se aplica sin captura', () => {
     const cliente = crearTemaSimulado('papel');
-    for (const archivo of ['inicializacion_tema.js', 'interacciones_globales.js', 'tema.js']) {
+    for (const archivo of ['nucleo/tema/inicializacion_tema.js', 'nucleo/interacciones/interacciones_globales.js', 'nucleo/tema/tema.js']) {
         cargarAssetCliente(archivo, cliente.contexto);
     }
     let capturas = 0;

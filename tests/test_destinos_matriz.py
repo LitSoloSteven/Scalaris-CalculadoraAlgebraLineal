@@ -1,6 +1,6 @@
 """Límites de destino y exclusiones de las transferencias matriciales."""
 import pytest
-from src.frontend.controladores.destinos_matriz import destinos_compatibles
+from src.frontend.controladores.compartido.matrices.destinos_matriz import destinos_compatibles
 
 
 @pytest.mark.parametrize("dimension,esperados", [

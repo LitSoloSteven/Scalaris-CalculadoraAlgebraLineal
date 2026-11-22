@@ -4,8 +4,8 @@ from dataclasses import asdict
 
 import pytest
 
-from src.backend.resolutores.raices.contrato_exploracion import EntradaExploracion
-from src.backend.resolutores.raices.exploracion_intervalos import explorar_intervalos
+from src.backend.resolutores.raices.exploracion.base.contrato_exploracion import EntradaExploracion
+from src.backend.resolutores.raices.exploracion.busqueda.exploracion_intervalos import explorar_intervalos
 
 
 def _explorar(expresion, minimo=-2, maximo=2, paso=0.5):

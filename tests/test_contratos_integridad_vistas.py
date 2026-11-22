@@ -6,11 +6,11 @@ import pytest
 from nicegui import ui
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices.leontief import ResolutorModeloLeontief
-from src.backend.resolutores.operaciones_matrices.captura_matrices import obtener_diccionario_matrices
-from src.frontend.componentes.captura_matrices import PanelCapturaMatrices
-from src.backend.resolutores.sistemas_lineales.exportacion_ecuaciones import exportar_ecuaciones_desde_datos
-from src.frontend.vistas.operaciones_inversas.vista_operaciones_inversas import VistaOperacionesInversas
+from src.backend.resolutores.operaciones_matrices.leontief.leontief import ResolutorModeloLeontief
+from src.backend.resolutores.operaciones_matrices.expresiones.captura_matrices import obtener_diccionario_matrices
+from src.frontend.componentes.captura.matrices.captura_matrices import PanelCapturaMatrices
+from src.backend.resolutores.sistemas_lineales.captura.exportacion_ecuaciones import exportar_ecuaciones_desde_datos
+from src.frontend.vistas.algebra.operaciones_inversas.vista_operaciones_inversas import VistaOperacionesInversas
 
 
 def test_captura_construye_matriz_con_dimensiones_y_fracciones_exactas():

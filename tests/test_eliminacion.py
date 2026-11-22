@@ -8,7 +8,7 @@ sys.path.insert(0, ruta_raiz)
 
 # 2. Ahora sí importamos las clases de tu compañero de forma segura
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.sistemas_lineales.gauss import ResolutorGauss
+from src.backend.resolutores.sistemas_lineales.eliminacion.gauss import ResolutorGauss
 class TestResolutorGauss(unittest.TestCase):
 
     """Agrupa las comprobaciones de resolutor gauss."""

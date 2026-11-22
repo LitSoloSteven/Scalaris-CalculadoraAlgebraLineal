@@ -5,7 +5,7 @@ const archivos = require("node:fs");
 const maquina = require("node:vm");
 const ruta = require("node:path");
 const fuente = archivos.readFileSync(ruta.join(__dirname,
-    "../src/frontend/recursos/js/recoleccion_basura.js"), "utf8");
+    "../src/frontend/recursos/js/nucleo/navegacion/recoleccion_basura.js"), "utf8");
 
 function crearCliente(permitido, cantidad = 1) {
     const rectangulo = { left: 0, top: 0, width: 50, height: 40, bottom: 40, right: 50 };

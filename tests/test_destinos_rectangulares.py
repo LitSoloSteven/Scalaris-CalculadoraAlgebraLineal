@@ -2,8 +2,8 @@
 from unittest.mock import MagicMock, Mock
 import pytest
 
-from src.frontend.componentes import transferencia
-from src.frontend.controladores.destinos_matriz import destinos_compatibles
+from src.frontend.componentes.resultados.acciones import transferencia
+from src.frontend.controladores.compartido.matrices.destinos_matriz import destinos_compatibles
 
 DESTINOS_RECTANGULARES = {"factorizacion_lu", "sistemas", "matrices", "transformaciones"}
 

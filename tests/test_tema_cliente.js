@@ -8,7 +8,7 @@ const { crearTemaSimulado, cargarTemaCompleto, simularTransicion } = require("./
 prueba("los valores canónicos se leen antes de cargar los estilos", () => {
     for (const [almacenado, esperado] of [["papel", "papel"], ["marea", "marea"], ["medianoche", "medianoche"]]) {
         const cliente = crearTemaSimulado(almacenado);
-        cargarAssetCliente("inicializacion_tema.js", cliente.contexto);
+        cargarAssetCliente("nucleo/tema/inicializacion_tema.js", cliente.contexto);
         afirmar.equal(cliente.atributos.get("data-tema"), esperado);
         afirmar.equal(cliente.almacen.get("tema"), esperado);
         afirmar.equal(cliente.documento.documentElement.style.colorScheme, esperado === "medianoche" ? "dark" : "light");
@@ -82,7 +82,7 @@ prueba("la preparación de Glosa conserva selección y límite de escritorio", (
     for (const [ancho, almacenado, esperado] of [[1024, "abierto", "abierto"], [1023, "abierto", "cerrado"], [1200, "cerrado", "cerrado"], [1200, null, "cerrado"]]) {
         const cliente = crearTemaSimulado(null, ancho);
         if (almacenado !== null) cliente.almacen.set("scalaris:glosa", almacenado);
-        cargarAssetCliente("inicializacion_glosa.js", cliente.contexto);
+        cargarAssetCliente("glosa/inicializacion_glosa.js", cliente.contexto);
         afirmar.equal(cliente.atributos.get("data-glosa"), esperado);
     }
 });
@@ -91,14 +91,14 @@ prueba("el fallo de almacenamiento de Glosa conserva el atributo anterior", () =
     const cliente = crearTemaSimulado();
     cliente.atributos.set("data-glosa", "abierto");
     cliente.almacenamiento.getItem = () => { throw new Error("almacenamiento simulado"); };
-    afirmar.doesNotThrow(() => cargarAssetCliente("inicializacion_glosa.js", cliente.contexto));
+    afirmar.doesNotThrow(() => cargarAssetCliente("glosa/inicializacion_glosa.js", cliente.contexto));
     afirmar.equal(cliente.atributos.get("data-glosa"), "abierto");
 });
 
 prueba("la activación por teclado aplica el tema sin transición", async () => {
     const cliente = crearTemaSimulado();
     cargarTemaCompleto(cliente);
-    cargarAssetCliente("interacciones_globales.js", cliente.contexto);
+    cargarAssetCliente("nucleo/interacciones/interacciones_globales.js", cliente.contexto);
     cliente.documento.startViewTransition = cambiar => simularTransicion(cambiar);
     cliente.eventos.get("keydown")();
     afirmar.doesNotThrow(() => cliente.ventana.scalaris.tema.establecer("marea"));
@@ -110,7 +110,7 @@ prueba("la activación por teclado aplica el tema sin transición", async () => 
 prueba("la preferencia de movimiento reducido aplica el tema sin transición", () => {
     const cliente = crearTemaSimulado();
     cargarTemaCompleto(cliente);
-    cargarAssetCliente("interacciones_globales.js", cliente.contexto);
+    cargarAssetCliente("nucleo/interacciones/interacciones_globales.js", cliente.contexto);
     cliente.ventana.matchMedia = consulta => ({ matches: consulta === '(prefers-reduced-motion: reduce)' });
     cliente.documento.startViewTransition = () => { throw new Error("no debe iniciar transición"); };
     afirmar.doesNotThrow(() => cliente.ventana.scalaris.tema.establecer("medianoche"));

@@ -4,9 +4,9 @@ from dataclasses import asdict
 
 import pytest
 
-from src.backend.resolutores.raices.contrato_biseccion import EntradaBiseccion
-from src.backend.resolutores.raices.criterios_biseccion import CriterioParada
-from src.backend.resolutores.raices.estimacion_biseccion import estimar_iteraciones
+from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import EntradaBiseccion
+from src.backend.resolutores.raices.biseccion.contratos.criterios_biseccion import CriterioParada
+from src.backend.resolutores.raices.biseccion.contratos.estimacion_biseccion import estimar_iteraciones
 
 
 def _entrada(criterio, intervalo=(0.0, 1.0), limite=100):

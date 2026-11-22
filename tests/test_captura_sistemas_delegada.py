@@ -6,10 +6,10 @@ from pathlib import Path
 
 import pytest
 
-from src.backend.utilidades.validadores import ValidadorMatriz
-from src.frontend.controladores.sistemas_lineales.captura import preparar_captura_ecuaciones, preparar_vista_previa
-from src.frontend.sugerencias import primera_celda_invalida
-from src.frontend.controladores.sistemas_lineales import ControladorGauss
+from src.backend.utilidades.validacion.validadores import ValidadorMatriz
+from src.frontend.controladores.algebra.sistemas_lineales.nucleo.captura import preparar_captura_ecuaciones, preparar_vista_previa
+from src.frontend.presentacion.sugerencias import primera_celda_invalida
+from src.frontend.controladores.algebra.sistemas_lineales import ControladorGauss
 from tests.comun_construccion_vistas import construir_pagina
 
 
@@ -72,16 +72,38 @@ def test_sugerencias_delegan_la_validacion(monkeypatch):
     assert resultado.foco == (1, 0)
 
 
+_RUTAS_VISTAS_FAMILIAS = (
+    "algebra/sistemas_lineales/__init__.py",
+    "algebra/sistemas_lineales/captura/_transferencia_sistemas.py",
+    "algebra/sistemas_lineales/captura/mixin_sincronizacion.py",
+    "algebra/sistemas_lineales/captura/mixin_vista_previa.py",
+    "algebra/sistemas_lineales/captura/modo_homogeneo.py",
+    "algebra/sistemas_lineales/mixin_historial.py",
+    "algebra/sistemas_lineales/resultados/_pasos_reproductor.py",
+    "algebra/sistemas_lineales/resultados/mixin_pasos.py",
+    "algebra/sistemas_lineales/resultados/mixin_resolucion.py",
+    "algebra/sistemas_lineales/resultados/mixin_resultados.py",
+    "algebra/sistemas_lineales/vista_sistemas_lineales.py",
+    "algebra/operaciones_inversas/__init__.py",
+    "algebra/operaciones_inversas/piezas/_adaptador_pasos.py",
+    "algebra/operaciones_inversas/piezas/_tarjeta_inversa.py",
+    "algebra/operaciones_inversas/piezas/_vista_previa_inversa.py",
+    "algebra/operaciones_inversas/mixins/mixin_historial.py",
+    "algebra/operaciones_inversas/mixins/mixin_pasos.py",
+    "algebra/operaciones_inversas/mixins/mixin_resultados.py",
+    "algebra/operaciones_inversas/vista_operaciones_inversas.py",
+)
+
+
 def test_vistas_no_importan_ni_invocan_parseo_de_dominio():
     """Inspecciona las dos familias y rechaza parseadores o validadores en sus vistas."""
     raiz = Path(__file__).parents[1] / "src/frontend/vistas"
     prohibidos = {"AnalizadorSistema", "ValidadorMatriz", "Fraction", "parsear_sistema", "parsear_numero_exacto", "matriz_desde_celdas", "analizar_ecuaciones", "latex_matriz_aumentada", "latex_sistema"}
-    for familia in ("sistemas_lineales", "operaciones_inversas"):
-        for ruta in (raiz / familia).glob("*.py"):
-            arbol = ast.parse(ruta.read_text(encoding="utf-8"))
-            nombres = {nodo.id for nodo in ast.walk(arbol) if isinstance(nodo, ast.Name)}
-            atributos = {nodo.attr for nodo in ast.walk(arbol) if isinstance(nodo, ast.Attribute)}
-            assert not (nombres | atributos) & prohibidos, ruta.name
+    for ruta in (raiz / relativo for relativo in _RUTAS_VISTAS_FAMILIAS):
+        arbol = ast.parse(ruta.read_text(encoding="utf-8"))
+        nombres = {nodo.id for nodo in ast.walk(arbol) if isinstance(nodo, ast.Name)}
+        atributos = {nodo.attr for nodo in ast.walk(arbol) if isinstance(nodo, ast.Attribute)}
+        assert not (nombres | atributos) & prohibidos, ruta.name
 
 
 def test_ecuaciones_resolucion_y_sincronizacion_en_vista_real(monkeypatch):

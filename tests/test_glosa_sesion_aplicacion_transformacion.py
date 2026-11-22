@@ -2,10 +2,10 @@
 import asyncio
 import copy
 
-from src.frontend.componentes.panel_ia import _recopilar_contexto_didactico
-from src.frontend.controladores.operaciones_matrices.contexto_modelos import capturar_modelo
-from src.frontend.vistas.operaciones_matrices.carga_modelos import cargar_captura_modelo
-from src.frontend.vistas.operaciones_matrices._ejemplos_aplicacion_transformacion import EJEMPLOS_APLICACION
+from src.frontend.componentes.glosa.panel.panel_ia import _recopilar_contexto_didactico
+from src.frontend.controladores.algebra.operaciones_matrices.modelos.contexto_modelos import capturar_modelo
+from src.frontend.vistas.algebra.operaciones_matrices.compartido.carga_modelos import cargar_captura_modelo
+from src.frontend.vistas.algebra.operaciones_matrices.aplicacion_transformacion.procedimiento._ejemplos_aplicacion_transformacion import EJEMPLOS_APLICACION
 from tests.comun_construccion_vistas import construir_pagina
 
 

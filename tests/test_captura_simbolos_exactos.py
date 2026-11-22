@@ -4,16 +4,16 @@ from fractions import Fraction
 import pytest
 
 from src.backend.constantes import LONGITUD_MAXIMA_CADENA_NUMERO
-from src.backend.geometria.captura import parsear_par_vectores
+from src.backend.geometria.preparacion.captura import parsear_par_vectores
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices.celdas_exactas import parsear_celda_exacta
-from src.backend.resolutores.sistemas_lineales.captura_ecuaciones import preparar_ecuaciones
-from src.backend.resolutores.sistemas_lineales.vista_previa import preparar_vista_previa
+from src.backend.resolutores.operaciones_matrices.compartido.celdas_exactas import parsear_celda_exacta
+from src.backend.resolutores.sistemas_lineales.captura.captura_ecuaciones import preparar_ecuaciones
+from src.backend.resolutores.sistemas_lineales.captura.vista_previa import preparar_vista_previa
 from src.backend.resolutores.sistemas_numericos.conversor_bases import ConversorBases
-from src.backend.utilidades.analizadores import AnalizadorSistema
-from src.backend.utilidades.reglas_dominio import validar_entrada_base
-from src.frontend.componentes.portapapeles_matricial import filtrar_matriz_numerica
-from src.frontend.controladores.sistemas_lineales.presentacion_solucion import formatear_elemento_solucion
+from src.backend.utilidades.validacion.analizadores import AnalizadorSistema
+from src.backend.utilidades.validacion.reglas_dominio import validar_entrada_base
+from src.frontend.componentes.captura.nucleo.portapapeles_matricial import filtrar_matriz_numerica
+from src.frontend.controladores.algebra.sistemas_lineales.nucleo.presentacion_solucion import formatear_elemento_solucion
 
 
 @pytest.mark.parametrize(("texto", "razon"), [

@@ -2,7 +2,7 @@
 from copy import deepcopy
 import pytest
 
-from src.ai.mensajes import recortar_historial
+from src.ai.cliente.mensajes import recortar_historial
 
 
 @pytest.mark.parametrize("limite,esperados", [(2, ["2", "3"]), (0, ["1", "2", "3"]), (-1, ["2", "3"]), (8, ["1", "2", "3"])])

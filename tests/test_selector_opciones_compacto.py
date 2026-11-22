@@ -6,7 +6,7 @@ from unittest.mock import Mock
 import pytest
 from nicegui import ui
 
-from src.frontend.componentes.selector_opciones import COLUMNAS_COMPACTAS, SelectorOpciones
+from src.frontend.componentes.aplicacion.controles.selector_opciones import COLUMNAS_COMPACTAS, SelectorOpciones
 from tests.comun_construccion_vistas import construir_pagina
 
 
@@ -37,8 +37,8 @@ def test_etiquetas_del_selector_conservan_las_rutas_del_componente(monkeypatch):
     """Las etiquetas del componente conservan sus URL directas fuera del versionado global."""
     async def comprobar(vista, cliente):
         """Inspecciona las referencias reales del cliente sin presuponer invalidacion de cache."""
-        for extension in ['css', 'js']:
-            url = f'/assets/{extension}/selector_opciones.{extension}'
+        for url in ('/assets/css/componentes/selector_opciones.css',
+                    '/assets/js/nucleo/navegacion/selector_opciones.js'):
             assert f'"{url}"' in cliente.head_html
             assert f'"{url}?v=' not in cliente.head_html
     asyncio.run(construir_pagina(monkeypatch, 'vectores', comprobar))
@@ -57,7 +57,7 @@ def test_secciones_vectoriales_comparten_un_gap_semantico(monkeypatch):
 
 def test_indicador_compacto_se_mueve_sin_transiciones_de_redimensionado():
     """Solo activar la clase de seleccion inicia movimiento, con accesibilidad conservada."""
-    estilos = Path('src/frontend/recursos/css/selector_opciones.css').read_text(encoding='utf-8')
+    estilos = Path('src/frontend/recursos/css/componentes/selector_opciones.css').read_text(encoding='utf-8')
     assert 'grid-auto-rows: 1fr' in estilos
     assert 'height: calc(100% / var(--selector-filas-compactas))' in estilos
     assert 'width: calc(100% / var(--selector-columnas-compactas))' in estilos

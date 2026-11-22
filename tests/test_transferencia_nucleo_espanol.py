@@ -4,8 +4,8 @@ from dataclasses import asdict
 import pytest
 
 from src.backend.constantes import MENSAJE_TRANSFERENCIA_DATOS_INVALIDOS
-from src.backend.utilidades import transferencias
-from src.frontend.componentes import transferencia
+from src.backend.utilidades.captura import transferencias
+from src.frontend.componentes.resultados.acciones import transferencia
 
 
 @pytest.mark.parametrize("tipo", ["matriz_a", "sistema", "vectores"])

@@ -7,8 +7,8 @@ import pytest
 from nicegui import run
 
 from src.ai.huellas import calcular_huella
-from src.frontend.controladores.calculo_raices import ConfiguracionCalculoRaices, resolver_calculo_raices
-from src.frontend.controladores.sesion_matricial import invalidar_resultado, notificar_edicion
+from src.frontend.controladores.raices.compartido.ejecucion.calculo_raices import ConfiguracionCalculoRaices, resolver_calculo_raices
+from src.frontend.controladores.compartido.sesion.sesion_matricial import invalidar_resultado, notificar_edicion
 from tests.comun import ejecutar_trabajador_simulado
 
 _CONFIGURACION = ConfiguracionCalculoRaices(

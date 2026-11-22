@@ -3,9 +3,9 @@ import math
 
 import pytest
 
-from src.frontend.controladores.regla_falsa.controlador import resolver_captura
-from src.frontend.controladores.regla_falsa.diagnostico import detalles_diagnostico
-from src.frontend.controladores.regla_falsa.presentacion import (
+from src.frontend.controladores.raices.regla_falsa.ejecucion.controlador import resolver_captura
+from src.frontend.controladores.raices.regla_falsa.presentacion.diagnostico import detalles_diagnostico
+from src.frontend.controladores.raices.regla_falsa.presentacion.presentacion import (
     aproximacion_presentada, avisos_resumen, etiqueta_aproximacion,
     metricas_principales, metricas_resumen, titulo_estado,
 )

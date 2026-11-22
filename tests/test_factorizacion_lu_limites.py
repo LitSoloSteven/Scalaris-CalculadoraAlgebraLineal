@@ -1,8 +1,8 @@
 """Casos de captura y factorización LU con dimensiones y números extremos."""
 import pytest
 
-from src.frontend.controladores.operaciones_matrices.controlador_factorizacion_lu import ControladorFactorizacionLU
-from src.frontend.vistas.operaciones_matrices._presentacion_factorizacion_lu import adaptar_traza_factorizacion_lu
+from src.frontend.controladores.algebra.operaciones_matrices.factorizacion_lu.controlador_factorizacion_lu import ControladorFactorizacionLU
+from src.frontend.vistas.algebra.operaciones_matrices.factorizacion_lu._presentacion_factorizacion_lu import adaptar_traza_factorizacion_lu
 
 
 @pytest.mark.parametrize("datos", [

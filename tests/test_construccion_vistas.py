@@ -38,7 +38,7 @@ def test_calculo_minimo_de_cada_vista(monkeypatch, herramienta):
 
 def test_arnes_leontief_rechaza_resultado_sin_renderizado(monkeypatch):
     """Un backend exitoso no oculta la excepción posterior del renderizador."""
-    from src.frontend.vistas.operaciones_matrices import mixin_calculo_leontief
+    from src.frontend.vistas.algebra.operaciones_matrices.leontief import mixin_calculo_leontief
     from tests.comun_calculos_vistas import calcular_leontief
 
     def fallar_renderizado(resultado):
@@ -60,7 +60,7 @@ def test_arnes_leontief_rechaza_resultado_sin_renderizado(monkeypatch):
 
 def test_arnes_matricial_rechaza_resultado_sin_renderizado(monkeypatch):
     """La guarda común detecta errores capturados después de un cálculo exitoso."""
-    from src.frontend.vistas.operaciones_matrices.mixin_resultados import MixinResultadosOperacionesMatrices
+    from src.frontend.vistas.algebra.operaciones_matrices.expresiones.mixin_resultados import MixinResultadosOperacionesMatrices
 
     def fallar_renderizado(vista, resultado):
         """Procesa fallar renderizado con los datos recibidos."""
@@ -74,7 +74,7 @@ def test_arnes_matricial_rechaza_resultado_sin_renderizado(monkeypatch):
 @pytest.mark.parametrize("herramienta", ["sistemas", "inversa"])
 def test_transferencia_matricial_monta_y_carga_el_panel(monkeypatch, herramienta):
     """El import diferido y la carga consumen el token sin alias inexistentes."""
-    from src.frontend.componentes.transferencia import guardar_matriz
+    from src.frontend.componentes.resultados.acciones.transferencia import guardar_matriz
     token = guardar_matriz("matrices", [["2", "0"], ["0", "3"]])
 
     async def comprobar(vista, cliente):

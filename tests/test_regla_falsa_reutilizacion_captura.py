@@ -3,8 +3,8 @@ import math
 
 import pytest
 
-from src.frontend.controladores import captura_real
-from src.frontend.controladores.biseccion import captura_criterio
+from src.frontend.controladores.raices.compartido.formato import captura_real
+from src.frontend.controladores.raices.biseccion.captura import captura_criterio
 from tests.comun_biseccion_criterios import captura_criterio as crear_captura
 
 

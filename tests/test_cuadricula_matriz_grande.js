@@ -37,7 +37,7 @@ function crearMatriz(falloObservador = false) {
   const movimiento = { permitido: () => true, duracion: token => token === '--dur-panel' ? 450 : 340,
     curva: () => 'curva' };
   const ventana = { scalaris: { movimiento } };
-  cargarAssetCliente('cuadricula_compartida.js', vm.createContext({ window: ventana, MutationObserver: Observador }));
+  cargarAssetCliente('captura/entrada/cuadricula_compartida.js', vm.createContext({ window: ventana, MutationObserver: Observador }));
   return { contenedor, animaciones, observadores, api: ventana.scalaris.cuadricula };
 }
 

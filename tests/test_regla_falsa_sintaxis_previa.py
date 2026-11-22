@@ -3,27 +3,27 @@ import json
 
 import pytest
 
-from src.frontend.controladores.formato_funcion_real import formatear_expresion
-from src.frontend.controladores.vista_previa_raices import preparar_vista_previa
+from src.frontend.controladores.raices.compartido.formato.formato_funcion_real import formatear_expresion
+from src.frontend.controladores.raices.compartido.exploracion.vista_previa_raices import preparar_vista_previa
 from tests import test_cumplimiento_reglas as reglas
 from tests.comun import RAIZ
 from tests.comun_regla_falsa_vista import ejecutar_escenario
 
 _MODULOS = (
-    "controladores/muestreo_raices.py", "controladores/formato_funcion_real.py",
-    "controladores/vista_previa_raices.py", "controladores/seleccion_muestra_raices.py",
-    "controladores/biseccion/muestreo.py", "controladores/biseccion/formato_expresion.py",
-    "controladores/biseccion/vista_previa.py", "controladores/regla_falsa/presentacion_grafica.py",
-    "controladores/regla_falsa/formulas_procedimiento.py", "componentes/previa_expresion_raices.py",
-    "componentes/borrador_intervalo_raices.py", "componentes/figura_funcion_real.py",
-    "componentes/colores_figuras.py", "componentes/sincronizacion_rango_raices.py",
-    "controladores/rango_exploracion_raices.py", "vistas/geometria/_colores_figuras.py",
-    "vistas/biseccion/rango_grafica.py", "vistas/biseccion/vista_previa.py",
-    "vistas/biseccion/previa_expresion.py", "vistas/biseccion/seleccion_grafico.py", "vistas/biseccion/figura.py",
-    "vistas/regla_falsa/rango_previo.py", "vistas/regla_falsa/vista_previa.py",
-    "vistas/regla_falsa/seleccion_grafico.py", "vistas/regla_falsa/composicion.py",
-    "vistas/regla_falsa/exploracion.py", "vistas/regla_falsa/vista_regla_falsa.py",
-    "vistas/regla_falsa/procedimiento.py",
+    "controladores/raices/compartido/exploracion/muestreo_raices.py", "controladores/raices/compartido/formato/formato_funcion_real.py",
+    "controladores/raices/compartido/exploracion/vista_previa_raices.py", "controladores/raices/compartido/ejecucion/seleccion_muestra_raices.py",
+    "controladores/raices/biseccion/adaptadores/muestreo.py", "controladores/raices/biseccion/adaptadores/formato_expresion.py",
+    "controladores/raices/biseccion/adaptadores/vista_previa.py", "controladores/raices/regla_falsa/ejecucion/presentacion_grafica.py",
+    "controladores/raices/regla_falsa/procedimiento/formulas_procedimiento.py", "componentes/raices/captura/previa_expresion_raices.py",
+    "componentes/raices/captura/borrador_intervalo_raices.py", "componentes/raices/graficos/figura_funcion_real.py",
+    "componentes/raices/graficos/colores_figuras.py", "componentes/raices/exploracion/sincronizacion_rango_raices.py",
+    "controladores/raices/compartido/formato/rango_exploracion_raices.py", "vistas/geometria/figuras/_colores_figuras.py",
+    "vistas/raices/biseccion/grafica/rango_grafica.py", "vistas/raices/biseccion/grafica/vista_previa.py",
+    "vistas/raices/biseccion/base/previa_expresion.py", "vistas/raices/biseccion/grafica/seleccion_grafico.py", "vistas/raices/biseccion/grafica/figura.py",
+    "vistas/raices/regla_falsa/grafica/rango_previo.py", "vistas/raices/regla_falsa/grafica/vista_previa.py",
+    "vistas/raices/regla_falsa/grafica/seleccion_grafico.py", "vistas/raices/regla_falsa/resultados/composicion.py",
+    "vistas/raices/regla_falsa/exploracion/exploracion.py", "vistas/raices/regla_falsa/vista_regla_falsa.py",
+    "vistas/raices/regla_falsa/procedimiento/procedimiento.py",
 )
 
 

@@ -3,9 +3,9 @@ import asyncio
 
 import pytest
 
-from src.frontend.componentes import acciones_matriz
-from src.frontend.controladores.destinos_matriz import destinos_compatibles
-from src.frontend.vistas.operaciones_matrices._ejemplos_aplicacion_transformacion import EJEMPLOS_APLICACION
+from src.frontend.componentes.resultados.acciones import acciones_matriz
+from src.frontend.controladores.compartido.matrices.destinos_matriz import destinos_compatibles
+from src.frontend.vistas.algebra.operaciones_matrices.aplicacion_transformacion.procedimiento._ejemplos_aplicacion_transformacion import EJEMPLOS_APLICACION
 from tests.comun_construccion_vistas import construir_pagina
 
 

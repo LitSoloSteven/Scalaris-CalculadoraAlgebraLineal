@@ -1,9 +1,9 @@
 """Elementos de navegación, escenas y composición de la barra contextual."""
 from unittest.mock import patch
 
-from src.frontend.componentes.iconos import icono_svg
-from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
-from src.frontend.componentes.barra_navegacion import crear_barra_navegacion
+from src.frontend.componentes.aplicacion.base.iconos import icono_svg
+from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
+from src.frontend.componentes.aplicacion.controles.barra_navegacion import crear_barra_navegacion
 from src.frontend.navegacion import (
     RUTA_INICIO, ESCENAS_VISUALIZADOR, ElementoNavegacion, predeterminado_elemento_clave, enlace_elemento_navegacion, elementos_navegacion,
 )
@@ -77,7 +77,7 @@ def test_iconos_generan_svg():
 
 def test_contenedor_omite_barra_en_inicio():
     """El inicio omite la barra y una herramienta la crea con su ruta activa."""
-    with patch("src.frontend.componentes.estructura_aplicacion.crear_barra_navegacion") as barra_simulada:
+    with patch("src.frontend.componentes.aplicacion.controles.estructura_aplicacion.crear_barra_navegacion") as barra_simulada:
         crear_estructura_aplicacion(ruta_activa=RUTA_INICIO)
         barra_simulada.assert_not_called()
         crear_estructura_aplicacion(ruta_activa="/algebra-lineal/sistemas", clave_activa="sistemas")

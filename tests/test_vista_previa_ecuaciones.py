@@ -2,7 +2,7 @@
 
 import pytest
 
-from src.backend.resolutores.sistemas_lineales.vista_previa import (
+from src.backend.resolutores.sistemas_lineales.captura.vista_previa import (
     analizar_ecuaciones,
     latex_matriz_aumentada,
     latex_sistema,

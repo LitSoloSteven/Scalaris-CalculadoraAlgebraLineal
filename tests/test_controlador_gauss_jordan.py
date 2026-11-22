@@ -3,7 +3,7 @@ from tests.comun_entradas import copiar_entrada_prueba
 import json
 import pytest
 
-from src.frontend.controladores.sistemas_lineales.controlador_gauss_jordan import (
+from src.frontend.controladores.algebra.sistemas_lineales.resolucion.controlador_gauss_jordan import (
     ControladorGaussJordan,
 )
 from tests.comun_controladores import procesar_sistema

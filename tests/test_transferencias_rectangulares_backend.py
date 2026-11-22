@@ -3,7 +3,7 @@ from copy import deepcopy
 import pytest
 
 from src.backend.constantes import LONGITUD_MAXIMA_CELDA, MENSAJE_TRANSFERENCIA_DATOS_INVALIDOS
-from src.backend.utilidades.transferencias import validar_carga_matriz, validar_carga_matriz_rectangular
+from src.backend.utilidades.captura.transferencias import validar_carga_matriz, validar_carga_matriz_rectangular
 
 
 def _carga(datos):

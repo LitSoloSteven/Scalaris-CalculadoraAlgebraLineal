@@ -1,7 +1,7 @@
 """Tipos racionales y validación de resultados de expresiones matriciales."""
 from fractions import Fraction
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices.evaluador import EvaluadorExpresionesMatriciales
+from src.backend.resolutores.operaciones_matrices.expresiones.evaluador import EvaluadorExpresionesMatriciales
 
 
 def test_literal_conserva_precision_racional():

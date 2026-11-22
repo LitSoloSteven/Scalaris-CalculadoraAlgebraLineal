@@ -3,8 +3,8 @@ import asyncio
 
 from nicegui import ui
 
-from src.frontend import textos
-from src.frontend.componentes.exportacion_pdf import boton as modulo_boton
+from src.frontend.nucleo.textos import textos
+from src.frontend.componentes.exportacion_pdf.montaje import boton as modulo_boton
 from tests.comun_construccion_vistas import construir_pagina
 from tests.comun_exportacion_algebra import calcular_algebra
 from tests.comun_exportacion_pdf import PORTADA, crear_captura

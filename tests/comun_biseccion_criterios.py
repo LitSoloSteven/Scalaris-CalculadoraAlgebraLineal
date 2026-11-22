@@ -3,7 +3,7 @@ import asyncio
 
 from nicegui import Client, core, ui
 
-from src.frontend.vistas.biseccion.vista_biseccion import VistaBiseccion
+from src.frontend.vistas.raices.biseccion.vista_biseccion import VistaBiseccion
 from tests.comun_construccion_vistas import preparar_transporte, cerrar_cliente
 
 

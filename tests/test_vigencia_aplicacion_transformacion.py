@@ -6,11 +6,11 @@ from unittest.mock import Mock
 import pytest
 from nicegui import run, ui
 
-from src.frontend import textos_transformaciones as textos
-from src.frontend.controladores.operaciones_matrices.controlador_aplicacion_transformacion import (
+from src.frontend.nucleo.textos import textos_transformaciones as textos
+from src.frontend.controladores.algebra.operaciones_matrices.transformaciones.controlador_aplicacion_transformacion import (
     ControladorAplicacionTransformacion,
 )
-from src.frontend.vistas.operaciones_matrices._ejemplos_aplicacion_transformacion import EJEMPLOS_APLICACION
+from src.frontend.vistas.algebra.operaciones_matrices.aplicacion_transformacion.procedimiento._ejemplos_aplicacion_transformacion import EJEMPLOS_APLICACION
 from tests.comun_construccion_vistas import construir_pagina
 
 

@@ -5,8 +5,8 @@ import json
 import pytest
 from nicegui import Client, core, ui
 
-from src.frontend.controladores.operaciones_matrices.controlador_leontief import ControladorLeontief
-from src.frontend.vistas.operaciones_matrices._renderizado_leontief import renderizar_resultado_leontief
+from src.frontend.controladores.algebra.operaciones_matrices.leontief.controlador_leontief import ControladorLeontief
+from src.frontend.vistas.algebra.operaciones_matrices.leontief.apoyo._renderizado_leontief import renderizar_resultado_leontief
 
 
 def _resolver(coeficientes, demanda):

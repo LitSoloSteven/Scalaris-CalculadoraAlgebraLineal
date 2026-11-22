@@ -3,12 +3,12 @@ from unittest.mock import AsyncMock
 
 import pytest
 
-from src.backend.resolutores.raices.contrato_biseccion import LIMITE_ITERACIONES_DEFECTO
-from src.backend.resolutores.raices.unidades_angulares import funcion_sensible_a_unidad
-from src.frontend.controladores.biseccion.exploracion import PASO_EXPLORACION_DEFECTO
-from src.frontend.controladores.biseccion.vista_previa import RANGO_GRAFICA_DEFECTO
-from src.frontend.vistas.biseccion.ejemplos import EJEMPLOS
-from src.frontend.vistas.biseccion.modos_captura import MODO_BUSQUEDA, MODO_INTERVALO
+from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import LIMITE_ITERACIONES_DEFECTO
+from src.backend.resolutores.raices.compartido.unidades_angulares import funcion_sensible_a_unidad
+from src.frontend.controladores.raices.biseccion.adaptadores.exploracion import PASO_EXPLORACION_DEFECTO
+from src.frontend.controladores.raices.biseccion.adaptadores.vista_previa import RANGO_GRAFICA_DEFECTO
+from src.frontend.vistas.raices.biseccion.captura.ejemplos import EJEMPLOS
+from src.frontend.vistas.raices.biseccion.base.modos_captura import MODO_BUSQUEDA, MODO_INTERVALO
 from tests.comun_biseccion_criterios import captura_criterio, ejecutar_escenario
 
 

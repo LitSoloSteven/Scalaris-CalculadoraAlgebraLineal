@@ -111,10 +111,10 @@ function crearPresentacion(opciones = {}) {
         },
     });
     function cargar(nombre) { cargarAssetCliente(nombre, contexto); }
-    cargar("interacciones_globales.js");
-    cargar("revelado_circular.js");
-    if (!opciones.sinPresentacion) cargar("presentacion.js");
-    if (!opciones.sinEntrada) cargar("inicio_entrada.js");
+    cargar("nucleo/interacciones/interacciones_globales.js");
+    cargar("nucleo/tema/revelado_circular.js");
+    if (!opciones.sinPresentacion) cargar("inicio/presentacion.js");
+    if (!opciones.sinEntrada) cargar("inicio/inicio_entrada.js");
     return { ...dom, reloj, almacen, preferencia, ventana, contexto, cargar };
 }
 

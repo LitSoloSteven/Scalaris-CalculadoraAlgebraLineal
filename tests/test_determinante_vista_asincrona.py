@@ -6,7 +6,7 @@ from unittest.mock import Mock
 import pytest
 from nicegui import Client, core, run, ui
 
-from src.frontend.vistas.operaciones_matrices.vista_determinante import VistaDeterminante
+from src.frontend.vistas.algebra.operaciones_matrices.determinante.vista_determinante import VistaDeterminante
 from tests.comun_construccion_vistas import preparar_transporte
 from tests.comun_calculo_determinante import retener_calculo
 

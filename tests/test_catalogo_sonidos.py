@@ -6,9 +6,9 @@ from pathlib import Path
 
 import pytest
 
-from src.frontend.componentes.sonido import _SONIDOS
-from src.frontend.recursos_vistas import seleccionar_recursos
-from src.frontend.tema import _CABECERA_HTML
+from src.frontend.componentes.aplicacion.base.sonido import _SONIDOS
+from src.frontend.presentacion.recursos_vistas import seleccionar_recursos
+from src.frontend.presentacion.tema import _CABECERA_HTML
 from tests.comun import RAIZ
 
 _RUTA = RAIZ / 'src/frontend/recursos/catalogo_sonidos.json'
@@ -65,8 +65,8 @@ def test_asignaciones_solo_referencian_perfiles_conocidos():
                                  'determinantes', 'bases', 'romanos', 'visualizador', 'leontief', 'transformaciones'])
 def test_orden_de_recursos_sonoros_en_cada_vista(vista):
     """Todos los consumidores reciben la configuración y dependencias una sola vez."""
-    nombres = ['catalogo_sonidos', 'sintesis_sonora', 'asignacion_sonora', 'sonido', 'eventos_sonoros',
-               'preferencia_sonido', 'interacciones_sonoras', 'sonido_escritura']
+    nombres = ['sonido/motor/catalogo_sonidos', 'sonido/motor/sintesis_sonora', 'sonido/motor/asignacion_sonora', 'sonido/motor/sonido', 'sonido/eventos/eventos_sonoros',
+               'sonido/eventos/preferencia_sonido', 'sonido/eventos/interacciones_sonoras', 'sonido/eventos/sonido_escritura']
     cabecera = seleccionar_recursos(_CABECERA_HTML, vista)
     posiciones = [cabecera.index(f'/assets/js/{nombre}.js') for nombre in nombres]
     assert posiciones == sorted(posiciones)
@@ -80,7 +80,7 @@ def test_inyeccion_escapa_cierre_de_script(monkeypatch):
     datos = {**_CATALOGO, 'muestra': '</script><script>alert(1)</script>'}
     monkeypatch.setattr(Path, 'read_text', lambda ruta, **opciones:
                         json.dumps(datos) if ruta == _RUTA else leer(ruta, **opciones))
-    modulo = runpy.run_path(str(RAIZ / 'src/frontend/tema.py'))
+    modulo = runpy.run_path(str(RAIZ / 'src/frontend/presentacion/tema.py'))
     cabecera = modulo['_CABECERA_HTML']
     assert '</script><script>alert(1)' not in cabecera
     bloque = re.search(r'id="scalaris-configuracion-sonidos" type="application/json">(.*?)</script>', cabecera)

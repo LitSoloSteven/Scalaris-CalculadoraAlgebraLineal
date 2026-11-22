@@ -1,7 +1,7 @@
 """Pruebas de normalizacion de escena en URL y validacion de handoff en el Visualizador."""
 import pytest
 
-from src.frontend.componentes.transferencia import (
+from src.frontend.componentes.resultados.acciones.transferencia import (
     ResultadoTransferencia,
     _ALMACEN,
     consumir_vectores,

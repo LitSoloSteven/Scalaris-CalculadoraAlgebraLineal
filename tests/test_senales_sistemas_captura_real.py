@@ -3,7 +3,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from src.frontend.vistas.sistemas_lineales.vista_sistemas_lineales import VistaSistemasLineales
+from src.frontend.vistas.algebra.sistemas_lineales.vista_sistemas_lineales import VistaSistemasLineales
 
 
 @pytest.mark.parametrize("valor,etiqueta", [("1/3", None), ("abc", "A[1,1]")])

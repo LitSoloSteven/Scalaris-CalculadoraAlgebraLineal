@@ -5,9 +5,9 @@ from dataclasses import asdict
 
 import pytest
 
-from src.backend.resolutores.raices.aritmetica_biseccion import punto_medio, error_relativo_numerico
-from src.backend.resolutores.raices.biseccion import biseccion
-from src.backend.resolutores.raices.contrato_biseccion import EntradaBiseccion
+from src.backend.resolutores.raices.biseccion.contratos.aritmetica_biseccion import punto_medio, error_relativo_numerico
+from src.backend.resolutores.raices.biseccion.motor.biseccion import biseccion
+from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import EntradaBiseccion
 
 
 def entrada(expresion="x**2-2", intervalo=(1.0, 2.0), decimales=4, limite=100):

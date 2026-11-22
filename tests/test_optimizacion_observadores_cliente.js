@@ -3,7 +3,7 @@ const afirmar = require('node:assert/strict');
 const prueba = require('node:test');
 const { crearObservador, mutacionEntrada, medirConsultas } = require('./comun_optimizacion_observadores.js');
 
-for (const nombre of ['selector_tema.js', 'navegacion_herramientas.js', 'sincronizacion_diseno.js']) {
+for (const nombre of ['nucleo/tema/selector_tema.js', 'nucleo/navegacion/navegacion_herramientas.js', 'herramientas/algebra/sincronizacion_diseno.js']) {
     prueba(`${nombre} omite búsquedas globales al insertar cien entradas`, () => {
         afirmar.equal(medirConsultas(nombre), 0);
     });
@@ -19,7 +19,7 @@ for (const nombre of ['selector_tema.js', 'navegacion_herramientas.js', 'sincron
 }
 
 prueba('el selector actualiza inmediatamente los cambios de tema de la raíz', () => {
-    const cliente = crearObservador('selector_tema.js');
+    const cliente = crearObservador('nucleo/tema/selector_tema.js');
     cliente.contadores.consultas = 0;
     cliente.observadores[0]([{ type: 'attributes', target: cliente.raiz }]);
     afirmar.equal(cliente.contadores.consultas, 1);
@@ -27,7 +27,7 @@ prueba('el selector actualiza inmediatamente los cambios de tema de la raíz', (
 });
 
 prueba('el filtro ignora nodos de texto y admite elementos añadidos sin descendientes', () => {
-    const cliente = crearObservador('selector_tema.js');
+    const cliente = crearObservador('nucleo/tema/selector_tema.js');
     const mutacion = mutacionEntrada();
     mutacion.addedNodes = [{ nodeType: 3 }, { nodeType: 1, matches: () => true }];
     afirmar.equal(cliente.contexto.window.scalaris.observacion.contiene([mutacion], 'opcion'), true);
@@ -36,7 +36,7 @@ prueba('el filtro ignora nodos de texto y admite elementos añadidos sin descend
 });
 
 prueba('los gráficos agrupan inserciones relevantes en un único fotograma', () => {
-    const cliente = crearObservador('sincronizacion_diseno.js');
+    const cliente = crearObservador('herramientas/algebra/sincronizacion_diseno.js');
     const mutacion = mutacionEntrada();
     mutacion.target.matches = () => true;
     for (let indice = 0; indice < 100; indice++) cliente.observadores[0]([mutacion]);

@@ -10,7 +10,7 @@ from nicegui import ui
 from src.frontend.controladores.inicio._modelo import EstadoPortada, estado_portada
 from ._catalogo_ejemplos import obtener_ejemplo
 
-_RUTA_PLANTILLA = Path(__file__).resolve().parents[2] / "recursos" / "plantillas" / "ejemplos_inicio.html"
+_RUTA_PLANTILLA = Path(__file__).resolve().parents[2] / "recursos" / "plantillas" / "inicio" / "ejemplos_inicio.html"
 
 
 @cache

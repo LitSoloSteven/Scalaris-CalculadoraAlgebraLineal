@@ -1,6 +1,6 @@
 """Preparación y controles comunes del foco de una operación matricial."""
-from src.backend.resolutores.operaciones_matrices.evaluador import EvaluadorExpresionesMatriciales
-from src.frontend.controladores.operaciones_matrices.controlador_operaciones_matrices import ControladorOperacionesMatrices
+from src.backend.resolutores.operaciones_matrices.expresiones.evaluador import EvaluadorExpresionesMatriciales
+from src.frontend.controladores.algebra.operaciones_matrices.base.controlador_operaciones_matrices import ControladorOperacionesMatrices
 
 
 def evaluar_foco_matriz(expresion, matrices):

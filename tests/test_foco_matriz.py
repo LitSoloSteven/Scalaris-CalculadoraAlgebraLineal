@@ -2,14 +2,14 @@
 from fractions import Fraction
 import pytest
 
-from src.ai.contexto import ContextoIA
+from src.ai.contexto.contexto import ContextoIA
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices.evaluador import (
+from src.backend.resolutores.operaciones_matrices.expresiones.evaluador import (
     EvaluadorExpresionesMatriciales,
 )
 from tests.comun_clientes import PanelIASimulado
 from tests.comun_foco_matriz import evaluar_foco_matriz, comprobar_ejemplo_foco
-from src.frontend.controladores.operaciones_matrices.controlador_operaciones_matrices import (
+from src.frontend.controladores.algebra.operaciones_matrices.base.controlador_operaciones_matrices import (
     ControladorOperacionesMatrices,
 )
 

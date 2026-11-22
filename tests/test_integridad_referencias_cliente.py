@@ -8,7 +8,7 @@ from tests.comun_integridad_cliente import errores_referencias, fragmentos_pytho
 def test_referencias_python_existen_en_espacio_nombres_cliente():
     """Detecta nombres inexistentes aun cuando una guarda opcional evita la excepción."""
     fragmentos = fragmentos_python(sorted((RAIZ / "src").rglob("*.py")))
-    recursos = [ruta.read_text(encoding="utf-8") for ruta in sorted((RAIZ / "src/frontend/recursos/js").glob("*.js"))]
+    recursos = [ruta.read_text(encoding="utf-8") for ruta in sorted((RAIZ / "src/frontend/recursos/js").rglob("*.js"))]
     assert fragmentos
     errores = errores_referencias(fragmentos, recursos)
     assert not errores, "\n".join(errores)

@@ -15,11 +15,11 @@ from src.frontend.componentes.reproductor_pasos import (
     etiqueta_variable_html,
     html_tabla_aumentada,
 )
-from src.frontend.componentes.reproductor_pasos import reproductor as modulo_reproductor
-from src.frontend.controladores.operaciones_inversas import (
+from src.frontend.componentes.reproductor_pasos.interfaz import reproductor as modulo_reproductor
+from src.frontend.controladores.algebra.operaciones_inversas import (
     ControladorOperacionesInversas,
 )
-from src.frontend.vistas.operaciones_inversas._adaptador_pasos import (
+from src.frontend.vistas.algebra.operaciones_inversas.piezas._adaptador_pasos import (
     adaptar_pasos_inversa,
 )
 
@@ -105,7 +105,7 @@ def test_tabla_aumentada_admite_bloque_derecho_de_una_columna():
 
 def test_catalogo_y_hoja_nueva_definen_todos_los_tipos():
     """Comprueba que cada tipo disponible tenga estilo declarado."""
-    ruta_css = Path("src/frontend/recursos/css/reproductor_pasos.css")
+    ruta_css = Path("src/frontend/recursos/css/utilidades/reproductor_pasos.css")
     estilos = ruta_css.read_text(encoding="utf-8")
     tipos_esperados = {
         "inicial", "intercambio", "pivote", "eliminacion", "normalizacion", "otro", "final",
@@ -118,11 +118,11 @@ def test_catalogo_y_hoja_nueva_definen_todos_los_tipos():
 
 def test_recursos_compartidos_se_enlazan_y_destello_deja_el_script_anterior():
     """Confirma la carga global de recursos y la eliminación del nombre antiguo."""
-    cabecera = Path("src/frontend/recursos/plantillas/cabecera.html").read_text(encoding="utf-8")
-    codigo_cliente = Path("src/frontend/recursos/js/reproductor_pasos.js").read_text(encoding="utf-8")
-    codigo_matriz = Path("src/frontend/recursos/js/matriz_cuadrada.js").read_text(encoding="utf-8")
-    assert "/assets/css/reproductor_pasos.css" in cabecera
-    assert "/assets/js/reproductor_pasos.js" in cabecera
+    cabecera = Path("src/frontend/recursos/plantillas/cabecera/cabecera.html").read_text(encoding="utf-8")
+    codigo_cliente = Path("src/frontend/recursos/js/herramientas/documentos/reproductor_pasos.js").read_text(encoding="utf-8")
+    codigo_matriz = Path("src/frontend/recursos/js/captura/adaptadores/matriz_cuadrada.js").read_text(encoding="utf-8")
+    assert "/assets/css/utilidades/reproductor_pasos.css" in cabecera
+    assert "/assets/js/herramientas/documentos/reproductor_pasos.js" in cabecera
     assert "window.scalaris.pasos =" in codigo_cliente
     assert "revelar: function" in codigo_cliente or "revelar(id" in codigo_cliente
     assert "destellar: function" in codigo_cliente or "destellar(id" in codigo_cliente

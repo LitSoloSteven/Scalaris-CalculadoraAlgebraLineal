@@ -66,7 +66,7 @@ function crearCliente() {
         scalaris: { movimiento: { duracion: token => tokens.get(token), curva: () => CURVA } },
     });
     const contexto = maquinaVirtual.createContext({ window: ventana, document: documento, AbortController });
-    cargarAssetCliente("inicio.js", contexto);
+    cargarAssetCliente("inicio/inicio.js", contexto);
     return { llamadas, tokens, punteroFino, reduccion, documento, ventana };
 }
 
@@ -90,7 +90,7 @@ function crearEjemplo() {
     };
     const ventana = Object.assign(new EventTarget(), { matchMedia: () => reduccion, scalaris: { movimiento } });
     const contexto = maquinaVirtual.createContext({ window: ventana, document: documento });
-    cargarAssetCliente("ejemplos_inicio.js", contexto);
+    cargarAssetCliente("inicio/ejemplos_inicio.js", contexto);
 
     const atributos = new Set();
     const estado = { textContent: "" };

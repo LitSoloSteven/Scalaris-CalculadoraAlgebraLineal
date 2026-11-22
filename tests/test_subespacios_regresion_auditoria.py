@@ -10,14 +10,14 @@ import sys
 
 import pytest
 
-from src.backend.modelos import conversion_fracciones
+from src.backend.modelos.escalares import conversion_fracciones
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_vectores import subespacios as motor
-from src.backend.resolutores.operaciones_vectores.captura_subespacios import (
+from src.backend.resolutores.operaciones_vectores.subespacios import subespacios as motor
+from src.backend.resolutores.operaciones_vectores.subespacios.captura_subespacios import (
     capturar_generadores,
     capturar_restricciones,
 )
-from src.frontend.controladores.operaciones_matrices.codificador import CodificadorMatriz
+from src.frontend.controladores.algebra.operaciones_matrices.base.codificador import CodificadorMatriz
 
 
 @pytest.fixture

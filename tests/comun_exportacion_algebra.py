@@ -10,8 +10,8 @@ HERRAMIENTAS = ('vectores', 'matrices', 'inversa', 'determinantes', 'factorizaci
 
 async def construir_algebra(monkeypatch, herramienta, comprobar):
     """Monta también las rutas matriciales diferidas con el transporte común de pruebas."""
-    monkeypatch.setitem(VISTAS_RUTAS, 'determinantes', ('operaciones_matrices.vista_determinante', 'VistaDeterminante'))
-    monkeypatch.setitem(VISTAS_RUTAS, 'factorizacion_lu', ('operaciones_matrices.vista_factorizacion_lu', 'VistaFactorizacionLU'))
+    monkeypatch.setitem(VISTAS_RUTAS, 'determinantes', ('algebra.operaciones_matrices.determinante.vista_determinante', 'VistaDeterminante'))
+    monkeypatch.setitem(VISTAS_RUTAS, 'factorizacion_lu', ('algebra.operaciones_matrices.factorizacion_lu.vista_factorizacion_lu', 'VistaFactorizacionLU'))
     await construir_pagina(monkeypatch, herramienta, comprobar)
 
 

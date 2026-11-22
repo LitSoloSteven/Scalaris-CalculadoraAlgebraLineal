@@ -1,9 +1,9 @@
 """Fases y foco real de ambos métodos del determinante."""
 import pytest
 
-from src.frontend.controladores.operaciones_matrices.controlador_determinante import ControladorDeterminante
-from src.frontend.controladores.operaciones_matrices.fases_determinante import agrupar_determinante
-from src.frontend.controladores.operaciones_matrices.foco_determinante import construir_meta_determinante
+from src.frontend.controladores.algebra.operaciones_matrices.determinante.controlador_determinante import ControladorDeterminante
+from src.frontend.controladores.algebra.operaciones_matrices.determinante.pasos.fases_determinante import agrupar_determinante
+from src.frontend.controladores.algebra.operaciones_matrices.determinante.pasos.foco_determinante import construir_meta_determinante
 
 
 @pytest.mark.parametrize("metodo", ["laplace", "lu"])

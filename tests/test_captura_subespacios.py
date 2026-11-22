@@ -3,11 +3,11 @@ from fractions import Fraction
 
 import pytest
 
-from src.backend.resolutores.operaciones_vectores.captura_subespacios import (
+from src.backend.resolutores.operaciones_vectores.subespacios.captura_subespacios import (
     capturar_generadores,
     capturar_restricciones,
 )
-from src.backend.resolutores.operaciones_vectores.contrato_subespacios import (
+from src.backend.resolutores.operaciones_vectores.subespacios.contrato_subespacios import (
     ErrorCapturaSubespacio,
 )
 

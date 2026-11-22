@@ -6,7 +6,7 @@ from tests.comun_entradas import copiar_entrada_prueba
 from fractions import Fraction
 import pytest
 
-from src.frontend.controladores.geometria.controlador_geometria import (
+from src.frontend.controladores.geometria.escenas.controlador_geometria import (
     ControladorGeometria,
     selector_celda_error,
 )

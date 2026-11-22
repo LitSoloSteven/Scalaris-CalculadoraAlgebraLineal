@@ -5,13 +5,13 @@ from tests.comun import RAIZ
 from tests import test_cumplimiento_reglas as reglas
 
 _RUTAS = (
-    "componentes/modos_captura_raices.py", "controladores/captura_exploratoria_raices.py",
-    "vistas/biseccion/modos_captura.py",
-    "componentes/paso_exploracion_raices.py", "componentes/exploracion_raices.py",
-    "vistas/biseccion/exploracion.py", "vistas/regla_falsa/modos_captura.py",
-    "vistas/regla_falsa/seleccion_candidato.py", "vistas/regla_falsa/exploracion.py",
-    "vistas/regla_falsa/captura.py", "vistas/regla_falsa/composicion.py",
-    "vistas/regla_falsa/vista_regla_falsa.py",
+    "componentes/raices/captura/modos_captura_raices.py", "controladores/raices/compartido/exploracion/captura_exploratoria_raices.py",
+    "vistas/raices/biseccion/base/modos_captura.py",
+    "componentes/raices/exploracion/paso_exploracion_raices.py", "componentes/raices/exploracion/exploracion_raices.py",
+    "vistas/raices/biseccion/exploracion/exploracion.py", "vistas/raices/regla_falsa/base/modos_captura.py",
+    "vistas/raices/regla_falsa/exploracion/seleccion_candidato.py", "vistas/raices/regla_falsa/exploracion/exploracion.py",
+    "vistas/raices/regla_falsa/captura/captura.py", "vistas/raices/regla_falsa/resultados/composicion.py",
+    "vistas/raices/regla_falsa/vista_regla_falsa.py",
 )
 
 

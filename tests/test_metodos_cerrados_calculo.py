@@ -5,10 +5,10 @@ from contextlib import asynccontextmanager
 from nicegui import Client, core, run, ui
 import pytest
 
-from src.frontend.controladores.biseccion.controlador import calcular_presentacion as biseccion
-from src.frontend.controladores.metodos_cerrados.adaptadores import BISECCION, REGLA_FALSA
-from src.frontend.controladores.regla_falsa.presentacion_grafica import calcular_presentacion as regla_falsa
-from src.frontend.vistas.metodos_cerrados.vista_metodos_cerrados import VistaMetodosCerrados
+from src.frontend.controladores.raices.biseccion.ejecucion.controlador import calcular_presentacion as biseccion
+from src.frontend.controladores.raices.metodos_cerrados.adaptadores import BISECCION, REGLA_FALSA
+from src.frontend.controladores.raices.regla_falsa.ejecucion.presentacion_grafica import calcular_presentacion as regla_falsa
+from src.frontend.vistas.raices.metodos_cerrados.vista_metodos_cerrados import VistaMetodosCerrados
 from tests.comun_construccion_vistas import cerrar_cliente, preparar_transporte
 
 CASOS = (

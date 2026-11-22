@@ -11,10 +11,10 @@ from src.backend.constantes import (
     INFINITA,
 )
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_vectores.combinacion_lineal import (
+from src.backend.resolutores.operaciones_vectores.operaciones.combinacion_lineal import (
     ResolutorCombinacionLineal,
 )
-from src.backend.resolutores.operaciones_vectores.operaciones import (
+from src.backend.resolutores.operaciones_vectores.operaciones.operaciones import (
     ResolutorOperacionesVectores,
 )
 from src.backend.resolutores.sistemas_numericos.calculadora_romana import (

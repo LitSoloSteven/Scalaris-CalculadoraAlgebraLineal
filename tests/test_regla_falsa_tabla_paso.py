@@ -4,8 +4,8 @@ from unittest.mock import Mock
 
 from nicegui import ui
 
-from src.frontend.controladores.regla_falsa.controlador import resolver_captura
-from src.frontend.vistas.regla_falsa.tabla_iteraciones import TablaReglaFalsa
+from src.frontend.controladores.raices.regla_falsa.ejecucion.controlador import resolver_captura
+from src.frontend.vistas.raices.regla_falsa.procedimiento.tabla_iteraciones import TablaReglaFalsa
 from tests.comun_regla_falsa_vista import captura_regla_falsa, ejecutar_escenario
 
 

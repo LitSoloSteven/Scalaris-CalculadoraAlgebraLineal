@@ -2,8 +2,8 @@
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, replace
 
-from ..evaluador_funcion import compilar
-from .aritmetica_abierta import (
+from ..funcion_real.evaluacion.evaluador_funcion import compilar
+from .base.aritmetica_abierta import (
     advertencias_por_cambio,
     criterio_parada,
     denominador_utilizable,
@@ -11,7 +11,7 @@ from .aritmetica_abierta import (
     evaluar_con_guarda,
     paso_representable,
 )
-from .contrato_abiertos import (
+from .base.contrato_abiertos import (
     EntradaMetodoAbierto,
     IteracionMetodoAbierto,
     ResultadoMetodoAbierto,
@@ -22,7 +22,7 @@ from .contrato_abiertos import (
     resultado_inicial,
     resultado_limite,
 )
-from .validacion_abiertos import preparar_entrada_abierta
+from .base.validacion_abiertos import preparar_entrada_abierta
 
 Funcion = Callable[[float], float]
 PuntosSecante = tuple[float, float, float, float]

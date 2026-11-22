@@ -5,9 +5,9 @@ from dataclasses import asdict
 
 import pytest
 
-from src.backend.resolutores.raices.regla_falsa import regla_falsa
-from src.backend.resolutores.raices.validacion_regla_falsa import validar_entrada_regla_falsa
-from src.frontend.controladores.captura_real import entero_capturado, real_capturado
+from src.backend.resolutores.raices.regla_falsa.motor.regla_falsa import regla_falsa
+from src.backend.resolutores.raices.regla_falsa.contratos.validacion_regla_falsa import validar_entrada_regla_falsa
+from src.frontend.controladores.raices.compartido.formato.captura_real import entero_capturado, real_capturado
 
 _CLAVES_RESULTADO = {
     "metodo", "entrada", "estado", "mensaje", "codigo_diagnostico", "motivo_parada",

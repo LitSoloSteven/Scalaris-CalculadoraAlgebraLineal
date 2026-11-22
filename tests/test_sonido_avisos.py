@@ -7,11 +7,11 @@ from unittest.mock import Mock
 import pytest
 from nicegui import Client, core, ui
 
-from src.frontend.componentes import sonido
-from src.frontend.componentes.control_sonido import renderizar_control_sonido
-from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
-from src.frontend.tema import _CABECERA_HTML
-from src.frontend.recursos_vistas import seleccionar_recursos
+from src.frontend.componentes.aplicacion.base import sonido
+from src.frontend.componentes.aplicacion.controles.control_sonido import renderizar_control_sonido
+from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
+from src.frontend.presentacion.tema import _CABECERA_HTML
+from src.frontend.presentacion.recursos_vistas import seleccionar_recursos
 from tests.comun import RAIZ
 
 
@@ -77,7 +77,7 @@ def test_los_avisos_python_tienen_un_unico_emisor():
                     and isinstance(nodo.func.value, ast.Name)
                     and nodo.func.value.id == 'ui' and nodo.func.attr == 'notify'):
                 emisores.append(ruta.relative_to(RAIZ).as_posix())
-    assert emisores == ['src/frontend/componentes/sonido.py']
+    assert emisores == ['src/frontend/componentes/aplicacion/base/sonido.py']
 
 
 def test_control_nativo_con_nombre_estable_estado_e_iconos(monkeypatch):
@@ -106,7 +106,7 @@ def test_control_nativo_con_nombre_estable_estado_e_iconos(monkeypatch):
 def test_navegacion_e_inicio_montan_el_mismo_control(monkeypatch, actualizada, ruta):
     """Cada pantalla monta un único control fuera de la cabecera en ambas navegaciones."""
     monkeypatch.setattr(core, 'script_mode', False)
-    monkeypatch.setattr('src.frontend.componentes.barra_navegacion.banderas.navegacion_actualizada', lambda: actualizada)
+    monkeypatch.setattr('src.frontend.componentes.aplicacion.controles.barra_navegacion.banderas.navegacion_actualizada', lambda: actualizada)
     cliente = Client(ui.page('/prueba_sonido_navegacion'))
     try:
         with cliente:
@@ -123,7 +123,7 @@ def test_navegacion_e_inicio_montan_el_mismo_control(monkeypatch, actualizada, r
                                  'visualizador', 'leontief', 'transformaciones'])
 def test_recursos_sonoros_se_cargan_una_vez_en_todas_las_vistas(vista):
     """La selección de recursos conserva el orden de motor, preferencia y consumidores."""
-    nombres = ['catalogo_sonidos.js', 'sonido.js', 'preferencia_sonido.js', 'interacciones_sonoras.js']
+    nombres = ['sonido/motor/catalogo_sonidos.js', 'sonido/motor/sonido.js', 'sonido/eventos/preferencia_sonido.js', 'sonido/eventos/interacciones_sonoras.js']
     cabecera = seleccionar_recursos(_CABECERA_HTML, vista)
     posiciones = [cabecera.index('/assets/js/' + nombre) for nombre in nombres]
     assert posiciones == sorted(posiciones)

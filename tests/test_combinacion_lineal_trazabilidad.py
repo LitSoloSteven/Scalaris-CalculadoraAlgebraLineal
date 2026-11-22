@@ -2,7 +2,7 @@
 import re
 from fractions import Fraction
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_vectores.combinacion_lineal import ResolutorCombinacionLineal
+from src.backend.resolutores.operaciones_vectores.operaciones.combinacion_lineal import ResolutorCombinacionLineal
 
 _CLAVES_RESPUESTA = {
     "estado", "es_combinacion_lineal", "coeficientes", "coeficientes_texto",
@@ -135,7 +135,7 @@ def test_mensaje_singular_para_combinacion_infinita():
 
 def test_combinacion_resuelve_sin_dependencia_de_operaciones_vectoriales():
     """El resolutor de combinación obtiene por sí mismo los coeficientes."""
-    from src.backend.resolutores.operaciones_vectores.operaciones import ResolutorOperacionesVectores
+    from src.backend.resolutores.operaciones_vectores.operaciones.operaciones import ResolutorOperacionesVectores
     v1 = Matriz(2, 1, [[1], [0]])
     v2 = Matriz(2, 1, [[0], [1]])
     objetivo = Matriz(2, 1, [[3], [4]])

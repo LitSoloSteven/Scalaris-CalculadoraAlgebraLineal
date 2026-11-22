@@ -1,6 +1,6 @@
 """Pruebas unitarias para el controlador de operaciones de inversión matricial."""
 import json
-from src.frontend.controladores.operaciones_inversas import (
+from src.frontend.controladores.algebra.operaciones_inversas import (
     ControladorOperacionesInversas,
 )
 

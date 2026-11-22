@@ -4,7 +4,7 @@ import asyncio
 import pytest
 from nicegui import ui
 
-from src.frontend.componentes.exportacion_pdf.secuencia import preparar_secuencia
+from src.frontend.componentes.exportacion_pdf.montaje.secuencia import preparar_secuencia
 from tests.comun_construccion_vistas import construir_pagina
 
 

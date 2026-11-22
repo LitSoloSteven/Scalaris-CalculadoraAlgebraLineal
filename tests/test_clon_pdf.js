@@ -6,7 +6,7 @@ const {cargarAssetCliente} = require('./comun_cliente_javascript.js');
 
 function crearApi(ventana = {}, opciones = {}) {
     const contexto = maquinaVirtual.createContext({window: ventana, setTimeout, ...opciones});
-    cargarAssetCliente('clon_pdf.js', contexto);
+    cargarAssetCliente('herramientas/documentos/clon_pdf.js', contexto);
     return ventana.scalaris.clonPdf;
 }
 
@@ -151,8 +151,8 @@ prueba('los fotogramas tardios no cargan bibliotecas ni componen formulas despue
     const raiz = {inert: false, querySelectorAll: () => []};
     const documento = {getElementById: () => raiz, querySelectorAll: () => []};
     const contexto = maquinaVirtual.createContext({window: ventana, document: documento, setTimeout, clearTimeout});
-    cargarAssetCliente('clon_pdf.js', contexto);
-    cargarAssetCliente('captura_pdf.js', contexto);
+    cargarAssetCliente('herramientas/documentos/clon_pdf.js', contexto);
+    cargarAssetCliente('herramientas/documentos/captura_pdf.js', contexto);
     const respuesta = await ventana.scalaris.capturaPdf.capturar('raiz', {plazoCaptura: 0.001});
     afirmar.equal(respuesta.error, 'captura');
     afirmar.equal(raiz.inert, false);

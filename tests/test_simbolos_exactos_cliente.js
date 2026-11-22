@@ -17,7 +17,7 @@ prueba('la captura conserva los literales Unicode de números exactos al teclear
 
 prueba('cada perfil ofrece la sintaxis que admite su captura', () => {
     const { ventana, contexto } = crearClienteNumerico();
-    cargarAssetCliente('catalogo_simbolos.js', contexto);
+    cargarAssetCliente('nucleo/escritura/catalogo_simbolos.js', contexto);
     const { catalogoSimbolos, perfilesSimbolos } = ventana.scalaris;
     const esperados = {
         numero: new Map([['÷', '/'], ['‰', '‰']]),

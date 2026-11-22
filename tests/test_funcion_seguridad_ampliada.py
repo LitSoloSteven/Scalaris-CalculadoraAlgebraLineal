@@ -2,10 +2,10 @@
 import pytest
 
 from src.backend.excepciones import ErrorDominio, ErrorNoFinito
-from src.backend.resolutores.raices.dominio_intervalo import comprobar_dominio_intervalo
-from src.backend.resolutores.raices.evaluador_funcion import compilar, evaluar
-from src.backend.resolutores.raices.gramatica_funcion import analizar_expresion
-from src.backend.resolutores.raices.normalizacion_funcion import normalizar_expresion
+from src.backend.resolutores.raices.continuidad.dominio.dominio_intervalo import comprobar_dominio_intervalo
+from src.backend.resolutores.raices.funcion_real.evaluacion.evaluador_funcion import compilar, evaluar
+from src.backend.resolutores.raices.funcion_real.evaluacion.gramatica_funcion import analizar_expresion
+from src.backend.resolutores.raices.funcion_real.evaluacion.normalizacion_funcion import normalizar_expresion
 
 
 @pytest.mark.parametrize("expresion", [

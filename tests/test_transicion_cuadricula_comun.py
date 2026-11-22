@@ -3,7 +3,7 @@ import asyncio
 from unittest.mock import AsyncMock
 import pytest
 from nicegui import ui, Client
-from src.frontend.componentes.cuadricula_base import CambioCuadricula, ejecutar_transicion_cuadricula
+from src.frontend.componentes.captura.nucleo.cuadricula_base import CambioCuadricula, ejecutar_transicion_cuadricula
 
 
 def _crear_controles():

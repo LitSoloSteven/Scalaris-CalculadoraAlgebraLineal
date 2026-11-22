@@ -1,5 +1,5 @@
 """Controles comunes de suma vectorial con ajuste de orientación."""
-from src.backend.resolutores.operaciones_vectores.operaciones import ResolutorOperacionesVectores
+from src.backend.resolutores.operaciones_vectores.operaciones.operaciones import ResolutorOperacionesVectores
 
 
 def comprobar_suma_columna(primero, segundo):

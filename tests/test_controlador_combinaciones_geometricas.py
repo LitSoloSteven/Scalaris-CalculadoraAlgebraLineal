@@ -1,6 +1,6 @@
 """Resultados geométricos de combinaciones lineales exactas."""
 import json
-from src.frontend.controladores.geometria.controlador_geometria import ControladorGeometria
+from src.frontend.controladores.geometria.escenas.controlador_geometria import ControladorGeometria
 
 
 def test_combinacion_cadena_unica():

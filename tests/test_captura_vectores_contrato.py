@@ -6,7 +6,7 @@ import subprocess
 import pytest
 from nicegui import ui
 
-from src.frontend.componentes.captura_vectores import PanelCapturaVectores
+from src.frontend.componentes.captura.vectores.captura_vectores import PanelCapturaVectores
 from tests.comun import RAIZ
 
 

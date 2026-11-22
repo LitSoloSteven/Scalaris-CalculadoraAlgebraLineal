@@ -2,11 +2,11 @@
 from types import SimpleNamespace
 from unittest.mock import Mock
 
-from src.frontend.componentes.cuadricula_base import (
+from src.frontend.componentes.captura.nucleo.cuadricula_base import (
     cache_matriz_desde_datos, deshabilitar_botones_dimension, sincronizar_cache_celdas,
 )
 from src.backend.constantes import DIMENSION_MAXIMA_INVERSA
-from src.frontend.componentes.panel_matriz_cuadrada import PanelMatrizCuadrada
+from src.frontend.componentes.captura.paneles.panel_matriz_cuadrada import PanelMatrizCuadrada
 
 
 def test_cache_de_carga_conserva_texto_y_omite_ceros_sin_parsear():

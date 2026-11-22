@@ -4,8 +4,8 @@ import asyncio
 import pytest
 from nicegui import run, ui
 
-from src.frontend.controladores.operaciones_matrices.contexto_modelos import capturar_modelo
-from src.frontend.vistas.operaciones_matrices.carga_modelos import cargar_captura_modelo
+from src.frontend.controladores.algebra.operaciones_matrices.modelos.contexto_modelos import capturar_modelo
+from src.frontend.vistas.algebra.operaciones_matrices.compartido.carga_modelos import cargar_captura_modelo
 from tests.comun_construccion_vistas import construir_pagina
 
 FRACCION_LARGA = "1/" + "9" * 200

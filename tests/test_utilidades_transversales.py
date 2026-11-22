@@ -8,19 +8,19 @@ from unittest.mock import AsyncMock, Mock
 import pytest
 from nicegui import ui
 
-from src.ai.clasificador_respuestas import ContextoIntento, clasificar_error_http
+from src.ai.respuestas.clasificador_respuestas import ContextoIntento, clasificar_error_http
 from src.ai.huellas import calcular_huella
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_vectores.formateadores import (
+from src.backend.resolutores.operaciones_vectores.base.formateadores import (
     formatear_combinacion_lineal_vector, formatear_expresion_lineal,
 )
-from src.frontend.componentes.avisos_resultado import mostrar_error_inesperado
-from src.frontend.componentes.glosa_foco import crear_accion_explicacion
-from src.frontend.controladores.captura_contexto import capturar_bases, capturar_matrices, capturar_romanos
-from src.frontend.controladores.sesion_matricial import actualizar_contexto
-from src.frontend.controladores.utilidades import extraer_datos_matriz, parsear_carga_json
-from src.frontend.componentes.glosa_preguntas import PreguntasGlosaMixin
-from src.frontend.componentes.glosa_panel_lateral import PanelLateralGlosaMixin
+from src.frontend.componentes.resultados.acciones.avisos_resultado import mostrar_error_inesperado
+from src.frontend.componentes.glosa.interaccion.glosa_foco import crear_accion_explicacion
+from src.frontend.controladores.compartido.sesion.captura_contexto import capturar_bases, capturar_matrices, capturar_romanos
+from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto
+from src.frontend.controladores.compartido.pasos.utilidades import extraer_datos_matriz, parsear_carga_json
+from src.frontend.componentes.glosa.interaccion.glosa_preguntas import PreguntasGlosaMixin
+from src.frontend.componentes.glosa.panel.glosa_panel_lateral import PanelLateralGlosaMixin
 from tests.comun import RAIZ
 from tests.comun_clientes import ClienteSimulado
 from tests.comun_construccion_vistas import construir_pagina

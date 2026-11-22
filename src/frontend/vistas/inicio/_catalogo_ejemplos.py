@@ -4,7 +4,7 @@ from functools import cache
 from pathlib import Path
 import re
 
-_CARPETA_PLANTILLAS = Path(__file__).resolve().parents[2] / "recursos" / "plantillas"
+_CARPETA_PLANTILLAS = Path(__file__).resolve().parents[2] / "recursos" / "plantillas" / "inicio"
 _PATRON_BLOQUE = re.compile(r'<template\s+data-ejemplo="([^"]+)">\s*(.*?)\s*</template>', re.DOTALL)
 
 

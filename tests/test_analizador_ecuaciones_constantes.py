@@ -1,7 +1,7 @@
 """Interpretación de ecuaciones constantes dentro de sistemas lineales."""
 from fractions import Fraction
-from src.backend.utilidades.analizadores import AnalizadorSistema
-from src.backend.resolutores.sistemas_lineales.gauss import ResolutorGauss
+from src.backend.utilidades.validacion.analizadores import AnalizadorSistema
+from src.backend.resolutores.sistemas_lineales.eliminacion.gauss import ResolutorGauss
 from tests.comun_analizador import comprobar_sistema_dos_variables
 
 

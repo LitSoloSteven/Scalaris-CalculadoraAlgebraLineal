@@ -3,7 +3,7 @@ import asyncio
 
 import pytest
 
-from src.frontend.componentes import cuadricula_base
+from src.frontend.componentes.captura.nucleo import cuadricula_base
 from tests.comun_animaciones_cliente import observar_invocaciones_cliente
 
 

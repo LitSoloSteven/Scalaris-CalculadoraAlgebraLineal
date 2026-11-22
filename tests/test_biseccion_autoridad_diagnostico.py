@@ -3,10 +3,10 @@ import json
 
 import pytest
 
-from src.backend.resolutores.raices.contrato_biseccion import CONTINUIDAD_CONDICIONAL
-from src.frontend.controladores.biseccion import controlador
-from src.frontend.controladores.biseccion.presentacion import construir_pasos
-from src.frontend.controladores.biseccion.presentacion_criterio import avisos_resumen, texto_resumen
+from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import CONTINUIDAD_CONDICIONAL
+from src.frontend.controladores.raices.biseccion.ejecucion import controlador
+from src.frontend.controladores.raices.biseccion.presentacion.presentacion import construir_pasos
+from src.frontend.controladores.raices.biseccion.presentacion.presentacion_criterio import avisos_resumen, texto_resumen
 from tests.comun_biseccion_criterios import captura_criterio, ejecutar_escenario
 
 

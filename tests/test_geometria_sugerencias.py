@@ -1,5 +1,5 @@
 """Sugerencias específicas de las escenas geométricas."""
-from src.frontend.sugerencias import Senales, generar_candidatas
+from src.frontend.presentacion.sugerencias import Senales, generar_candidatas
 
 
 def test_sugerencia_paralelismo_aparece_con_senal():

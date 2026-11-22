@@ -1,5 +1,5 @@
 """Rangos automáticos y recorte de rectas al área visible."""
-from src.backend.geometria.recorte import calcular_rango_automatico, recortar_recta_a_caja
+from src.backend.geometria.base.recorte import calcular_rango_automatico, recortar_recta_a_caja
 
 
 def test_rango_automatico_simetrico():

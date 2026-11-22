@@ -5,8 +5,8 @@ from unittest.mock import Mock
 
 import pytest
 from nicegui import ui
-from src.frontend.componentes.selector_opciones import SelectorOpciones
-from src.frontend.controladores.operaciones_matrices.recomendacion_determinante import metodo_recomendado_disponible
+from src.frontend.componentes.aplicacion.controles.selector_opciones import SelectorOpciones
+from src.frontend.controladores.algebra.operaciones_matrices.determinante.recomendacion_determinante import metodo_recomendado_disponible
 from tests.comun_construccion_vistas import construir_pagina
 
 
@@ -38,7 +38,7 @@ def test_vacio_selector_y_teclado_sin_historial(monkeypatch):
         assert pestanas == {'teclado', 'vista_previa', 'historial'}
         assert vista.pestanas_herramientas.value == 'teclado'
         assert not vista.historial
-        assert '/assets/js/calculadora.js' in cliente.head_html
+        assert '/assets/js/captura/entrada/calculadora.js' in cliente.head_html
         assert sum(isinstance(elemento, ui.button) and elemento.text == '7'
                    for elemento in cliente.elements.values()) == 1
     asyncio.run(construir_pagina(monkeypatch, 'determinantes', comprobar))

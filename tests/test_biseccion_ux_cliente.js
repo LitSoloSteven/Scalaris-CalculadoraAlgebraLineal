@@ -13,7 +13,7 @@ function cargar(archivo, contexto = {}) {
 }
 
 test("proyecta la pulsación según la escala y descarta arrastres, barra y márgenes", () => {
-    const ventana = cargar("grafico_biseccion.js");
+    const ventana = cargar("herramientas/biseccion/grafico_biseccion.js");
     const seleccion = ventana.scalaris.graficoBiseccion;
     const grafico = {
         closest: () => ({}),
@@ -47,7 +47,7 @@ test("limpia MathJax por región y omite trabajo encolado ya desmontado", async 
         observe() {}
         disconnect() {}
     }
-    const ventana = cargar("renderizado_mathjax.js", {
+    const ventana = cargar("nucleo/interacciones/renderizado_mathjax.js", {
         document: { body: {}, getElementById: id => regiones.get(id) },
         MutationObserver: Observador,
     });

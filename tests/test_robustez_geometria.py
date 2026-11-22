@@ -3,7 +3,7 @@ import json
 import pytest
 from tests.comun_geometria import comprobar_error_longitud
 
-from src.frontend.controladores.geometria.controlador_geometria import (
+from src.frontend.controladores.geometria.escenas.controlador_geometria import (
     ControladorGeometria,
 )
 

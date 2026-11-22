@@ -2,7 +2,7 @@
 import math
 import pytest
 from src.backend.excepciones import ErrorDominio
-from src.backend.resolutores.raices.evaluador_funcion import compilar, evaluar
+from src.backend.resolutores.raices.funcion_real.evaluacion.evaluador_funcion import compilar, evaluar
 
 
 def test_expresion_valida():

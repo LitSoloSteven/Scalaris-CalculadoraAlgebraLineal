@@ -5,8 +5,8 @@ import pytest
 
 from src.backend.constantes import CERO_EPSILON
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.sistemas_lineales.gauss import ResolutorGauss
-from src.backend.resolutores.sistemas_lineales.gauss_jordan import ResolutorGaussJordan
+from src.backend.resolutores.sistemas_lineales.eliminacion.gauss import ResolutorGauss
+from src.backend.resolutores.sistemas_lineales.eliminacion.gauss_jordan import ResolutorGaussJordan
 
 
 @pytest.mark.parametrize("resolutor", [ResolutorGauss, ResolutorGaussJordan])

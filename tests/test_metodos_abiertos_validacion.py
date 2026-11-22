@@ -4,10 +4,10 @@ from types import MappingProxyType
 
 import pytest
 
-from src.backend.resolutores.raices.metodos_abiertos.contrato_abiertos import (
+from src.backend.resolutores.raices.metodos_abiertos.base.contrato_abiertos import (
     EntradaMetodoAbierto,
 )
-from src.backend.resolutores.raices.metodos_abiertos.validacion_abiertos import (
+from src.backend.resolutores.raices.metodos_abiertos.base.validacion_abiertos import (
     validar_entrada_abierta,
 )
 

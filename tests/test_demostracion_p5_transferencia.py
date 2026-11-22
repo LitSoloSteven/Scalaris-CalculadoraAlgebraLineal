@@ -6,9 +6,9 @@ from urllib.parse import parse_qs, urlsplit
 import pytest
 from nicegui import ui
 
-from src.frontend import textos_transformaciones as textos
-from src.frontend.componentes import acciones_matriz, transferencia
-from src.frontend.vistas.operaciones_matrices.carga_modelos import cargar_captura_modelo
+from src.frontend.nucleo.textos import textos_transformaciones as textos
+from src.frontend.componentes.resultados.acciones import acciones_matriz, transferencia
+from src.frontend.vistas.algebra.operaciones_matrices.compartido.carga_modelos import cargar_captura_modelo
 from tests.comun_construccion_vistas import construir_pagina
 
 MATRIZ_FRACCIONARIA = [["1/2", "1/3"], ["2/5", "-1/7"]]

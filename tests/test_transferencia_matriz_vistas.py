@@ -4,8 +4,8 @@ from unittest.mock import Mock
 import pytest
 from nicegui import ui
 
-from src.frontend.componentes import transferencia
-from src.frontend.vistas.sistemas_lineales._transferencia_sistemas import procesar_transferencia_matriz
+from src.frontend.componentes.resultados.acciones import transferencia
+from src.frontend.vistas.algebra.sistemas_lineales.captura._transferencia_sistemas import procesar_transferencia_matriz
 from tests.comun_construccion_vistas import construir_pagina, VISTAS_RUTAS
 from tests.comun_transferencia_matriz import (
     MATRIZ_TRANSFERIDA, DESTINOS_MATRICIALES, preparar_ruta_lu, leer_matriz,
@@ -70,7 +70,7 @@ def test_sistemas_recepcion_retira_modo_homogeneo_y_deja_b_vacio(monkeypatch):
 def test_variante_matrices_determinante_propaga_handoff(monkeypatch):
     """La ruta compatible con operacion=determinante no pierde la transferencia."""
     monkeypatch.setitem(VISTAS_RUTAS, "matrices",
-                        ("operaciones_matrices.vista_determinante", "VistaDeterminante"))
+                        ("algebra.operaciones_matrices.determinante.vista_determinante", "VistaDeterminante"))
     token = transferencia.guardar_matriz("inversa", MATRIZ_TRANSFERIDA)
 
     async def comprobar(vista, cliente):

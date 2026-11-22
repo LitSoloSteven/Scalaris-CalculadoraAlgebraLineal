@@ -27,7 +27,7 @@ def test_determinantes_tiene_estado_activo_exclusivo(monkeypatch):
 def test_enlace_anterior_y_ruta_nueva_construyen_la_misma_captura(monkeypatch):
     """El parámetro histórico de matrices continúa abriendo la captura pública LU."""
     from src.frontend import rutas
-    from src.frontend.vistas.operaciones_matrices import vista_determinante
+    from src.frontend.vistas.algebra.operaciones_matrices.determinante import vista_determinante
     paginas = registrar_paginas(monkeypatch)
     constructor = Mock()
     monkeypatch.setattr(vista_determinante, "VistaDeterminante", constructor)
@@ -52,7 +52,7 @@ def test_componente_y_referencias_de_mas_algebra_retirados():
 def test_visita_directa_se_registra_al_conectar(monkeypatch):
     """La construcción previa al socket no pierde la herramienta del historial."""
     from nicegui import Client, core, ui
-    from src.frontend.componentes.barra_navegacion import _registrar_navegacion_reciente
+    from src.frontend.componentes.aplicacion.controles.barra_navegacion import _registrar_navegacion_reciente
     monkeypatch.setattr(core, "script_mode", False)
     cliente = Client(ui.page("/prueba_historial_determinantes"))
     enviar = Mock()

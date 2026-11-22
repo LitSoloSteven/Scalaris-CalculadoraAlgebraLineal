@@ -4,8 +4,8 @@ import struct
 
 import pytest
 
-from src.frontend import constantes as limites
-from src.frontend.controladores.exportacion_pdf.imagenes import validar_imagenes
+from src.frontend.nucleo import constantes as limites
+from src.frontend.controladores.exportacion_pdf.recursos.imagenes import validar_imagenes
 from tests.comun_exportacion_pdf import crear_captura
 
 
@@ -52,7 +52,7 @@ def test_rechaza_total_y_png_truncado(monkeypatch):
 @pytest.mark.parametrize('dimensiones', [(0, 1), (4097, 1), (4096, 4096), (1, 2**31)])
 def test_dimension_falsa_se_rechaza_antes_de_pillow(monkeypatch, dimensiones):
     """Una cabecera manipulada no puede forzar una reserva masiva de píxeles."""
-    from src.frontend.controladores.exportacion_pdf import imagenes
+    from src.frontend.controladores.exportacion_pdf.recursos import imagenes
     captura = crear_captura()
     datos = bytearray(base64.b64decode(captura['png']))
     datos[16:24] = struct.pack('>II', *dimensiones)

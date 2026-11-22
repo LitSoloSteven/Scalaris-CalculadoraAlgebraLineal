@@ -9,13 +9,13 @@ from types import SimpleNamespace
 import pytest
 from nicegui import ui
 
-from src.ai.contexto import (
+from src.ai.contexto.contexto import (
     CapturaPaso, ContextoIA, EstadoContexto, ReferenciaPaso,
     describir_matriz, serializar_contexto,
 )
-from src.ai.estrategias_recorte import construir_contexto_minimo
+from src.ai.contexto.estrategias_recorte import construir_contexto_minimo
 from src.backend.modelos.matriz import Matriz
-from src.frontend.componentes.glosa_pie import renderizar_pildora_contexto
+from src.frontend.componentes.glosa.interaccion.glosa_pie import renderizar_pildora_contexto
 
 
 def _leer_datos(serializado):

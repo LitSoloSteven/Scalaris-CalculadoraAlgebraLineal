@@ -3,8 +3,8 @@
 from fractions import Fraction
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_vectores.combinacion_lineal import ResolutorCombinacionLineal
-from src.backend.resolutores.operaciones_vectores.operaciones import ResolutorOperacionesVectores
+from src.backend.resolutores.operaciones_vectores.operaciones.combinacion_lineal import ResolutorCombinacionLineal
+from src.backend.resolutores.operaciones_vectores.operaciones.operaciones import ResolutorOperacionesVectores
 from tests.comun_combinacion import preparar_combinacion_canonica
 
 

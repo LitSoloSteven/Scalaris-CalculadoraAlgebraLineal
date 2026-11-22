@@ -25,8 +25,8 @@ def test_componentes_quasar_leen_sus_tokens(monkeypatch):
 
 def test_entrada_inicio_y_aviso_utilizan_tokens():
     """El directorio usa los tokens de entrada y los avisos distinguen entrada y salida."""
-    inicio = leer_estilos("vistas_inicio_directorio.css")
-    base = leer_estilos("base.css")
+    inicio = leer_estilos("inicio/vistas_inicio_directorio.css")
+    base = leer_estilos("base/base.css")
     assert "var(--dur-view)" in bloque_css(inicio, ".inicio-seccion {")
     assert "var(--dur-reduced)" in bloque_css(inicio, "@media (prefers-reduced-motion: reduce)")
     assert "var(--dur-panel)" in bloque_css(base, ".q-notification {")

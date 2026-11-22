@@ -1,7 +1,7 @@
 """Operaciones públicas de producto escalar y transposición matricial."""
 from fractions import Fraction
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices.operaciones import ResolutorOperacionesMatrices
+from src.backend.resolutores.operaciones_matrices.expresiones.operaciones import ResolutorOperacionesMatrices
 
 
 def test_producto_escalar_matricial_simple():

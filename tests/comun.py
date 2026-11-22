@@ -8,34 +8,34 @@ import subprocess
 RAIZ = Path(__file__).resolve().parent.parent
 
 ARCHIVOS_CSS = [
-    RAIZ / "src" / "frontend" / "recursos" / "css" / "tokens.css",
-    RAIZ / "src" / "frontend" / "recursos" / "css" / "base.css",
-    RAIZ / "src" / "frontend" / "recursos" / "css" / "presentacion.css",
-    RAIZ / "src" / "frontend" / "recursos" / "css" / "disposicion.css",
-    RAIZ / "src" / "frontend" / "recursos" / "css" / "componentes_entradas.css",
-    RAIZ / "src" / "frontend" / "recursos" / "css" / "componentes_controles.css",
-    RAIZ / "src" / "frontend" / "recursos" / "css" / "exportacion_pdf.css",
-    RAIZ / "src" / "frontend" / "recursos" / "css" / "selector_simbolos.css",
-    RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_navegacion.css",
-    RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_inicio_directorio.css",
-    RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_inicio_ejemplos.css",
-    RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_inicio_adaptable.css",
-    RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_glosa_panel_lateral.css",
-    RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_glosa_componentes.css",
-    RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_glosa_bitacora.css",
-    RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_inversa.css",
-    RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_matrices.css",
-    RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_vectores.css",
-    RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_geometria.css",
-    RAIZ / "src" / "frontend" / "recursos" / "css" / "movimiento.css",
-    RAIZ / "src" / "frontend" / "recursos" / "css" / "reproductor_pasos.css",
-    RAIZ / "src" / "frontend" / "recursos" / "css" / "pasos_numericos.css",
-    RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_modelos.css",
-    RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_numericos.css",
-    RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_biseccion.css",
-    RAIZ / "src" / "frontend" / "recursos" / "css" / "estructura_metodos_raices.css",
-    RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_metodos_abiertos.css",
-    RAIZ / "src" / "frontend" / "recursos" / "css" / "vistas_metodos_cerrados.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "base/tokens.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "base/base.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "inicio/presentacion.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "base/disposicion.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "componentes/componentes_entradas.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "componentes/componentes_controles.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "utilidades/exportacion_pdf.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "componentes/selector_simbolos.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "utilidades/vistas_navegacion.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "inicio/vistas_inicio_directorio.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "inicio/vistas_inicio_ejemplos.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "inicio/vistas_inicio_adaptable.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "glosa/vistas_glosa_panel_lateral.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "glosa/vistas_glosa_componentes.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "glosa/vistas_glosa_bitacora.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "algebra/matrices/vistas_inversa.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "algebra/matrices/vistas_matrices.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "algebra/espacios/vistas_vectores.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "algebra/espacios/vistas_geometria.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "base/movimiento.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "utilidades/reproductor_pasos.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "numericos/sistemas/pasos_numericos.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "algebra/matrices/vistas_modelos.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "numericos/sistemas/vistas_numericos.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "numericos/raices/vistas_biseccion.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "numericos/raices/estructura_metodos_raices.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "numericos/raices/vistas_metodos_abiertos.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "numericos/raices/vistas_metodos_cerrados.css",
 ]
 
 
@@ -71,7 +71,7 @@ async def ejecutar_trabajador_simulado(funcion, *argumentos, **opciones):
 
 def limpiar_almacen_transferencia():
     """Vacía el almacén de transferencias para aislar un escenario de prueba."""
-    from src.frontend.componentes.transferencia import _ALMACEN
+    from src.frontend.componentes.resultados.acciones.transferencia import _ALMACEN
     _ALMACEN.clear()
 
 

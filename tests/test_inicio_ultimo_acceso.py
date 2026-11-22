@@ -6,7 +6,7 @@ from unittest.mock import Mock
 from nicegui import Client, core, ui
 import pytest
 
-from src.frontend.componentes.barra_navegacion import crear_barra_navegacion
+from src.frontend.componentes.aplicacion.controles.barra_navegacion import crear_barra_navegacion
 from src.frontend.controladores.inicio import _recientes
 from src.frontend.controladores.inicio._modelo import estado_portada
 from src.frontend.controladores.inicio._recientes import (

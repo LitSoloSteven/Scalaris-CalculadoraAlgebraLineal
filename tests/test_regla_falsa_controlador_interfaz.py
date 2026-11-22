@@ -6,11 +6,11 @@ from dataclasses import asdict, replace
 
 import pytest
 
-from src.backend.resolutores.raices.contrato_regla_falsa import ResultadoReglaFalsa
-from src.backend.resolutores.raices.regla_falsa import regla_falsa
-from src.frontend.controladores.regla_falsa.captura import preparar_entrada
-from src.frontend.controladores.regla_falsa.controlador import resolver_captura
-from src.frontend.controladores.regla_falsa.serializacion import serializar_resultado
+from src.backend.resolutores.raices.regla_falsa.contratos.contrato_regla_falsa import ResultadoReglaFalsa
+from src.backend.resolutores.raices.regla_falsa.motor.regla_falsa import regla_falsa
+from src.frontend.controladores.raices.regla_falsa.captura.captura import preparar_entrada
+from src.frontend.controladores.raices.regla_falsa.ejecucion.controlador import resolver_captura
+from src.frontend.controladores.raices.regla_falsa.captura.serializacion import serializar_resultado
 
 
 def _captura():
@@ -65,7 +65,7 @@ def test_controlador_publica_errores_de_captura_completos(captura):
 @pytest.mark.parametrize("error", [ValueError, TypeError, OverflowError, ZeroDivisionError, RecursionError])
 def test_controlador_no_expone_detalles_de_fallos_inesperados(monkeypatch, error):
     """Los fallos de adaptación previstos no filtran mensajes internos del motor."""
-    modulo = importlib.import_module("src.frontend.controladores.regla_falsa.controlador")
+    modulo = importlib.import_module("src.frontend.controladores.raices.regla_falsa.ejecucion.controlador")
 
     def fallar(_entrada):
         """Simula un fallo interno para comprobar la salida pública del adaptador."""

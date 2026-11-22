@@ -1,7 +1,7 @@
 """Sugerencias de aplicación separadas de las conclusiones del análisis."""
 import pytest
 
-from src.frontend.sugerencias import Senales, sugerir
+from src.frontend.presentacion.sugerencias import Senales, sugerir
 
 
 @pytest.mark.parametrize("estado", ["aplicacion_sin_resultado", "aplicacion_exito"])

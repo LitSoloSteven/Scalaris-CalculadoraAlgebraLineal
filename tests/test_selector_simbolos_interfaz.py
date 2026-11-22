@@ -3,8 +3,8 @@ import re
 
 from nicegui import ui
 
-from src.frontend.componentes.campo_funcion_real import crear_campo_funcion
-from src.frontend.componentes.simbolos import habilitar_simbolos
+from src.frontend.componentes.raices.captura.campo_funcion_real import crear_campo_funcion
+from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
 from tests.comun import RAIZ
 
 
@@ -47,7 +47,7 @@ def test_crear_campo_funcion_conserva_aviso_teclado_sin_boton_visible():
 
 def test_plantilla_simbolos_mantiene_cabecera_fija_y_dialogo_nativo():
     """La plantilla usa dialog nativo con closedby, cabecera separada y cierre etiquetado."""
-    ruta_plantilla = RAIZ / "src/frontend/recursos/plantillas/simbolos.html"
+    ruta_plantilla = RAIZ / "src/frontend/recursos/plantillas/cabecera/simbolos.html"
     html = ruta_plantilla.read_text(encoding="utf-8")
 
     assert '<dialog class="simbolos-dialogo" aria-labelledby="titulo-simbolos" closedby="any">' in html
@@ -60,7 +60,7 @@ def test_plantilla_simbolos_mantiene_cabecera_fija_y_dialogo_nativo():
 
 def test_estilos_selector_simbolos_acotan_flex_y_scroll_interno():
     """Los estilos acotan display al estado abierto y contienen el scroll en cuerpo y backdrop."""
-    ruta_css = RAIZ / "src/frontend/recursos/css/selector_simbolos.css"
+    ruta_css = RAIZ / "src/frontend/recursos/css/componentes/selector_simbolos.css"
     texto_css = ruta_css.read_text(encoding="utf-8")
 
     regla_dialogo = _bloque_css(texto_css, ".simbolos-dialogo")

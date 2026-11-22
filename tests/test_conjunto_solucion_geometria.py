@@ -2,7 +2,7 @@
 from fractions import Fraction
 import pytest
 
-from src.backend.geometria.conjunto_solucion import (
+from src.backend.geometria.analisis.conjunto_solucion import (
     ConjuntoSolucion,
     TipoSolucionGeometria,
     clasificar_conjunto_solucion,
@@ -11,7 +11,7 @@ from src.backend.geometria.conjunto_solucion import (
     tiene_parametros_solucion,
 )
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.sistemas_lineales.gauss import ResolutorGauss
+from src.backend.resolutores.sistemas_lineales.eliminacion.gauss import ResolutorGauss
 
 
 def test_clasificar_vacio():

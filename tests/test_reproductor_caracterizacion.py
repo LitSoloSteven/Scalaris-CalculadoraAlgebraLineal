@@ -4,7 +4,7 @@ import json
 from fractions import Fraction
 
 from src.backend.modelos.matriz import Matriz
-from src.frontend.controladores.operaciones_inversas import (
+from src.frontend.controladores.algebra.operaciones_inversas import (
     ControladorOperacionesInversas,
 )
 from src.frontend.componentes.reproductor_pasos import (

@@ -4,12 +4,12 @@ import json
 import pytest
 from nicegui import ui
 
-from src.backend.geometria.muestreo import extremos_recta, superficie_plano
+from src.backend.geometria.base.muestreo import extremos_recta, superficie_plano
 from src.backend.constantes import LONGITUD_MAXIMA_CADENA_NUMERO
-from src.backend.geometria.transferencia import validar_transferencia_escena
+from src.backend.geometria.preparacion.transferencia import validar_transferencia_escena
 from src.frontend.controladores.geometria import ControladorGeometria
-from src.frontend.controladores.geometria.captura import construir_carga_sistema, construir_carga_vectores
-from src.frontend.vistas.geometria._escenas import construir_figura_rectas_planos, construir_figura_combinacion
+from src.frontend.controladores.geometria.base.captura import construir_carga_sistema, construir_carga_vectores
+from src.frontend.vistas.geometria.escenas._escenas import construir_figura_rectas_planos, construir_figura_combinacion
 from src.frontend.vistas.geometria.vista_geometria import VistaGeometria
 
 

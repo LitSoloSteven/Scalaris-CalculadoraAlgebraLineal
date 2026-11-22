@@ -1,4 +1,4 @@
-from src.ai.contexto import ContextoIA, serializar_contexto, sanear_cadena_usuario, compactar_numero, describir_matriz
+from src.ai.contexto.contexto import ContextoIA, serializar_contexto, sanear_cadena_usuario, compactar_numero, describir_matriz
 
 def test_saneamiento_texto_usuario():
     """El texto de usuario conserva contenido seguro y elimina etiquetas."""

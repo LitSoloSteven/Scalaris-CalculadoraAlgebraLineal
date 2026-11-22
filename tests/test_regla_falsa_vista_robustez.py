@@ -34,7 +34,7 @@ def test_cancelacion_libera_la_carga_sin_publicar(monkeypatch):
 
 def test_fallo_parcial_se_presenta_y_guarda_como_error(monkeypatch):
     """Las filas válidas de un fallo se conservan para diagnóstico, contexto y reciente provisional."""
-    motor = importlib.import_module("src.backend.resolutores.raices.regla_falsa")
+    motor = importlib.import_module("src.backend.resolutores.raices.regla_falsa.motor.regla_falsa")
     original, llamadas = motor.evaluar, []
 
     def evaluar_con_fallo(funcion, valor):

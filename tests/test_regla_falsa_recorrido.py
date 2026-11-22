@@ -19,7 +19,7 @@ from tests.comun_regla_falsa_vista import captura_regla_falsa, textos_resultado
 ])
 def test_casos_limite_desde_la_pagina_registrada(monkeypatch, cambios, estado, codigo, filas):
     """La ruta pública distingue polos, éxito final, extremo fijo y gramática hostil."""
-    monkeypatch.setitem(VISTAS_RUTAS, "regla_falsa", ("regla_falsa.pagina", "VistaReglaFalsa"))
+    monkeypatch.setitem(VISTAS_RUTAS, "regla_falsa", ("raices.regla_falsa.pagina", "VistaReglaFalsa"))
 
     async def comprobar(vista, cliente):
         """Envía textos de captura y verifica presentación y detalle de la página real."""

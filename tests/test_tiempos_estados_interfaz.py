@@ -14,7 +14,7 @@ def leer_estilos(nombre):
 
 def test_pulsacion_y_regreso_comparten_tokens():
     """Los controles usan tiempos distintos al presionar y al soltar."""
-    controles = leer_estilos("componentes_controles.css")
+    controles = leer_estilos("componentes/componentes_controles.css")
     for selector in (".boton-principal", ".boton-discreto", ".boton-icono",
                      ".calculadora-boton", ".marca-enlace-logotipo"):
         assert "var(--dur-release)" in bloque_css(controles, selector + " {")
@@ -23,9 +23,9 @@ def test_pulsacion_y_regreso_comparten_tokens():
 
 def test_selector_geometria_y_regreso_inicio():
     """El selector, el deslizador y los símbolos responden con los tokens previstos."""
-    selector = leer_estilos("selector_opciones.css")
-    geometria = leer_estilos("vistas_geometria.css")
-    inicio = leer_estilos("vistas_inicio_directorio.css")
+    selector = leer_estilos("componentes/selector_opciones.css")
+    geometria = leer_estilos("algebra/espacios/vistas_geometria.css")
+    inicio = leer_estilos("inicio/vistas_inicio_directorio.css")
     assert "var(--dur-state)" in bloque_css(selector, ".selector-opciones-cambiando .selector-opciones-indicador")
     assert "var(--dur-press)" in bloque_css(selector, ".selector-opciones-opcion:active")
     assert "var(--dur-release)" in bloque_css(geometria, ".geometria-deslizador-entrada")

@@ -4,8 +4,8 @@ import json
 
 import pytest
 
-from src.frontend.controladores.operaciones_matrices.controlador_aplicacion_transformacion import ControladorAplicacionTransformacion
-from src.frontend.vistas.operaciones_matrices.pasos_aplicacion_transformacion import adaptar_pasos_aplicacion
+from src.frontend.controladores.algebra.operaciones_matrices.transformaciones.controlador_aplicacion_transformacion import ControladorAplicacionTransformacion
+from src.frontend.vistas.algebra.operaciones_matrices.aplicacion_transformacion.procedimiento.pasos_aplicacion_transformacion import adaptar_pasos_aplicacion
 
 
 def _resolver(dominio, codominio):

@@ -2,7 +2,7 @@
 import json
 from tests.comun_contexto import comprobar_contexto_truncado
 
-from src.ai.contexto import (
+from src.ai.contexto.contexto import (
     ContextoIA, EstadoContexto,
     ReferenciaPaso, CapturaPaso,
     MAXIMO_CARACTERES_CONTEXTO,

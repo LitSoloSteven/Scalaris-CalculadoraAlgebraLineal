@@ -1,13 +1,13 @@
 """Componentes reutilizables de UI de Scalaris."""
 
-from .panel_ia import PanelIA
-from .estructura_aplicacion import crear_estructura_aplicacion
-from .calculadora import PanelCalculadora
-from .cuadricula_ecuaciones import CuadriculaEcuaciones
-from .captura_matrices import PanelCapturaMatrices
-from .barra_navegacion import crear_barra_navegacion
-from .panel_matriz_cuadrada import PanelMatrizCuadrada
-from .captura_vectores import PanelCapturaVectores
+from .glosa.panel.panel_ia import PanelIA
+from .aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
+from .captura.paneles.calculadora import PanelCalculadora
+from .captura.ecuaciones.cuadricula_ecuaciones import CuadriculaEcuaciones
+from .captura.matrices.captura_matrices import PanelCapturaMatrices
+from .aplicacion.controles.barra_navegacion import crear_barra_navegacion
+from .captura.paneles.panel_matriz_cuadrada import PanelMatrizCuadrada
+from .captura.vectores.captura_vectores import PanelCapturaVectores
 
 __all__ = [
     "PanelIA",

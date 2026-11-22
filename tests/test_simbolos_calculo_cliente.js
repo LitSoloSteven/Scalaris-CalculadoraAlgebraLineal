@@ -7,7 +7,7 @@ const { crearClienteNumerico } = require('./comun_entrada_numerica.js');
 
 prueba('ofrece cálculos acotados en funciones y solo constantes en reales', () => {
     const { ventana, contexto } = crearClienteNumerico();
-    cargarAssetCliente('catalogo_simbolos.js', contexto);
+    cargarAssetCliente('nucleo/escritura/catalogo_simbolos.js', contexto);
     const { catalogoSimbolos, perfilesSimbolos } = ventana.scalaris;
     const para = tipo => new Map(perfilesSimbolos.simbolosDisponibles(catalogoSimbolos, [tipo]).map(entrada =>
         [entrada.simbolo, perfilesSimbolos.textoInsercion(entrada, { tipo })]));

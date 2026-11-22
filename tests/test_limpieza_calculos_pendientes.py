@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, Mock
 
 import pytest
 from nicegui import ui
-from src.frontend.componentes.limpieza_captura import crear_boton_limpieza
+from src.frontend.componentes.captura.ecuaciones.limpieza_captura import crear_boton_limpieza
 from tests.comun_construccion_vistas import construir_pagina
 
 

@@ -6,19 +6,19 @@ from fractions import Fraction
 import pytest
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_vectores.captura_subespacios import (
+from src.backend.resolutores.operaciones_vectores.subespacios.captura_subespacios import (
     capturar_generadores,
     capturar_restricciones,
 )
-from src.backend.resolutores.operaciones_vectores.comprobacion_subespacios import (
+from src.backend.resolutores.operaciones_vectores.subespacios.comprobacion_subespacios import (
     verificar_base_generadores,
 )
-from src.backend.resolutores.operaciones_vectores.contrato_subespacios import (
+from src.backend.resolutores.operaciones_vectores.subespacios.contrato_subespacios import (
     ErrorCapturaSubespacio,
     ErrorVerificacionSubespacio,
 )
-from src.backend.resolutores.operaciones_vectores.subespacios import analizar_subespacio
-from src.frontend.controladores.operaciones_matrices.codificador import CodificadorMatriz
+from src.backend.resolutores.operaciones_vectores.subespacios.subespacios import analizar_subespacio
+from src.frontend.controladores.algebra.operaciones_matrices.base.codificador import CodificadorMatriz
 
 CLAVES_RESULTADO = {
     "estado", "modo", "clasificacion", "codigo", "mensaje", "dimension_ambiente",
@@ -136,7 +136,7 @@ def test_fallo_interno_no_se_presenta_como_verificacion_matematica(monkeypatch):
     def _fallar(*argumentos, **opciones):
         raise ZeroDivisionError("fallo interno simulado")
 
-    modulo = "src.backend.resolutores.operaciones_vectores.subespacios"
+    modulo = "src.backend.resolutores.operaciones_vectores.subespacios.subespacios"
     monkeypatch.setattr(f"{modulo}.calcular_solucion_parametrica", _fallar)
     resultado = analizar_subespacio(capturar_restricciones({
         "modo": "restricciones", "dimension_ambiente": 2,
@@ -208,7 +208,7 @@ def test_resultado_serializa_fracciones_y_matrices_con_el_codificador_comun():
 
 def test_fallo_de_verificacion_interna_devuelve_error_diagnosticado(monkeypatch):
     """Una comprobacion que no coincide no se convierte en un resultado valido."""
-    modulo = "src.backend.resolutores.operaciones_vectores.comprobacion_subespacios"
+    modulo = "src.backend.resolutores.operaciones_vectores.subespacios.comprobacion_subespacios"
     monkeypatch.setattr(f"{modulo}.comprobar_familia", lambda *argumentos: {
         "coincide": False, "filas": [], "pasos_latex": [],
     })

@@ -4,9 +4,9 @@ from types import SimpleNamespace
 
 from nicegui.elements.plotly import Plotly
 
-from src.frontend.recursos_vistas import seleccionar_recursos
-from src.frontend.tema import _CABECERA_HTML
-from src.frontend.controladores.metodos_cerrados.adaptadores import BISECCION, REGLA_FALSA
+from src.frontend.presentacion.recursos_vistas import seleccionar_recursos
+from src.frontend.presentacion.tema import _CABECERA_HTML
+from src.frontend.controladores.raices.metodos_cerrados.adaptadores import BISECCION, REGLA_FALSA
 from tests.test_metodos_cerrados_calculo import montar_vista
 
 

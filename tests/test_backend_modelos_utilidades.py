@@ -18,25 +18,25 @@ from src.backend.excepciones import (
     ErrorVectorInvalido,
 )
 from src.backend.modelos.matriz import Matriz
-from src.backend.utilidades.analizadores import AnalizadorSistema
-from src.backend.utilidades.formateadores import (
+from src.backend.utilidades.validacion.analizadores import AnalizadorSistema
+from src.backend.utilidades.formato.formateadores import (
     formatear_expresion_parametrica,
     formatear_fraccion_texto,
     formatear_variable_para_latex,
     numero_a_latex,
 )
-from src.backend.utilidades.reglas_dominio import (
+from src.backend.utilidades.validacion.reglas_dominio import (
     validar_datos_transferencia_matriz,
     validar_datos_transferencia_vectores,
     validar_entrada_base,
 )
-from src.backend.utilidades.utilidades_matematicas import (
+from src.backend.utilidades.formato.utilidades_matematicas import (
     mcd,
     mcd_lista,
     mcm,
     simplificar_fila,
 )
-from src.backend.utilidades.validadores import (
+from src.backend.utilidades.validacion.validadores import (
     ValidadorMatriz,
     validar_dimensiones_multiplicacion,
     validar_mismas_dimensiones,

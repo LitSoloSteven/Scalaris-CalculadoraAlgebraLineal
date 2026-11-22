@@ -1,7 +1,7 @@
 """Tiempo de lectura proporcional y límites de cada velocidad."""
 import pytest
 
-from src.frontend.componentes.reproductor_pasos.catalogo import intervalo_lectura
+from src.frontend.componentes.reproductor_pasos.nucleo.catalogo import intervalo_lectura
 
 
 @pytest.mark.parametrize("velocidad,multiplicador", [("Lenta", 1.0), ("Normal", 0.6), ("Rápida", 0.35)])

@@ -1,7 +1,7 @@
 """Representaciones únicas, dependientes e incompatibles de vectores."""
 from fractions import Fraction
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_vectores.combinacion_lineal import ResolutorCombinacionLineal
+from src.backend.resolutores.operaciones_vectores.operaciones.combinacion_lineal import ResolutorCombinacionLineal
 
 
 def test_representacion_unica_con_base():

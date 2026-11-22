@@ -7,7 +7,7 @@ import pytest
 from nicegui import run, ui
 
 from tests.comun import ejecutar_trabajador_simulado
-from src.frontend.controladores.geometria.controlador_geometria import ControladorGeometria
+from src.frontend.controladores.geometria.escenas.controlador_geometria import ControladorGeometria
 
 
 def preparar_fallo_figura(monkeypatch, vista, carga):

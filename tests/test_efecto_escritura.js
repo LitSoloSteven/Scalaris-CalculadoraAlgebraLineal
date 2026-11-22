@@ -17,7 +17,7 @@ function crearPulso() {
     const documento = { addEventListener: (nombre, funcion) => eventos.set(nombre, funcion),
         removeEventListener: nombre => eventos.delete(nombre) };
     const contexto = vm.createContext({ window: ventana, document: documento });
-    cargarAssetCliente('efecto_escritura.js', contexto);
+    cargarAssetCliente('nucleo/escritura/efecto_escritura.js', contexto);
     return { eventos, llamadas, entrada, contexto, superficie,
         insertar: opciones => eventos.get('input')({ target: entrada, isTrusted: true,
             inputType: 'insertText', data: '1', ...opciones }) };
@@ -30,7 +30,7 @@ prueba('teclado reinicia una sola animación sin consultar el bloqueo general de
     afirmar.deepEqual(cliente.llamadas,
         ['escritura-activa', 'cancelar', 'reproducir', 'escritura-activa', 'cancelar', 'reproducir']);
     afirmar.equal(cliente.eventos.size, 1);
-    cargarAssetCliente('efecto_escritura.js', cliente.contexto);
+    cargarAssetCliente('nucleo/escritura/efecto_escritura.js', cliente.contexto);
     afirmar.equal(cliente.eventos.size, 1);
 });
 

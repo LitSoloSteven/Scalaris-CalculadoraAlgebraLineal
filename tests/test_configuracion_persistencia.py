@@ -6,8 +6,8 @@ import nicegui.storage as almacenamiento_nicegui
 from nicegui.persistence import FilePersistentDict
 
 from src.frontend import aplicacion
-from src.frontend.configuracion_persistencia import configurar_persistencia
-from src.frontend.persistencia_archivo import DiccionarioPersistenteSeguro
+from src.frontend.nucleo.persistencia.configuracion_persistencia import configurar_persistencia
+from src.frontend.nucleo.persistencia.persistencia_archivo import DiccionarioPersistenteSeguro
 
 
 def test_fabrica_crea_sesiones_seguras_sin_cambiar_rutas(monkeypatch, tmp_path):

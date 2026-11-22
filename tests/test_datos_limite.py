@@ -10,21 +10,21 @@ from src.backend.resolutores.sistemas_numericos.calculadora_romana import (
     CalculadoraRomana,
     ErrorNumeroRomano,
 )
-from src.backend.utilidades.validadores import ValidadorMatriz
-from src.frontend.componentes.glosa_renderizado import renderizar_texto_glosa
-from src.frontend.controladores.geometria.controlador_geometria import (
+from src.backend.utilidades.validacion.validadores import ValidadorMatriz
+from src.frontend.componentes.glosa.elementos.glosa_renderizado import renderizar_texto_glosa
+from src.frontend.controladores.geometria.escenas.controlador_geometria import (
     ControladorGeometria,
 )
-from src.frontend.controladores.operaciones_inversas.controlador_operaciones_inversas import (
+from src.frontend.controladores.algebra.operaciones_inversas.calculo.controlador_operaciones_inversas import (
     ControladorOperacionesInversas,
 )
-from src.frontend.controladores.operaciones_vectores.controlador_operaciones_vectores import (
+from src.frontend.controladores.algebra.operaciones_vectores.controlador_operaciones_vectores import (
     ControladorOperacionesVectores,
 )
-from src.frontend.controladores.sistemas_lineales.controlador_gauss import (
+from src.frontend.controladores.algebra.sistemas_lineales.resolucion.controlador_gauss import (
     ControladorGauss,
 )
-from src.frontend.controladores.sistemas_lineales.controlador_gauss_jordan import (
+from src.frontend.controladores.algebra.sistemas_lineales.resolucion.controlador_gauss_jordan import (
     ControladorGaussJordan,
 )
 

@@ -1,6 +1,6 @@
 """Validación permisiva y estricta de ecuaciones con variables disjuntas."""
 from fractions import Fraction
-from src.backend.utilidades.analizadores import AnalizadorSistema
+from src.backend.utilidades.validacion.analizadores import AnalizadorSistema
 from tests.comun_analizador import comprobar_sistema_dos_variables
 
 

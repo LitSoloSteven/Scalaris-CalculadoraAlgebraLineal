@@ -57,10 +57,10 @@ function crearTemaSimulado(temaInicial = null, ancho = 1200) {
 
 /** Carga la inicialización y sus recursos en el orden de la cabecera real. */
 function cargarTemaCompleto(cliente) {
-    cargarAssetCliente("inicializacion_tema.js", cliente.contexto);
-    cargarAssetCliente("interacciones_globales.js", cliente.contexto);
-    cargarAssetCliente("revelado_circular.js", cliente.contexto);
-    cargarAssetCliente("tema.js", cliente.contexto);
+    cargarAssetCliente("nucleo/tema/inicializacion_tema.js", cliente.contexto);
+    cargarAssetCliente("nucleo/interacciones/interacciones_globales.js", cliente.contexto);
+    cargarAssetCliente("nucleo/tema/revelado_circular.js", cliente.contexto);
+    cargarAssetCliente("nucleo/tema/tema.js", cliente.contexto);
 }
 
 /** Conserva pendientes las capturas hasta que la prueba decida finalizarlas. */

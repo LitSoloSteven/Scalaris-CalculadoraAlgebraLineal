@@ -23,7 +23,7 @@ prueba('la referencia NiceGUI se cancela y conserva la prioridad de visibilidad'
     createElement: () => ({ style: {}, remove() {} }), body: { appendChild() {} } };
   const contexto = vm.createContext({ window: ventana, document: documento,
     setTimeout: funcion => { tareas.add(funcion); return funcion; }, clearTimeout: funcion => tareas.delete(funcion) });
-  cargarAssetCliente('recoleccion_basura.js', contexto);
+  cargarAssetCliente('nucleo/navegacion/recoleccion_basura.js', contexto);
   const espera = ventana.scalaris.animarRecoleccionBasura([12]);
   afirmar.equal(visibilidad, 'hidden');
   ventana.scalaris.terminarRecoleccionBasura();

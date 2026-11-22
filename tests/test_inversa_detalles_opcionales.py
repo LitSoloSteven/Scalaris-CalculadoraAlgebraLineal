@@ -1,6 +1,6 @@
 """Completitud de pasos al incluir u omitir el detalle LaTeX de la inversa."""
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices.inversa import ResolutorInversa
+from src.backend.resolutores.operaciones_matrices.inversa.inversa import ResolutorInversa
 
 
 def test_inversa_con_y_sin_latex_conserva_pasos():

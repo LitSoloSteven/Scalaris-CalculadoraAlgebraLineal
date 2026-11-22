@@ -1,7 +1,7 @@
 """Normalización matemática escapada para las descripciones visibles."""
 import pytest
 
-from src.frontend.componentes.reproductor_pasos.textos import formatear_descripcion_html
+from src.frontend.componentes.reproductor_pasos.formato.textos import formatear_descripcion_html
 
 
 @pytest.mark.parametrize("texto,esperado", [

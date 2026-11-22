@@ -1,5 +1,5 @@
 """Preparación y controles comunes de matrices extraídas de ecuaciones textuales."""
-from src.backend.utilidades.analizadores import AnalizadorSistema
+from src.backend.utilidades.validacion.analizadores import AnalizadorSistema
 
 
 def comprobar_sistema_dos_variables(texto):

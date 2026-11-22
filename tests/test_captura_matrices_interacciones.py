@@ -5,7 +5,7 @@ from unittest.mock import Mock
 
 from nicegui import ui
 
-from src.frontend.componentes.transferencia import consumir_matriz
+from src.frontend.componentes.resultados.acciones.transferencia import consumir_matriz
 from tests.comun_construccion_vistas import construir_pagina
 
 

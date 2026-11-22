@@ -4,11 +4,11 @@ import json
 
 import pytest
 
-from src.backend.geometria.cadena_combinacion import calcular_cadena_acumulada
-from src.backend.geometria.clasificacion import clasificar_ecuacion
-from src.backend.geometria.conjunto_solucion import ConjuntoSolucion, TipoSolucionGeometria
-from src.backend.geometria.cuadros_vectores import calcular_cuadros_vectores, calcular_suma_vectores
-from src.backend.geometria.planos import calcular_geometria_plano
+from src.backend.geometria.preparacion.cadena_combinacion import calcular_cadena_acumulada
+from src.backend.geometria.analisis.clasificacion import clasificar_ecuacion
+from src.backend.geometria.analisis.conjunto_solucion import ConjuntoSolucion, TipoSolucionGeometria
+from src.backend.geometria.preparacion.cuadros_vectores import calcular_cuadros_vectores, calcular_suma_vectores
+from src.backend.geometria.analisis.planos import calcular_geometria_plano
 from src.backend.modelos.matriz import Matriz
 from src.frontend.controladores.geometria import ControladorGeometria
 
@@ -120,7 +120,7 @@ def test_enum_y_conjunto_no_publican_alias():
 
 def test_modulo_conjunto_no_publica_funciones_o_clases_alternativas():
     """Las funciones y clases retiradas no quedan disponibles como alias."""
-    from src.backend.geometria import conjunto_solucion
+    from src.backend.geometria.analisis import conjunto_solucion
     retirados = (
         "SolutionKind", "SolutionSet", "classify", "has_solution_param", "get_solution_param",
         "from_solution_param", "from_gauss_result",

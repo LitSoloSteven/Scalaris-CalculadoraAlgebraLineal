@@ -5,7 +5,7 @@ from types import SimpleNamespace
 import pytest
 from nicegui import ui
 
-from src.frontend import textos
+from src.frontend.nucleo.textos import textos
 from tests.comun_construccion_vistas import construir_pagina
 
 

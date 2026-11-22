@@ -1,6 +1,6 @@
 import pytest
 
-from src.frontend.sugerencias import (
+from src.frontend.presentacion.sugerencias import (
     Senales,
     CeldaInvalida,
     Sugerencia,

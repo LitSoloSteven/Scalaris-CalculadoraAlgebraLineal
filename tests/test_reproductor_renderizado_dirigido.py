@@ -16,6 +16,6 @@ def test_mathjax_recibe_el_identificador_del_bloque_renderizado(monkeypatch):
 
 def test_firmas_cliente_conservan_argumentos_para_revelar_y_destellar():
     """La publicación conserva dos argumentos de revelado y uno de destello."""
-    codigo = (RAIZ / "src/frontend/recursos/js/reproductor_pasos.js").read_text(encoding="utf-8")
+    codigo = (RAIZ / "src/frontend/recursos/js/herramientas/documentos/reproductor_pasos.js").read_text(encoding="utf-8")
     assert re.search(r"\brevelar:\s*function\s*\(identificador,\s*texto\)", codigo)
     assert re.search(r"\bdestellar:\s*function\s*\(identificador\)", codigo)

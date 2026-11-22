@@ -5,7 +5,7 @@ import threading
 from types import SimpleNamespace
 import pytest
 from nicegui import run, ui
-from src.frontend.controladores.calculo_vigente import ejecutar_calculo_vigente
+from src.frontend.controladores.compartido.sesion.calculo_vigente import ejecutar_calculo_vigente
 from tests.comun_construccion_vistas import construir_pagina
 
 

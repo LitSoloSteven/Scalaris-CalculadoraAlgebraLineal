@@ -8,9 +8,9 @@ from nicegui import ui
 
 from src.backend.modelos.matriz import Matriz
 from src.backend.resolutores.trazado import TrazadorPasos
-from src.frontend.componentes.reproductor_pasos.modelo import PasoReproductor
-from src.frontend.controladores.utilidades import parsear_carga_json
-from src.frontend.vistas.operaciones_matrices._cuerpo_reproductor_matrices import renderizar_cuerpo_matrices
+from src.frontend.componentes.reproductor_pasos.nucleo.modelo import PasoReproductor
+from src.frontend.controladores.compartido.pasos.utilidades import parsear_carga_json
+from src.frontend.vistas.algebra.operaciones_matrices.expresiones._cuerpo_reproductor_matrices import renderizar_cuerpo_matrices
 from tests.comun_caracterizacion_backend import ejecutar_caso
 from tests.test_caracterizacion_backend import CASOS
 
@@ -69,7 +69,7 @@ def test_trazador_conserva_fraccion_y_copia_defensiva():
 
 def test_cuerpo_matrices_conserva_indice_y_carga_detalle_una_vez(monkeypatch):
     """La ausencia de operación usa el índice del objeto y el detalle no se duplica."""
-    modulo = "src.frontend.vistas.operaciones_matrices._cuerpo_reproductor_matrices"
+    modulo = "src.frontend.vistas.algebra.operaciones_matrices.expresiones._cuerpo_reproductor_matrices"
     expresiones = []
     monkeypatch.setattr(modulo + ".renderizar_latex", expresiones.append)
     contenedor = ui.column()

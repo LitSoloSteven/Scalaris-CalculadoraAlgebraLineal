@@ -1,6 +1,6 @@
 """Opciones de interfaz configuradas mediante variables de entorno."""
 import pytest
-from src.frontend.banderas import panel_lateral_habilitado, navegacion_actualizada, proactivo_habilitado
+from src.frontend.nucleo.banderas import panel_lateral_habilitado, navegacion_actualizada, proactivo_habilitado
 from tests.comun_opciones_interfaz import comprobar_opciones_configuradas
 
 

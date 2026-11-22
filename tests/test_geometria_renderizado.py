@@ -3,10 +3,10 @@ import json
 from fractions import Fraction
 import pytest
 
-from src.backend.resolutores.sistemas_lineales.gauss import ResolutorGauss
+from src.backend.resolutores.sistemas_lineales.eliminacion.gauss import ResolutorGauss
 from tests.comun_geometria import comprobar_rectas_incompatibles
 from tests.comun_entradas import copiar_entrada_prueba
-from src.frontend.controladores.geometria.controlador_geometria import (
+from src.frontend.controladores.geometria.escenas.controlador_geometria import (
     ControladorGeometria,
 )
 
@@ -196,7 +196,7 @@ def test_controlador_simulado_sin_parametros_solucion(monkeypatch):
 def test_figuras_recta_dos_dimensiones_y_plano_tres_dimensiones():
     """Verifica figuras recta dos dimensiones y plano tres dimensiones."""
     pytest.importorskip("plotly")
-    from src.frontend.vistas.geometria._escenas import construir_figura_rectas_planos
+    from src.frontend.vistas.geometria.escenas._escenas import construir_figura_rectas_planos
 
     carga_plana = json.dumps({"matriz_a": [["1", "1"]], "vector_b": ["2"]})
     res_2d = ControladorGeometria.procesar_rectas_planos(carga_plana)

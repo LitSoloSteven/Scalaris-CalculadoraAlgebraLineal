@@ -6,8 +6,9 @@ from pathlib import Path
 
 import pytest
 
-from src.frontend import tema, versionado_recursos
-from src.frontend.recursos_vistas import seleccionar_recursos
+from src.frontend.presentacion import tema
+from src.frontend.presentacion import versionado_recursos
+from src.frontend.presentacion.recursos_vistas import seleccionar_recursos
 from tests.comun_construccion_vistas import VISTAS_RUTAS, construir_pagina
 
 _RECURSOS = Path("src/frontend/recursos")
@@ -31,8 +32,8 @@ def test_paginas_versionan_cabecera_sin_cambiar_recursos_de_componentes(monkeypa
         assert cabecera.index("interacciones_globales.js") < cabecera.index("cuadricula_compartida.js")
         assert cabecera.index("escritura_progresiva.js") < cabecera.index("reproductor_pasos.js")
         urls = {url for url, _ in recursos}
-        for recurso_inicio in ("js/inicio.js", "css/vistas_inicio_directorio.css",
-                              "css/vistas_inicio_ejemplos.css", "js/ejemplos_inicio.js"):
+        for recurso_inicio in ("js/inicio/inicio.js", "css/inicio/vistas_inicio_directorio.css",
+                              "css/inicio/vistas_inicio_ejemplos.css", "js/inicio/ejemplos_inicio.js"):
             assert (f"/assets/{recurso_inicio}" in urls) == (vista == "inicio")
         assert ("tema_graficos.js" in cabecera) == (vista in {"visualizador", "biseccion", "regla_falsa", "metodos_abiertos"})
         assert ("sincronizacion_diseno.js" in cabecera) == (vista == "visualizador")
@@ -62,12 +63,12 @@ def test_seleccion_conserva_plantillas_recursos_desconocidos_y_orden():
 
 def test_versionado_es_idempotente_y_no_reescribe_entradas_ajenas():
     """Solo URL propias conocidas reciben una huella; consultas y rutas ajenas se conservan."""
-    cabecera = '<script src="/assets/js/tema.js"></script>'
+    cabecera = '<script src="/assets/js/nucleo/tema/tema.js"></script>'
     versionada = versionado_recursos.versionar_html(cabecera)
     assert versionada != cabecera
     assert versionado_recursos.versionar_html(versionada) == versionada
-    for url in ("https://externo/js/tema.js", "/assets/js/../tema.js", "/assets/js/ausente.js",
-                "/assets/js/tema.js?x=1", "/assets/css/tema.js"):
+    for url in ("https://externo/js/nucleo/tema/tema.js", "/assets/js/../tema.js", "/assets/js/ausente.js",
+                "/assets/js/nucleo/tema/tema.js?x=1", "/assets/css/tema.js"):
         etiqueta = f'<script src="{url}"></script>'
         assert versionado_recursos.versionar_html(etiqueta) == etiqueta
 
@@ -84,4 +85,4 @@ def test_huellas_cambian_solo_con_el_contenido(monkeypatch):
 
     monkeypatch.setattr(Path, "read_bytes", leer_cambio)
     nuevas = versionado_recursos._calcular_versiones()
-    assert [url for url in versiones if versiones[url] != nuevas[url]] == ["/assets/js/tema.js"]
+    assert [url for url in versiones if versiones[url] != nuevas[url]] == ["/assets/js/nucleo/tema/tema.js"]

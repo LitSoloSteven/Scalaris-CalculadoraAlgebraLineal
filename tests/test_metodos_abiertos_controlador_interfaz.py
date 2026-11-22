@@ -1,7 +1,7 @@
 """Contrato serializable del adaptador público de métodos abiertos."""
 import json
 
-from src.frontend.controladores.metodos_abiertos import resolver_captura
+from src.frontend.controladores.raices.metodos_abiertos import resolver_captura
 
 
 def test_resolver_captura_despacha_newton_y_secante():

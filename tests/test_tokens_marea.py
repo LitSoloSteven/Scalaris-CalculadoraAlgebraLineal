@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 from tests.comun_estilos import analizar_tokens, hexadecimal_a_rgb, razon_contraste
 
-RUTA_CSS = Path("src/frontend/recursos/css/tokens.css")
+RUTA_CSS = Path("src/frontend/recursos/css/base/tokens.css")
 
 HEXADECIMALES_MAREA_ESPERADOS = {
     "--bg-page": "#CFE3F0",

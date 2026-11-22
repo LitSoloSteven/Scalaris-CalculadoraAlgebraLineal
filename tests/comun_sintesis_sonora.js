@@ -53,7 +53,7 @@ function prepararSintesis(opciones = {}) {
     };
     const entorno = { window: ventana, document: documento, performance: { now: () => ahora } };
     const cargar = nombre => ejecutar(leerArchivo(`src/frontend/recursos/js/${nombre}.js`, 'utf8'), entorno);
-    ['catalogo_sonidos', 'sintesis_sonora', 'sonido'].forEach(cargar);
+    ['sonido/motor/catalogo_sonidos', 'sonido/motor/sintesis_sonora', 'sonido/motor/sonido'].forEach(cargar);
     return { documento, ventana, contextos, cargar, avanzar: cantidad => { ahora += cantidad; },
         activar: () => documento.emitir('pointerdown', { isTrusted: true }), motor: ventana.scalaris.sonido };
 }

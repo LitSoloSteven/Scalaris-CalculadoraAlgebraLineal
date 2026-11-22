@@ -1,7 +1,7 @@
 """Validación exacta de números y conservación de precisión en ecuaciones."""
 from fractions import Fraction
-from src.backend.utilidades.validadores import ValidadorMatriz
-from src.backend.utilidades.analizadores import AnalizadorSistema
+from src.backend.utilidades.validacion.validadores import ValidadorMatriz
+from src.backend.utilidades.validacion.analizadores import AnalizadorSistema
 
 
 def test_numero_exacto_conserva_denominador_grande():

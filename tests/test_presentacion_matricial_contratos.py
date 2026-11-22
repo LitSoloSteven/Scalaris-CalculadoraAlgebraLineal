@@ -1,21 +1,21 @@
 """Contratos de estilos estrechos, limites y nombres de las vistas matriciales."""
 from pathlib import Path
 
-from src.backend.utilidades.estado_captura import opciones_transferencia_sistema
-from src.frontend.controladores.operaciones_inversas.vista_previa import preparar_presentacion_previa
+from src.backend.utilidades.captura.estado_captura import opciones_transferencia_sistema
+from src.frontend.controladores.algebra.operaciones_inversas.calculo.vista_previa import preparar_presentacion_previa
 from tests.comun import RAIZ
 
 
 def test_disposicion_estrecha_conserva_numeros_y_dialogos():
     """El CSS permite encoger a 320 px y contiene numeros y dialogos de confirmacion."""
-    css = (RAIZ / 'src/frontend/recursos/css/vistas_sesion_matricial.css').read_text(encoding='utf-8')
+    css = (RAIZ / 'src/frontend/recursos/css/algebra/espacios/vistas_sesion_matricial.css').read_text(encoding='utf-8')
     assert 'width: min(100%, 24rem)' in css
     assert 'min-width: 0' in css
     assert 'overflow-wrap: anywhere;' in css
     assert 'font-variant-numeric: tabular-nums' in css
     assert '@media (max-width: 400px)' in css
     assert 'prefers-reduced-motion: reduce' in css
-    for paquete in ('sistemas_lineales', 'operaciones_inversas'):
+    for paquete in ('algebra/sistemas_lineales', 'algebra/operaciones_inversas'):
         archivos = (RAIZ / 'src/frontend/vistas' / paquete).glob('vista_*.py')
         assert any('sesion-vista' in archivo.read_text(encoding='utf-8') for archivo in archivos)
 
@@ -34,7 +34,7 @@ def test_paquetes_canonicos_sin_fachadas_inglesas():
     raiz = RAIZ / 'src/frontend/vistas'
     for nombre in ('hub', 'linear_systems', 'inverse_ops'):
         assert not (raiz / nombre).exists()
-    for paquete in ('inicio', 'sistemas_lineales', 'operaciones_inversas'):
+    for paquete in ('inicio', 'algebra/sistemas_lineales', 'algebra/operaciones_inversas'):
         assert (raiz / paquete).is_dir()
-        assert not list((raiz / paquete).glob('view_*.py'))
-        assert not list((raiz / paquete).glob('*_mixin.py'))
+        assert not list((raiz / paquete).rglob('view_*.py'))
+        assert not list((raiz / paquete).rglob('*_mixin.py'))

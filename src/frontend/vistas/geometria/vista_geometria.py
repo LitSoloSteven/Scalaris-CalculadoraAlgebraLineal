@@ -5,19 +5,19 @@ import asyncio
 import logging
 from nicegui import ui
 
-from src.frontend.componentes.panel_ia import PanelIA
-from src.frontend.componentes.estructura_aplicacion import crear_estructura_aplicacion
-from src.frontend.componentes.tareas import lanzar_tarea
-from src.frontend.constantes import ANTIRREBOTE_GEOMETRIA_SEGUNDOS
+from src.frontend.componentes.glosa.panel.panel_ia import PanelIA
+from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
+from src.frontend.componentes.aplicacion.base.tareas import lanzar_tarea
+from src.frontend.nucleo.constantes import ANTIRREBOTE_GEOMETRIA_SEGUNDOS
 from src.frontend.navegacion import ruta_de
-from src.frontend.controladores.sesion_matricial import actualizar_contexto, notificar_edicion
-from .mixin_controles import MixinControlesGeometria
-from .limpieza_geometria import MixinLimpiezaGeometria
+from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto, notificar_edicion
+from src.frontend.vistas.geometria.controles.mixin_controles import MixinControlesGeometria
+from src.frontend.vistas.geometria.controles.limpieza_geometria import MixinLimpiezaGeometria
 from .mixin_escenas import MixinEscenasGeometria
-from ._actualizacion_geometria import actualizar_figura
+from src.frontend.vistas.geometria.escenas._actualizacion_geometria import actualizar_figura
 from ._contexto_ia_geometria import obtener_contexto_ia, obtener_senales_ia
-from ._estados_geometria import mostrar_estado_vacio, renderizar_error
-from ._transferencia_geometria import procesar_transferencia_rectas, procesar_transferencia_vectores
+from src.frontend.vistas.geometria.escenas._estados_geometria import mostrar_estado_vacio, renderizar_error
+from src.frontend.vistas.geometria.controles._transferencia_geometria import procesar_transferencia_rectas, procesar_transferencia_vectores
 
 registro = logging.getLogger(__name__)
 ESCENAS_VALIDAS = ('rectas-planos', 'vectores', 'combinacion')
@@ -62,7 +62,7 @@ class VistaGeometria(MixinLimpiezaGeometria, MixinControlesGeometria, MixinEscen
         self.escena = self.normalizar_escena(escena)
         self.panel_ia = PanelIA(self)
         crear_estructura_aplicacion(self, ruta_activa=ruta_de('visualizador'), clave_activa=f"vis:{self.escena}")
-        ui.add_head_html('<script src="/assets/js/geometria.js"></script>')
+        ui.add_head_html('<script src="/assets/js/herramientas/algebra/geometria.js"></script>')
         self._construir_contenedores()
         self.panel_ia.construir()
         self._construir_controles(self.escena)

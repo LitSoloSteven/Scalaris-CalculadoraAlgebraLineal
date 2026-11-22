@@ -1,10 +1,10 @@
 """Modulo de resolutores de sistemas lineales exactos."""
 
-from src.backend.resolutores.sistemas_lineales.gauss import ResolutorGauss
-from src.backend.resolutores.sistemas_lineales.gauss_jordan import (
+from src.backend.resolutores.sistemas_lineales.eliminacion.gauss import ResolutorGauss
+from src.backend.resolutores.sistemas_lineales.eliminacion.gauss_jordan import (
     ResolutorGaussJordan,
 )
-from src.backend.resolutores.sistemas_lineales.modelo_solucion import (
+from src.backend.resolutores.sistemas_lineales.solucion.modelo_solucion import (
     ParametrosSolucion,
 )
 

@@ -22,8 +22,8 @@ def test_importacion_diferida_inexistente_no_se_omite():
 
 def test_importacion_relativa_y_submodulo_resuelven():
     """El arnés sigue paquetes relativos y la semántica de from paquete import módulo."""
-    ruta = RAIZ / "src/frontend/vistas/operaciones_vectores/controles.py"
+    ruta = RAIZ / "src/frontend/vistas/algebra/operaciones_vectores/panel/controles.py"
     referencias = referencias_importadas(ruta, "from . import contexto\nimport src.backend.modelos.matriz\n")
-    assert referencias == [(1, "src.frontend.vistas.operaciones_vectores", "contexto"),
+    assert referencias == [(1, "src.frontend.vistas.algebra.operaciones_vectores.panel", "contexto"),
                            (2, "src.backend.modelos.matriz", None)]
     assert all(resolver_referencia(modulo, simbolo) is None for _, modulo, simbolo in referencias)

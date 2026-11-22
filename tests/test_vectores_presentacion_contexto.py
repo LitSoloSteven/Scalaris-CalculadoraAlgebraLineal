@@ -6,7 +6,7 @@ from unittest.mock import Mock
 import pytest
 from nicegui import ui
 
-from src.frontend.vistas.operaciones_vectores.vista_operaciones_vectores import VistaOperacionesVectores
+from src.frontend.vistas.algebra.operaciones_vectores.vista_operaciones_vectores import VistaOperacionesVectores
 from tests.comun_clientes import PanelIASimulado
 from tests.comun_vista_vectorial import vista_vectorial_montada, ejecutar_calculo_en_panel
 
@@ -59,10 +59,10 @@ def test_presentacion_escapa_latex_y_coeficientes(vista_vectorial_montada):
 @pytest.mark.parametrize('panel_lateral', [False, True])
 def test_construccion_completa_monta_asistente_y_tres_paneles(monkeypatch, panel_lateral):
     """El montaje usa componentes reales con almacén aislado para las dos modalidades."""
-    from src.frontend.vistas.operaciones_vectores import vista_operaciones_vectores as modulo
+    from src.frontend.vistas.algebra.operaciones_vectores import vista_operaciones_vectores as modulo
     monkeypatch.setattr(modulo, "PanelIA", PanelIASimulado)
     monkeypatch.setattr(ui, "run_javascript", Mock())
-    from src.frontend import banderas
+    from src.frontend.nucleo import banderas
     monkeypatch.setattr(banderas, "panel_lateral_habilitado", lambda: panel_lateral)
     monkeypatch.setattr(banderas, "navegacion_actualizada", lambda: False)
     vista = VistaOperacionesVectores()

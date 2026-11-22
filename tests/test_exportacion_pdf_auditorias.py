@@ -7,7 +7,7 @@ from tests.comun_javascript_embebido import PROVEEDORES_CLIENTE, fuentes_javascr
 
 def test_proveedor_excluido_solo_de_estilo_con_distribucion_y_licencias_intactas():
     """La exclusión identifica un solo archivo oficial y exige su contenido y licencia MIT."""
-    assert PROVEEDORES_CLIENTE == {'src/frontend/recursos/js/html2canvas.min.js'}
+    assert PROVEEDORES_CLIENTE == {'src/frontend/recursos/js/vendor/html2canvas.min.js'}
     ruta = RAIZ / next(iter(PROVEEDORES_CLIENTE))
     contenido = ruta.read_bytes().replace(b'\r\n', b'\n')
     assert hashlib.sha256(contenido).hexdigest() == 'e87e550794322e574a1fda0c1549a3c70dae5a93d9113417a429016838eab8cb'
@@ -17,9 +17,9 @@ def test_proveedor_excluido_solo_de_estilo_con_distribucion_y_licencias_intactas
 
 def test_excepcion_no_excluye_el_adaptador_ni_otro_javascript_propio():
     """La captura nueva y los demás scripts propios conservan todas las auditorías de estilo."""
-    rutas = sorted((RAIZ / 'src/frontend/recursos/js').glob('*.js'))
+    rutas = sorted((RAIZ / 'src/frontend/recursos/js').rglob('*.js'))
     auditadas = {fuente['ruta'] for fuente in fuentes_javascript(rutas)}
-    assert 'src/frontend/recursos/js/captura_pdf.js' in auditadas
+    assert 'src/frontend/recursos/js/herramientas/documentos/captura_pdf.js' in auditadas
     assert auditadas == {ruta.relative_to(RAIZ).as_posix() for ruta in rutas} - PROVEEDORES_CLIENTE
 
 

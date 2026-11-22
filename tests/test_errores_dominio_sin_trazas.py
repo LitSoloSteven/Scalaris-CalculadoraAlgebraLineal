@@ -5,8 +5,8 @@ import pytest
 
 from src.backend.resolutores.sistemas_numericos.calculadora_romana import CalculadoraRomana, ErrorNumeroRomano
 from src.backend.resolutores.sistemas_numericos.conversor_bases import ConversorBases
-from src.frontend.controladores.sistemas_lineales.controlador_gauss import ControladorGauss
-from src.frontend.controladores.sistemas_lineales.controlador_gauss_jordan import ControladorGaussJordan
+from src.frontend.controladores.algebra.sistemas_lineales.resolucion.controlador_gauss import ControladorGauss
+from src.frontend.controladores.algebra.sistemas_lineales.resolucion.controlador_gauss_jordan import ControladorGaussJordan
 
 
 @pytest.mark.parametrize('controlador', [ControladorGauss, ControladorGaussJordan])

@@ -4,10 +4,11 @@ from io import BytesIO
 
 import pytest
 from reportlab.lib.pagesizes import letter
-from src.frontend import constantes as medidas, textos
-from src.frontend.controladores.exportacion_pdf.documento import generar_pdf, _crear_documento
-from src.frontend.controladores.exportacion_pdf.estilos import crear_estilos, parrafo
-from src.frontend.controladores.exportacion_pdf.figuras import preparar_figuras
+from src.frontend.nucleo import constantes as medidas
+from src.frontend.nucleo.textos import textos
+from src.frontend.controladores.exportacion_pdf.documento.documento import generar_pdf, _crear_documento
+from src.frontend.controladores.exportacion_pdf.recursos.estilos import crear_estilos, parrafo
+from src.frontend.controladores.exportacion_pdf.documento.figuras import preparar_figuras
 from tests.comun_exportacion_pdf import PORTADA, RESULTADO, crear_captura
 
 

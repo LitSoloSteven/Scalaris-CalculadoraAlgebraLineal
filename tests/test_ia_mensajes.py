@@ -1,5 +1,5 @@
 """Filtrado de historial y construcción de mensajes para el proveedor de IA."""
-from src.ai.mensajes import construir_mensajes, recortar_historial
+from src.ai.cliente.mensajes import construir_mensajes, recortar_historial
 
 def test_recorte_historial():
     """El historial mantiene la cantidad y el orden de mensajes esperados."""

@@ -3,26 +3,26 @@ import math
 
 import pytest
 
-from src.backend.resolutores.raices.contrato_biseccion import (
+from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import (
     D_MAXIMO,
     LIMITE_ITERACIONES_MAXIMO,
     EntradaBiseccion,
     validar_entrada,
     validar_precision,
 )
-from src.backend.resolutores.raices.limites_biseccion import (
+from src.backend.resolutores.raices.compartido.limites_biseccion import (
     D_MAXIMO as D_MAXIMO_FACHADA,
     LIMITE_ITERACIONES_DEFECTO,
     LIMITE_ITERACIONES_MAXIMO as LIMITE_MAX_FACHADA,
     LONGITUD_MAXIMA_EXPRESION,
 )
-from src.backend.resolutores.raices.limites_raices import (
+from src.backend.resolutores.raices.compartido.limites_raices import (
     D_MAXIMO as D_MAXIMO_RAICES,
     LIMITE_ITERACIONES_DEFECTO as LIMITE_DEFECTO_RAICES,
     LIMITE_ITERACIONES_MAXIMO as LIMITE_MAX_RAICES,
     LONGITUD_MAXIMA_EXPRESION as LONGITUD_MAX_RAICES,
 )
-from src.backend.resolutores.raices.validacion_raices import (
+from src.backend.resolutores.raices.compartido.validacion_raices import (
     validar_expresion,
     validar_extremo,
     validar_limite_iteraciones,
@@ -127,7 +127,7 @@ def test_contrato_biseccion_reexporta_constantes_historicas():
     """Los consumidores existentes siguen importando las constantes desde contrato_biseccion."""
     import importlib
 
-    modulo = importlib.import_module("src.backend.resolutores.raices.contrato_biseccion")
+    modulo = importlib.import_module("src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion")
     for nombre in (
         "D_MAXIMO",
         "LIMITE_ITERACIONES_DEFECTO",

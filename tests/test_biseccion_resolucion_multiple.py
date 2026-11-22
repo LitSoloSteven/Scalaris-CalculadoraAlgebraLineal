@@ -6,18 +6,18 @@ from importlib import import_module
 
 import pytest
 
-from src.backend.resolutores.raices.biseccion import biseccion
-from src.backend.resolutores.raices.contrato_biseccion import EntradaBiseccion
-from src.backend.resolutores.raices.contrato_exploracion import CandidatoExploracion, EntradaExploracion
-from src.backend.resolutores.raices.contrato_resolucion_multiple import CandidatoResolucion, EntradaResolucionMultiple
-from src.backend.resolutores.raices.criterios_biseccion import CriterioParada
-from src.backend.resolutores.raices.exploracion_intervalos import explorar_intervalos
-from src.backend.resolutores.raices.evaluador_funcion import compilar
-from src.backend.resolutores.raices.limites_resolucion_multiple import (
+from src.backend.resolutores.raices.biseccion.motor.biseccion import biseccion
+from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import EntradaBiseccion
+from src.backend.resolutores.raices.exploracion.base.contrato_exploracion import CandidatoExploracion, EntradaExploracion
+from src.backend.resolutores.raices.biseccion.lote.contrato_resolucion_multiple import CandidatoResolucion, EntradaResolucionMultiple
+from src.backend.resolutores.raices.biseccion.contratos.criterios_biseccion import CriterioParada
+from src.backend.resolutores.raices.exploracion.busqueda.exploracion_intervalos import explorar_intervalos
+from src.backend.resolutores.raices.funcion_real.evaluacion.evaluador_funcion import compilar
+from src.backend.resolutores.raices.biseccion.lote.limites_resolucion_multiple import (
     EVALUACIONES_AUXILIARES_CANDIDATO, MAXIMO_CANDIDATOS_MULTIPLE, MAXIMO_EVALUACIONES_CANDIDATO,
 )
-from src.backend.resolutores.raices.resolucion_multiple import resolver_candidatos
-from src.frontend.controladores.biseccion.resolucion_multiple import resolver_lote
+from src.backend.resolutores.raices.biseccion.lote.resolucion_multiple import resolver_candidatos
+from src.frontend.controladores.raices.biseccion.ejecucion.resolucion_multiple import resolver_lote
 from tests.comun_biseccion_criterios import captura_criterio
 
 
@@ -168,7 +168,8 @@ def test_reserva_acota_evaluaciones_efectivas(monkeypatch, presupuesto):
             llamadas.append(valor)
             return evaluador(valor)
         return funcion
-    for nombre in ("resolucion_multiple", "biseccion", "sugerencias_dominio"):
+    for nombre in ("biseccion.lote.resolucion_multiple", "biseccion.motor.biseccion",
+                   "continuidad.analisis.sugerencias_dominio"):
         modulo = import_module(f"src.backend.resolutores.raices.{nombre}")
         monkeypatch.setattr(modulo, "compilar", compilar_contando)
     lote = resolver_candidatos(entrada)

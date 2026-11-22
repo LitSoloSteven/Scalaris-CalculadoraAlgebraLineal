@@ -3,8 +3,8 @@ from dataclasses import asdict
 
 import pytest
 
-from src.backend.resolutores.raices.validacion_regla_falsa import validar_entrada_regla_falsa
-from src.frontend.controladores.regla_falsa.captura import preparar_entrada
+from src.backend.resolutores.raices.regla_falsa.contratos.validacion_regla_falsa import validar_entrada_regla_falsa
+from src.frontend.controladores.raices.regla_falsa.captura.captura import preparar_entrada
 
 
 def _captura():

@@ -1,5 +1,5 @@
 """Construcción de preguntas de explicación de pasos algebraicos."""
-from src.ai.mensajes import construir_pregunta_explicar_paso
+from src.ai.cliente.mensajes import construir_pregunta_explicar_paso
 
 
 def test_pregunta_incluye_paso_operacion_y_proposito():

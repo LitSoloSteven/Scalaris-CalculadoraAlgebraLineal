@@ -1,5 +1,5 @@
 """Pruebas unitarias para la extracción de metadatos pedagógicos de pasos."""
-from src.frontend.controladores.sistemas_lineales import construir_metadatos_pasos
+from src.frontend.controladores.algebra.sistemas_lineales import construir_metadatos_pasos
 
 
 class MatrizSimulada:

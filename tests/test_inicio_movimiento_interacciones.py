@@ -8,8 +8,8 @@ from tests.comun_estilos import (
 )
 
 
-RUTA_JS_INICIO = Path("src/frontend/recursos/js/inicio.js")
-RUTA_JS_ENTRADA = Path("src/frontend/recursos/js/inicio_entrada.js")
+RUTA_JS_INICIO = Path("src/frontend/recursos/js/inicio/inicio.js")
+RUTA_JS_ENTRADA = Path("src/frontend/recursos/js/inicio/inicio_entrada.js")
 
 
 def test_transiciones_inicio_solo_transformacion_y_opacidad():
@@ -87,7 +87,7 @@ def test_gesto_puntero_solo_mueve_los_trazos_del_simbolo():
 def test_texto_y_foco_del_directorio_conservan_contraste():
     """El texto, el acento y el anillo de foco mantienen contraste en los tres temas."""
     css = leer_css_inicio()
-    tokens = analizar_tokens("src/frontend/recursos/css/tokens.css", pasadas=1, exigir_cierre=False)
+    tokens = analizar_tokens("src/frontend/recursos/css/base/tokens.css", pasadas=1, exigir_cierre=False)
     enlace = bloque_css(css, ".inicio-enlace {")
     hover = bloque_css(css, ".inicio-enlace:hover")
     assert "color: var(--text-main)" in enlace

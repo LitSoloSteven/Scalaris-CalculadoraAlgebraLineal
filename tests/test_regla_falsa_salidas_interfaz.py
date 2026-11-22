@@ -6,11 +6,11 @@ from copy import deepcopy
 import pytest
 
 from src.backend.excepciones import ErrorDominio
-from src.frontend.controladores.regla_falsa.contexto_regla_falsa import resumir_contexto_regla_falsa
-from src.frontend.controladores.regla_falsa.controlador import resolver_captura
-from src.frontend.controladores.regla_falsa.diagnostico import detalles_diagnostico
-from src.frontend.controladores.regla_falsa.presentacion import avisos_resumen, metricas_resumen, titulo_estado
-from src.frontend.controladores.regla_falsa.salidas_regla_falsa import datos_copia_regla_falsa, texto_copia_regla_falsa
+from src.frontend.controladores.raices.regla_falsa.procedimiento.contexto_regla_falsa import resumir_contexto_regla_falsa
+from src.frontend.controladores.raices.regla_falsa.ejecucion.controlador import resolver_captura
+from src.frontend.controladores.raices.regla_falsa.presentacion.diagnostico import detalles_diagnostico
+from src.frontend.controladores.raices.regla_falsa.presentacion.presentacion import avisos_resumen, metricas_resumen, titulo_estado
+from src.frontend.controladores.raices.regla_falsa.procedimiento.salidas_regla_falsa import datos_copia_regla_falsa, texto_copia_regla_falsa
 
 
 def _captura():
@@ -66,7 +66,7 @@ def test_contexto_copia_la_evidencia_y_solo_la_ultima_fila():
 
 def test_error_tras_filas_validas_conserva_contexto_sin_aproximacion_final(monkeypatch):
     """Un fallo de evaluación conserva las filas del motor y se describe como error."""
-    motor = importlib.import_module("src.backend.resolutores.raices.regla_falsa")
+    motor = importlib.import_module("src.backend.resolutores.raices.regla_falsa.motor.regla_falsa")
     evaluar_original = motor.evaluar
     llamadas = []
 

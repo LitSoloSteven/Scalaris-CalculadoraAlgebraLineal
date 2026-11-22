@@ -3,12 +3,12 @@ import json
 
 import pytest
 
-from src.frontend import tema
-from src.frontend.componentes import cuadricula_base
-from src.frontend.componentes.cuadricula_ecuaciones import CuadriculaEcuaciones
-from src.frontend.componentes.captura_matrices import PanelCapturaMatrices
-from src.frontend.componentes.panel_matriz_cuadrada import PanelMatrizCuadrada
-from src.frontend.componentes.captura_vectores import PanelCapturaVectores
+from src.frontend.presentacion import tema
+from src.frontend.componentes.captura.nucleo import cuadricula_base
+from src.frontend.componentes.captura.ecuaciones.cuadricula_ecuaciones import CuadriculaEcuaciones
+from src.frontend.componentes.captura.matrices.captura_matrices import PanelCapturaMatrices
+from src.frontend.componentes.captura.paneles.panel_matriz_cuadrada import PanelMatrizCuadrada
+from src.frontend.componentes.captura.vectores.captura_vectores import PanelCapturaVectores
 from tests.comun import RAIZ
 
 
@@ -33,10 +33,10 @@ def test_propiedades_celda_usan_un_solo_contrato_espanol(fila, columna, identifi
 
 
 @pytest.mark.parametrize("componente,adaptador", [
-    (CuadriculaEcuaciones, "captura_ecuaciones.js"),
-    (PanelCapturaMatrices, "captura_matrices.js"),
-    (PanelMatrizCuadrada, "captura_matrices.js"),
-    (PanelCapturaVectores, "captura_vectores.js"),
+    (CuadriculaEcuaciones, "captura/adaptadores/captura_ecuaciones.js"),
+    (PanelCapturaMatrices, "captura/adaptadores/captura_matrices.js"),
+    (PanelMatrizCuadrada, "captura/adaptadores/captura_matrices.js"),
+    (PanelCapturaVectores, "captura/adaptadores/captura_vectores.js"),
 ])
 def test_componentes_inyectan_su_adaptador_existente(monkeypatch, componente, adaptador):
     """Cada componente solicita un recurso real después de la cabecera compartida."""
@@ -53,8 +53,8 @@ def test_cabecera_carga_dependencias_de_captura_en_orden():
     nombres = json.loads((activos / "catalogo_captura.json").read_text(encoding="utf-8"))
     posiciones = [tema._CABECERA_HTML.index(f'/assets/js/{nombre}') for nombre in nombres]
     assert posiciones == sorted(posiciones)
-    assert posiciones[0] > tema._CABECERA_HTML.index('/assets/js/cuadricula_compartida.js')
-    assert posiciones[-1] < tema._CABECERA_HTML.index('/assets/js/recoleccion_basura.js')
-    assert nombres == ["rechazo_entrada_numerica.js", "entrada_numerica.js", "captura_celdas.js",
-                       "navegacion_captura.js", "pegado_captura.js", "foco_captura.js", "eventos_captura.js"]
+    assert posiciones[0] > tema._CABECERA_HTML.index('/assets/js/captura/entrada/cuadricula_compartida.js')
+    assert posiciones[-1] < tema._CABECERA_HTML.index('/assets/js/nucleo/navegacion/recoleccion_basura.js')
+    assert nombres == ["captura/entrada/rechazo_entrada_numerica.js", "captura/entrada/entrada_numerica.js", "captura/cuadricula/captura_celdas.js",
+                       "captura/cuadricula/navegacion_captura.js", "captura/cuadricula/pegado_captura.js", "captura/cuadricula/foco_captura.js", "captura/cuadricula/eventos_captura.js"]
     assert all((activos / "js" / nombre).is_file() for nombre in nombres)

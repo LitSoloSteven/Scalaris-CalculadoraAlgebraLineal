@@ -17,7 +17,7 @@ EXCEPCIONES_DECLARACIONES_E4 = {
     ('src/frontend/rutas.py', 'method'),
     ('src/frontend/rutas.py', 'handoff'),
     ('src/frontend/rutas.py', 'client'),
-    ('src/frontend/controladores/operaciones_matrices/codificador.py', 'default'),
+    ('src/frontend/controladores/algebra/operaciones_matrices/base/codificador.py', 'default'),
 }
 ATRIBUTOS_EXTERNOS_ESCRITOS = {
     'text': {'self.etiqueta_error', 'self.etiqueta_signo', 'self.etiqueta_bits', 'etiqueta'},

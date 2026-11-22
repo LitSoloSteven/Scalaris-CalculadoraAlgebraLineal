@@ -65,7 +65,7 @@ def _comprobar_movimiento_reducido_y_sugerencias(contenido, raiz):
     assert "max-width: 16ch" not in css_celda_inversa
     assert "text-overflow: ellipsis" not in css_celda_inversa
 
-    parte_movimiento_reducido = (raiz / "src" / "frontend" / "recursos" / "css" / "movimiento.css").read_text(encoding="utf-8")
+    parte_movimiento_reducido = (raiz / "src" / "frontend" / "recursos" / "css" / "base/movimiento.css").read_text(encoding="utf-8")
     assert "@media (prefers-reduced-motion: reduce)" in parte_movimiento_reducido
     assert ".escritura-cursor" in parte_movimiento_reducido
     assert ".glosa-indicador-escritura span" in parte_movimiento_reducido
@@ -86,7 +86,7 @@ def _comprobar_movimiento_reducido_y_sugerencias(contenido, raiz):
 def test_cliente_delega_ayuda_y_no_anima_teclado():
     """La ayuda de entradas largas se delega y la recolección conserva su curva."""
     javascript_aplicacion = leer_interacciones_cliente()
-    recoleccion_js = Path("src/frontend/recursos/js/recoleccion_basura.js").read_text(encoding="utf-8")
+    recoleccion_js = Path("src/frontend/recursos/js/nucleo/navegacion/recoleccion_basura.js").read_text(encoding="utf-8")
     assert "key-pulse" not in javascript_aplicacion
     assert "scrollWidth > objetivo.clientWidth" in javascript_aplicacion
     assert "objetivo.title = objetivo.value" in javascript_aplicacion
@@ -96,40 +96,40 @@ def test_cliente_delega_ayuda_y_no_anima_teclado():
 
 def test_cliente_resaltado_cruzado_sin_desenfoque():
     """Las cuadrículas resaltan celdas sin cambiar fondo ni aplicar desenfoque."""
-    cuadricula_ecuaciones = leer_captura_cliente("captura_ecuaciones.js")
+    cuadricula_ecuaciones = leer_captura_cliente("captura/adaptadores/captura_ecuaciones.js")
     assert "cuadricula-resaltado-cruzado" in cuadricula_ecuaciones
     assert "filter: blur" not in cuadricula_ecuaciones
     assert "style.background =" not in cuadricula_ecuaciones
 
-    captura_matrices = leer_captura_cliente("captura_matrices.js")
+    captura_matrices = leer_captura_cliente("captura/adaptadores/captura_matrices.js")
     assert "cuadricula-resaltado-cruzado" in captura_matrices
     assert "style.background =" not in captura_matrices
 
-    captura_vectores = leer_captura_cliente("captura_vectores.js")
+    captura_vectores = leer_captura_cliente("captura/adaptadores/captura_vectores.js")
     assert "cuadricula-resaltado-cruzado" in captura_vectores
     assert "filter: blur" not in captura_vectores
     assert "style.background =" not in captura_vectores
 
-    matriz_cuadrada = Path("src/frontend/recursos/js/matriz_cuadrada.js").read_text(encoding="utf-8")
+    matriz_cuadrada = Path("src/frontend/recursos/js/captura/adaptadores/matriz_cuadrada.js").read_text(encoding="utf-8")
     assert "filter: blur" not in matriz_cuadrada
 
 
 def test_componentes_celdas_resistentes_y_animaciones():
     """Las cuadrículas usan clases de celdas con tamaño adaptable."""
-    python_matrices = Path("src/frontend/componentes/captura_matrices.py").read_text(encoding="utf-8")
+    python_matrices = Path("src/frontend/componentes/captura/matrices/captura_matrices.py").read_text(encoding="utf-8")
     assert "filter: 'blur" not in python_matrices
     assert "cuadricula-celda" in python_matrices
     assert "w-20" not in python_matrices
 
-    python_ecuaciones = Path("src/frontend/componentes/cuadricula_ecuaciones.py").read_text(encoding="utf-8")
+    python_ecuaciones = Path("src/frontend/componentes/captura/ecuaciones/cuadricula_ecuaciones.py").read_text(encoding="utf-8")
     assert "cuadricula-celda" in python_ecuaciones
     assert "w-20" not in python_ecuaciones
 
-    python_vectores = Path("src/frontend/componentes/captura_vectores.py").read_text(encoding="utf-8")
+    python_vectores = Path("src/frontend/componentes/captura/vectores/captura_vectores.py").read_text(encoding="utf-8")
     assert "cuadricula-celda" in python_vectores
     assert "w-20" not in python_vectores
 
-    python_matriz_cuadrada = Path("src/frontend/componentes/panel_matriz_cuadrada.py").read_text(encoding="utf-8")
+    python_matriz_cuadrada = Path("src/frontend/componentes/captura/paneles/panel_matriz_cuadrada.py").read_text(encoding="utf-8")
     assert "CELL_PX" not in python_matriz_cuadrada
     assert "cuadricula-celda" in python_matriz_cuadrada
     assert "cuadricula-celda-compacta" in python_matriz_cuadrada
@@ -137,15 +137,15 @@ def test_componentes_celdas_resistentes_y_animaciones():
 
 def test_vistas_sanean_resultados_y_contienen_contenido_ancho():
     """Las vistas contienen fórmulas anchas y escapan texto del resultado."""
-    mixin_numerico = Path("src/frontend/vistas/sistemas_numericos/mixin_interaccion.py").read_text(encoding="utf-8")
+    mixin_numerico = Path("src/frontend/vistas/sistemas_numericos/bases/mixin_interaccion.py").read_text(encoding="utf-8")
     assert "movimiento-sacudida" not in mixin_numerico
 
-    resultados_lineales = Path("src/frontend/vistas/sistemas_lineales/mixin_resultados.py").read_text(encoding="utf-8")
-    css_sesion = Path('src/frontend/recursos/css/vistas_sesion_matricial.css').read_text(encoding='utf-8')
+    resultados_lineales = Path("src/frontend/vistas/algebra/sistemas_lineales/resultados/mixin_resultados.py").read_text(encoding="utf-8")
+    css_sesion = Path('src/frontend/recursos/css/algebra/espacios/vistas_sesion_matricial.css').read_text(encoding='utf-8')
     assert "overflow-wrap: anywhere;" in bloque_css(css_sesion, '.sesion-numero') and "sesion-numero" in resultados_lineales
     assert "min-w-0 max-w-full" in resultados_lineales
 
-    resultados_vectoriales = Path("src/frontend/vistas/operaciones_vectores/mixin_resultados.py").read_text(encoding="utf-8")
+    resultados_vectoriales = Path("src/frontend/vistas/algebra/operaciones_vectores/mixin_resultados.py").read_text(encoding="utf-8")
     assert "matematicas-desplazamiento" in resultados_vectoriales
     assert "html.escape(coeficientes)" in resultados_vectoriales
     assert "html.escape(solucion)" in resultados_vectoriales

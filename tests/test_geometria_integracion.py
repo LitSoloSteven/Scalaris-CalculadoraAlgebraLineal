@@ -4,14 +4,14 @@ import json
 import pytest
 from tests.comun import limpiar_almacen_transferencia
 
-from src.frontend.componentes import transferencia
-from src.frontend.controladores.geometria.controlador_geometria import (
+from src.frontend.componentes.resultados.acciones import transferencia
+from src.frontend.controladores.geometria.escenas.controlador_geometria import (
     ControladorGeometria,
 )
-from src.frontend.controladores.operaciones_inversas.controlador_operaciones_inversas import (
+from src.frontend.controladores.algebra.operaciones_inversas.calculo.controlador_operaciones_inversas import (
     ControladorOperacionesInversas,
 )
-from src.frontend.controladores.operaciones_vectores.controlador_operaciones_vectores import (
+from src.frontend.controladores.algebra.operaciones_vectores.controlador_operaciones_vectores import (
     ControladorOperacionesVectores,
 )
 from src.frontend.navegacion import RedireccionHeredada, ubicacion_redireccion

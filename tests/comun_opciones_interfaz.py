@@ -1,5 +1,5 @@
 """Preparación y verificación de las tres opciones configuradas por entorno."""
-from src.frontend.banderas import navegacion_actualizada, panel_lateral_habilitado, proactivo_habilitado
+from src.frontend.nucleo.banderas import navegacion_actualizada, panel_lateral_habilitado, proactivo_habilitado
 
 
 def comprobar_opciones_configuradas(monkeypatch, valor, esperado):

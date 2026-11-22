@@ -1,5 +1,5 @@
 import inspect
-from src.ai.cliente_openrouter import ClienteOpenRouter
+from src.ai.cliente.cliente_openrouter import ClienteOpenRouter
 
 def test_peticiones_post_vinculacion():
     """La petición inyectable no se vincula accidentalmente a la instancia."""

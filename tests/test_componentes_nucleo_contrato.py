@@ -4,11 +4,11 @@ from dataclasses import fields
 import pytest
 
 from src.frontend import navegacion
-from src.frontend.componentes.calculadora import PanelCalculadora
-from src.frontend.componentes.cuadricula_ecuaciones import CuadriculaEcuaciones
-from src.frontend.componentes.captura_matrices import PanelCapturaMatrices
-from src.frontend.componentes.captura_vectores import PanelCapturaVectores
-from src.frontend.componentes.panel_matriz_cuadrada import PanelMatrizCuadrada
+from src.frontend.componentes.captura.paneles.calculadora import PanelCalculadora
+from src.frontend.componentes.captura.ecuaciones.cuadricula_ecuaciones import CuadriculaEcuaciones
+from src.frontend.componentes.captura.matrices.captura_matrices import PanelCapturaMatrices
+from src.frontend.componentes.captura.vectores.captura_vectores import PanelCapturaVectores
+from src.frontend.componentes.captura.paneles.panel_matriz_cuadrada import PanelMatrizCuadrada
 from tests.comun import RAIZ
 
 

@@ -5,8 +5,8 @@ from types import SimpleNamespace
 
 import pytest
 
-from src.frontend.controladores.biseccion.exploracion import resolver_exploracion
-from src.frontend.controladores.biseccion.formato_expresion import formatear_expresion
+from src.frontend.controladores.raices.biseccion.adaptadores.exploracion import resolver_exploracion
+from src.frontend.controladores.raices.biseccion.adaptadores.formato_expresion import formatear_expresion
 from tests.comun_biseccion_criterios import captura_criterio, ejecutar_escenario
 
 

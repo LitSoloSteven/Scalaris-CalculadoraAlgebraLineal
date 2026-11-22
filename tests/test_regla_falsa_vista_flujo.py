@@ -5,7 +5,7 @@ import math
 import pytest
 
 from src.ai.huellas import calcular_huella
-from src.frontend.controladores.regla_falsa.controlador import resolver_captura
+from src.frontend.controladores.raices.regla_falsa.ejecucion.controlador import resolver_captura
 from tests.comun_regla_falsa_vista import captura_regla_falsa, ejecutar_escenario, textos_resultado
 
 

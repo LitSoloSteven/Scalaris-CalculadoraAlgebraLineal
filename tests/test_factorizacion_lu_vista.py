@@ -5,7 +5,7 @@ from types import SimpleNamespace
 from nicegui import run, ui
 
 from src.frontend.navegacion import elementos_navegacion, ruta_de
-from src.frontend.recursos_vistas import seleccionar_recursos
+from src.frontend.presentacion.recursos_vistas import seleccionar_recursos
 from tests.comun_construccion_vistas import VISTAS_RUTAS, construir_pagina
 
 
@@ -14,14 +14,14 @@ def test_navegacion_y_recursos():
     claves = [elemento.clave for elemento in elementos_navegacion("algebra")]
     assert claves[claves.index("determinantes") + 1] == "factorizacion_lu"
     assert ruta_de("factorizacion_lu") == "/algebra-lineal/factorizacion-lu"
-    cabecera = '<link rel="stylesheet" href="/assets/css/vistas_inversa.css"><script src="/assets/js/inicio.js"></script>'
+    cabecera = '<link rel="stylesheet" href="/assets/css/algebra/matrices/vistas_inversa.css"><script src="/assets/js/inicio/inicio.js"></script>'
     assert 'vistas_inversa.css' in seleccionar_recursos(cabecera, 'factorizacion_lu')
     assert 'inicio.js' not in seleccionar_recursos(cabecera, 'factorizacion_lu')
 
 
 def test_sesion_factorizacion(monkeypatch):
     """Monta la ruta real y comprueba cálculo, errores, historial y restauración."""
-    monkeypatch.setitem(VISTAS_RUTAS, 'factorizacion_lu', ('operaciones_matrices.vista_factorizacion_lu', 'VistaFactorizacionLU'))
+    monkeypatch.setitem(VISTAS_RUTAS, 'factorizacion_lu', ('algebra.operaciones_matrices.factorizacion_lu.vista_factorizacion_lu', 'VistaFactorizacionLU'))
 
     async def comprobar(vista, cliente):
         """Ejercita el ciclo de una captura rectangular y una celda inválida."""
@@ -53,7 +53,7 @@ def test_sesion_factorizacion(monkeypatch):
 
 def test_respuesta_obsoleta_no_se_publica(monkeypatch):
     """Descarta un resultado cuando la captura cambia durante el cálculo."""
-    monkeypatch.setitem(VISTAS_RUTAS, 'factorizacion_lu', ('operaciones_matrices.vista_factorizacion_lu', 'VistaFactorizacionLU'))
+    monkeypatch.setitem(VISTAS_RUTAS, 'factorizacion_lu', ('algebra.operaciones_matrices.factorizacion_lu.vista_factorizacion_lu', 'VistaFactorizacionLU'))
 
     async def comprobar(vista, cliente):
         """Simula una edición mientras el trabajador produce el resultado."""

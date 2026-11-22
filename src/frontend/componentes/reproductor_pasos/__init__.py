@@ -1,22 +1,22 @@
 """API pública del reproductor interactivo de pasos."""
 from __future__ import annotations
 
-from src.frontend.componentes.reproductor_pasos.catalogo import (
+from src.frontend.componentes.reproductor_pasos.nucleo.catalogo import (
     CATALOGO_TIPOS,
     DIMENSION_MAXIMA_FRACCIONES_APILADAS,
     VELOCIDADES_AUTOREPRODUCCION,
     html_sugerencia_tipo,
 )
-from src.frontend.componentes.reproductor_pasos.cuerpos import renderizar_latex
-from src.frontend.componentes.reproductor_pasos.html_tablas import (
+from src.frontend.componentes.reproductor_pasos.formato.cuerpos import renderizar_latex
+from src.frontend.componentes.reproductor_pasos.formato.html_tablas import (
     etiqueta_variable_html,
     formatear_decimal,
     formatear_valor,
     html_tabla_aumentada,
     html_tabla_matriz,
 )
-from src.frontend.componentes.reproductor_pasos.modelo import GrupoReproductor, PasoReproductor
-from src.frontend.componentes.reproductor_pasos.reproductor import ReproductorPasos
+from src.frontend.componentes.reproductor_pasos.nucleo.modelo import GrupoReproductor, PasoReproductor
+from src.frontend.componentes.reproductor_pasos.interfaz.reproductor import ReproductorPasos
 
 __all__ = [
     "CATALOGO_TIPOS",

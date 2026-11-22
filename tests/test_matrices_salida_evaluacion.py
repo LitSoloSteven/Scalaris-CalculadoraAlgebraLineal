@@ -5,7 +5,7 @@ from unittest.mock import Mock
 import pytest
 from nicegui import run, ui
 
-from src.frontend.textos import LIMPIAR
+from src.frontend.nucleo.textos.textos import LIMPIAR
 from tests.comun_construccion_vistas import construir_pagina
 
 

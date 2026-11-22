@@ -52,10 +52,10 @@ function preparar(valor = null, bloquear = false) {
             disconnect() { this.desconectado = true; }
         } };
     const cargar = nombre => ejecutar(leerArchivo(`src/frontend/recursos/js/${nombre}.js`, 'utf8'), entorno);
-    cargar('catalogo_sonidos');
-    cargar('asignacion_sonora');
-    cargar('preferencia_sonido');
-    cargar('interacciones_sonoras');
+    cargar('sonido/motor/catalogo_sonidos');
+    cargar('sonido/motor/asignacion_sonora');
+    cargar('sonido/eventos/preferencia_sonido');
+    cargar('sonido/eventos/interacciones_sonoras');
     const pulsar = (control, opciones = {}) => documento.emitir('click', {
         isTrusted: true, button: 0, target: control, ...opciones
     });
@@ -145,8 +145,8 @@ test('Escape no reproduce el cierre del directorio sin diálogos', () => {
 
 test('recargar y destruir retira listeners y observadores anteriores', () => {
     const caso = preparar();
-    caso.cargar('preferencia_sonido');
-    caso.cargar('interacciones_sonoras');
+    caso.cargar('sonido/eventos/preferencia_sonido');
+    caso.cargar('sonido/eventos/interacciones_sonoras');
     comprobar.equal(caso.documento.contar('click'), 2);
     comprobar.equal(caso.observadores[0].desconectado, true);
     caso.pulsar(boton());

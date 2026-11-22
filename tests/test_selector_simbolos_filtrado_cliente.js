@@ -79,8 +79,8 @@ function cargarSelector(documento, copiados) {
         Option: class { constructor(texto, valor) { this.text = texto; this.value = valor; } },
     });
     const base = path.join(__dirname, "../src/frontend/recursos/js");
-    vm.runInContext(fs.readFileSync(path.join(base, "catalogo_simbolos.js"), "utf8"), contexto);
-    vm.runInContext(fs.readFileSync(path.join(base, "selector_simbolos.js"), "utf8"), contexto);
+    vm.runInContext(fs.readFileSync(path.join(base, "nucleo/escritura/catalogo_simbolos.js"), "utf8"), contexto);
+    vm.runInContext(fs.readFileSync(path.join(base, "nucleo/escritura/selector_simbolos.js"), "utf8"), contexto);
     return contexto;
 }
 

@@ -20,7 +20,7 @@ prueba('una fila completa se anima como capa sin ocultar su contenedor', async (
   }));
   const ventana = { scalaris: { movimiento: movimiento() } };
   const contexto = vm.createContext({ window: ventana, document: {} });
-  cargarAssetCliente('cuadricula_compartida.js', contexto);
+  cargarAssetCliente('captura/entrada/cuadricula_compartida.js', contexto);
   await ventana.scalaris.cuadricula.animarEntradaCeldas(fila.entradas);
   afirmar.equal(animaciones.length, 1);
   afirmar.equal(animaciones[0].duration, 450);
@@ -42,7 +42,7 @@ prueba('la salida de una fila se restaura sin animar su vecina', async () => {
   vecina.parentElement = contenedor;
   const ventana = { scalaris: { movimiento: movimiento() } };
   const contexto = vm.createContext({ window: ventana, document: {} });
-  cargarAssetCliente('cuadricula_compartida.js', contexto);
+  cargarAssetCliente('captura/entrada/cuadricula_compartida.js', contexto);
   const cuadricula = ventana.scalaris.cuadricula;
   await cuadricula.animarSalidaCeldas(fila.entradas);
   afirmar.equal(cancelada, false);
@@ -62,7 +62,7 @@ prueba('texto largo termina con un número acotado de temporizadores', () => {
   const contexto = vm.createContext({ window: ventana, document: { getElementById: () => elemento },
     Date: { now: () => ahora }, clearTimeout() {},
     setTimeout: (funcion, espera) => { cantidad++; pendientes.push({ funcion, espera }); return cantidad; } });
-  cargarAssetCliente('escritura_progresiva.js', contexto);
+  cargarAssetCliente('nucleo/escritura/escritura_progresiva.js', contexto);
   ventana.scalaris.efectoMaquinaEscribir('texto', 'x'.repeat(10000), 18);
   while (pendientes.length) { const tarea = pendientes.shift(); ahora += tarea.espera; tarea.funcion(); }
   afirmar.equal(ahora, 900);

@@ -1,5 +1,5 @@
 """Taxonomía, rutas y referencias del registro de navegación."""
-from src.frontend.componentes.iconos import icono_svg
+from src.frontend.componentes.aplicacion.base.iconos import icono_svg
 from src.frontend.navegacion import (
     ORDEN_NAVEGACION_PLANA, PILARES, HERRAMIENTAS, ruta_navegacion, redirecciones_heredadas, pilar_de,
     herramienta_por_identificador, herramienta_por_ruta, herramientas_visibles,

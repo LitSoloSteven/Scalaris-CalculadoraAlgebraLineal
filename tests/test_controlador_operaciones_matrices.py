@@ -3,10 +3,10 @@ import json
 from fractions import Fraction
 import pytest
 
-from src.frontend.controladores.operaciones_matrices.controlador_operaciones_matrices import (
+from src.frontend.controladores.algebra.operaciones_matrices.base.controlador_operaciones_matrices import (
     ControladorOperacionesMatrices,
 )
-from src.backend.resolutores.operaciones_matrices.captura_matrices import obtener_diccionario_matrices
+from src.backend.resolutores.operaciones_matrices.expresiones.captura_matrices import obtener_diccionario_matrices
 
 
 def _llamar(expresion: str, matrices: dict) -> dict:

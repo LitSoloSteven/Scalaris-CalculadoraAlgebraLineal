@@ -5,14 +5,14 @@ from unittest.mock import Mock
 
 import pytest
 
-from src.ai.clasificador_respuestas import procesar_respuesta_exitosa
-from src.ai.cliente_openrouter import ClienteOpenRouter
+from src.ai.respuestas.clasificador_respuestas import procesar_respuesta_exitosa
+from src.ai.cliente.cliente_openrouter import ClienteOpenRouter
 from src.ai.constantes import MAXIMO_CARACTERES_MENSAJE
-from src.ai.historial import limpiar_historial_almacenado
-from src.ai.mensajes import construir_mensajes, recortar_historial
-from src.ai.respuestas import TipoErrorIA
+from src.ai.presupuesto.historial import limpiar_historial_almacenado
+from src.ai.cliente.mensajes import construir_mensajes, recortar_historial
+from src.ai.respuestas.respuestas import TipoErrorIA
 from src.ai.textos import RESPUESTA_DEMASIADO_EXTENSA
-from src.frontend.componentes.glosa_envio import EnvioGlosaMixin
+from src.frontend.componentes.glosa.panel.glosa_envio import EnvioGlosaMixin
 
 
 def test_pregunta_excesiva_se_rechaza_antes_de_red_y_cache(monkeypatch):
@@ -37,7 +37,7 @@ def test_campo_e_historial_no_se_modifican_tras_rechazar_pregunta(monkeypatch):
     panel = SimpleNamespace(_preparar_interfaz_envio=preparar,
                             campo_entrada=SimpleNamespace(value=texto), historial_chat=[])
     aviso = Mock()
-    monkeypatch.setattr("src.frontend.componentes.glosa_envio.ui.notify", aviso)
+    monkeypatch.setattr("src.frontend.componentes.glosa.panel.glosa_envio.ui.notify", aviso)
     asyncio.run(EnvioGlosaMixin._enviar_consulta(panel, texto))
     preparar.assert_not_called()
     assert panel.campo_entrada.value == texto

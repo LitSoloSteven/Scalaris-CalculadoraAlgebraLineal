@@ -1,5 +1,5 @@
 """Pruebas unitarias para el clasificador de pasos elementales de Gauss-Jordan."""
-from src.frontend.controladores.clasificador_pasos import clasificar_paso
+from src.frontend.controladores.compartido.pasos.clasificador_pasos import clasificar_paso
 
 
 def test_clasificar_pivote():

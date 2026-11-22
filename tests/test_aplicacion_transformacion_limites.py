@@ -5,7 +5,7 @@ import math
 import pytest
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_matrices.aplicacion_transformacion import aplicar_vector, matriz_rotacion
+from src.backend.resolutores.operaciones_matrices.transformaciones.aplicacion_transformacion import aplicar_vector, matriz_rotacion
 
 
 @pytest.mark.parametrize("origen", ["matriz", "vector"])

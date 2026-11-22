@@ -1,0 +1,19 @@
+"""Presentación del veredicto y de la traza del cálculo individual."""
+from src.frontend.vistas.raices.biseccion.grafica.grafico_compartido import mostrar_paso_principal
+from src.frontend.vistas.raices.biseccion.procedimiento.modo_examen import crear_interruptor_examen
+from src.frontend.vistas.raices.biseccion.procedimiento.procedimiento import mostrar_traza
+from .resumen_criterio import mostrar_resumen
+
+
+def mostrar_resultado(vista, respuesta: dict, *, puntero: bool = False) -> None:
+    """Presenta el cálculo vigente y conserva el contexto de Glosa en sus pasos."""
+    with vista.contenedor_resultados:
+        hay_filas = bool(respuesta.get("iteraciones"))
+        examen = crear_interruptor_examen(vista) if hay_filas else None
+        mostrar_resumen(vista, respuesta, examen, puntero=puntero)
+        mostrar_paso_principal(vista, respuesta)
+        if examen is not None:
+            examen.move(vista.contenedor_resultados)
+            vista.reproductor_pasos = mostrar_traza(
+                respuesta, examen, lambda paso: mostrar_paso_principal(vista, respuesta, paso),
+                "biseccion", {"panel_ia": vista.panel_ia, "velocidad": vista.velocidad_procedimiento})

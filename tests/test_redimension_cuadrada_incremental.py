@@ -3,7 +3,7 @@ import asyncio
 from unittest.mock import AsyncMock
 import pytest
 from nicegui import ui, Client
-from src.frontend.componentes.panel_matriz_cuadrada import PanelMatrizCuadrada
+from src.frontend.componentes.captura.paneles.panel_matriz_cuadrada import PanelMatrizCuadrada
 
 
 def test_cincuenta_por_cincuenta_solo_recrea_el_borde(monkeypatch):

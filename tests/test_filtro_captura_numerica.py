@@ -6,13 +6,13 @@ from unittest.mock import Mock
 import pytest
 from nicegui import ui
 
-from src.frontend import tema
-from src.frontend.constantes import CARACTERES_ENTRADA_NUMERICA
-from src.frontend.textos import MENSAJE_ENTRADA_NUMERICA
-from src.frontend.componentes.carga_numerica import preparar_matriz_numerica
-from src.frontend.componentes.captura_modelos import crear_entradas_nombres, crear_entradas_vector, llenar_entradas
-from src.frontend.componentes.cuadricula_base import propiedades_celda_accesible, propiedades_vector_accesible
-from src.frontend.componentes.portapapeles_matricial import filtrar_entrada_numerica, filtrar_matriz_numerica
+from src.frontend.presentacion import tema
+from src.frontend.nucleo.constantes import CARACTERES_ENTRADA_NUMERICA
+from src.frontend.nucleo.textos.textos import MENSAJE_ENTRADA_NUMERICA
+from src.frontend.componentes.captura.nucleo.carga_numerica import preparar_matriz_numerica
+from src.frontend.componentes.captura.matrices.captura_modelos import crear_entradas_nombres, crear_entradas_vector, llenar_entradas
+from src.frontend.componentes.captura.nucleo.cuadricula_base import propiedades_celda_accesible, propiedades_vector_accesible
+from src.frontend.componentes.captura.nucleo.portapapeles_matricial import filtrar_entrada_numerica, filtrar_matriz_numerica
 
 
 @pytest.mark.parametrize('texto,esperado', [
@@ -42,7 +42,7 @@ def test_configuracion_json_coincide_con_fuentes_python():
     assert json.loads(bloque.group(1)) == {'caracteres': CARACTERES_ENTRADA_NUMERICA,
                                          'mensaje': MENSAJE_ENTRADA_NUMERICA}
     assert set(CARACTERES_ENTRADA_NUMERICA) == set('0123456789./-+−÷⁄∕¼½¾⅐⅑⅒⅓⅔⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞↉‰')
-    assert tema._CABECERA_HTML.index('scalaris-configuracion-numerica') < tema._CABECERA_HTML.index('/assets/js/entrada_numerica.js')
+    assert tema._CABECERA_HTML.index('scalaris-configuracion-numerica') < tema._CABECERA_HTML.index('/assets/js/captura/entrada/entrada_numerica.js')
 
 
 def test_propiedades_separan_celdas_y_texto_libre():

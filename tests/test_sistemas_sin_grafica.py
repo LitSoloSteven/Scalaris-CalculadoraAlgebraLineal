@@ -4,7 +4,7 @@ from pathlib import Path
 
 
 RAIZ = Path(__file__).resolve().parents[1]
-VISTAS_SISTEMAS = RAIZ / "src/frontend/vistas/sistemas_lineales"
+VISTAS_SISTEMAS = RAIZ / "src/frontend/vistas/algebra/sistemas_lineales"
 EXTENSIONES_FUENTE = {".py", ".js", ".css", ".html"}
 
 
@@ -25,8 +25,8 @@ def test_frontend_no_contiene_la_grafica_de_sistemas():
 
 def test_resultados_conservan_el_boton_y_su_transferencia():
     """Verifica el botón existente, su condición, su tooltip y el traspaso de datos."""
-    contenido = (VISTAS_SISTEMAS / "mixin_resolucion.py").read_text(encoding="utf-8")
-    contenido += (RAIZ / 'src/backend/utilidades/estado_captura.py').read_text(encoding='utf-8')
+    contenido = (VISTAS_SISTEMAS / "resultados/mixin_resolucion.py").read_text(encoding="utf-8")
+    contenido += (RAIZ / 'src/backend/utilidades/captura/estado_captura.py').read_text(encoding='utf-8')
     assert "if numero_variables in (2, 3):" in contenido
     assert "Ver en el Visualizador" in contenido
     assert "guardar_sistema('sistemas', coeficientes, independientes)" in contenido

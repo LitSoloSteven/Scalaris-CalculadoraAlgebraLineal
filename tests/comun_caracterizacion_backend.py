@@ -7,16 +7,16 @@ from importlib import import_module
 from src.backend.modelos.matriz import Matriz
 
 MODULOS = {
-    "gauss": ("sistemas_lineales.gauss", "ResolutorGauss"),
-    "gauss_jordan": ("sistemas_lineales.gauss_jordan", "ResolutorGaussJordan"),
-    "operaciones": ("operaciones_matrices.operaciones", "ResolutorOperacionesMatrices"),
-    "determinante": ("operaciones_matrices.determinante", "ResolutorDeterminante"),
-    "inversa": ("operaciones_matrices.inversa", "ResolutorInversa"),
-    "evaluador": ("operaciones_matrices.evaluador", "EvaluadorExpresionesMatriciales"),
-    "leontief": ("operaciones_matrices.leontief", "ResolutorModeloLeontief"),
-    "transformaciones": ("operaciones_matrices.transformaciones", "ResolutorTransformacionesLineales"),
-    "vectores": ("operaciones_vectores.operaciones", "ResolutorOperacionesVectores"),
-    "combinacion": ("operaciones_vectores.combinacion_lineal", "ResolutorCombinacionLineal"),
+    "gauss": ("sistemas_lineales.eliminacion.gauss", "ResolutorGauss"),
+    "gauss_jordan": ("sistemas_lineales.eliminacion.gauss_jordan", "ResolutorGaussJordan"),
+    "operaciones": ("operaciones_matrices.expresiones.operaciones", "ResolutorOperacionesMatrices"),
+    "determinante": ("operaciones_matrices.determinante.determinante", "ResolutorDeterminante"),
+    "inversa": ("operaciones_matrices.inversa.inversa", "ResolutorInversa"),
+    "evaluador": ("operaciones_matrices.expresiones.evaluador", "EvaluadorExpresionesMatriciales"),
+    "leontief": ("operaciones_matrices.leontief.leontief", "ResolutorModeloLeontief"),
+    "transformaciones": ("operaciones_matrices.transformaciones.transformaciones", "ResolutorTransformacionesLineales"),
+    "vectores": ("operaciones_vectores.operaciones.operaciones", "ResolutorOperacionesVectores"),
+    "combinacion": ("operaciones_vectores.operaciones.combinacion_lineal", "ResolutorCombinacionLineal"),
     "romanos": ("sistemas_numericos.calculadora_romana", "CalculadoraRomana"),
     "bases": ("sistemas_numericos.conversor_bases", "ConversorBases"),
 }

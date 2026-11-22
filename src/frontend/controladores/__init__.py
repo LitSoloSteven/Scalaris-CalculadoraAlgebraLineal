@@ -1,15 +1,15 @@
 """Paquete de controladores para mediación entre interfaz y dominio matemático."""
-from src.frontend.controladores.agrupador_pasos import agrupar_pasos_eliminacion
-from src.frontend.controladores.clasificador_pasos import clasificar_paso
+from src.frontend.controladores.compartido.pasos.agrupador_pasos import agrupar_pasos_eliminacion
+from src.frontend.controladores.compartido.pasos.clasificador_pasos import clasificar_paso
 from src.frontend.controladores.geometria import (
     ControladorGeometria,
     selector_celda_error,
 )
-from src.frontend.controladores.operaciones_inversas import (
+from src.frontend.controladores.algebra.operaciones_inversas import (
     ControladorOperacionesInversas,
     construir_foco_paso,
 )
-from src.frontend.controladores.operaciones_matrices import (
+from src.frontend.controladores.algebra.operaciones_matrices import (
     CodificadorMatriz,
     ControladorDeterminante,
     ControladorFactorizacionLU,
@@ -17,15 +17,15 @@ from src.frontend.controladores.operaciones_matrices import (
     ControladorOperacionesMatrices,
     ControladorTransformaciones,
 )
-from src.frontend.controladores.operaciones_vectores import (
+from src.frontend.controladores.algebra.operaciones_vectores import (
     ControladorOperacionesVectores,
 )
-from src.frontend.controladores.sistemas_lineales import (
+from src.frontend.controladores.algebra.sistemas_lineales import (
     ControladorGauss,
     ControladorGaussJordan,
     construir_metadatos_pasos,
 )
-from src.frontend.controladores.utilidades import (
+from src.frontend.controladores.compartido.pasos.utilidades import (
     construir_vista_pasos,
     parsear_carga_json,
     serializar_matriz,

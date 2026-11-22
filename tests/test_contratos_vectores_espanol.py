@@ -6,13 +6,13 @@ from fractions import Fraction
 import pytest
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.operaciones_vectores.captura import construir_vector_desde_diccionario
-from src.backend.resolutores.operaciones_vectores.combinacion_lineal import ResolutorCombinacionLineal
-from src.backend.resolutores.operaciones_vectores.operaciones import ResolutorOperacionesVectores
-from src.frontend.controladores.operaciones_vectores.captura import capturar_vectores, preparar_transferencia
-from src.frontend.controladores.operaciones_vectores.controlador_operaciones_vectores import ControladorOperacionesVectores
-from src.frontend.controladores.operaciones_vectores.presentacion_pasos import construir_tabla_paso_vectorial
-from src.frontend.componentes.captura_vectores import _formatear_nombre_vector
+from src.backend.resolutores.operaciones_vectores.base.captura import construir_vector_desde_diccionario
+from src.backend.resolutores.operaciones_vectores.operaciones.combinacion_lineal import ResolutorCombinacionLineal
+from src.backend.resolutores.operaciones_vectores.operaciones.operaciones import ResolutorOperacionesVectores
+from src.frontend.controladores.algebra.operaciones_vectores.captura import capturar_vectores, preparar_transferencia
+from src.frontend.controladores.algebra.operaciones_vectores.controlador_operaciones_vectores import ControladorOperacionesVectores
+from src.frontend.controladores.algebra.operaciones_vectores.presentacion_pasos import construir_tabla_paso_vectorial
+from src.frontend.componentes.captura.vectores.captura_vectores import _formatear_nombre_vector
 from tests.comun import RAIZ
 from tests.comun_vista_vectorial import vista_vectorial_montada
 
@@ -150,9 +150,20 @@ def test_panel_captura_y_herramienta_unicos(vista_vectorial_montada):
     assert vista.obtener_contexto_ia().herramienta == vista.obtener_senales_ia().herramienta == "vectores"
 
 
+_VISTAS_VECTORES = (
+    "algebra/operaciones_vectores/__init__.py",
+    "algebra/operaciones_vectores/mixin_resultados.py",
+    "algebra/operaciones_vectores/vista_operaciones_vectores.py",
+    "algebra/operaciones_vectores/panel/_pasos_reproductor.py",
+    "algebra/operaciones_vectores/panel/contexto.py",
+    "algebra/operaciones_vectores/panel/controles.py",
+    "algebra/operaciones_vectores/panel/mixin_pasos.py",
+)
+
+
 def test_vistas_delegan_dominio_y_transferencia():
     """Las vistas no construyen números/matrices ni importan el preparador de dominio."""
-    for ruta in (RAIZ / "src/frontend/vistas/operaciones_vectores").glob("*.py"):
+    for ruta in (RAIZ / "src/frontend/vistas" / relativo for relativo in _VISTAS_VECTORES):
         arbol = ast.parse(ruta.read_text(encoding="utf-8"))
         llamadas = {nodo.func.id for nodo in ast.walk(arbol) if isinstance(nodo, ast.Call) and isinstance(nodo.func, ast.Name)}
         assert not llamadas & {"Fraction", "Matriz", "float", "preparar_vectores_visualizador"}

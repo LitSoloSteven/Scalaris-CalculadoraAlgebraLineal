@@ -6,7 +6,7 @@ plotly = pytest.importorskip("plotly")
 
 def test_construir_rectas_en_dos_dimensiones():
     """Las rectas bidimensionales generan JSON de Plotly válido."""
-    from src.frontend.vistas.geometria._escenas import construir_figura_rectas_planos
+    from src.frontend.vistas.geometria.escenas._escenas import construir_figura_rectas_planos
     resultado = {
         "numero_variables": 2,
         "ecuaciones": [
@@ -22,7 +22,7 @@ def test_construir_rectas_en_dos_dimensiones():
 
 def test_construir_planos_en_tres_dimensiones():
     """Un plano tridimensional genera JSON de Plotly válido."""
-    from src.frontend.vistas.geometria._escenas import construir_figura_rectas_planos
+    from src.frontend.vistas.geometria.escenas._escenas import construir_figura_rectas_planos
     resultado = {
         "numero_variables": 3,
         "ecuaciones": [
@@ -37,7 +37,7 @@ def test_construir_planos_en_tres_dimensiones():
 
 def test_construir_figura_vectores():
     """Los vectores y su cuadro inicial generan JSON de Plotly válido."""
-    from src.frontend.vistas.geometria._escenas import construir_figura_vectores
+    from src.frontend.vistas.geometria.escenas._escenas import construir_figura_vectores
     resultado = {
         "numero_variables": 2,
         "estatica": {"vector_u": [1.0, 0.0], "vector_v": [0.0, 1.0], "u_mas_v": [1.0, 1.0]},
@@ -50,7 +50,7 @@ def test_construir_figura_vectores():
 
 def test_construir_figura_combinacion():
     """La combinación y su cadena generan JSON de Plotly válido."""
-    from src.frontend.vistas.geometria._escenas import construir_figura_combinacion
+    from src.frontend.vistas.geometria.escenas._escenas import construir_figura_combinacion
     resultado = {
         "numero_variables": 2,
         "objetivo": {"aproximado": [3.0, 3.0], "exacta": ["3", "3"]},
@@ -68,7 +68,7 @@ def test_construir_figura_combinacion():
 
 def test_figuras_conservan_rangos_fijos():
     """Los ejes mantienen el intervalo indicado por el controlador."""
-    from src.frontend.vistas.geometria._escenas import construir_figura_rectas_planos
+    from src.frontend.vistas.geometria.escenas._escenas import construir_figura_rectas_planos
     resultado = {
         "numero_variables": 2,
         "ecuaciones": [
@@ -85,7 +85,7 @@ def test_figuras_conservan_rangos_fijos():
 
 def test_figuras_no_dependen_de_cuadros_plotly():
     """Las figuras no dependen de la propiedad frames de Plotly."""
-    from src.frontend.vistas.geometria._escenas import construir_figura_vectores
+    from src.frontend.vistas.geometria.escenas._escenas import construir_figura_vectores
     resultado = {
         "numero_variables": 2,
         "estatica": {"vector_u": [1.0, 0.0], "vector_v": [0.0, 1.0], "u_mas_v": [1.0, 1.0]},

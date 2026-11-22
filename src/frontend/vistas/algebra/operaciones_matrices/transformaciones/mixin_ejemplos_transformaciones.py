@@ -1,0 +1,26 @@
+"""Selección y carga de ejemplos de Transformaciones."""
+from src.frontend.componentes.aplicacion.base.sonido import notificar
+from src.frontend.componentes.captura.matrices.captura_modelos import construir_ejemplos
+from src.frontend.nucleo.textos import textos_transformaciones as textos
+from nicegui import ui
+from src.frontend.vistas.algebra.operaciones_matrices.transformaciones.apoyo._ejemplos_transformaciones import EJEMPLOS_TRANSFORMACIONES
+from src.frontend.vistas.algebra.operaciones_matrices.aplicacion_transformacion.procedimiento._ejemplos_aplicacion_transformacion import EJEMPLOS_APLICACION
+from src.frontend.vistas.algebra.operaciones_matrices.compartido.carga_modelos import cargar_captura_modelo
+
+
+class MixinEjemplosTransformaciones:
+    """Carga datos internos de ejemplo en los controles de captura."""
+
+    def _construir_ejemplos(self):
+        with ui.column().classes("w-full").bind_visibility_from(
+            self.selector_modo, 'value', backward=lambda modo: modo == textos.MODO_ANALISIS
+        ):
+            construir_ejemplos(EJEMPLOS_TRANSFORMACIONES, self._cargar_ejemplo, "Ejemplos precargados")
+        with ui.column().classes("w-full").bind_visibility_from(
+            self.selector_modo, 'value', backward=lambda modo: modo == textos.MODO_APLICACION
+        ):
+            construir_ejemplos(EJEMPLOS_APLICACION, self._cargar_ejemplo, textos.TITULO_EJEMPLOS)
+
+    def _cargar_ejemplo(self, ejemplo: dict):
+        cargar_captura_modelo(self, ejemplo)
+        notificar(f"Ejemplo '{ejemplo['nombre']}' cargado.", type="positive", position="top")

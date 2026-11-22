@@ -4,8 +4,8 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 from nicegui import ui
 
-from src.frontend.vistas.geometria import _actualizacion_geometria as actualizacion
-from src.frontend.vistas.geometria import _resumen_geometria as resumen
+from src.frontend.vistas.geometria.escenas import _actualizacion_geometria as actualizacion
+from src.frontend.vistas.geometria.escenas import _resumen_geometria as resumen
 from src.frontend.vistas.geometria._contexto_ia_geometria import obtener_contexto_ia
 from src.frontend.vistas.geometria.vista_geometria import VistaGeometria
 from src.frontend.controladores.geometria import selector_celda_error
@@ -13,6 +13,26 @@ from tests.comun import RAIZ
 from tests.rutas_auditadas import RUTAS_AUDITADAS
 from tests.comun_geometria import cancelar_figura_pendiente
 
+
+_VISTAS_GEOMETRIA = (
+    'src/frontend/vistas/geometria/__init__.py',
+    'src/frontend/vistas/geometria/_contexto_ia_geometria.py',
+    'src/frontend/vistas/geometria/mixin_escenas.py',
+    'src/frontend/vistas/geometria/vista_geometria.py',
+    'src/frontend/vistas/geometria/figuras/_colores_figuras.py',
+    'src/frontend/vistas/geometria/figuras/_figuras_comunes.py',
+    'src/frontend/vistas/geometria/figuras/_figura_combinacion.py',
+    'src/frontend/vistas/geometria/figuras/_figura_rectas_planos.py',
+    'src/frontend/vistas/geometria/figuras/_figura_vectores.py',
+    'src/frontend/vistas/geometria/escenas/_escenas.py',
+    'src/frontend/vistas/geometria/escenas/_estados_geometria.py',
+    'src/frontend/vistas/geometria/escenas/_resumen_geometria.py',
+    'src/frontend/vistas/geometria/escenas/_actualizacion_geometria.py',
+    'src/frontend/vistas/geometria/controles/_panel_vectores.py',
+    'src/frontend/vistas/geometria/controles/_transferencia_geometria.py',
+    'src/frontend/vistas/geometria/controles/limpieza_geometria.py',
+    'src/frontend/vistas/geometria/controles/mixin_controles.py',
+)
 
 def _crear_vista_simulada(monkeypatch):
     vista = VistaGeometria()
@@ -121,7 +141,7 @@ def test_contexto_vectores_contiene_entrada_actual(monkeypatch):
 def test_auditoria_incluye_toda_geometria_y_rutas_existentes():
     """La lista no permite que rutas inexistentes oculten módulos del alcance."""
     assert all(ruta.is_file() for ruta in RUTAS_AUDITADAS)
-    geometria = set((RAIZ / 'src/frontend/vistas/geometria').glob('*.py'))
+    geometria = {RAIZ / ruta for ruta in _VISTAS_GEOMETRIA}
     assert geometria <= set(RUTAS_AUDITADAS)
 
 

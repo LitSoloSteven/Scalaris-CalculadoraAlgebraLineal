@@ -3,7 +3,7 @@ import asyncio
 
 from nicegui import Client, core, ui
 
-from src.frontend.vistas.regla_falsa.vista_regla_falsa import VistaReglaFalsa
+from src.frontend.vistas.raices.regla_falsa.vista_regla_falsa import VistaReglaFalsa
 from tests.comun_construccion_vistas import cerrar_cliente, preparar_transporte
 
 

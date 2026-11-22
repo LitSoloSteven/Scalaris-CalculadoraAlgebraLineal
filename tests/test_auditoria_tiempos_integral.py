@@ -49,13 +49,13 @@ def _infracciones_css(texto, es_tokens=False):
 
 def test_css_solo_declaraciones_de_tiempo_en_tokens():
     """Busca tiempos y propiedades prohibidas en cada hoja propia."""
-    for ruta in (RECURSOS / 'css').glob('*.css'):
+    for ruta in (RECURSOS / 'css').rglob('*.css'):
         assert not _infracciones_css(ruta.read_text(encoding='utf-8'), ruta.name == 'tokens.css'), ruta
 
 
 def test_tokens_de_duracion_en_banda():
     """Exige los tokens y valores acordados en milisegundos literales."""
-    texto = (RECURSOS / 'css/tokens.css').read_text(encoding='utf-8')
+    texto = (RECURSOS / 'css/base/tokens.css').read_text(encoding='utf-8')
     tokens = re.findall(r'(--dur-[\w-]+)\s*:\s*([^;]+);', texto)
     assert {nombre.removeprefix('--dur-') for nombre, _ in tokens} == set(TOKENS)
     for nombre, declaracion in tokens:
@@ -69,7 +69,7 @@ def test_tokens_de_duracion_en_banda():
 
 def test_javascript_sin_duraciones_o_curvas_literales_en_animaciones():
     """Rechaza duraciones directas y curvas literales en JavaScript."""
-    rutas = [str(ruta) for ruta in (RECURSOS / 'js').glob('*.js')]
+    rutas = [str(ruta) for ruta in (RECURSOS / 'js').rglob('*.js')]
     analizador = Path(__file__).with_name('comun_auditoria_tiempos.js')
     salida = subprocess.run(['node', '--expose-internals', str(analizador)], input=json.dumps(rutas),
                             text=True, capture_output=True, check=True, encoding='utf-8')

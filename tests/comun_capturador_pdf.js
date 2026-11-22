@@ -5,8 +5,8 @@ const {cargarAssetCliente} = require('./comun_cliente_javascript.js');
 function cargarCapturadorPdf(contexto) {
     contexto.window.requestAnimationFrame ||= resolver => resolver();
     contexto.window.scheduler ||= {yield: async () => {}};
-    cargarAssetCliente('clon_pdf.js', contexto);
-    cargarAssetCliente('captura_pdf.js', contexto);
+    cargarAssetCliente('herramientas/documentos/clon_pdf.js', contexto);
+    cargarAssetCliente('herramientas/documentos/captura_pdf.js', contexto);
 }
 
 module.exports = {cargarCapturadorPdf};

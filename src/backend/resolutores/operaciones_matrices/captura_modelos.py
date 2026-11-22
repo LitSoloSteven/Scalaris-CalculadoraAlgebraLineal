@@ -2,7 +2,7 @@
 from fractions import Fraction
 from src.backend.modelos.matriz import Matriz
 from src.backend.constantes import DIMENSION_MAXIMA_MODELOS, LONGITUD_MAXIMA_NOMBRE_MODELO
-from .celdas_exactas import parsear_celda_exacta
+from .compartido.celdas_exactas import parsear_celda_exacta
 
 
 def parsear_matriz_modelo(datos_crudos: list, simbolo: str, cuadrada: bool = False) -> Matriz:

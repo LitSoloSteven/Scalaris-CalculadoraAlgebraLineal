@@ -5,12 +5,12 @@ from pathlib import Path
 
 import pytest
 
-from src.frontend import tema
+from src.frontend.presentacion import tema
 from src.frontend.navegacion import (
     ORDEN_NAVEGACION_PLANA, elementos_navegacion, herramienta_por_identificador,
     herramienta_por_ruta, herramientas_visibles, ruta_de, ruta_navegacion,
 )
-from src.frontend.recursos_vistas import seleccionar_recursos
+from src.frontend.presentacion.recursos_vistas import seleccionar_recursos
 
 
 def test_registro_visible_con_identidad_ruta_y_contexto_coherentes():
@@ -42,7 +42,7 @@ def test_recursos_de_raices_no_filtran_movimiento_a_otras_herramientas(vista):
 
 def comprobar_hoja_versionada(cabecera):
     """Contrasta la hoja realmente cargada con su contenido y el orden de cascada común."""
-    versiones = re.findall(r'/assets/css/vistas_metodos_cerrados.css\?v=([a-f0-9]+)', cabecera)
-    contenido = Path("src/frontend/recursos/css/vistas_metodos_cerrados.css").read_bytes()
+    versiones = re.findall(r'/assets/css/numericos/raices/vistas_metodos_cerrados.css\?v=([a-f0-9]+)', cabecera)
+    contenido = Path("src/frontend/recursos/css/numericos/raices/vistas_metodos_cerrados.css").read_bytes()
     assert versiones == [hashlib.sha256(contenido).hexdigest()]
     assert cabecera.index("vistas_inversa.css") < cabecera.index("vistas_metodos_cerrados.css")

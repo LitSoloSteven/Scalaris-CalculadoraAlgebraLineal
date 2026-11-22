@@ -2,7 +2,7 @@
 from pathlib import Path
 import re
 
-RUTA_CSS = Path("src/frontend/recursos/css/vistas_navegacion.css")
+RUTA_CSS = Path("src/frontend/recursos/css/utilidades/vistas_navegacion.css")
 
 
 def leer_estilos_navegacion() -> str:

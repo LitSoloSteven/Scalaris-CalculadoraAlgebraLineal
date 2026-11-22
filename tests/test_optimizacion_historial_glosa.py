@@ -2,7 +2,7 @@
 import json
 import pytest
 from nicegui.observables import ObservableDict
-from src.frontend.componentes.historial_glosa import incorporar_mensaje
+from src.frontend.componentes.glosa.elementos.historial_glosa import incorporar_mensaje
 
 
 @pytest.mark.parametrize('cantidad', [0, 1, 59, 60, 61])

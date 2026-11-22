@@ -2,7 +2,7 @@
 import pytest
 
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos
-from src.frontend.componentes.reproductor_pasos.catalogo import (
+from src.frontend.componentes.reproductor_pasos.nucleo.catalogo import (
     MULTIPLICADORES_LECTURA,
     intervalo_lectura,
 )

@@ -1,8 +1,8 @@
 """Contratos puros de recomendación e historial de las herramientas matriciales."""
 import pytest
 
-from src.frontend.controladores.operaciones_matrices.recomendacion_determinante import metodo_recomendado_disponible
-from src.frontend.controladores.sesion_matricial import describir_registro
+from src.frontend.controladores.algebra.operaciones_matrices.determinante.recomendacion_determinante import metodo_recomendado_disponible
+from src.frontend.controladores.compartido.sesion.sesion_matricial import describir_registro
 
 
 @pytest.mark.parametrize('respuesta,actual,esperado', [

@@ -6,16 +6,16 @@ from fractions import Fraction
 
 import pytest
 
-from src.backend.resolutores.raices.biseccion import biseccion
-from src.backend.resolutores.raices.contrato_biseccion import EntradaBiseccion
-from src.backend.resolutores.raices.contrato_exploracion import CandidatoExploracion, EntradaExploracion
-from src.backend.resolutores.raices.contrato_resolucion_multiple import CandidatoResolucion, EntradaResolucionMultiple
-from src.backend.resolutores.raices.criterios_biseccion import CriterioParada
-from src.backend.resolutores.raices.dominio_intervalo import comprobar_dominio_intervalo
-from src.backend.resolutores.raices.errores_numericos import ErrorSingularidad
-from src.backend.resolutores.raices.exploracion_intervalos import explorar_intervalos
-from src.backend.resolutores.raices.polos_trigonometricos import comprobar_polos_tangente
-from src.backend.resolutores.raices.resolucion_multiple import resolver_candidatos
+from src.backend.resolutores.raices.biseccion.motor.biseccion import biseccion
+from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import EntradaBiseccion
+from src.backend.resolutores.raices.exploracion.base.contrato_exploracion import CandidatoExploracion, EntradaExploracion
+from src.backend.resolutores.raices.biseccion.lote.contrato_resolucion_multiple import CandidatoResolucion, EntradaResolucionMultiple
+from src.backend.resolutores.raices.biseccion.contratos.criterios_biseccion import CriterioParada
+from src.backend.resolutores.raices.continuidad.dominio.dominio_intervalo import comprobar_dominio_intervalo
+from src.backend.resolutores.raices.compartido.errores_numericos import ErrorSingularidad
+from src.backend.resolutores.raices.exploracion.busqueda.exploracion_intervalos import explorar_intervalos
+from src.backend.resolutores.raices.continuidad.dominio.polos_trigonometricos import comprobar_polos_tangente
+from src.backend.resolutores.raices.biseccion.lote.resolucion_multiple import resolver_candidatos
 
 
 @pytest.mark.parametrize("expresion,intervalo,unidad", [

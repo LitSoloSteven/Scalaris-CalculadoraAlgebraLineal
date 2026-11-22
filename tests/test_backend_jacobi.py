@@ -3,17 +3,17 @@ from fractions import Fraction
 
 import pytest
 
-from src.backend.resolutores.sistemas_lineales.aritmetica_jacobi import (
+from src.backend.resolutores.sistemas_lineales.jacobi.aritmetica_jacobi import (
     LimiteAritmeticoJacobi, PresupuestoAritmetico,
 )
-from src.backend.resolutores.sistemas_lineales.contrato_jacobi import (
+from src.backend.resolutores.sistemas_lineales.jacobi.contrato_jacobi import (
     EntradaJacobi, MatrizCrudaJacobi, ResultadoJacobi,
 )
-from src.backend.resolutores.sistemas_lineales.jacobi import resolver_jacobi
-from src.backend.resolutores.sistemas_lineales.limites_jacobi import (
+from src.backend.resolutores.sistemas_lineales.jacobi.jacobi import resolver_jacobi
+from src.backend.resolutores.sistemas_lineales.jacobi.limites_jacobi import (
     MAXIMO_BITS_CALCULO_JACOBI,
 )
-import src.backend.resolutores.sistemas_lineales.jacobi as motor
+import src.backend.resolutores.sistemas_lineales.jacobi.jacobi as motor
 
 
 def _matriz(datos: list[list[int]]) -> MatrizCrudaJacobi:

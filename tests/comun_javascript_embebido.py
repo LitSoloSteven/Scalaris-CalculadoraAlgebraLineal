@@ -8,7 +8,7 @@ TIPOS_JAVASCRIPT = {
     "", "module", "text/javascript", "application/javascript",
     "text/ecmascript", "application/ecmascript",
 }
-PROVEEDORES_CLIENTE = frozenset({'src/frontend/recursos/js/html2canvas.min.js'})
+PROVEEDORES_CLIENTE = frozenset({'src/frontend/recursos/js/vendor/html2canvas.min.js'})
 
 
 class LectorCodigoHTML(HTMLParser):

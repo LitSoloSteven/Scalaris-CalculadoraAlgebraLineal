@@ -5,11 +5,11 @@ from fractions import Fraction
 import pytest
 
 from src.backend.modelos.matriz import Matriz
-from src.backend.resolutores.sistemas_lineales.gauss import ResolutorGauss
-from src.backend.resolutores.sistemas_lineales.gauss_jordan import ResolutorGaussJordan
-from src.backend.resolutores.operaciones_matrices.inversa import ResolutorInversa
-from src.frontend.controladores.sistemas_lineales import ControladorGauss, ControladorGaussJordan
-from src.frontend.controladores.operaciones_inversas import ControladorOperacionesInversas
+from src.backend.resolutores.sistemas_lineales.eliminacion.gauss import ResolutorGauss
+from src.backend.resolutores.sistemas_lineales.eliminacion.gauss_jordan import ResolutorGaussJordan
+from src.backend.resolutores.operaciones_matrices.inversa.inversa import ResolutorInversa
+from src.frontend.controladores.algebra.sistemas_lineales import ControladorGauss, ControladorGaussJordan
+from src.frontend.controladores.algebra.operaciones_inversas import ControladorOperacionesInversas
 
 
 CLAVES_SISTEMA = {

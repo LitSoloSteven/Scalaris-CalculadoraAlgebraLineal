@@ -1,7 +1,7 @@
 """Restricciones de dominio para enviar una familia vectorial al visualizador."""
 import pytest
 
-from src.backend.geometria.transferencia import preparar_vectores_visualizador
+from src.backend.geometria.preparacion.transferencia import preparar_vectores_visualizador
 
 
 @pytest.mark.parametrize("operacion,cantidad,dimension,escena", [

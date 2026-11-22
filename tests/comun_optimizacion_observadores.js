@@ -15,7 +15,7 @@ function crearObservador(nombre) {
         MutationObserver: class { constructor(funcion) { observadores.push(funcion); } observe() {} },
         ResizeObserver: class { observe() {} },
         requestAnimationFrame: funcion => fotogramas.push(funcion), setTimeout, clearTimeout });
-    const recursoObservacion = rutas.join(recursos, 'observacion_dom.js');
+    const recursoObservacion = rutas.join(recursos, 'nucleo/interacciones/observacion_dom.js');
     if (archivos.existsSync(recursoObservacion)) {
         maquinaVirtual.runInContext(archivos.readFileSync(recursoObservacion, 'utf8'), contexto);
     }
