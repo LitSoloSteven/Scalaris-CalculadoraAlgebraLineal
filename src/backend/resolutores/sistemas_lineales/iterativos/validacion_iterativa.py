@@ -68,9 +68,12 @@ def preparar_entrada(
             "entrada",
             f"La entrada debe cumplir el contrato del método de {parametros.nombre_metodo}.",
         )
+    matriz = _preparar_cuadricula(entrada.matriz_a, parametros)
+    if isinstance(matriz, FalloValidacion):
+        return matriz
     return _preparar_sistema(
         DatosValidacion(
-            matriz=entrada.matriz_a,
+            matriz=matriz,
             vector_b=entrada.vector_b,
             vector_inicial=entrada.vector_inicial,
             tolerancia=entrada.tolerancia,
