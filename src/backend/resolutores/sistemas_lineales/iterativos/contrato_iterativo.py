@@ -3,6 +3,8 @@ from dataclasses import dataclass, field
 from fractions import Fraction
 from typing import Literal
 
+from .formato_iterativo import formatear_racional_exacto
+
 EscalarIterativo = Fraction | int | str
 FilaCapturaIterativa = list[EscalarIterativo] | tuple[EscalarIterativo, ...]
 MatrizCrudaIterativa = list[FilaCapturaIterativa] | tuple[FilaCapturaIterativa, ...]
@@ -117,7 +119,7 @@ def _explicar_sin_vector(diagnostico: DiagnosticoIterativo | None) -> str:
 
 def _formatear_vector(vector: VectorIterativo) -> str:
     """Presenta un vector entre paréntesis con sus componentes separadas por comas."""
-    return "(" + ", ".join(str(componente) for componente in vector) + ")"
+    return "(" + ", ".join(formatear_racional_exacto(componente) for componente in vector) + ")"
 
 
 def _describir_barridos(iteraciones: int) -> str:
@@ -140,7 +142,8 @@ def _explicar_tolerancia(
     """Describe la aproximación que cumple la tolerancia solicitada."""
     return (
         f"La aproximación {_formatear_vector(vector)} cumple la tolerancia con una "
-        f"norma del residuo de {norma} tras {_describir_barridos(iteraciones)}."
+        f"norma del residuo de {formatear_racional_exacto(norma)} "
+        f"tras {_describir_barridos(iteraciones)}."
     )
 
 
@@ -150,7 +153,8 @@ def _explicar_maximo(
     """Describe el cierre por máximo sin ocultar el último residuo."""
     return (
         f"Se alcanzó el máximo de {_describir_barridos(iteraciones)} con la "
-        f"aproximación {_formatear_vector(vector)} y una norma del residuo de {norma}."
+        f"aproximación {_formatear_vector(vector)} y una norma del residuo "
+        f"de {formatear_racional_exacto(norma)}."
     )
 
 
@@ -161,5 +165,6 @@ def _explicar_limite(
     return (
         f"El cálculo se interrumpió por el límite aritmético tras "
         f"{_describir_barridos(iteraciones)}; se conserva la aproximación "
-        f"{_formatear_vector(vector)} con una norma del residuo de {norma}."
+        f"{_formatear_vector(vector)} con una norma del residuo "
+        f"de {formatear_racional_exacto(norma)}."
     )
