@@ -52,6 +52,20 @@ class PresupuestoAritmetico:
         return valor
 
 
+def _sumar_producto(
+    total: Fraction,
+    coeficiente: Fraction,
+    componente: Fraction,
+    presupuesto: PresupuestoAritmetico,
+) -> Fraction:
+    """Suma un producto exacto y contabiliza la multiplicación y la suma."""
+    presupuesto.consumir(2)
+    return presupuesto.registrar(
+        total + coeficiente * componente,
+        presupuesto.configuracion.maximo_bits_acumulacion,
+    )
+
+
 def producto_fila(
     fila: tuple[Fraction, ...],
     vector: tuple[Fraction, ...],
@@ -62,11 +76,7 @@ def producto_fila(
         raise ValueError("La fila y el vector deben tener la misma dimensión.")
     total = Fraction(0)
     for coeficiente, componente in zip(fila, vector):
-        presupuesto.consumir(2)
-        total = presupuesto.registrar(
-            total + coeficiente * componente,
-            presupuesto.configuracion.maximo_bits_acumulacion,
-        )
+        total = _sumar_producto(total, coeficiente, componente, presupuesto)
     return total
 
 
@@ -81,13 +91,8 @@ def producto_fila_sin_diagonal(
         raise ValueError("La fila y el vector deben tener la misma dimensión.")
     total = Fraction(0)
     for posicion, coeficiente in enumerate(fila):
-        if posicion == indice:
-            continue
-        presupuesto.consumir(2)
-        total = presupuesto.registrar(
-            total + coeficiente * vector[posicion],
-            presupuesto.configuracion.maximo_bits_acumulacion,
-        )
+        if posicion != indice:
+            total = _sumar_producto(total, coeficiente, vector[posicion], presupuesto)
     return total
 
 
@@ -104,14 +109,9 @@ def producto_fila_mixto(
         raise ValueError("La fila y los vectores deben tener la misma dimensión.")
     total = Fraction(0)
     for posicion, coeficiente in enumerate(fila):
-        if posicion == indice:
-            continue
-        vector = vector_trabajo if posicion < indice else vector_anterior
-        presupuesto.consumir(2)
-        total = presupuesto.registrar(
-            total + coeficiente * vector[posicion],
-            presupuesto.configuracion.maximo_bits_acumulacion,
-        )
+        if posicion != indice:
+            vector = vector_trabajo if posicion < indice else vector_anterior
+            total = _sumar_producto(total, coeficiente, vector[posicion], presupuesto)
     return total
 
 
