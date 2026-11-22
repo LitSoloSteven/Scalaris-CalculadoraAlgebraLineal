@@ -1,6 +1,7 @@
 """Motor del método de Jacobi para sistemas lineales cuadrados exactos."""
 from fractions import Fraction
 
+from ..iterativos.aritmetica_iterativa import PresupuestoAritmetico as PresupuestoAritmeticoComun
 from ..iterativos.motor_iterativo import FabricaResultado, ejecutar_metodo
 from ..iterativos.modelos_iterativos import EntradaPreparada
 from .aritmetica_jacobi import (
@@ -48,7 +49,7 @@ def _resolver_validacion(
 def _siguiente_vector(
     preparada: EntradaPreparada,
     anterior: tuple[Fraction, ...],
-    presupuesto: PresupuestoAritmetico,
+    presupuesto: PresupuestoAritmeticoComun,
 ) -> tuple[Fraction, ...]:
     """Calcula las n componentes nuevas leyendo solo el vector anterior."""
     nuevo = []

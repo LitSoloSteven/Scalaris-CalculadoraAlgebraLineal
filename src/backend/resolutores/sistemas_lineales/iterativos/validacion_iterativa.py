@@ -72,8 +72,6 @@ def preparar_captura(
 def _preparar_sistema(
     datos: DatosValidacion, parametros: ParametrosValidacion,
 ) -> EntradaPreparada | FalloValidacion:
-    if isinstance(datos.matriz, FalloValidacion):
-        return datos.matriz
     dominancia = _es_estrictamente_dominante(datos.matriz)
     dimension = len(datos.matriz)
     vector_b = _validar_vector(datos.vector_b, "vector_b", dimension, parametros)

@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 from .contrato_iterativo import (
     CampoIterativo, CodigoIterativo, DiagnosticoIterativo, EntradaCanonicaIterativa,
+    VectorIterativo,
 )
 
 
@@ -33,9 +34,9 @@ class FalloValidacion:
 
 @dataclass(frozen=True, kw_only=True)
 class DatosValidacion:
-    """Agrupa los campos crudos que se validan antes de construir la instantánea."""
+    """Agrupa la matriz exacta y los campos crudos pendientes de validar."""
 
-    matriz: object
+    matriz: tuple[VectorIterativo, ...]
     vector_b: object
     vector_inicial: object
     tolerancia: object
