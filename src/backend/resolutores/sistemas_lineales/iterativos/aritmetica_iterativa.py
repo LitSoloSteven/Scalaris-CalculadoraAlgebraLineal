@@ -9,6 +9,14 @@ class LimiteAritmeticoIterativo(ArithmeticError):
     """Señala que el cálculo exacto superó el presupuesto configurado."""
 
 
+class LimiteTamanoIterativo(LimiteAritmeticoIterativo):
+    """Señala que una fracción excede su cota de bits, sin reiniciar el presupuesto."""
+
+
+class LimiteResiduoIterativo(LimiteTamanoIterativo):
+    """Señala que una componente final del residuo excede su cota de bits."""
+
+
 @dataclass(frozen=True, kw_only=True)
 class ConfiguracionAritmetica:
     """Agrupa los topes que usan el presupuesto, la validación y la traza."""
@@ -46,7 +54,7 @@ class PresupuestoAritmetico:
         """Comprueba el tamaño de la fracción y la devuelve sin modificarla."""
         limite = self.configuracion.maximo_bits_calculo if maximo_bits is None else maximo_bits
         if not fraccion_admitida(valor, limite):
-            raise LimiteAritmeticoIterativo(
+            raise LimiteTamanoIterativo(
                 "El cálculo exacto superó el tamaño máximo de una fracción."
             )
         return valor
@@ -128,7 +136,10 @@ def residuo_sistema(
     for termino, fila in zip(vector_b, matriz):
         producto = producto_fila(fila, vector, presupuesto)
         presupuesto.consumir()
-        residuo.append(presupuesto.registrar(termino - producto))
+        try:
+            residuo.append(presupuesto.registrar(termino - producto))
+        except LimiteTamanoIterativo as error:
+            raise LimiteResiduoIterativo(str(error)) from error
     return tuple(residuo)
 
 

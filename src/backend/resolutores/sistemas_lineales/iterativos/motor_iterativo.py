@@ -2,9 +2,11 @@
 from collections.abc import Callable
 from dataclasses import dataclass, replace
 from fractions import Fraction
+from typing import Generic, TypeVar
 
 from .aritmetica_iterativa import (
     LimiteAritmeticoIterativo,
+    LimiteResiduoIterativo,
     PresupuestoAritmetico,
     norma_infinito,
     residuo_sistema,
@@ -17,6 +19,8 @@ from .contrato_iterativo import (
     VectorIterativo,
 )
 from .modelos_iterativos import EntradaPreparada
+
+TipoResultado = TypeVar("TipoResultado", bound=ResultadoIterativo)
 
 CalculadoraSiguiente = Callable[
     [EntradaPreparada, VectorIterativo, PresupuestoAritmetico], VectorIterativo,
@@ -33,22 +37,22 @@ CalculadoraResiduo = Callable[
 
 
 @dataclass(frozen=True, kw_only=True)
-class FabricaResultado:
+class FabricaResultado(Generic[TipoResultado]):
     """Agrupa las clases del método para construir pasos, resultados y diagnósticos."""
 
     crear_paso: Callable[..., PasoIterativo]
-    crear_resultado: Callable[..., ResultadoIterativo]
+    crear_resultado: Callable[..., TipoResultado]
     crear_diagnostico: Callable[..., DiagnosticoIterativo]
 
 
 @dataclass(frozen=True, kw_only=True)
-class ContextoMotor:
+class ContextoMotor(Generic[TipoResultado]):
     """Reúne la entrada preparada, el presupuesto y las funciones del método."""
 
     preparada: EntradaPreparada
     presupuesto: PresupuestoAritmetico
     calcular_siguiente: CalculadoraSiguiente
-    fabrica: FabricaResultado
+    fabrica: FabricaResultado[TipoResultado]
     calcular_residuo: CalculadoraResiduo
 
 
@@ -56,9 +60,9 @@ def ejecutar_metodo(
     preparada: EntradaPreparada,
     presupuesto: PresupuestoAritmetico,
     calcular_siguiente: CalculadoraSiguiente,
-    fabrica: FabricaResultado,
+    fabrica: FabricaResultado[TipoResultado],
     calcular_residuo: CalculadoraResiduo = residuo_sistema,
-) -> ResultadoIterativo:
+) -> TipoResultado:
     """Evalúa el inicio y ejecuta barridos completos hasta una causa de parada."""
     contexto = ContextoMotor(
         preparada=preparada,
@@ -71,6 +75,8 @@ def ejecutar_metodo(
         residuo = calcular_residuo(
             preparada.matriz, preparada.vector_b, preparada.vector_inicial, presupuesto,
         )
+    except LimiteResiduoIterativo:
+        return _iterar(contexto, None)
     except LimiteAritmeticoIterativo as error:
         return _resultado_limite(contexto, None, (), None, error)
     norma = norma_infinito(residuo)
@@ -86,10 +92,10 @@ def ejecutar_metodo(
 
 
 def _iterar(
-    contexto: ContextoMotor, residuo_actual: VectorIterativo,
-) -> ResultadoIterativo:
+    contexto: ContextoMotor[TipoResultado], residuo_actual: VectorIterativo | None,
+) -> TipoResultado:
     """Construye cada barrido completo y aplica la prioridad de parada."""
-    pasos = []
+    pasos: list[PasoIterativo] = []
     anterior = contexto.preparada.vector_inicial
     for indice in range(1, contexto.preparada.maximo_iteraciones + 1):
         try:
@@ -113,11 +119,12 @@ def _iterar(
             )
         anterior = nuevo
         residuo_actual = residuo_nuevo
+    assert residuo_actual is not None
     return _resultado_maximo(contexto, anterior, residuo_actual, tuple(pasos))
 
 
 def _calcular_barrido(
-    contexto: ContextoMotor, anterior: VectorIterativo,
+    contexto: ContextoMotor[TipoResultado], anterior: VectorIterativo,
 ) -> tuple[VectorIterativo, VectorIterativo, Fraction]:
     """Calcula el vector nuevo, su residuo y la norma del cambio de un barrido."""
     nuevo = contexto.calcular_siguiente(
@@ -165,11 +172,11 @@ def _norma_cambio(
 
 def _resultado_con_vector(
     codigo: CodigoIterativo,
-    contexto: ContextoMotor,
+    contexto: ContextoMotor[TipoResultado],
     vector: VectorIterativo,
     residuo: VectorIterativo,
     pasos: tuple[PasoIterativo, ...],
-) -> ResultadoIterativo:
+) -> TipoResultado:
     """Construye un resultado con un vector completo ya verificado."""
     return contexto.fabrica.crear_resultado(
         codigo=codigo,
@@ -183,11 +190,11 @@ def _resultado_con_vector(
 
 
 def _resultado_maximo(
-    contexto: ContextoMotor,
+    contexto: ContextoMotor[TipoResultado],
     vector: VectorIterativo,
     residuo: VectorIterativo,
     pasos: tuple[PasoIterativo, ...],
-) -> ResultadoIterativo:
+) -> TipoResultado:
     """Cierra por agotamiento del máximo sin ocultar la última aproximación."""
     resultado = _resultado_con_vector(
         "MAXIMO_ITERACIONES", contexto, vector, residuo, pasos,
@@ -199,12 +206,12 @@ def _resultado_maximo(
 
 
 def _resultado_limite(
-    contexto: ContextoMotor,
+    contexto: ContextoMotor[TipoResultado],
     anterior: VectorIterativo | None,
     pasos: tuple[PasoIterativo, ...],
     residuo: VectorIterativo | None,
     error: LimiteAritmeticoIterativo,
-) -> ResultadoIterativo:
+) -> TipoResultado:
     """Cierra por presupuesto aritmético y conserva el último vector verificable."""
     if anterior is None or residuo is None:
         mensaje = f"{error} No se pudo verificar el vector inicial."
