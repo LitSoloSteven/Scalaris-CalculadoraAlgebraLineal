@@ -1,5 +1,5 @@
 """Datos comunes de entrada y salida de los métodos iterativos."""
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from fractions import Fraction
 from typing import Literal
 
@@ -70,8 +70,8 @@ class PasoIterativo:
 
 @dataclass(frozen=True, kw_only=True)
 class ResultadoIterativo:
-    """Causa de parada y traza inmutable; solo SOLUCION_EXACTA y TOLERANCIA_ALCANZADA certifican.
-    La aproximación y el residuo b - A·x son None hasta comprobar un vector completo."""
+    """Causa de parada y traza inmutable; aproximación y residuo son None hasta verificar un vector.
+    La entrada canónica se serializa como metadato, sin intervenir en la igualdad ni el hash."""
 
     codigo: CodigoIterativo
     aproximacion: VectorIterativo | None = None
@@ -80,7 +80,7 @@ class ResultadoIterativo:
     dominancia_estricta: bool | None = None
     pasos: tuple[PasoIterativo, ...] = ()
     diagnostico: DiagnosticoIterativo | None = None
-    entrada_canonica: EntradaCanonicaIterativa | None = None
+    entrada_canonica: EntradaCanonicaIterativa | None = field(default=None, compare=False)
 
     @property
     def iteraciones_realizadas(self) -> int:
@@ -130,8 +130,8 @@ def _explicar_exacta(vector: VectorIterativo, iteraciones: int) -> str:
     """Describe una solución exacta y si el vector inicial ya la satisfacía."""
     texto = _formatear_vector(vector)
     if iteraciones == 0:
-        return f"El vector inicial ya era la solución exacta {texto}."
-    return f"El método encontró la solución exacta {texto} tras {_describir_barridos(iteraciones)}."
+        return f"El vector inicial ya era una solución exacta {texto}."
+    return f"El método encontró una solución exacta {texto} tras {_describir_barridos(iteraciones)}."
 
 
 def _explicar_tolerancia(

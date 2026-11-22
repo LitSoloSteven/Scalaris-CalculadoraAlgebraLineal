@@ -41,7 +41,7 @@ def test_explicacion_de_una_solucion_inicial_exacta() -> None:
 
     assert resultado.codigo == "SOLUCION_EXACTA"
     assert resultado.explicacion == (
-        "El vector inicial ya era la solución exacta (4/11, 6/11)."
+        "El vector inicial ya era una solución exacta (4/11, 6/11)."
     )
 
 
@@ -50,7 +50,7 @@ def test_explicacion_de_una_solucion_exacta_en_un_barrido() -> None:
     resultado = resolver_gauss_seidel(_entrada(((3,),), (1,), (0,)))
 
     assert resultado.explicacion == (
-        "El método encontró la solución exacta (1/3) tras 1 barrido."
+        "El método encontró una solución exacta (1/3) tras 1 barrido."
     )
 
 
