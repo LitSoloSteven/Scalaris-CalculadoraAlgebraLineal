@@ -27,6 +27,11 @@ class ConfiguracionAritmetica:
     maximo_bits_cambio: int
     maximo_bits_acumulacion: int
 
+    @property
+    def maximo_bits_residuo(self) -> int:
+        """Acota b - A·x con los bits de la acumulación, los de b y un acarreo."""
+        return self.maximo_bits_acumulacion + self.maximo_bits_entrada + 1
+
 
 class PresupuestoAritmetico:
     """Cuenta operaciones exactas y rechaza fracciones fuera del tamaño admitido."""
@@ -137,7 +142,9 @@ def residuo_sistema(
         producto = producto_fila(fila, vector, presupuesto)
         presupuesto.consumir()
         try:
-            residuo.append(presupuesto.registrar(termino - producto))
+            residuo.append(presupuesto.registrar(
+                termino - producto, presupuesto.configuracion.maximo_bits_residuo,
+            ))
         except LimiteTamanoIterativo as error:
             raise LimiteResiduoIterativo(str(error)) from error
     return tuple(residuo)

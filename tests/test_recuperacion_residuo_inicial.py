@@ -82,6 +82,12 @@ def test_la_recuperacion_conserva_los_cargos_y_solo_publica_estados_verificados(
     if iteraciones:
         assert resultado.aproximacion == (_SOLUCION,)
         assert resultado.residuo == (Fraction(0),)
+    elif operaciones == 7:
+        residuo_inicial = 1 - _COEFICIENTE ** 2
+        assert resultado.aproximacion == (_COEFICIENTE,)
+        assert resultado.residuo == (residuo_inicial,)
+        assert resultado.norma_residuo == residuo_inicial
+        assert resultado.pasos == ()
     else:
         assert resultado.aproximacion is None
         assert resultado.residuo is None
