@@ -6,7 +6,7 @@ from ..iterativos.validacion_iterativa import (
     preparar_captura as _preparar_captura,
     preparar_entrada as _preparar_entrada,
 )
-from .contrato_gauss_seidel import DiagnosticoGaussSeidel
+from .contrato_gauss_seidel import DiagnosticoGaussSeidel, EntradaGaussSeidel
 from .limites_gauss_seidel import (
     MAXIMO_BITS_ENTRADA_GAUSS_SEIDEL,
     MAXIMO_ITERACIONES_GAUSS_SEIDEL,
@@ -24,7 +24,7 @@ def preparar_entrada(
     entrada: object,
 ) -> EntradaPreparadaGaussSeidel | FalloValidacionGaussSeidel:
     """Valida la entrada completa y devuelve una instantánea o el fallo ubicado."""
-    return _preparar_entrada(entrada, _PARAMETROS_VALIDACION_GAUSS_SEIDEL)
+    return _preparar_entrada(entrada, _PARAMETROS_VALIDACION_GAUSS_SEIDEL, EntradaGaussSeidel)
 
 
 def preparar_captura(

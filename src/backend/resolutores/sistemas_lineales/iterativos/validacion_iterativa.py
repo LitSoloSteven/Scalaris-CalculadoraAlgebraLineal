@@ -20,10 +20,10 @@ __all__ = [
 
 
 def preparar_entrada(
-    entrada: object, parametros: ParametrosValidacion,
+    entrada: object, parametros: ParametrosValidacion, tipo_entrada: type[EntradaIterativa],
 ) -> EntradaPreparada | FalloValidacion:
-    """Valida la entrada tipada y devuelve una instantánea o el fallo ubicado."""
-    if not isinstance(entrada, EntradaIterativa):
+    """Exige el tipo del método y devuelve una instantánea validada o el fallo ubicado."""
+    if not isinstance(entrada, tipo_entrada):
         return crear_fallo(
             parametros,
             "entrada",
