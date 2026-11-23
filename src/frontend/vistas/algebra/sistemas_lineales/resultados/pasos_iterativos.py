@@ -11,7 +11,7 @@ def crear_reproductor_iterativo(resultado: dict) -> ReproductorPasos:
     entrada = resultado['entrada_canonica']
     pasos = tuple(_crear_paso(paso, entrada, resultado['variables']) for paso in resultado['pasos'])
     grupo = GrupoReproductor('Barridos de Jacobi', f'{len(pasos)} barridos', 'iteracion', tuple(range(len(pasos))))
-    return ReproductorPasos(pasos, (grupo,), _renderizar_paso, 'metodos-iterativos')
+    return ReproductorPasos(pasos, (grupo,), _renderizar_paso, 'metodos-iterativos', {'sin_movimiento': True})
 
 
 def _crear_paso(paso: dict, entrada: dict, variables: list[str]) -> PasoReproductor:
@@ -49,6 +49,8 @@ def _renderizar_paso(paso: PasoReproductor, contenedor) -> None:
     with contenedor, ui.column().classes('w-full gap-2'):
         for titulo, clave in (('Vector anterior', 'vector_anterior'), ('Vector nuevo', 'vector_nuevo')):
             ui.label(f'{titulo} = ({", ".join(barrido[clave])})').classes('iterativos-numero')
-        for indice, variable in enumerate(variables):
-            ui.label(f'Incógnita {variable}').classes('iterativos-numero texto-secundario')
-            renderizar_latex(_despeje(barrido, entrada, indice), vigilar_region=True)
+        columnas = range(len(variables))
+        if variables != [f'x{indice + 1}' for indice in columnas]:
+            ui.label(f'Incógnitas en orden: {", ".join(variables)}').classes('iterativos-numero texto-secundario')
+        despejes = r' \\ '.join(_despeje(barrido, entrada, indice) for indice in columnas)
+        renderizar_latex(r'\begin{gathered}' + despejes + r'\end{gathered}', vigilar_region=True)
