@@ -7,6 +7,10 @@
     flex-basis: min(100%, 11rem);
 }
 
+.iterativos-parametros .q-field:not(.q-field--error) .q-field__bottom {
+    color: var(--text-sec);
+}
+
 .iterativos-panel .cuadricula-area-desplazamiento {
     min-width: 0;
 }
