@@ -3,9 +3,11 @@ import pytest
 
 from src.frontend.controladores.algebra.operaciones_vectores.controlador_subespacios import (
     analizar_generadores_desde_captura,
+    analizar_subespacio_desde_captura,
     ejemplo_generadores,
 )
 from src.frontend.nucleo.textos.textos_espacios_subespacios import (
+    NOTA_CONJUNTO_VACIO,
     NOTA_DIMENSION_SUPERIOR,
     NOTA_GRAFICA_NO_DISPONIBLE,
 )
@@ -98,3 +100,82 @@ def test_coordenadas_extremas_conservan_base_y_explican_indisponibilidad(coorden
     assert preparada.disponible is False
     assert preparada.figura is None
     assert preparada.motivo_indisponible == NOTA_GRAFICA_NO_DISPONIBLE
+
+
+def _analizar_restricciones(ecuaciones: str, dimension: int) -> dict:
+    return analizar_subespacio_desde_captura({
+        "modo": "restricciones",
+        "formato": "ecuaciones",
+        "dimension_ambiente": dimension,
+        "ecuaciones": ecuaciones,
+    })
+
+
+@pytest.mark.parametrize(("dimension", "ecuaciones", "esperado_1d", "traza_esperada"), [
+    (1, "x1 = 2", True, "Punto particular p"),
+    (2, "x = 1\ny = 2", False, "Punto particular p"),
+    (2, "x + y = 1", False, "Recta afín"),
+    (3, "x = 1\ny = 1\nz = 1", False, "Punto particular p"),
+    (3, "x + y = 1\nz = 2", False, "Recta afín"),
+    (3, "-x1 - x2 + x3 = 1", False, "Plano afín"),
+])
+def test_figuras_afines_cubren_dimensiones_uno_a_tres(
+    dimension, ecuaciones, esperado_1d, traza_esperada
+):
+    """Dibuja conjuntos afines en 1D..3D indicando que el origen no pertenece a W."""
+    resultado = _analizar_restricciones(ecuaciones, dimension)
+    preparada = preparar_figura_subespacio(resultado, tema="papel")
+    assert preparada.disponible is True
+    assert preparada.es_1d is esperado_1d
+    descripcion = preparada.descripcion.lower()
+    assert "no contiene al origen" in descripcion or "no pasa por el origen" in descripcion
+    nombres = [traza.name for traza in preparada.figura.data]
+    assert "Origen (0) ∉ W" in nombres
+    assert "Punto particular p" in nombres
+    assert traza_esperada in nombres
+    assert all("scalaris_colores" in (traza.meta or {}) for traza in preparada.figura.data)
+
+
+@pytest.mark.parametrize("tema", ["papel", "marea", "medianoche"])
+def test_figura_afin_aplica_paletas_de_los_tres_temas(tema):
+    """El plano afín del ejemplo oficial adapta su color y texto a los tres temas."""
+    resultado = _analizar_restricciones("-x1 - x2 + x3 = 1", 3)
+    preparada = preparar_figura_subespacio(resultado, tema=tema)
+    assert preparada.disponible is True
+    assert preparada.figura.layout.font.color == COLORES_TEXTO_GRAFICOS[tema]
+    plano = next(traza for traza in preparada.figura.data if traza.name == "Plano afín")
+    assert plano.colorscale[0][1] == COLORES_SOLUCION_POR_TEMA[tema]
+
+
+def test_figura_homogenea_desde_restricciones_y_conjunto_vacio():
+    """Grafica núcleos homogéneos con origen en W y omite la gráfica en conjuntos vacíos."""
+    recta = preparar_figura_subespacio(_analizar_restricciones("y = 0", 2), tema="marea")
+    assert recta.disponible is True
+    nombres_recta = [traza.name for traza in recta.figura.data]
+    assert "Recta generada" in nombres_recta
+    assert "d_1" in nombres_recta
+    assert "Origen (0)" in nombres_recta
+
+    plano = preparar_figura_subespacio(_analizar_restricciones("-x1 - x2 + x3 = 0", 3))
+    assert plano.disponible is True
+    assert any(traza.name == "Plano generado" for traza in plano.figura.data)
+
+    vacio = preparar_figura_subespacio(_analizar_restricciones("x = 0\nx = 1", 2))
+    assert vacio.disponible is False
+    assert vacio.figura is None
+    assert vacio.motivo_indisponible == NOTA_CONJUNTO_VACIO
+
+
+def test_figura_afin_dimension_superior_y_coordenadas_extremas():
+    """En ℝ⁴ o coordenadas extremas conserva p exacto y explica por qué no hay figura."""
+    en_r4 = _analizar_restricciones("x1 = 1", 4)
+    assert en_r4["particular"] == ("1", "0", "0", "0")
+    preparada_r4 = preparar_figura_subespacio(en_r4)
+    assert preparada_r4.disponible is False
+    assert preparada_r4.motivo_indisponible == NOTA_DIMENSION_SUPERIOR
+
+    extrema = _analizar_restricciones(f"x1 = 1{'0' * 30}", 2)
+    assert extrema["particular"] == ("1" + "0" * 30, "0")
+    preparada_ext = preparar_figura_subespacio(extrema)
+    assert preparada_ext.disponible is False
+    assert preparada_ext.motivo_indisponible == NOTA_GRAFICA_NO_DISPONIBLE
