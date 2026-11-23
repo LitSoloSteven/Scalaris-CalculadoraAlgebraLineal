@@ -106,6 +106,36 @@
     color: var(--badge-suc-text);
 }
 
+.subespacios-criterio-error {
+    background: var(--badge-err-bg);
+    color: var(--badge-err-text);
+}
+
+.subespacios-criterio-vacuo {
+    background: var(--badge-warn-bg);
+    color: var(--badge-warn-text);
+}
+
+.subespacios-restricciones-dimension {
+    min-width: 0;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+}
+
+.subespacios-restricciones-dimension .q-btn {
+    min-width: var(--space-12);
+    min-height: var(--space-12);
+}
+
+.subespacios-raiz .cuadricula-area-desplazamiento,
+.subespacios-formula {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+}
+
 .subespacios-figura {
     width: 100%;
     min-width: 0;
