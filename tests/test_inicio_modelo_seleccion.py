@@ -26,7 +26,7 @@ def test_estructura_areas_inicio():
         "sistemas-lineales": ["sistemas", "metodos_iterativos", "leontief"],
         "matrices": ["matrices", "inversa", "determinantes", "factorizacion_lu"],
         "vectores-geometria": [
-            "vectores", "transformaciones", "vis:rectas-planos", "vis:vectores", "vis:combinacion",
+            "vectores", "espacios_subespacios", "transformaciones", "vis:rectas-planos", "vis:vectores", "vis:combinacion",
         ],
         "metodos-numericos": ["metodos_cerrados", "metodos_abiertos"],
         "sistemas-numeracion": ["bases", "romanos"],
