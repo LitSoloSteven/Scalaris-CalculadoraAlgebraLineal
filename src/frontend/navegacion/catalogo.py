@@ -13,6 +13,7 @@ ESCENAS_VISUALIZADOR: tuple[tuple[str, str, str, str, str], ...] = (
 
 _ETIQUETAS_CORTAS: dict[str, str] = {
     "sistemas": "Sistemas",
+    "metodos_iterativos": "Iterativos",
     "vectores": "Vectores",
     "matrices": "Matrices",
     "inversa": "Inversa",
@@ -62,6 +63,17 @@ HERRAMIENTAS: tuple[Herramienta, ...] = (
         icono="sistemas_lineales",
         titulo_pagina="Sistemas de ecuaciones lineales (SEL) | Scalaris",
         ejemplo_latex=r"A\mathbf{x} = \mathbf{b}",
+        habilitada=True,
+    ),
+    Herramienta(
+        identificador="metodos_iterativos",
+        nombre="Métodos iterativos",
+        descriptor="Sistemas lineales por Jacobi",
+        ruta="/algebra-lineal/metodos-iterativos",
+        identificador_pilar="algebra",
+        icono="metodos_iterativos",
+        titulo_pagina="Métodos iterativos | Scalaris",
+        ejemplo_latex=r"\mathbf{x}^{(k+1)}=D^{-1}(\mathbf{b}-(A-D)\mathbf{x}^{(k)})",
         habilitada=True,
     ),
     Herramienta(
@@ -228,6 +240,7 @@ _HERRAMIENTAS_POR_IDENTIFICADOR: dict[str, Herramienta] = {
 
 ORDEN_NAVEGACION_PLANA: tuple[str, ...] = (
     "sistemas",
+    "metodos_iterativos",
     "matrices",
     "inversa",
     "determinantes",

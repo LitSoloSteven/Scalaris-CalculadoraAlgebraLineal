@@ -26,6 +26,10 @@ CATALOGO_ICONOS: dict[str, str] = {
         '<path d="M15.5 11H18m-2.5 3H18"></path>'
         '<path d="M20 8v7h1a2 2 0 0 0 0-4h-1"></path>'
     ),
+    "metodos_iterativos": (
+        '<path d="M19 10a7 7 0 1 0 0 5"></path>'
+        '<path d="M19 5v5h-5"></path>'
+    ),
     "operaciones_matrices": (
         '<path d="M4 6H2v12h2m3 0h2V6H7M5.5 10h.01m-.01 4h.01"></path>'
         '<path d="M10.5 12h3m-1.5-1.5v3"></path>'

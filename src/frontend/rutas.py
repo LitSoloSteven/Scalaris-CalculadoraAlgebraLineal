@@ -76,6 +76,18 @@ def _registrar_paginas_algebra() -> None:
         VistaOperacionesInversas().construir(token_transferencia=handoff)
 
 
+def _registrar_pagina_metodos_iterativos() -> None:
+    """Registra la captura y resolución de sistemas lineales por Jacobi."""
+
+    @ui.page(ruta_de("metodos_iterativos"), title=herramienta_por_identificador("metodos_iterativos").titulo_pagina)
+    def pagina_metodos_iterativos():
+        """Configura el tema y monta la sesión de métodos iterativos."""
+        from src.frontend.vistas.algebra.sistemas_lineales.vista_metodos_iterativos import VistaMetodosIterativos
+
+        configurar_tema("metodos_iterativos")
+        VistaMetodosIterativos().construir()
+
+
 def _registrar_pagina_factorizacion_lu() -> None:
     """Registra la página de factorización LU."""
     @ui.page(ruta_de("factorizacion_lu"), title=herramienta_por_identificador("factorizacion_lu").titulo_pagina)
@@ -192,6 +204,7 @@ def registrar_rutas() -> None:
     """Registra todas las redirecciones heredadas y páginas canónicas de la aplicación."""
     registrar_redirecciones_heredadas(app)
     _registrar_paginas_algebra()
+    _registrar_pagina_metodos_iterativos()
     _registrar_pagina_factorizacion_lu()
     _registrar_paginas_avanzadas()
     _registrar_paginas_utilidades()
