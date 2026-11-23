@@ -14,6 +14,7 @@ MAXIMO_RECIENTES = 4
 MAXIMO_ELEMENTOS_CRUDOS = 16
 MAXIMO_LONGITUD_CLAVE = 64
 IDENTIFICADOR_DESTACADA_PREDETERMINADA = "sistemas"
+_DESTACADAS_SIN_HISTORIAL = (IDENTIFICADOR_DESTACADA_PREDETERMINADA, "leontief")
 _CLAVES_ESCENAS = frozenset(elemento.clave for elemento in elementos_navegacion("visualizador"))
 
 
@@ -139,7 +140,7 @@ def elegir_acceso_destacado(datos_crudos) -> tuple[ElementoNavegacion, bool]:
     if recientes:
         return recientes[0], True
     accesos = _accesos_por_clave()
-    predeterminado = accesos.get(IDENTIFICADOR_DESTACADA_PREDETERMINADA)
-    if predeterminado is not None:
-        return predeterminado, False
+    for clave in _DESTACADAS_SIN_HISTORIAL:
+        if clave in accesos:
+            return accesos[clave], False
     return tuple(accesos.values())[0], False
