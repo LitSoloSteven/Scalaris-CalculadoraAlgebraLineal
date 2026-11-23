@@ -1,4 +1,6 @@
 """Paridad y causas de parada de Jacobi desde las capturas de Scalaris."""
+from fractions import Fraction
+
 import pytest
 
 from src.backend.resolutores.sistemas_lineales.jacobi import jacobi as motor
@@ -9,6 +11,7 @@ from src.frontend.controladores.algebra.sistemas_lineales.nucleo.captura_iterati
 from src.frontend.controladores.algebra.sistemas_lineales.resolucion.controlador_iterativos import (
     ejemplo_iterativo, resolver_iterativo,
 )
+from src.frontend.vistas.algebra.sistemas_lineales.resultados.resultado_iterativo import _presentar_escalar
 
 
 def _captura(sistema: SistemaCapturado, **cambios) -> dict:
@@ -90,3 +93,16 @@ def test_limite_aritmetico_solo_publica_barridos_completos(monkeypatch, residuos
     else:
         assert len(resultado['pasos']) == 1
         assert resultado['aproximacion'] == ('5/8', '23/10', '-7/6')
+
+
+def test_residuo_extenso_se_serializa_y_se_muestra_sin_truncar():
+    """Una entrada válida puede producir un residuo con más de 4300 dígitos."""
+    coeficientes = [str(Fraction(1, base**potencia)) for base, potencia in ((2, 2000), (3, 1250), (5, 850), (7, 700))]
+    inicio = [str(Fraction(1, base**potencia)) for base, potencia in ((11, 570), (13, 540), (17, 490), (19, 465))]
+    matriz = [coeficientes, ['0', '1', '0', '0'], ['0', '0', '1', '0'], ['0', '0', '0', '1']]
+    sistema = SistemaCapturado(matriz, ['0', *inicio[1:]], ['x1', 'x2', 'x3', 'x4'])
+    resultado = resolver_iterativo(_captura(sistema, vector_inicial=inicio))
+    assert resultado['codigo'] == 'TOLERANCIA_ALCANZADA'
+    norma = resultado['norma_residuo']
+    assert len(norma.partition('/')[2]) > 4300
+    assert _presentar_escalar('‖r‖∞', norma).endswith(f'(exacto: {norma})')

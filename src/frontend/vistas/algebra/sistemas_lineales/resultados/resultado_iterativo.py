@@ -1,6 +1,5 @@
 """Resumen exacto, aproximación legible y tabla navegable de los barridos."""
 from decimal import Decimal, localcontext
-from fractions import Fraction
 from functools import partial
 
 from nicegui import ui
@@ -42,11 +41,14 @@ def _mostrar_resumen(resultado: dict) -> None:
 
 
 def _presentar_escalar(etiqueta: str, exacto: str) -> str:
-    racional = Fraction(exacto)
+    numerador, _, denominador = exacto.partition('/')
+    numerador_decimal = Decimal(numerador)
+    denominador_decimal = Decimal(denominador or '1')
     with localcontext() as contexto:
         contexto.prec = 9
-        decimal = Decimal(racional.numerator) / Decimal(racional.denominator)
-    if Fraction(decimal) == racional or exacto == str(decimal):
+        decimal = numerador_decimal / denominador_decimal
+    numerador_redondeado, denominador_redondeado = decimal.as_integer_ratio()
+    if numerador_redondeado * int(denominador_decimal) == denominador_redondeado * int(numerador_decimal):
         return f'{etiqueta} = {decimal}'
     return f'{etiqueta} ≈ {decimal} (exacto: {exacto})'
 

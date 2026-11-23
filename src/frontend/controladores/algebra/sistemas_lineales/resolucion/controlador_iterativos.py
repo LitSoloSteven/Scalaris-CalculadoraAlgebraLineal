@@ -2,6 +2,7 @@
 from dataclasses import asdict
 from fractions import Fraction
 
+from src.backend.resolutores.sistemas_lineales.iterativos.formato_iterativo import formatear_racional_exacto
 from src.backend.resolutores.sistemas_lineales.jacobi.jacobi import resolver_jacobi_desde_captura
 from ..nucleo.captura_iterativa import SistemaCapturado, interpretar_ecuaciones
 
@@ -51,7 +52,7 @@ def _interpretar_maximo(texto: str) -> int | None:
 
 def _serializar(valor):
     if isinstance(valor, Fraction):
-        return str(valor)
+        return formatear_racional_exacto(valor)
     if isinstance(valor, dict):
         return {clave: _serializar(dato) for clave, dato in valor.items()}
     if isinstance(valor, tuple):
