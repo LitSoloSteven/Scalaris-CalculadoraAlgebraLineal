@@ -45,13 +45,13 @@ def test_inicio_monta_enlaces_para_ambos_modelos(monkeypatch):
                    if "inicio-enlace" in elemento.classes and "data-clave" in elemento._props}
         for identificador in MODELOS_MATRICIALES:
             assert enlaces[identificador]._props["href"] == ruta_de(identificador)
-        assert len(enlaces) == 15
+        assert len(enlaces) == 16
     asyncio.run(construir_pagina(monkeypatch, "inicio", comprobar))
 
 
 @pytest.mark.parametrize("identificador,seccion,total", [
-    ("sistemas", ("sistemas", "leontief"), 2),
-    ("leontief", ("sistemas", "leontief"), 2),
+    ("sistemas", ("sistemas", "metodos_iterativos", "leontief"), 3),
+    ("leontief", ("sistemas", "metodos_iterativos", "leontief"), 3),
     ("transformaciones", ("vectores", "transformaciones"), 5),
 ])
 def test_barra_ofrece_modelos_y_marca_solo_la_vista_actual(monkeypatch, identificador, seccion, total):

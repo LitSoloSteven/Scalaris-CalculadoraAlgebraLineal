@@ -23,7 +23,7 @@ def test_estructura_areas_inicio():
     }
     assert {identificador: [acceso.clave for acceso in accesos]
             for identificador, accesos in grupos.items()} == {
-        "sistemas-lineales": ["sistemas", "leontief"],
+        "sistemas-lineales": ["sistemas", "metodos_iterativos", "leontief"],
         "matrices": ["matrices", "inversa", "determinantes", "factorizacion_lu"],
         "vectores-geometria": [
             "vectores", "transformaciones", "vis:rectas-planos", "vis:vectores", "vis:combinacion",
