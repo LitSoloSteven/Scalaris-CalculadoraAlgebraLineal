@@ -5,7 +5,6 @@ import logging
 
 from nicegui import ui
 
-from src.ai.contexto.contexto import ContextoIA, EstadoContexto
 from src.frontend.componentes.aplicacion.base.sonido import emitir_sonido
 from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import (
     crear_estructura_aplicacion,
@@ -13,6 +12,10 @@ from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import 
 from src.frontend.componentes.glosa.panel.panel_ia import PanelIA
 from src.frontend.componentes.resultados.acciones.avisos_resultado import (
     MENSAJE_ERROR_INESPERADO,
+)
+from src.frontend.controladores.algebra.operaciones_vectores.contexto_subespacios import (
+    obtener_contexto_subespacio,
+    obtener_senales_subespacio,
 )
 from src.frontend.controladores.algebra.operaciones_vectores.controlador_subespacios import (
     analizar_subespacio_desde_captura,
@@ -42,34 +45,35 @@ from src.frontend.vistas.algebra.operaciones_vectores.panel.captura_generadores 
 from src.frontend.vistas.algebra.operaciones_vectores.panel.captura_restricciones import (
     CapturaRestricciones,
 )
+from src.frontend.vistas.algebra.operaciones_vectores.panel.exportacion_subespacios import (
+    montar_exportacion_subespacio,
+)
 from src.frontend.vistas.algebra.operaciones_vectores.panel.resultado_subespacios import (
     mostrar_resultado_subespacio,
 )
 
 _REGISTRO = logging.getLogger(__name__)
-_CLAVES_RESUMEN_IA = (
-    "codigo", "clasificacion", "es_subespacio", "dimension", "dimension_afin", "base", "dependencias",
-)
 
 
-def _construir_contexto_ia(vista: VistaEspaciosSubespacios) -> ContextoIA:
-    captura = vista.captura.obtener()
-    if vista.modo == MODO_RESTRICCIONES:
-        vacio = vista.captura_restricciones.esta_vacia()
-    else:
-        vectores = captura["vectores"]
-        vacio = not any(
-            str(celda).strip() for vector in vectores.values() for celda in vector["datos"]
+def _limpiar_asistente(vista: VistaEspaciosSubespacios) -> None:
+    vista.actualizar_exportacion_pdf = None
+    vista.panel_ia.limpiar_foco_explicacion()
+    vista.panel_ia.limpiar_contexto()
+    cancelar = getattr(vista.panel_ia, "cancelar_consulta_activa", None)
+    if callable(cancelar):
+        cancelar()
+
+
+def _crear_vigencia_paso(vista: VistaEspaciosSubespacios, resultado: dict):
+    def _sigue_vigente(paso) -> bool:
+        reproductor = vista.reproductor_pasos
+        return (
+            vista.ultimo_resultado is resultado and vista.modo == resultado.get("modo")
+            and not vista.contenedor_resultados.is_deleted and reproductor is not None
+            and reproductor.pasos[reproductor.indice_actual] is paso
         )
-    respuesta = vista.ultimo_resultado
-    resumen = {clave: respuesta.get(clave) for clave in _CLAVES_RESUMEN_IA} if respuesta else None
-    return ContextoIA(
-        "espacios_subespacios",
-        TITULO_PAGINA,
-        NOMBRES_MODOS[vista.modo],
-        captura,
-        EstadoContexto(resultado=resumen, vacio=vacio),
-    )
+
+    return _sigue_vigente
 
 
 def _sonido_resultado(resultado: dict) -> str:
@@ -87,6 +91,7 @@ class VistaEspaciosSubespacios:
         self.captura_restricciones = CapturaRestricciones(self.editar)
         self.reproductor_pasos = None
         self.ultimo_resultado = None
+        self.actualizar_exportacion_pdf = None
         self._identificador_calculo = 0
         self._revision_captura = 0
         self._huella_resultado = None
@@ -241,23 +246,30 @@ class VistaEspaciosSubespacios:
     def _publicar(self, resultado: dict, huella: str, tema: str) -> None:
         self.estado.set_text("")
         self.captura.marcar_diagnostico(resultado.get("diagnostico"))
-        with self.contenedor_resultados:
-            self.reproductor_pasos = mostrar_resultado_subespacio(resultado, tema=tema)
         self.ultimo_resultado = resultado
         self._huella_resultado = huella
+        with self.contenedor_resultados:
+            self.reproductor_pasos = mostrar_resultado_subespacio(
+                resultado, tema=tema, panel_ia=self.panel_ia, sigue_vigente=_crear_vigencia_paso(self, resultado),
+            )
+            montar_exportacion_subespacio(self, resultado)
         emitir_sonido(_sonido_resultado(resultado))
         actualizar_contexto(self)
 
     def _retirar_resultado(self) -> None:
         invalidar_resultado(self)
-        self.panel_ia.foco_explicacion = None
+        _limpiar_asistente(self)
         if self.contenedor_resultados is not None and not self.contenedor_resultados.is_deleted:
             self.contenedor_resultados.clear()
 
     def _cerrar(self) -> None:
         invalidar_resultado(self)
-        self.panel_ia.foco_explicacion = None
+        _limpiar_asistente(self)
 
-    def obtener_contexto_ia(self) -> ContextoIA:
+    def obtener_contexto_ia(self):
         """Entrega a Glosa la captura activa y el resumen del resultado vigente."""
-        return _construir_contexto_ia(self)
+        return obtener_contexto_subespacio(self)
+
+    def obtener_senales_ia(self):
+        """Devuelve el estado, celda inválida y banderas de Espacios y subespacios."""
+        return obtener_senales_subespacio(self)

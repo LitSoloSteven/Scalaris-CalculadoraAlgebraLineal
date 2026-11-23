@@ -5,10 +5,12 @@ from functools import partial
 
 from nicegui import ui
 
+from src.frontend.componentes.exportacion_pdf.montaje.integracion import region_pdf
 from src.frontend.componentes.reproductor_pasos.formato.cuerpos import renderizar_latex
 from src.frontend.componentes.reproductor_pasos.interfaz.reproductor import ReproductorPasos
 from src.frontend.nucleo.textos.textos_espacios_subespacios import (
     MODO_RESTRICCIONES,
+    NOMBRES_MODOS,
     NOTA_GENERA_AMBIENTE,
     SUBTITULO_CONJUNTO_VACIO,
     SUBTITULO_SUBESPACIO_CERO,
@@ -37,7 +39,7 @@ _CLASES_ESTADO = {
 
 
 def mostrar_resultado_subespacio(
-    resultado: dict, *, tema: str = "papel"
+    resultado: dict, *, tema: str = "papel", panel_ia=None, sigue_vigente=None,
 ) -> ReproductorPasos | None:
     """Renderiza el resultado exacto de subespacios y devuelve el reproductor si aplica."""
     if resultado.get("estado") != "EXITO":
@@ -48,17 +50,35 @@ def mostrar_resultado_subespacio(
             "subespacios-numero texto-secundario"
         ).props("role=alert")
         return None
-    reproductor, indices_criterios = crear_reproductor_subespacios(resultado)
-    _mostrar_veredicto(resultado)
-    if resultado.get("modo") == MODO_RESTRICCIONES:
-        _mostrar_detalle_restricciones(resultado)
-    else:
-        _mostrar_base_y_dependencias(resultado)
-    _mostrar_criterios(resultado, reproductor, indices_criterios)
-    _mostrar_verificaciones_motor(resultado)
-    _mostrar_figura(resultado, tema)
+    reproductor, indices_criterios = crear_reproductor_subespacios(
+        resultado, panel_ia=panel_ia, sigue_vigente=sigue_vigente,
+    )
+    modo = str(resultado.get("modo") or "")
+    with region_pdf("espacios_subespacios-resumen"):
+        if modo in NOMBRES_MODOS:
+            ui.label(f"Modo: {NOMBRES_MODOS[modo]}").classes("text-sm font-semibold texto-secundario")
+        _mostrar_veredicto(resultado)
+        if modo == MODO_RESTRICCIONES:
+            _mostrar_detalle_restricciones(resultado)
+        else:
+            _mostrar_base_y_dependencias(resultado)
+    if panel_ia is not None:
+        panel_ia.renderizar_sugerencias_en_linea()
+    _renderizar_bloques_complementarios(resultado, reproductor, indices_criterios, tema)
     reproductor.construir()
     return reproductor
+
+
+def _renderizar_bloques_complementarios(
+    resultado: dict, reproductor: ReproductorPasos, indices_criterios: dict[str, int], tema: str,
+) -> None:
+    if resultado.get("criterios"):
+        with region_pdf("espacios_subespacios-criterios"):
+            _mostrar_criterios(resultado, reproductor, indices_criterios)
+    if resultado.get("comprobaciones"):
+        with region_pdf("espacios_subespacios-comprobaciones"):
+            _mostrar_verificaciones_motor(resultado)
+    _mostrar_figura(resultado, tema)
 
 
 def _metricas_resultado(resultado: dict) -> list[tuple[str, object]]:
@@ -262,6 +282,11 @@ def _mostrar_figura(resultado: dict, tema: str) -> None:
         ui.label(NOTA_GENERA_AMBIENTE).classes("texto-principal text-sm font-semibold")
     clase = "subespacios-figura subespacios-figura-1d w-full" if figura_preparada.es_1d else "subespacios-figura w-full"
     with ui.element("div").classes(clase) as marco:
-        marco.props.update({"role": "img", "aria-label": figura_preparada.descripcion})
+        marco.props.update({
+            "role": "img",
+            "aria-label": figura_preparada.descripcion,
+            "data-pdf-captura": "espacios_subespacios-grafica",
+            "data-pdf-motor": "plotly",
+        })
         grafica = ui.plotly(figura_preparada.figura).classes("w-full h-full")
         grafica.on("plotly_afterplot", js_handler="() => window.scalaris?.sincronizarTemaPlotly?.()")
