@@ -43,6 +43,7 @@ _POR_RECURSO = {
     "inicio/inicio.js": _INICIO,
     "inicio/ejemplos_inicio.js": _INICIO,
     "herramientas/algebra/sistemas_metodo.js": frozenset({"sistemas"}),
+    "herramientas/algebra/iterativos_historial.js": _METODOS_ITERATIVOS,
     "nucleo/tema/tema_graficos.js": frozenset({"visualizador"}) | _RAICES,
     "herramientas/biseccion/grafico_biseccion.js": _BISECCION,
     "herramientas/biseccion/movimiento_biseccion.js": _BISECCION,
