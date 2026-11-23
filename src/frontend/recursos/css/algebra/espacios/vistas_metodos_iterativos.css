@@ -1,0 +1,45 @@
+.iterativos-raiz,
+.iterativos-panel {
+    padding: clamp(var(--space-3), 3vw, var(--space-6));
+}
+
+.iterativos-parametros > .nicegui-column {
+    flex-basis: min(100%, 11rem);
+}
+
+.iterativos-panel .cuadricula-area-desplazamiento {
+    min-width: 0;
+}
+
+.iterativos-desplazamiento {
+    max-width: 100%;
+    overflow: auto;
+}
+
+.iterativos-desplazamiento:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+}
+
+.iterativos-tabla {
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+    text-align: start;
+}
+
+.iterativos-tabla :is(th, td) {
+    border-block-end: 1px solid var(--border-input);
+    padding: var(--space-2) var(--space-3);
+    min-width: 8ch;
+    text-align: start;
+}
+
+.iterativos-tabla td .iterativos-numero {
+    max-width: 24ch;
+}
+
+.iterativos-numero {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    font-variant-numeric: tabular-nums;
+}
