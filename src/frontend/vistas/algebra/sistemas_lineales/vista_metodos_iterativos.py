@@ -3,11 +3,13 @@ import logging
 
 from nicegui import ui
 
-from src.ai.contexto.contexto import ContextoIA, EstadoContexto
 from src.frontend.componentes.aplicacion.base.sonido import emitir_sonido
 from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.glosa.panel.panel_ia import PanelIA
 from src.frontend.componentes.resultados.acciones.avisos_resultado import MENSAJE_ERROR_INESPERADO
+from src.frontend.controladores.algebra.sistemas_lineales.resolucion.contexto_iterativos import (
+    obtener_contexto_iterativo, obtener_senales_iterativo,
+)
 from src.frontend.controladores.algebra.sistemas_lineales.resolucion.controlador_iterativos import (
     normalizar_metodo_iterativo, resolver_iterativo,
 )
@@ -18,6 +20,7 @@ from src.frontend.nucleo.textos.textos_metodos_iterativos import (
     AYUDA_METODOS, ESTADO_CALCULO, ESTADO_EDICION, ESTADO_INICIAL, METODO_INICIAL, NOMBRES_METODOS,
 )
 from .captura.captura_iterativa import CapturaIterativa
+from .resultados.exportacion_iterativos import montar_exportacion_iterativa
 from .resultados.resultado_iterativo import mostrar_resultado_iterativo
 
 _REGISTRO = logging.getLogger(__name__)
@@ -36,7 +39,9 @@ class VistaMetodosIterativos:
         self.reproductor_pasos = None
         self.ultimo_resultado = None
         self._identificador_calculo = 0
+        self._revision_captura = 0
         self._huella_resultado = None
+        self.actualizar_exportacion_pdf = None
         self.panel_ia = PanelIA(self)
 
     def construir(self) -> None:
@@ -128,32 +133,47 @@ class VistaMetodosIterativos:
     def _publicar(self, resultado: dict, huella: str) -> None:
         self.estado.set_text('')
         self.captura.marcar_diagnostico(resultado.get('diagnostico'))
-        with self.contenedor_resultados:
-            self.reproductor_pasos = mostrar_resultado_iterativo(resultado)
         self.ultimo_resultado = resultado
         self._huella_resultado = huella
+
+        def _sigue_vigente(paso) -> bool:
+            reproductor = self.reproductor_pasos
+            return (
+                self.ultimo_resultado is resultado
+                and self.metodo == resultado['metodo']
+                and not self.contenedor_resultados.is_deleted
+                and reproductor is not None
+                and reproductor.pasos[reproductor.indice_actual] is paso
+            )
+
+        with self.contenedor_resultados:
+            self.reproductor_pasos = mostrar_resultado_iterativo(
+                resultado, panel_ia=self.panel_ia, sigue_vigente=_sigue_vigente,
+            )
+            montar_exportacion_iterativa(self, resultado)
         emitir_sonido(_SONIDOS_RESULTADO[resultado['codigo']])
         actualizar_contexto(self)
 
+    def _limpiar_glosa(self) -> None:
+        self.actualizar_exportacion_pdf = None
+        self.panel_ia.limpiar_foco_explicacion()
+        self.panel_ia.limpiar_contexto()
+        if hasattr(self.panel_ia, 'cancelar_consulta_activa'):
+            self.panel_ia.cancelar_consulta_activa()
+
     def _retirar_resultado(self) -> None:
         invalidar_resultado(self)
-        self.panel_ia.foco_explicacion = None
+        self._limpiar_glosa()
         self.contenedor_resultados.clear()
 
     def _cerrar(self) -> None:
         invalidar_resultado(self)
-        self.panel_ia.foco_explicacion = None
+        self._limpiar_glosa()
 
-    def obtener_contexto_ia(self) -> ContextoIA:
+    def obtener_contexto_ia(self):
         """Entrega a Glosa la captura activa y un resumen del resultado si sigue vigente."""
-        captura = self.captura.obtener()
-        ecuaciones = captura['modo'] == 'ecuaciones'
-        entrada = {'ecuaciones': captura['ecuaciones']} if ecuaciones else {
-            'matriz_a': captura['matriz_a'], 'vector_b': captura['vector_b'], 'variables': captura['variables'],
-        }
-        entrada.update({clave: captura[clave] for clave in ('vector_inicial', 'tolerancia', 'maximo_iteraciones')})
-        respuesta = self.ultimo_resultado
-        resumen = {clave: respuesta.get(clave) for clave in ('codigo', 'aproximacion', 'norma_residuo')} if respuesta else None
-        vacio = not captura['ecuaciones'].strip() if ecuaciones else captura['matriz_vacia']
-        return ContextoIA(self.metodo, 'Métodos iterativos', NOMBRES_METODOS[self.metodo], entrada,
-                          EstadoContexto(resultado=resumen, vacio=vacio))
+        return obtener_contexto_iterativo(self)
+
+    def obtener_senales_ia(self):
+        """Devuelve el estado, celdas inválidas y banderas del método iterativo activo."""
+        return obtener_senales_iterativo(self)
