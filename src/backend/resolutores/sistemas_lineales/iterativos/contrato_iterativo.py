@@ -67,7 +67,7 @@ class PasoIterativo:
     vector_anterior: VectorIterativo
     vector_nuevo: VectorIterativo
     norma_cambio: Fraction
-    norma_residuo: Fraction
+    norma_residuo: Fraction = field(repr=False)
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -77,8 +77,8 @@ class ResultadoIterativo:
 
     codigo: CodigoIterativo
     aproximacion: VectorIterativo | None = None
-    residuo: VectorIterativo | None = None
-    norma_residuo: Fraction | None = None
+    residuo: VectorIterativo | None = field(default=None, repr=False)
+    norma_residuo: Fraction | None = field(default=None, repr=False)
     dominancia_estricta: bool | None = None
     pasos: tuple[PasoIterativo, ...] = ()
     diagnostico: DiagnosticoIterativo | None = None
