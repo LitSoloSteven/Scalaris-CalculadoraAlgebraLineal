@@ -21,7 +21,10 @@
         window.removeEventListener('pagehide', desmontar);
     }
 
-    window.addEventListener('popstate', restaurar);
-    window.addEventListener('pagehide', desmontar);
-    window.scalaris.historialIterativos = { guardar };
+    function montar() {
+        window.addEventListener('popstate', restaurar);
+        window.addEventListener('pagehide', desmontar);
+    }
+
+    window.scalaris.historialIterativos = { guardar, montar };
 }

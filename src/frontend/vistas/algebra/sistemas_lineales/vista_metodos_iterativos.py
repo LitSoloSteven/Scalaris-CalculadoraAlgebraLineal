@@ -67,6 +67,7 @@ class VistaMetodosIterativos:
         self.selector_metodo.on_value_change(lambda evento: self._cambiar_metodo(evento.value))
         self.selector_metodo.on('update:model-value', js_handler='metodo => window.scalaris.historialIterativos.guardar(metodo)')
         ui.on('iterativos-metodo-historial', lambda evento: self.selector_metodo.set_value(normalizar_metodo_iterativo(evento.args)))
+        ui.run_javascript('window.scalaris.historialIterativos.montar()')
 
     def _cambiar_metodo(self, metodo: object) -> None:
         if not isinstance(metodo, str) or metodo not in NOMBRES_METODOS or metodo == self.metodo:
