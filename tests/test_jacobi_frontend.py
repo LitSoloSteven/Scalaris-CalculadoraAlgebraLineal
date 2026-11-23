@@ -1,6 +1,8 @@
 """Paridad y causas de parada de Jacobi desde las capturas de Scalaris."""
 import pytest
 
+from src.backend.resolutores.sistemas_lineales.jacobi import jacobi as motor
+from src.backend.resolutores.sistemas_lineales.jacobi.aritmetica_jacobi import LimiteAritmeticoJacobi
 from src.frontend.controladores.algebra.sistemas_lineales.nucleo.captura_iterativa import (
     SistemaCapturado, ajustar_variables, interpretar_ecuaciones, redactar_ecuaciones,
 )
@@ -63,3 +65,28 @@ def test_maximo_y_sistema_rectangular_conservan_su_diagnostico():
     assert rectangular['codigo'] == 'ENTRADA_INVALIDA'
     assert rectangular['diagnostico']['campo'] == 'ecuaciones'
     assert '1 ecuaciones y 2 incógnitas' in rectangular['diagnostico']['mensaje']
+
+
+@pytest.mark.parametrize('residuos_verificados', [0, 2])
+def test_limite_aritmetico_solo_publica_barridos_completos(monkeypatch, residuos_verificados):
+    """Preserva el último barrido y omite el vector cuando ni el inicio fue verificable."""
+    calcular_residuo = motor.residuo_sistema
+    verificados = 0
+
+    def residuo_acotado(*argumentos):
+        nonlocal verificados
+        if verificados == residuos_verificados:
+            raise LimiteAritmeticoJacobi('Se alcanzó el límite aritmético.')
+        verificados += 1
+        return calcular_residuo(*argumentos)
+
+    monkeypatch.setattr(motor, 'residuo_sistema', residuo_acotado)
+    resultado = resolver_iterativo(_captura(ejemplo_iterativo()))
+    assert resultado['codigo'] == 'LIMITE_ARITMETICO'
+    if residuos_verificados == 0:
+        assert resultado['aproximacion'] is None
+        assert resultado['residuo'] is None
+        assert not resultado['pasos']
+    else:
+        assert len(resultado['pasos']) == 1
+        assert resultado['aproximacion'] == ('5/8', '23/10', '-7/6')

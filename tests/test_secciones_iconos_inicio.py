@@ -21,6 +21,7 @@ from tests.comun_construccion_vistas import construir_pagina
 
 _DESTINOS = (
     ("sistemas", "/algebra-lineal/sistemas", "sistemas_lineales"),
+    ("metodos_iterativos", "/algebra-lineal/metodos-iterativos", "metodos_iterativos"),
     ("leontief", "/algebra-lineal/leontief", "leontief"),
     ("matrices", "/algebra-lineal/matrices", "operaciones_matrices"),
     ("inversa", "/algebra-lineal/inversa", "matriz_inversa"),
@@ -54,13 +55,13 @@ def test_secciones_respetan_orden_subtitulos_y_destinos():
     assert [
         [(grupo.subtitulo, len(grupo.accesos)) for grupo in seccion.grupos]
         for seccion in secciones
-    ] == [[(None, 2)], [(None, 4)], [(None, 2), ("Visualizador geométrico", 3)],
+    ] == [[(None, 3)], [(None, 4)], [(None, 2), ("Visualizador geométrico", 3)],
           [("Raíces de ecuaciones", 2)], [(None, 2)]]
     accesos = [acceso for seccion in secciones for grupo in seccion.grupos for acceso in grupo.accesos]
     assert tuple((acceso.clave, enlace_elemento_navegacion(acceso), acceso.icono) for acceso in accesos) == _DESTINOS
     assert all(herramienta_por_ruta(acceso.ruta).habilitada for acceso in accesos)
-    assert accesos[2].etiqueta == "Operaciones con matrices"
-    assert accesos[7].etiqueta == "Transformaciones lineales"
+    assert accesos[3].etiqueta == "Operaciones con matrices"
+    assert accesos[8].etiqueta == "Transformaciones lineales"
 
 
 def test_svg_del_directorio_son_distintos_y_decorativos():
@@ -102,7 +103,7 @@ def test_inicio_publico_muestra_los_svg_del_catalogo(monkeypatch):
 
 
 @pytest.mark.parametrize("claves,ruta", [(None, "/algebra-lineal/leontief"),
-                                         ({"sistemas", "leontief"}, "/algebra-lineal/leontief"),
+                                         ({"sistemas", "metodos_iterativos", "leontief"}, "/algebra-lineal/leontief"),
                                          ({"metodos_cerrados", "metodos_abiertos"}, "/utilidades/metodos-abiertos")])
 def test_barra_comparte_svg_de_herramientas(monkeypatch, claves, ruta):
     """Cada barra construye sus accesos desde los símbolos del directorio."""
