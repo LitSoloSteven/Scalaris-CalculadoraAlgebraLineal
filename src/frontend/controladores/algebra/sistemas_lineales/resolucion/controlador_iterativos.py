@@ -1,15 +1,18 @@
-"""Despacho de Jacobi y adaptación de su respuesta exacta para la interfaz."""
+"""Despacho de métodos iterativos y adaptación de su respuesta exacta para la interfaz."""
 from dataclasses import asdict
 from fractions import Fraction
 
+from src.backend.resolutores.sistemas_lineales.gauss_seidel.gauss_seidel import resolver_gauss_seidel_desde_captura
 from src.backend.resolutores.sistemas_lineales.iterativos.formato_iterativo import formatear_racional_exacto
 from src.backend.resolutores.sistemas_lineales.jacobi.jacobi import resolver_jacobi_desde_captura
+from src.frontend.nucleo.textos.textos_metodos_iterativos import METODO_INICIAL, METODO_SECUENCIAL
 from ..nucleo.captura_iterativa import SistemaCapturado, interpretar_ecuaciones
 
 
 _EJEMPLO = '8*x1 - x2 + x3 = 5\n2*x1 + 10*x2 - x3 = 23\nx1 - x2 + 6*x3 = -7'
 TOLERANCIA_INICIAL = '0.001'
 MAXIMO_INICIAL = '25'
+_RESOLUTORES = {METODO_INICIAL: resolver_jacobi_desde_captura, METODO_SECUENCIAL: resolver_gauss_seidel_desde_captura}
 
 
 def ejemplo_iterativo() -> SistemaCapturado:
@@ -17,13 +20,19 @@ def ejemplo_iterativo() -> SistemaCapturado:
     return interpretar_ecuaciones(_EJEMPLO)
 
 
+def normalizar_metodo_iterativo(metodo: object) -> str:
+    """Devuelve una clave registrada o la de Jacobi cuando el valor no es reconocido."""
+    return metodo if isinstance(metodo, str) and metodo in _RESOLUTORES else METODO_INICIAL
+
+
 def resolver_iterativo(captura: dict) -> dict:
-    """Calcula Jacobi desde una instantánea de la vista y devuelve datos serializables."""
+    """Calcula el método de la instantánea y devuelve su resultado serializable."""
+    metodo = normalizar_metodo_iterativo(captura.get('metodo'))
     try:
         sistema = _obtener_sistema(captura)
     except ValueError as error:
         return {
-            'codigo': 'ENTRADA_INVALIDA', 'pasos': (), 'aproximacion': None,
+            'metodo': metodo, 'codigo': 'ENTRADA_INVALIDA', 'pasos': (), 'aproximacion': None,
             'diagnostico': {'mensaje': str(error), 'campo': captura['modo'], 'fila': None, 'columna': None},
         }
     datos_motor = {
@@ -31,8 +40,8 @@ def resolver_iterativo(captura: dict) -> dict:
         'vector_inicial': captura['vector_inicial'], 'tolerancia': captura['tolerancia'],
         'maximo_iteraciones': _interpretar_maximo(captura['maximo_iteraciones']),
     }
-    resultado = resolver_jacobi_desde_captura(datos_motor)
-    return {**_serializar(asdict(resultado)), 'variables': sistema.variables}
+    resultado = _RESOLUTORES[metodo](datos_motor)
+    return {**_serializar(asdict(resultado)), 'metodo': metodo, 'variables': sistema.variables}
 
 
 def _obtener_sistema(captura: dict) -> SistemaCapturado:
