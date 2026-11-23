@@ -22,7 +22,7 @@ from src.frontend.nucleo.textos.textos_espacios_subespacios import (
     VEREDICTO_SUBESPACIO_CERO,
 )
 from src.frontend.vistas.algebra.operaciones_vectores.panel.pasos_restricciones import (
-    renderizar_verificacion_motor_item,
+    renderizar_verificacion_motor,
 )
 from src.frontend.vistas.algebra.operaciones_vectores.panel.pasos_subespacios import (
     crear_reproductor_subespacios,
@@ -248,7 +248,7 @@ def _mostrar_verificaciones_motor(resultado: dict) -> None:
     ui.label(TITULO_VERIFICACION_MOTOR).classes("text-sm font-semibold texto-secundario mt-2")
     with ui.column().classes("w-full gap-1"):
         for elemento in comprobaciones:
-            renderizar_verificacion_motor_item(elemento)
+            renderizar_verificacion_motor(elemento)
 
 
 def _mostrar_figura(resultado: dict, tema: str) -> None:

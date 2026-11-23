@@ -170,7 +170,7 @@ def _cuerpo_vacio(resultado: dict) -> None:
         ui.label(f"Testigo: {testigo['descripcion']}").classes("subespacios-numero texto-principal text-sm select-text")
 
 
-def renderizar_verificacion_motor_item(elemento: dict) -> None:
+def renderizar_verificacion_motor(elemento: dict) -> None:
     """Renderiza una verificación del motor ya sea textual o en bloque LaTeX."""
     if elemento.get("detalle_latex"):
         fila = elemento.get("fila")

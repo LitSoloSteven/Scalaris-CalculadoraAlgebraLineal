@@ -14,7 +14,7 @@ from src.frontend.nucleo.textos.textos_espacios_subespacios import (
 )
 from src.frontend.vistas.algebra.operaciones_vectores.panel.pasos_restricciones import (
     agregar_grupo_solucion_restricciones, describir_evento_restricciones,
-    renderizar_cuerpo_solucion_restricciones, renderizar_verificacion_motor_item,
+    renderizar_cuerpo_solucion_restricciones, renderizar_verificacion_motor,
     tabla_reduccion_restricciones, tabla_reduccion_subespacio,
 )
 
@@ -279,4 +279,4 @@ def _renderizar_cuerpo_teorema(criterio: dict, herencia: str) -> None:
 def _renderizar_cuerpo_motor(comprobaciones: tuple[dict, ...]) -> None:
     ui.label("Verificaciones del cálculo del motor:").classes("texto-secundario text-sm")
     for elemento in comprobaciones:
-        renderizar_verificacion_motor_item(elemento)
+        renderizar_verificacion_motor(elemento)
