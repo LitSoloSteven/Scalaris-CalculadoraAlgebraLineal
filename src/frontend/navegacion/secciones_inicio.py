@@ -38,7 +38,7 @@ _GruposPorClave = tuple[tuple[str | None, tuple[str, ...]], ...]
 _DefinicionSeccion = tuple[str, str, _GruposPorClave]
 
 _SECCIONES: tuple[_DefinicionSeccion, ...] = (
-    ("sistemas-lineales", "Sistemas lineales", ((None, ("sistemas", "leontief")),)),
+    ("sistemas-lineales", "Sistemas lineales", ((None, ("sistemas", "metodos_iterativos", "leontief")),)),
     ("matrices", "Matrices", ((None, ("matrices", "inversa", "determinantes", "factorizacion_lu")),)),
     ("vectores-geometria", "Vectores y geometría", (
         (None, ("vectores", "transformaciones")),

@@ -8,10 +8,11 @@ _BISECCION = frozenset({"biseccion"})
 _REGLA_FALSA = frozenset({"regla_falsa"})
 _METODOS_ABIERTOS = frozenset({"metodos_abiertos"})
 _METODOS_CERRADOS = frozenset({"metodos_cerrados"})
+_METODOS_ITERATIVOS = frozenset({"metodos_iterativos"})
 _RAICES = _BISECCION | _REGLA_FALSA | _METODOS_ABIERTOS | _METODOS_CERRADOS
 _ALGEBRA = frozenset({"sistemas", "vectores", "matrices", "inversa", "determinantes", "factorizacion_lu",
                        "visualizador", "leontief", "transformaciones"})
-_VISTAS = _INICIO | _NUMERICAS | _ALGEBRA | _RAICES
+_VISTAS = _INICIO | _NUMERICAS | _ALGEBRA | _RAICES | _METODOS_ITERATIVOS
 _EXPORTACION_PDF = _ALGEBRA | _NUMERICAS
 _POR_RECURSO = {
     "sonido/motor/catalogo_sonidos.js": _VISTAS,
@@ -27,11 +28,12 @@ _POR_RECURSO = {
     "inicio/vistas_inicio_adaptable.css": frozenset({"sistemas", "inversa", "visualizador"}),
     "algebra/matrices/vistas_matrices.css": frozenset({"matrices"}),
     "algebra/espacios/vistas_vectores.css": frozenset({"vectores", "visualizador"}),
+    "algebra/espacios/vistas_metodos_iterativos.css": _METODOS_ITERATIVOS,
     "algebra/espacios/vistas_geometria.css": frozenset({"visualizador"}),
     "algebra/matrices/vistas_modelos.css": frozenset({"leontief", "transformaciones", "determinantes"}),
     "numericos/sistemas/vistas_numericos.css": _NUMERICAS,
     "numericos/sistemas/pasos_numericos.css": _NUMERICAS,
-    "algebra/matrices/vistas_inversa.css": _ALGEBRA | _NUMERICAS | _RAICES,
+    "algebra/matrices/vistas_inversa.css": _ALGEBRA | _NUMERICAS | _RAICES | _METODOS_ITERATIVOS,
     "numericos/raices/vistas_biseccion.css": _BISECCION,
     "numericos/raices/vistas_regla_falsa.css": _REGLA_FALSA,
     "numericos/raices/estructura_metodos_raices.css": _METODOS_ABIERTOS | _METODOS_CERRADOS,
