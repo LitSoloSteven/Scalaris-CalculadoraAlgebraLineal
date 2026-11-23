@@ -160,7 +160,7 @@ class CapturaRestricciones:
         with ui.column().classes("w-full min-w-0") as self.panel_matriz:
             self.cuadricula.construir_contenedor_cuadricula()
         self.ecuaciones = ui.textarea(
-            "Ecuaciones lineales de restricción, una por línea", on_change=self._al_editar_ecuaciones
+            "Ecuaciones lineales de restricción, una por línea", on_change=self._al_cambiar_panel
         ).classes("w-full min-w-0").props(f"outlined maxlength={MAXIMO_CARACTERES_ECUACIONES}")
         self.ecuaciones.set_visibility(False)
         self.aviso_ejemplo = ui.label(ETIQUETA_EJEMPLO_RESTRICCIONES).classes(
@@ -218,10 +218,6 @@ class CapturaRestricciones:
             return
         self.dimension_ambiente = columnas
         _actualizar_indicadores_dimension(self)
-
-    def _al_cambiar_ecuaciones(self) -> None:
-        if not self._sincronizando:
-            self._notificar_edicion(conservar_ejemplo=False)
 
     def _al_cambiar_panel(self) -> None:
         if not self._sincronizando:
