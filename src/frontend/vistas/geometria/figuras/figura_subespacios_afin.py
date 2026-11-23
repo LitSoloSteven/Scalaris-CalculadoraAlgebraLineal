@@ -1,6 +1,7 @@
 """Construcción de figuras Plotly para conjuntos afines y primitivos compartidos."""
 from __future__ import annotations
 
+from dataclasses import dataclass
 from fractions import Fraction
 import math
 
@@ -21,6 +22,16 @@ from ._figuras_comunes import disposicion_2d, disposicion_3d
 _LIMITE_VISUAL = 1e12
 _LIMITE_TEXTO_COORDENADA = 256
 _OPACIDAD_PLANO = 0.45
+
+
+@dataclass(frozen=True)
+class _GeometriaAfin:
+    dimension: int
+    punto: tuple[float, ...]
+    p_frac: tuple[Fraction, ...]
+    d_vis: tuple[tuple[float, ...], ...]
+    d_fracs: tuple[tuple[Fraction, ...], ...]
+    rango: list[float]
 
 
 def interpretar_vectores_visuales(
@@ -150,28 +161,25 @@ def preparar_figura_afin(resultado: dict, *, tema: str = "papel"):
     punto = p_vis[0]
     extremos = [punto, *(tuple(a + b for a, b in zip(punto, dir_v)) for dir_v in d_vis)]
     rango = calcular_rango_visual(tuple(extremos))
-    return _armar_figura_afin(dimension, punto, p_fracs[0], d_vis, d_fracs, rango, tema)
+    geometria = _GeometriaAfin(dimension, punto, p_fracs[0], d_vis, d_fracs, rango)
+    return _armar_figura_afin(geometria, tema)
 
 
-def _armar_figura_afin(
-    dimension: int, punto: tuple[float, ...], p_frac: tuple[Fraction, ...],
-    d_vis: tuple[tuple[float, ...], ...], d_fracs: tuple[tuple[Fraction, ...], ...],
-    rango: list[float], tema: str,
-):
+def _armar_figura_afin(geometria: _GeometriaAfin, tema: str):
     import plotly.graph_objects as graficos
 
     figura = graficos.Figure()
     fuente = COLORES_TEXTO_GRAFICOS.get(tema, COLORES_TEXTO_GRAFICOS["papel"])
-    if dimension == 1:
-        _escena_afin_1d(figura, punto, rango, fuente)
-    elif dimension == 2:
-        if not _escena_afin_2d(figura, punto, d_vis, rango):
+    if geometria.dimension == 1:
+        _escena_afin_1d(figura, geometria.punto, geometria.rango, fuente)
+    elif geometria.dimension == 2:
+        if not _escena_afin_2d(figura, geometria.punto, geometria.d_vis, geometria.rango):
             return None
-        disposicion_2d(figura, rango_ejes=rango, color_fuente=fuente, revision="subespacios-2d")
+        disposicion_2d(figura, rango_ejes=geometria.rango, color_fuente=fuente, revision="subespacios-2d")
     else:
-        if not _escena_afin_3d(figura, punto, p_frac, d_vis, d_fracs, rango):
+        if not _escena_afin_3d(figura, geometria):
             return None
-        disposicion_3d(figura, rango_ejes=rango, color_fuente=fuente, revision="subespacios-3d")
+        disposicion_3d(figura, rango_ejes=geometria.rango, color_fuente=fuente, revision="subespacios-3d")
     aplicar_colores_figura(figura, tema)
     return figura
 
@@ -224,16 +232,15 @@ def _escena_afin_2d(
     return True
 
 
-def _escena_afin_3d(
-    figura, punto: tuple[float, ...], p_frac: tuple[Fraction, ...],
-    d_vis: tuple[tuple[float, ...], ...], d_fracs: tuple[tuple[Fraction, ...], ...],
-    rango: list[float],
-) -> bool:
+def _escena_afin_3d(figura, geometria: _GeometriaAfin) -> bool:
     import plotly.graph_objects as graficos
 
+    punto, d_vis, rango = geometria.punto, geometria.d_vis, geometria.rango
     if len(d_vis) == 1 and not _recta_afin_3d(figura, punto, d_vis[0], rango):
         return False
-    if len(d_vis) == 2 and not agregar_plano_desde_vectores(figura, p_frac, d_fracs, rango, "Plano afín"):
+    if len(d_vis) == 2 and not agregar_plano_desde_vectores(
+        figura, geometria.p_frac, geometria.d_fracs, rango, "Plano afín"
+    ):
         return False
     for indice, direccion in enumerate(d_vis):
         destino = (punto[0] + direccion[0], punto[1] + direccion[1], punto[2] + direccion[2])
