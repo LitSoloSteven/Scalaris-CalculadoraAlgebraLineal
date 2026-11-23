@@ -56,7 +56,7 @@ def _resumen_exito(resultado: Mapping) -> dict:
         "veredicto": texto_veredicto_subespacio(dimension_ambiente),
         "subtitulo_veredicto": _subtitulo_veredicto(dimension_subespacio, dimension_ambiente),
         "herencia_axiomas": texto_herencia_axiomas(dimension_ambiente),
-        "descripcion_geometrica": _descripcion_geometrica(dimension_subespacio, dimension_ambiente),
+        "descripcion_geometrica": descripcion_geometrica_subespacio(dimension_subespacio, dimension_ambiente),
     }
 
 
@@ -67,47 +67,46 @@ def _traza_exito(resultado: Mapping, etiquetas: tuple[str, ...]) -> dict:
     pivotes = tuple(resultado.get("columnas_pivote") or ())
     libres = tuple(resultado.get("columnas_libres") or ())
     return {
-        "base": _serializar_vectores(resultado.get("base") or ()),
+        "base": serializar_vectores(resultado.get("base") or ()),
         "indices_generadores_base": tuple(resultado.get("indices_generadores_base") or ()),
         "etiquetas_generadores_base": tuple(resultado.get("etiquetas_generadores_base") or ()),
         "etiquetas_generadores": etiquetas_efectivas,
         "columnas_pivote": pivotes,
         "columnas_libres": libres,
         "dependencias": _extraer_dependencias(matriz_reducida, etiquetas_efectivas, pivotes, libres),
-        "matriz_original": _serializar_matriz(matriz_original),
-        "matriz_reducida": _serializar_matriz(matriz_reducida),
-        "pasos": _serializar_pasos(resultado.get("pasos") or ()),
+        "matriz_original": serializar_matriz(matriz_original),
+        "matriz_reducida": serializar_matriz(matriz_reducida),
+        "pasos": serializar_pasos(resultado.get("pasos") or ()),
         "criterios": tuple(dict(criterio) for criterio in CRITERIOS_TEOREMA_GENERADORES),
-        "comprobaciones": _serializar_comprobaciones(resultado.get("comprobaciones") or ()),
+        "comprobaciones": serializar_comprobaciones(resultado.get("comprobaciones") or ()),
     }
 
 
 def _presentar_error(resultado: Mapping, diagnostico: dict | None) -> dict:
     codigo = str(resultado.get("codigo") or "ENTRADA_INVALIDA")
     es_interno = codigo in _CODIGOS_INTERNOS
-    mensaje = MENSAJE_CALCULO_NO_VERIFICADO if es_interno else (_limpiar_texto(resultado.get("mensaje")) or MENSAJE_CALCULO_NO_VERIFICADO)
+    mensaje = (
+        MENSAJE_CALCULO_NO_VERIFICADO if es_interno
+        else (limpiar_texto(resultado.get("mensaje")) or MENSAJE_CALCULO_NO_VERIFICADO)
+    )
     detalle = None if es_interno else diagnostico
     if detalle is None and codigo == "ENTRADA_INVALIDA":
-        detalle = {"mensaje": mensaje, "ubicacion": None, "etiqueta": None, "componente": None}
+        detalle = {
+            "mensaje": mensaje, "ubicacion": None, "campo": None,
+            "fila": None, "columna": None, "etiqueta": None, "componente": None,
+        }
     return {
-        "estado": "ERROR",
-        "modo": resultado.get("modo") or MODO_GENERADORES,
-        "codigo": codigo,
-        "clasificacion": None,
-        "mensaje": mensaje,
-        "diagnostico": detalle,
-        "dimension_ambiente": resultado.get("dimension_ambiente"),
-        "es_subespacio": None,
-        "es_espacio_vectorial": None,
-        "base": None,
-        "pasos": (),
-        "comprobaciones": (),
-        "criterios": (),
-        "dependencias": (),
+        "estado": "ERROR", "modo": resultado.get("modo") or MODO_GENERADORES, "codigo": codigo,
+        "clasificacion": None, "mensaje": mensaje, "diagnostico": detalle,
+        "dimension_ambiente": resultado.get("dimension_ambiente"), "es_subespacio": None,
+        "es_espacio_vectorial": None, "base": None, "particular": None, "direcciones": None,
+        "testigo": None, "familia_parametrica": None, "pasos": (),
+        "comprobaciones": (), "criterios": (), "dependencias": (),
     }
 
 
-def _limpiar_texto(valor: object) -> str:
+def limpiar_texto(valor: object) -> str:
+    """Normaliza espacios y saltos de línea en un texto de salida."""
     return " ".join(str(valor or "").split())
 
 
@@ -124,11 +123,13 @@ def _subtitulo_veredicto(dimension: int, dimension_ambiente: int) -> str:
     return f"Subespacio de dimensión {dimension} incluido en ℝ{superindice_dimension(dimension_ambiente)}."
 
 
-def _serializar_vectores(vectores: tuple[tuple[Fraction, ...], ...]) -> tuple[tuple[str, ...], ...]:
+def serializar_vectores(vectores: tuple[tuple[Fraction, ...], ...]) -> tuple[tuple[str, ...], ...]:
+    """Serializa una secuencia de vectores racionales a cadenas exactas."""
     return tuple(tuple(texto_fraccion_exacta(valor) for valor in vector) for vector in vectores)
 
 
-def _serializar_matriz(matriz: Matriz | None) -> dict | None:
+def serializar_matriz(matriz: Matriz | None) -> dict | None:
+    """Serializa una matriz racional con todas sus celdas como texto exacto."""
     if matriz is None:
         return None
     return {
@@ -150,23 +151,27 @@ def _serializar_dato_exacto(valor: object) -> object:
     return valor
 
 
-def _serializar_pasos(pasos: tuple) -> tuple[dict, ...]:
+def serializar_pasos(pasos: tuple) -> tuple[dict, ...]:
+    """Serializa la traza de pasos preservando matrices y datos exactos."""
     return tuple(
         {
             "tipo": str(paso.get("tipo", "otro")),
             "datos": _serializar_dato_exacto(paso.get("datos") or {}),
-            "matriz": _serializar_matriz(paso.get("matriz")),
+            "matriz": serializar_matriz(paso.get("matriz")),
         }
         for paso in pasos
     )
 
 
-def _serializar_comprobaciones(comprobaciones: tuple[Mapping, ...]) -> tuple[dict, ...]:
+def serializar_comprobaciones(comprobaciones: tuple[Mapping, ...]) -> tuple[dict, ...]:
+    """Serializa las verificaciones exactas devueltas por el motor."""
     return tuple(
         {
             "tipo": str(elemento.get("tipo", "")),
             "coincide": bool(elemento.get("coincide", False)),
-            "detalle": _limpiar_texto(elemento.get("detalle", "")),
+            "detalle": limpiar_texto(elemento.get("detalle", "")),
+            "detalle_latex": str(elemento.get("detalle_latex") or ""),
+            "fila": elemento.get("fila"),
             "indice": elemento.get("indice"),
             "origen": "motor",
         }
@@ -264,7 +269,8 @@ def _etiqueta_latex(etiqueta: str) -> str:
     return rf"\text{{{segura}}}"
 
 
-def _fraccion_latex(valor: Fraction) -> str:
+def fraccion_latex(valor: Fraction) -> str:
+    """Formatea un racional exacto en LaTeX para enteros o fracciones."""
     numerador = texto_entero_exacto(valor.numerator)
     if valor.denominator == 1:
         return numerador
@@ -275,10 +281,11 @@ def _formatear_dependencia_latex(etiqueta_libre: str, terminos: list[tuple[str, 
     izquierda = _etiqueta_latex(etiqueta_libre)
     if not terminos:
         return f"{izquierda} = \\mathbf{{0}}"
-    return f"{izquierda} = {_formatear_combinacion(terminos, _fraccion_latex, _etiqueta_latex)}"
+    return f"{izquierda} = {_formatear_combinacion(terminos, fraccion_latex, _etiqueta_latex)}"
 
 
-def _descripcion_geometrica(dimension: int, dimension_ambiente: int) -> str:
+def descripcion_geometrica_subespacio(dimension: int, dimension_ambiente: int) -> str:
+    """Resume geométricamente un subespacio de dimensión dada dentro de ℝⁿ."""
     ambiente = f"ℝ{superindice_dimension(dimension_ambiente)}"
     if dimension_ambiente > 3:
         return f"Subespacio de dimensión {dimension} en {ambiente}; contiene al origen. {NOTA_DIMENSION_SUPERIOR}"
