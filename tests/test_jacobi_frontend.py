@@ -77,6 +77,7 @@ def test_limite_aritmetico_solo_publica_barridos_completos(monkeypatch, residuos
     verificados = 0
 
     def residuo_acotado(*argumentos):
+        """Simula el agotamiento del presupuesto tras los residuos indicados."""
         nonlocal verificados
         if verificados == residuos_verificados:
             raise LimiteAritmeticoJacobi('Se alcanzó el límite aritmético.')

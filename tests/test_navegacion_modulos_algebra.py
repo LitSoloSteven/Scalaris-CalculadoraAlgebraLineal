@@ -19,6 +19,7 @@ def test_ruta_de_jacobi_resuelve_y_navega_al_barrido(monkeypatch):
     _registrar_vista(monkeypatch)
 
     async def comprobar(vista, cliente):
+        """Comprueba el resultado, el foco lógico y la conservación del texto."""
         activos = [elemento._props.get('href') for elemento in cliente.elements.values()
                    if elemento._props.get('aria-current') == 'page']
         assert activos == [ruta_de('metodos_iterativos')]
@@ -53,9 +54,11 @@ def test_edicion_descarta_una_respuesta_anterior(monkeypatch):
     _registrar_vista(monkeypatch)
 
     async def comprobar(vista, cliente):
+        """Retiene el trabajador hasta que la captura haya cambiado dos veces."""
         iniciado, continuar = asyncio.Event(), asyncio.Event()
 
         async def ejecutar(calcular, captura):
+            """Notifica el inicio y espera la señal de la prueba antes de calcular."""
             iniciado.set()
             await continuar.wait()
             return calcular(captura)
@@ -80,6 +83,7 @@ def test_el_inicio_conserva_componentes_al_ampliar_y_ordenar_incognitas(monkeypa
     _registrar_vista(monkeypatch)
 
     async def comprobar(vista, cliente):
+        """Inserta una incógnita antes de dos componentes editadas y amplía la matriz."""
         captura = vista.captura
         captura.selector.set_value('ecuaciones')
         captura.ecuaciones.set_value('y = 1\nz = 2')

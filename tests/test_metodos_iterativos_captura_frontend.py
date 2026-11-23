@@ -13,6 +13,7 @@ def test_cuadricula_cuadrada_redimensiona_junta_y_notifica(monkeypatch):
     monkeypatch.setattr(ui, 'run_javascript', AsyncMock())
 
     async def comprobar():
+        """Cambia ambos ejes desde el control de incógnitas y lee la captura."""
         cliente = Client(ui.page('/prueba-cuadricula-iterativa'))
         try:
             with cliente:
