@@ -64,18 +64,20 @@ def _renderizar_fila_entradas(cuadricula: CuadriculaEcuaciones, i: int) -> None:
 class CuadriculaEcuaciones:
     """Cuadricula de captura de matriz de coeficientes y terminos independientes."""
 
-    def __init__(self, filas_iniciales: int = 3, columnas_iniciales: int = 3) -> None:
+    def __init__(self, filas_iniciales: int = 3, columnas_iniciales: int = 3, *, cuadrada: bool = False) -> None:
         self.filas_interfaz: list[ui.row] = []
         self.entradas_coeficientes: list[list[ui.input]] = []
         self.entradas_independientes: list[ui.input] = []
         self.filas: int = filas_iniciales
-        self.columnas: int = columnas_iniciales
+        self.columnas: int = filas_iniciales if cuadrada else columnas_iniciales
+        self.cuadrada = cuadrada
         self.modo_homogeneo = False
         self.contenedor_matriz: ui.column | None = None
         self.etiqueta_forma: ui.html | None = None
         self._cache_coeficientes: dict[tuple[int, int], str] = {}
         self._cache_independientes: dict[int, str] = {}
         self.al_cambiar_datos: Callable[[], None] | None = None
+        self.al_cambiar_dimension: Callable[[int, int], None] | None = None
         self.boton_quitar_fila: ui.button | None = None
         self.boton_agregar_fila: ui.button | None = None
         self.boton_quitar_columna: ui.button | None = None
@@ -88,6 +90,8 @@ class CuadriculaEcuaciones:
 
     async def ajustar_tamano(self, incremento_filas: int = 0, incremento_columnas: int = 0) -> None:
         """Ajusta las dimensiones de ecuaciones o variables con animacion."""
+        if self.cuadrada:
+            incremento_filas = incremento_columnas = incremento_columnas or incremento_filas
         nuevo_m = self.filas + incremento_filas
         nuevo_n = self.columnas + incremento_columnas
         if not (DIMENSION_MINIMA <= nuevo_m <= DIMENSION_MAXIMA_SISTEMAS) or not (
@@ -124,6 +128,12 @@ class CuadriculaEcuaciones:
                 with self.contenedor_matriz:
                     self.cabecera_columnas = _renderizar_cabecera_columnas(self.columnas)
                 self.cabecera_columnas.move(target_index=0)
+        self._notificar_dimension(anterior)
+
+    def _notificar_dimension(self, anterior: tuple[int, int]) -> None:
+        actual = self.filas, self.columnas
+        if anterior != actual and self.al_cambiar_dimension:
+            self.al_cambiar_dimension(*actual)
         if self.al_cambiar_datos:
             self.al_cambiar_datos()
 
@@ -140,7 +150,8 @@ class CuadriculaEcuaciones:
             self.contenedor_matriz = ui.column().classes(
                 "overflow-auto panel-tarjeta p-4 flex-1 cuadricula-area-desplazamiento cuadricula-desplazamiento"
             )
-            _construir_botones_tamanos(self)
+            if not self.cuadrada:
+                _construir_botones_tamanos(self)
 
         _construir_botones_variables(self)
         self.generar_cuadricula()
@@ -243,9 +254,12 @@ class CuadriculaEcuaciones:
         self.cargar_datos(coeficientes, independientes)
 
     def cargar_datos(self, coeficientes: list[list[str]], vector_b: list[str]) -> None:
-        """Carga datos directamente actualizando dimensiones y cuadricula."""
+        """Carga datos y actualiza la cuadrícula. Una cuadrícula cuadrada rechaza formas incompatibles."""
+        if self.cuadrada and (not coeficientes or any(len(fila) != len(coeficientes) for fila in coeficientes)):
+            raise ValueError("La cuadrícula requiere una matriz cuadrada.")
         coeficientes = preparar_matriz_numerica(coeficientes)
         vector_b = preparar_matriz_numerica([vector_b])[0]
+        anterior = self.filas, self.columnas
         self.filas = len(coeficientes)
         self.columnas = len(coeficientes[0]) if self.filas > 0 else 3
         self.modo_homogeneo = False
@@ -259,5 +273,4 @@ class CuadriculaEcuaciones:
             if texto and texto != "0":
                 self._cache_independientes[i] = texto
         self.generar_cuadricula()
-        if self.al_cambiar_datos:
-            self.al_cambiar_datos()
+        self._notificar_dimension(anterior)
