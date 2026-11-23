@@ -54,6 +54,11 @@ CATALOGO_ICONOS: dict[str, str] = {
         '<path d="M5 7h14m-3-3 3 3-3 3"></path>'
         '<path d="m8 13 4 7 4-7"></path>'
     ),
+    "espacios_subespacios": (
+        '<path d="M12 12V4m0 8 8 4.5M12 12 4 16.5"></path>'
+        '<polygon points="4 10 12 6 20 14 12 18"></polygon>'
+        '<circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"></circle>'
+    ),
     "temas": (
         '<circle cx="12" cy="12" r="8"></circle>'
         '<path d="M17.65 6.35A8 8 0 0 0 6.35 17.65Z" fill="currentColor" stroke="none"></path>'
