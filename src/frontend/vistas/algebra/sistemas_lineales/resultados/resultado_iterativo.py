@@ -55,15 +55,21 @@ def _presentar_escalar(etiqueta: str, exacto: str) -> str:
 
 def _mostrar_tabla(resultado: dict, ir_a) -> None:
     ui.label('Tabla de iteraciones').classes('text-base font-semibold texto-principal')
-    with ui.element('div').classes('iterativos-desplazamiento').props('tabindex=0 aria-label="Tabla de iteraciones"'):
-        with ui.element('table').classes('iterativos-tabla'):
-            with ui.element('thead'), ui.element('tr'):
-                for etiqueta in ('Barrido', *resultado['variables'], '‖r‖∞', '‖Δx‖∞'):
-                    with ui.element('th').props('scope=col'):
-                        ui.label(etiqueta)
-            with ui.element('tbody'):
-                for paso in resultado['pasos']:
-                    _mostrar_fila(paso, ir_a)
+    with (
+        ui.element('div').classes('iterativos-desplazamiento').props('tabindex=0 aria-label="Tabla de iteraciones"'),
+        ui.element('table').classes('iterativos-tabla'),
+    ):
+        _mostrar_encabezado(resultado['variables'])
+        with ui.element('tbody'):
+            for paso in resultado['pasos']:
+                _mostrar_fila(paso, ir_a)
+
+
+def _mostrar_encabezado(variables: list[str]) -> None:
+    with ui.element('thead'), ui.element('tr'):
+        for etiqueta in ('Barrido', *variables, '‖r‖∞', '‖Δx‖∞'):
+            with ui.element('th').props('scope=col'):
+                ui.label(etiqueta)
 
 
 def _mostrar_fila(paso: dict, ir_a) -> None:

@@ -29,6 +29,14 @@ def _asignar_inicio(anteriores: list[str], nuevas: list[str], valores: dict[int,
     return {indice: por_variable.get(nombre, '0') for indice, nombre in enumerate(nuevas)}
 
 
+def _localizar_celda_matriz(cuadricula: CuadriculaEcuaciones, campo: str, fila: int | None, columna: int | None):
+    if not fila:
+        return None
+    if campo == 'vector_b':
+        return cuadricula.entradas_independientes[fila - 1]
+    return cuadricula.entradas_coeficientes[fila - 1][columna - 1] if columna else None
+
+
 class CapturaIterativa:
     """Monta la captura y sincroniza las dos representaciones sin perder borradores inválidos."""
 
@@ -221,10 +229,8 @@ class CapturaIterativa:
             if fila and columna:
                 self.aviso.set_text(f'Ecuación {fila}, incógnita {self.variables[columna - 1]}.')
             return self.ecuaciones
-        if campo == 'matriz_a' and fila and columna:
-            return self.cuadricula.entradas_coeficientes[fila - 1][columna - 1]
-        if campo == 'vector_b' and fila:
-            return self.cuadricula.entradas_independientes[fila - 1]
+        if campo in ('matriz_a', 'vector_b'):
+            return _localizar_celda_matriz(self.cuadricula, campo, fila, columna)
         if campo == 'vector_inicial' and fila:
             return self._campos_vector()[fila - 1]
         return {'tolerancia': self.tolerancia, 'maximo_iteraciones': self.maximo}.get(campo)
