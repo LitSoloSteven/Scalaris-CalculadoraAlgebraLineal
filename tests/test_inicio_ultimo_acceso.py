@@ -30,7 +30,7 @@ _CLAVES_ESPERADAS = {
 def test_catalogo_ejemplos_cubre_exactamente_los_quince_accesos():
     """Todos los accesos del directorio tienen plantilla y metadatos propios."""
     assert CLAVES_EJEMPLOS == _CLAVES_ESPERADAS
-    assert len(CLAVES_EJEMPLOS) == 15
+    assert len(CLAVES_EJEMPLOS) == 16
     assert obtener_ejemplo("desconocida").clave == "sistemas"
 
 
@@ -183,7 +183,7 @@ def test_portada_actualiza_acceso_y_ejemplo_conservando_directorio(
         assert (clave == "sistemas") != any("ejemplosInicio?.preparar" in codigo for codigo in emitidos)
         directorio = next(elemento for elemento in cliente.elements.values() if "inicio-directorio" in elemento.classes)
         assert "data-directorio-listo" in directorio._props
-        assert len([elemento for elemento in directorio.descendants() if "inicio-enlace" in elemento.classes]) == 15
+        assert len([elemento for elemento in directorio.descendants() if "inicio-enlace" in elemento.classes]) == 16
 
     def _responder(codigo):
         emitidos.append(codigo)
