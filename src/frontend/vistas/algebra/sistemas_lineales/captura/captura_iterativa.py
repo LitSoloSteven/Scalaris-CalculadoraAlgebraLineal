@@ -16,6 +16,17 @@ from src.frontend.controladores.algebra.sistemas_lineales.resolucion.controlador
 )
 
 _NOMBRE_INICIO = 'x_0'
+_OPCIONES_INICIO = {
+    'minimo_vectores': 1, 'maximo_vectores': 1, 'permitir_orientacion': False,
+    'etiqueta_primer_vector': _NOMBRE_INICIO,
+}
+
+
+def _asignar_inicio(anteriores: list[str], nuevas: list[str], valores: dict[int, str]) -> dict[int, str]:
+    if not set(anteriores).intersection(nuevas):
+        return {indice: valores.get(indice, '0') for indice in range(len(nuevas))}
+    por_variable = {nombre: valores.get(indice, '0') for indice, nombre in enumerate(anteriores)}
+    return {indice: por_variable.get(nombre, '0') for indice, nombre in enumerate(nuevas)}
 
 
 class CapturaIterativa:
@@ -24,10 +35,7 @@ class CapturaIterativa:
     def __init__(self, al_editar: Callable[[], None]) -> None:
         self.al_editar = al_editar
         self.cuadricula = CuadriculaEcuaciones(cuadrada=True)
-        self.vector = PanelCapturaVectores('iterativos', {
-            'minimo_vectores': 1, 'maximo_vectores': 1, 'permitir_orientacion': False,
-            'etiqueta_primer_vector': _NOMBRE_INICIO,
-        })
+        self.vector = PanelCapturaVectores('iterativos', _OPCIONES_INICIO)
         self.variables = ajustar_variables([], self.cuadricula.columnas)
         self._variables_matriz = self.variables
         self.modo = 'matriz'
@@ -140,7 +148,7 @@ class CapturaIterativa:
             return
         vector = self.vector.vectores[_NOMBRE_INICIO]
         valores = vector['celdas'] if not reiniciar else {}
-        vector['celdas'] = {indice: valores.get(indice, '0') for indice in range(len(variables))}
+        vector['celdas'] = _asignar_inicio(self.variables, variables, valores)
         self.variables = variables
         self.vector.dimension = len(variables)
         self.vector.renderizar_cuadricula_vector(_NOMBRE_INICIO)

@@ -73,3 +73,23 @@ def test_edicion_descarta_una_respuesta_anterior(monkeypatch):
         assert vista.boton_resolver._props.get('loading') == 'false'
 
     asyncio.run(construir_pagina(monkeypatch, 'metodos_iterativos', comprobar))
+
+
+def test_el_inicio_conserva_componentes_al_ampliar_y_ordenar_incognitas(monkeypatch):
+    """Amplía el inicio con ceros y mantiene los valores de las incógnitas que ya existían."""
+    _registrar_vista(monkeypatch)
+
+    async def comprobar(vista, cliente):
+        captura = vista.captura
+        captura.selector.set_value('ecuaciones')
+        captura.ecuaciones.set_value('y = 1\nz = 2')
+        campos = captura._campos_vector()
+        campos[0].set_value('1/2')
+        campos[1].set_value('')
+        captura.ecuaciones.set_value('a = 0\ny = 1\nz = 2')
+        assert captura.obtener()['vector_inicial'] == ['0', '1/2', '']
+        captura.selector.set_value('matriz')
+        await captura.cuadricula.ajustar_tamano(incremento_columnas=1)
+        assert captura.obtener()['vector_inicial'] == ['0', '1/2', '', '0']
+
+    asyncio.run(construir_pagina(monkeypatch, 'metodos_iterativos', comprobar))
