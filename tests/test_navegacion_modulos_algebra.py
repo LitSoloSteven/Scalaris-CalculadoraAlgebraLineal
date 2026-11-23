@@ -112,6 +112,26 @@ def _pulsar_boton(boton: ui.button) -> None:
             escucha.handler(None)
 
 
+def _verificar_recursos_subespacios(cabecera: str) -> None:
+    for recurso in ('vistas_subespacios.css', 'vistas_vectores.css', 'vistas_inversa.css', 'tema_graficos.js'):
+        assert recurso in cabecera
+    for ajeno in ('sistemas_metodo.js', 'vistas_metodos_iterativos.css'):
+        assert ajeno not in cabecera
+
+
+def _navegar_botones_criterio(vista) -> list[str]:
+    botones = [elemento for elemento in vista.contenedor_resultados.descendants()
+               if isinstance(elemento, ui.button) and 'subespacios-criterio-boton' in elemento.classes]
+    assert len(botones) == 3
+    claves_visitadas = []
+    for boton in botones:
+        _pulsar_boton(boton)
+        paso = vista.reproductor_pasos.pasos[vista.reproductor_pasos.indice_actual]
+        assert paso.cuerpo[0] == 'teorema'
+        claves_visitadas.append(paso.cuerpo[1]['clave'])
+    return claves_visitadas
+
+
 def test_ruta_espacios_subespacios_analiza_criterios_y_recursos(monkeypatch):
     """Abre Espacios y subespacios, valida recursos, analiza el ejemplo y navega criterios."""
     _registrar_subespacios(monkeypatch)
@@ -121,26 +141,13 @@ def test_ruta_espacios_subespacios_analiza_criterios_y_recursos(monkeypatch):
         activos = [elemento._props.get('href') for elemento in cliente.elements.values()
                    if elemento._props.get('aria-current') == 'page']
         assert activos == [ruta_de('espacios_subespacios')]
-        cabecera = cliente.head_html
-        for recurso in ('vistas_subespacios.css', 'vistas_vectores.css', 'vistas_inversa.css', 'tema_graficos.js'):
-            assert recurso in cabecera
-        for ajeno in ('sistemas_metodo.js', 'vistas_metodos_iterativos.css'):
-            assert ajeno not in cabecera
+        _verificar_recursos_subespacios(cliente.head_html)
         vista.captura.cargar_ejemplo()
         await vista.analizar()
         assert vista.ultimo_resultado['dimension'] == 2
         etiquetas = [getattr(elemento, 'text', '') for elemento in vista.contenedor_resultados.descendants()]
         assert any('espacio vectorial con las operaciones usuales' in texto.lower() for texto in etiquetas)
-        botones = [elemento for elemento in vista.contenedor_resultados.descendants()
-                   if isinstance(elemento, ui.button) and 'subespacios-criterio-boton' in elemento.classes]
-        assert len(botones) == 3
-        claves_visitadas = []
-        for boton in botones:
-            _pulsar_boton(boton)
-            paso = vista.reproductor_pasos.pasos[vista.reproductor_pasos.indice_actual]
-            assert paso.cuerpo[0] == 'teorema'
-            claves_visitadas.append(paso.cuerpo[1]['clave'])
-        assert claves_visitadas == ['origen', 'suma', 'escalar']
+        assert _navegar_botones_criterio(vista) == ['origen', 'suma', 'escalar']
 
     asyncio.run(construir_pagina(monkeypatch, 'espacios_subespacios', comprobar))
 
