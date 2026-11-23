@@ -6,28 +6,15 @@ from fractions import Fraction
 
 from src.backend.modelos.escalares.conversion_fracciones import texto_fraccion_exacta
 from src.frontend.controladores.algebra.operaciones_vectores.presentacion_subespacios import (
-    descripcion_geometrica_subespacio,
-    fraccion_latex,
-    limpiar_texto,
-    serializar_comprobaciones,
-    serializar_matriz,
-    serializar_pasos,
-    serializar_vectores,
+    descripcion_geometrica_subespacio, fraccion_latex, limpiar_texto,
+    serializar_comprobaciones, serializar_matriz, serializar_pasos, serializar_vectores,
 )
 from src.frontend.nucleo.textos.textos_espacios_subespacios import (
-    ESTADO_CRITERIO_CUMPLE,
-    ESTADO_CRITERIO_NO_CUMPLE,
-    ESTADO_CRITERIO_VACUO,
-    MODO_RESTRICCIONES,
-    NOTA_DIMENSION_SUPERIOR,
-    SUBTITULO_CONJUNTO_VACIO,
-    SUBTITULO_SUBESPACIO_CERO,
-    VEREDICTO_CONJUNTO_VACIO,
-    VEREDICTO_SUBESPACIO_CERO,
-    superindice_dimension,
-    texto_herencia_axiomas,
-    texto_veredicto_no_subespacio,
-    texto_veredicto_subespacio,
+    ESTADO_CRITERIO_CUMPLE, ESTADO_CRITERIO_NO_CUMPLE, ESTADO_CRITERIO_VACUO,
+    MODO_RESTRICCIONES, NOTA_DIMENSION_SUPERIOR, SUBTITULO_CONJUNTO_VACIO,
+    SUBTITULO_SUBESPACIO_CERO, VEREDICTO_CONJUNTO_VACIO, VEREDICTO_SUBESPACIO_CERO,
+    superindice_dimension, texto_herencia_axiomas,
+    texto_veredicto_no_subespacio, texto_veredicto_subespacio,
 )
 
 _LIMITE_LATEX_VALOR = 256
@@ -48,13 +35,10 @@ def presentar_resultado_restricciones(resultado: Mapping) -> dict:
 def _resumen_comun(
     resultado: Mapping, clasificacion: str, dimension_ambiente: int
 ) -> dict:
-    pivotes = tuple(resultado.get("columnas_pivote") or ())
-    libres = tuple(resultado.get("columnas_libres") or ())
-    matriz_original = resultado.get("matriz_original")
     return {
         "estado": "EXITO",
         "modo": MODO_RESTRICCIONES,
-        "codigo": str(resultado.get("codigo") or ""),
+        "codigo": str(resultado.get("codigo", "")),
         "clasificacion": clasificacion,
         "mensaje": limpiar_texto(resultado.get("mensaje")),
         "dimension_ambiente": dimension_ambiente,
@@ -62,20 +46,29 @@ def _resumen_comun(
         "es_espacio_vectorial": bool(resultado.get("es_subespacio")),
         "contiene_origen": bool(resultado.get("contiene_origen")),
         "es_vacio": bool(resultado.get("es_vacio")),
-        "es_subespacio_cero": clasificacion == "SUBESPACIO" and int(resultado.get("dimension") or 0) == 0,
-        "rango": int(resultado.get("rango") or 0),
+        "es_subespacio_cero": clasificacion == "SUBESPACIO" and resultado.get("dimension") == 0,
+        "rango": int(resultado.get("rango", 0)),
         "rango_aumentada": resultado.get("rango_aumentada"),
         "dimension": resultado.get("dimension"),
         "dimension_afin": resultado.get("dimension_afin"),
+        **_traza_comun(resultado),
+    }
+
+
+def _traza_comun(resultado: Mapping) -> dict:
+    pivotes = tuple(resultado.get("columnas_pivote", ()))
+    libres = tuple(resultado.get("columnas_libres", ()))
+    matriz_original = resultado.get("matriz_original")
+    return {
         "columnas_pivote": pivotes,
         "columnas_libres": libres,
         "variables_pivote": tuple(f"x{columna + 1}" for columna in pivotes),
         "variables_libres": tuple(f"x{columna + 1}" for columna in libres),
-        "cantidad_ecuaciones": matriz_original.filas if matriz_original is not None else 0,
+        "cantidad_ecuaciones": matriz_original.filas if matriz_original else 0,
         "matriz_original": serializar_matriz(matriz_original),
         "matriz_reducida": serializar_matriz(resultado.get("matriz_reducida")),
-        "pasos": serializar_pasos(resultado.get("pasos") or ()),
-        "comprobaciones": serializar_comprobaciones(resultado.get("comprobaciones") or ()),
+        "pasos": serializar_pasos(resultado.get("pasos", ())),
+        "comprobaciones": serializar_comprobaciones(resultado.get("comprobaciones", ())),
         "dependencias": (),
         "etiquetas_generadores": (),
         "etiquetas_generadores_base": (),
@@ -133,13 +126,8 @@ def _detalle_vacio(resultado: Mapping, dimension_ambiente: int) -> dict:
     return {
         "veredicto": texto_veredicto_no_subespacio(dimension_ambiente),
         "subtitulo_veredicto": f"{VEREDICTO_CONJUNTO_VACIO}: {SUBTITULO_CONJUNTO_VACIO}",
-        "herencia_axiomas": "",
-        "base": None,
-        "direcciones": None,
-        "particular": None,
-        "testigo": testigo,
-        "familia_parametrica": None,
-        "criterios": _criterios_vacio(testigo),
+        "herencia_axiomas": "", "base": None, "direcciones": None, "particular": None,
+        "testigo": testigo, "familia_parametrica": None, "criterios": _criterios_vacio(testigo),
         "descripcion_geometrica": (
             f"Conjunto vacío en ℝ{superindice_dimension(dimension_ambiente)}: "
             "no contiene al origen ni tiene elementos."
@@ -153,14 +141,14 @@ def _serializar_testigo(testigo: Mapping | None) -> dict | None:
     indice_fila = testigo.get("indice_fila")
     termino = Fraction(testigo.get("termino_independiente", 0))
     return {
-        "tipo": str(testigo.get("tipo") or ""),
+        "tipo": str(testigo.get("tipo", "")),
         "indice_fila": indice_fila,
         "fila_visible": (int(indice_fila) + 1) if indice_fila is not None else None,
-        "coeficientes": tuple(texto_fraccion_exacta(valor) for valor in testigo.get("coeficientes") or ()),
+        "coeficientes": tuple(texto_fraccion_exacta(valor) for valor in testigo.get("coeficientes", ())),
         "termino_independiente": texto_fraccion_exacta(termino),
         "doble_termino": texto_fraccion_exacta(2 * termino),
         "valor_izquierdo": texto_fraccion_exacta(testigo.get("valor_izquierdo", 0)),
-        "descripcion": limpiar_texto(testigo.get("descripcion") or ""),
+        "descripcion": limpiar_texto(testigo.get("descripcion", "")),
     }
 
 
@@ -181,25 +169,33 @@ def _admite_latex(vectores: tuple[tuple[Fraction, ...], ...]) -> bool:
     )
 
 
+def _familia_latex(
+    particular: tuple[Fraction, ...],
+    direcciones: tuple[tuple[Fraction, ...], ...],
+    incluir_particular: bool,
+) -> str:
+    if not direcciones and not incluir_particular:
+        return r"\mathbf{x} = \mathbf{0}"
+    vectores = (particular, *direcciones) if incluir_particular else direcciones
+    if not _admite_latex(vectores):
+        terminos = [r"\mathbf{p}"] if incluir_particular else []
+        terminos.extend(f"t_{{{indice + 1}}}\\mathbf{{d}}_{{{indice + 1}}}" for indice in range(len(direcciones)))
+        return r"\mathbf{x} = " + " + ".join(terminos)
+    partes = [_vector_latex(particular)] if incluir_particular else []
+    partes.extend(f"t_{{{indice + 1}}} {_vector_latex(vector)}" for indice, vector in enumerate(direcciones))
+    return r"\mathbf{x} = " + " + ".join(partes)
+
+
 def _familia_parametrica(
     particular: tuple[Fraction, ...],
     direcciones: tuple[tuple[Fraction, ...], ...],
     *,
     incluir_particular: bool,
 ) -> dict[str, str]:
-    partes_texto = [_vector_texto(particular)] if incluir_particular else []
-    partes_texto.extend(f"t_{indice + 1}·{_vector_texto(vector)}" for indice, vector in enumerate(direcciones))
-    texto = "x = " + (" + ".join(partes_texto) if partes_texto else _vector_texto(particular))
-    vectores_latex = (particular, *direcciones) if incluir_particular else direcciones
-    if not direcciones and not incluir_particular:
-        return {"texto": texto, "latex": r"\mathbf{x} = \mathbf{0}"}
-    if not _admite_latex(vectores_latex):
-        terminos = [r"\mathbf{p}"] if incluir_particular else []
-        terminos.extend(f"t_{{{indice + 1}}}\\mathbf{{d}}_{{{indice + 1}}}" for indice in range(len(direcciones)))
-        return {"texto": texto, "latex": r"\mathbf{x} = " + " + ".join(terminos)}
-    partes_latex = [_vector_latex(particular)] if incluir_particular else []
-    partes_latex.extend(f"t_{{{indice + 1}}} {_vector_latex(vector)}" for indice, vector in enumerate(direcciones))
-    return {"texto": texto, "latex": r"\mathbf{x} = " + " + ".join(partes_latex)}
+    partes = [_vector_texto(particular)] if incluir_particular else []
+    partes.extend(f"t_{indice + 1}·{_vector_texto(vector)}" for indice, vector in enumerate(direcciones))
+    texto = "x = " + (" + ".join(partes) if partes else _vector_texto(particular))
+    return {"texto": texto, "latex": _familia_latex(particular, direcciones, incluir_particular)}
 
 
 def _criterio(
