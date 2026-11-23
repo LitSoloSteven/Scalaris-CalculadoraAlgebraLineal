@@ -181,3 +181,36 @@ def texto_herencia_axiomas(dimension_ambiente: int) -> str:
     return PLANTILLA_HERENCIA_AXIOMAS.format(
         superindice=superindice_dimension(dimension_ambiente)
     )
+
+
+PDF_ESTADOS_SUBESPACIOS = {
+    "SUBESPACIO": "es espacio vectorial y subespacio",
+    "AFIN_NO_SUBESPACIO": "conjunto afín fuera del origen (no es subespacio)",
+    "VACIO_NO_SUBESPACIO": "conjunto vacío (no es subespacio)",
+}
+PDF_REGIONES_SUBESPACIOS = {
+    "espacios_subespacios-resumen": (
+        "Clasificación y Resultado del Conjunto",
+        "Se presenta el modo, el veredicto de espacio vectorial y subespacio, métricas y base o familia.",
+    ),
+    "espacios_subespacios-criterios": (
+        "Resumen de Criterios de Subespacio",
+        "Se presentan los tres criterios estructurales evaluados sobre el conjunto.",
+    ),
+    "espacios_subespacios-pruebas": (
+        "Demostración y Contraejemplos de los Criterios",
+        "Se presentan las pruebas generales del teorema o los testigos explícitos para origen, suma y producto por escalar.",
+    ),
+    "espacios_subespacios-grafica": (
+        "Representación Geométrica del Conjunto",
+        "Se presenta la gráfica del subespacio o conjunto afín respecto del origen en tema claro.",
+    ),
+    "espacios_subespacios-comprobaciones": (
+        "Verificaciones del Motor",
+        "Se presentan las comprobaciones exactas devueltas por el motor sobre la captura vigente.",
+    ),
+    "espacios_subespacios-procedimiento": (
+        "Paso Visible del Procedimiento",
+        "Se presenta únicamente el paso visible del procedimiento, sin recorrer los demás pasos.",
+    ),
+}

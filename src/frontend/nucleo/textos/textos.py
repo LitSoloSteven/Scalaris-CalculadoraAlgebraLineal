@@ -1,4 +1,6 @@
 """Catálogo centralizado de textos y mensajes de interfaz de Scalaris."""
+from .textos_espacios_subespacios import PDF_ESTADOS_SUBESPACIOS, PDF_REGIONES_SUBESPACIOS
+from .textos_metodos_iterativos import PDF_ESTADOS_ITERATIVOS, PDF_REGIONES_ITERATIVOS
 
 MENSAJE_ANTI_REBOTE_GLOSA = "Espera un momento antes de enviar otra pregunta."
 MENSAJE_ENTRADA_NUMERICA = "Solo se admiten números, fracciones y decimales."
@@ -16,6 +18,7 @@ PDF_HERRAMIENTAS = {
     "leontief": "Modelo de Leontief", "transformaciones": "Transformaciones lineales",
     "bases": "Conversor de bases", "romanos": "Números romanos",
     "visualizador": "Visualizador geométrico",
+    "metodos_iterativos": "Métodos iterativos", "espacios_subespacios": "Espacios y subespacios",
 }
 PDF_GRUPO = "Grupo {grupo}"
 PDF_DOCENTE = "Docente: {docente}"
@@ -58,7 +61,9 @@ PDF_ETIQUETAS_ENTRADA = {
     "nombres_variables": "Variables", "escena": "Escena", "carga": "Datos de la escena",
     "vector_b": "Vector b", "objetivo": "Vector objetivo",
     "vector_original": "Coordenadas originales", "tipo_objeto": "Tipo de objeto",
-    "modo_transformacion": "Modo de transformación",
+    "modo_transformacion": "Modo de transformación", "vector_inicial": "Vector inicial",
+    "tolerancia": "Tolerancia", "maximo_iteraciones": "Máximo de iteraciones",
+    "dimension_ambiente": "Dimensión ambiente",
 }
 PDF_BOOLEANOS = {True: "Sí", False: "No"}
 PDF_SEGUNDO_OPERANDO = "Segundo operando"
@@ -126,6 +131,8 @@ PDF_ESTADOS_POR_HERRAMIENTA = {
     "bases": {"EXITO": PDF_ESTADOS_ALGEBRA["EXITO"]},
     "romanos": {"EXITO": PDF_ESTADOS_ALGEBRA["EXITO"]},
     "visualizador": {"EXITO": PDF_ESTADOS_ALGEBRA["EXITO"]},
+    "metodos_iterativos": PDF_ESTADOS_ITERATIVOS,
+    "espacios_subespacios": PDF_ESTADOS_SUBESPACIOS,
 }
 PDF_REGIONES_UTILIDADES = {
     "bases": {
@@ -143,6 +150,7 @@ PDF_REGIONES_UTILIDADES = {
 }
 PDF_REGIONES_POR_HERRAMIENTA = {
     "sistemas": PDF_REGIONES_SISTEMAS, **PDF_REGIONES_ALGEBRA, **PDF_REGIONES_UTILIDADES,
+    "metodos_iterativos": PDF_REGIONES_ITERATIVOS, "espacios_subespacios": PDF_REGIONES_SUBESPACIOS,
 }
 PDF_REGIONES_OBLIGATORIAS = {
     "bases": ("bases-resultado",), "romanos": ("romanos-resultado",),

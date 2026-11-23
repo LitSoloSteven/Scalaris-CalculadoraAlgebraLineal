@@ -19,3 +19,28 @@ CAUSAS_PARADA = {
     'DIAGONAL_NULA': 'Diagonal nula',
     'ENTRADA_INVALIDA': 'Revisa la captura',
 }
+
+PDF_ESTADOS_ITERATIVOS = {
+    'SOLUCION_EXACTA': 'solución exacta',
+    'TOLERANCIA_ALCANZADA': 'tolerancia alcanzada',
+    'MAXIMO_ITERACIONES': 'máximo de iteraciones alcanzado',
+    'LIMITE_ARITMETICO': 'límite aritmético alcanzado',
+}
+PDF_REGIONES_ITERATIVOS = {
+    'metodos_iterativos-resumen': (
+        'Resumen del Método Iterativo',
+        'Se presenta el método usado, la causa de parada, el resultado exacto o aproximado, el residuo y la tolerancia.',
+    ),
+    'metodos_iterativos-tabla': (
+        'Tabla de Iteraciones',
+        'Se presentan los barridos completos confirmados con el vector obtenido, la norma del residuo y la norma del cambio.',
+    ),
+    'metodos_iterativos-resultado': (
+        'Barrido Final del Procedimiento',
+        'Se presenta el último barrido confirmado con la sustitución de las incógnitas.',
+    ),
+    'metodos_iterativos-procedimiento': (
+        'Paso Visible del Procedimiento',
+        'Se presenta únicamente el paso visible del procedimiento, sin recorrer los demás pasos.',
+    ),
+}
