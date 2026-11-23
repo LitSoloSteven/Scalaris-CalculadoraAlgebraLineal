@@ -28,6 +28,7 @@ _DESTINOS = (
     ("determinantes", "/algebra-lineal/determinantes", "determinantes"),
     ("factorizacion_lu", "/algebra-lineal/factorizacion-lu", "factorizacion_lu"),
     ("vectores", "/algebra-lineal/vectores", "vectores"),
+    ("espacios_subespacios", "/algebra-lineal/espacios-subespacios", "espacios_subespacios"),
     ("transformaciones", "/algebra-lineal/transformaciones", "transformaciones"),
     ("vis:rectas-planos", "/visualizador?escena=rectas-planos", "escena_rectas_planos"),
     ("vis:vectores", "/visualizador?escena=vectores", "escena_vectores"),
@@ -55,13 +56,13 @@ def test_secciones_respetan_orden_subtitulos_y_destinos():
     assert [
         [(grupo.subtitulo, len(grupo.accesos)) for grupo in seccion.grupos]
         for seccion in secciones
-    ] == [[(None, 3)], [(None, 4)], [(None, 2), ("Visualizador geométrico", 3)],
+    ] == [[(None, 3)], [(None, 4)], [(None, 3), ("Visualizador geométrico", 3)],
           [("Raíces de ecuaciones", 2)], [(None, 2)]]
     accesos = [acceso for seccion in secciones for grupo in seccion.grupos for acceso in grupo.accesos]
     assert tuple((acceso.clave, enlace_elemento_navegacion(acceso), acceso.icono) for acceso in accesos) == _DESTINOS
     assert all(herramienta_por_ruta(acceso.ruta).habilitada for acceso in accesos)
     assert accesos[3].etiqueta == "Operaciones con matrices"
-    assert accesos[8].etiqueta == "Transformaciones lineales"
+    assert accesos[9].etiqueta == "Transformaciones lineales"
 
 
 def test_svg_del_directorio_son_distintos_y_decorativos():
@@ -88,7 +89,7 @@ def test_directorio_omite_grupos_y_secciones_sin_accesos(monkeypatch):
     assert "sistemas-numeracion" not in secciones
     grupo, = secciones["vectores-geometria"].grupos
     assert grupo.subtitulo is None
-    assert [acceso.clave for acceso in grupo.accesos] == ["vectores", "transformaciones"]
+    assert [acceso.clave for acceso in grupo.accesos] == ["vectores", "espacios_subespacios", "transformaciones"]
 
 
 def test_inicio_publico_muestra_los_svg_del_catalogo(monkeypatch):
@@ -139,7 +140,7 @@ def test_barra_contextual_marca_y_revela_cada_escena(monkeypatch, escena):
         enlaces = {elemento._props["href"]: elemento for elemento in cliente.elements.values()
                    if "navegacion-elemento" in elemento.classes}
         destinos_seccion = {destino: icono for clave, destino, icono in _DESTINOS
-                            if clave in {"vectores", "transformaciones"} or clave.startswith("vis:")}
+                            if clave in {"vectores", "espacios_subespacios", "transformaciones"} or clave.startswith("vis:")}
         assert enlaces.keys() == destinos_seccion.keys()
         for destino, icono in destinos_seccion.items():
             assert enlaces[destino]._props["aria-label"]

@@ -20,7 +20,7 @@ def test_enlaces_respetan_el_orden_de_lectura_del_directorio(monkeypatch):
         directorio = next(elemento for elemento in cliente.elements.values()
                           if "inicio-directorio" in elemento.classes)
         enlaces = [elemento for elemento in directorio.descendants() if "inicio-enlace" in elemento.classes]
-        assert len(enlaces) == len(esperado) == 16
+        assert len(enlaces) == len(esperado) == 17
         for enlace, acceso in zip(enlaces, esperado, strict=True):
             assert enlace.tag == "a"
             assert "tabindex" not in enlace._props
