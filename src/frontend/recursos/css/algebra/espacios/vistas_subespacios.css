@@ -1,0 +1,137 @@
+.subespacios-raiz,
+.subespacios-panel {
+    padding: clamp(var(--space-3), 3vw, var(--space-6));
+    min-width: 0;
+}
+
+.subespacios-numero {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    font-variant-numeric: tabular-nums;
+}
+
+.subespacios-etiqueta {
+    min-width: 0;
+    max-width: 18ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.subespacios-raiz .vectores-captura-lista {
+    flex-direction: column;
+    align-items: stretch;
+    min-width: 0;
+}
+
+.subespacios-raiz .vectores-captura-tarjeta,
+.subespacios-raiz .vectores-captura-desplazamiento {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.subespacios-raiz .vectores-captura-cabecera {
+    gap: var(--space-2);
+    flex-wrap: wrap;
+}
+
+.subespacios-raiz .etiqueta-dimensiones {
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+}
+
+.subespacios-raiz .vectores-captura-desplazamiento {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    align-items: center;
+}
+
+.subespacios-raiz .vectores-captura-celdas {
+    flex-wrap: nowrap;
+    flex: none;
+}
+
+.subespacios-raiz .vectores-captura-columna {
+    flex-direction: column;
+}
+
+.subespacios-raiz .vectores-captura-celdas .cuadricula-celda {
+    flex: none;
+    min-width: var(--cell-w);
+}
+
+.subespacios-raiz .vectores-captura-dimension {
+    min-width: 0;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+}
+
+.subespacios-raiz .vectores-captura-acciones .q-btn,
+.subespacios-raiz .vectores-captura-dimension .q-btn {
+    min-width: var(--space-12);
+    min-height: var(--space-12);
+}
+
+.subespacios-criterios {
+    min-width: 0;
+}
+
+.subespacios-criterio-boton {
+    min-width: 0;
+    transition: transform var(--dur-release) var(--ease-std), opacity var(--dur-state) var(--ease-std);
+}
+
+.subespacios-criterio-boton:active {
+    transform: scale(0.98);
+    transition-duration: var(--dur-press);
+}
+
+.subespacios-criterio-boton:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .subespacios-criterio-boton:hover {
+        transform: scale(1.01);
+        transition-duration: var(--dur-state);
+    }
+}
+
+.subespacios-criterio-estado {
+    border-radius: var(--radius-badge);
+    background: var(--badge-suc-bg);
+    color: var(--badge-suc-text);
+}
+
+.subespacios-figura {
+    width: 100%;
+    min-width: 0;
+    height: clamp(260px, 42dvh, 420px);
+    overflow-x: auto;
+}
+
+.subespacios-figura-1d {
+    height: clamp(180px, 28dvh, 240px);
+}
+
+html[data-entrada="teclado"] .subespacios-criterio-boton {
+    transition: none;
+}
+
+html[data-entrada="teclado"] .subespacios-criterio-boton:active {
+    transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .subespacios-criterio-boton {
+        transition: opacity var(--dur-reduced) var(--ease-std);
+    }
+
+    .subespacios-criterio-boton:active,
+    .subespacios-criterio-boton:hover {
+        transform: none;
+    }
+}

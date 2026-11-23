@@ -9,10 +9,11 @@ _REGLA_FALSA = frozenset({"regla_falsa"})
 _METODOS_ABIERTOS = frozenset({"metodos_abiertos"})
 _METODOS_CERRADOS = frozenset({"metodos_cerrados"})
 _METODOS_ITERATIVOS = frozenset({"metodos_iterativos"})
+_ESPACIOS_SUBESPACIOS = frozenset({"espacios_subespacios"})
 _RAICES = _BISECCION | _REGLA_FALSA | _METODOS_ABIERTOS | _METODOS_CERRADOS
 _ALGEBRA = frozenset({"sistemas", "vectores", "matrices", "inversa", "determinantes", "factorizacion_lu",
                        "visualizador", "leontief", "transformaciones"})
-_VISTAS = _INICIO | _NUMERICAS | _ALGEBRA | _RAICES | _METODOS_ITERATIVOS
+_VISTAS = _INICIO | _NUMERICAS | _ALGEBRA | _RAICES | _METODOS_ITERATIVOS | _ESPACIOS_SUBESPACIOS
 _EXPORTACION_PDF = _ALGEBRA | _NUMERICAS
 _POR_RECURSO = {
     "sonido/motor/catalogo_sonidos.js": _VISTAS,
@@ -27,13 +28,14 @@ _POR_RECURSO = {
     "inicio/vistas_inicio_ejemplos.css": _INICIO,
     "inicio/vistas_inicio_adaptable.css": frozenset({"sistemas", "inversa", "visualizador"}),
     "algebra/matrices/vistas_matrices.css": frozenset({"matrices"}),
-    "algebra/espacios/vistas_vectores.css": frozenset({"vectores", "visualizador"}),
+    "algebra/espacios/vistas_vectores.css": frozenset({"vectores", "visualizador"}) | _ESPACIOS_SUBESPACIOS,
     "algebra/espacios/vistas_metodos_iterativos.css": _METODOS_ITERATIVOS,
+    "algebra/espacios/vistas_subespacios.css": _ESPACIOS_SUBESPACIOS,
     "algebra/espacios/vistas_geometria.css": frozenset({"visualizador"}),
     "algebra/matrices/vistas_modelos.css": frozenset({"leontief", "transformaciones", "determinantes"}),
     "numericos/sistemas/vistas_numericos.css": _NUMERICAS,
     "numericos/sistemas/pasos_numericos.css": _NUMERICAS,
-    "algebra/matrices/vistas_inversa.css": _ALGEBRA | _NUMERICAS | _RAICES | _METODOS_ITERATIVOS,
+    "algebra/matrices/vistas_inversa.css": _ALGEBRA | _NUMERICAS | _RAICES | _METODOS_ITERATIVOS | _ESPACIOS_SUBESPACIOS,
     "numericos/raices/vistas_biseccion.css": _BISECCION,
     "numericos/raices/vistas_regla_falsa.css": _REGLA_FALSA,
     "numericos/raices/estructura_metodos_raices.css": _METODOS_ABIERTOS | _METODOS_CERRADOS,
@@ -44,7 +46,7 @@ _POR_RECURSO = {
     "inicio/ejemplos_inicio.js": _INICIO,
     "herramientas/algebra/sistemas_metodo.js": frozenset({"sistemas"}),
     "herramientas/algebra/iterativos_historial.js": _METODOS_ITERATIVOS,
-    "nucleo/tema/tema_graficos.js": frozenset({"visualizador"}) | _RAICES,
+    "nucleo/tema/tema_graficos.js": frozenset({"visualizador"}) | _RAICES | _ESPACIOS_SUBESPACIOS,
     "herramientas/biseccion/grafico_biseccion.js": _BISECCION,
     "herramientas/biseccion/movimiento_biseccion.js": _BISECCION,
     "herramientas/biseccion/banda_biseccion.js": _BISECCION,
