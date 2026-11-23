@@ -77,15 +77,15 @@ def _registrar_paginas_algebra() -> None:
 
 
 def _registrar_pagina_metodos_iterativos() -> None:
-    """Registra la captura y resolución de sistemas lineales por Jacobi."""
+    """Registra la captura compartida para los métodos iterativos."""
 
     @ui.page(ruta_de("metodos_iterativos"), title=herramienta_por_identificador("metodos_iterativos").titulo_pagina)
-    def pagina_metodos_iterativos():
+    def pagina_metodos_iterativos(method: str = ""):
         """Configura el tema y monta la sesión de métodos iterativos."""
         from src.frontend.vistas.algebra.sistemas_lineales.vista_metodos_iterativos import VistaMetodosIterativos
 
         configurar_tema("metodos_iterativos")
-        VistaMetodosIterativos().construir()
+        VistaMetodosIterativos(metodo_inicial=method).construir()
 
 
 def _registrar_pagina_factorizacion_lu() -> None:

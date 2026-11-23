@@ -14,6 +14,7 @@ from src.frontend.controladores.algebra.sistemas_lineales.nucleo.captura_iterati
 from src.frontend.controladores.algebra.sistemas_lineales.resolucion.controlador_iterativos import (
     MAXIMO_INICIAL, TOLERANCIA_INICIAL, ejemplo_iterativo,
 )
+from src.frontend.nucleo.textos.textos_metodos_iterativos import EJEMPLO_CARGADO
 
 _NOMBRE_INICIO = 'x_0'
 _OPCIONES_INICIO = {
@@ -65,7 +66,7 @@ class CapturaIterativa:
             'w-full min-w-0').props(f'outlined maxlength={MAXIMO_CARACTERES_ECUACIONES}')
         self.ecuaciones.set_visibility(False)
         self.aviso = ui.label().classes('iterativos-numero texto-secundario').props('role=status aria-live=polite')
-        self.ejemplo = ui.label('Ejemplo de Jacobi cargado').classes('text-sm texto-secundario').props('role=status')
+        self.ejemplo = ui.label(EJEMPLO_CARGADO).classes('text-sm texto-secundario').props('role=status')
         self.ejemplo.set_visibility(False)
         self._construir_parametros()
         self.cuadricula.al_cambiar_dimension = self._cambiar_dimension

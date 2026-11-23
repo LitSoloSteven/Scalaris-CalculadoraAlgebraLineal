@@ -8,11 +8,15 @@ from src.frontend.componentes.aplicacion.base.sonido import emitir_sonido
 from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.glosa.panel.panel_ia import PanelIA
 from src.frontend.componentes.resultados.acciones.avisos_resultado import MENSAJE_ERROR_INESPERADO
-from src.frontend.controladores.algebra.sistemas_lineales.resolucion.controlador_iterativos import resolver_iterativo
+from src.frontend.controladores.algebra.sistemas_lineales.resolucion.controlador_iterativos import (
+    normalizar_metodo_iterativo, resolver_iterativo,
+)
 from src.frontend.controladores.compartido.sesion.calculo_vigente import ejecutar_calculo_vigente
 from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto, invalidar_resultado
 from src.frontend.navegacion import ruta_de
-from src.frontend.nucleo.textos.textos_metodos_iterativos import ESTADO_CALCULO, ESTADO_EDICION, ESTADO_INICIAL
+from src.frontend.nucleo.textos.textos_metodos_iterativos import (
+    AYUDA_METODOS, ESTADO_CALCULO, ESTADO_EDICION, ESTADO_INICIAL, METODO_INICIAL, NOMBRES_METODOS,
+)
 from .captura.captura_iterativa import CapturaIterativa
 from .resultados.resultado_iterativo import mostrar_resultado_iterativo
 
@@ -24,9 +28,10 @@ _SONIDOS_RESULTADO = {
 
 
 class VistaMetodosIterativos:
-    """Orquesta la sesión de Jacobi y retira resultados obsoletos al editar."""
+    """Orquesta los métodos sobre una sola captura y retira resultados obsoletos."""
 
-    def __init__(self) -> None:
+    def __init__(self, metodo_inicial: str = METODO_INICIAL) -> None:
+        self.metodo = normalizar_metodo_iterativo(metodo_inicial)
         self.captura = CapturaIterativa(self.editar)
         self.reproductor_pasos = None
         self.ultimo_resultado = None
@@ -39,9 +44,7 @@ class VistaMetodosIterativos:
         crear_estructura_aplicacion(self, ruta_activa=ruta_de('metodos_iterativos'))
         ui.context.client.on_delete(self._cerrar)
         with ui.column().classes('vista-raiz iterativos-raiz w-full max-w-7xl mx-auto mt-4'):
-            ui.label('Métodos iterativos').classes('text-2xl font-bold texto-principal').props('role=heading aria-level=1')
-            with ui.tabs(value='jacobi').classes('pestanas-controles pestanas-metodo').props('dense no-caps'):
-                ui.tab('jacobi', label='Jacobi')
+            self._construir_selector()
             with ui.element('div').classes('disposicion-dividida'):
                 with ui.column().classes('disposicion-panel panel-tarjeta iterativos-panel'):
                     self.captura.construir()
@@ -51,6 +54,33 @@ class VistaMetodosIterativos:
                     self.estado = ui.label(ESTADO_INICIAL).classes('texto-secundario').props('role=status aria-live=polite')
                     self.contenedor_resultados = ui.column().classes('w-full min-w-0')
         self.panel_ia.construir()
+
+    def _construir_selector(self) -> None:
+        self.titulo = ui.label().classes('text-2xl font-bold texto-principal').props('role=heading aria-level=1')
+        with ui.tabs(value=self.metodo).classes('pestanas-controles pestanas-metodo').props(
+            'dense no-caps aria-label="Método iterativo"'
+        ) as self.selector_metodo:
+            for metodo, nombre in NOMBRES_METODOS.items():
+                ui.tab(metodo, label=nombre)
+        self.ayuda = ui.label().classes('texto-secundario')
+        self._actualizar_metodo_visible()
+        self.selector_metodo.on_value_change(lambda evento: self._cambiar_metodo(evento.value))
+        self.selector_metodo.on('update:model-value', js_handler='metodo => window.scalaris.historialIterativos.guardar(metodo)')
+        ui.on('iterativos-metodo-historial', lambda evento: self.selector_metodo.set_value(normalizar_metodo_iterativo(evento.args)))
+
+    def _cambiar_metodo(self, metodo: object) -> None:
+        if not isinstance(metodo, str) or metodo not in NOMBRES_METODOS or metodo == self.metodo:
+            return
+        self.metodo = metodo
+        self._actualizar_metodo_visible()
+        self.captura.marcar_diagnostico(None)
+        self.editar()
+
+    def _actualizar_metodo_visible(self) -> None:
+        nombre = NOMBRES_METODOS[self.metodo]
+        self.titulo.set_text(f'Métodos iterativos: {nombre}')
+        self.ayuda.set_text(AYUDA_METODOS[self.metodo])
+        ui.page_title(f'{nombre} | Scalaris')
 
     def _construir_acciones(self) -> None:
         with ui.row().classes('w-full items-center flex-wrap'):
@@ -73,11 +103,11 @@ class VistaMetodosIterativos:
         self._retirar_resultado()
         solicitud = self._identificador_calculo
         self.captura.marcar_diagnostico(None)
-        self.estado.set_text(ESTADO_CALCULO)
+        self.estado.set_text(ESTADO_CALCULO.format(metodo=NOMBRES_METODOS[self.metodo]))
         self.boton_resolver.props('loading=true')
         actualizar_contexto(self)
         try:
-            respuesta = await ejecutar_calculo_vigente(self, self.captura.obtener, resolver_iterativo)
+            respuesta = await ejecutar_calculo_vigente(self, self._capturar_solicitud, resolver_iterativo)
             if respuesta is not None:
                 self._publicar(*respuesta)
         except Exception as error:
@@ -90,6 +120,9 @@ class VistaMetodosIterativos:
         finally:
             if self._identificador_calculo == solicitud and not self.boton_resolver.is_deleted:
                 self.boton_resolver.props('loading=false')
+
+    def _capturar_solicitud(self) -> dict:
+        return {**self.captura.obtener(), 'metodo': self.metodo}
 
     def _publicar(self, resultado: dict, huella: str) -> None:
         self.estado.set_text('')
@@ -121,4 +154,5 @@ class VistaMetodosIterativos:
         respuesta = self.ultimo_resultado
         resumen = {clave: respuesta.get(clave) for clave in ('codigo', 'aproximacion', 'norma_residuo')} if respuesta else None
         vacio = not captura['ecuaciones'].strip() if ecuaciones else captura['matriz_vacia']
-        return ContextoIA('jacobi', 'Métodos iterativos', 'Jacobi', entrada, EstadoContexto(resultado=resumen, vacio=vacio))
+        return ContextoIA(self.metodo, 'Métodos iterativos', NOMBRES_METODOS[self.metodo], entrada,
+                          EstadoContexto(resultado=resumen, vacio=vacio))
