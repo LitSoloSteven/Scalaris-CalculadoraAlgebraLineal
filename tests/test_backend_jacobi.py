@@ -216,12 +216,12 @@ def test_limite_aritmetico_antes_del_residuo_inicial(monkeypatch) -> None:
 def test_limite_aritmetico_real_durante_la_iteracion() -> None:
     """El crecimiento exacto agota el presupuesto sin publicar un paso parcial."""
     grande = 2 ** (MAXIMO_BITS_CALCULO_JACOBI // 2)
-    resultado = _ejecutar(_matriz([[1, grande], [grande, 1]]), [1, 1], maximo=3)
+    resultado = _ejecutar(_matriz([[1, grande], [grande, 1]]), [1, 1], maximo=4)
 
     assert resultado.codigo == "LIMITE_ARITMETICO"
-    assert resultado.iteraciones_realizadas == 1
-    assert resultado.aproximacion == (Fraction(1), Fraction(1))
-    assert resultado.residuo == (-grande, -grande)
+    assert resultado.iteraciones_realizadas == 3
+    assert resultado.aproximacion == (Fraction(grande ** 2 - grande + 1),) * 2
+    assert resultado.residuo == (-grande ** 3,) * 2
 
 
 def test_la_solucion_exacta_prevalece_sobre_la_norma_del_cambio() -> None:
