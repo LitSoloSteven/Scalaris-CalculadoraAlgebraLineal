@@ -27,6 +27,7 @@ ARCHIVOS_CSS = [
     RAIZ / "src" / "frontend" / "recursos" / "css" / "algebra/matrices/vistas_matrices.css",
     RAIZ / "src" / "frontend" / "recursos" / "css" / "algebra/espacios/vistas_vectores.css",
     RAIZ / "src" / "frontend" / "recursos" / "css" / "algebra/espacios/vistas_metodos_iterativos.css",
+    RAIZ / "src" / "frontend" / "recursos" / "css" / "algebra/espacios/vistas_subespacios.css",
     RAIZ / "src" / "frontend" / "recursos" / "css" / "algebra/espacios/vistas_geometria.css",
     RAIZ / "src" / "frontend" / "recursos" / "css" / "base/movimiento.css",
     RAIZ / "src" / "frontend" / "recursos" / "css" / "utilidades/reproductor_pasos.css",

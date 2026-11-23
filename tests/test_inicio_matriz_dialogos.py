@@ -34,7 +34,7 @@ def _comprobar_secciones(secciones):
 
 
 def _comprobar_enlaces(enlaces):
-    assert len(enlaces) == 16
+    assert len(enlaces) == 17
     for enlace in enlaces:
         assert enlace.tag == "a"
         assert enlace._props.get("href")
