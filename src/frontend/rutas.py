@@ -92,12 +92,12 @@ def _registrar_pagina_espacios_subespacios() -> None:
     """Registra la página de análisis de espacios y subespacios."""
 
     @ui.page(ruta_de("espacios_subespacios"), title=herramienta_por_identificador("espacios_subespacios").titulo_pagina)
-    def pagina_espacios_subespacios():
+    def pagina_espacios_subespacios(modo: str = ""):
         """Configura el tema y monta la sesión de Espacios y subespacios."""
         from src.frontend.vistas.algebra.operaciones_vectores.vista_espacios_subespacios import VistaEspaciosSubespacios
 
         configurar_tema("espacios_subespacios")
-        VistaEspaciosSubespacios().construir()
+        VistaEspaciosSubespacios(modo_inicial=modo).construir()
 
 
 def _registrar_pagina_factorizacion_lu() -> None:
