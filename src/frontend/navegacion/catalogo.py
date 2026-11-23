@@ -69,7 +69,7 @@ HERRAMIENTAS: tuple[Herramienta, ...] = (
     Herramienta(
         identificador="metodos_iterativos",
         nombre="Métodos iterativos",
-        descriptor="Sistemas lineales por Jacobi",
+        descriptor="Sistemas lineales por Jacobi y Gauss-Seidel",
         ruta="/algebra-lineal/metodos-iterativos",
         identificador_pilar="algebra",
         icono="metodos_iterativos",

@@ -14,7 +14,7 @@ _RAICES = _BISECCION | _REGLA_FALSA | _METODOS_ABIERTOS | _METODOS_CERRADOS
 _ALGEBRA = frozenset({"sistemas", "vectores", "matrices", "inversa", "determinantes", "factorizacion_lu",
                        "visualizador", "leontief", "transformaciones"})
 _VISTAS = _INICIO | _NUMERICAS | _ALGEBRA | _RAICES | _METODOS_ITERATIVOS | _ESPACIOS_SUBESPACIOS
-_EXPORTACION_PDF = _ALGEBRA | _NUMERICAS
+_EXPORTACION_PDF = _ALGEBRA | _NUMERICAS | _METODOS_ITERATIVOS | _ESPACIOS_SUBESPACIOS
 _POR_RECURSO = {
     "sonido/motor/catalogo_sonidos.js": _VISTAS,
     "sonido/motor/sintesis_sonora.js": _VISTAS,
