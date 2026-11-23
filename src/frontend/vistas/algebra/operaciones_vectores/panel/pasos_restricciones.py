@@ -86,15 +86,64 @@ def agregar_grupo_solucion_restricciones(
     indice = len(pasos)
     indice_grupo = len(grupos)
     descripcion, explicacion, titulo_grupo = _metadatos_grupo_solucion(resultado)
+    testigo = resultado.get("testigo") or {}
+    detalle = {
+        "categoria": "resultado_calculo",
+        "modo": "restricciones",
+        "clasificacion": resultado.get("clasificacion"),
+        "testigo": testigo.get("descripcion", ""),
+    }
     pasos.append(PasoReproductor(
         indice=indice, tipo="final", etiqueta_tipo="Solución",
         descripcion=descripcion, explicacion=explicacion,
         indice_grupo=indice_grupo, cuerpo=("solucion_restricciones", resultado),
-        meta_explicar={"indice": indice + 1, "tipo": "final", "operacion": descripcion, "origen": "solucion_restricciones"},
+        meta_explicar={
+            "indice": indice + 1, "tipo": "final", "operacion": descripcion,
+            "origen": "solucion_restricciones", "detalle": detalle,
+        },
     ))
     grupos.append(GrupoReproductor(
         titulo=titulo_grupo, resumen="1 paso", tipo="final", indices_pasos=(indice,),
     ))
+
+
+def detalle_paso_base(resultado: dict) -> dict:
+    """Resume la lectura de base y dependencias para explicarla con Glosa."""
+    return {
+        "categoria": "resultado_calculo",
+        "modo": "generadores",
+        "es_subespacio_cero": bool(resultado.get("es_subespacio_cero")),
+        "dimension": resultado.get("dimension"),
+        "base": list(resultado.get("etiquetas_generadores_base") or ()),
+        "dependencias": [dependencia["texto"] for dependencia in resultado.get("dependencias") or ()],
+    }
+
+
+def detalle_paso_teorema(criterio: dict, es_subespacio: bool, herencia: str) -> dict:
+    """Construye los metadatos explicables diferenciando teorema y criterio."""
+    return {
+        "categoria": "teorema" if es_subespacio else "criterio",
+        "clave": criterio.get("clave", ""),
+        "estado": criterio.get("estado", ""),
+        "resumen": criterio.get("resumen", ""),
+        "formula": criterio.get("formula_latex", ""),
+        "detalle_testigo": criterio.get("detalle_testigo", ""),
+        "herencia": herencia,
+    }
+
+
+def detalle_paso_motor(comprobaciones: tuple[dict, ...]) -> dict:
+    """Resume las verificaciones exactas del motor para explicarlas con Glosa."""
+    return {
+        "categoria": "verificacion_motor",
+        "comprobaciones": [
+            {
+                "coincide": bool(elemento.get("coincide", False)),
+                "detalle": str(elemento.get("detalle") or elemento.get("detalle_latex") or ""),
+            }
+            for elemento in comprobaciones
+        ],
+    }
 
 
 def renderizar_cuerpo_solucion_restricciones(resultado: dict, adaptador_cls) -> None:

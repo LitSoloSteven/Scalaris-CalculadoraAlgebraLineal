@@ -5,6 +5,7 @@ from fractions import Fraction
 
 from nicegui import ui
 
+from src.frontend.componentes.glosa.interaccion.glosa_foco import crear_accion_explicacion
 from src.frontend.componentes.reproductor_pasos.formato.cuerpos import renderizar_latex
 from src.frontend.componentes.reproductor_pasos.formato.html_tablas import html_tabla_aumentada
 from src.frontend.componentes.reproductor_pasos.interfaz.reproductor import ReproductorPasos
@@ -14,6 +15,7 @@ from src.frontend.nucleo.textos.textos_espacios_subespacios import (
 )
 from src.frontend.vistas.algebra.operaciones_vectores.panel.pasos_restricciones import (
     agregar_grupo_solucion_restricciones, describir_evento_restricciones,
+    detalle_paso_base, detalle_paso_motor, detalle_paso_teorema,
     renderizar_cuerpo_solucion_restricciones, renderizar_verificacion_motor,
     tabla_reduccion_restricciones, tabla_reduccion_subespacio,
 )
@@ -59,7 +61,9 @@ def _convertir_celda_tabla(celda: object) -> Fraction | str:
         return texto
 
 
-def crear_reproductor_subespacios(resultado: dict) -> tuple[ReproductorPasos, dict[str, int]]:
+def crear_reproductor_subespacios(
+    resultado: dict, *, panel_ia=None, sigue_vigente=None,
+) -> tuple[ReproductorPasos, dict[str, int]]:
     """Construye el reproductor completo y devuelve los índices de cada criterio."""
     pasos: list[PasoReproductor] = []
     grupos: list[GrupoReproductor] = []
@@ -74,9 +78,12 @@ def crear_reproductor_subespacios(resultado: dict) -> tuple[ReproductorPasos, di
     total = len(pasos)
     pasos_completos = tuple(_completar_total_paso(paso, total) for paso in pasos)
     ayuda = _AYUDA_RESTRICCIONES if es_restricciones else _AYUDA_REPRODUCTOR
+    opciones = {"sin_movimiento": True, "lineas_ayuda": ayuda, "tipos_leyenda": _LEYENDA_TIPOS}
+    if panel_ia is not None:
+        opciones["al_explicar"] = crear_accion_explicacion(panel_ia, pasos_completos, sigue_vigente=sigue_vigente)
+        opciones["esta_ocupado"] = lambda: bool(getattr(panel_ia, "_esta_enviando", False))
     reproductor = ReproductorPasos(
-        pasos_completos, tuple(grupos), _renderizar_cuerpo_paso, "espacios-subespacios",
-        {"sin_movimiento": True, "lineas_ayuda": ayuda, "tipos_leyenda": _LEYENDA_TIPOS},
+        pasos_completos, tuple(grupos), _renderizar_cuerpo_paso, "espacios-subespacios", opciones,
     )
     return reproductor, indices_criterios
 
@@ -123,7 +130,8 @@ def _crear_paso_reduccion(
         descripcion, explicacion = _describir_evento_reduccion(tipo, datos)
         etiquetas = tuple(resultado.get("etiquetas_generadores") or ())
         tabla = tabla_reduccion_subespacio(evento.get("matriz"), _MatrizTabla, None, (etiquetas, ()), (tipo, datos))
-    metadatos = {"indice": indice + 1, "tipo": tipo, "operacion": descripcion, "origen": "reduccion"}
+    metadatos = {"indice": indice + 1, "tipo": tipo, "operacion": descripcion, "origen": "reduccion",
+                 "detalle": {"categoria": "reduccion", "tipo": tipo, "datos": datos}}
     return PasoReproductor(
         indice=indice, tipo=tipo, descripcion=descripcion, explicacion=explicacion,
         indice_grupo=indice_grupo, cuerpo=("tabla", tabla), meta_explicar=metadatos,
@@ -162,7 +170,8 @@ def _agregar_grupo_base(
     pasos.append(PasoReproductor(
         indice=indice, tipo="final", etiqueta_tipo="Base", descripcion=descripcion,
         explicacion=explicacion, indice_grupo=indice_grupo, cuerpo=("base", resultado),
-        meta_explicar={"indice": indice + 1, "tipo": "final", "operacion": descripcion, "origen": "base"},
+        meta_explicar={"indice": indice + 1, "tipo": "final", "operacion": descripcion,
+                       "origen": "base", "detalle": detalle_paso_base(resultado)},
     ))
     grupos.append(GrupoReproductor(
         titulo="Lectura de la base y dependencias", resumen="1 paso", tipo="final", indices_pasos=(indice,),
@@ -188,7 +197,10 @@ def _agregar_grupo_teorema(
             indice=indice, tipo="planteamiento", etiqueta_tipo=etiqueta,
             descripcion=f"{prefijo}: {criterio['titulo']}", explicacion=criterio["resumen"],
             indice_grupo=indice_grupo, cuerpo=("teorema", criterio, herencia),
-            meta_explicar={"indice": indice + 1, "tipo": "planteamiento", "operacion": criterio["titulo"], "origen": "teorema"},
+            meta_explicar={
+                "indice": indice + 1, "tipo": "planteamiento", "operacion": criterio["titulo"],
+                "origen": "teorema", "detalle": detalle_paso_teorema(criterio, es_subespacio, herencia),
+            },
         ))
     if indices_pasos:
         titulo = "Demostración del teorema (operaciones usuales)" if es_subespacio else "Comprobación de criterios de subespacio"
@@ -212,7 +224,10 @@ def _agregar_grupo_verificaciones(
         descripcion=TITULO_VERIFICACION_MOTOR,
         explicacion="Resultados de consistencia exacta devueltos por el motor sobre la captura vigente.",
         indice_grupo=indice_grupo, cuerpo=("motor", comprobaciones),
-        meta_explicar={"indice": indice + 1, "tipo": "verificacion", "operacion": TITULO_VERIFICACION_MOTOR, "origen": "motor"},
+        meta_explicar={
+            "indice": indice + 1, "tipo": "verificacion", "operacion": TITULO_VERIFICACION_MOTOR,
+            "origen": "motor", "detalle": detalle_paso_motor(comprobaciones),
+        },
     ))
     grupos.append(GrupoReproductor(
         titulo=TITULO_VERIFICACION_MOTOR, resumen="1 resumen", tipo="verificacion", indices_pasos=(indice,),

@@ -1,0 +1,60 @@
+"""Adaptación de Espacios y subespacios al contrato compartido de exportación PDF."""
+from __future__ import annotations
+
+from src.frontend.componentes.exportacion_pdf.montaje.integracion import (
+    completar_exportacion,
+    identificador_raiz,
+)
+from src.frontend.controladores.exportacion_pdf.documento.vigencia import EnlacePDF
+from src.frontend.nucleo.textos.textos_espacios_subespacios import (
+    MODO_RESTRICCIONES,
+    NOMBRES_MODOS,
+    PDF_ESTADOS_SUBESPACIOS,
+)
+
+
+def entrada_documental_subespacio(vista) -> dict:
+    """Devuelve la captura vigente de generadores o restricciones para el PDF."""
+    captura = vista.captura.obtener()
+    modo = str(captura.get("modo", vista.modo))
+    datos = {
+        "modo": NOMBRES_MODOS.get(modo, modo),
+        "dimension_ambiente": f"ℝ^{captura.get('dimension_ambiente', '')}",
+    }
+    if modo == MODO_RESTRICCIONES:
+        if captura.get("formato") == "ecuaciones":
+            lineas = [
+                linea.strip()
+                for linea in str(captura.get("ecuaciones", "")).splitlines() if linea.strip()
+            ]
+            datos["ecuaciones"] = lineas or [""]
+        else:
+            datos["matriz_a"] = captura.get("matriz_a", [])
+            datos["vector_b"] = captura.get("vector_b", [])
+        return datos
+    vectores = captura.get("vectores", {})
+    datos["vectores"] = {
+        etiqueta: list(vector.get("datos", ())) for etiqueta, vector in vectores.items()
+    }
+    return datos
+
+
+def montar_exportacion_subespacio(vista, resultado: dict) -> None:
+    """Monta el control PDF cuando el análisis es exitoso y exportable."""
+    clasificacion = resultado.get("clasificacion")
+    if resultado.get("estado") != "EXITO" or clasificacion not in PDF_ESTADOS_SUBESPACIOS:
+        return
+    contenedor = getattr(vista, "contenedor_resultados", None)
+    if contenedor is None or contenedor.is_deleted:
+        return
+    resultado_pdf = {**resultado, "estado": clasificacion}
+
+    def leer_estado() -> tuple:
+        actual = resultado_pdf if getattr(vista, "ultimo_resultado", None) is resultado else None
+        return (contenedor, actual, getattr(vista, "_revision_captura", 0), getattr(vista, "_identificador_calculo", 0))
+
+    enlace = EnlacePDF(
+        vista, vista.captura.obtener, identificador_raiz(contenedor),
+        leer_estado=leer_estado, leer_entrada_documental=lambda: entrada_documental_subespacio(vista),
+    )
+    completar_exportacion(vista, "espacios_subespacios", resultado_pdf, enlace)
