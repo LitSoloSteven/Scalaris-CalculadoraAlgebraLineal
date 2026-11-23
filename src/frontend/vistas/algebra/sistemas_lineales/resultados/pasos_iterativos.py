@@ -1,28 +1,70 @@
 """Adaptación de los barridos de cada método al reproductor compartido."""
 from nicegui import ui
 
+from src.ai.contexto.contexto import compactar_numero
+from src.frontend.componentes.glosa.interaccion.glosa_foco import crear_accion_explicacion
 from src.frontend.componentes.reproductor_pasos.formato.cuerpos import renderizar_latex
 from src.frontend.componentes.reproductor_pasos.interfaz.reproductor import ReproductorPasos
 from src.frontend.componentes.reproductor_pasos.nucleo.modelo import GrupoReproductor, PasoReproductor
 from src.frontend.nucleo.textos.textos_metodos_iterativos import AYUDA_METODOS, METODO_SECUENCIAL, NOMBRES_METODOS
 
 
-def crear_reproductor_iterativo(resultado: dict) -> ReproductorPasos:
+def crear_reproductor_iterativo(
+    resultado: dict, *, panel_ia=None, sigue_vigente=None,
+) -> ReproductorPasos:
     """Construye el reproductor con un paso exacto por barrido confirmado."""
     entrada = resultado['entrada_canonica']
     metodo = resultado['metodo']
-    pasos = tuple(_crear_paso(paso, entrada, resultado['variables'], metodo) for paso in resultado['pasos'])
-    grupo = GrupoReproductor(f'Barridos de {NOMBRES_METODOS[metodo]}', f'{len(pasos)} barridos', 'iteracion', tuple(range(len(pasos))))
-    return ReproductorPasos(pasos, (grupo,), _renderizar_paso, 'metodos-iterativos', {'sin_movimiento': True})
+    total_pasos = len(resultado['pasos'])
+    pasos = tuple(_crear_paso(paso, entrada, resultado, indice_total=total_pasos) for paso in resultado['pasos'])
+    grupo = GrupoReproductor(
+        f'Barridos de {NOMBRES_METODOS[metodo]}',
+        f'{len(pasos)} barridos',
+        'iteracion',
+        tuple(range(len(pasos))),
+    )
+    opciones: dict = {'sin_movimiento': True}
+    if panel_ia is not None:
+        opciones['al_explicar'] = crear_accion_explicacion(panel_ia, pasos, sigue_vigente=sigue_vigente)
+        opciones['esta_ocupado'] = lambda: bool(getattr(panel_ia, '_esta_enviando', False))
+    return ReproductorPasos(pasos, (grupo,), _renderizar_paso, 'metodos-iterativos', opciones)
 
 
-def _crear_paso(paso: dict, entrada: dict, variables: list[str], metodo: str) -> PasoReproductor:
+def _compactar_vector(valores: tuple | list) -> list[str]:
+    return [compactar_numero(str(valor), 48) for valor in valores]
+
+
+def _crear_paso(
+    paso: dict, entrada: dict, resultado: dict, *, indice_total: int,
+) -> PasoReproductor:
     indice = paso['indice']
+    metodo = resultado['metodo']
+    variables = resultado['variables']
+    detalle = {
+        'metodo': NOMBRES_METODOS[metodo],
+        'actualizacion': 'secuencial' if metodo == METODO_SECUENCIAL else 'simultanea',
+        'barrido': indice,
+        'variables': list(variables),
+        'vector_anterior': _compactar_vector(paso['vector_anterior']),
+        'vector_nuevo': _compactar_vector(paso['vector_nuevo']),
+        'norma_residuo': compactar_numero(str(paso['norma_residuo']), 48),
+        'norma_cambio': compactar_numero(str(paso['norma_cambio']), 48),
+        'tolerancia': compactar_numero(str(entrada['tolerancia']), 32),
+        'causa_parada': resultado['codigo'],
+    }
+    metadatos = {
+        'indice': indice,
+        'total': indice_total,
+        'tipo': 'iteracion',
+        'operacion': f'Barrido {indice} ({NOMBRES_METODOS[metodo]})',
+        'detalle': detalle,
+    }
     return PasoReproductor(
         indice=indice - 1, tipo='iteracion', descripcion=f'Barrido {indice}',
         etiqueta_tipo='Iteración',
         explicacion=AYUDA_METODOS[metodo],
         cuerpo=(paso, entrada, variables, metodo),
+        meta_explicar=metadatos,
     )
 
 

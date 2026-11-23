@@ -4,26 +4,47 @@ from functools import partial
 
 from nicegui import ui
 
-from src.frontend.nucleo.textos.textos_metodos_iterativos import CAUSAS_PARADA
+from src.frontend.componentes.exportacion_pdf.montaje.integracion import region_pdf
+from src.frontend.nucleo.textos.textos_metodos_iterativos import (
+    CAUSAS_PARADA, NOMBRES_METODOS, PDF_ESTADOS_ITERATIVOS,
+)
 from .pasos_iterativos import crear_reproductor_iterativo
 
 
-def mostrar_resultado_iterativo(resultado: dict):
-    """Renderiza el resultado y devuelve su reproductor si se confirmaron barridos."""
+def _mostrar_bloque_resumen(resultado: dict) -> None:
     codigo = resultado['codigo']
     ui.label(CAUSAS_PARADA[codigo]).classes('text-lg font-semibold texto-principal').props('role=status')
+    metodo = resultado.get('metodo')
+    if metodo in NOMBRES_METODOS:
+        ui.label(f'Método: {NOMBRES_METODOS[metodo]}').classes('text-sm font-semibold texto-secundario')
     diagnostico = resultado.get('diagnostico')
     if diagnostico:
         ui.label(diagnostico['mensaje']).classes('iterativos-numero texto-secundario').props('role=alert')
-    if resultado['aproximacion'] is not None:
+    if resultado.get('aproximacion') is not None:
         _mostrar_resumen(resultado)
     dominancia = resultado.get('dominancia_estricta')
     if dominancia is not None:
         ui.label(f'Dominancia diagonal estricta: {"sí" if dominancia else "no"}.').classes('text-sm texto-secundario')
+
+
+def mostrar_resultado_iterativo(resultado: dict, *, panel_ia=None, sigue_vigente=None):
+    """Renderiza el resultado, las regiones PDF y el reproductor si hubo barridos."""
+    exportable = resultado.get('codigo') in PDF_ESTADOS_ITERATIVOS
+    if exportable:
+        with region_pdf('metodos_iterativos-resumen'):
+            _mostrar_bloque_resumen(resultado)
+    else:
+        _mostrar_bloque_resumen(resultado)
+    if panel_ia is not None:
+        panel_ia.renderizar_sugerencias_en_linea()
     if not resultado['pasos']:
         return None
-    reproductor = crear_reproductor_iterativo(resultado)
-    _mostrar_tabla(resultado, reproductor.ir_a)
+    reproductor = crear_reproductor_iterativo(resultado, panel_ia=panel_ia, sigue_vigente=sigue_vigente)
+    if exportable:
+        with region_pdf('metodos_iterativos-tabla'):
+            _mostrar_tabla(resultado, reproductor.ir_a)
+    else:
+        _mostrar_tabla(resultado, reproductor.ir_a)
     reproductor.construir()
     return reproductor
 
