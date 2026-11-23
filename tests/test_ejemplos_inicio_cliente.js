@@ -15,7 +15,7 @@ const PLANTILLAS = [
 ];
 const CLAVES = [
     "sistemas", "metodos_iterativos", "leontief", "matrices", "inversa", "factorizacion_lu",
-    "determinantes", "vectores", "transformaciones",
+    "determinantes", "vectores", "espacios_subespacios", "transformaciones",
     "vis:rectas-planos", "vis:vectores", "vis:combinacion",
     "metodos_cerrados", "metodos_abiertos", "bases", "romanos",
 ];
