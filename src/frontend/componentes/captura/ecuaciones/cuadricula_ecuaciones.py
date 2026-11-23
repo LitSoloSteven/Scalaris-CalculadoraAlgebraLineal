@@ -61,6 +61,28 @@ def _renderizar_fila_entradas(cuadricula: CuadriculaEcuaciones, i: int) -> None:
     crear_fila_ecuaciones(cuadricula, i)
 
 
+def _aplicar_tamano(cuadricula: CuadriculaEcuaciones, nuevo_m: int, nuevo_n: int) -> None:
+    cuadricula._sincronizar_cache_desde_entradas()
+    anterior = cuadricula.filas, cuadricula.columnas
+    cuadricula.filas = nuevo_m
+    cuadricula.columnas = nuevo_n
+    cuadricula._cache_coeficientes = purgar_cache_bidimensional(cuadricula._cache_coeficientes, nuevo_m, nuevo_n)
+    cuadricula._cache_independientes = purgar_cache_unidimensional(cuadricula._cache_independientes, nuevo_m)
+
+    if not redimensionar_ecuaciones(cuadricula, anterior):
+        cuadricula.entradas_coeficientes.clear()
+        cuadricula.entradas_independientes.clear()
+        cuadricula.generar_cuadricula()
+    else:
+        actualizar_presentacion(cuadricula)
+        if anterior[1] != nuevo_n:
+            cuadricula.cabecera_columnas.delete()
+            with cuadricula.contenedor_matriz:
+                cuadricula.cabecera_columnas = _renderizar_cabecera_columnas(nuevo_n)
+            cuadricula.cabecera_columnas.move(target_index=0)
+    cuadricula._notificar_dimension(anterior)
+
+
 class CuadriculaEcuaciones:
     """Cuadricula de captura de matriz de coeficientes y terminos independientes."""
 
@@ -106,29 +128,8 @@ class CuadriculaEcuaciones:
         botones = (self.boton_quitar_fila, self.boton_agregar_fila, self.boton_quitar_columna, self.boton_agregar_columna)
         await ejecutar_transicion_cuadricula(
             vars(self), selectores_cambio_dimension(selector, incremento),
-            partial(self._aplicar_tamano, nuevo_m, nuevo_n), botones, self._actualizar_botones_dimension,
+            partial(_aplicar_tamano, self, nuevo_m, nuevo_n), botones, self._actualizar_botones_dimension,
         )
-
-    def _aplicar_tamano(self, nuevo_m: int, nuevo_n: int) -> None:
-        self._sincronizar_cache_desde_entradas()
-        anterior = self.filas, self.columnas
-        self.filas = nuevo_m
-        self.columnas = nuevo_n
-        self._cache_coeficientes = purgar_cache_bidimensional(self._cache_coeficientes, self.filas, self.columnas)
-        self._cache_independientes = purgar_cache_unidimensional(self._cache_independientes, self.filas)
-
-        if not redimensionar_ecuaciones(self, anterior):
-            self.entradas_coeficientes.clear()
-            self.entradas_independientes.clear()
-            self.generar_cuadricula()
-        else:
-            actualizar_presentacion(self)
-            if anterior[1] != self.columnas:
-                self.cabecera_columnas.delete()
-                with self.contenedor_matriz:
-                    self.cabecera_columnas = _renderizar_cabecera_columnas(self.columnas)
-                self.cabecera_columnas.move(target_index=0)
-        self._notificar_dimension(anterior)
 
     def _notificar_dimension(self, anterior: tuple[int, int]) -> None:
         actual = self.filas, self.columnas
