@@ -78,7 +78,7 @@ def _traza_comun(resultado: Mapping) -> dict:
 def _detalle_homogeneo(resultado: Mapping, dimension_ambiente: int) -> dict:
     dimension = int(resultado.get("dimension") or 0)
     direcciones_raw = tuple(resultado.get("direcciones") or ())
-    direcciones_txt = serializar_vectores(direcciones_raw)
+    direcciones_texto = serializar_vectores(direcciones_raw)
     particular_raw = tuple(resultado.get("particular") or (Fraction(0),) * dimension_ambiente)
     subtitulo = (
         f"{VEREDICTO_SUBESPACIO_CERO}: {SUBTITULO_SUBESPACIO_CERO}"
@@ -90,7 +90,7 @@ def _detalle_homogeneo(resultado: Mapping, dimension_ambiente: int) -> dict:
         "subtitulo_veredicto": subtitulo,
         "herencia_axiomas": texto_herencia_axiomas(dimension_ambiente),
         "base": serializar_vectores(resultado.get("base") or ()),
-        "direcciones": direcciones_txt,
+        "direcciones": direcciones_texto,
         "particular": tuple(texto_fraccion_exacta(valor) for valor in particular_raw),
         "testigo": None,
         "familia_parametrica": _familia_parametrica(particular_raw, direcciones_raw, incluir_particular=False),
@@ -224,12 +224,12 @@ def _criterios_homogeneo() -> tuple[dict[str, str], ...]:
     )
 
 
-def _comparaciones_afin(testigo: dict | None, b_txt: str, doble_txt: str) -> tuple[str, str]:
-    corto = bool(testigo) and len(b_txt) <= _LIMITE_LATEX_VALOR and len(doble_txt) <= _LIMITE_LATEX_VALOR
+def _comparaciones_afin(testigo: dict | None, b_texto: str, doble_texto: str) -> tuple[str, str]:
+    corto = bool(testigo) and len(b_texto) <= _LIMITE_LATEX_VALOR and len(doble_texto) <= _LIMITE_LATEX_VALOR
     if not corto:
         return "", ""
-    b_latex = fraccion_latex(Fraction(b_txt))
-    doble_latex = fraccion_latex(Fraction(doble_txt))
+    b_latex = fraccion_latex(Fraction(b_texto))
+    doble_latex = fraccion_latex(Fraction(doble_texto))
     return rf"\; (0 \neq {b_latex})", rf"\; ({doble_latex} \neq {b_latex})"
 
 
@@ -237,27 +237,27 @@ def _criterios_afin(
     particular: tuple[Fraction, ...], testigo: dict | None
 ) -> tuple[dict[str, str], ...]:
     fila = testigo["fila_visible"] if testigo and testigo["fila_visible"] else 1
-    b_txt = testigo["termino_independiente"] if testigo else "b_i"
-    doble_txt = testigo["doble_termino"] if testigo else "2b_i"
-    p_txt = _vector_texto(particular)
-    doble_p_txt = _vector_texto(tuple(2 * valor for valor in particular))
+    b_texto = testigo["termino_independiente"] if testigo else "b_i"
+    doble_texto = testigo["doble_termino"] if testigo else "2b_i"
+    p_texto = _vector_texto(particular)
+    doble_p_texto = _vector_texto(tuple(2 * valor for valor in particular))
     detalle_origen = testigo["descripcion"] if testigo else "En el origen, Ax = 0 difiere de b."
-    comp_origen, comp_doble = _comparaciones_afin(testigo, b_txt, doble_txt)
+    comp_origen, comp_doble = _comparaciones_afin(testigo, b_texto, doble_texto)
     return (
         _criterio("origen", "Contiene al vector cero", ESTADO_CRITERIO_NO_CUMPLE, "error", {
-            "resumen": f"En x = 0 se obtiene A·0 = 0, pero la ecuación {fila} exige {b_txt} ≠ 0.",
+            "resumen": f"En x = 0 se obtiene A·0 = 0, pero la ecuación {fila} exige {b_texto} ≠ 0.",
             "formula_latex": rf"A\mathbf{{0}} = \mathbf{{0}} \neq \mathbf{{b}}{comp_origen}",
             "detalle_testigo": detalle_origen,
         }),
         _criterio("suma", "Cerrado bajo la suma", ESTADO_CRITERIO_NO_CUMPLE, "error", {
-            "resumen": f"Con p ∈ W (Ap = b), en la ecuación {fila} resulta A(p + p) = {doble_txt} ≠ {b_txt}.",
+            "resumen": f"Con p ∈ W (Ap = b), en la ecuación {fila} resulta A(p + p) = {doble_texto} ≠ {b_texto}.",
             "formula_latex": rf"A(\mathbf{{p}} + \mathbf{{p}}) = 2\mathbf{{b}} \neq \mathbf{{b}}{comp_doble}",
-            "detalle_testigo": f"Contraejemplo con p = {p_txt}: p + p = {doble_p_txt} no satisface la ecuación {fila}.",
+            "detalle_testigo": f"Contraejemplo con p = {p_texto}: p + p = {doble_p_texto} no satisface la ecuación {fila}.",
         }),
         _criterio("escalar", "Cerrado bajo el producto por escalar", ESTADO_CRITERIO_NO_CUMPLE, "error", {
-            "resumen": f"Con λ = 2 y p ∈ W, en la ecuación {fila} resulta A(2p) = {doble_txt} ≠ {b_txt}.",
+            "resumen": f"Con λ = 2 y p ∈ W, en la ecuación {fila} resulta A(2p) = {doble_texto} ≠ {b_texto}.",
             "formula_latex": rf"A(2\mathbf{{p}}) = 2\mathbf{{b}} \neq \mathbf{{b}}{comp_doble}",
-            "detalle_testigo": f"Contraejemplo con λ = 2 y p = {p_txt}: 2p = {doble_p_txt} no satisface la ecuación {fila}.",
+            "detalle_testigo": f"Contraejemplo con λ = 2 y p = {p_texto}: 2p = {doble_p_texto} no satisface la ecuación {fila}.",
         }),
     )
 
