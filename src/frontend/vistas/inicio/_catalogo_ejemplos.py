@@ -68,6 +68,12 @@ _EJEMPLOS_PORTADA: dict[str, tuple[str, str, str, str]] = {
         "El vector v duplica la longitud de u en la misma dirección.",
         "ejemplos_inicio_geometria.html",
     ),
+    "espacios_subespacios": (
+        "gen{v₁, v₂, v₃}",
+        "Subespacio generado por tres vectores en R tres",
+        "La base tiene dimensión 2 y el plano contiene al origen.",
+        "ejemplos_inicio_geometria.html",
+    ),
     "transformaciones": (
         "T(x, y) = (x + y, y)",
         "Transformación lineal de x coma y en x más y coma y",
