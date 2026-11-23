@@ -202,35 +202,29 @@ def _familia_parametrica(
     return {"texto": texto, "latex": r"\mathbf{x} = " + " + ".join(partes_latex)}
 
 
+def _criterio(
+    clave: str, titulo: str, estado: str, clase_estado: str, datos: dict[str, str]
+) -> dict[str, str]:
+    return {
+        "clave": clave, "titulo": titulo, "estado": estado,
+        "clase_estado": clase_estado, "origen": "teorema", **datos,
+    }
+
+
 def _criterios_homogeneo() -> tuple[dict[str, str], ...]:
     return (
-        {
-            "clave": "origen",
-            "titulo": "Contiene al vector cero",
-            "estado": ESTADO_CRITERIO_CUMPLE,
-            "clase_estado": "exito",
-            "origen": "teorema",
+        _criterio("origen", "Contiene al vector cero", ESTADO_CRITERIO_CUMPLE, "exito", {
             "resumen": "Al evaluar x = 0 en todas las ecuaciones homogéneas se cumple A·0 = 0.",
             "formula_latex": r"A\mathbf{0} = \mathbf{0} \implies \mathbf{0} \in W",
-        },
-        {
-            "clave": "suma",
-            "titulo": "Cerrado bajo la suma",
-            "estado": ESTADO_CRITERIO_CUMPLE,
-            "clase_estado": "exito",
-            "origen": "teorema",
+        }),
+        _criterio("suma", "Cerrado bajo la suma", ESTADO_CRITERIO_CUMPLE, "exito", {
             "resumen": "Si u, v ∈ W cumplen Au = 0 y Av = 0, por linealidad A(u + v) = Au + Av = 0.",
             "formula_latex": r"A(\mathbf{u} + \mathbf{v}) = A\mathbf{u} + A\mathbf{v} = \mathbf{0} \implies \mathbf{u} + \mathbf{v} \in W",
-        },
-        {
-            "clave": "escalar",
-            "titulo": "Cerrado bajo el producto por escalar",
-            "estado": ESTADO_CRITERIO_CUMPLE,
-            "clase_estado": "exito",
-            "origen": "teorema",
+        }),
+        _criterio("escalar", "Cerrado bajo el producto por escalar", ESTADO_CRITERIO_CUMPLE, "exito", {
             "resumen": "Si u ∈ W cumple Au = 0 y λ ∈ ℝ, entonces A(λu) = λ(Au) = 0.",
             "formula_latex": r"A(\lambda\mathbf{u}) = \lambda(A\mathbf{u}) = \lambda\mathbf{0} = \mathbf{0} \implies \lambda\mathbf{u} \in W",
-        },
+        }),
     )
 
 
@@ -254,27 +248,21 @@ def _criterios_afin(
     detalle_origen = testigo["descripcion"] if testigo else "En el origen, Ax = 0 difiere de b."
     comp_origen, comp_doble = _comparaciones_afin(testigo, b_txt, doble_txt)
     return (
-        {
-            "clave": "origen", "titulo": "Contiene al vector cero",
-            "estado": ESTADO_CRITERIO_NO_CUMPLE, "clase_estado": "error", "origen": "teorema",
+        _criterio("origen", "Contiene al vector cero", ESTADO_CRITERIO_NO_CUMPLE, "error", {
             "resumen": f"En x = 0 se obtiene A·0 = 0, pero la ecuación {fila} exige {b_txt} ≠ 0.",
             "formula_latex": rf"A\mathbf{{0}} = \mathbf{{0}} \neq \mathbf{{b}}{comp_origen}",
             "detalle_testigo": detalle_origen,
-        },
-        {
-            "clave": "suma", "titulo": "Cerrado bajo la suma",
-            "estado": ESTADO_CRITERIO_NO_CUMPLE, "clase_estado": "error", "origen": "teorema",
+        }),
+        _criterio("suma", "Cerrado bajo la suma", ESTADO_CRITERIO_NO_CUMPLE, "error", {
             "resumen": f"Con p ∈ W (Ap = b), en la ecuación {fila} resulta A(p + p) = {doble_txt} ≠ {b_txt}.",
             "formula_latex": rf"A(\mathbf{{p}} + \mathbf{{p}}) = 2\mathbf{{b}} \neq \mathbf{{b}}{comp_doble}",
             "detalle_testigo": f"Contraejemplo con p = {p_txt}: p + p = {doble_p_txt} no satisface la ecuación {fila}.",
-        },
-        {
-            "clave": "escalar", "titulo": "Cerrado bajo el producto por escalar",
-            "estado": ESTADO_CRITERIO_NO_CUMPLE, "clase_estado": "error", "origen": "teorema",
+        }),
+        _criterio("escalar", "Cerrado bajo el producto por escalar", ESTADO_CRITERIO_NO_CUMPLE, "error", {
             "resumen": f"Con λ = 2 y p ∈ W, en la ecuación {fila} resulta A(2p) = {doble_txt} ≠ {b_txt}.",
             "formula_latex": rf"A(2\mathbf{{p}}) = 2\mathbf{{b}} \neq \mathbf{{b}}{comp_doble}",
             "detalle_testigo": f"Contraejemplo con λ = 2 y p = {p_txt}: 2p = {doble_p_txt} no satisface la ecuación {fila}.",
-        },
+        }),
     )
 
 
@@ -282,43 +270,19 @@ def _criterios_vacio(testigo: dict | None) -> tuple[dict[str, str], ...]:
     fila = testigo["fila_visible"] if testigo and testigo["fila_visible"] else 1
     detalle = testigo["descripcion"] if testigo else "El sistema es incompatible."
     return (
-        {
-            "clave": "origen",
-            "titulo": "Contiene al vector cero",
-            "estado": ESTADO_CRITERIO_NO_CUMPLE,
-            "clase_estado": "error",
-            "origen": "teorema",
-            "resumen": (
-                f"El sistema es incompatible (contradicción en la fila {fila}): "
-                "ningún vector satisface Ax = b y 0 ∉ W."
-            ),
+        _criterio("origen", "Contiene al vector cero", ESTADO_CRITERIO_NO_CUMPLE, "error", {
+            "resumen": f"El sistema es incompatible (contradicción en la fila {fila}): ningún vector satisface Ax = b y 0 ∉ W.",
             "formula_latex": r"W = \varnothing \implies \mathbf{0} \notin W",
             "detalle_testigo": detalle,
-        },
-        {
-            "clave": "suma",
-            "titulo": "Cerrado bajo la suma",
-            "estado": ESTADO_CRITERIO_VACUO,
-            "clase_estado": "vacuo",
-            "origen": "teorema",
-            "resumen": (
-                "Se cumple vacuamente porque no existen elementos en W = ∅ para formar un contraejemplo. "
-                "La ausencia del cero basta para descartar que sea espacio vectorial o subespacio."
-            ),
+        }),
+        _criterio("suma", "Cerrado bajo la suma", ESTADO_CRITERIO_VACUO, "vacuo", {
+            "resumen": "Se cumple vacuamente porque no existen elementos en W = ∅ para formar un contraejemplo. La ausencia del cero basta para descartar que sea espacio vectorial o subespacio.",
             "formula_latex": r"W = \varnothing \implies \forall \mathbf{u},\mathbf{v} \in W,\; \mathbf{u}+\mathbf{v}\in W",
-        },
-        {
-            "clave": "escalar",
-            "titulo": "Cerrado bajo el producto por escalar",
-            "estado": ESTADO_CRITERIO_VACUO,
-            "clase_estado": "vacuo",
-            "origen": "teorema",
-            "resumen": (
-                "Se cumple vacuamente porque no existen vectores en W = ∅ que escalar. "
-                "La ausencia del cero basta para descartar que sea espacio vectorial o subespacio."
-            ),
+        }),
+        _criterio("escalar", "Cerrado bajo el producto por escalar", ESTADO_CRITERIO_VACUO, "vacuo", {
+            "resumen": "Se cumple vacuamente porque no existen vectores en W = ∅ que escalar. La ausencia del cero basta para descartar que sea espacio vectorial o subespacio.",
             "formula_latex": r"W = \varnothing \implies \forall \lambda \in \mathbb{R},\, \mathbf{u} \in W,\; \lambda\mathbf{u}\in W",
-        },
+        }),
     )
 
 
