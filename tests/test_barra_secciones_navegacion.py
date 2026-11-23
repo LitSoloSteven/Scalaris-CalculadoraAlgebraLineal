@@ -78,7 +78,7 @@ def test_el_directorio_tiene_quince_claves_unicas_en_cinco_secciones():
     secciones = secciones_inicio()
     claves = [acceso.clave for seccion in secciones for grupo in seccion.grupos for acceso in grupo.accesos]
     assert len(secciones) == 5
-    assert len(claves) == len(set(claves)) == 15
+    assert len(claves) == len(set(claves)) == 16
 
 
 def test_vectores_y_su_escena_tienen_etiquetas_distintas(cliente_contextual):
