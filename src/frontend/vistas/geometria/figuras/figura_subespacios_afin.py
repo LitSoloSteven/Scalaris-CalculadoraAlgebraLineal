@@ -159,7 +159,13 @@ def preparar_figura_afin(resultado: dict, *, tema: str = "papel"):
     except (OverflowError, ValueError):
         return None
     punto = p_vis[0]
-    extremos = [punto, *(tuple(a + b for a, b in zip(punto, dir_v)) for dir_v in d_vis)]
+    extremos = [
+        punto,
+        *(
+            tuple(origen + desplazamiento for origen, desplazamiento in zip(punto, direccion))
+            for direccion in d_vis
+        ),
+    ]
     rango = calcular_rango_visual(tuple(extremos))
     geometria = _GeometriaAfin(dimension, punto, p_fracs[0], d_vis, d_fracs, rango)
     return _armar_figura_afin(geometria, tema)
