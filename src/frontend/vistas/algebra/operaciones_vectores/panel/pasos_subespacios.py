@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 from fractions import Fraction
-import html
 
 from nicegui import ui
 
@@ -11,14 +10,22 @@ from src.frontend.componentes.reproductor_pasos.formato.html_tablas import html_
 from src.frontend.componentes.reproductor_pasos.interfaz.reproductor import ReproductorPasos
 from src.frontend.componentes.reproductor_pasos.nucleo.modelo import GrupoReproductor, PasoReproductor
 from src.frontend.nucleo.textos.textos_espacios_subespacios import (
-    TITULO_VERIFICACION_MOTOR,
-    VEREDICTO_SUBESPACIO_CERO,
+    MODO_RESTRICCIONES, TITULO_VERIFICACION_MOTOR, VEREDICTO_SUBESPACIO_CERO,
+)
+from src.frontend.vistas.algebra.operaciones_vectores.panel.pasos_restricciones import (
+    agregar_grupo_solucion_restricciones, describir_evento_restricciones,
+    renderizar_cuerpo_solucion_restricciones, renderizar_verificacion_motor_item,
+    tabla_reduccion_restricciones, tabla_reduccion_subespacio,
 )
 
 _LIMITE_FRACCION_TABLA = 4000
 _AYUDA_REPRODUCTOR = (
     "Las fases separan la reducción de columnas, la lectura de la base, "
     "la demostración del teorema y las verificaciones numéricas del motor.",
+)
+_AYUDA_RESTRICCIONES = (
+    "Las fases separan la reducción de [A | b], la lectura de la solución o testigo, "
+    "los criterios de subespacio y las verificaciones del motor.",
 )
 _LEYENDA_TIPOS = (
     "inicial", "intercambio", "pivote", "eliminacion",
@@ -56,18 +63,20 @@ def crear_reproductor_subespacios(resultado: dict) -> tuple[ReproductorPasos, di
     """Construye el reproductor completo y devuelve los índices de cada criterio."""
     pasos: list[PasoReproductor] = []
     grupos: list[GrupoReproductor] = []
+    es_restricciones = resultado.get("modo") == MODO_RESTRICCIONES
     _agregar_grupo_reduccion(resultado, pasos, grupos)
-    _agregar_grupo_base(resultado, pasos, grupos)
+    if es_restricciones:
+        agregar_grupo_solucion_restricciones(resultado, pasos, grupos)
+    else:
+        _agregar_grupo_base(resultado, pasos, grupos)
     indices_criterios = _agregar_grupo_teorema(resultado, pasos, grupos)
     _agregar_grupo_verificaciones(resultado, pasos, grupos)
     total = len(pasos)
     pasos_completos = tuple(_completar_total_paso(paso, total) for paso in pasos)
+    ayuda = _AYUDA_RESTRICCIONES if es_restricciones else _AYUDA_REPRODUCTOR
     reproductor = ReproductorPasos(
-        pasos_completos,
-        tuple(grupos),
-        _renderizar_cuerpo_paso,
-        "espacios-subespacios",
-        {"sin_movimiento": True, "lineas_ayuda": _AYUDA_REPRODUCTOR, "tipos_leyenda": _LEYENDA_TIPOS},
+        pasos_completos, tuple(grupos), _renderizar_cuerpo_paso, "espacios-subespacios",
+        {"sin_movimiento": True, "lineas_ayuda": ayuda, "tipos_leyenda": _LEYENDA_TIPOS},
     )
     return reproductor, indices_criterios
 
@@ -87,26 +96,33 @@ def _agregar_grupo_reduccion(
     traza = resultado.get("pasos") or ()
     if not traza:
         return
-    etiquetas = tuple(resultado.get("etiquetas_generadores") or ())
+    es_restricciones = resultado.get("modo") == MODO_RESTRICCIONES
     indice_grupo = len(grupos)
     indices = []
     for evento in traza:
         indice = len(pasos)
         indices.append(indice)
-        pasos.append(_crear_paso_reduccion(evento, etiquetas, indice, indice_grupo))
+        pasos.append(_crear_paso_reduccion(evento, resultado, indice, indice_grupo))
+    titulo = "Planteamiento y reducción de [A | b]" if es_restricciones else "Planteamiento y reducción de generadores"
     grupos.append(GrupoReproductor(
-        titulo="Planteamiento y reducción de generadores", resumen=f"{len(indices)} pasos",
-        tipo="eliminacion", indices_pasos=tuple(indices),
+        titulo=titulo, resumen=f"{len(indices)} pasos", tipo="eliminacion", indices_pasos=tuple(indices),
     ))
 
 
 def _crear_paso_reduccion(
-    evento: dict, etiquetas: tuple[str, ...], indice: int, indice_grupo: int
+    evento: dict, resultado: dict, indice: int, indice_grupo: int
 ) -> PasoReproductor:
     tipo = str(evento.get("tipo") or "otro")
     datos = evento.get("datos") or {}
-    descripcion, explicacion = _describir_evento_reduccion(tipo, datos)
-    tabla = _tabla_evento_reduccion(evento.get("matriz"), etiquetas, tipo, datos)
+    if resultado.get("modo") == MODO_RESTRICCIONES:
+        descripcion, explicacion = describir_evento_restricciones(tipo, datos, _describir_evento_reduccion)
+        tabla = tabla_reduccion_restricciones(
+            evento.get("matriz"), _MatrizTabla, int(resultado.get("dimension_ambiente") or 1), tipo, datos
+        )
+    else:
+        descripcion, explicacion = _describir_evento_reduccion(tipo, datos)
+        etiquetas = tuple(resultado.get("etiquetas_generadores") or ())
+        tabla = tabla_reduccion_subespacio(evento.get("matriz"), _MatrizTabla, None, (etiquetas, ()), (tipo, datos))
     metadatos = {"indice": indice + 1, "tipo": tipo, "operacion": descripcion, "origen": "reduccion"}
     return PasoReproductor(
         indice=indice, tipo=tipo, descripcion=descripcion, explicacion=explicacion,
@@ -132,21 +148,6 @@ def _describir_evento_reduccion(tipo: str, datos: dict) -> tuple[str, str]:
     return "Operación de reducción", "Aplicamos una transformación elemental por filas."
 
 
-def _tabla_evento_reduccion(
-    matriz: dict | None, etiquetas: tuple[str, ...], tipo: str, datos: dict
-) -> str:
-    if not matriz:
-        return ""
-    adaptador = _MatrizTabla(matriz)
-    pivote = (datos["fila"], datos["columna"]) if tipo == "pivote" and "fila" in datos and "columna" in datos else None
-    intercambio = (datos["fila"], datos["seleccionada"]) if tipo == "intercambio" and "fila" in datos else ()
-    cambiadas = (datos["fila"],) if tipo in ("eliminacion", "normalizacion") and "fila" in datos else ()
-    return html_tabla_aumentada(adaptador, adaptador.columnas, {
-        "etiquetas_izquierda": etiquetas, "etiquetas_derecha": (),
-        "pivote": pivote, "filas_intercambio": intercambio, "filas_cambiadas": cambiadas,
-    })
-
-
 def _agregar_grupo_base(
     resultado: dict, pasos: list[PasoReproductor], grupos: list[GrupoReproductor]
 ) -> None:
@@ -155,8 +156,7 @@ def _agregar_grupo_base(
     es_cero = bool(resultado.get("es_subespacio_cero"))
     descripcion = "Base vacía del subespacio cero" if es_cero else "Lectura de la base en las columnas originales"
     explicacion = (
-        "No hay columnas pivote porque todos los generadores son nulos."
-        if es_cero
+        "No hay columnas pivote porque todos los generadores son nulos." if es_cero
         else "Los pivotes de la matriz reducida señalan qué columnas originales integran la base."
     )
     pasos.append(PasoReproductor(
@@ -176,21 +176,25 @@ def _agregar_grupo_teorema(
     indice_grupo = len(grupos)
     indices_criterios: dict[str, int] = {}
     indices_pasos: list[int] = []
+    es_subespacio = resultado.get("clasificacion") == "SUBESPACIO"
+    etiqueta = "Teorema" if es_subespacio else "Criterio"
+    prefijo = "Explicación del teorema" if es_subespacio else "Criterio"
     for criterio in criterios:
         indice = len(pasos)
         indices_pasos.append(indice)
         indices_criterios[criterio["clave"]] = indice
         herencia = resultado.get("herencia_axiomas", "") if criterio["clave"] == "escalar" else ""
         pasos.append(PasoReproductor(
-            indice=indice, tipo="planteamiento", etiqueta_tipo="Teorema",
-            descripcion=f"Explicación del teorema: {criterio['titulo']}", explicacion=criterio["resumen"],
+            indice=indice, tipo="planteamiento", etiqueta_tipo=etiqueta,
+            descripcion=f"{prefijo}: {criterio['titulo']}", explicacion=criterio["resumen"],
             indice_grupo=indice_grupo, cuerpo=("teorema", criterio, herencia),
             meta_explicar={"indice": indice + 1, "tipo": "planteamiento", "operacion": criterio["titulo"], "origen": "teorema"},
         ))
     if indices_pasos:
+        titulo = "Demostración del teorema (operaciones usuales)" if es_subespacio else "Comprobación de criterios de subespacio"
         grupos.append(GrupoReproductor(
-            titulo="Demostración del teorema (operaciones usuales)",
-            resumen=f"{len(indices_pasos)} criterios", tipo="planteamiento", indices_pasos=tuple(indices_pasos),
+            titulo=titulo, resumen=f"{len(indices_pasos)} criterios",
+            tipo="planteamiento", indices_pasos=tuple(indices_pasos),
         ))
     return indices_criterios
 
@@ -206,7 +210,7 @@ def _agregar_grupo_verificaciones(
     pasos.append(PasoReproductor(
         indice=indice, tipo="verificacion", etiqueta_tipo="Motor",
         descripcion=TITULO_VERIFICACION_MOTOR,
-        explicacion="Resultados de consistencia exacta devueltos por el motor sobre la matriz capturada.",
+        explicacion="Resultados de consistencia exacta devueltos por el motor sobre la captura vigente.",
         indice_grupo=indice_grupo, cuerpo=("motor", comprobaciones),
         meta_explicar={"indice": indice + 1, "tipo": "verificacion", "operacion": TITULO_VERIFICACION_MOTOR, "origen": "motor"},
     ))
@@ -225,6 +229,8 @@ def _renderizar_cuerpo_paso(paso: PasoReproductor, contenedor) -> None:
             ui.html(cuerpo[1]).classes("w-full")
         elif clase == "base":
             _renderizar_cuerpo_base(cuerpo[1])
+        elif clase == "solucion_restricciones":
+            renderizar_cuerpo_solucion_restricciones(cuerpo[1], _MatrizTabla)
         elif clase == "teorema":
             _renderizar_cuerpo_teorema(cuerpo[1], cuerpo[2])
         elif clase == "motor":
@@ -258,15 +264,19 @@ def _renderizar_cuerpo_base(resultado: dict) -> None:
 
 
 def _renderizar_cuerpo_teorema(criterio: dict, herencia: str) -> None:
-    ui.label("Explicación del teorema (operaciones usuales)").classes("text-xs font-semibold texto-secundario uppercase")
-    ui.label(criterio["resumen"]).classes("texto-principal text-sm")
+    estado = criterio.get("estado") or ""
+    ui.label(f"Criterio ({estado})" if estado else "Explicación del teorema").classes(
+        "text-xs font-semibold texto-secundario uppercase"
+    )
+    ui.label(criterio["resumen"]).classes("subespacios-numero texto-principal text-sm")
     renderizar_latex(criterio["formula_latex"], vigilar_region=True)
+    if criterio.get("detalle_testigo"):
+        ui.label(criterio["detalle_testigo"]).classes("subespacios-numero texto-principal text-sm select-text")
     if herencia:
         ui.label(herencia).classes("texto-secundario text-sm")
 
 
 def _renderizar_cuerpo_motor(comprobaciones: tuple[dict, ...]) -> None:
-    ui.label("Verificaciones del cálculo del motor sobre los generadores capturados:").classes("texto-secundario text-sm")
+    ui.label("Verificaciones del cálculo del motor:").classes("texto-secundario text-sm")
     for elemento in comprobaciones:
-        estado = "Cumple" if elemento.get("coincide") else "Error"
-        ui.label(f"{estado}: {html.unescape(elemento.get('detalle', ''))}").classes("subespacios-numero texto-principal text-sm")
+        renderizar_verificacion_motor_item(elemento)

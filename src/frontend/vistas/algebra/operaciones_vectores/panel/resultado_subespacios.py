@@ -1,4 +1,4 @@
-"""Presentación del veredicto, base, criterios y gráfica de subespacios."""
+"""Presentación del veredicto, base, familia, criterios y gráfica de subespacios."""
 from __future__ import annotations
 
 from functools import partial
@@ -8,17 +8,32 @@ from nicegui import ui
 from src.frontend.componentes.reproductor_pasos.formato.cuerpos import renderizar_latex
 from src.frontend.componentes.reproductor_pasos.interfaz.reproductor import ReproductorPasos
 from src.frontend.nucleo.textos.textos_espacios_subespacios import (
+    MODO_RESTRICCIONES,
     NOTA_GENERA_AMBIENTE,
+    SUBTITULO_CONJUNTO_VACIO,
     SUBTITULO_SUBESPACIO_CERO,
     SUBTITULO_TEOREMA_CRITERIOS,
+    SUBTITULO_TEOREMA_RESTRICCIONES_AFIN,
+    SUBTITULO_TEOREMA_RESTRICCIONES_HOMOGENEO,
+    SUBTITULO_TEOREMA_RESTRICCIONES_VACIO,
     TITULO_TEOREMA_CRITERIOS,
     TITULO_VERIFICACION_MOTOR,
+    VEREDICTO_CONJUNTO_VACIO,
     VEREDICTO_SUBESPACIO_CERO,
+)
+from src.frontend.vistas.algebra.operaciones_vectores.panel.pasos_restricciones import (
+    renderizar_verificacion_motor_item,
 )
 from src.frontend.vistas.algebra.operaciones_vectores.panel.pasos_subespacios import (
     crear_reproductor_subespacios,
 )
 from src.frontend.vistas.geometria.figuras.figura_subespacios import preparar_figura_subespacio
+
+_CLASES_ESTADO = {
+    "exito": "distintivo-exito subespacios-criterio-estado",
+    "error": "distintivo-error subespacios-criterio-estado subespacios-criterio-error",
+    "vacuo": "distintivo-advertencia subespacios-criterio-estado subespacios-criterio-vacuo",
+}
 
 
 def mostrar_resultado_subespacio(
@@ -35,12 +50,37 @@ def mostrar_resultado_subespacio(
         return None
     reproductor, indices_criterios = crear_reproductor_subespacios(resultado)
     _mostrar_veredicto(resultado)
-    _mostrar_base_y_dependencias(resultado)
+    if resultado.get("modo") == MODO_RESTRICCIONES:
+        _mostrar_detalle_restricciones(resultado)
+    else:
+        _mostrar_base_y_dependencias(resultado)
     _mostrar_criterios(resultado, reproductor, indices_criterios)
     _mostrar_verificaciones_motor(resultado)
     _mostrar_figura(resultado, tema)
     reproductor.construir()
     return reproductor
+
+
+def _metricas_resultado(resultado: dict) -> list[tuple[str, object]]:
+    ambiente = f"ℝ^{resultado['dimension_ambiente']}"
+    if resultado.get("modo") != MODO_RESTRICCIONES:
+        return [
+            ("Rango", resultado["rango"]),
+            ("Dimensión", resultado["dimension"]),
+            ("Ambiente", ambiente),
+            ("Generadores", len(resultado.get("etiquetas_generadores") or ())),
+        ]
+    ecuaciones = resultado.get("cantidad_ecuaciones") or 0
+    clasificacion = resultado.get("clasificacion")
+    if clasificacion == "SUBESPACIO":
+        return [("Rango", resultado["rango"]), ("Dimensión", resultado["dimension"]), ("Ambiente", ambiente), ("Ecuaciones", ecuaciones)]
+    if clasificacion == "AFIN_NO_SUBESPACIO":
+        return [("Rango", resultado["rango"]), ("Dimensión afín", resultado["dimension_afin"]), ("Ambiente", ambiente), ("Ecuaciones", ecuaciones)]
+    metricas: list[tuple[str, object]] = [("Rango de A", resultado["rango"])]
+    if resultado.get("rango_aumentada") is not None:
+        metricas.append(("Rango de [A | b]", resultado["rango_aumentada"]))
+    metricas.extend([("Ambiente", ambiente), ("Ecuaciones", ecuaciones)])
+    return metricas
 
 
 def _mostrar_veredicto(resultado: dict) -> None:
@@ -51,23 +91,23 @@ def _mostrar_veredicto(resultado: dict) -> None:
         "subespacios-numero texto-secundario text-sm"
     )
     with ui.row().classes("w-full flex-wrap gap-4"):
-        for rotulo, valor in (
-            ("Rango", resultado["rango"]),
-            ("Dimensión", resultado["dimension"]),
-            ("Ambiente", f"ℝ^{resultado['dimension_ambiente']}"),
-            ("Generadores", len(resultado.get("etiquetas_generadores") or ())),
-        ):
+        for rotulo, valor in _metricas_resultado(resultado):
             with ui.column().classes("panel-tarjeta px-3 py-2 gap-0"):
                 ui.label(rotulo).classes("text-xs texto-secundario")
                 ui.label(str(valor)).classes("subespacios-numero font-bold texto-principal")
-    ui.label(resultado["herencia_axiomas"]).classes("text-sm texto-secundario")
+    if resultado.get("herencia_axiomas"):
+        ui.label(resultado["herencia_axiomas"]).classes("text-sm texto-secundario")
+
+
+def _mostrar_tarjeta_subespacio_cero() -> None:
+    with ui.column().classes("w-full panel-tarjeta p-3 gap-1"):
+        ui.label(VEREDICTO_SUBESPACIO_CERO).classes("font-semibold texto-principal")
+        ui.label(SUBTITULO_SUBESPACIO_CERO).classes("subespacios-numero texto-secundario text-sm")
 
 
 def _mostrar_base_y_dependencias(resultado: dict) -> None:
     if resultado.get("es_subespacio_cero"):
-        with ui.column().classes("w-full panel-tarjeta p-3 gap-1"):
-            ui.label(VEREDICTO_SUBESPACIO_CERO).classes("font-semibold texto-principal")
-            ui.label(SUBTITULO_SUBESPACIO_CERO).classes("subespacios-numero texto-secundario text-sm")
+        _mostrar_tarjeta_subespacio_cero()
         return
     ui.label("Base extraída de los generadores originales").classes(
         "text-base font-semibold texto-principal mt-2"
@@ -77,6 +117,75 @@ def _mostrar_base_y_dependencias(resultado: dict) -> None:
         for etiqueta, vector in zip(etiquetas_base, resultado.get("base") or ()):
             _mostrar_vector_base(etiqueta, vector)
     _mostrar_dependencias(resultado.get("dependencias") or ())
+
+
+def _mostrar_detalle_restricciones(resultado: dict) -> None:
+    clasificacion = resultado.get("clasificacion")
+    if clasificacion == "VACIO_NO_SUBESPACIO":
+        _mostrar_bloque_vacio(resultado)
+        return
+    pivotes = ", ".join(resultado.get("variables_pivote") or ()) or "ninguna"
+    libres = ", ".join(resultado.get("variables_libres") or ()) or "ninguna"
+    ui.label(f"Variables pivote: {pivotes} · Variables libres: {libres}").classes(
+        "subespacios-numero texto-secundario text-sm mt-1"
+    )
+    if clasificacion == "SUBESPACIO":
+        _mostrar_bloque_homogeneo(resultado)
+    else:
+        _mostrar_bloque_afin(resultado)
+
+
+def _mostrar_bloque_vacio(resultado: dict) -> None:
+    with ui.column().classes("w-full panel-tarjeta p-3 gap-1 mt-1"):
+        ui.label(VEREDICTO_CONJUNTO_VACIO).classes("font-semibold texto-principal")
+        ui.label(SUBTITULO_CONJUNTO_VACIO).classes("subespacios-numero texto-secundario text-sm")
+        testigo = resultado.get("testigo") or {}
+        if testigo.get("descripcion"):
+            ui.label(f"Testigo: {testigo['descripcion']}").classes(
+                "subespacios-numero texto-principal text-sm select-text"
+            )
+
+
+def _mostrar_bloque_homogeneo(resultado: dict) -> None:
+    if resultado.get("es_subespacio_cero"):
+        _mostrar_tarjeta_subespacio_cero()
+        return
+    ui.label("Base del núcleo").classes("text-base font-semibold texto-principal mt-2")
+    with ui.column().classes("w-full gap-2"):
+        for indice, vector in enumerate(resultado.get("base") or (), 1):
+            _mostrar_vector_base(f"d_{indice}", vector)
+    _mostrar_familia_parametrica(resultado.get("familia_parametrica"), "Familia paramétrica del núcleo")
+
+
+def _mostrar_bloque_afin(resultado: dict) -> None:
+    testigo = resultado.get("testigo") or {}
+    if testigo.get("descripcion"):
+        with ui.column().classes("w-full panel-tarjeta p-3 gap-1 mt-1"):
+            ui.label("Testigo del origen").classes("font-semibold texto-principal text-sm")
+            ui.label(testigo["descripcion"]).classes("subespacios-numero texto-secundario text-sm select-text")
+    particular = resultado.get("particular") or ()
+    ui.label("Punto particular y direcciones de ker(A)").classes(
+        "text-base font-semibold texto-principal mt-2"
+    )
+    _mostrar_vector_base("p", particular)
+    direcciones = resultado.get("direcciones") or ()
+    if not direcciones:
+        ui.label("El núcleo es {0}; la solución es un punto afín único.").classes("texto-secundario text-sm")
+    else:
+        with ui.column().classes("w-full gap-2"):
+            for indice, vector in enumerate(direcciones, 1):
+                _mostrar_vector_base(f"d_{indice}", vector)
+    _mostrar_familia_parametrica(resultado.get("familia_parametrica"), "Familia afín p + ker(A)")
+
+
+def _mostrar_familia_parametrica(familia: dict | None, titulo: str) -> None:
+    if not familia:
+        return
+    ui.label(titulo).classes("text-sm font-semibold texto-principal mt-2")
+    with ui.column().classes("subespacios-formula gap-1"):
+        if familia.get("latex"):
+            renderizar_latex(familia["latex"], vigilar_region=True)
+        ui.label(familia["texto"]).classes("subespacios-numero texto-secundario text-sm select-text")
 
 
 def _mostrar_vector_base(etiqueta: str, vector: tuple[str, ...]) -> None:
@@ -98,14 +207,26 @@ def _mostrar_dependencias(dependencias: tuple[dict, ...]) -> None:
         ui.label(dependencia["texto"]).classes("subespacios-numero texto-secundario text-sm select-text")
 
 
+def _subtitulo_criterios(resultado: dict) -> str:
+    if resultado.get("modo") != MODO_RESTRICCIONES:
+        return SUBTITULO_TEOREMA_CRITERIOS
+    clasificacion = resultado.get("clasificacion")
+    if clasificacion == "SUBESPACIO":
+        return SUBTITULO_TEOREMA_RESTRICCIONES_HOMOGENEO
+    if clasificacion == "AFIN_NO_SUBESPACIO":
+        return SUBTITULO_TEOREMA_RESTRICCIONES_AFIN
+    return SUBTITULO_TEOREMA_RESTRICCIONES_VACIO
+
+
 def _mostrar_criterios(
     resultado: dict, reproductor: ReproductorPasos, indices_criterios: dict[str, int]
 ) -> None:
     ui.label(TITULO_TEOREMA_CRITERIOS).classes("text-base font-semibold texto-principal mt-3")
-    ui.label(SUBTITULO_TEOREMA_CRITERIOS).classes("text-xs texto-secundario")
+    ui.label(_subtitulo_criterios(resultado)).classes("text-xs texto-secundario")
     with ui.column().classes("subespacios-criterios w-full gap-2"):
         for criterio in resultado.get("criterios") or ():
             indice = indices_criterios.get(criterio["clave"], 0)
+            clase_estado = _CLASES_ESTADO.get(criterio.get("clase_estado", "exito"), _CLASES_ESTADO["exito"])
             boton = ui.button(
                 on_click=partial(reproductor._seleccionar_desde_indice, indice),
                 color=None,
@@ -117,9 +238,7 @@ def _mostrar_criterios(
             })
             with boton, ui.row().classes("w-full items-center justify-between gap-2 no-wrap"):
                 ui.label(criterio["titulo"]).classes("texto-principal text-sm font-medium text-left min-w-0")
-                ui.label(criterio["estado"]).classes(
-                    "distintivo-exito subespacios-criterio-estado px-2 py-1 text-xs font-bold shrink-0"
-                )
+                ui.label(criterio["estado"]).classes(f"{clase_estado} px-2 py-1 text-xs font-bold shrink-0")
 
 
 def _mostrar_verificaciones_motor(resultado: dict) -> None:
@@ -129,7 +248,7 @@ def _mostrar_verificaciones_motor(resultado: dict) -> None:
     ui.label(TITULO_VERIFICACION_MOTOR).classes("text-sm font-semibold texto-secundario mt-2")
     with ui.column().classes("w-full gap-1"):
         for elemento in comprobaciones:
-            ui.label(elemento["detalle"]).classes("subespacios-numero text-xs texto-secundario")
+            renderizar_verificacion_motor_item(elemento)
 
 
 def _mostrar_figura(resultado: dict, tema: str) -> None:
@@ -139,7 +258,7 @@ def _mostrar_figura(resultado: dict, tema: str) -> None:
     if not figura_preparada.disponible:
         ui.label(figura_preparada.motivo_indisponible or "").classes("texto-secundario text-sm")
         return
-    if resultado.get("dimension_ambiente") == 3 and resultado.get("dimension") == 3:
+    if resultado.get("es_subespacio") and resultado.get("dimension_ambiente") == 3 and resultado.get("dimension") == 3:
         ui.label(NOTA_GENERA_AMBIENTE).classes("texto-principal text-sm font-semibold")
     clase = "subespacios-figura subespacios-figura-1d w-full" if figura_preparada.es_1d else "subespacios-figura w-full"
     with ui.element("div").classes(clase) as marco:
