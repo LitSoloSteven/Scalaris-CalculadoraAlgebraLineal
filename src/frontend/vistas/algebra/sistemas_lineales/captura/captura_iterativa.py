@@ -3,10 +3,10 @@ from collections.abc import Callable
 
 from nicegui import ui
 
-from src.backend.constantes import MAXIMO_CARACTERES_ECUACIONES
 from src.backend.resolutores.sistemas_lineales.iterativos.limites_iterativos import MAXIMO_ITERACIONES_ITERATIVO
 from src.frontend.componentes.aplicacion.base.sonido import emitir_sonido
 from src.frontend.componentes.captura.ecuaciones.cuadricula_ecuaciones import CuadriculaEcuaciones
+from src.frontend.componentes.captura.ecuaciones.editor_ecuaciones import EditorEcuaciones
 from src.frontend.componentes.captura.vectores.captura_vectores import PanelCapturaVectores
 from src.frontend.controladores.algebra.sistemas_lineales.nucleo.captura_iterativa import (
     SistemaCapturado, ajustar_variables, interpretar_ecuaciones, redactar_ecuaciones,
@@ -62,9 +62,8 @@ class CapturaIterativa:
         with ui.column().classes('w-full min-w-0') as self.panel_matriz:
             self.etiqueta_variables = ui.label().classes('iterativos-numero texto-secundario text-sm')
             self.cuadricula.construir_contenedor_cuadricula()
-        self.ecuaciones = ui.textarea('Ecuaciones, una por línea', on_change=self._editar_ecuaciones).classes(
-            'w-full min-w-0').props(f'outlined maxlength={MAXIMO_CARACTERES_ECUACIONES}')
-        self.ecuaciones.set_visibility(False)
+        self.ecuaciones = EditorEcuaciones(self.cuadricula.filas, self._editar_ecuaciones)
+        self.ecuaciones.contenedor.set_visibility(False)
         self.aviso = ui.label().classes('iterativos-numero texto-secundario').props('role=status aria-live=polite')
         self.ejemplo = ui.label(EJEMPLO_CARGADO).classes('text-sm texto-secundario').props('role=status')
         self.ejemplo.set_visibility(False)
@@ -103,7 +102,7 @@ class CapturaIterativa:
             self._sincronizando = False
         self.modo = destino
         self.panel_matriz.set_visibility(destino == 'matriz')
-        self.ecuaciones.set_visibility(destino == 'ecuaciones')
+        self.ecuaciones.contenedor.set_visibility(destino == 'ecuaciones')
         self._editar(conservar_ejemplo=True)
 
     def _sincronizar_destino(self, destino: str) -> None:
@@ -227,9 +226,13 @@ class CapturaIterativa:
         campo = diagnostico['campo']
         fila, columna = diagnostico['fila'], diagnostico['columna']
         if campo in ('ecuaciones', 'matriz_a', 'vector_b') and self.modo == 'ecuaciones':
-            if fila and columna:
-                self.aviso.set_text(f'Ecuación {fila}, incógnita {self.variables[columna - 1]}.')
-            return self.ecuaciones
+            ubicada = self.ecuaciones.localizar_fila_escrita(fila)
+            if ubicada is None:
+                return None
+            numero, entrada = ubicada
+            if columna and 1 <= columna <= len(self.variables):
+                self.aviso.set_text(f'Ecuación {numero}, incógnita {self.variables[columna - 1]}.')
+            return entrada
         if campo in ('matriz_a', 'vector_b'):
             return _localizar_celda_matriz(self.cuadricula, campo, fila, columna)
         if campo == 'vector_inicial' and fila:
