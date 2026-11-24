@@ -10,6 +10,9 @@ from src.ai.contexto.contexto import (
     sanear_cadena_usuario,
 )
 from src.ai.huellas import esta_desactualizado
+from src.frontend.nucleo.textos.textos_espacio_vectorial import (
+    ESTADOS_AXIOMA, MODO_PERSONALIZADO, NOMBRES_AXIOMAS,
+)
 from src.frontend.nucleo.textos.textos_espacios_subespacios import (
     MODO_RESTRICCIONES,
     NOMBRES_MODOS,
@@ -45,7 +48,7 @@ def _compactar_vectores(vectores: tuple | list) -> list[list[str]]:
     ]
 
 
-def _entrada_restricciones_saneada(vista, captura: dict) -> tuple[dict, str | None, bool]:
+def _entrada_restricciones_saneada(panel, captura: dict) -> tuple[dict, str | None, bool]:
     formato = str(captura.get("formato", "matriz"))
     dimension = captura.get("dimension_ambiente")
     if formato == "ecuaciones":
@@ -54,13 +57,13 @@ def _entrada_restricciones_saneada(vista, captura: dict) -> tuple[dict, str | No
             for linea in str(captura.get("ecuaciones", "")).splitlines() if linea.strip()
         ][:_LIMITE_LINEAS_ECUACIONES]
         entrada = {"dimension_ambiente": dimension, "formato": "ecuaciones", "ecuaciones": lineas}
-        return entrada, None, vista.captura_restricciones.esta_vacia()
+        return entrada, None, panel.esta_vacia()
     datos_a = [[sanear_cadena_usuario(str(celda), _LIMITE_CELDA) for celda in fila] for fila in captura["matriz_a"]]
     datos_b = [[sanear_cadena_usuario(str(celda), _LIMITE_CELDA)] for celda in captura["vector_b"]]
     descriptor_a = describir_matriz(datos_a)
     descriptor_b = describir_matriz(datos_b)
     entrada = {"dimension_ambiente": dimension, "formato": "matriz", "A": descriptor_a, "b": descriptor_b}
-    return entrada, generar_nota_ventana(descriptor_a, descriptor_b), vista.captura_restricciones.esta_vacia()
+    return entrada, generar_nota_ventana(descriptor_a, descriptor_b), panel.esta_vacia()
 
 
 def _entrada_generadores_saneada(captura: dict) -> tuple[dict, str | None, bool]:
@@ -164,8 +167,10 @@ def _resumir_resultado_subespacio(resultado: dict) -> dict:
 def obtener_contexto_subespacio(vista) -> ContextoIA:
     """Construye el contexto saneado de Espacios y subespacios sin exponer obsoletos."""
     captura = vista.captura.obtener()
+    if vista.modo == MODO_PERSONALIZADO:
+        return _contexto_personalizado(vista, captura)
     if vista.modo == MODO_RESTRICCIONES:
-        entrada, nota_ventana, vacio = _entrada_restricciones_saneada(vista, captura)
+        entrada, nota_ventana, vacio = _entrada_restricciones_saneada(vista.captura_restricciones, captura)
     else:
         entrada, nota_ventana, vacio = _entrada_generadores_saneada(captura)
     huella = getattr(vista, "_huella_resultado", None)
@@ -179,6 +184,41 @@ def obtener_contexto_subespacio(vista) -> ContextoIA:
         entrada,
         EstadoContexto(resultado=resumen, nota_ventana=nota_ventana, desactualizado=desactualizado, vacio=vacio),
     )
+
+
+def _contexto_personalizado(vista, captura: dict) -> ContextoIA:
+    conjunto = captura["conjunto"]
+    if conjunto["modo"] == MODO_RESTRICCIONES:
+        entrada, nota, vacio = _entrada_restricciones_saneada(vista.captura.conjunto, conjunto)
+    else:
+        entrada, nota, vacio = _entrada_generadores_saneada(conjunto)
+    entrada = {"conjunto": entrada, "cuerpo_de_escalares": "ℝ"}
+    vigente = resultado_subespacio_vigente(vista)
+    desactualizado = esta_desactualizado(captura, getattr(vista, "_huella_resultado", None))
+    return ContextoIA(
+        "espacios_subespacios", TITULO_PAGINA, NOMBRES_MODOS[MODO_PERSONALIZADO], entrada,
+        EstadoContexto(resultado=_resumen_personalizado(vigente), nota_ventana=nota,
+                       desactualizado=desactualizado, vacio=vacio),
+    )
+
+
+def _resumen_personalizado(resultado: dict | None) -> dict | None:
+    if resultado is None:
+        return None
+    return {
+        "estado": resultado["estado"], "codigo": resultado["codigo"], "veredicto": resultado["veredicto"],
+        "mensaje": sanear_cadena_usuario((resultado.get("diagnostico") or {}).get("mensaje", ""), 180),
+        "es_espacio_vectorial": resultado["es_espacio_vectorial"],
+        "neutro_aditivo": _compactar_vectores((resultado["vector_cero"],))[0] if resultado["vector_cero"] else None,
+        "operaciones": {
+            campo: [sanear_cadena_usuario(coordenada, 160) for coordenada in coordenadas]
+            for campo, coordenadas in resultado["operaciones"].items()
+        },
+        "axiomas": {
+            NOMBRES_AXIOMAS[comprobacion["axioma"]]: ESTADOS_AXIOMA[comprobacion["estado"]]
+            for comprobacion in resultado["comprobaciones"]
+        },
+    }
 
 
 def _celdas_restricciones(captura: dict) -> list[tuple]:
@@ -208,6 +248,12 @@ def obtener_senales_subespacio(vista) -> Senales:
     """Devuelve estado vigente, celda inválida y banderas de Espacios y subespacios."""
     captura = vista.captura.obtener()
     vigente = resultado_subespacio_vigente(vista)
+    if vista.modo == MODO_PERSONALIZADO:
+        return Senales(
+            herramienta="espacios_subespacios",
+            estado=vigente["codigo"].lower() if vigente else MODO_PERSONALIZADO,
+            banderas=frozenset({MODO_PERSONALIZADO}),
+        )
     banderas = {vista.modo}
     estado = "sin_resultado"
     if vigente is not None:
