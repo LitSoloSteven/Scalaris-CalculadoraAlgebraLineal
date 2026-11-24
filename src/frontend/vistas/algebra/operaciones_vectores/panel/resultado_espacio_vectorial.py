@@ -21,7 +21,7 @@ _CLASES_ESTADO = {
 
 def mostrar_resultado_espacio(resultado: dict, *, panel_ia=None, sigue_vigente=None) -> ReproductorPasos | None:
     """Muestra veredicto y operaciones y conecta cada axioma con su evidencia exacta."""
-    with region_pdf("espacios_subespacios-operaciones"):
+    with region_pdf("espacios_subespacios-resumen"):
         _mostrar_resumen(resultado)
     comprobaciones = resultado["comprobaciones"]
     if not comprobaciones:
@@ -74,7 +74,9 @@ def _crear_paso(indice: int, comprobacion: dict) -> PasoReproductor:
     return PasoReproductor(
         indice=indice, tipo="verificacion", descripcion=titulo, explicacion=explicacion,
         etiqueta_tipo=estado, cuerpo=comprobacion,
-        meta_explicar={"operacion": titulo, "tipo": "verificacion", "detalle": f"{estado}. {explicacion}"},
+        meta_explicar={
+            "operacion": titulo, "tipo": "verificacion", "origen": "axioma", "detalle": f"{estado}. {explicacion}",
+        },
     )
 
 

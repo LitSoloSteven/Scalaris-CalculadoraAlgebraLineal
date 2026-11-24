@@ -21,6 +21,9 @@ from src.frontend.controladores.algebra.operaciones_vectores.controlador_subespa
     analizar_subespacio_desde_captura,
     normalizar_modo_subespacios,
 )
+from src.frontend.controladores.algebra.operaciones_vectores.controlador_espacio_vectorial import (
+    analizar_espacio_desde_captura,
+)
 from src.frontend.controladores.compartido.sesion.calculo_vigente import (
     ejecutar_calculo_vigente,
 )
@@ -29,6 +32,7 @@ from src.frontend.controladores.compartido.sesion.sesion_matricial import (
     invalidar_resultado,
 )
 from src.frontend.navegacion import ruta_de
+from src.frontend.nucleo.textos.textos_espacio_vectorial import MODO_PERSONALIZADO
 from src.frontend.nucleo.textos.textos_espacios_subespacios import (
     AYUDA_MODOS,
     ESTADO_CALCULO_MODOS,
@@ -42,6 +46,9 @@ from src.frontend.nucleo.textos.textos_espacios_subespacios import (
 from src.frontend.vistas.algebra.operaciones_vectores.panel.captura_generadores import (
     CapturaGeneradores,
 )
+from src.frontend.vistas.algebra.operaciones_vectores.panel.captura_operaciones_personalizadas import (
+    CapturaOperacionesPersonalizadas,
+)
 from src.frontend.vistas.algebra.operaciones_vectores.panel.captura_restricciones import (
     CapturaRestricciones,
 )
@@ -50,6 +57,9 @@ from src.frontend.vistas.algebra.operaciones_vectores.panel.exportacion_subespac
 )
 from src.frontend.vistas.algebra.operaciones_vectores.panel.resultado_subespacios import (
     mostrar_resultado_subespacio,
+)
+from src.frontend.vistas.algebra.operaciones_vectores.panel.resultado_espacio_vectorial import (
+    mostrar_resultado_espacio,
 )
 
 _REGISTRO = logging.getLogger(__name__)
@@ -81,16 +91,18 @@ def _crear_vigencia_paso(vista: VistaEspaciosSubespacios, resultado: dict):
 def _sonido_resultado(resultado: dict) -> str:
     if resultado.get("estado") != "EXITO":
         return "error"
-    return "exito" if resultado.get("es_subespacio") else "aviso"
+    veredicto = resultado.get("es_subespacio", resultado.get("es_espacio_vectorial"))
+    return "exito" if veredicto else "aviso"
 
 
 class VistaEspaciosSubespacios:
-    """Orquesta generadores y restricciones, el análisis vigente y la presentación."""
+    """Orquesta los modos de captura, el análisis vigente y la presentación."""
 
     def __init__(self, modo_inicial: str = MODO_GENERADORES) -> None:
         self.modo = normalizar_modo_subespacios(modo_inicial)
         self.captura_generadores = CapturaGeneradores(self.editar)
         self.captura_restricciones = CapturaRestricciones(self.editar)
+        self.captura_personalizada = CapturaOperacionesPersonalizadas(self.editar)
         self.reproductor_pasos = None
         self.ultimo_resultado = None
         self.actualizar_exportacion_pdf = None
@@ -101,18 +113,21 @@ class VistaEspaciosSubespacios:
         self.panel_ia = PanelIA(self)
         self.selector_modo = None
         self.ayuda = None
-        self.contenedor_generadores = None
-        self.contenedor_restricciones = None
+        self._contenedores_captura = {}
         self.boton_analizar = None
         self.estado = None
         self.contenedor_resultados = None
 
     @property
-    def captura(self) -> CapturaGeneradores | CapturaRestricciones:
+    def captura(self) -> CapturaGeneradores | CapturaRestricciones | CapturaOperacionesPersonalizadas:
         """Devuelve el panel de captura correspondiente al modo activo."""
-        if self.modo == MODO_RESTRICCIONES:
-            return self.captura_restricciones
-        return self.captura_generadores
+        return self._capturas()[self.modo]
+
+    def _capturas(self) -> dict:
+        return {
+            MODO_GENERADORES: self.captura_generadores, MODO_RESTRICCIONES: self.captura_restricciones,
+            MODO_PERSONALIZADO: self.captura_personalizada,
+        }
 
     def construir(self) -> None:
         """Monta la estructura compartida, el selector de modo y los paneles principales."""
@@ -133,7 +148,7 @@ class VistaEspaciosSubespacios:
             "role=heading aria-level=1"
         )
         with ui.tabs(value=self.modo).classes("pestanas-controles pestanas-metodo").props(
-            'dense no-caps aria-label="Modo de definición del conjunto"'
+            'dense no-caps aria-label="Modo de análisis"'
         ) as self.selector_modo:
             for clave, etiqueta in NOMBRES_MODOS.items():
                 ui.tab(clave, label=etiqueta)
@@ -142,10 +157,9 @@ class VistaEspaciosSubespacios:
 
     def _construir_panel_entrada(self) -> None:
         with ui.column().classes("disposicion-panel panel-tarjeta subespacios-panel"):
-            with ui.column().classes("w-full min-w-0") as self.contenedor_generadores:
-                self.captura_generadores.construir()
-            with ui.column().classes("w-full min-w-0") as self.contenedor_restricciones:
-                self.captura_restricciones.construir()
+            for modo, captura in self._capturas().items():
+                with ui.column().classes("w-full min-w-0") as self._contenedores_captura[modo]:
+                    captura.construir()
             self._actualizar_visibilidad_modos()
             with ui.row().classes("w-full items-center flex-wrap gap-2 mt-2"):
                 ui.button("Cargar ejemplo", on_click=self._cargar_ejemplo_activo, color=None).classes(
@@ -167,10 +181,8 @@ class VistaEspaciosSubespacios:
             self.contenedor_resultados = ui.column().classes("w-full min-w-0")
 
     def _actualizar_visibilidad_modos(self) -> None:
-        if self.contenedor_generadores is not None:
-            self.contenedor_generadores.set_visibility(self.modo == MODO_GENERADORES)
-        if self.contenedor_restricciones is not None:
-            self.contenedor_restricciones.set_visibility(self.modo == MODO_RESTRICCIONES)
+        for modo, contenedor in self._contenedores_captura.items():
+            contenedor.set_visibility(modo == self.modo)
 
     def _cambiar_modo(self, nuevo_modo: object) -> None:
         if not isinstance(nuevo_modo, str) or nuevo_modo not in NOMBRES_MODOS or nuevo_modo == self.modo:
@@ -213,11 +225,10 @@ class VistaEspaciosSubespacios:
         self.boton_analizar.props("loading=true")
         actualizar_contexto(self)
         try:
-            respuesta = await ejecutar_calculo_vigente(
-                self, self.captura.obtener, analizar_subespacio_desde_captura
-            )
+            calcular = analizar_espacio_desde_captura if self.modo == MODO_PERSONALIZADO else analizar_subespacio_desde_captura
+            respuesta = await ejecutar_calculo_vigente(self, self.captura.obtener, calcular)
             if respuesta is not None:
-                tema = await self._tema_actual()
+                tema = "" if self.modo == MODO_PERSONALIZADO else await self._tema_actual()
                 if self._identificador_calculo == solicitud and not self.contenedor_resultados.is_deleted:
                     self._publicar(respuesta[0], respuesta[1], tema)
         except Exception as error:
@@ -251,9 +262,11 @@ class VistaEspaciosSubespacios:
         self.ultimo_resultado = resultado
         self._huella_resultado = huella
         with self.contenedor_resultados:
-            self.reproductor_pasos = mostrar_resultado_subespacio(
-                resultado, tema=tema, panel_ia=self.panel_ia, sigue_vigente=_crear_vigencia_paso(self, resultado),
-            )
+            opciones = {"panel_ia": self.panel_ia, "sigue_vigente": _crear_vigencia_paso(self, resultado)}
+            if self.modo == MODO_PERSONALIZADO:
+                self.reproductor_pasos = mostrar_resultado_espacio(resultado, **opciones)
+            else:
+                self.reproductor_pasos = mostrar_resultado_subespacio(resultado, tema=tema, **opciones)
             montar_exportacion_subespacio(self, resultado)
         emitir_sonido(_sonido_resultado(resultado))
         actualizar_contexto(self)

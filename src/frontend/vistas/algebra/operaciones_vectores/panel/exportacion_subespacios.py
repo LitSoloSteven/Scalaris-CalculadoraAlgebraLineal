@@ -6,6 +6,7 @@ from src.frontend.componentes.exportacion_pdf.montaje.integracion import (
     identificador_raiz,
 )
 from src.frontend.controladores.exportacion_pdf.documento.vigencia import EnlacePDF
+from src.frontend.nucleo.textos.textos_espacio_vectorial import MODO_PERSONALIZADO
 from src.frontend.nucleo.textos.textos_espacios_subespacios import (
     MODO_RESTRICCIONES,
     NOMBRES_MODOS,
@@ -16,7 +17,14 @@ from src.frontend.nucleo.textos.textos_espacios_subespacios import (
 def entrada_documental_subespacio(vista) -> dict:
     """Devuelve la captura vigente de generadores o restricciones para el PDF."""
     captura = vista.captura.obtener()
-    modo = str(captura.get("modo", vista.modo))
+    modo = captura.get("modo", vista.modo)
+    if modo == MODO_PERSONALIZADO:
+        return {"modo": NOMBRES_MODOS[modo], "Conjunto": _entrada_conjunto(captura["conjunto"])}
+    return _entrada_conjunto(captura)
+
+
+def _entrada_conjunto(captura: dict) -> dict:
+    modo = captura["modo"]
     datos = {
         "modo": NOMBRES_MODOS.get(modo, modo),
         "dimension_ambiente": f"ℝ^{captura.get('dimension_ambiente', '')}",
@@ -41,8 +49,11 @@ def entrada_documental_subespacio(vista) -> dict:
 
 def montar_exportacion_subespacio(vista, resultado: dict) -> None:
     """Monta el control PDF cuando el análisis es exitoso y exportable."""
-    clasificacion = resultado.get("clasificacion")
-    if resultado.get("estado") != "EXITO" or clasificacion not in PDF_ESTADOS_SUBESPACIOS:
+    personalizada = resultado.get("modo") == MODO_PERSONALIZADO
+    clasificacion = resultado.get("codigo" if personalizada else "clasificacion")
+    if clasificacion not in PDF_ESTADOS_SUBESPACIOS:
+        return
+    if resultado.get("estado") != "EXITO" and not (personalizada and clasificacion == "LIMITE_ARITMETICO"):
         return
     contenedor = getattr(vista, "contenedor_resultados", None)
     if contenedor is None or contenedor.is_deleted:
