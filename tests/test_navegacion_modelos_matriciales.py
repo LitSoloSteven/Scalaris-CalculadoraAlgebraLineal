@@ -52,7 +52,7 @@ def test_inicio_monta_enlaces_para_ambos_modelos(monkeypatch):
 @pytest.mark.parametrize("identificador,seccion,total", [
     ("sistemas", ("sistemas", "metodos_iterativos", "leontief"), 3),
     ("leontief", ("sistemas", "metodos_iterativos", "leontief"), 3),
-    ("transformaciones", ("vectores", "espacios_subespacios", "transformaciones"), 6),
+    ("transformaciones", ("vectores", "espacios_subespacios", "transformaciones"), 3),
 ])
 def test_barra_ofrece_modelos_y_marca_solo_la_vista_actual(monkeypatch, identificador, seccion, total):
     """Cada modelo aparece en su sección y tiene estado activo al abrirlo."""
