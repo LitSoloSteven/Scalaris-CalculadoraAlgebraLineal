@@ -13,6 +13,9 @@ from src.frontend.controladores.algebra.sistemas_lineales.resolucion.contexto_it
 from src.frontend.controladores.algebra.sistemas_lineales.resolucion.controlador_iterativos import (
     normalizar_metodo_iterativo, resolver_iterativo,
 )
+from src.frontend.controladores.algebra.sistemas_lineales.resolucion.presentacion_iterativa import (
+    DECIMALES_INICIALES, FORMATO_EXACTO, OPCIONES_DECIMALES,
+)
 from src.frontend.controladores.compartido.sesion.calculo_vigente import ejecutar_calculo_vigente
 from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto, invalidar_resultado
 from src.frontend.navegacion import ruta_de
@@ -40,6 +43,7 @@ class VistaMetodosIterativos:
         self.ultimo_resultado = None
         self._identificador_calculo = 0
         self._revision_captura = 0
+        self._revision_presentacion = 0
         self._huella_resultado = None
         self.actualizar_exportacion_pdf = None
         self.panel_ia = PanelIA(self)
@@ -57,6 +61,11 @@ class VistaMetodosIterativos:
                 with ui.column().classes('disposicion-panel panel-tarjeta iterativos-panel'):
                     ui.label('Resultado').classes('text-xl font-semibold texto-principal')
                     self.estado = ui.label(ESTADO_INICIAL).classes('texto-secundario').props('role=status aria-live=polite')
+                    self.selector_decimales = ui.select(
+                        OPCIONES_DECIMALES, value=DECIMALES_INICIALES, label='Decimales de presentación',
+                        on_change=self._cambiar_decimales,
+                    ).classes('w-full max-w-xs').props('outlined dense')
+                    self.selector_decimales.set_visibility(False)
                     self.contenedor_resultados = ui.column().classes('w-full min-w-0')
         self.panel_ia.construir()
 
@@ -135,7 +144,27 @@ class VistaMetodosIterativos:
         self.captura.marcar_diagnostico(resultado.get('diagnostico'))
         self.ultimo_resultado = resultado
         self._huella_resultado = huella
+        self.selector_decimales.set_visibility(resultado.get('aproximacion') is not None)
+        self._montar_resultados(resultado)
+        emitir_sonido(_SONIDOS_RESULTADO[resultado['codigo']])
+        actualizar_contexto(self)
 
+    def _cambiar_decimales(self) -> None:
+        resultado = self.ultimo_resultado
+        if resultado is None or self.contenedor_resultados.is_deleted:
+            return
+        indice = 0
+        if self.reproductor_pasos is not None:
+            indice = self.reproductor_pasos.indice_actual
+            self.reproductor_pasos.detener()
+        self._revision_presentacion += 1
+        self.actualizar_exportacion_pdf = None
+        self.contenedor_resultados.clear()
+        self._montar_resultados(resultado)
+        if indice and self.reproductor_pasos is not None:
+            self.reproductor_pasos.ir_a(indice)
+
+    def _montar_resultados(self, resultado: dict) -> None:
         def _sigue_vigente(paso) -> bool:
             reproductor = self.reproductor_pasos
             return (
@@ -148,13 +177,13 @@ class VistaMetodosIterativos:
                 and reproductor.pasos[reproductor.indice_actual].descripcion == paso.descripcion
             )
 
+        formato = self.selector_decimales.value
+        decimales = None if formato == FORMATO_EXACTO else formato
         with self.contenedor_resultados:
             self.reproductor_pasos = mostrar_resultado_iterativo(
-                resultado, panel_ia=self.panel_ia, sigue_vigente=_sigue_vigente,
+                resultado, decimales=decimales, panel_ia=self.panel_ia, sigue_vigente=_sigue_vigente,
             )
             montar_exportacion_iterativa(self, resultado)
-        emitir_sonido(_SONIDOS_RESULTADO[resultado['codigo']])
-        actualizar_contexto(self)
 
     def _limpiar_glosa(self) -> None:
         self.actualizar_exportacion_pdf = None
@@ -166,6 +195,7 @@ class VistaMetodosIterativos:
     def _retirar_resultado(self) -> None:
         invalidar_resultado(self)
         self._limpiar_glosa()
+        self.selector_decimales.set_visibility(False)
         self.contenedor_resultados.clear()
 
     def _cerrar(self) -> None:

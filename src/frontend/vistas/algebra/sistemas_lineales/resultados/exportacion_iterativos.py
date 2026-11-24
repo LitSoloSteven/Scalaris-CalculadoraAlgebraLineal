@@ -46,10 +46,12 @@ def montar_exportacion_iterativa(vista, resultado: dict) -> None:
     if contenedor is None or contenedor.is_deleted:
         return
     resultado_pdf = {**resultado, 'estado': codigo}
+    revision_presentacion = vista._revision_presentacion
 
     def leer_estado() -> tuple:
-        """Comprueba identidad contra el resultado publicado en la vista."""
-        actual = resultado_pdf if getattr(vista, 'ultimo_resultado', None) is resultado else None
+        """Comprueba que siguen vigentes tanto el cálculo como su presentación."""
+        vigente = vista.ultimo_resultado is resultado and vista._revision_presentacion == revision_presentacion
+        actual = resultado_pdf if vigente else None
         return (
             contenedor,
             actual,
