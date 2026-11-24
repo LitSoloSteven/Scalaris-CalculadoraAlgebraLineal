@@ -10,7 +10,7 @@ from src.backend.resolutores.operaciones_vectores.espacios_vectoriales.contrato_
 from src.backend.resolutores.operaciones_vectores.espacios_vectoriales.espacios_vectoriales import (
     analizar_espacio_vectorial,
 )
-from src.backend.resolutores.operaciones_vectores.subespacios.contrato_subespacio import ErrorCapturaSubespacio
+from src.backend.resolutores.operaciones_vectores.subespacios.contrato_subespacios import ErrorCapturaSubespacio
 from src.frontend.nucleo.textos.textos_espacio_vectorial import (
     MODO_PERSONALIZADO, NOMBRES_OPERACIONES, VEREDICTOS,
 )
