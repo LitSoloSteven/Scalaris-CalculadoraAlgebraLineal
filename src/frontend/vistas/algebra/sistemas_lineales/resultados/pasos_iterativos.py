@@ -93,7 +93,7 @@ def _operando(paso: dict, fila: int, columna: int, metodo: str, decimales: int |
     return rf'\underbrace{{{valor}}}_{{x_{{{columna + 1}}}^{{({barrido})}}}}'
 
 
-def _despeje(paso: dict, entrada: dict, indice: int, metodo: str, decimales: int | None) -> str:
+def _despeje(paso: dict, entrada: dict, indice: int, metodo: str, decimales: int | None = None) -> str:
     fila = entrada['matriz'][indice]
     terminos = [
         rf'\left({_numero_latex(coeficiente, decimales)}\right){_operando(paso, indice, columna, metodo, decimales)}'
