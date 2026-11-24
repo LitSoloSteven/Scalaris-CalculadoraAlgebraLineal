@@ -140,7 +140,7 @@ def test_barra_contextual_marca_y_revela_cada_escena(monkeypatch, escena):
         enlaces = {elemento._props["href"]: elemento for elemento in cliente.elements.values()
                    if "navegacion-elemento" in elemento.classes}
         destinos_seccion = {destino: icono for clave, destino, icono in _DESTINOS
-                            if clave in {"vectores", "espacios_subespacios", "transformaciones"} or clave.startswith("vis:")}
+                            if clave.startswith("vis:")}
         assert enlaces.keys() == destinos_seccion.keys()
         for destino, icono in destinos_seccion.items():
             assert enlaces[destino]._props["aria-label"]
