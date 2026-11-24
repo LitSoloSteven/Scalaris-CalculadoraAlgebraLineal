@@ -54,19 +54,18 @@ class VistaMetodosIterativos:
         ui.context.client.on_delete(self._cerrar)
         with ui.column().classes('vista-raiz iterativos-raiz w-full max-w-7xl mx-auto mt-4'):
             self._construir_selector()
-            with ui.element('div').classes('disposicion-dividida'):
-                with ui.column().classes('disposicion-panel panel-tarjeta iterativos-panel'):
-                    self.captura.construir()
-                    self._construir_acciones()
-                with ui.column().classes('disposicion-panel panel-tarjeta iterativos-panel'):
-                    ui.label('Resultado').classes('text-xl font-semibold texto-principal')
-                    self.estado = ui.label(ESTADO_INICIAL).classes('texto-secundario').props('role=status aria-live=polite')
-                    self.selector_decimales = ui.select(
-                        OPCIONES_DECIMALES, value=DECIMALES_INICIALES, label='Decimales de presentación',
-                        on_change=self._cambiar_decimales,
-                    ).classes('w-full max-w-xs').props('outlined dense')
-                    self.selector_decimales.set_visibility(False)
-                    self.contenedor_resultados = ui.column().classes('w-full min-w-0')
+            with ui.column().classes('w-full min-w-0 panel-tarjeta iterativos-panel'):
+                self.captura.construir()
+                self._construir_acciones()
+            with ui.column().classes('w-full min-w-0 panel-tarjeta iterativos-panel'):
+                ui.label('Resultado').classes('text-xl font-semibold texto-principal')
+                self.estado = ui.label(ESTADO_INICIAL).classes('texto-secundario').props('role=status aria-live=polite')
+                self.selector_decimales = ui.select(
+                    OPCIONES_DECIMALES, value=DECIMALES_INICIALES, label='Decimales de presentación',
+                    on_change=self._cambiar_decimales,
+                ).classes('w-full max-w-xs').props('outlined dense')
+                self.selector_decimales.set_visibility(False)
+                self.contenedor_resultados = ui.column().classes('w-full min-w-0')
         self.panel_ia.construir()
 
     def _construir_selector(self) -> None:
