@@ -128,8 +128,11 @@ class CuadriculaEcuaciones:
         botones = (self.boton_quitar_fila, self.boton_agregar_fila, self.boton_quitar_columna, self.boton_agregar_columna)
         await ejecutar_transicion_cuadricula(
             vars(self), selectores_cambio_dimension(selector, incremento),
-            partial(_aplicar_tamano, self, nuevo_m, nuevo_n), botones, self._actualizar_botones_dimension,
+            partial(self._aplicar_tamano, nuevo_m, nuevo_n), botones, self._actualizar_botones_dimension,
         )
+
+    def _aplicar_tamano(self, nuevo_m: int, nuevo_n: int) -> None:
+        _aplicar_tamano(self, nuevo_m, nuevo_n)
 
     def _notificar_dimension(self, anterior: tuple[int, int]) -> None:
         actual = self.filas, self.columnas
