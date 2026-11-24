@@ -3,10 +3,6 @@
     padding: clamp(var(--space-3), 3vw, var(--space-6));
 }
 
-.iterativos-parametros > .nicegui-column {
-    flex-basis: min(100%, 11rem);
-}
-
 .iterativos-parametros .q-field:not(.q-field--error) .q-field__bottom {
     color: var(--text-sec);
 }

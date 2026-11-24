@@ -56,35 +56,35 @@ class CapturaIterativa:
         """Monta los controles y los vincula a la revisión de la captura."""
         self.cuadricula.inyectar_recursos_cliente()
         self.vector.inyectar_recursos_cliente()
-        with ui.tabs(value='matriz').classes('pestanas-controles sistemas-pestanas-modo').props('dense no-caps') as self.selector:
-            ui.tab('matriz', label='Matriz', icon='grid_4x4')
-            ui.tab('ecuaciones', label='Ecuaciones', icon='functions')
-        with ui.column().classes('w-full min-w-0') as self.panel_matriz:
-            self.etiqueta_variables = ui.label().classes('iterativos-numero texto-secundario text-sm')
-            self.cuadricula.construir_contenedor_cuadricula()
-        self.ecuaciones = EditorEcuaciones(self.cuadricula.filas, self._editar_ecuaciones)
-        self.ecuaciones.set_visibility(False)
-        self.aviso = ui.label().classes('iterativos-numero texto-secundario').props('role=status aria-live=polite')
-        self.ejemplo = ui.label(EJEMPLO_CARGADO).classes('text-sm texto-secundario').props('role=status')
-        self.ejemplo.set_visibility(False)
-        self._construir_parametros()
+        with ui.element('div').classes('disposicion-dividida'):
+            with ui.column().classes('disposicion-panel'):
+                with ui.tabs(value='matriz').classes('pestanas-controles sistemas-pestanas-modo').props('dense no-caps') as self.selector:
+                    ui.tab('matriz', label='Matriz', icon='grid_4x4')
+                    ui.tab('ecuaciones', label='Ecuaciones', icon='functions')
+                with ui.column().classes('w-full min-w-0') as self.panel_matriz:
+                    self.etiqueta_variables = ui.label().classes('iterativos-numero texto-secundario text-sm')
+                    self.cuadricula.construir_contenedor_cuadricula()
+                self.ecuaciones = EditorEcuaciones(self.cuadricula.filas, self._editar_ecuaciones)
+                self.ecuaciones.set_visibility(False)
+                self.aviso = ui.label().classes('iterativos-numero texto-secundario').props('role=status aria-live=polite')
+                self.ejemplo = ui.label(EJEMPLO_CARGADO).classes('text-sm texto-secundario').props('role=status')
+                self.ejemplo.set_visibility(False)
+            with ui.column().classes('disposicion-panel iterativos-parametros'):
+                self._construir_parametros()
         self.cuadricula.al_cambiar_dimension = self._cambiar_dimension
         self.cuadricula.al_cambiar_datos = self._editar
         self.vector.al_cambiar_datos = self._editar
         self.selector.on_value_change(lambda evento: self.cambiar_modo(evento.value))
 
     def _construir_parametros(self) -> None:
-        with ui.row().classes('iterativos-parametros w-full items-start'):
-            with ui.column().classes('gap-1 min-w-0'):
-                ui.label('Vector inicial x⁽⁰⁾').classes('font-semibold texto-principal')
-                self.vector.construir(ui.column().classes('min-w-0'))
-                self.vector.contenedor_cabecera.set_visibility(False)
-                self._ajustar_inicio(self.variables, reiniciar=True)
-            with ui.column().classes('gap-2 min-w-0 flex-1'):
-                self.tolerancia = ui.input('Tolerancia', value=TOLERANCIA_INICIAL, on_change=lambda: self._editar()).classes('w-full').props(
-                    'outlined data-solo-numerico=true')
-                self.maximo = ui.input('Máximo de iteraciones', value=MAXIMO_INICIAL, on_change=lambda: self._editar()).classes('w-full').props(
-                    f'outlined inputmode=numeric hint="De 1 a {MAXIMO_ITERACIONES_ITERATIVO}"')
+        ui.label('Vector inicial x⁽⁰⁾').classes('font-semibold texto-principal')
+        self.vector.construir(ui.column().classes('w-full min-w-0'))
+        self.vector.contenedor_cabecera.set_visibility(False)
+        self._ajustar_inicio(self.variables, reiniciar=True)
+        self.tolerancia = ui.input('Tolerancia', value=TOLERANCIA_INICIAL, on_change=lambda: self._editar()).classes('w-full max-w-xs').props(
+            'outlined data-solo-numerico=true')
+        self.maximo = ui.input('Máximo de iteraciones', value=MAXIMO_INICIAL, on_change=lambda: self._editar()).classes('w-full max-w-xs').props(
+            f'outlined inputmode=numeric hint="De 1 a {MAXIMO_ITERACIONES_ITERATIVO}"')
 
     def cambiar_modo(self, destino: str) -> None:
         """Convierte la fuente solo si es válida y devuelve el foco lógico al modo anterior si falla."""
