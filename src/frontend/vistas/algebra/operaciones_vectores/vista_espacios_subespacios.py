@@ -9,6 +9,7 @@ from src.frontend.componentes.aplicacion.base.sonido import emitir_sonido
 from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import (
     crear_estructura_aplicacion,
 )
+from src.frontend.componentes.aplicacion.controles.selector_opciones import SelectorOpciones
 from src.frontend.componentes.glosa.panel.panel_ia import PanelIA
 from src.frontend.componentes.resultados.acciones.avisos_resultado import (
     MENSAJE_ERROR_INESPERADO,
@@ -147,13 +148,12 @@ class VistaEspaciosSubespacios:
         ui.label(TITULO_PAGINA).classes("text-2xl font-bold texto-principal").props(
             "role=heading aria-level=1"
         )
-        with ui.tabs(value=self.modo).classes("pestanas-controles pestanas-metodo").props(
-            'dense no-caps aria-label="Modo de análisis"'
-        ) as self.selector_modo:
-            for clave, etiqueta in NOMBRES_MODOS.items():
-                ui.tab(clave, label=etiqueta)
+        opciones = tuple((clave, etiqueta, etiqueta) for clave, etiqueta in NOMBRES_MODOS.items())
+        with ui.element("div").classes("w-full min-w-0 max-w-2xl"):
+            self.selector_modo = SelectorOpciones(
+                opciones, self.modo, lambda evento: self._cambiar_modo(evento.value), "Modo de análisis",
+            )
         self.ayuda = ui.label(AYUDA_MODOS[self.modo]).classes("texto-secundario")
-        self.selector_modo.on_value_change(lambda evento: self._cambiar_modo(evento.value))
 
     def _construir_panel_entrada(self) -> None:
         with ui.column().classes("disposicion-panel panel-tarjeta subespacios-panel"):
