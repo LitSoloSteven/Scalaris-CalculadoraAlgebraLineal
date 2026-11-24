@@ -70,7 +70,9 @@ def _crear_vigencia_paso(vista: VistaEspaciosSubespacios, resultado: dict):
         return (
             vista.ultimo_resultado is resultado and vista.modo == resultado.get("modo")
             and not vista.contenedor_resultados.is_deleted and reproductor is not None
-            and reproductor.pasos[reproductor.indice_actual] is paso
+            and 0 <= reproductor.indice_actual < len(reproductor.pasos)
+            and reproductor.indice_actual == paso.indice
+            and reproductor.pasos[reproductor.indice_actual].descripcion == paso.descripcion
         )
 
     return _sigue_vigente

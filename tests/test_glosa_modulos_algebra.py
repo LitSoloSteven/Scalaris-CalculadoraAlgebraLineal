@@ -204,3 +204,58 @@ def test_vista_con_dock_deshabilitado_no_falla_en_edicion(monkeypatch):
         assert vista.panel_ia.contexto_adjuntado == ''
 
     asyncio.run(construir_pagina(monkeypatch, 'espacios_subespacios', comprobar))
+
+
+def _pulsar_boton_explicacion_real(vista, monkeypatch) -> list[tuple]:
+    """Localiza el botón real de explicación en el paso actual y simula su pulsación."""
+    from types import SimpleNamespace
+    recibidos = []
+    monkeypatch.setattr(
+        vista.panel_ia,
+        'disparar_explicacion_paso',
+        lambda datos, *, sigue_vigente=None: recibidos.append((datos, sigue_vigente)),
+    )
+    botones = [
+        elemento for elemento in vista.reproductor_pasos.contenedor_glosa.descendants()
+        if isinstance(elemento, ui.button)
+    ]
+    assert len(botones) == 1
+    manejador = next(evento.handler for evento in botones[0]._event_listeners.values() if evento.type == 'click')
+    manejador(SimpleNamespace(args={'detail': 1}))
+    return recibidos
+
+
+async def _verificar_explicar_real(vista, monkeypatch, ejecutar, invalidar) -> None:
+    """Calcula con clave activa y valida vigencia antes y después de cambiar paso o invalidar."""
+    monkeypatch.setenv('OPENROUTER_API_KEY', 'clave-prueba')
+    await ejecutar()
+    recibidos = _pulsar_boton_explicacion_real(vista, monkeypatch)
+    assert len(recibidos) == 1
+    datos, sigue_vigente = recibidos[0]
+    assert datos['detalle']
+    assert callable(sigue_vigente)
+    assert sigue_vigente() is True
+    vista.reproductor_pasos.ir_a(1)
+    assert sigue_vigente() is False
+    invalidar()
+    assert sigue_vigente() is False
+
+
+def test_boton_explicar_paso_real_dispara_glosa(monkeypatch):
+    """El botón real Explicar paso dispara Glosa incluso sobre copia reemplazada del paso."""
+    async def comprobar_iterativos(vista, _cliente):
+        """Valida botón real y pérdida de vigencia en métodos iterativos."""
+        vista.captura.restablecer(True)
+        await _verificar_explicar_real(
+            vista, monkeypatch, vista.resolver, lambda: vista.captura.tolerancia.set_value('0.01'),
+        )
+
+    async def comprobar_subespacios(vista, _cliente):
+        """Valida botón real y pérdida de vigencia en espacios y subespacios."""
+        vista.captura.cargar_ejemplo()
+        await _verificar_explicar_real(
+            vista, monkeypatch, vista.analizar, lambda: vista.selector_modo.set_value('restricciones'),
+        )
+
+    asyncio.run(construir_pagina(monkeypatch, 'metodos_iterativos', comprobar_iterativos))
+    asyncio.run(construir_pagina(monkeypatch, 'espacios_subespacios', comprobar_subespacios))
