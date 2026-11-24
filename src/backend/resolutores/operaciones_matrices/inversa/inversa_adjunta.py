@@ -2,8 +2,6 @@
 from fractions import Fraction
 
 from src.backend.constantes import (
-    DIMENSION_MAXIMA_COFACTORES,
-    DIMENSION_MAXIMA_INVERSA,
     ERROR,
     EXITO,
     SINGULAR,
@@ -16,8 +14,6 @@ from src.backend.resolutores.operaciones_matrices.compartido.comprobacion_produc
 from src.backend.resolutores.operaciones_matrices.determinante import cofactores
 from .construccion_adjunta import ConstruccionAdjunta, construir_adjunta
 from .contrato_adjunta import (
-    CODIGO_DIMENSION_EXCEDIDA,
-    CODIGO_ENTRADA_INVALIDA,
     CODIGO_INVERSA_CALCULADA,
     CODIGO_MATRIZ_SINGULAR,
     CODIGO_PRESUPUESTO_EXCEDIDO,
@@ -30,6 +26,7 @@ from .contrato_adjunta import (
     crear_resultado_adjunta,
 )
 from .traza_adjunta import ContextoTrazaAdjunta, construir_traza_adjunta
+from .validacion_adjunta import validar_entrada_adjunta
 
 
 def calcular_inversa_adjunta(matriz: Matriz) -> ResultadoInversaAdjunta:
@@ -56,39 +53,11 @@ def _crear_resultado(
 
 
 def _resultado_entrada_invalida(matriz: object) -> ResultadoInversaAdjunta | None:
-    if not isinstance(matriz, Matriz):
-        return _crear_resultado(ERROR, CODIGO_ENTRADA_INVALIDA, "Se esperaba una matriz exacta.")
-    dimension = matriz.filas
-    if matriz.filas != matriz.columnas:
-        mensaje = (
-            f"La matriz debe ser cuadrada para la inversa por adjunta: "
-            f"recibido {matriz.filas}×{matriz.columnas}."
-        )
-        return _crear_resultado(ERROR, CODIGO_ENTRADA_INVALIDA, mensaje, dimension)
-    if not 1 <= matriz.filas <= DIMENSION_MAXIMA_COFACTORES:
-        mensaje = (
-            f"La inversa por adjunta admite hasta {DIMENSION_MAXIMA_COFACTORES} filas. "
-            f"Usa Gauss-Jordan hasta {DIMENSION_MAXIMA_INVERSA} si necesitas una matriz mayor."
-        )
-        return _crear_resultado(ERROR, CODIGO_DIMENSION_EXCEDIDA, mensaje, dimension)
-    if not _celdas_exactas(matriz):
-        mensaje = "Las celdas deben ser enteros o fracciones exactas; no se admite booleano ni flotante."
-        return _crear_resultado(ERROR, CODIGO_ENTRADA_INVALIDA, mensaje, dimension)
-    return None
-
-
-def _celdas_exactas(matriz: Matriz) -> bool:
-    if len(matriz.datos) != matriz.filas:
-        return False
-    for fila in matriz.datos:
-        if not isinstance(fila, list) or len(fila) != matriz.columnas:
-            return False
-        if any(
-            isinstance(valor, bool) or not isinstance(valor, (int, Fraction))
-            for valor in fila
-        ):
-            return False
-    return True
+    rechazo = validar_entrada_adjunta(matriz)
+    if rechazo is None:
+        return None
+    codigo, mensaje, dimension = rechazo
+    return _crear_resultado(ERROR, codigo, mensaje, dimension)
 
 
 def _copiar_datos(matriz: Matriz) -> list[list[Fraction]]:
