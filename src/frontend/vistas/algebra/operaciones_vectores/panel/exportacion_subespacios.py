@@ -49,12 +49,13 @@ def montar_exportacion_subespacio(vista, resultado: dict) -> None:
         return
     resultado_pdf = {**resultado, "estado": clasificacion}
 
-    def leer_estado() -> tuple:
+    def _leer_estado() -> tuple:
+        """Devuelve el estado vigente del resultado mientras no sea invalidado."""
         actual = resultado_pdf if getattr(vista, "ultimo_resultado", None) is resultado else None
         return (contenedor, actual, getattr(vista, "_revision_captura", 0), getattr(vista, "_identificador_calculo", 0))
 
     enlace = EnlacePDF(
         vista, vista.captura.obtener, identificador_raiz(contenedor),
-        leer_estado=leer_estado, leer_entrada_documental=lambda: entrada_documental_subespacio(vista),
+        leer_estado=_leer_estado, leer_entrada_documental=lambda: entrada_documental_subespacio(vista),
     )
     completar_exportacion(vista, "espacios_subespacios", resultado_pdf, enlace)

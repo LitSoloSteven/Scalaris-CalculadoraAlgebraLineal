@@ -160,14 +160,26 @@ async def _ejecutar_descarga_interceptada(monkeypatch, control, capturas, al_cap
     descargas = []
     monkeypatch.setattr(ui, 'download', lambda contenido, **_ops: descargas.append(contenido))
 
-    async def capturar_y_alterar(_identificador):
+    async def _capturar_y_alterar(_identificador):
+        """Simula la edición en vuelo durante la captura y devuelve las imágenes."""
         al_capturar()
         return capturas
 
-    monkeypatch.setattr(modulo_boton, 'capturar_regiones', capturar_y_alterar)
+    monkeypatch.setattr(modulo_boton, 'capturar_regiones', _capturar_y_alterar)
     monkeypatch.setattr(modulo_boton.run, 'io_bound', lambda funcion, *args: funcion(*args))
     await control.generar()
     return descargas
+
+
+async def _afirmar_carrera_pdf(monkeypatch, vista, clave_region: str, al_capturar) -> None:
+    """Ejecuta exportación interceptada y verifica que la edición en vuelo la aborte."""
+    control = vista.actualizar_exportacion_pdf.__self__
+    descargas = await _ejecutar_descarga_interceptada(
+        monkeypatch, control, [crear_captura(clave_region)], al_capturar,
+    )
+    assert descargas == []
+    assert control.dialogo.estado.text == textos.PDF_ERROR_OBSOLETO
+    assert not control.ocupado
 
 
 def test_pdf_rechaza_errores_y_edicion_durante_descarga(monkeypatch):
@@ -183,31 +195,17 @@ def test_pdf_rechaza_errores_y_edicion_durante_descarga(monkeypatch):
         """Simula edición de captura mientras se capturan regiones en iterativos."""
         vista.captura.restablecer(True)
         await vista.resolver()
-        control = vista.actualizar_exportacion_pdf.__self__
-        descargas = await _ejecutar_descarga_interceptada(
-            monkeypatch,
-            control,
-            [crear_captura('metodos_iterativos-resumen')],
-            lambda: vista.captura.tolerancia.set_value('0.05'),
+        await _afirmar_carrera_pdf(
+            monkeypatch, vista, 'metodos_iterativos-resumen', lambda: vista.captura.tolerancia.set_value('0.05'),
         )
-        assert descargas == []
-        assert control.dialogo.estado.text == textos.PDF_ERROR_OBSOLETO
-        assert not control.ocupado
 
     async def comprobar_subespacios(vista, _cliente):
         """Simula cambio de modo mientras se capturan regiones en subespacios."""
         vista.captura.cargar_ejemplo()
         await vista.analizar()
-        control = vista.actualizar_exportacion_pdf.__self__
-        descargas = await _ejecutar_descarga_interceptada(
-            monkeypatch,
-            control,
-            [crear_captura('espacios_subespacios-resumen')],
-            lambda: vista.selector_modo.set_value('restricciones'),
+        await _afirmar_carrera_pdf(
+            monkeypatch, vista, 'espacios_subespacios-resumen', lambda: vista.selector_modo.set_value('restricciones'),
         )
-        assert descargas == []
-        assert control.dialogo.estado.text == textos.PDF_ERROR_OBSOLETO
-        assert not control.ocupado
 
     asyncio.run(construir_pagina(monkeypatch, 'metodos_iterativos', comprobar_iterativos))
     asyncio.run(construir_pagina(monkeypatch, 'espacios_subespacios', comprobar_subespacios))
