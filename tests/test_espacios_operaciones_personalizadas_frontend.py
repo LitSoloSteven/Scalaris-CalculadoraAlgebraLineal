@@ -21,10 +21,10 @@ def _abrir_vista(monkeypatch):
         "algebra.operaciones_vectores.vista_espacios_subespacios", "VistaEspaciosSubespacios",
     ))
 
-    def comprobar(escenario):
+    def _comprobar(escenario):
         asyncio.run(construir_pagina(monkeypatch, _HERRAMIENTA, escenario, {"modo": MODO_PERSONALIZADO}))
 
-    return comprobar
+    return _comprobar
 
 
 def _cargar(vista, indice):
@@ -41,7 +41,7 @@ def _cargar(vista, indice):
 ])
 def test_ejemplos_personalizados(_abrir_vista, indice, codigo, cantidad):
     """Analiza cada ejemplo desde la ruta y conserva el veredicto al alternar el formato lineal."""
-    async def comprobar(vista, _cliente):
+    async def _comprobar(vista, _cliente):
         _cargar(vista, indice)
         await vista.analizar()
         resultado = vista.ultimo_resultado
@@ -54,12 +54,12 @@ def test_ejemplos_personalizados(_abrir_vista, indice, codigo, cantidad):
             await vista.analizar()
             assert vista.ultimo_resultado == resultado
 
-    _abrir_vista(comprobar)
+    _abrir_vista(_comprobar)
 
 
 def test_localiza_termino_invalido_y_reintenta(_abrir_vista):
     """Retiene el borrador inválido y permite corregir la posición señalada."""
-    async def comprobar(vista, _cliente):
+    async def _comprobar(vista, _cliente):
         _cargar(vista, 0)
         coeficiente, exponentes = vista.captura.campos_entrada()[1:3]
         exponentes.set_value("9 1")
@@ -74,12 +74,12 @@ def test_localiza_termino_invalido_y_reintenta(_abrir_vista):
         assert vista.ultimo_resultado["es_espacio_vectorial"] is True
         assert not coeficiente.props.get("aria-invalid")
 
-    _abrir_vista(comprobar)
+    _abrir_vista(_comprobar)
 
 
 def test_limite_y_reintento_mantienen_estados_distintos(monkeypatch, _abrir_vista):
     """Distingue los axiomas sin verificar de una violación certificada."""
-    async def comprobar(vista, _cliente):
+    async def _comprobar(vista, _cliente):
         _cargar(vista, 3)
         with monkeypatch.context() as presupuesto:
             presupuesto.setattr(limites_espacio_vectorial, "MAXIMO_OPERACIONES", 0)
@@ -92,12 +92,12 @@ def test_limite_y_reintento_mantienen_estados_distintos(monkeypatch, _abrir_vist
         assert paso.etiqueta_tipo == "No cumple"
         assert "residuo" in paso.meta_explicar["detalle"].lower()
 
-    _abrir_vista(comprobar)
+    _abrir_vista(_comprobar)
 
 
 def test_cambio_de_modo_descarta_el_calculo_y_conserva_el_borrador(monkeypatch, _abrir_vista):
     """Descarta una respuesta antigua incluso al volver a la misma captura."""
-    async def comprobar(vista, _cliente):
+    async def _comprobar(vista, _cliente):
         _cargar(vista, 1)
         borrador = vista.captura.obtener()
         inicio, liberar = asyncio.Event(), asyncio.Event()
@@ -119,12 +119,12 @@ def test_cambio_de_modo_descarta_el_calculo_y_conserva_el_borrador(monkeypatch, 
         await vista.analizar()
         assert vista.ultimo_resultado["vector_cero"] == (0, 1)
 
-    _abrir_vista(comprobar)
+    _abrir_vista(_comprobar)
 
 
 def test_pdf_personalizado_exporta_pruebas_sin_mover_el_reproductor(_abrir_vista):
     """Monta certificados para PDF y conserva el paso visible del reproductor."""
-    async def comprobar(vista, _cliente):
+    async def _comprobar(vista, _cliente):
         _cargar(vista, 3)
         await vista.analizar()
         reproductor = vista.reproductor_pasos
@@ -141,4 +141,4 @@ def test_pdf_personalizado_exporta_pruebas_sin_mover_el_reproductor(_abrir_vista
         documento, _ = generar_pdf(_HERRAMIENTA, PORTADA, control.resultado, capturas)
         assert documento.startswith(b"%PDF")
 
-    _abrir_vista(comprobar)
+    _abrir_vista(_comprobar)

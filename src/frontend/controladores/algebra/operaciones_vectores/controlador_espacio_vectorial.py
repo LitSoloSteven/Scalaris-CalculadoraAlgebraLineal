@@ -28,15 +28,21 @@ def _exponente(texto: str) -> int | str:
     return texto
 
 
-def _preparar_operacion(coordenadas: list) -> list:
+def _preparar_operacion(coordenadas: list, cantidad_variables: int) -> list:
     return [
         [
             {"coeficiente": termino["coeficiente"],
-             "exponentes": [_exponente(texto) for texto in termino["exponentes"].split()]}
+             "exponentes": _separar_exponentes(termino["exponentes"], cantidad_variables)}
             for termino in terminos
         ]
         for terminos in coordenadas
     ]
+
+
+def _separar_exponentes(datos: object, cantidad_variables: int) -> list:
+    if not isinstance(datos, str):
+        return []
+    return [_exponente(texto) for texto in datos.split(maxsplit=cantidad_variables)]
 
 
 def _resultado_invalido(diagnostico: dict) -> dict:
@@ -68,10 +74,7 @@ def analizar_espacio_desde_captura(captura: dict) -> dict:
     if vacio is not None:
         return _resultado_invalido({**vacio, "origen": "conjunto"})
     try:
-        entrada = capturar_espacio_vectorial({
-            "conjunto": preparar_captura_restricciones(conjunto, formato) if formato else conjunto,
-            **{campo: _preparar_operacion(captura[campo]) for campo in NOMBRES_OPERACIONES},
-        })
+        entrada = capturar_espacio_vectorial(_preparar_captura(captura, conjunto, formato))
     except ErrorCapturaRestricciones as error:
         return _resultado_invalido({**error.diagnostico, "origen": "conjunto"})
     except ErrorCapturaEspacioVectorial as error:
@@ -82,6 +85,17 @@ def analizar_espacio_desde_captura(captura: dict) -> dict:
         **resultado, "modo": MODO_PERSONALIZADO, "dimension_ambiente": dimension,
         "veredicto": VEREDICTOS[resultado["es_espacio_vectorial"]],
         "operaciones": _formatear_operaciones(entrada, dimension),
+    }
+
+
+def _preparar_captura(captura: dict, conjunto: dict, formato: str | None) -> dict:
+    dimension = conjunto["dimension_ambiente"]
+    return {
+        "conjunto": preparar_captura_restricciones(conjunto, formato) if formato else conjunto,
+        **{
+            campo: _preparar_operacion(captura[campo], len(variables_operacion(campo, dimension)))
+            for campo in NOMBRES_OPERACIONES
+        },
     }
 
 

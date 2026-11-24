@@ -122,7 +122,7 @@ class CapturaOperacionesPersonalizadas:
         conjunto.ecuaciones.set_value(ecuaciones)
 
     def _cambiar_conjunto(self, modo: object) -> None:
-        if modo not in self._conjuntos or modo == self._modo_conjunto:
+        if not isinstance(modo, str) or modo not in self._conjuntos or modo == self._modo_conjunto:
             return
         self._modo_conjunto = modo
         self._selector_conjunto.set_value(modo)
