@@ -5,6 +5,7 @@ from src.backend.constantes import DIMENSION_MAXIMA_COFACTORES
 from src.backend.modelos.matriz import Matriz
 
 MAXIMO_NODOS_COFACTORES = 10000
+CODIGO_PRESUPUESTO_COFACTORES = "PRESUPUESTO_COFACTORES_EXCEDIDO"
 
 
 def describir_limites_cofactores() -> str:
@@ -31,7 +32,7 @@ def construir_menor(datos: list[list[Fraction]], fila: int, columna: int) -> lis
 class ErrorPresupuestoCofactores(ValueError):
     """Error controlado al superar el presupuesto compartido de nodos."""
 
-    codigo = "PRESUPUESTO_COFACTORES_EXCEDIDO"
+    codigo = CODIGO_PRESUPUESTO_COFACTORES
 
     def __init__(self, nodos: int, limite: int) -> None:
         """Conserva el consumo y el limite vigentes con un mensaje estable."""
