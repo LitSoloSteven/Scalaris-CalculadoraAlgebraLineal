@@ -25,10 +25,12 @@ from src.frontend.controladores.algebra.operaciones_vectores.controlador_subespa
 class CapturaGeneradores:
     """Administra vectores columna de generadores, ejemplo, limpieza y diagnósticos."""
 
-    def __init__(self, al_editar: Callable[[], None]) -> None:
+    def __init__(
+        self, al_editar: Callable[[], None], identificador: str = "subespacios_generadores",
+    ) -> None:
         self.al_editar = al_editar
         self.panel = PanelCapturaVectores(
-            "subespacios_generadores",
+            identificador,
             opciones={
                 "minimo_vectores": DIMENSION_MINIMA,
                 "maximo_vectores": DIMENSION_MAXIMA_VECTORES,
