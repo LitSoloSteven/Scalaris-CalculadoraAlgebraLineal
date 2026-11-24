@@ -3,6 +3,7 @@ from nicegui import ui
 from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.navegacion import ruta_de
 from src.frontend.componentes.captura.ecuaciones.cuadricula_ecuaciones import CuadriculaEcuaciones
+from src.frontend.componentes.captura.ecuaciones.filas_ecuaciones import crear_cabecera_ecuaciones
 from src.frontend.componentes.captura.paneles.calculadora import PanelCalculadora
 from src.frontend.componentes.glosa.panel.panel_ia import PanelIA
 from src.frontend.vistas.algebra.sistemas_lineales.captura.mixin_sincronizacion import MixinSincronizacionSistemasLineales
@@ -120,23 +121,17 @@ class VistaSistemasLineales(
 
     def _renderizar_panel_ecuaciones(self) -> None:
         """Renderiza la lista de ecuaciones editables y botones agregar/quitar."""
-        with ui.row().classes('w-full justify-between items-center mb-6'):
-            ui.label('Sistema de Ecuaciones').classes('text-lg font-bold texto-principal')
-            self.boton_desde_matriz = ui.button(
-                'Sincronizar desde Matriz', icon='sync',
-                on_click=self.sincronizar_desde_matriz, color=None
-            ).classes('boton-discreto text-xs py-1 px-3').props('ripple=false')
-
-            with ui.row().classes('gap-2 ml-auto'):
-                self.boton_quitar_ecuacion = ui.button(icon='remove', on_click=lambda: self._cambiar_ecuaciones_animadas(-1), color=None).classes(
-                    'boton-icono w-8 h-8 p-0'
-                ).props('ripple=false aria-label="Quitar ecuación"').tooltip('Quitar ecuación')
-                self.boton_agregar_ecuacion = ui.button(icon='add', on_click=lambda: self._cambiar_ecuaciones_animadas(1), color=None).classes(
-                    'boton-icono w-8 h-8 p-0'
-                ).props('ripple=false aria-label="Añadir ecuación"').tooltip('Añadir ecuación')
-
+        self.boton_quitar_ecuacion, self.boton_agregar_ecuacion = crear_cabecera_ecuaciones(
+            self._cambiar_ecuaciones_animadas, self._crear_sincronizacion_matriz,
+        )
         self.contenedor_ecuaciones_lista = ui.column().classes('w-full')
         self.renderizar_ecuaciones()
+
+    def _crear_sincronizacion_matriz(self) -> None:
+        self.boton_desde_matriz = ui.button(
+            'Sincronizar desde Matriz', icon='sync',
+            on_click=self.sincronizar_desde_matriz, color=None,
+        ).classes('boton-discreto text-xs py-1 px-3').props('ripple=false')
 
     def _procesar_transferencia_sistemas(self, token_transferencia: str) -> None:
         """Aplica la matriz del token de handoff entrante si existe."""

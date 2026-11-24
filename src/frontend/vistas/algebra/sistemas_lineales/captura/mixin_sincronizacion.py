@@ -1,9 +1,9 @@
 """Coordinacion de los controles de captura de sistemas lineales."""
-from nicegui import ui
 from src.frontend.componentes.aplicacion.base.sonido import notificar
 from functools import partial
 from src.backend.constantes import DIMENSION_MAXIMA_SISTEMAS, DIMENSION_MINIMA
 from src.frontend.componentes.captura.nucleo.cuadricula_base import ejecutar_transicion_cuadricula, selectores_cambio_dimension, actualizar_estados_botones_dimension
+from src.frontend.componentes.captura.ecuaciones.filas_ecuaciones import montar_filas_ecuaciones
 from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto, notificar_edicion
 from src.frontend.controladores.algebra.sistemas_lineales.nucleo.estado_captura import cambiar_numero_ecuaciones, matriz_vacia, ecuaciones_vacias
 from src.frontend.controladores.algebra.sistemas_lineales.nucleo.captura import preparar_captura_ecuaciones
@@ -63,24 +63,11 @@ class MixinSincronizacionSistemasLineales:
         """Reconstruye las entradas de ecuaciones conservando sus valores y eventos."""
         if not self.contenedor_ecuaciones_lista:
             return
-        self.contenedor_ecuaciones_lista.clear()
-        self.entradas_ecuaciones.clear()
-        with self.contenedor_ecuaciones_lista:
-            for i in range(self.num_ecuaciones):
-                valor = valores[i] if i < len(valores) else ''
-                self._crear_entrada_ecuacion(i, valor)
+        datos = [valores[indice] if indice < len(valores) else '' for indice in range(self.num_ecuaciones)]
+        self.entradas_ecuaciones[:] = montar_filas_ecuaciones(
+            self.contenedor_ecuaciones_lista, datos, self._al_cambiar_ecuaciones,
+        )
         self._actualizar_botones_ecuaciones()
-
-    def _crear_entrada_ecuacion(self, i, valor):
-        """Crea una ecuación numerada y registra el control para sincronizarla."""
-        with ui.row().classes('w-full items-center gap-3 no-wrap mb-3'):
-            ui.label(f'{i+1}.').classes('font-bold texto-secundario w-6 text-right shrink-0')
-            entrada = ui.input(
-                value=valor,
-                placeholder=f'Ej. 2x + 3y = {i*2 + 4}',
-                on_change=self._al_cambiar_ecuaciones
-            ).classes('matriz-entrada flex-1 min-w-0').props(f'borderless autocomplete="new-password" name="eq{i}" data-ecuaciones-indice="{i}"')
-            self.entradas_ecuaciones.append(entrada)
 
     def sincronizar_desde_ecuaciones(self):
         """Analiza las ecuaciones y carga la matriz, o informa del error de entrada."""
