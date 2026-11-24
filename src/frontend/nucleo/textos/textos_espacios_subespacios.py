@@ -201,7 +201,7 @@ PDF_ESTADOS_SUBESPACIOS = {
 PDF_REGIONES_SUBESPACIOS = {
     "espacios_subespacios-axiomas": (
         "Comprobación de axiomas",
-        "Se presenta el estado de cada axioma verificado sobre ℝ.",
+        "Se presenta el estado de cada axioma evaluado sobre los números reales.",
     ),
     "espacios_subespacios-resumen": (
         "Clasificación y Resultado del Conjunto",
