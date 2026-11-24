@@ -8,13 +8,13 @@ from nicegui import ui
 from src.backend.constantes import (
     DIMENSION_MAXIMA_SISTEMAS,
     DIMENSION_MINIMA,
-    MAXIMO_CARACTERES_ECUACIONES,
 )
 from src.frontend.componentes.aplicacion.base.sonido import emitir_sonido
 from src.frontend.componentes.captura.ecuaciones.cuadricula_ecuaciones import (
     CuadriculaEcuaciones,
     _aplicar_tamano,
 )
+from src.frontend.componentes.captura.ecuaciones.editor_ecuaciones import EditorEcuaciones
 from src.frontend.componentes.captura.nucleo.cuadricula_base import (
     actualizar_estados_botones_dimension,
 )
@@ -106,6 +106,12 @@ def _sincronizar_formato_restricciones(captura: CapturaRestricciones, destino: s
     _cargar_matriz_exacta(captura.cuadricula, capturada.matriz_a, capturada.vector_b)
 
 
+def _campo_diagnostico(captura: CapturaRestricciones, diagnostico: dict) -> ui.input | EditorEcuaciones | None:
+    if captura.formato == "ecuaciones" or diagnostico.get("campo") == "ecuaciones":
+        return captura.ecuaciones
+    return _localizar_celda_restriccion(captura.cuadricula, diagnostico)
+
+
 def _marcar_diagnostico_panel(captura: CapturaRestricciones, diagnostico: dict | None) -> None:
     if captura._campo_marcado is not None and not captura._campo_marcado.is_deleted:
         captura._campo_marcado.props(remove="error aria-invalid")
@@ -114,13 +120,9 @@ def _marcar_diagnostico_panel(captura: CapturaRestricciones, diagnostico: dict |
         captura.aviso_diagnostico.set_text(str(diagnostico.get("mensaje") or "") if diagnostico else "")
     if not diagnostico:
         return
-    campo = (
-        captura.ecuaciones
-        if captura.formato == "ecuaciones" or diagnostico.get("campo") == "ecuaciones"
-        else _localizar_celda_restriccion(captura.cuadricula, diagnostico)
-    )
+    campo = _campo_diagnostico(captura, diagnostico)
     if campo is not None:
-        campo.props("error aria-invalid=true")
+        campo.props("error aria-invalid=true" if isinstance(campo, ui.input) else "aria-invalid=true")
         captura._campo_marcado = campo
 
 
@@ -159,9 +161,7 @@ class CapturaRestricciones:
             ui.tab("ecuaciones", label="Ecuaciones", icon="functions")
         with ui.column().classes("w-full min-w-0") as self.panel_matriz:
             self.cuadricula.construir_contenedor_cuadricula()
-        self.ecuaciones = ui.textarea(
-            "Ecuaciones lineales de restricción, una por línea", on_change=self._al_cambiar_panel
-        ).classes("w-full min-w-0").props(f"outlined maxlength={MAXIMO_CARACTERES_ECUACIONES}")
+        self.ecuaciones = EditorEcuaciones(self.cuadricula.filas, self._al_cambiar_panel)
         self.ecuaciones.set_visibility(False)
         self.aviso_ejemplo = ui.label(ETIQUETA_EJEMPLO_RESTRICCIONES).classes(
             "text-sm texto-secundario"
@@ -282,7 +282,9 @@ class CapturaRestricciones:
         return self.cuadricula.esta_completamente_vacio()
 
     def campos_entrada(self) -> list[ui.input]:
-        """Devuelve las celdas activas de la cuadrícula de restricciones."""
+        """Devuelve los campos montados del formato activo."""
+        if self.formato == "ecuaciones":
+            return list(self.ecuaciones.entradas)
         return [celda for fila in self.cuadricula.entradas_coeficientes for celda in fila] + list(
             self.cuadricula.entradas_independientes
         )
