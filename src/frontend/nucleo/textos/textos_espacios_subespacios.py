@@ -199,25 +199,21 @@ PDF_ESTADOS_SUBESPACIOS = {
     "LIMITE_ARITMETICO": VEREDICTOS[None],
 }
 PDF_REGIONES_SUBESPACIOS = {
-    "espacios_subespacios-operaciones": (
-        "Operaciones sobre ℝ",
-        "Se presentan las operaciones polinómicas y el veredicto del análisis.",
-    ),
     "espacios_subespacios-axiomas": (
         "Comprobación de axiomas",
-        "Se presenta el estado de cada axioma y el desarrollo seleccionado.",
+        "Se presenta el estado de cada axioma verificado sobre ℝ.",
     ),
     "espacios_subespacios-resumen": (
         "Clasificación y Resultado del Conjunto",
-        "Se presenta el modo, el veredicto de espacio vectorial y subespacio, métricas y base o familia.",
+        "Se presenta el veredicto con las propiedades del conjunto o las operaciones utilizadas.",
     ),
     "espacios_subespacios-criterios": (
         "Resumen de Criterios de Subespacio",
         "Se presentan los tres criterios estructurales evaluados sobre el conjunto.",
     ),
     "espacios_subespacios-pruebas": (
-        "Demostración y Contraejemplos de los Criterios",
-        "Se presentan las pruebas generales del teorema o los testigos explícitos para origen, suma y producto por escalar.",
+        "Demostraciones y evidencia exacta",
+        "Se presentan las pruebas, los certificados o los contraejemplos que respaldan las comprobaciones.",
     ),
     "espacios_subespacios-grafica": (
         "Representación Geométrica del Conjunto",

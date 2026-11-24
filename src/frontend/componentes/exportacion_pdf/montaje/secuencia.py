@@ -71,9 +71,14 @@ def _renderizar_pruebas(herramienta: str, reproductor) -> None:
         return
     pruebas = tuple(
         paso for paso in reproductor.pasos
-        if paso.tipo == 'planteamiento' and (paso.meta_explicar or {}).get('origen') == 'teorema'
+        if _es_paso_de_prueba(paso)
     )
     _renderizar_grupo_region(clave, pruebas, reproductor)
+
+
+def _es_paso_de_prueba(paso) -> bool:
+    origen = (paso.meta_explicar or {}).get('origen')
+    return (paso.tipo, origen) in (('planteamiento', 'teorema'), ('verificacion', 'axioma'))
 
 
 def _renderizar_comprobaciones(herramienta: str, reproductor) -> None:
