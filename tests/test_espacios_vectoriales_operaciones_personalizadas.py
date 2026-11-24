@@ -235,20 +235,20 @@ def test_preserva_una_violacion_certificada_si_se_agota_el_presupuesto(monkeypat
 @pytest.mark.parametrize("tipo_error", [CancelledError, OSError])
 def test_propagacion_de_cancelacion_y_errores_del_entorno(monkeypatch, tipo_error):
     """Permite al llamador gestionar la cancelación y los errores del entorno."""
-    def fallar(_entrada):
+    def _fallar(_entrada):
         raise tipo_error("Error del entorno")
 
-    monkeypatch.setattr(motor, "caracterizar_conjunto", fallar)
+    monkeypatch.setattr(motor, "caracterizar_conjunto", _fallar)
     with pytest.raises(tipo_error):
         _resolver(_recta_real())
 
 
 def test_error_interno_devuelve_diagnostico_seguro(monkeypatch):
     """Omite los detalles internos en los diagnósticos visibles."""
-    def fallar(_entrada):
+    def _fallar(_entrada):
         raise ArithmeticError("detalle interno")
 
-    monkeypatch.setattr(motor, "caracterizar_conjunto", fallar)
+    monkeypatch.setattr(motor, "caracterizar_conjunto", _fallar)
     resultado = _resolver(_recta_real())
     assert resultado["codigo"] == "ERROR_INTERNO"
     assert resultado["es_espacio_vectorial"] is None
