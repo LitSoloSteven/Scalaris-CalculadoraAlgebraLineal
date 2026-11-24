@@ -28,6 +28,20 @@ def construir_menor(datos: list[list[Fraction]], fila: int, columna: int) -> lis
             for posicion, valores in enumerate(datos) if posicion != fila]
 
 
+class ErrorPresupuestoCofactores(ValueError):
+    """Error controlado al superar el presupuesto compartido de nodos."""
+
+    codigo = "PRESUPUESTO_COFACTORES_EXCEDIDO"
+
+    def __init__(self, nodos: int, limite: int) -> None:
+        """Conserva el consumo y el limite vigentes con un mensaje estable."""
+        self.nodos = nodos
+        self.limite = limite
+        super().__init__(
+            "Se supero el presupuesto de cofactores. " + describir_limites_cofactores()
+        )
+
+
 class ExpansionCofactores:
     """Calcula una expansion y contabiliza su trabajo antes de cada subproblema."""
 
@@ -38,7 +52,7 @@ class ExpansionCofactores:
     def _valor(self, datos: list[list[Fraction]]) -> Fraction:
         self.nodos += 1
         if self.nodos > MAXIMO_NODOS_COFACTORES:
-            raise ValueError("Se supero el presupuesto de cofactores. " + describir_limites_cofactores())
+            raise ErrorPresupuestoCofactores(self.nodos, MAXIMO_NODOS_COFACTORES)
         if len(datos) == 1:
             return datos[0][0]
         if len(datos) == 2:
@@ -48,12 +62,15 @@ class ExpansionCofactores:
                     * self._valor(construir_menor(datos, fila, columna))
                     for columna, elemento in enumerate(datos[fila]) if elemento != 0), Fraction(0))
 
+    def calcular_valor(self, matriz: Matriz) -> Fraction:
+        """Devuelve el determinante exacto y acumula nodos en el presupuesto de la instancia."""
+        self._validar_matriz(matriz)
+        datos = [[Fraction(valor) for valor in fila] for fila in matriz.datos]
+        return self._valor(datos)
+
     def calcular(self, matriz: Matriz) -> dict:
         """Devuelve fila, menores, valores exactos y coste; lanza ValueError al exceder limites."""
-        if matriz.filas != matriz.columnas:
-            raise ValueError("El determinante requiere una matriz cuadrada.")
-        if matriz.filas > DIMENSION_MAXIMA_COFACTORES:
-            raise ValueError(describir_limites_cofactores())
+        self._validar_matriz(matriz)
         datos = [[Fraction(valor) for valor in fila] for fila in matriz.datos]
         fila = seleccionar_fila(datos)
         if matriz.filas == 1:
@@ -65,6 +82,15 @@ class ExpansionCofactores:
             acumulado += menor["termino"]
             menores.append({**menor, "acumulado": acumulado})
         return {"fila": fila + 1, "menores": menores, "determinante": acumulado, "nodos": self.nodos}
+
+    @staticmethod
+    def _validar_matriz(matriz: Matriz) -> None:
+        if not isinstance(matriz, Matriz):
+            raise ValueError("Se esperaba una instancia de Matriz.")
+        if matriz.filas != matriz.columnas:
+            raise ValueError("El determinante requiere una matriz cuadrada.")
+        if matriz.filas < 1 or matriz.filas > DIMENSION_MAXIMA_COFACTORES:
+            raise ValueError(describir_limites_cofactores())
 
     def _calcular_menor(self, datos: list, coordenadas: tuple[int, int], elemento: Fraction) -> dict:
         fila, columna = coordenadas
