@@ -1,10 +1,13 @@
 """Mensajes, etiquetas y construcciones textuales para Espacios y subespacios."""
 
+from .textos_espacio_vectorial import MODO_PERSONALIZADO, NOMBRE_MODO_PERSONALIZADO, VEREDICTOS
+
 MODO_GENERADORES = "generadores"
 MODO_RESTRICCIONES = "restricciones"
 NOMBRES_MODOS = {
     MODO_GENERADORES: "Generadores",
     MODO_RESTRICCIONES: "Restricciones",
+    MODO_PERSONALIZADO: NOMBRE_MODO_PERSONALIZADO,
 }
 AYUDA_MODOS = {
     MODO_GENERADORES: (
@@ -15,6 +18,7 @@ AYUDA_MODOS = {
         "Define un sistema lineal Ax = b en ℝⁿ mediante matriz aumentada o ecuaciones "
         "para determinar si describe un subespacio, un conjunto afín o un conjunto vacío."
     ),
+    MODO_PERSONALIZADO: "Define un conjunto en ℝⁿ y verifica los axiomas con operaciones polinómicas sobre ℝ.",
 }
 
 TITULO_PAGINA = "Espacios y subespacios"
@@ -22,12 +26,14 @@ ESTADO_INICIAL = "Escribe los generadores o carga el ejemplo para analizar el su
 ESTADO_INICIAL_MODOS = {
     MODO_GENERADORES: ESTADO_INICIAL,
     MODO_RESTRICCIONES: "Escribe las ecuaciones de restricción o carga el ejemplo para analizar el conjunto.",
+    MODO_PERSONALIZADO: "Completa el conjunto y las operaciones o carga un ejemplo.",
 }
 ESTADO_EDICION = "Analiza el conjunto para actualizar el resultado."
 ESTADO_CALCULO = "Analizando el conjunto generado…"
 ESTADO_CALCULO_MODOS = {
     MODO_GENERADORES: ESTADO_CALCULO,
     MODO_RESTRICCIONES: "Analizando el sistema de restricciones…",
+    MODO_PERSONALIZADO: "Verificando los axiomas sobre ℝ…",
 }
 ETIQUETA_EJEMPLO = (
     "Ejemplo cargado: tres generadores en ℝ³ que generan un plano de dimensión 2."
@@ -187,8 +193,20 @@ PDF_ESTADOS_SUBESPACIOS = {
     "SUBESPACIO": "es espacio vectorial y subespacio",
     "AFIN_NO_SUBESPACIO": "conjunto afín fuera del origen (no es subespacio)",
     "VACIO_NO_SUBESPACIO": "conjunto vacío (no es subespacio)",
+    "ESPACIO_VECTORIAL": VEREDICTOS[True],
+    "NO_ESPACIO_VECTORIAL": VEREDICTOS[False],
+    "CONJUNTO_VACIO": VEREDICTOS[False],
+    "LIMITE_ARITMETICO": VEREDICTOS[None],
 }
 PDF_REGIONES_SUBESPACIOS = {
+    "espacios_subespacios-operaciones": (
+        "Operaciones sobre ℝ",
+        "Se presentan las operaciones polinómicas y el veredicto del análisis.",
+    ),
+    "espacios_subespacios-axiomas": (
+        "Comprobación de axiomas",
+        "Se presenta el estado de cada axioma y el desarrollo seleccionado.",
+    ),
     "espacios_subespacios-resumen": (
         "Clasificación y Resultado del Conjunto",
         "Se presenta el modo, el veredicto de espacio vectorial y subespacio, métricas y base o familia.",

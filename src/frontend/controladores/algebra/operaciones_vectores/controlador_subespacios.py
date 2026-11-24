@@ -31,6 +31,7 @@ from src.frontend.nucleo.textos.textos_espacios_subespacios import (
     MENSAJE_RESTRICCIONES_VACIAS,
     MODO_GENERADORES,
     MODO_RESTRICCIONES,
+    NOMBRES_MODOS,
     PLANTILLA_COMPONENTE_VACIA,
 )
 
@@ -39,7 +40,7 @@ _PATRON_COMPONENTE = re.compile(r"^vectores\.(.+)\.datos\[(\d+)\]$")
 
 def normalizar_modo_subespacios(modo: object) -> str:
     """Devuelve el modo admitido por Espacios y subespacios o generadores por defecto."""
-    return MODO_RESTRICCIONES if modo == MODO_RESTRICCIONES else MODO_GENERADORES
+    return modo if isinstance(modo, str) and modo in NOMBRES_MODOS else MODO_GENERADORES
 
 
 def ejemplo_generadores() -> dict[str, list[str]]:
@@ -56,13 +57,13 @@ def analizar_subespacio_desde_captura(captura: object) -> dict:
 
 def analizar_generadores_desde_captura(captura: object) -> dict:
     """Valida la captura de generadores, invoca el motor y adapta su resultado."""
-    diagnostico_vacio = _detectar_celdas_vacias(captura)
+    diagnostico_vacio = diagnosticar_generadores_vacios(captura)
     if diagnostico_vacio is not None:
         return _resultado_entrada_invalida(captura, diagnostico_vacio)
     try:
         entrada = capturar_generadores(captura)
     except ErrorCapturaSubespacio as error:
-        diagnostico = _diagnostico_desde_error(error)
+        diagnostico = diagnosticar_error_generadores(error)
         return _resultado_entrada_invalida(captura, diagnostico)
     resultado = analizar_subespacio(entrada)
     return presentar_resultado_subespacio(
@@ -74,7 +75,7 @@ def analizar_restricciones_desde_captura(captura: object) -> dict:
     """Valida captura en Matriz o Ecuaciones, invoca el motor y adapta su resultado."""
     formato = str(captura.get("formato") or "matriz") if isinstance(captura, Mapping) else "matriz"
     try:
-        datos_entrada = _preparar_datos_restricciones(captura, formato)
+        datos_entrada = preparar_captura_restricciones(captura, formato)
         entrada = capturar_restricciones(datos_entrada)
     except ErrorCapturaRestricciones as error:
         return _resultado_entrada_invalida(captura, error.diagnostico)
@@ -86,7 +87,8 @@ def analizar_restricciones_desde_captura(captura: object) -> dict:
     return presentar_resultado_subespacio(resultado)
 
 
-def _preparar_datos_restricciones(captura: object, formato: str) -> dict:
+def preparar_captura_restricciones(captura: object, formato: str) -> dict:
+    """Prepara la entrada Matriz/Ecuaciones que admite el motor exacto."""
     if not isinstance(captura, Mapping):
         raise ErrorCapturaRestricciones("La captura de restricciones es inválida.")
     dimension = captura.get("dimension_ambiente")
@@ -144,7 +146,8 @@ def _recolectar_vacias_vector(etiqueta: str, vector: object) -> tuple[int, list[
     return len(datos), vacias
 
 
-def _detectar_celdas_vacias(captura: object) -> dict | None:
+def diagnosticar_generadores_vacios(captura: object) -> dict | None:
+    """Identifica el primer generador incompleto o la captura totalmente vacía."""
     if not isinstance(captura, Mapping):
         return None
     vectores = captura.get("vectores")
@@ -165,7 +168,8 @@ def _detectar_celdas_vacias(captura: object) -> dict | None:
     return _construir_diagnostico(mensaje, f"vectores.{etiqueta}.datos[{componente}]", etiqueta, componente)
 
 
-def _diagnostico_desde_error(error: ErrorCapturaSubespacio) -> dict:
+def diagnosticar_error_generadores(error: ErrorCapturaSubespacio) -> dict:
+    """Adapta la ubicación del error de dominio al panel de generadores."""
     ubicacion = error.ubicacion
     base = str(error).split(" Ubicacion:", 1)[0].strip()
     if ubicacion:
