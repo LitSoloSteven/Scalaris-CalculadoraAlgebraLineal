@@ -63,7 +63,7 @@ class CapturaIterativa:
             self.etiqueta_variables = ui.label().classes('iterativos-numero texto-secundario text-sm')
             self.cuadricula.construir_contenedor_cuadricula()
         self.ecuaciones = EditorEcuaciones(self.cuadricula.filas, self._editar_ecuaciones)
-        self.ecuaciones.contenedor.set_visibility(False)
+        self.ecuaciones.set_visibility(False)
         self.aviso = ui.label().classes('iterativos-numero texto-secundario').props('role=status aria-live=polite')
         self.ejemplo = ui.label(EJEMPLO_CARGADO).classes('text-sm texto-secundario').props('role=status')
         self.ejemplo.set_visibility(False)
@@ -102,7 +102,7 @@ class CapturaIterativa:
             self._sincronizando = False
         self.modo = destino
         self.panel_matriz.set_visibility(destino == 'matriz')
-        self.ecuaciones.contenedor.set_visibility(destino == 'ecuaciones')
+        self.ecuaciones.set_visibility(destino == 'ecuaciones')
         self._editar(conservar_ejemplo=True)
 
     def _sincronizar_destino(self, destino: str) -> None:
@@ -220,7 +220,7 @@ class CapturaIterativa:
             self._campo_marcado.props(remove='error aria-invalid')
         self._campo_marcado = self._localizar_campo(diagnostico) if diagnostico else None
         if self._campo_marcado is not None:
-            self._campo_marcado.props('error aria-invalid=true')
+            self._campo_marcado.props('error aria-invalid=true' if isinstance(self._campo_marcado, ui.input) else 'aria-invalid=true')
 
     def _localizar_campo(self, diagnostico: dict):
         campo = diagnostico['campo']
@@ -228,7 +228,7 @@ class CapturaIterativa:
         if campo in ('ecuaciones', 'matriz_a', 'vector_b') and self.modo == 'ecuaciones':
             ubicada = self.ecuaciones.localizar_fila_escrita(fila)
             if ubicada is None:
-                return None
+                return self.ecuaciones
             numero, entrada = ubicada
             if columna and 1 <= columna <= len(self.variables):
                 self.aviso.set_text(f'Ecuación {numero}, incógnita {self.variables[columna - 1]}.')

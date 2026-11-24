@@ -20,13 +20,15 @@ _PEGADO_MULTILINEA = r'''evento => {
 }'''
 
 
-class EditorEcuaciones:
+class EditorEcuaciones(ui.column):
     """Monta filas numeradas y permite convertir el borrador a texto para el analizador."""
 
     def __init__(self, cantidad_inicial: int, al_editar: Callable[[], None]) -> None:
+        super().__init__()
+        self.classes('w-full min-w-0').props('role=group aria-label="Sistema de ecuaciones"')
         self._al_editar = al_editar
         self._estado_transicion = {}
-        with ui.column().classes('w-full min-w-0') as self.contenedor:
+        with self:
             self._botones = crear_cabecera_ecuaciones(self.cambiar_cantidad)
             self._lista = ui.column().classes('w-full min-w-0')
         self._actualizar_filas([''] * cantidad_inicial)
@@ -60,7 +62,7 @@ class EditorEcuaciones:
         )
 
     def _aplicar_cantidad(self, cantidad: int, entradas: list[ui.input]) -> None:
-        if self.entradas is not entradas or not self.contenedor.visible or self.contenedor.is_deleted:
+        if self.entradas is not entradas or not self.visible or self.is_deleted:
             return
         valores = self._valores()
         self._actualizar_filas((valores + [''])[:cantidad])
