@@ -8,7 +8,7 @@ from src.frontend.componentes.glosa.interaccion.glosa_foco import crear_accion_e
 from src.frontend.componentes.reproductor_pasos.interfaz.reproductor import ReproductorPasos
 from src.frontend.componentes.reproductor_pasos.nucleo.modelo import GrupoReproductor, PasoReproductor
 from src.frontend.controladores.algebra.operaciones_vectores.presentacion_espacio_vectorial import (
-    evidencia_axioma, formatear_vector,
+    evidencia_axioma, formatear_vector, resumir_evidencia_axioma,
 )
 from src.frontend.nucleo.textos.textos_espacio_vectorial import ESTADOS_AXIOMA, NOMBRES_AXIOMAS, NOMBRES_OPERACIONES
 
@@ -71,23 +71,24 @@ def _crear_paso(indice: int, comprobacion: dict) -> PasoReproductor:
     titulo = NOMBRES_AXIOMAS[comprobacion["axioma"]]
     estado = ESTADOS_AXIOMA[comprobacion["estado"]]
     explicacion = comprobacion["explicacion"]
+    detalle = f"{estado}. {explicacion} {resumir_evidencia_axioma(comprobacion)}".strip()
     return PasoReproductor(
         indice=indice, tipo="verificacion", descripcion=titulo, explicacion=explicacion,
         etiqueta_tipo=estado, cuerpo=comprobacion,
         meta_explicar={
-            "operacion": titulo, "tipo": "verificacion", "origen": "axioma", "detalle": f"{estado}. {explicacion}",
+            "operacion": titulo, "tipo": "verificacion", "origen": "axioma", "detalle": detalle,
         },
     )
 
 
 def _mostrar_enlace_axioma(reproductor: ReproductorPasos, paso: PasoReproductor, estado: str) -> None:
-    boton = ui.button(on_click=partial(reproductor.ir_a, paso.indice), color=None)
-    boton.classes("boton-discreto subespacios-criterio-boton w-full")
+    boton = ui.button(on_click=partial(reproductor._seleccionar_desde_indice, paso.indice), color=None)
+    boton.classes("boton-discreto subespacios-criterio-boton w-full px-3 py-2")
     nombre = f"Ver desarrollo · {paso.descripcion} · {ESTADOS_AXIOMA[estado]}"
-    boton.props(f'ripple=false aria-label="{nombre}"')
+    boton.props(f'ripple=false aria-label="{nombre}" aria-controls="{reproductor.id_tarjeta}"')
     with boton, ui.row().classes("w-full items-center justify-between gap-2 flex-wrap"):
-        ui.label(paso.descripcion).classes("text-left")
-        ui.label(ESTADOS_AXIOMA[estado]).classes(_CLASES_ESTADO[estado])
+        ui.label(paso.descripcion).classes("texto-principal text-sm font-medium text-left min-w-0")
+        ui.label(ESTADOS_AXIOMA[estado]).classes(f"{_CLASES_ESTADO[estado]} px-2 py-1 text-xs font-bold shrink-0")
 
 
 def _renderizar_evidencia(paso: PasoReproductor, contenedor) -> None:

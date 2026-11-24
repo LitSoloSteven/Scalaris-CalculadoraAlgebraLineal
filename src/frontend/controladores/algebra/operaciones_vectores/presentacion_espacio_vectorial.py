@@ -2,8 +2,10 @@
 from fractions import Fraction
 
 from src.backend.resolutores.operaciones_vectores.espacios_vectoriales.contrato_espacio_vectorial import (
-    ComprobacionAxioma, OperacionPolinomica, TerminoPolinomico,
+    ComprobacionAxioma, OperacionPolinomica, TerminoPolinomico, TestigoAxioma,
 )
+
+_MAXIMO_RESUMEN_EVIDENCIA = 160
 
 
 def variables_operacion(campo: str, dimension: int) -> tuple[str, ...]:
@@ -61,7 +63,23 @@ def evidencia_axioma(comprobacion: ComprobacionAxioma) -> tuple[str, ...]:
     return tuple(lineas)
 
 
-def _lineas_testigo(testigo) -> tuple[str, ...]:
+def resumir_evidencia_axioma(comprobacion: ComprobacionAxioma) -> str:
+    """Proporciona a Glosa un término exacto de la evidencia sin enviar toda la expansión."""
+    certificado = comprobacion["certificado"]
+    if certificado is None:
+        return ""
+    for indice, terminos in enumerate(certificado["identidades"], 1):
+        if terminos:
+            muestra = _polinomio(terminos[:1], certificado["variables_libres"])
+            if len(muestra) > _MAXIMO_RESUMEN_EVIDENCIA:
+                return f"El residuo {indice} tiene {len(terminos)} términos y es distinto de cero."
+            if len(terminos) == 1:
+                return f"Residuo {indice} = {muestra}."
+            return f"El residuo {indice} tiene {len(terminos)} términos e incluye {muestra}."
+    return "Todos los residuos del certificado son cero."
+
+
+def _lineas_testigo(testigo: TestigoAxioma) -> tuple[str, ...]:
     vectores = ", ".join(formatear_vector(vector) for vector in testigo["vectores"])
     return (
         f"Vectores · {vectores}",
