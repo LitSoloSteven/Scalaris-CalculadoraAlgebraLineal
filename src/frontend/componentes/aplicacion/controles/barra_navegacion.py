@@ -18,6 +18,7 @@ from src.frontend.navegacion import (
     elementos_navegacion,
     herramienta_por_identificador,
     herramienta_por_ruta,
+    pilar_de,
 )
 from src.frontend.navegacion.modelo import ElementoNavegacion
 from src.frontend.navegacion.secciones_inicio import SeccionInicio, seccion_por_clave
@@ -99,19 +100,31 @@ def _renderizar_barra_contextual(clave_activa: str | None) -> None:
 
 
 def _renderizar_seccion(seccion: SeccionInicio, clave_activa: str | None) -> None:
-    """Renderiza el símbolo, el título y los accesos de una sección del directorio."""
+    """Renderiza el símbolo, el título y los accesos del grupo activo."""
+    titulo, icono, accesos = _contenido_seccion(seccion, clave_activa)
     with ui.element("span").classes("navegacion-seccion"):
-        ui.html(icono_svg(seccion.icono), tag="span")
-        ui.html(html.escape(seccion.titulo), tag="span")
+        ui.html(icono_svg(icono), tag="span")
+        ui.html(html.escape(titulo), tag="span")
 
     with ui.element("div").classes("navegacion-recorrido"):
         ui.html("‹", tag="span").classes("navegacion-indicio navegacion-indicio-antes").props('aria-hidden="true"')
         with ui.element("nav").classes("navegacion-elementos").props(
-            f'aria-label="Herramientas de {seccion.titulo}"'
+            f'aria-label="Herramientas de {titulo}"'
         ):
-            for elemento in seccion.accesos:
+            for elemento in accesos:
                 _renderizar_acceso(elemento, clave_activa)
         ui.html("›", tag="span").classes("navegacion-indicio navegacion-indicio-despues").props('aria-hidden="true"')
+
+
+def _contenido_seccion(
+    seccion: SeccionInicio, clave_activa: str | None,
+) -> tuple[str, str, tuple[ElementoNavegacion, ...]]:
+    if seccion.identificador != "vectores-geometria":
+        return seccion.titulo, seccion.icono, seccion.accesos
+    grupo = next(grupo for grupo in seccion.grupos if any(acceso.clave == clave_activa for acceso in grupo.accesos))
+    if grupo.subtitulo is None:
+        return seccion.titulo, seccion.icono, grupo.accesos
+    return grupo.subtitulo, pilar_de("visualizador").icono, grupo.accesos
 
 
 def _renderizar_acceso(elemento: ElementoNavegacion, clave_activa: str | None) -> None:

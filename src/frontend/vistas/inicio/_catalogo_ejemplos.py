@@ -26,6 +26,12 @@ _EJEMPLOS_PORTADA: dict[str, tuple[str, str, str, str]] = {
         "Se eliminó x de la segunda fila.",
         "ejemplos_inicio_algebra.html",
     ),
+    "metodos_iterativos": (
+        "x⁽⁰⁾ → x⁽¹⁾",
+        "Primer barrido de Jacobi desde el vector inicial",
+        "Cada componente del primer barrido se obtuvo a partir del vector inicial.",
+        "ejemplos_inicio_algebra.html",
+    ),
     "leontief": (
         "C = diag(1/2, 1/4)",
         "Matriz tecnológica diagonal con un medio y un cuarto",
@@ -60,6 +66,12 @@ _EJEMPLOS_PORTADA: dict[str, tuple[str, str, str, str]] = {
         "v = 2u",
         "Vector v igual a dos por u",
         "El vector v duplica la longitud de u en la misma dirección.",
+        "ejemplos_inicio_geometria.html",
+    ),
+    "espacios_subespacios": (
+        "gen{v₁, v₂, v₃}",
+        "Subespacio generado por tres vectores en R tres",
+        "La base tiene dimensión 2 y el plano contiene al origen.",
         "ejemplos_inicio_geometria.html",
     ),
     "transformaciones": (

@@ -26,6 +26,10 @@ CATALOGO_ICONOS: dict[str, str] = {
         '<path d="M15.5 11H18m-2.5 3H18"></path>'
         '<path d="M20 8v7h1a2 2 0 0 0 0-4h-1"></path>'
     ),
+    "metodos_iterativos": (
+        '<path d="M19 10a7 7 0 1 0 0 5"></path>'
+        '<path d="M19 5v5h-5"></path>'
+    ),
     "operaciones_matrices": (
         '<path d="M4 6H2v12h2m3 0h2V6H7M5.5 10h.01m-.01 4h.01"></path>'
         '<path d="M10.5 12h3m-1.5-1.5v3"></path>'
@@ -49,6 +53,11 @@ CATALOGO_ICONOS: dict[str, str] = {
     "vectores": (
         '<path d="M5 7h14m-3-3 3 3-3 3"></path>'
         '<path d="m8 13 4 7 4-7"></path>'
+    ),
+    "espacios_subespacios": (
+        '<path d="M12 12V4m0 8 8 4.5M12 12 4 16.5"></path>'
+        '<polygon points="4 10 12 6 20 14 12 18"></polygon>'
+        '<circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"></circle>'
     ),
     "temas": (
         '<circle cx="12" cy="12" r="8"></circle>'

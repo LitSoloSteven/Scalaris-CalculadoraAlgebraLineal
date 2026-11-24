@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from functools import partial
 import html
+import re
 from typing import Any, Callable
 from nicegui import ui
 from src.frontend.componentes.aplicacion.base.sonido import notificar
@@ -21,9 +22,17 @@ from src.frontend.componentes.captura.nucleo.cuadricula_base import (
 
 def _formatear_nombre_vector(nombre: str) -> str:
     """Escapa la etiqueta y su subíndice antes de incluirlos en la cabecera HTML."""
-    if "_" in nombre:
-        return f"{html.escape(nombre[0])}<sub>{html.escape(nombre[2:])}</sub>"
+    if "_" in nombre and not nombre.startswith("_"):
+        base, subindice = nombre.split("_", 1)
+        return f"{html.escape(base)}<sub>{html.escape(subindice)}</sub>"
     return html.escape(nombre)
+
+
+def _clave_orden_vector(nombre: str) -> tuple[str, int, str]:
+    coincidencia = re.fullmatch(r"^(.*?)(\d+)$", nombre)
+    if coincidencia:
+        return (coincidencia.group(1), int(coincidencia.group(2)), nombre)
+    return (nombre, -1, nombre)
 
 
 def _construir_acciones_vector(instancia: PanelCapturaVectores, nombre: str) -> None:
@@ -122,7 +131,7 @@ class PanelCapturaVectores(MixinTransicionVectores):
             for letra in ("u", "v", "w"):
                 if letra not in self.vectores and letra != self.etiqueta_fija_primer_vector:
                     return letra
-        for i in range(1, 10):
+        for i in range(1, max(10, self.maximo_vectores + 1)):
             nombre = f"v_{i}"
             if nombre not in self.vectores and nombre != self.etiqueta_fija_primer_vector:
                 return nombre
@@ -209,7 +218,7 @@ class PanelCapturaVectores(MixinTransicionVectores):
             self.contenedor,
             ui.row().classes("w-full flex-wrap gap-4 items-start vectores-captura-lista"),
         ):
-            for nombre in sorted(self.vectores.keys()):
+            for nombre in sorted(self.vectores.keys(), key=_clave_orden_vector):
                 _construir_tarjeta_vector(self, nombre)
         self._actualizar_botones_vectores()
 

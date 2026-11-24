@@ -13,6 +13,7 @@
     "sonido/eventos/interacciones_sonoras.js",
     "sonido/eventos/sonido_escritura.js",
     "herramientas/algebra/sistemas_metodo.js",
+    "herramientas/algebra/iterativos_historial.js",
     "nucleo/navegacion/navegacion_herramientas.js",
     "nucleo/tema/selector_tema.js",
     "nucleo/interacciones/renderizado_mathjax.js",

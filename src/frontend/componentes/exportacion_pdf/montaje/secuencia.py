@@ -23,6 +23,7 @@ def preparar_secuencia(herramienta: str, enlace):
             if reproductor is not None:
                 _renderizar_pasos(herramienta, reproductor)
                 _renderizar_resultado(herramienta, reproductor, contenedor)
+                _renderizar_pruebas(herramienta, reproductor)
                 _renderizar_comprobaciones(herramienta, reproductor)
         yield temporal
     finally:
@@ -56,14 +57,35 @@ def _renderizar_paso(paso, reproductor) -> None:
     reproductor.renderizar_cuerpo(paso, cuerpo)
 
 
+def _renderizar_grupo_region(clave: str, pasos: tuple, reproductor) -> None:
+    if not pasos:
+        return
+    with _region(clave):
+        for paso in pasos:
+            _renderizar_paso(paso, reproductor)
+
+
+def _renderizar_pruebas(herramienta: str, reproductor) -> None:
+    clave = f'{herramienta}-pruebas'
+    if clave not in textos.PDF_REGIONES_POR_HERRAMIENTA[herramienta]:
+        return
+    pruebas = tuple(
+        paso for paso in reproductor.pasos
+        if _es_paso_de_prueba(paso)
+    )
+    _renderizar_grupo_region(clave, pruebas, reproductor)
+
+
+def _es_paso_de_prueba(paso) -> bool:
+    origen = (paso.meta_explicar or {}).get('origen')
+    return (paso.tipo, origen) in (('planteamiento', 'teorema'), ('verificacion', 'axioma'))
+
+
 def _renderizar_comprobaciones(herramienta: str, reproductor) -> None:
     if f'{herramienta}-comprobaciones' in textos.PDF_REGIONES_POR_HERRAMIENTA[herramienta]:
         return
-    pasos = seleccionar_comprobaciones(reproductor.pasos, herramienta)
-    if pasos:
-        with _region(f'{herramienta}-verificaciones'):
-            for paso in pasos:
-                _renderizar_paso(paso, reproductor)
+    _renderizar_grupo_region(f'{herramienta}-verificaciones',
+                             seleccionar_comprobaciones(reproductor.pasos, herramienta), reproductor)
 
 
 def _renderizar_resultado(herramienta: str, reproductor, contenedor) -> None:

@@ -16,10 +16,10 @@ def _enlaces(cliente):
     return [elemento for elemento in cliente.elements.values() if "navegacion-elemento" in elemento.classes]
 
 
-def _comprobar_titulo_e_icono(cliente, identificador, titulo):
+def _comprobar_titulo_e_icono(cliente, icono, titulo):
     """Comprueba el rótulo del grupo, el símbolo y el nombre de la lista."""
     cabecera, = (elemento for elemento in cliente.elements.values() if "navegacion-seccion" in elemento.classes)
-    assert [hijo.content for hijo in cabecera.descendants()] == [icono_svg(f"seccion-{identificador}"), titulo]
+    assert [hijo.content for hijo in cabecera.descendants()] == [icono_svg(icono), titulo]
     lista, = (elemento for elemento in cliente.elements.values() if "navegacion-elementos" in elemento.classes)
     assert lista._props["aria-label"] == f"Herramientas de {titulo}"
 
@@ -29,10 +29,9 @@ def _svg_del_enlace(enlace):
     return next(hijo.content for hijo in enlace.descendants() if hijo.content.startswith("<svg"))
 
 
-def _comprobar_enlaces(cliente, seccion, activo):
+def _comprobar_enlaces(cliente, accesos, activo):
     """Comprueba destinos, símbolos y selección de la lista renderizada."""
     enlaces = _enlaces(cliente)
-    accesos = [acceso for grupo in seccion.grupos for acceso in grupo.accesos]
     assert [enlace._props["href"] for enlace in enlaces] == [enlace_elemento_navegacion(acceso) for acceso in accesos]
     assert [enlace._props["href"] for enlace in enlaces if enlace._props.get("aria-current") == "page"] == [
         enlace_elemento_navegacion(activo)
@@ -59,15 +58,21 @@ def cliente_contextual(monkeypatch):
     for seccion in secciones_inicio() for grupo in seccion.grupos for acceso in grupo.accesos
 ])
 def test_cada_acceso_activa_su_seccion_del_directorio(cliente_contextual, seccion, activo):
-    """El grupo y su orden coinciden para herramientas y escenas, con un único activo."""
+    """La barra conserva el orden y activa solo los enlaces del grupo contextual."""
     cliente, enviar = cliente_contextual
     clave = activo.clave
     assert seccion_por_clave(clave) == seccion
     with cliente:
         crear_barra_navegacion(ruta_activa=activo.ruta, clave_activa=clave)
 
-    _comprobar_titulo_e_icono(cliente, seccion.identificador, seccion.titulo)
-    _comprobar_enlaces(cliente, seccion, activo)
+    icono, titulo, accesos = seccion.icono, seccion.titulo, seccion.accesos
+    if seccion.identificador == "vectores-geometria":
+        grupo = next(grupo for grupo in seccion.grupos if activo in grupo.accesos)
+        accesos = grupo.accesos
+        if activo.clave.startswith("vis:"):
+            icono, titulo = "geometria", "Visualizador geométrico"
+    _comprobar_titulo_e_icono(cliente, icono, titulo)
+    _comprobar_enlaces(cliente, accesos, activo)
     cliente.connect_handlers[0]()
     enviar.assert_any_call(f'window.scalaris?.recientes?.registrar?.("{clave}");')
     enviar.assert_any_call("window.scalaris?.navegacion?.centrarActivo?.();")
@@ -78,20 +83,22 @@ def test_el_directorio_tiene_quince_claves_unicas_en_cinco_secciones():
     secciones = secciones_inicio()
     claves = [acceso.clave for seccion in secciones for grupo in seccion.grupos for acceso in grupo.accesos]
     assert len(secciones) == 5
-    assert len(claves) == len(set(claves)) == 15
+    assert len(claves) == len(set(claves)) == 17
 
 
-def test_vectores_y_su_escena_tienen_etiquetas_distintas(cliente_contextual):
+@pytest.mark.parametrize("ruta,clave,destino,nombre", [
+    ("/algebra-lineal/vectores", "vectores", "/algebra-lineal/vectores", "Vectores"),
+    ("/visualizador", "vis:vectores", "/visualizador?escena=vectores", "Vectores del Visualizador"),
+])
+def test_vectores_y_su_escena_tienen_etiquetas_distintas(cliente_contextual, ruta, clave, destino, nombre):
     """La herramienta y la escena se distinguen visualmente y en su nombre accesible."""
     cliente, _ = cliente_contextual
     with cliente:
-        crear_barra_navegacion(ruta_activa="/visualizador", clave_activa="vis:vectores")
+        crear_barra_navegacion(ruta_activa=ruta, clave_activa=clave)
     etiquetas = {enlace._props["href"]: enlace for enlace in _enlaces(cliente)}
-    for destino, nombre in [("/algebra-lineal/vectores", "Vectores"),
-                            ("/visualizador?escena=vectores", "Vectores del Visualizador")]:
-        enlace = etiquetas[destino]
-        assert enlace._props["aria-label"] == nombre
-        assert any(hijo.content == nombre for hijo in enlace.descendants())
+    enlace = etiquetas[destino]
+    assert enlace._props["aria-label"] == nombre
+    assert any(hijo.content == nombre for hijo in enlace.descendants())
 
 
 def test_seccion_ignora_claves_ausentes_o_ajenas():

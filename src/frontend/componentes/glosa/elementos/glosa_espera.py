@@ -23,6 +23,19 @@ def _consulta_vigente(instancia, identificador, cancelar):
             and getattr(instancia, "_esta_enviando", False) and not cancelar.is_set())
 
 
+def cancelar_consulta_vigente(
+    instancia: Any, identificador: int, cancelar: threading.Event, indicadores: IndicadoresEnvio,
+) -> bool:
+    """Cancela una consulta en curso si su identificador y evento siguen vigentes."""
+    if not _consulta_vigente(instancia, identificador, cancelar):
+        return False
+    cancelar.set()
+    instancia._contador_solicitudes += 1
+    finalizar_envio(instancia, indicadores)
+    instancia._ultimo_envio = 0.0
+    return True
+
+
 def iniciar_temporizador_cancelar(
     instancia: Any, identificador: int, cancelar: threading.Event, escritura: Any,
 ) -> IndicadoresEnvio:
@@ -31,11 +44,7 @@ def iniciar_temporizador_cancelar(
 
     def cancelar_consulta():
         """Cancela únicamente la consulta que creó estos indicadores."""
-        if _consulta_vigente(instancia, identificador, cancelar):
-            cancelar.set()
-            instancia._contador_solicitudes += 1
-            finalizar_envio(instancia, indicadores)
-            instancia._ultimo_envio = 0.0
+        cancelar_consulta_vigente(instancia, identificador, cancelar, indicadores)
 
     def mostrar_cancelacion():
         """Monta el botón cuando la petición sigue activa al vencer la espera."""

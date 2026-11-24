@@ -80,6 +80,7 @@ INSTRUCCIONES_EXPLICAR_PASO: dict[str, str] = {
     "planteamiento": "Explícame brevemente cómo se plantea este problema y qué representa." + _SUFIJO_CONTEXTO,
     "sustitucion": "Explícame brevemente cómo se realiza esta sustitución y qué significa." + _SUFIJO_CONTEXTO,
     "verificacion": "Explícame brevemente cómo se verifica este resultado." + _SUFIJO_CONTEXTO,
+    "iteracion": "Explícame brevemente cómo se calculó este barrido, qué vectores intervienen y cómo se distinguen la norma del residuo y la norma del cambio." + _SUFIJO_CONTEXTO,
 }
 
 DEFECTO_EXPLICAR_PASO = (

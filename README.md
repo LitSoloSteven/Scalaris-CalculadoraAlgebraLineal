@@ -1,28 +1,37 @@
 # Scalaris
 
-Aplicación educativa de álgebra lineal para la Universidad Americana (UAM). Permite capturar ejercicios, obtener resultados con aritmética racional exacta y recorrer procedimientos paso a paso. Incluye un visualizador geométrico y Glosa, un asistente de explicación conectado a OpenRouter.
+Aplicación educativa de álgebra lineal, métodos numéricos y sistemas de numeración para la Universidad Americana (UAM). Permite resolver ejercicios, explorar gráficos interactivos y recorrer procedimientos paso a paso. Incluye Glosa, un asistente de explicación conectado a OpenRouter.
 
-La interfaz está construida con NiceGUI, los gráficos con Plotly y el motor matemático con Python. El cálculo algebraico usa `fractions.Fraction`; la representación geométrica convierte los valores a punto flotante para dibujarlos.
+La interfaz está construida con NiceGUI, los gráficos con Plotly y el motor matemático con Python. El cálculo algebraico usa racionales exactos con `fractions.Fraction`. Los métodos de raíces calculan aproximaciones y los gráficos representan coordenadas en punto flotante.
 
 ## Herramientas
 
-El inicio está en `/`. La navegación organiza las herramientas en tres grupos:
+El directorio de inicio está en `/` y organiza las herramientas y escenas en cinco secciones.
 
-### Álgebra lineal
+### Sistemas lineales
 
 | Herramienta | Funciones | Ruta |
 | --- | --- | --- |
-| Sistemas de ecuaciones | Captura matricial o por ecuaciones, eliminación de Gauss y Gauss-Jordan; solución única, infinitas soluciones o sistema incompatible. | `/algebra-lineal/sistemas` |
-| Vectores | Suma y resta, multiplicación por escalar, combinación lineal e independencia lineal. | `/algebra-lineal/vectores` |
+| Sistemas de ecuaciones | Captura matricial o por ecuaciones, incluidos sistemas homogéneos. Gauss y Gauss-Jordan identifican solución única, infinitas soluciones o un sistema incompatible. | `/algebra-lineal/sistemas` |
+| Métodos iterativos | Jacobi y Gauss-Seidel para sistemas cuadrados. Comparten la captura y muestran la tabla de iteraciones, el residuo y la causa de parada. | `/algebra-lineal/metodos-iterativos` |
+| Modelo de Leontief | Resolución del modelo de insumo-producto a partir de la matriz de coeficientes y la demanda. | `/algebra-lineal/leontief` |
+
+### Matrices
+
+| Herramienta | Funciones | Ruta |
+| --- | --- | --- |
 | Matrices | Evaluación de expresiones con suma, resta, producto, escalares, paréntesis y transpuesta. | `/algebra-lineal/matrices` |
 | Matriz inversa | Reducción de la matriz aumentada `[A \| I]` mediante Gauss-Jordan y detección de matrices singulares. | `/algebra-lineal/inversa` |
 | Determinantes | Eliminación con pivoteo, identificada como `lu`, y expansión de Laplace por cofactores. | `/algebra-lineal/determinantes` |
-| Modelo de Leontief | Resolución del modelo de insumo-producto a partir de la matriz de coeficientes y la demanda. | `/algebra-lineal/leontief` |
-| Transformaciones lineales | Núcleo, imagen, rango y nulidad de la transformación representada por una matriz. | `/algebra-lineal/transformaciones` |
+| Factorización LU | Descomposición `PA = LU` con pivoteo parcial, presentación de los factores y procedimiento. | `/algebra-lineal/factorizacion-lu` |
 
-La vista de Matrices ya no incluye un panel independiente de factorización LU. El método `lu` de Determinantes sigue disponible: calcula el determinante mediante eliminación con pivoteo.
+### Vectores y geometría
 
-### Visualizador geométrico
+| Herramienta | Funciones | Ruta |
+| --- | --- | --- |
+| Vectores | Suma y resta, multiplicación por escalar, combinación lineal e independencia lineal. | `/algebra-lineal/vectores` |
+| Espacios y subespacios | Análisis por generadores o restricciones lineales. Verificación de axiomas con operaciones polinómicas personalizadas sobre ℝ. | `/algebra-lineal/espacios-subespacios` |
+| Transformaciones lineales | Núcleo, imagen, rango y nulidad. Aplicación de la matriz a un vector con coordenadas exactas y gráfica cuando las dimensiones lo permiten. | `/algebra-lineal/transformaciones` |
 
 La ruta `/visualizador` reúne tres escenas:
 
@@ -32,13 +41,40 @@ La ruta `/visualizador` reúne tres escenas:
 
 Las herramientas compatibles permiten transferir datos al visualizador sin volver a introducirlos. Los gráficos son interactivos y adaptan su paleta al tema de la interfaz.
 
-### Utilidades numéricas
+### Métodos numéricos
+
+| Herramienta | Funciones | Ruta |
+| --- | --- | --- |
+| Métodos cerrados | Bisección y regla falsa. Acepta un intervalo dado o busca intervalos candidatos. Incluye gráfica, criterios de parada configurables, tabla de iteraciones y procedimiento. | `/utilidades/metodos-cerrados` |
+| Métodos abiertos | Newton-Raphson con derivación simbólica y secante con dos puntos iniciales. Incluye tolerancia, límite de iteraciones, ejemplos, gráfica y procedimiento. | `/utilidades/metodos-abiertos` |
+
+Los enlaces `/utilidades/biseccion` y `/utilidades/regla-falsa` abren Métodos cerrados con el método correspondiente preseleccionado.
+
+### Sistemas de numeración
 
 | Herramienta | Funciones | Ruta |
 | --- | --- | --- |
 | Conversor de bases | Conversión de enteros entre decimal, binario, octal y hexadecimal. | `/utilidades/bases` |
 | Números romanos | Suma, resta y multiplicación con presentación del procedimiento. | `/utilidades/romanos` |
-| Métodos abiertos | Resolución de raíces por Newton-Raphson y secante. | `/utilidades/metodos-abiertos` |
+
+## Métodos iterativos y espacios vectoriales
+
+En **Métodos iterativos**, captura el sistema en **Matriz** o **Ecuaciones** y configura el vector inicial, la tolerancia y el máximo de iteraciones. Jacobi usa el vector de la iteración anterior. Gauss-Seidel incorpora los valores actualizados durante el mismo barrido. Puedes cambiar de método y resolver con la misma captura.
+
+En **Espacios y subespacios**, usa **Generadores** para obtener una base y la dimensión del conjunto generado. **Restricciones** admite una matriz aumentada o ecuaciones lineales y distingue un subespacio, un conjunto afín y un conjunto vacío.
+
+En **Operaciones personalizadas**, define el conjunto por generadores o restricciones y escribe los coeficientes racionales y los exponentes de cada coordenada de la suma y el producto por escalar. El análisis comprueba los diez axiomas mediante identidades polinómicas exactas sobre ℝ. Muestra el neutro aditivo si se certifica y distingue los axiomas que fallan de los que quedan sin verificar.
+
+Para probarlo, selecciona **Recta y = 1 con operaciones trasladadas**, pulsa **Cargar ejemplo** y luego **Analizar**. El resultado certifica el neutro aditivo `(0, 1)`. Puedes abrir el desarrollo de cada axioma, explicarlo con Glosa o exportar el resultado y sus pruebas a PDF.
+
+### Resolutores en Python
+
+| Resolutor | Funciones | Módulo |
+| --- | --- | --- |
+| Gauss-Seidel | Resuelve sistemas cuadrados usando los valores actualizados durante cada iteración. Devuelve la traza, el residuo y la causa de parada. | [Gauss-Seidel](src/backend/resolutores/sistemas_lineales/gauss_seidel/gauss_seidel.py) |
+| Jacobi | Resuelve sistemas cuadrados usando el vector de la iteración anterior. Devuelve la traza, el residuo y la causa de parada. | [Jacobi](src/backend/resolutores/sistemas_lineales/jacobi/jacobi.py) |
+| Espacios y subespacios | Analiza listas de generadores y restricciones lineales. Calcula bases y dimensiones cuando corresponde y clasifica el conjunto como subespacio, conjunto afín o conjunto vacío. | [Subespacios](src/backend/resolutores/operaciones_vectores/subespacios/subespacios.py) |
+| Operaciones personalizadas | Verifica los axiomas mediante residuos polinómicos exactos y devuelve el veredicto, la evidencia y los diagnósticos del análisis. | [Espacios vectoriales](src/backend/resolutores/operaciones_vectores/espacios_vectoriales/espacios_vectoriales.py) |
 
 ## Captura y resultados
 
@@ -47,6 +83,7 @@ Las herramientas compatibles permiten transferir datos al visualizador sin volve
 - Las vistas ofrecen previsualización matemática, validación de entradas y procedimientos según la operación. Los reproductores permiten recorrer los pasos disponibles.
 - Al cambiar los datos se invalida el resultado anterior. Las vistas que calculan en segundo plano descartan respuestas que ya no corresponden a la captura vigente.
 - Los sistemas permiten alternar entre captura matricial y ecuaciones, y recuperar ejercicios desde el historial de sesión.
+- Las herramientas compatibles permiten compartir datos matriciales entre vistas y exportar resultados y procedimientos a PDF.
 - En suma y resta de vectores, el modo estricto rechaza orientaciones incompatibles; sin él, se puede ajustar la orientación y mostrar ese ajuste en el procedimiento.
 - Los controles para añadir o eliminar vectores se muestran cuando la cantidad es variable. Se ocultan en suma/resta, escalar y la escena de dos vectores del visualizador.
 
@@ -60,6 +97,7 @@ Las herramientas compatibles permiten transferir datos al visualizador sin volve
 | Matriz inversa | Orden máximo de 50; las vistas previas y el contexto de explicación tienen límites menores. |
 | Determinante por cofactores | Orden máximo de 8, con presupuesto adicional de expansión. |
 | Dimensión de vectores | Hasta 10 componentes. |
+| Operaciones polinómicas personalizadas | Hasta 128 términos por coordenada y grado total máximo de 8 por monomio. El cálculo aplica además un presupuesto de expansión. |
 | Combinación lineal | Hasta 9 vectores en la captura: el objetivo `b` y hasta 8 generadores. |
 | Independencia lineal | De 1 a 10 vectores. |
 | Modelo de Leontief | De 2 a 8 sectores. |
@@ -79,7 +117,7 @@ Las consultas enviadas a Glosa pueden incluir datos del ejercicio y mensajes del
 
 Scalaris dispone de tres temas: **Papel**, **Marea** y **Medianoche**. Comparte tokens de espaciado, tipografía, color y movimiento entre las herramientas.
 
-La interfaz incluye navegación por categorías, presentación inicial, panel lateral de Glosa y selectores de operaciones adaptables. En Vectores, el selector distribuye sus cuatro opciones en dos columnas cuando falta espacio y mantiene el indicador de selección. El mismo componente se utiliza con dos opciones en Determinantes.
+La interfaz incluye una presentación inicial con ejemplos interactivos, un directorio de herramientas, navegación contextual y un panel lateral de Glosa. Las vistas de cálculo incluyen un control para silenciar los sonidos de interacción. Los selectores de operaciones adaptan su distribución al espacio disponible.
 
 Los componentes incorporan estados de foco, manejo de teclado y reglas para movimiento reducido. La compatibilidad visual en un dispositivo o nivel de zoom concreto debe comprobarse en el navegador; la suite automatizada no sustituye esa revisión.
 
@@ -180,7 +218,7 @@ src/
   main.py                  Punto de entrada
   backend/
     modelos/               Representaciones matemáticas
-    resolutores/           Sistemas, matrices, vectores y utilidades numéricas
+    resolutores/           Sistemas lineales, matrices, vectores, raíces y sistemas de numeración
     geometria/             Cálculo y datos para escenas geométricas
     utilidades/            Validación, formato y funciones compartidas
     constantes.py          Límites y tolerancias del dominio
@@ -219,9 +257,15 @@ Para comprobar además la compilación de los módulos Python:
 python -m compileall -q src tests
 ```
 
-La revisión visual debe incluir los tres temas, una ventana de 320 píxeles de ancho, zoom al 200 %, navegación con teclado y movimiento reducido. Comprueba las cuatro operaciones de Vectores, los dos métodos de Determinantes y las tres escenas del visualizador; revisa que las fórmulas y tablas se puedan desplazar sin ocultar controles.
+La revisión visual debe incluir los tres temas, una ventana de 320 píxeles de ancho, zoom al 200 %, navegación con teclado y movimiento reducido. Comprueba el directorio de inicio, los selectores de métodos y las escenas del visualizador. Revisa que las fórmulas y tablas se puedan desplazar sin ocultar controles.
 
 Las verificaciones con Playwright pueden generar capturas, instantáneas de página y registros en `.playwright-mcp/`. Esta carpeta contiene evidencia local temporal, está excluida mediante `.gitignore` y no debe publicarse en el repositorio.
+
+## Guiones de demostración
+
+- [Operaciones matriciales, Leontief y transformaciones](docs/DEMOSTRACION_P5.md)
+- [Bisección](docs/DEMOSTRACION_BISECCION.md)
+- [Regla falsa](docs/DEMOSTRACION_REGLA_FALSA.md)
 
 ## Participantes
 

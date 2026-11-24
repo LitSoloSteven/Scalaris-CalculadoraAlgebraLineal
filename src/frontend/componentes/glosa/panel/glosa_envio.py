@@ -11,7 +11,9 @@ from src.ai.respuestas.respuestas import OpcionesConsulta, ResultadoIA, TipoErro
 from src.ai.textos import CONSULTA_CANCELADA, ERROR_SERVICIO, RESPUESTA_DEMASIADO_EXTENSA
 from src.ai.presupuesto.presupuesto_mensajes import validar_longitud_mensaje
 from src.frontend.componentes.glosa.interaccion.glosa_preguntas import PreguntasGlosaMixin
-from src.frontend.componentes.glosa.elementos.glosa_espera import iniciar_temporizador_cancelar, finalizar_envio
+from src.frontend.componentes.glosa.elementos.glosa_espera import (
+    cancelar_consulta_vigente, finalizar_envio, iniciar_temporizador_cancelar,
+)
 from src.frontend.nucleo import banderas
 from src.frontend.nucleo.constantes import ANTI_REBOTE_GLOSA_SEGUNDOS
 from src.frontend.componentes.glosa.elementos.historial_glosa import incorporar_mensaje
@@ -81,14 +83,28 @@ class EnvioGlosaMixin(PreguntasGlosaMixin):
             texto_limpio, almacenable_en_cache=almacenable_en_cache, mas_simple=mas_simple, es_reintento=es_reintento
         )
         indicadores = iniciar_temporizador_cancelar(self, identificador_solicitud, cancelar, fila_escritura)
+        self._consulta_activa = (identificador_solicitud, cancelar, indicadores)
 
         try:
             resultado = await self._consultar_motor_ia(texto_limpio, almacenable_en_cache, mas_simple, cancelar)
         finally:
-            if self._contador_solicitudes == identificador_solicitud:
-                finalizar_envio(self, indicadores)
+            self._finalizar_consulta_activa(identificador_solicitud, indicadores)
         if self._contador_solicitudes == identificador_solicitud and resultado.tipo_error != TipoErrorIA.CANCELADO:
             self._procesar_resultado(resultado, permitir_reintento=permitir_reintento)
+
+    def _finalizar_consulta_activa(self, identificador: int, indicadores) -> None:
+        activa = getattr(self, "_consulta_activa", None)
+        if activa and activa[0] == identificador:
+            self._consulta_activa = None
+        if self._contador_solicitudes == identificador:
+            finalizar_envio(self, indicadores)
+
+    def cancelar_consulta_activa(self) -> None:
+        """Cancela la consulta en vuelo cuando el ejercicio cambia o se desmonta."""
+        activa = getattr(self, "_consulta_activa", None)
+        self._consulta_activa = None
+        if activa is not None:
+            cancelar_consulta_vigente(self, *activa)
 
     def _preparar_interfaz_envio(
         self, texto: str, *, almacenable_en_cache: bool, mas_simple: bool, es_reintento: bool

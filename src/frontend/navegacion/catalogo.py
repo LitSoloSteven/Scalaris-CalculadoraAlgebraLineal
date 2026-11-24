@@ -13,7 +13,9 @@ ESCENAS_VISUALIZADOR: tuple[tuple[str, str, str, str, str], ...] = (
 
 _ETIQUETAS_CORTAS: dict[str, str] = {
     "sistemas": "Sistemas",
+    "metodos_iterativos": "Iterativos",
     "vectores": "Vectores",
+    "espacios_subespacios": "Subespacios",
     "matrices": "Matrices",
     "inversa": "Inversa",
     "determinantes": "Determinantes",
@@ -65,6 +67,17 @@ HERRAMIENTAS: tuple[Herramienta, ...] = (
         habilitada=True,
     ),
     Herramienta(
+        identificador="metodos_iterativos",
+        nombre="Métodos iterativos",
+        descriptor="Sistemas lineales por Jacobi y Gauss-Seidel",
+        ruta="/algebra-lineal/metodos-iterativos",
+        identificador_pilar="algebra",
+        icono="metodos_iterativos",
+        titulo_pagina="Métodos iterativos | Scalaris",
+        ejemplo_latex=r"\mathbf{x}^{(k+1)}=D^{-1}(\mathbf{b}-(A-D)\mathbf{x}^{(k)})",
+        habilitada=True,
+    ),
+    Herramienta(
         identificador="vectores",
         nombre="Vectores",
         descriptor="Operaciones y combinación lineal",
@@ -73,6 +86,17 @@ HERRAMIENTAS: tuple[Herramienta, ...] = (
         icono="vectores",
         titulo_pagina="Vectores | Scalaris",
         ejemplo_latex=r"c_1\mathbf{v}_1 + c_2\mathbf{v}_2 = \mathbf{b}",
+        habilitada=True,
+    ),
+    Herramienta(
+        identificador="espacios_subespacios",
+        nombre="Espacios y subespacios",
+        descriptor="Subespacios, base y dimensión",
+        ruta="/algebra-lineal/espacios-subespacios",
+        identificador_pilar="algebra",
+        icono="espacios_subespacios",
+        titulo_pagina="Espacios y subespacios | Scalaris",
+        ejemplo_latex=r"W = \operatorname{gen}\{\mathbf{v}_1,\dots,\mathbf{v}_m\}",
         habilitada=True,
     ),
     Herramienta(
@@ -228,11 +252,13 @@ _HERRAMIENTAS_POR_IDENTIFICADOR: dict[str, Herramienta] = {
 
 ORDEN_NAVEGACION_PLANA: tuple[str, ...] = (
     "sistemas",
+    "metodos_iterativos",
     "matrices",
     "inversa",
     "determinantes",
     "factorizacion_lu",
     "vectores",
+    "espacios_subespacios",
     "leontief",
     "transformaciones",
     "visualizador",

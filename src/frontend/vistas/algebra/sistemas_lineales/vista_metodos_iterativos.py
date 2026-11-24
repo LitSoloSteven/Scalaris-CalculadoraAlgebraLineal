@@ -1,0 +1,210 @@
+"""Página de captura, resolución y procedimiento de métodos iterativos."""
+import logging
+
+from nicegui import ui
+
+from src.frontend.componentes.aplicacion.base.sonido import emitir_sonido
+from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
+from src.frontend.componentes.glosa.panel.panel_ia import PanelIA
+from src.frontend.componentes.resultados.acciones.avisos_resultado import MENSAJE_ERROR_INESPERADO
+from src.frontend.controladores.algebra.sistemas_lineales.resolucion.contexto_iterativos import (
+    obtener_contexto_iterativo, obtener_senales_iterativo,
+)
+from src.frontend.controladores.algebra.sistemas_lineales.resolucion.controlador_iterativos import (
+    normalizar_metodo_iterativo, resolver_iterativo,
+)
+from src.frontend.controladores.algebra.sistemas_lineales.resolucion.presentacion_iterativa import (
+    DECIMALES_INICIALES, FORMATO_EXACTO, OPCIONES_DECIMALES,
+)
+from src.frontend.controladores.compartido.sesion.calculo_vigente import ejecutar_calculo_vigente
+from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto, invalidar_resultado
+from src.frontend.navegacion import ruta_de
+from src.frontend.nucleo.textos.textos_metodos_iterativos import (
+    AYUDA_METODOS, ESTADO_CALCULO, ESTADO_EDICION, ESTADO_INICIAL, METODO_INICIAL, NOMBRES_METODOS,
+)
+from .captura.captura_iterativa import CapturaIterativa
+from .resultados.exportacion_iterativos import montar_exportacion_iterativa
+from .resultados.resultado_iterativo import mostrar_resultado_iterativo
+
+_REGISTRO = logging.getLogger(__name__)
+_SONIDOS_RESULTADO = {
+    'SOLUCION_EXACTA': 'exito', 'TOLERANCIA_ALCANZADA': 'exito', 'MAXIMO_ITERACIONES': 'aviso',
+    'LIMITE_ARITMETICO': 'aviso', 'DIAGONAL_NULA': 'error', 'ENTRADA_INVALIDA': 'error',
+}
+
+
+class VistaMetodosIterativos:
+    """Orquesta los métodos sobre una sola captura y retira resultados obsoletos."""
+
+    def __init__(self, metodo_inicial: str = METODO_INICIAL) -> None:
+        self.metodo = normalizar_metodo_iterativo(metodo_inicial)
+        self.captura = CapturaIterativa(self.editar)
+        self.reproductor_pasos = None
+        self.ultimo_resultado = None
+        self._identificador_calculo = 0
+        self._revision_captura = 0
+        self._revision_presentacion = 0
+        self._huella_resultado = None
+        self.actualizar_exportacion_pdf = None
+        self.panel_ia = PanelIA(self)
+
+    def construir(self) -> None:
+        """Monta la navegación, los controles de captura y la región de resultados."""
+        crear_estructura_aplicacion(self, ruta_activa=ruta_de('metodos_iterativos'))
+        ui.context.client.on_delete(self._cerrar)
+        with ui.column().classes('vista-raiz iterativos-raiz w-full max-w-7xl mx-auto mt-4'):
+            self._construir_selector()
+            with ui.column().classes('w-full min-w-0 panel-tarjeta iterativos-panel'):
+                self.captura.construir()
+                self._construir_acciones()
+            with ui.column().classes('w-full min-w-0 panel-tarjeta iterativos-panel'):
+                ui.label('Resultado').classes('text-xl font-semibold texto-principal')
+                self.estado = ui.label(ESTADO_INICIAL).classes('texto-secundario').props('role=status aria-live=polite')
+                self.selector_decimales = ui.select(
+                    OPCIONES_DECIMALES, value=DECIMALES_INICIALES, label='Decimales de presentación',
+                    on_change=self._cambiar_decimales,
+                ).classes('w-full max-w-xs').props('outlined dense')
+                self.selector_decimales.set_visibility(False)
+                self.contenedor_resultados = ui.column().classes('w-full min-w-0')
+        self.panel_ia.construir()
+
+    def _construir_selector(self) -> None:
+        self.titulo = ui.label().classes('text-2xl font-bold texto-principal').props('role=heading aria-level=1')
+        with ui.tabs(value=self.metodo).classes('pestanas-controles pestanas-metodo').props(
+            'dense no-caps aria-label="Método iterativo"'
+        ) as self.selector_metodo:
+            for metodo, nombre in NOMBRES_METODOS.items():
+                ui.tab(metodo, label=nombre)
+        self.ayuda = ui.label().classes('texto-secundario')
+        self._actualizar_metodo_visible()
+        self.selector_metodo.on_value_change(lambda evento: self._cambiar_metodo(evento.value))
+        self.selector_metodo.on('update:model-value', js_handler='metodo => window.scalaris.historialIterativos.guardar(metodo)')
+        ui.on('iterativos-metodo-historial', lambda evento: self.selector_metodo.set_value(normalizar_metodo_iterativo(evento.args)))
+        ui.run_javascript('window.scalaris.historialIterativos.montar()')
+
+    def _cambiar_metodo(self, metodo: object) -> None:
+        if not isinstance(metodo, str) or metodo not in NOMBRES_METODOS or metodo == self.metodo:
+            return
+        self.metodo = metodo
+        self._actualizar_metodo_visible()
+        self.captura.marcar_diagnostico(None)
+        self.editar()
+
+    def _actualizar_metodo_visible(self) -> None:
+        nombre = NOMBRES_METODOS[self.metodo]
+        self.titulo.set_text(f'Métodos iterativos: {nombre}')
+        self.ayuda.set_text(AYUDA_METODOS[self.metodo])
+        ui.page_title(f'{nombre} | Scalaris')
+
+    def _construir_acciones(self) -> None:
+        with ui.row().classes('w-full items-center flex-wrap'):
+            ui.button('Cargar ejemplo', on_click=lambda: self.captura.restablecer(True), color=None).classes(
+                'boton-discreto').props('ripple=false')
+            ui.button('Limpiar', on_click=lambda: self.captura.restablecer(), color=None).classes(
+                'boton-discreto').props('ripple=false')
+            self.boton_resolver = ui.button('Resolver', on_click=self.resolver, color=None).classes(
+                'boton-principal').props('ripple=false aria-label=Resolver')
+
+    def editar(self) -> None:
+        """Invalida el cálculo anterior y devuelve el control para resolver de nuevo."""
+        self._retirar_resultado()
+        self.boton_resolver.props('loading=false')
+        self.estado.set_text(ESTADO_EDICION)
+        actualizar_contexto(self)
+
+    async def resolver(self) -> None:
+        """Calcula la captura en segundo plano y publica únicamente la solicitud vigente."""
+        self._retirar_resultado()
+        solicitud = self._identificador_calculo
+        self.captura.marcar_diagnostico(None)
+        self.estado.set_text(ESTADO_CALCULO.format(metodo=NOMBRES_METODOS[self.metodo]))
+        self.boton_resolver.props('loading=true')
+        actualizar_contexto(self)
+        try:
+            respuesta = await ejecutar_calculo_vigente(self, self._capturar_solicitud, resolver_iterativo)
+            if respuesta is not None:
+                self._publicar(*respuesta)
+        except Exception as error:
+            _REGISTRO.error('Error en métodos iterativos: %s', type(error).__name__)
+            if self._identificador_calculo == solicitud and not self.estado.is_deleted:
+                self._retirar_resultado()
+                self.estado.set_text(MENSAJE_ERROR_INESPERADO)
+                self.boton_resolver.props('loading=false')
+                emitir_sonido('error')
+        finally:
+            if self._identificador_calculo == solicitud and not self.boton_resolver.is_deleted:
+                self.boton_resolver.props('loading=false')
+
+    def _capturar_solicitud(self) -> dict:
+        return {**self.captura.obtener(), 'metodo': self.metodo}
+
+    def _publicar(self, resultado: dict, huella: str) -> None:
+        self.estado.set_text('')
+        self.captura.marcar_diagnostico(resultado.get('diagnostico'))
+        self.ultimo_resultado = resultado
+        self._huella_resultado = huella
+        self.selector_decimales.set_visibility(resultado.get('aproximacion') is not None)
+        self._montar_resultados(resultado)
+        emitir_sonido(_SONIDOS_RESULTADO[resultado['codigo']])
+        actualizar_contexto(self)
+
+    def _cambiar_decimales(self) -> None:
+        resultado = self.ultimo_resultado
+        if resultado is None or self.contenedor_resultados.is_deleted:
+            return
+        indice = 0
+        if self.reproductor_pasos is not None:
+            indice = self.reproductor_pasos.indice_actual
+            self.reproductor_pasos.detener()
+        self._revision_presentacion += 1
+        self.actualizar_exportacion_pdf = None
+        self.contenedor_resultados.clear()
+        self._montar_resultados(resultado)
+        if indice and self.reproductor_pasos is not None:
+            self.reproductor_pasos.ir_a(indice)
+
+    def _montar_resultados(self, resultado: dict) -> None:
+        def _sigue_vigente(paso) -> bool:
+            reproductor = self.reproductor_pasos
+            return (
+                self.ultimo_resultado is resultado
+                and self.metodo == resultado['metodo']
+                and not self.contenedor_resultados.is_deleted
+                and reproductor is not None
+                and 0 <= reproductor.indice_actual < len(reproductor.pasos)
+                and reproductor.indice_actual == paso.indice
+                and reproductor.pasos[reproductor.indice_actual].descripcion == paso.descripcion
+            )
+
+        formato = self.selector_decimales.value
+        decimales = None if formato == FORMATO_EXACTO else formato
+        with self.contenedor_resultados:
+            self.reproductor_pasos = mostrar_resultado_iterativo(
+                resultado, decimales=decimales, panel_ia=self.panel_ia, sigue_vigente=_sigue_vigente,
+            )
+            montar_exportacion_iterativa(self, resultado)
+
+    def _limpiar_glosa(self) -> None:
+        self.actualizar_exportacion_pdf = None
+        self.panel_ia.limpiar_foco_explicacion()
+        self.panel_ia.limpiar_contexto()
+        if hasattr(self.panel_ia, 'cancelar_consulta_activa'):
+            self.panel_ia.cancelar_consulta_activa()
+
+    def _retirar_resultado(self) -> None:
+        invalidar_resultado(self)
+        self._limpiar_glosa()
+        self.selector_decimales.set_visibility(False)
+        self.contenedor_resultados.clear()
+
+    def _cerrar(self) -> None:
+        invalidar_resultado(self)
+        self._limpiar_glosa()
+
+    def obtener_contexto_ia(self):
+        """Entrega a Glosa la captura activa y un resumen del resultado si sigue vigente."""
+        return obtener_contexto_iterativo(self)
+
+    def obtener_senales_ia(self):
+        """Devuelve el estado, celdas inválidas y banderas del método iterativo activo."""
+        return obtener_senales_iterativo(self)

@@ -14,8 +14,8 @@ const PLANTILLAS = [
     "ejemplos_inicio_numericos.html",
 ];
 const CLAVES = [
-    "sistemas", "leontief", "matrices", "inversa", "factorizacion_lu",
-    "determinantes", "vectores", "transformaciones",
+    "sistemas", "metodos_iterativos", "leontief", "matrices", "inversa", "factorizacion_lu",
+    "determinantes", "vectores", "espacios_subespacios", "transformaciones",
     "vis:rectas-planos", "vis:vectores", "vis:combinacion",
     "metodos_cerrados", "metodos_abiertos", "bases", "romanos",
 ];
