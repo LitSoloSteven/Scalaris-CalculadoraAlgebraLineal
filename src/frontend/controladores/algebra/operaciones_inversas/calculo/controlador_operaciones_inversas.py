@@ -18,7 +18,7 @@ from src.backend.resolutores.operaciones_matrices.inversa.captura_inversa import
     extraer_comprobaciones_inversa,
     validar_y_parsear_matriz_cuadrada,
 )
-from src.frontend.controladores.compartido.pasos.utilidades import parsear_carga_json
+from src.frontend.controladores.compartido.pasos.utilidades import parsear_carga_json_exacta
 
 registro = logging.getLogger(__name__)
 
@@ -87,7 +87,7 @@ class ControladorOperacionesInversas:
     @classmethod
     def procesar_inversa(cls, carga_json: str) -> dict:
         """Devuelve la inversa y sus pasos, o un error estructurado si la carga falla."""
-        datos_crudos, error_json = parsear_carga_json(carga_json)
+        datos_crudos, error_json = parsear_carga_json_exacta(carga_json)
         if error_json is not None or datos_crudos is None:
             return construir_resultado_vacio("ERROR", "Carga JSON inválida. Revisa los datos y vuelve a calcular.")
 

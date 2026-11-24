@@ -1,23 +1,40 @@
 """Utilidades compartidas de serialización y parseo para controladores de interfaz."""
 import json
+from collections.abc import Callable
 
 from src.backend.modelos.matriz import Matriz
 from src.backend.utilidades.formato.formateadores import formatear_fraccion_texto
 
+_MENSAJE_OBJETO_JSON = "La carga debe ser un objeto JSON. Revisa los datos y vuelve a enviarlos."
+
 
 def parsear_carga_json(
     carga_json: str,
-    mensaje_esperado: str = "La carga debe ser un objeto JSON. Revisa los datos y vuelve a enviarlos.",
+    mensaje_esperado: str = _MENSAJE_OBJETO_JSON,
 ) -> tuple[dict | None, str | None]:
     """Devuelve el objeto JSON de la carga o un error serializado si su sintaxis o tipo falla."""
+    return _parsear_carga_json(carga_json, mensaje_esperado, float)
+
+
+def parsear_carga_json_exacta(carga_json: str) -> tuple[dict | None, str | None]:
+    """Decodifica una carga conservando decimales como texto; devuelve objeto o error JSON."""
+    return _parsear_carga_json(carga_json, _MENSAJE_OBJETO_JSON, str)
+
+
+def _parsear_carga_json(
+    carga_json: str, mensaje_esperado: str, parsear_decimal: Callable[[str], object]
+) -> tuple[dict | None, str | None]:
     try:
-        datos = json.loads(carga_json)
+        datos = json.loads(carga_json, parse_float=parsear_decimal)
     except json.JSONDecodeError as error:
         mensaje_error = (
             f"Carga JSON inválida: JSON malformado (línea {error.lineno}, columna {error.colno}). "
             "Revisa las comillas y los separadores y vuelve a enviarlo."
         )
         return None, json.dumps({"estado": "ERROR", "mensaje": mensaje_error})
+    except (ValueError, TypeError, RecursionError):
+        mensaje = "Carga JSON inválida o demasiado grande. Reduce los datos y vuelve a enviarlos."
+        return None, json.dumps({"estado": "ERROR", "mensaje": mensaje})
 
     if not isinstance(datos, dict):
         return None, json.dumps({"estado": "ERROR", "mensaje": mensaje_esperado})
