@@ -309,9 +309,19 @@ El lanzador usa el modo predeterminado de Antigravity con sandbox y permisos de 
 
 **Skills activas.** `codebase-memory` es la primera opción para localizar símbolos, relaciones y consumidores con su MCP. `graphify` se usa sobre el índice existente si el MCP no está disponible o la consulta queda pendiente. Aplica 16.3 y abre solo el código que confirme el resultado. Guarda en el avance los hallazgos que el cliente de reserva deba reutilizar.
 
-**Herramientas instaladas para pilotos.** Activa `caveman` bajo demanda para informes breves. Mantén completos los comandos, errores, evidencias y resultados. Usa Serena como tercer recuperador cuando Codebase Memory y Graphify no resuelvan una búsqueda estructural. Usa RTK OSS de forma explícita para salidas largas, por ejemplo `rtk git log -20`, y consulta `rtk gain` para medir la reducción. Si un hallazgo depende de un fragmento de diff, revisa el fragmento original. Los estudios siguientes corresponden a tareas, modelos y métricas concretos.
+**Pilotos de implementación y diagnóstico.** Las skills de este piloto se instalan en `.agents/`, fuera de Git. Aplica la jerarquía de la sección 0. Si falta una skill local, sigue el flujo del proyecto.
+
+- **Ponytail.** Consúltala en cambios acotados para reutilizar componentes y utilidades del repositorio y evitar dependencias o abstracciones innecesarias. Conserva la legibilidad, los contratos y las verificaciones del cambio. [Ponytail](https://github.com/DietrichGebert/ponytail)
+- **ub-mode.** Cárgala cuando el usuario la pida. Aplica su enfoque de cambios mínimos y pruebas de comportamiento dentro de la sección 10. Usa las herramientas de verificación del repositorio y termina con el flujo local de Git de la sección 15. [ub-mode](https://github.com/unclebob/ub-mode)
+- **Superpowers.** Consulta `systematic-debugging` cuando un fallo reproducible siga sin causa clara y `verification-before-completion` cuando el cierre requiera reunir evidencia de varias comprobaciones. Abre el `SKILL.md` correspondiente en `.agents/superpowers/skills/`. Carga las skills individualmente y conserva el agente activo, el alcance de la fase y las verificaciones de las secciones 6 y 10. [Superpowers](https://github.com/obra/superpowers#whats-inside)
+
+**Herramientas instaladas para pilotos.** Activa `caveman` bajo demanda para informes breves. Mantén completos los comandos, errores, evidencias y resultados. Usa Serena como tercer recuperador cuando Codebase Memory y Graphify no resuelvan una búsqueda estructural.
+
+**RTK OSS.** Usa el CLI explícitamente si la salida es larga, por ejemplo `rtk git log -20`. Si faltan detalles de un fallo o un hallazgo depende de un fragmento de diff, consulta la salida original en el rango pertinente. `rtk gain` estima la reducción de salida de comandos. Mide el cupo por separado según 16.4. [RTK](https://github.com/rtk-ai/rtk)
 
 Serena queda registrada en `.codex/config.toml` con cuatro herramientas de búsqueda y desactivada de inicio para evitar cargar un tercer índice. Para una sesión puntual de Codex CLI, inicia desde la raíz con `codex -c 'mcp_servers.serena.enabled=true'`. En Desktop, establece `enabled = true` en el bloque de Serena y reinicia Codex para cargar el cambio. Restaura `enabled = false` al cerrar la consulta. [Configuración de MCP en Codex](https://learn.chatgpt.com/docs/extend/mcp)
+
+Los estudios siguientes corresponden a tareas, modelos y métricas concretos.
 
 | Opción | Evidencia medida | Uso en Scalaris |
 |---|---|---|
