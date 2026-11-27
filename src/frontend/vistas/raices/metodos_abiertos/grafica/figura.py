@@ -26,23 +26,26 @@ def crear_figura_metodos_abiertos(
 ) -> go.Figure:
     """Dibuja puntos iniciales y la construcción correspondiente al paso activo."""
     vista = opciones_vista or {}
-    rango_camara = vista.get("rango_camara")
-    identidad = vista.get("identidad")
-    revision_vista = vista.get("revision_vista")
     respuesta = muestra if muestra and muestra.get("estado") == "EXITO" else None
     figura = crear_figura_previa(respuesta) if respuesta else crear_figura_vacia()
     if resultado:
         _dibujar_resultado(figura, resultado, paso, mostrar_raiz)
-        if rango_camara is None:
-            _ajustar_ventana(figura, resultado, paso, revision_vista)
-    if rango_camara is not None:
-        _aplicar_camara_usuario(figura, rango_camara, revision_vista)
-    elif not resultado and revision_vista is not None:
-        figura.update_layout(uirevision=revision_vista)
-    if identidad is not None:
-        figura.update_layout(meta=identidad)
+    _aplicar_encuadre_figura(figura, resultado, paso, vista)
     aplicar_colores_figura(figura, "papel")
     return figura
+
+
+def _aplicar_encuadre_figura(figura, resultado: dict | None, paso, vista: dict) -> None:
+    rango_camara = vista.get("rango_camara")
+    revision_vista = vista.get("revision_vista")
+    if rango_camara is not None:
+        _aplicar_camara_usuario(figura, rango_camara, revision_vista)
+    elif resultado:
+        _ajustar_ventana(figura, resultado, paso, revision_vista)
+    elif revision_vista is not None:
+        figura.update_layout(uirevision=revision_vista)
+    if vista.get("identidad") is not None:
+        figura.update_layout(meta=vista["identidad"])
 
 
 def _dibujar_resultado(figura, resultado: dict, paso, mostrar_raiz: bool) -> None:

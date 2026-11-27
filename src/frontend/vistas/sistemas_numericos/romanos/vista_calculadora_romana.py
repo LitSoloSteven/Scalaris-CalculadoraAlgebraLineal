@@ -54,17 +54,7 @@ class VistaCalculadoraRomana(MixinLimpiezaRomanos, MixinResultadoRomano, MixinCo
 
         with ui.column().classes("w-full max-w-6xl mx-auto q-pa-md mt-6 vista-raiz disposicion-herramienta"):
             with ui.element("div").classes("disposicion-captura-fila"):
-                with ui.column().classes("w-full panel-tarjeta p-6 gap-5"):
-                    ui.html("Números romanos", tag="h1").classes("text-2xl font-bold texto-principal m-0")
-                    self._construir_campos_entrada()
-                    self.contenedor_sugerencias = ui.column().classes("w-full mt-1")
-                    with ui.row().classes("w-full gap-4 mt-1"):
-                        crear_boton_limpieza(self, lambda: not self.boton_calcular.is_deleted,
-                                              lambda: [self.entrada_a, self.entrada_b])
-                        self.boton_calcular = ui.button(
-                            "Calcular", on_click=self._operar_desde_control, color=None
-                        ).classes("boton-principal flex-[2] py-3 text-lg font-bold").props("no-caps")
-
+                self._construir_panel_captura()
                 self._construir_panel_auxiliar()
 
             with ui.column().classes("disposicion-resultados gap-6"):
@@ -75,6 +65,19 @@ class VistaCalculadoraRomana(MixinLimpiezaRomanos, MixinResultadoRomano, MixinCo
 
         self._conectar_controles()
         self.panel_ia.construir()
+
+    def _construir_panel_captura(self) -> None:
+        """Construye la columna izquierda con operandos, sugerencias y acciones."""
+        with ui.column().classes("w-full panel-tarjeta p-6 gap-5"):
+            ui.html("Números romanos", tag="h1").classes("text-2xl font-bold texto-principal m-0")
+            self._construir_campos_entrada()
+            self.contenedor_sugerencias = ui.column().classes("w-full mt-1")
+            with ui.row().classes("w-full gap-4 mt-1"):
+                crear_boton_limpieza(self, lambda: not self.boton_calcular.is_deleted,
+                                      lambda: [self.entrada_a, self.entrada_b])
+                self.boton_calcular = ui.button(
+                    "Calcular", on_click=self._operar_desde_control, color=None
+                ).classes("boton-principal flex-[2] py-3 text-lg font-bold").props("no-caps")
 
     def _construir_panel_auxiliar(self) -> None:
         """Construye los selectores de operación, ejemplos y referencia romana."""

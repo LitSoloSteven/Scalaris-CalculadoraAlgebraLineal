@@ -38,6 +38,23 @@ def rango_base_cerrados(captura_rango: dict, resultado: dict | None, rango_detal
     return intervalo if intervalo_fuera_del_rango_inicial(intervalo, rango) else rango
 
 
+def _muestra_de(fuente: dict | None) -> dict | None:
+    return fuente.get("muestra") if isinstance(fuente, dict) else None
+
+
+def _entrada_resultado(resultado: dict | None) -> dict | None:
+    if not isinstance(resultado, dict):
+        return None
+    interno = resultado.get("resultado")
+    return interno.get("entrada") if isinstance(interno, dict) else None
+
+
+def _usa_muestra_resultado(resultado: dict | None, rango: tuple[float, float]) -> bool:
+    entrada = _entrada_resultado(resultado)
+    intervalo = intervalo_desde_captura(entrada) if entrada else None
+    return intervalo_fuera_del_rango_inicial(intervalo, RANGO_GRAFICA_DEFECTO) and rango == intervalo
+
+
 def calcular_encuadre(
     captura_rango: dict,
     resultado: dict | None,
@@ -47,17 +64,13 @@ def calcular_encuadre(
     """Determina rango X y muestra de curva vigentes respetando encuadre manual o resultado."""
     previa, previa_camara = muestras
     rango_camara, rango_detalle = rangos
-    muestra_previa = (previa or {}).get("muestra")
-    muestra_resultado = (resultado or {}).get("muestra")
+    muestra_previa, muestra_resultado = _muestra_de(previa), _muestra_de(resultado)
     if rango_camara is not None:
-        muestra_camara = (previa_camara or {}).get("muestra")
-        return rango_camara, muestra_camara or muestra_resultado or muestra_previa
+        return rango_camara, _muestra_de(previa_camara) or muestra_resultado or muestra_previa
     if rango_detalle is not None:
         return rango_detalle, muestra_resultado or muestra_previa
-    entrada = (resultado or {}).get("resultado", {}).get("entrada")
-    intervalo = intervalo_desde_captura(entrada) if entrada else None
     rango = rango_base_cerrados(captura_rango, resultado, None)
-    if intervalo_fuera_del_rango_inicial(intervalo, RANGO_GRAFICA_DEFECTO) and rango == intervalo:
+    if _usa_muestra_resultado(resultado, rango):
         return rango, muestra_resultado or muestra_previa
     return rango, muestra_previa
 
