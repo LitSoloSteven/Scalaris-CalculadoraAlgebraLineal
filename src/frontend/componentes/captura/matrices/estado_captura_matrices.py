@@ -16,7 +16,7 @@ def crear_registro_matriz(datos: list[list[str]] | None = None) -> dict[str, Any
         datos = preparar_matriz_numerica(datos)
     return {
         "filas": filas, "columnas": columnas, "entradas": [],
-        "cache": cache_matriz_desde_datos(datos) if datos is not None else {}, "contenedor": None,
+        "cache": cache_matriz_desde_datos(datos, conservar_ceros=True) if datos is not None else {}, "contenedor": None,
         "etiqueta_filas": None, "etiqueta_dimension": None, "etiqueta_dimension_matriz": None,
         "boton_quitar_fila": None, "boton_agregar_fila": None,
         "boton_quitar_columna": None, "boton_agregar_columna": None,

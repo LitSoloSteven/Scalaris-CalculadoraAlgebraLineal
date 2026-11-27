@@ -30,16 +30,6 @@ IDENTIFICADOR_MATRIZ = "A"
 DIMENSION_INICIAL = 3
 
 
-def _preparar_cache(datos: list[list[str]], conservar_ceros: bool) -> dict[tuple[int, int], str]:
-    if not conservar_ceros:
-        return cache_matriz_desde_datos(datos)
-    return {
-        (fila, columna): str(valor).strip()
-        for fila, valores in enumerate(datos)
-        for columna, valor in enumerate(valores) if str(valor).strip()
-    }
-
-
 class PanelMatrizCuadrada:
     """Panel de captura de matriz cuadrada con un único control bidimensional (n×n)."""
 
@@ -202,7 +192,7 @@ class PanelMatrizCuadrada:
         nuevo_n = min(max(len(datos), DIMENSION_MINIMA), DIMENSION_MAXIMA_INVERSA)
         self.cache.clear()
         datos_recortados = preparar_matriz_numerica([fila[:nuevo_n] for fila in datos[:nuevo_n]])
-        self.cache.update(_preparar_cache(datos_recortados, conservar_ceros))
+        self.cache.update(cache_matriz_desde_datos(datos_recortados, conservar_ceros=conservar_ceros))
         self.dimension = nuevo_n
         self._publicar_matriz()
 

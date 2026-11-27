@@ -25,13 +25,15 @@ def sincronizar_cache_celdas(entradas: list[list[Any]], cache: dict) -> None:
                 cache[(fila, columna)] = celda.value
 
 
-def cache_matriz_desde_datos(datos: list[list[str]]) -> dict[tuple[int, int], str]:
-    """Construye el caché de captura omitiendo las cadenas vacías y los ceros."""
+def cache_matriz_desde_datos(
+    datos: list[list[str]], *, conservar_ceros: bool = False,
+) -> dict[tuple[int, int], str]:
+    """Construye el caché sin cadenas vacías y conserva los ceros explícitos si se solicita."""
     cache = {}
     for fila, valores in enumerate(datos):
         for columna, valor in enumerate(valores):
             texto = str(valor).strip()
-            if texto and texto != "0":
+            if texto and (conservar_ceros or texto != "0"):
                 cache[(fila, columna)] = texto
     return cache
 
