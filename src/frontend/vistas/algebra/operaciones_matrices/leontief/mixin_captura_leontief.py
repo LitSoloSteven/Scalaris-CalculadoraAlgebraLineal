@@ -16,8 +16,8 @@ class MixinCapturaLeontief:
     def _construir_selector_tamano(self):
         with ui.row().classes("w-full items-center gap-3 mb-2"):
             ui.label("Tamaño n×n:").classes("text-sm font-bold texto-secundario")
-            self.boton_reducir = ui.button(icon="remove", on_click=partial(self._ajustar_tamano, -1), color=None).classes("boton-icono w-7 h-7 p-0").props('ripple=false aria-label="Reducir dimension"')
-            self.boton_aumentar = ui.button(icon="add", on_click=partial(self._ajustar_tamano, 1), color=None).classes("boton-icono w-7 h-7 p-0").props('ripple=false aria-label="Aumentar dimension"')
+            self.boton_reducir = ui.button(icon="remove", on_click=partial(self._ajustar_tamano, -1), color=None).classes("boton-icono p-0").props('ripple=false aria-label="Reducir dimensión"')
+            self.boton_aumentar = ui.button(icon="add", on_click=partial(self._ajustar_tamano, 1), color=None).classes("boton-icono p-0").props('ripple=false aria-label="Aumentar dimensión"')
         self._actualizar_botones_tamano()
 
     def _construir_panel_c(self):
