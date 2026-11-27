@@ -23,17 +23,30 @@ def titulo_configurado(respuesta: dict, ampliado: dict | None) -> str:
     return _TITULOS.get(respuesta["motivo_parada"], titulo_estado(respuesta))
 
 
-def datos_criterio(ampliado: dict) -> tuple[tuple[str, str], ...]:
+def datos_criterio(ampliado: dict, respuesta: dict | None = None) -> tuple[tuple[str, str], ...]:
     """Presenta condición, unidad, umbral y métrica de la autoridad de ejecución."""
     criterio = ampliado["criterio"]
     tipo = criterio["tipo"]
     unidad = CriterioParada(**criterio).unidad
     metrica = ampliado["metrica_final"]
+    cumplimiento = _texto_cumplimiento(ampliado, respuesta)
     return (("Criterio aplicado", CRITERIOS[tipo][0]),
             ("Condición", condicion_criterio(tipo, criterio["parametro"])),
             ("Unidad de la métrica", unidad), ("Umbral", numero(ampliado["umbral"], True)),
             ("Métrica final", "No aplica: sin dato evaluable en esta fila." if metrica is None else numero(metrica, True)),
-            ("Cumplimiento", _CUMPLIMIENTOS[ampliado["cumplimiento"]]))
+            ("Cumplimiento", cumplimiento))
+
+
+def _texto_cumplimiento(ampliado: dict, respuesta: dict | None) -> str:
+    codigo = ampliado["cumplimiento"]
+    if (
+        respuesta is not None
+        and respuesta.get("estado") == "EXITO"
+        and respuesta.get("motivo_parada") == "raiz_exacta"
+        and codigo == "NO_CUMPLIDO"
+    ):
+        return "Raíz exacta evaluada (residuo 0)"
+    return _CUMPLIMIENTOS[codigo]
 
 
 def metricas_configuradas(respuesta: dict, ampliado: dict | None) -> tuple:
@@ -41,7 +54,7 @@ def metricas_configuradas(respuesta: dict, ampliado: dict | None) -> tuple:
     datos = metricas_resumen(respuesta)
     if ampliado is None:
         return datos
-    return tuple(par for par in datos if par[0] != "Tolerancia de residuo") + datos_criterio(ampliado)
+    return tuple(par for par in datos if par[0] != "Tolerancia de residuo") + datos_criterio(ampliado, respuesta)
 
 
 def descripcion_captura(captura: dict) -> str:

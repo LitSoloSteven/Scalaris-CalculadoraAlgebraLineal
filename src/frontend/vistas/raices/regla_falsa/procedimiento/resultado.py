@@ -24,7 +24,8 @@ def mostrar_resultado(vista, respuesta: dict, ampliado: dict | None = None, *, c
         if respuesta["aproximacion"] is not None:
             _montar_formato(vista, respuesta)
         ui.label(respuesta["mensaje"]).classes(
-            "texto-acento" if respuesta["estado"] == "EXITO" else "texto-advertencia")
+            "texto-acento" if respuesta["estado"] == "EXITO" else "texto-advertencia"
+        ).props("role=status aria-live=polite" if respuesta["estado"] == "EXITO" else "role=alert")
         _mostrar_datos(metricas_configuradas(respuesta, ampliado))
         for aviso in avisos_resumen(respuesta):
             ui.label(aviso).classes("text-sm texto-advertencia")

@@ -5,7 +5,7 @@ from src.backend.resolutores.raices.exploracion.base.contrato_exploracion import
 from src.backend.resolutores.raices.exploracion.busqueda.exploracion_intervalos import explorar_intervalos
 from src.backend.resolutores.raices.exploracion.base.limites_exploracion import MAXIMO_EVALUACIONES_REFINAMIENTO
 from src.frontend.controladores.raices.compartido.formato.captura_real import real_capturado
-from src.frontend.controladores.raices.compartido.formato.formato_numerico_raices import numero, texto_intervalo
+from src.frontend.controladores.raices.compartido.formato.formato_numerico_raices import numero
 from src.frontend.controladores.raices.compartido.formato.rango_exploracion_raices import RANGO_GRAFICA_DEFECTO, rango_grafica
 
 LONGITUD_CAMPO_EXPLORACION = 64
@@ -52,13 +52,19 @@ def sugerir_paso(captura: dict) -> float:
     return paso
 
 
+def _texto_intervalo_legible(intervalo) -> str:
+    """Formatea los extremos del candidato evitando ruido decimal de representación binaria."""
+    extremos = [format(valor, ".12g") if isinstance(valor, float) else str(valor) for valor in intervalo]
+    return f"[{extremos[0]}, {extremos[1]}]"
+
+
 def presentar_candidato(candidato: dict) -> dict:
     """Entrega etiqueta, intervalo completo y aptitud según la clasificación del dominio."""
     muestra = ""
     if candidato["abscisa"] is not None:
         muestra = f"x = {numero(candidato['abscisa'], True)}; f(x) = {numero(candidato['valor'], True)}"
     return {"etiqueta": ETIQUETAS_CANDIDATOS[candidato["tipo"]],
-            "intervalo": texto_intervalo(candidato["intervalo"]), "muestra": muestra,
+            "intervalo": _texto_intervalo_legible(candidato["intervalo"]), "muestra": muestra,
             "seleccionable": candidato["tipo"] in ("cruce", "cero_evaluado")}
 
 
