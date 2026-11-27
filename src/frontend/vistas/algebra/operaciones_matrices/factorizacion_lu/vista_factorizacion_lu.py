@@ -39,14 +39,14 @@ class VistaFactorizacionLU(ResultadosFactorizacionLU, MixinSesionMatricial):
         self.calculadora.inyectar_recursos_cliente()
         ui.add_head_html('<link rel="stylesheet" href="/assets/css/algebra/matrices/vistas_factorizacion_lu.css">')
         with (ui.element('div').classes('factorizacion-lu-marco w-full'),
-              ui.column().classes('vista-raiz sesion-vista sesion-paneles-compartidos factorizacion-lu-vista w-full max-w-7xl mx-auto p-6 gap-4')):
-            self.contenedor_transferencia = ui.column().classes('w-full')
-            ui.label(textos.LU_TITULO).classes('text-2xl font-bold texto-principal')
+              ui.column().classes('vista-raiz sesion-vista sesion-paneles-compartidos disposicion-herramienta factorizacion-lu-vista w-full max-w-7xl mx-auto p-6 gap-4')):
+            self.contenedor_transferencia = ui.column().classes('w-full empty:hidden')
+            ui.label(textos.LU_TITULO).classes('text-2xl font-bold texto-principal').props('role="heading" aria-level="1"')
             ui.label(textos.LU_DESCRIPCION).classes('texto-secundario')
-            with ui.element('div').classes('disposicion-dividida'):
+            with ui.element('div').classes('disposicion-captura-fila'):
                 self._construir_captura()
                 self._renderizar_columna_herramientas()
-            self.contenedor_resultados = ui.column().classes('panel-tarjeta p-6 w-full min-w-0')
+            self.contenedor_resultados = ui.column().classes('disposicion-resultados panel-tarjeta p-6 w-full min-w-0')
             self.panel_matriz.al_cambiar_datos = self._al_cambiar_matriz
         self.panel_ia = PanelIA(self)
         self.panel_ia.construir()
@@ -66,6 +66,8 @@ class VistaFactorizacionLU(ResultadosFactorizacionLU, MixinSesionMatricial):
 
     def _al_cambiar_matriz(self) -> None:
         invalidar_resultado(self)
+        if getattr(self, 'contenedor_transferencia', None) is not None and not self.contenedor_transferencia.is_deleted:
+            self.contenedor_transferencia.clear()
         if hasattr(self, 'panel_ia'):
             self.panel_ia.limpiar_foco_explicacion()
         actualizar_contexto(self)
