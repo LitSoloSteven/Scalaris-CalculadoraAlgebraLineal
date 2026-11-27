@@ -14,6 +14,8 @@ def crear_entradas_vector(contenedor: Any, cantidad: int, identificador: str) ->
         for indice in range(cantidad):
             entrada = ui.input(value=valores[indice] if indice < len(valores) else "", placeholder="0", label=f"d{indice + 1}").classes("matriz-entrada w-20 shrink-0")
             entrada.props(propiedades_celda_accesible(0, indice, identificador_matriz=identificador))
+            etiqueta = f"Demanda final sector {indice + 1}" if identificador == "d" else f"Componente {identificador}{indice + 1}"
+            entrada.props(f'aria-label="{etiqueta}"')
             entradas.append(entrada)
     return entradas
 
@@ -54,5 +56,5 @@ def construir_ejemplos(ejemplos: list[dict], cargar: Any, titulo: str) -> None:
         with ui.row().classes("gap-2 flex-wrap"):
             for ejemplo in ejemplos:
                 ui.button(ejemplo["nombre"], on_click=partial(cargar, ejemplo), color=None).classes(
-                    "boton-discreto text-xs py-1 px-3"
+                    "boton-discreto text-xs min-h-[44px] py-2 px-3"
                 ).props("ripple=false").tooltip(ejemplo["descripcion"])

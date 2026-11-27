@@ -5,6 +5,7 @@
     const animaciones = new WeakMap();
     const identificadorAviso = 'captura-aviso-numerico';
     let entradaRechazada = null;
+    let temporizador = null;
 
     function prepararAviso() {
         let aviso = document.getElementById(identificadorAviso);
@@ -48,6 +49,10 @@
     }
 
     function limpiar() {
+        if (temporizador) {
+            clearTimeout(temporizador);
+            temporizador = null;
+        }
         const aviso = document.getElementById(identificadorAviso);
         if (aviso) aviso.textContent = '';
         if (entradaRechazada) {
@@ -57,8 +62,10 @@
     }
 
     function rechazar(entrada, mensaje, animar) {
+        if (temporizador) clearTimeout(temporizador);
         anunciar(mensaje);
         vincularDescriptor(entrada);
+        temporizador = setTimeout(limpiar, 6000);
         window.scalaris.eventosSonoros?.rechazo();
         if (!animar) return;
         const control = entrada.closest('.q-field__control');
@@ -83,7 +90,7 @@
         if (document.body) prepararAviso();
         else document.addEventListener('DOMContentLoaded', prepararAviso, { once: true });
         document.addEventListener('click', evento => {
-            if (evento.target?.closest?.('[role="tab"]')) limpiar();
+            if (evento.target?.closest?.('[role="tab"], [role="radio"], [role="option"], .selector-opciones-boton')) limpiar();
         });
         window.scalaris.rechazoNumerico = { rechazar, limpiar };
     }

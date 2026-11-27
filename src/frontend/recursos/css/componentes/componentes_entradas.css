@@ -187,10 +187,12 @@
 
 .cuadricula-desplazamiento {
     max-height: 60dvh;
+    overscroll-behavior-x: contain;
 }
 
 .cuadricula-contenido {
     min-width: max-content;
+    padding: var(--space-1);
 }
 
 .cuadricula-cabecera-fija {
