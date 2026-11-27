@@ -44,8 +44,10 @@
 
 .subespacios-raiz .vectores-captura-desplazamiento {
     overflow-x: auto;
+    overflow-y: visible;
     overscroll-behavior-x: contain;
     align-items: center;
+    padding-block: var(--space-1);
 }
 
 .subespacios-raiz .vectores-captura-celdas {
@@ -139,7 +141,7 @@
 .subespacios-figura {
     width: 100%;
     min-width: 0;
-    height: clamp(260px, 42dvh, 420px);
+    height: clamp(280px, 44dvh, 420px);
     overflow-x: auto;
 }
 

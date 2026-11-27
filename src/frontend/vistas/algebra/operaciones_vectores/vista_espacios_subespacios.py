@@ -6,62 +6,35 @@ import logging
 from nicegui import ui
 
 from src.frontend.componentes.aplicacion.base.sonido import emitir_sonido
-from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import (
-    crear_estructura_aplicacion,
-)
+from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.aplicacion.controles.selector_opciones import SelectorOpciones
 from src.frontend.componentes.glosa.panel.panel_ia import PanelIA
-from src.frontend.componentes.resultados.acciones.avisos_resultado import (
-    MENSAJE_ERROR_INESPERADO,
-)
+from src.frontend.componentes.resultados.acciones.avisos_resultado import MENSAJE_ERROR_INESPERADO
 from src.frontend.controladores.algebra.operaciones_vectores.contexto_subespacios import (
-    obtener_contexto_subespacio,
-    obtener_senales_subespacio,
+    obtener_contexto_subespacio, obtener_senales_subespacio,
 )
 from src.frontend.controladores.algebra.operaciones_vectores.controlador_subespacios import (
-    analizar_subespacio_desde_captura,
-    normalizar_modo_subespacios,
+    analizar_subespacio_desde_captura, normalizar_modo_subespacios,
 )
 from src.frontend.controladores.algebra.operaciones_vectores.controlador_espacio_vectorial import (
     analizar_espacio_desde_captura,
 )
-from src.frontend.controladores.compartido.sesion.calculo_vigente import (
-    ejecutar_calculo_vigente,
-)
-from src.frontend.controladores.compartido.sesion.sesion_matricial import (
-    actualizar_contexto,
-    invalidar_resultado,
-)
+from src.frontend.controladores.compartido.sesion.calculo_vigente import ejecutar_calculo_vigente
+from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto, invalidar_resultado
 from src.frontend.navegacion import ruta_de
 from src.frontend.nucleo.textos.textos_espacio_vectorial import MODO_PERSONALIZADO
 from src.frontend.nucleo.textos.textos_espacios_subespacios import (
-    AYUDA_MODOS,
-    ESTADO_CALCULO_MODOS,
-    ESTADO_EDICION,
-    ESTADO_INICIAL_MODOS,
-    MODO_GENERADORES,
-    MODO_RESTRICCIONES,
-    NOMBRES_MODOS,
-    TITULO_PAGINA,
+    AYUDA_MODOS, ESTADO_CALCULO_MODOS, ESTADO_EDICION, ESTADO_INICIAL_MODOS,
+    MODO_GENERADORES, MODO_RESTRICCIONES, NOMBRES_MODOS, TITULO_PAGINA,
 )
-from src.frontend.vistas.algebra.operaciones_vectores.panel.captura_generadores import (
-    CapturaGeneradores,
-)
+from src.frontend.vistas.algebra.operaciones_vectores.panel.captura_generadores import CapturaGeneradores
 from src.frontend.vistas.algebra.operaciones_vectores.panel.captura_operaciones_personalizadas import (
     CapturaOperacionesPersonalizadas,
 )
-from src.frontend.vistas.algebra.operaciones_vectores.panel.captura_restricciones import (
-    CapturaRestricciones,
-)
-from src.frontend.vistas.algebra.operaciones_vectores.panel.exportacion_subespacios import (
-    montar_exportacion_subespacio,
-)
-from src.frontend.vistas.algebra.operaciones_vectores.panel.resultado_subespacios import (
-    mostrar_resultado_subespacio,
-)
-from src.frontend.vistas.algebra.operaciones_vectores.panel.resultado_espacio_vectorial import (
-    mostrar_resultado_espacio,
-)
+from src.frontend.vistas.algebra.operaciones_vectores.panel.captura_restricciones import CapturaRestricciones
+from src.frontend.vistas.algebra.operaciones_vectores.panel.exportacion_subespacios import montar_exportacion_subespacio
+from src.frontend.vistas.algebra.operaciones_vectores.panel.resultado_subespacios import mostrar_resultado_subespacio
+from src.frontend.vistas.algebra.operaciones_vectores.panel.resultado_espacio_vectorial import mostrar_resultado_espacio
 
 _REGISTRO = logging.getLogger(__name__)
 
@@ -137,11 +110,12 @@ class VistaEspaciosSubespacios:
         self.captura_generadores.inyectar_recursos_cliente()
         self.captura_restricciones.inyectar_recursos_cliente()
         self._cliente.on_delete(self._cerrar)
-        with ui.column().classes("vista-raiz subespacios-raiz w-full max-w-7xl mx-auto mt-4"):
+        with ui.column().classes("vista-raiz subespacios-raiz disposicion-herramienta w-full max-w-7xl mx-auto mt-4"):
             self._construir_cabecera()
-            with ui.element("div").classes("disposicion-dividida"):
+            with ui.element("div").classes("disposicion-captura-fila"):
                 self._construir_panel_entrada()
-                self._construir_panel_resultados()
+                self._construir_panel_auxiliar()
+            self._construir_panel_resultados()
         self.panel_ia.construir()
 
     def _construir_cabecera(self) -> None:
@@ -153,7 +127,6 @@ class VistaEspaciosSubespacios:
             self.selector_modo = SelectorOpciones(
                 opciones, self.modo, lambda evento: self._cambiar_modo(evento.value), "Modo de análisis",
             )
-        self.ayuda = ui.label(AYUDA_MODOS[self.modo]).classes("texto-secundario")
 
     def _construir_panel_entrada(self) -> None:
         with ui.column().classes("disposicion-panel panel-tarjeta subespacios-panel"):
@@ -162,9 +135,6 @@ class VistaEspaciosSubespacios:
                     captura.construir()
             self._actualizar_visibilidad_modos()
             with ui.row().classes("w-full items-center flex-wrap gap-2 mt-2"):
-                ui.button("Cargar ejemplo", on_click=self._cargar_ejemplo_activo, color=None).classes(
-                    "boton-discreto"
-                ).props("ripple=false")
                 ui.button("Limpiar", on_click=self._limpiar_activo, color=None).classes(
                     "boton-discreto"
                 ).props("ripple=false")
@@ -172,8 +142,16 @@ class VistaEspaciosSubespacios:
                     "Analizar", on_click=self.analizar, color=None
                 ).classes("boton-principal").props("ripple=false aria-label=Analizar")
 
+    def _construir_panel_auxiliar(self) -> None:
+        with ui.column().classes("disposicion-panel panel-tarjeta subespacios-panel gap-3"):
+            ui.label("Guía del modo activo").classes("text-lg font-semibold texto-principal")
+            self.ayuda = ui.label(AYUDA_MODOS[self.modo]).classes("texto-secundario text-sm")
+            ui.button("Cargar ejemplo", on_click=self._cargar_ejemplo_activo, color=None).classes(
+                "boton-discreto w-fit"
+            ).props("ripple=false")
+
     def _construir_panel_resultados(self) -> None:
-        with ui.column().classes("disposicion-panel panel-tarjeta subespacios-panel"):
+        with ui.column().classes("disposicion-resultados panel-tarjeta subespacios-panel"):
             ui.label("Resultado").classes("text-xl font-semibold texto-principal")
             self.estado = ui.label(ESTADO_INICIAL_MODOS[self.modo]).classes("texto-secundario").props(
                 "role=status aria-live=polite"
