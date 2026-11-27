@@ -102,18 +102,25 @@ def test_control_nativo_con_nombre_estable_estado_e_iconos(monkeypatch):
 
 
 @pytest.mark.parametrize('actualizada', [True, False])
-@pytest.mark.parametrize('ruta', ['/', '/algebra-lineal/sistemas'])
-def test_navegacion_e_inicio_montan_el_mismo_control(monkeypatch, actualizada, ruta):
-    """Cada pantalla monta un único control fuera de la cabecera en ambas navegaciones."""
+def test_navegacion_monta_control_de_sonido_en_configuracion_y_no_en_inicio(monkeypatch, actualizada):
+    """Las herramientas integran el control de sonido en Configuración e Inicio lo oculta."""
     monkeypatch.setattr(core, 'script_mode', False)
     monkeypatch.setattr('src.frontend.componentes.aplicacion.controles.barra_navegacion.banderas.navegacion_actualizada', lambda: actualizada)
+    cliente_inicio = Client(ui.page('/prueba_sonido_inicio'))
+    try:
+        with cliente_inicio:
+            crear_estructura_aplicacion(ruta_activa='/')
+        assert [e for e in cliente_inicio.elements.values() if 'data-sonido-control' in e._props] == []
+    finally:
+        cliente_inicio.delete()
+
     cliente = Client(ui.page('/prueba_sonido_navegacion'))
     try:
         with cliente:
-            crear_estructura_aplicacion(ruta_activa=ruta)
+            crear_estructura_aplicacion(ruta_activa='/algebra-lineal/sistemas')
         controles = [elemento for elemento in cliente.elements.values() if 'data-sonido-control' in elemento._props]
         assert len(controles) == 1
-        assert controles[0].parent_slot.parent is cliente.content
+        assert any('configuracion-dialogo' in e.classes for e in cliente.elements.values())
     finally:
         cliente.delete()
 
