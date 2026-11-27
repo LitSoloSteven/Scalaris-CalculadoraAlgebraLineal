@@ -38,7 +38,7 @@ def construir_escalar(vista):
 
 
 def _construir_pestanas(vista):
-    with ui.row().classes("w-full mb-8"):
+    with ui.row().classes("w-full mb-2"):
         vista.pestanas = SelectorOpciones(
             OPCIONES_OPERACIONES_VECTORES, vista.operacion_activa,
             vista.al_cambiar_pestana, NOMBRE_SELECTOR_VECTORES,
@@ -62,15 +62,32 @@ def _construir_capturas(vista):
             panel.agregar_vector()
 
 
+def _construir_panel_guia() -> None:
+    """Presenta orientación auxiliar de captura y navegación para la columna derecha."""
+    with ui.column().classes("disposicion-panel panel-tarjeta p-6 gap-3"):
+        ui.label("Guía rápida de captura").classes("text-lg font-bold texto-principal")
+        ui.label(
+            "Ajusta la dimensión compartida n con − y + y alterna entre columna (n×1) y fila (1×n) cuando la operación lo permita."
+        ).classes("text-sm texto-secundario")
+        ui.label(
+            "Puedes pegar columnas o filas desde Excel o un editor de texto y navegar entre celdas con las flechas del teclado."
+        ).classes("text-sm texto-secundario")
+        ui.label(
+            "Cuando las dimensiones estén entre 2 y 3, podrás abrir tus vectores directamente en el Visualizador geométrico."
+        ).classes("text-sm texto-secundario")
+
+
 def construir_panel_izquierdo(vista):
-    """Monta pestañas, mínimos de captura y acciones de cálculo y limpieza."""
-    with ui.column().classes("disposicion-panel vectores-panel-captura p-8 bg-[var(--bg-page)]"):
-        _construir_pestanas(vista)
-        _construir_capturas(vista)
-        with ui.row().classes("w-full justify-between mt-8 pt-4 border-t border-[var(--border-input)] items-center"):
-            crear_boton_limpieza(vista, lambda: vista._montada,
-                                  lambda: [vista.panel_vectorial.contenedor] +
-                                  ([vista.entrada_escalar] if vista.operacion_activa == 'escalar' else []))
-            vista.boton_calcular = ui.button(
-                "Calcular", icon="calculate", on_click=vista.calcular, color=None,
-            ).classes("boton-principal flex-[2] py-3 font-bold")
+    """Monta pestañas, mínimos de captura, guía auxiliar y acciones de cálculo."""
+    _construir_pestanas(vista)
+    with ui.element("div").classes("disposicion-captura-fila"):
+        with ui.column().classes("disposicion-panel vectores-panel-captura p-6 bg-[var(--bg-page)]"):
+            _construir_capturas(vista)
+            with ui.row().classes("w-full justify-between mt-6 pt-4 border-t border-[var(--border-input)] items-center gap-4"):
+                crear_boton_limpieza(vista, lambda: vista._montada,
+                                      lambda: [vista.panel_vectorial.contenedor] +
+                                      ([vista.entrada_escalar] if vista.operacion_activa == 'escalar' else []))
+                vista.boton_calcular = ui.button(
+                    "Calcular", icon="calculate", on_click=vista.calcular, color=None,
+                ).classes("boton-principal flex-[2] py-3 font-bold")
+        _construir_panel_guia()

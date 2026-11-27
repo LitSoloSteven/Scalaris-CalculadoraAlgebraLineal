@@ -42,9 +42,15 @@
 
 .vectores-vista .vectores-captura-desplazamiento {
     overflow-x: auto;
+    overflow-y: visible;
     overscroll-behavior-x: contain;
     scrollbar-width: thin;
     align-items: center;
+    padding-block: var(--space-1);
+}
+
+.vectores-vista .vectores-formula {
+    padding-inline: var(--space-4);
 }
 
 .vectores-vista .vectores-captura-celdas {

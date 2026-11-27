@@ -111,11 +111,11 @@ class VistaOperacionesVectores(MixinResultadosVectores):
         self.panel_suma_resta.inyectar_recursos_cliente()
         with (
             ui.element('div').classes('vectores-marco w-full'),
-            ui.column().classes("w-full max-w-7xl mx-auto p-6 mt-4 vista-raiz vectores-vista"),
-            ui.element("div").classes("disposicion-dividida mb-8"),
+            ui.column().classes("w-full max-w-7xl mx-auto p-6 mt-4 vista-raiz disposicion-herramienta vectores-vista"),
         ):
+            ui.label("Vectores").classes("text-2xl font-bold texto-principal").props('role="heading" aria-level="1"')
             controles.construir_panel_izquierdo(self)
-            with ui.column().classes("disposicion-panel p-8 bg-[var(--bg-page)]") as self.panel_resultados:
+            with ui.column().classes("disposicion-resultados panel-tarjeta p-6 min-h-[280px] bg-[var(--bg-page)]") as self.panel_resultados:
                 self.renderizar_estado_vacio()
         self.panel_ia.construir()
 
