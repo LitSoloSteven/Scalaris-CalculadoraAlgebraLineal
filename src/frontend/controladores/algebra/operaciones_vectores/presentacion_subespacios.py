@@ -156,7 +156,9 @@ def serializar_pasos(pasos: tuple) -> tuple[dict, ...]:
 
 
 def _detalle_comprobacion(texto: object) -> str:
-    return _PATRON_COLUMNA_CERO.sub(lambda m: f"columna original {int(m.group(1)) + 1}", limpiar_texto(texto))
+    return _PATRON_COLUMNA_CERO.sub(
+        lambda coincidencia: f"columna original {int(coincidencia.group(1)) + 1}", limpiar_texto(texto),
+    )
 
 def serializar_comprobaciones(comprobaciones: tuple[Mapping, ...]) -> tuple[dict, ...]:
     """Serializa las verificaciones exactas devueltas por el motor."""
