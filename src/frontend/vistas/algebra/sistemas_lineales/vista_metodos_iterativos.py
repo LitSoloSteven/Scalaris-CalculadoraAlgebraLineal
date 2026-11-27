@@ -52,12 +52,12 @@ class VistaMetodosIterativos:
         """Monta la navegación, los controles de captura y la región de resultados."""
         crear_estructura_aplicacion(self, ruta_activa=ruta_de('metodos_iterativos'))
         ui.context.client.on_delete(self._cerrar)
-        with ui.column().classes('vista-raiz iterativos-raiz w-full max-w-7xl mx-auto mt-4'):
+        with ui.column().classes('vista-raiz iterativos-raiz disposicion-herramienta w-full max-w-7xl mx-auto mt-4'):
             self._construir_selector()
             with ui.column().classes('w-full min-w-0 panel-tarjeta iterativos-panel'):
                 self.captura.construir()
                 self._construir_acciones()
-            with ui.column().classes('w-full min-w-0 panel-tarjeta iterativos-panel'):
+            with ui.column().classes('disposicion-resultados w-full min-w-0 panel-tarjeta iterativos-panel'):
                 ui.label('Resultado').classes('text-xl font-semibold texto-principal')
                 self.estado = ui.label(ESTADO_INICIAL).classes('texto-secundario').props('role=status aria-live=polite')
                 self.selector_decimales = ui.select(

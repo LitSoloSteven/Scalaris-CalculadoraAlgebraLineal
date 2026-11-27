@@ -56,7 +56,7 @@ class CapturaIterativa:
         """Monta los controles y los vincula a la revisión de la captura."""
         self.cuadricula.inyectar_recursos_cliente()
         self.vector.inyectar_recursos_cliente()
-        with ui.element('div').classes('disposicion-dividida'):
+        with ui.element('div').classes('disposicion-captura-fila'):
             with ui.column().classes('disposicion-panel'):
                 with ui.tabs(value='matriz').classes('pestanas-controles sistemas-pestanas-modo').props('dense no-caps') as self.selector:
                     ui.tab('matriz', label='Matriz', icon='grid_4x4')

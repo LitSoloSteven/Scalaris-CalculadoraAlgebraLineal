@@ -32,10 +32,13 @@
     padding: var(--space-2) var(--space-3);
     min-width: 8ch;
     text-align: start;
+    white-space: nowrap;
 }
 
 .iterativos-tabla td .iterativos-numero {
-    max-width: 24ch;
+    max-width: none;
+    overflow-wrap: normal;
+    white-space: nowrap;
 }
 
 .iterativos-numero {
