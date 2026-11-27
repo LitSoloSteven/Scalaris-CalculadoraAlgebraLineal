@@ -44,16 +44,18 @@ def construir_controles(reproductor: ReproductorPasos) -> None:
 def _boton_primero(reproductor: ReproductorPasos) -> None:
     """Crea el control que navega al primer paso."""
     boton = ui.button(icon="first_page", color=None).classes(
-        "boton-icono w-9 h-9 p-0"
+        "boton-icono p-0"
     ).props('ripple=false aria-label="Primer paso"').tooltip("Primer paso")
+    reproductor.boton_primero = boton
     vincular_accion(reproductor, boton, lambda: reproductor.ir_a(0))
 
 
 def _boton_anterior(reproductor: ReproductorPasos) -> None:
     """Crea el control que navega al paso anterior."""
     boton = ui.button(icon="chevron_left", color=None).classes(
-        "boton-icono w-9 h-9 p-0"
+        "boton-icono p-0"
     ).props('ripple=false aria-label="Paso anterior"').tooltip("Paso anterior")
+    reproductor.boton_anterior = boton
     vincular_accion(reproductor, boton, lambda: _mover(reproductor, -1))
 
 
@@ -61,7 +63,7 @@ def _boton_reproducir(reproductor: ReproductorPasos) -> None:
     """Crea el control que inicia o pausa la reproducción."""
     reproductor.boton_reproducir = ui.button(
         icon="play_arrow", color=None
-    ).classes("boton-icono w-9 h-9 p-0").props(
+    ).classes("boton-icono p-0").props(
         'ripple=false aria-label="Reproducción automática"'
     ).tooltip("Reproducción automática")
     vincular_accion(reproductor, reproductor.boton_reproducir, reproductor._alternar_reproduccion)
@@ -70,8 +72,9 @@ def _boton_reproducir(reproductor: ReproductorPasos) -> None:
 def _boton_siguiente(reproductor: ReproductorPasos) -> None:
     """Crea el control que navega al paso siguiente."""
     boton = ui.button(icon="chevron_right", color=None).classes(
-        "boton-icono w-9 h-9 p-0"
+        "boton-icono p-0"
     ).props('ripple=false aria-label="Paso siguiente"').tooltip("Paso siguiente")
+    reproductor.boton_siguiente = boton
     vincular_accion(reproductor, boton, lambda: _mover(reproductor, 1))
 
 
@@ -79,8 +82,9 @@ def _boton_ultimo(reproductor: ReproductorPasos) -> None:
     """Crea el control que navega al último paso."""
     ultimo = len(reproductor.pasos) - 1
     boton = ui.button(icon="last_page", color=None).classes(
-        "boton-icono w-9 h-9 p-0"
+        "boton-icono p-0"
     ).props('ripple=false aria-label="Último paso"').tooltip("Último paso")
+    reproductor.boton_ultimo = boton
     vincular_accion(reproductor, boton, lambda: reproductor.ir_a(ultimo))
 
 

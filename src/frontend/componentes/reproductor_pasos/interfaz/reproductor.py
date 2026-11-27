@@ -53,7 +53,11 @@ class ReproductorPasos:
         self.velocidad = "Normal"
         self.temporizador = None
         self.deslizador = None
+        self.boton_primero = None
+        self.boton_anterior = None
         self.boton_reproducir = None
+        self.boton_siguiente = None
+        self.boton_ultimo = None
         self.grupos_cargados: set[int] = set()
         self.tarjeta = None
 
@@ -111,6 +115,20 @@ class ReproductorPasos:
         self.progreso.set_value((self.indice_actual + 1) / len(self.pasos))
         if self.deslizador is not None and self.deslizador.value != self.indice_actual:
             self.deslizador.value = self.indice_actual
+        self._actualizar_botones_extremos()
+
+    def _actualizar_botones_extremos(self) -> None:
+        """Deshabilita las acciones que superan el primer o último paso."""
+        en_inicio = self.indice_actual <= 0
+        en_fin = self.indice_actual >= len(self.pasos) - 1
+        for boton, deshabilitado in (
+            (getattr(self, "boton_primero", None), en_inicio),
+            (getattr(self, "boton_anterior", None), en_inicio),
+            (getattr(self, "boton_siguiente", None), en_fin),
+            (getattr(self, "boton_ultimo", None), en_fin),
+        ):
+            if boton is not None and not getattr(boton, "is_deleted", False):
+                boton.set_enabled(not deshabilitado)
 
     def _actualizar_explicacion(self, paso: PasoReproductor, autoreproduccion: bool) -> None:
         """Muestra la explicacion, con escritura animada fuera de autoplay."""

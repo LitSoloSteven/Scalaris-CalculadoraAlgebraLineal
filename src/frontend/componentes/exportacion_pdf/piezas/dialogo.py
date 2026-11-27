@@ -18,9 +18,13 @@ class DialogoPortada:
         self.generar = generar
         self.activador = activador
         self.ocupado = False
-        with ui.dialog().props('transition-show=none transition-hide=none') as self.dialogo:
+        with ui.dialog().props('transition-show=scale transition-hide=scale') as self.dialogo:
             with ui.card().classes('panel-tarjeta pdf-portada'):
-                ui.label(textos.PDF_PORTADA_TITULO).classes('text-xl font-bold texto-principal').props('id=pdf-portada-titulo')
+                with ui.row().classes('w-full items-center justify-between gap-3'):
+                    ui.label(textos.PDF_PORTADA_TITULO).classes('text-xl font-bold texto-principal').props('id=pdf-portada-titulo')
+                    ui.button(icon='close', on_click=self.dialogo.close, color=None).classes(
+                        'boton-icono p-0'
+                    ).props('flat ripple=false data-sonido="cierre" aria-label="Cerrar diálogo de portada"').tooltip('Cerrar')
                 self.dialogo.props('aria-labelledby=pdf-portada-titulo')
                 self._crear_campos()
                 with ui.row().classes('w-full items-center gap-2 flex-nowrap'):
@@ -32,10 +36,12 @@ class DialogoPortada:
     def _crear_campos(self) -> None:
         for clave, etiqueta in textos.PDF_CAMPOS.items():
             identificador = f'pdf-campo-{clave}'
+            etiqueta_id = f'pdf-etiqueta-{clave}'
             error_id = f'pdf-error-{clave}'
-            ui.html(f'<label for="{identificador}">{escape(etiqueta)}</label>')
+            ui.html(f'<span id="{etiqueta_id}" class="texto-principal text-sm font-semibold">{escape(etiqueta)}</span>')
             campo = ui.input(value='').classes('w-full min-w-0').props(
-                f'outlined dense autocomplete=off for={identificador} aria-describedby={error_id}')
+                f'outlined dense autocomplete=off for={identificador} '
+                f'aria-labelledby={etiqueta_id} aria-describedby={error_id}')
             campo.props(f'maxlength={limites.PDF_LIMITES_PORTADA[clave]}' if clave in limites.PDF_LIMITES_PORTADA else 'type=date')
             if clave == 'nombre':
                 campo.props('autofocus')
@@ -45,9 +51,9 @@ class DialogoPortada:
     def _crear_acciones(self) -> None:
         with ui.row().classes('w-full justify-end gap-3 flex-wrap'):
             self.cancelar = ui.button(textos.PDF_CANCELAR, on_click=self.dialogo.close, color=None).classes(
-                'boton-discreto pdf-control').props('ripple=false data-sonido="cierre"')
+                'boton-discreto pdf-control').props('no-caps ripple=false data-sonido="cierre"')
             self.confirmar = ui.button(textos.PDF_GENERAR, on_click=self.generar, color=None).classes(
-                'boton-principal pdf-control').props('ripple=false data-sonido-omitir')
+                'boton-principal pdf-control').props('no-caps ripple=false data-sonido-omitir')
             with self.confirmar:
                 self.indicador_confirmar = crear_indicador()
 
