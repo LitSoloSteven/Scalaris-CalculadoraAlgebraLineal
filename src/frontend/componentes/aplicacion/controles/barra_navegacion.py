@@ -9,7 +9,7 @@ from nicegui import ui
 
 from src.frontend.nucleo import banderas
 from src.frontend.componentes.aplicacion.base.iconos import icono_svg
-from src.frontend.componentes.aplicacion.controles.selector_tema import renderizar_boton_tema
+from src.frontend.componentes.aplicacion.controles.configuracion_global import renderizar_boton_configuracion
 from src.frontend.navegacion import (
     RUTA_INICIO,
     ORDEN_NAVEGACION_PLANA,
@@ -58,7 +58,7 @@ def _renderizar_logotipo() -> None:
 
 def _renderizar_barra_plana(interfaz_activa: Any, ruta_activa: str, al_alternar_ia=None) -> None:
     """Renderiza la botonera lineal de herramientas en modo clásico."""
-    with ui.row().classes("items-center gap-4"):
+    with ui.row().classes("items-center gap-4 navegacion-plana-fila"):
         for identificador_herramienta in ORDEN_NAVEGACION_PLANA:
             herramienta = herramienta_por_identificador(identificador_herramienta)
             esta_activa = (ruta_activa == herramienta.ruta)
@@ -80,13 +80,13 @@ def _renderizar_barra_plana(interfaz_activa: Any, ruta_activa: str, al_alternar_
                 ui.html(icono_svg("tutor_ia"))
 
         ui.element("div").classes("navegacion-separador")
-        renderizar_boton_tema()
+        renderizar_boton_configuracion()
 
 
 def _renderizar_barra_contextual(clave_activa: str | None) -> None:
     """Renderiza la botonera contextual con la sección del acceso activo."""
     with ui.element("a").classes("navegacion-accion navegacion-inicio").props(
-        f'href="{RUTA_INICIO}" aria-label="Inicio" title="Inicio"'
+        f'href="{RUTA_INICIO}" aria-label="Inicio"'
     ).tooltip("Inicio"):
         ui.html(icono_svg("inicio"))
 
@@ -96,7 +96,7 @@ def _renderizar_barra_contextual(clave_activa: str | None) -> None:
             _renderizar_seccion(seccion, clave_activa)
 
     with ui.element("div").classes("tema-boton-selector navegacion-tema"):
-        renderizar_boton_tema()
+        renderizar_boton_configuracion()
 
 
 def _renderizar_seccion(seccion: SeccionInicio, clave_activa: str | None) -> None:
@@ -132,7 +132,7 @@ def _renderizar_acceso(elemento: ElementoNavegacion, clave_activa: str | None) -
     esta_activa = (elemento.clave == clave_activa)
     etiqueta = _ETIQUETAS_CONTEXTUALES.get(elemento.clave, elemento.etiqueta)
     clases_elemento = "navegacion-accion navegacion-elemento" + (" navegacion-activa" if esta_activa else "")
-    propiedades_elemento = f'href="{enlace_elemento_navegacion(elemento)}" aria-label="{etiqueta}" title="{etiqueta}"'
+    propiedades_elemento = f'href="{enlace_elemento_navegacion(elemento)}" aria-label="{etiqueta}"'
     if esta_activa:
         propiedades_elemento += ' aria-current="page"'
     with ui.element("a").classes(clases_elemento).props(propiedades_elemento).tooltip(etiqueta):

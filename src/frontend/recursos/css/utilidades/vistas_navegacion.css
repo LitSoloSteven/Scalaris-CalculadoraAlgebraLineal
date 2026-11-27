@@ -19,16 +19,8 @@
     view-transition-name: barra-navegacion;
 }
 
-.marca-contenedor-logotipo {
-    width: 72px;
-    height: 72px;
-}
-
-.marca-logotipo {
-    width: 72px;
-    height: 72px;
-    object-fit: contain;
-}
+.marca-contenedor-logotipo { width: 72px; height: 72px; }
+.marca-logotipo { width: 72px; height: 72px; object-fit: contain; }
 
 .navegacion-capsula {
     display: grid;
@@ -68,8 +60,8 @@
     align-items: center;
     gap: var(--space-2);
     flex-shrink: 0;
-    height: 38px;
-    min-height: 38px;
+    height: 44px;
+    min-height: 44px;
     padding: 0 var(--space-3);
     border-radius: var(--radius-pill);
     background-color: var(--bg-panel);
@@ -118,7 +110,7 @@ html[data-entrada="teclado"] .navegacion-accion::after {
 
 .navegacion-inicio {
     padding: 0 var(--space-2);
-    width: 38px;
+    width: 44px;
     justify-content: center;
 }
 
@@ -126,8 +118,28 @@ html[data-entrada="teclado"] .navegacion-accion::after {
     width: 1px;
     height: 24px;
     flex-shrink: 0;
+    align-self: center;
     background-color: var(--text-sec);
     opacity: 0.2;
+}
+
+.navegacion-capsula:has(.navegacion-plana-fila) {
+    display: flex;
+    align-items: center;
+    max-width: 100%;
+    height: auto;
+    min-height: 64px;
+    max-height: none;
+}
+
+.navegacion-plana-fila {
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    max-width: 100%;
+    min-width: 0;
+    padding: var(--space-1);
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
 }
 
 .navegacion-seccion {
@@ -163,42 +175,19 @@ html[data-entrada="teclado"] .navegacion-accion::after {
     scroll-padding-inline: var(--space-2);
 }
 
-.navegacion-recorrido {
-    position: relative;
-    display: flex;
-    min-width: 0;
-}
-
-.navegacion-indicio {
-    position: absolute;
-    z-index: 1;
-    inset-block-start: 50%;
-    transform: translateY(-50%);
-    display: none;
-    color: var(--accent);
-    background: var(--bg-panel);
-    font-size: 1.25rem;
-    pointer-events: none;
-}
-
+.navegacion-recorrido { position: relative; display: flex; min-width: 0; }
+.navegacion-indicio { position: absolute; z-index: 1; inset-block-start: 50%; transform: translateY(-50%); display: none; color: var(--accent); background: var(--bg-panel); font-size: 1.25rem; pointer-events: none; }
 .navegacion-indicio-antes { inset-inline-start: 0; }
 .navegacion-indicio-despues { inset-inline-end: 0; }
 .navegacion-centro[data-opciones-antes] .navegacion-indicio-antes,
-.navegacion-centro[data-opciones-despues] .navegacion-indicio-despues {
-    display: block;
-}
-
+.navegacion-centro[data-opciones-despues] .navegacion-indicio-despues { display: block; }
 .navegacion-etiqueta-completa {
     display: inline;
     min-width: 0;
     white-space: nowrap;
     font-variant-numeric: tabular-nums;
 }
-
-.navegacion-elemento:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-}
+.navegacion-elemento:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 @media (min-width: 560px) {
     .navegacion-centro[data-opciones-despues] .navegacion-elementos {
@@ -235,13 +224,17 @@ html[data-entrada="teclado"] .navegacion-accion::after {
         padding-inline: var(--space-2);
         background: transparent;
         line-height: 1.15;
-        overflow-wrap: anywhere;
+        overflow-wrap: break-word;
     }
 }
 
 .navegacion-cabecera:has(.navegacion-seccion) {
     height: auto;
     max-height: none;
+}
+
+.q-layout:has(> .navegacion-cabecera) > .q-page-container {
+    padding-top: 0 !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -259,42 +252,26 @@ html[data-entrada="teclado"] .navegacion-accion::after {
 @media (max-width: 559px) {
     .navegacion-cabecera,
     .navegacion-capsula {
-        padding-inline: var(--space-2);
+        padding-inline: var(--space-1);
     }
-    .navegacion-recorrido { padding-inline: var(--space-3); }
+    .navegacion-recorrido { padding-inline: var(--space-2); }
     .navegacion-elemento {
         max-inline-size: 100%;
-        height: auto;
+        height: 44px;
         min-height: 2.75rem;
         gap: var(--space-1);
         padding: var(--space-1) var(--space-2);
         font-size: var(--fs-small);
     }
     .navegacion-etiqueta-completa {
-        white-space: normal;
-        overflow-wrap: anywhere;
+        white-space: nowrap;
         line-height: 1.15;
     }
 }
 
 @media (max-width: 280px) {
-    .navegacion-cabecera {
-        height: auto;
-        max-height: none;
-        padding-inline: var(--space-1);
-    }
-    .navegacion-capsula {
-        grid-template-columns: auto minmax(0, 1fr) auto;
-        height: auto;
-        max-height: none;
-        width: 100%;
-        padding: var(--space-1);
-        gap: var(--space-1);
-    }
-    .navegacion-capsula:has(.navegacion-seccion) .navegacion-tema {
-        grid-area: 1 / 3;
-    }
-    .navegacion-capsula:has(.navegacion-seccion) .navegacion-centro {
-        grid-area: 2 / 1 / 3 / -1;
-    }
+    .navegacion-cabecera { height: auto; max-height: none; padding-inline: var(--space-1); }
+    .navegacion-capsula { grid-template-columns: auto minmax(0, 1fr) auto; height: auto; max-height: none; width: 100%; padding: var(--space-1); gap: var(--space-1); }
+    .navegacion-capsula:has(.navegacion-seccion) .navegacion-tema { grid-area: 1 / 3; }
+    .navegacion-capsula:has(.navegacion-seccion) .navegacion-centro { grid-area: 2 / 1 / 3 / -1; }
 }
