@@ -11,7 +11,7 @@ from src.frontend.presentacion.tema import configurar_tema
 from src.frontend.vistas.raices.metodos_cerrados.captura.acciones import AccionesMetodosCerrados
 from src.frontend.vistas.raices.metodos_cerrados.calculo.calculo import CalculoIndividual
 from src.frontend.vistas.raices.metodos_cerrados.captura.captura import CapturaMetodosCerrados, captura_vacia, limpiar_captura
-from src.frontend.vistas.raices.metodos_cerrados.salida.contexto import construir_contexto
+from src.frontend.vistas.raices.metodos_cerrados.salida.contexto import construir_contexto, construir_senales
 from src.frontend.vistas.raices.metodos_cerrados.captura.continuidad import ContinuidadMetodosCerrados
 from src.frontend.vistas.raices.metodos_cerrados.calculo.exploracion import ExploracionMetodosCerrados
 from src.frontend.vistas.raices.metodos_cerrados.salida.grafica import GraficaMetodosCerrados
@@ -90,12 +90,8 @@ class VistaMetodosCerrados:
         """Monta la vista dentro de la página que la consume."""
         self.panel_ia = PanelIA(self)
         regiones = montar_contenido(self)
-        self.contenedor_resultados = regiones.resultados
-        self.contenedor_procedimiento = regiones.procedimiento
-        cliente = ui.context.client
-        cliente.on_disconnect(self.cerrar)
-        cliente.on_delete(self.cerrar)
-        cliente.on_connect(self._reabrir)
+        self.contenedor_resultados, self.contenedor_procedimiento = regiones.resultados, regiones.procedimiento
+        _vincular_cliente(self)
         self.panel_ia.construir()
         self.exploracion.actualizar_captura()
 
@@ -165,6 +161,10 @@ class VistaMetodosCerrados:
         """Entrega a Glosa el contexto de la captura, el resultado y el paso vigentes."""
         return construir_contexto(self)
 
+    def obtener_senales_ia(self):
+        """Emite señales de método, estado y discontinuidad para sugerencias de Glosa."""
+        return construir_senales(self)
+
     def esta_completamente_vacio(self) -> bool:
         """Indica si limpiar retiraría datos del ejercicio o del rango visual."""
         return captura_vacia(self.captura) and not self.exploracion.hay_datos()
@@ -219,6 +219,13 @@ class VistaMetodosCerrados:
         self.estado.set_text("Resultado disponible." if respuesta["estado"] != "ERROR" else "Revisa el diagnóstico del cálculo.")
         self.presentacion.publicar(datos, puntero=puntero)
         self.acciones.registrar(self.capturar(), respuesta, datos.get("ampliado"))
+
+
+def _vincular_cliente(vista: VistaMetodosCerrados) -> None:
+    cliente = ui.context.client
+    cliente.on_disconnect(vista.cerrar)
+    cliente.on_delete(vista.cerrar)
+    cliente.on_connect(vista._reabrir)
 
 
 def montar_pagina(vista: VistaMetodosCerrados) -> None:

@@ -5,6 +5,7 @@ from src.frontend.controladores.raices.biseccion.salidas.contexto_biseccion impo
 from src.frontend.controladores.raices.metodos_cerrados.adaptadores import BISECCION, METODOS
 from src.frontend.controladores.raices.regla_falsa.procedimiento.contexto_regla_falsa import resumir_contexto_regla_falsa
 from src.frontend.controladores.raices.regla_falsa.procedimiento.pasos import referencia_paso
+from src.frontend.presentacion.sugerencias import Senales
 
 
 def construir_contexto(vista) -> ContextoIA:
@@ -40,3 +41,25 @@ def opciones_glosa(salida, datos: dict, pasos: tuple) -> dict:
 
     return {"al_explicar": crear_accion_explicacion(panel, pasos, sigue_vigente=_sigue_vigente),
             "esta_ocupado": lambda: bool(getattr(panel, "_esta_enviando", False))}
+
+
+def construir_senales(vista) -> Senales:
+    """Emite estado y banderas de métodos cerrados para seleccionar sugerencias."""
+    metodo = vista.capturar()["metodo"]
+    respuesta = vista.ultimo_resultado
+    banderas = set()
+    if respuesta is None:
+        return Senales(herramienta=metodo, estado="sin_resultado")
+    estado_motor = respuesta.get("estado")
+    if estado_motor == "EXITO":
+        estado = "exito"
+    elif estado_motor == "POSIBLE_DISCONTINUIDAD":
+        estado = "discontinuidad"
+        banderas.add("discontinuidad")
+    else:
+        estado = "error"
+        if estado_motor == "SIN_CAMBIO_DE_SIGNO":
+            banderas.add("sin_cambio_signo")
+        if respuesta.get("codigo_diagnostico") == "SINGULARIDAD_DETECTADA":
+            banderas.add("discontinuidad")
+    return Senales(herramienta=metodo, estado=estado, banderas=frozenset(banderas))
