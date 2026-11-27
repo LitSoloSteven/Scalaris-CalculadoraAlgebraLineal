@@ -18,7 +18,7 @@ class MixinRenderizadoSistemasNumericos(MixinProcedimientoSistemasNumericos):
             with ui.row().classes('w-full justify-between items-center mb-2 gap-2 flex-wrap'):
                 with ui.row().classes('items-center gap-2'):
                     ui.html(f'<span class="font-bold texto-secundario">{titulo}</span><sub class="font-bold ml-1 text-xs">{subindice}</sub>')
-                    distintivo = ui.label('ENTRADA ACTUAL').classes('distintivo-exito text-[10px] font-bold px-2 py-0.5')
+                    distintivo = ui.label('Entrada actual').classes('distintivo-exito text-xs font-bold px-2 py-0.5')
                     distintivo.bind_visibility_from(self, 'base_activa', backward=lambda valor: valor == identificador_base)
 
                 with ui.row().classes('gap-2'):
@@ -26,12 +26,12 @@ class MixinRenderizadoSistemasNumericos(MixinProcedimientoSistemasNumericos):
                         icon='swap_vert',
                         on_click=lambda evento, base=identificador_base: self._intercambiar_base(base),
                         color=None
-                    ).classes('boton-discreto w-8 h-8 p-0 texto-secundario').props('ripple=false aria-label="Usar como entrada"').tooltip('Usar como entrada')
+                    ).classes('boton-icono p-0 texto-secundario').props('ripple=false aria-label="Usar como entrada" title="Usar como entrada"')
                     ui.button(
                         icon='content_copy',
                         on_click=lambda evento, base=identificador_base: self._copiar_resultado(base, evento.sender),
                         color=None
-                    ).classes('boton-discreto w-8 h-8 p-0 texto-secundario').props('ripple=false aria-label="Copiar"').tooltip('Copiar')
+                    ).classes('boton-icono p-0 texto-secundario').props('ripple=false aria-label="Copiar" title="Copiar"')
 
             self.etiquetas_valores[identificador_base] = ui.label('0').classes(
                 'text-2xl font-mono texto-principal break-all tracking-wide '
