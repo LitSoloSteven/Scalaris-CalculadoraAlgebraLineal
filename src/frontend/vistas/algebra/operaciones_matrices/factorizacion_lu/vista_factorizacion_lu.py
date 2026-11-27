@@ -11,7 +11,6 @@ from src.frontend.componentes.captura.paneles.panel_matriz_rectangular import Pa
 from src.frontend.componentes.resultados.acciones.transferencia import recibir_matriz
 from src.frontend.controladores.algebra.operaciones_matrices.factorizacion_lu.vista_previa_factorizacion_lu import preparar_presentacion_factorizacion_lu
 from src.frontend.controladores.algebra.operaciones_matrices.factorizacion_lu.contexto_factorizacion_lu import obtener_contexto_ia, obtener_senales_ia
-from src.frontend.controladores.compartido.sesion.sesion_matricial import invalidar_resultado, actualizar_contexto
 from src.frontend.navegacion import ruta_de
 from src.frontend.vistas.compartido.mixin_sesion_matricial import MixinSesionMatricial
 from src.frontend.vistas.compartido.vista_previa_matricial import actualizar_vista_previa
@@ -65,12 +64,7 @@ class VistaFactorizacionLU(ResultadosFactorizacionLU, MixinSesionMatricial):
                     'boton-principal flex-[2] py-3').props('ripple=false')
 
     def _al_cambiar_matriz(self) -> None:
-        invalidar_resultado(self)
-        if getattr(self, 'contenedor_transferencia', None) is not None and not self.contenedor_transferencia.is_deleted:
-            self.contenedor_transferencia.clear()
-        if hasattr(self, 'panel_ia'):
-            self.panel_ia.limpiar_foco_explicacion()
-        actualizar_contexto(self)
+        self._invalidar_resultado_y_transferencia()
         self._programar_vista_previa()
         self._restablecer_resultados()
 

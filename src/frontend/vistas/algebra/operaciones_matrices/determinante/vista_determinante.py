@@ -12,7 +12,6 @@ from src.frontend.componentes.resultados.acciones.transferencia import recibir_m
 from src.frontend.controladores.algebra.operaciones_matrices.determinante.contexto_determinante import obtener_contexto_determinante, obtener_senales_determinante
 from src.frontend.componentes.captura.nucleo.cuadricula_base import ubicar_celda_matriz
 from src.frontend.controladores.algebra.operaciones_matrices.determinante.vista_previa_determinante import preparar_presentacion_determinante
-from src.frontend.controladores.compartido.sesion.sesion_matricial import invalidar_resultado, actualizar_contexto
 from src.frontend.navegacion import ruta_de
 from src.frontend.vistas.compartido.mixin_sesion_matricial import MixinSesionMatricial
 from src.frontend.vistas.compartido.vista_previa_matricial import actualizar_vista_previa
@@ -90,12 +89,7 @@ class VistaDeterminante(ResultadosDeterminante, MixinSesionMatricial):
         self.recomendacion.actualizar_eleccion()
 
     def _invalidar_resultado(self) -> None:
-        invalidar_resultado(self)
-        if getattr(self, 'contenedor_transferencia', None) is not None and not self.contenedor_transferencia.is_deleted:
-            self.contenedor_transferencia.clear()
-        if hasattr(self, 'panel_ia'):
-            self.panel_ia.limpiar_foco_explicacion()
-        actualizar_contexto(self)
+        self._invalidar_resultado_y_transferencia()
         self.contenedor_resultados.clear()
         with self.contenedor_resultados:
             ui.label(textos.DETERMINANTES_ORIENTACION).props('role=status')
