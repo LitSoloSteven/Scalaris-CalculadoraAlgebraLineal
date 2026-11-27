@@ -100,7 +100,6 @@
 
 .q-menu,
 .q-tooltip,
-.q-select,
 .q-notification {
     background: var(--bg-elevated) !important;
     color: var(--text-main) !important;
@@ -202,73 +201,4 @@
 
 .cuadricula-fila-sin-ajuste {
     flex-wrap: nowrap;
-}
-
-.glosa-area-chat {
-    min-height: 0;
-    overscroll-behavior: contain;
-}
-
-.glosa-campo-entrada {
-    max-height: 120px;
-    min-width: 0;
-}
-
-.glosa-boton-enviar {
-    border-radius: 12px !important;
-}
-
-.glosa-contexto-panel {
-    background: var(--bg-panel);
-    border-radius: 8px;
-}
-
-.glosa-contexto-borde {
-    border: 1px solid var(--border-input);
-}
-
-.glosa-icono-vacio {
-    width: 48px;
-    height: 48px;
-    opacity: 1;
-}
-
-.glosa-burbuja-error {
-    background: var(--badge-err-bg);
-    color: var(--badge-err-text);
-    border-radius: 16px 16px 16px 4px;
-    box-shadow: none !important;
-    max-width: 85%;
-}
-
-.glosa-burbuja-usuario {
-    background: var(--btn-primary-bg);
-    color: var(--btn-primary-text);
-    border-radius: 16px 16px 4px 16px;
-    box-shadow: none !important;
-    max-width: 85%;
-    min-width: 0;
-}
-
-.glosa-burbuja-asistente {
-    background: var(--bg-panel);
-    color: var(--text-main);
-    border-radius: 16px 16px 16px 4px;
-    box-shadow: none !important;
-    max-width: 85%;
-    min-width: 0;
-}
-
-.glosa-texto-bloque {
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
-}
-
-.glosa-sugerencia-texto {
-    pointer-events: none;
-}
-
-.glosa-sugerencias-deshabilitado {
-    opacity: 1;
-    pointer-events: none;
 }
