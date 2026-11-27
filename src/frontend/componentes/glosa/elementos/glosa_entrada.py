@@ -26,4 +26,4 @@ def construir_entrada_glosa(instancia: Any, estilo: EstiloEntradaGlosa) -> None:
         instancia.campo_entrada.on("keydown.enter.prevent.exact", instancia.enviar_mensaje)
         ui.button(icon="send", on_click=instancia.enviar_mensaje, color=None).classes(
             estilo.clases_boton
-        ).props(f'ripple=false aria-label="{estilo.etiqueta_envio}"').tooltip("Enviar")
+        ).props(f'ripple=false aria-label="{estilo.etiqueta_envio}"')
