@@ -133,9 +133,7 @@ class VistaOperacionesMatrices(MixinResultadosOperacionesMatrices, MixinContexto
 
                 with ui.column().classes('disposicion-panel gap-4'):
                     self._renderizar_panel_expresion()
-                    with ui.column().classes('panel-tarjeta p-4 gap-1'):
-                        ui.label('Sintaxis rápida').classes('text-sm font-bold texto-principal')
-                        ui.label('Usa +, -, *, ^T (transpuesta), ^-1 o escalares como 2*A.').classes('text-xs texto-secundario')
+                    self._renderizar_ayuda_expresion()
 
             self.contenedor_resultados = ui.column().classes(
                 'disposicion-resultados panel-tarjeta p-6 items-center justify-center min-h-[280px]'
@@ -145,6 +143,11 @@ class VistaOperacionesMatrices(MixinResultadosOperacionesMatrices, MixinContexto
         self.panel_ia.construir()
         recibir_matriz(token_transferencia, "matrices", self.panel_captura_matrices.cargar_matriz_a,
                        self.contenedor_transferencia)
+
+    def _renderizar_ayuda_expresion(self) -> None:
+        with ui.column().classes('panel-tarjeta p-4 gap-1'):
+            ui.label('Sintaxis rápida').classes('text-sm font-bold texto-principal')
+            ui.label('Usa +, -, *, ^T (transpuesta), ^-1 o escalares como 2*A.').classes('text-xs texto-secundario')
 
     def _renderizar_panel_captura(self) -> None:
         """Sitúa la acción de añadir sobre la lista y separa el panel de expresión."""

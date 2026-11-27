@@ -93,14 +93,17 @@ class ExportacionPDF:
                 self.dialogo.estado.set_text(str(error) if str(error) in permitidos else textos.PDF_ERROR_GENERACION)
             return
         if self._puede_entregar(testigo):
-            ui.download(documento, filename=nombre_archivo(self.herramienta, portada['fecha']), media_type='application/pdf')
-            self.dialogo.estado.set_text(textos.PDF_AVISO_REDUCCION if reducida else '')
-            dialogo_modal = getattr(self.dialogo, 'dialogo', None)
-            if dialogo_modal is not None and not getattr(dialogo_modal, 'is_deleted', False):
-                dialogo_modal.close()
-            if reducida:
-                notificar(textos.PDF_AVISO_REDUCCION, type='info')
-            emitir_sonido('exportar')
+            self._entregar_documento(documento, portada['fecha'], reducida)
+
+    def _entregar_documento(self, documento: bytes, fecha: str, reducida: bool) -> None:
+        ui.download(documento, filename=nombre_archivo(self.herramienta, fecha), media_type='application/pdf')
+        self.dialogo.estado.set_text(textos.PDF_AVISO_REDUCCION if reducida else '')
+        dialogo_modal = getattr(self.dialogo, 'dialogo', None)
+        if dialogo_modal is not None and not getattr(dialogo_modal, 'is_deleted', False):
+            dialogo_modal.close()
+        if reducida:
+            notificar(textos.PDF_AVISO_REDUCCION, type='info')
+        emitir_sonido('exportar')
 
     def _dialogo_abierto(self) -> bool:
         return not self.dialogo.dialogo.is_deleted and self.dialogo.dialogo.value
