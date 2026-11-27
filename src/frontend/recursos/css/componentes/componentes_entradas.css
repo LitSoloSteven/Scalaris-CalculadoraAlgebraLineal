@@ -108,6 +108,30 @@
     font-family: 'Space Grotesk', sans-serif !important;
 }
 
+.q-notification.bg-negative {
+    background: var(--badge-err-bg) !important;
+    color: var(--badge-err-text) !important;
+}
+
+.q-notification.bg-warning {
+    background: var(--badge-warn-bg) !important;
+    color: var(--badge-warn-text) !important;
+}
+
+.q-notification.bg-positive {
+    background: var(--badge-suc-bg) !important;
+    color: var(--badge-suc-text) !important;
+}
+
+.q-notification.bg-info {
+    background: var(--accent-soft) !important;
+    color: var(--text-main) !important;
+}
+
+.q-notification :is(.q-notification__message, .q-notification__icon, .q-notification__caption, .q-btn) {
+    color: inherit !important;
+}
+
 .selector-controles .q-field__control {
     background: var(--input-bg) !important;
     border: none !important;
