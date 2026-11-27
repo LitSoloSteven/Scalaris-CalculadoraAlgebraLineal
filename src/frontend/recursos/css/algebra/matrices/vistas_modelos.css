@@ -1,6 +1,8 @@
 .modelos-captura {
   width: 100%;
   overflow-x: auto;
+  overflow-y: visible;
+  padding-block: var(--space-1);
 }
 .modelos-sectorial {
   width: 100%;

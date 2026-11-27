@@ -40,19 +40,19 @@ def _renderizar_resumen_transformacion(resultado: dict) -> None:
             ui.label(aviso).classes("text-xs texto-secundario")
 
 def _renderizar_metricas_dimension(resultado: dict, filas: int, columnas: int, rango: int, nulidad: int) -> None:
-    """Muestra tarjetas de rango, nulidad y el Teorema de la Dimension."""
+    """Muestra tarjetas de rango, nulidad y el Teorema de la Dimensión."""
     with ui.row().classes("w-full gap-4 mb-4 flex-wrap"):
         for etiqueta, valor, clase_color in [
             ("Rango", rango, "texto-acento"),
             ("Nulidad", nulidad, "texto-secundario"),
-            (f"T: R^{columnas} -> R^{filas}", "", ""),
+            (f"T: ℝ^{columnas} → ℝ^{filas}", "", ""),
         ]:
             _renderizar_metrica(etiqueta, valor, clase_color)
 
     with ui.row().classes("w-full panel-tarjeta p-3 mb-4 items-center gap-2"):
         ui.icon("functions", size="sm").classes("texto-acento")
         ui.html(
-            f'<span class="font-bold texto-principal">Teorema de la Dimension:</span> '
+            f'<span class="font-bold texto-principal">Teorema de la Dimensión:</span> '
             f'<span class="texto-secundario">{html.escape(resultado.get("teorema_dimension", ""))}</span>'
         )
 
@@ -86,7 +86,7 @@ def _renderizar_nucleo(resultado: dict, nulidad: int) -> None:
     """Muestra la base del nucleo (ker T)."""
     base_nucleo = resultado.get("base_nucleo", [])
     with ui.column().classes("w-full panel-tarjeta p-4 mb-4"):
-        ui.label(f"Nucleo  ker(T)  [dim = {nulidad}]").classes("font-bold texto-principal mb-2")
+        ui.label(f"Núcleo  ker(T)  [dim = {nulidad}]").classes("font-bold texto-principal mb-2")
         if not base_nucleo:
             ui.html('<div class="matematicas-desplazamiento matematicas-etiqueta text-lg text-center">$$ \\ker(T) = \\{\\mathbf{0}\\} $$</div>')
         else:
@@ -102,7 +102,7 @@ def _renderizar_imagen(resultado: dict, rango: int) -> None:
     base_imagen = resultado.get("base_imagen", [])
     with ui.column().classes("w-full panel-tarjeta p-4 mb-4"):
         ui.label(f"Imagen  Im(T)  [dim = {rango}]").classes("font-bold texto-principal mb-2")
-        ui.html('<p class="text-xs texto-secundario mb-2">Base formada por las columnas pivote de A (convencion columna estandar).</p>')
+        ui.html('<p class="text-xs texto-secundario mb-2">Base formada por las columnas pivote de A (convención columna estándar).</p>')
         if not base_imagen:
             ui.label("Imagen = {0}").classes("texto-secundario italic")
         else:
