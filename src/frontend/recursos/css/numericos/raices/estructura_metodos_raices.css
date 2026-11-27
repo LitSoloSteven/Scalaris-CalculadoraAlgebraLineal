@@ -1,19 +1,22 @@
 .metodos-raices-vista { font-family: inherit; }
-.metodos-raices-captura {
+.metodos-raices-captura,
+.metodos-raices-previa {
   background: var(--bg-panel) !important;
   color: var(--text-main);
   border-radius: var(--radius-card) !important;
 }
+.metodos-raices-vista .q-btn { min-height: 44px; }
 .metodos-raices-acciones.limpieza-acciones { flex-wrap: wrap; align-items: center; }
 .metodos-raices-calcular { min-height: 44px; padding-inline: var(--space-4); }
 .metodos-raices-limpieza {
-  flex: 0 0 44px !important;
-  width: 44px !important;
-  min-width: 44px !important;
-  height: 44px !important;
-  min-height: 44px !important;
-  padding: 0 !important;
+  min-height: 44px;
+  padding-inline: var(--space-4);
   border-radius: var(--radius-btn) !important;
+}
+@container (min-width: 944px) {
+  .metodos-raices-fila-captura {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
 }
 .metodos-raices-ejemplos { align-self: center; }
 .metodos-raices-ejemplos .q-field__control,
