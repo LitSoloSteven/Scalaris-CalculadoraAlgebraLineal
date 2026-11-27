@@ -11,6 +11,7 @@ from src.backend.utilidades.formato.formateadores import formatear_fraccion_text
 from src.frontend.componentes.reproductor_pasos.formato.html_tablas import html_tabla_matriz
 from src.frontend.componentes.resultados.analisis.desarrollo_comprobacion import mostrar_desarrollo
 from src.frontend.componentes.resultados.acciones.acciones_matriz import renderizar_acciones_matriz
+from src.frontend.componentes.resultados.acciones.copia_resultado import renderizar_copia_resultado
 from src.frontend.componentes.exportacion_pdf.montaje.integracion import region_pdf, completar_exportacion, identificador_raiz
 from src.frontend.controladores.exportacion_pdf.documento.vigencia import EnlacePDF
 
@@ -131,9 +132,10 @@ def _agregar_botones_acciones(resultado: dict, dimension: int) -> None:
 
     with (
         ui.row().classes('w-full justify-between items-center mt-4 flex-wrap gap-2').props('data-pdf-excluir'),
-        ui.row().classes('gap-2'),
+        ui.row().classes('gap-2 flex-wrap'),
     ):
-        ui.button('Resolver A·x = b con esta A', on_click=ir_a_sistemas, color=None).classes('boton-discreto text-xs').props('ripple=false')
+        renderizar_copia_resultado(resultado)
+        ui.button('Resolver A·x = b con esta A', on_click=ir_a_sistemas, color=None).classes('boton-discreto text-xs min-h-[44px]').props('ripple=false')
 
 
 def _renderizar_comprobaciones(resultado: dict, dimension: int) -> None:

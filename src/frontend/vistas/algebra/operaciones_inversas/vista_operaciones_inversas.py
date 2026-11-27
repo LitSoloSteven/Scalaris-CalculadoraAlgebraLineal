@@ -45,16 +45,16 @@ class VistaOperacionesInversas(MixinResultadosOperacionesInversas, MixinPasosOpe
         self.panel_matriz_cuadrada.al_cambiar_datos = self._al_cambiar_matriz
         self.calculadora.inyectar_recursos_cliente()
 
-        with ui.column().classes('w-full max-w-7xl mx-auto p-6 mt-4 vista-raiz sesion-vista'):
+        with ui.column().classes('w-full max-w-7xl mx-auto p-6 mt-4 vista-raiz disposicion-herramienta sesion-vista'):
             self.contenedor_transferencia = ui.column().classes('w-full')
             self._renderizar_cabecera()
 
-            with ui.element('div').classes('disposicion-dividida mb-8'):
+            with ui.element('div').classes('disposicion-captura-fila mb-2'):
                 self._renderizar_columna_captura()
                 self._renderizar_columna_herramientas()
 
             self.contenedor_resultados = ui.column().classes(
-                'w-full panel-tarjeta p-6 items-center justify-center min-h-[400px]'
+                'disposicion-resultados panel-tarjeta p-6 items-center justify-center min-h-[280px]'
             ).props('id="inversa-resultados"')
             self.restablecer_resultados()
 
@@ -63,8 +63,8 @@ class VistaOperacionesInversas(MixinResultadosOperacionesInversas, MixinPasosOpe
 
     def _renderizar_cabecera(self) -> None:
         """Renderiza título y subtítulo de la herramienta."""
-        with ui.column().classes('mb-8'):
-            ui.label('Matriz inversa').classes('text-2xl font-bold texto-principal')
+        with ui.column().classes('mb-2'):
+            ui.label('Matriz inversa').classes('text-2xl font-bold texto-principal').props('role="heading" aria-level="1"')
             ui.label('Gauss-Jordan sobre [A | I]').classes(
                 'fuente-pequena texto-secundario uppercase'
             ).classes('sesion-subtitulo')
@@ -85,8 +85,11 @@ class VistaOperacionesInversas(MixinResultadosOperacionesInversas, MixinPasosOpe
     def _procesar_transferencia_inicial(self, token_transferencia: str) -> None:
         """Recupera la matriz desde navegación entrante si existe token."""
         from src.frontend.componentes.resultados.acciones.transferencia import recibir_matriz
-        recibir_matriz(token_transferencia, "inversa", self.panel_matriz_cuadrada.cargar_matriz,
-                       self.contenedor_transferencia)
+        recibir_matriz(
+            token_transferencia, "inversa",
+            lambda datos: self.panel_matriz_cuadrada.cargar_matriz(datos, conservar_ceros=True),
+            self.contenedor_transferencia,
+        )
 
     def obtener_contexto_ia(self):
         """Delega la serializacion de captura y resultado al controlador."""

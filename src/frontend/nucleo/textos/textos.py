@@ -224,7 +224,7 @@ RESULTADO_COPIAR = "Copiar resultado"
 RESULTADO_COPIADO = "Resultado copiado al portapapeles"
 RESULTADO_COPIAR_ERROR = "No se pudo copiar el resultado. Revisa los permisos del portapapeles y vuelve a intentarlo."
 RESULTADO_CAMPOS_COPIABLES = (
-    ("determinante", "Determinante"), ("permutacion", "P"), ("inferior", "L"), ("superior", "U"),
+    ("determinante", "Determinante"), ("inversa", "A⁻¹"), ("permutacion", "P"), ("inferior", "L"), ("superior", "U"),
     ("solucion", "Solución"), ("matriz_resultado", "Resultado"), ("vector_resultado", "Vector"),
     ("coeficientes_texto", "Coeficientes"), ("solucion_parametrica", "Solución paramétrica"),
     ("vector_produccion", "Producción"), ("rango", "Rango"), ("nulidad", "Nulidad"),
