@@ -50,7 +50,7 @@
 
     function limpiar() {
         if (temporizador) {
-            clearTimeout(temporizador);
+            window.clearTimeout(temporizador);
             temporizador = null;
         }
         const aviso = document.getElementById(identificadorAviso);
@@ -62,10 +62,10 @@
     }
 
     function rechazar(entrada, mensaje, animar) {
-        if (temporizador) clearTimeout(temporizador);
+        if (temporizador) window.clearTimeout(temporizador);
         anunciar(mensaje);
         vincularDescriptor(entrada);
-        temporizador = setTimeout(limpiar, 6000);
+        temporizador = window.setTimeout?.(limpiar, 6000) ?? null;
         window.scalaris.eventosSonoros?.rechazo();
         if (!animar) return;
         const control = entrada.closest('.q-field__control');
