@@ -6,11 +6,13 @@ import asyncio
 import json
 import logging
 import html
+import re
 
 from ._cuerpo_reproductor_matrices import renderizar_cuerpo_matrices
 
 from nicegui import ui
 from src.frontend.componentes.aplicacion.base.sonido import notificar
+from src.frontend.componentes.captura.nucleo.cuadricula_base import ubicar_celda_matriz
 from src.frontend.componentes.resultados.acciones.avisos_resultado import mostrar_error_inesperado, renderizar_aviso_resultado
 from src.frontend.componentes.glosa.interaccion.glosa_foco import crear_accion_explicacion
 from src.frontend.componentes.exportacion_pdf.montaje.integracion import region_pdf, completar_exportacion, identificador_raiz
@@ -39,6 +41,16 @@ class MixinResultadosOperacionesMatrices:
         if not expresion:
             self.restablecer_resultados()
             notificar('Ingresa una expresión para evaluar.', type='warning')
+            return
+        vacia = self._matriz_usada_vacia(expresion)
+        if vacia:
+            self.restablecer_resultados()
+            mensaje = f'La matriz {vacia} está vacía. Ingresa al menos un valor antes de evaluar.'
+            with self.contenedor_resultados:
+                self.contenedor_resultados.classes(remove='items-center justify-center', add='items-start justify-start')
+                renderizar_aviso_resultado(mensaje, 'close', 'items-center gap-2 px-4 py-2 distintivo-error mb-4 w-fit')
+            notificar(mensaje, type='warning')
+            ubicar_celda_matriz(vacia, 0, 0)
             return
 
         if getattr(self, "_calculando", False):
@@ -118,10 +130,22 @@ class MixinResultadosOperacionesMatrices:
         return {'expresion': self.entrada_expresion.value,
                 'matrices': self.panel_captura_matrices.obtener_datos_crudos()}
 
+    def _matriz_usada_vacia(self, expresion: str) -> str | None:
+        usadas = re.findall(r'(?<![A-Za-z0-9_^])([A-Z])(?![A-Za-z0-9_])', expresion or '')
+        for nombre in dict.fromkeys(usadas):
+            matriz = self.panel_captura_matrices.matrices.get(nombre)
+            if not matriz:
+                continue
+            if all(not str(celda.value or '').strip() for fila in matriz['entradas'] for celda in fila):
+                return nombre
+        return None
+
     def _renderizar_transferencias(self, respuesta: dict, matrices: dict) -> None:
         if respuesta.get('estado') != 'EXITO':
             return
-        for nombre, matriz in matrices.items():
+        usadas = set(re.findall(r'(?<![A-Za-z0-9_^])([A-Z])(?![A-Za-z0-9_])', self.entrada_expresion.value or ''))
+        candidatas = {nombre: matriz for nombre, matriz in matrices.items() if nombre in usadas} or matrices
+        for nombre, matriz in candidatas.items():
             ui.label(textos.TRANSFERENCIA_MATRIZ_CAPTURADA.format(nombre=nombre)).classes(
                 'font-semibold texto-principal')
             renderizar_acciones_matriz('matrices', matriz['datos'])
@@ -138,8 +162,12 @@ class MixinResultadosOperacionesMatrices:
     def _renderizar_estado_y_sugerencias(self, respuesta: dict):
         """Presenta el estado recibido y las sugerencias contextuales de Glosa."""
         if respuesta.get("estado") == "ERROR":
-            renderizar_aviso_resultado(respuesta.get("mensaje", "Error desconocido"), 'close',
+            mensaje = respuesta.get("mensaje", "Error desconocido")
+            renderizar_aviso_resultado(mensaje, 'close',
                                       'items-center gap-2 px-4 py-2 distintivo-error mb-4 w-fit')
+            coincidencia = re.search(r'Matriz ([A-Z]), celda \[(\d+),(\d+)\]', mensaje)
+            if coincidencia:
+                ubicar_celda_matriz(coincidencia.group(1), int(coincidencia.group(2)) - 1, int(coincidencia.group(3)) - 1)
         else:
             renderizar_aviso_resultado(respuesta.get("mensaje", "Éxito"), 'check',
                                       'items-center gap-2 px-4 py-2 distintivo-exito mb-6 w-fit')

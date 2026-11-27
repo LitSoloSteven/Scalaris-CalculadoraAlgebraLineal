@@ -118,20 +118,25 @@ class VistaOperacionesMatrices(MixinResultadosOperacionesMatrices, MixinContexto
         self.panel_captura_matrices.inyectar_recursos_cliente()
         self.panel_captura_matrices.al_cambiar_datos = self._al_cambiar_matriz
 
-        with ui.column().classes('w-full max-w-7xl mx-auto p-6 mt-4 vista-raiz matrices-vista'):
+        with ui.column().classes('w-full max-w-7xl mx-auto p-6 mt-4 vista-raiz disposicion-herramienta matrices-vista'):
             self.contenedor_transferencia = ui.column().classes('w-full')
-            with ui.row().classes('w-full justify-between items-center mb-8 gap-4 flex-wrap'):
-                ui.label('Matrices').classes('text-2xl font-bold texto-principal')
+            with ui.row().classes('w-full justify-between items-center mb-2 gap-4 flex-wrap'):
+                ui.label('Matrices').classes('text-2xl font-bold texto-principal').props('role="heading" aria-level="1"')
 
-            with ui.element('div').classes('disposicion-dividida mb-8'):
+            with ui.element('div').classes('disposicion-captura-fila mb-2'):
                 with ui.column().classes('disposicion-panel matrices-panel-captura'):
                     self._renderizar_panel_captura()
 
-                with ui.column().classes('disposicion-panel'):
-                    self.contenedor_resultados = ui.column().classes(
-                        'w-full panel-tarjeta p-6 items-center justify-center min-h-[400px]'
-                    ).props('id="resultados-matrices"')
-                    self.restablecer_resultados()
+                with ui.column().classes('disposicion-panel gap-4'):
+                    self._renderizar_panel_expresion()
+                    with ui.column().classes('panel-tarjeta p-4 gap-1'):
+                        ui.label('Sintaxis rápida').classes('text-sm font-bold texto-principal')
+                        ui.label('Usa +, -, *, ^T (transpuesta), ^-1 o escalares como 2*A.').classes('text-xs texto-secundario')
+
+            self.contenedor_resultados = ui.column().classes(
+                'disposicion-resultados panel-tarjeta p-6 items-center justify-center min-h-[280px]'
+            ).props('id="resultados-matrices"')
+            self.restablecer_resultados()
 
         self.panel_ia.construir()
         recibir_matriz(token_transferencia, "matrices", self.panel_captura_matrices.cargar_matriz_a,

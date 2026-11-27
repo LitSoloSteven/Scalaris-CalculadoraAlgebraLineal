@@ -46,9 +46,9 @@ def _construir_acciones_tarjeta(panel: PanelCapturaMatrices, nombre: str) -> Non
     """Ofrece la transferencia a inversa y la eliminación junto a las dimensiones."""
     with ui.row().classes("captura-matriz-acciones"):
         if panel.al_invertir:
-            ui.button(icon="arrow_forward", color=None, on_click=lambda: panel.al_invertir(nombre)).classes(
-                "boton-discreto captura-matriz-accion"
-            ).props(f'ripple=false aria-label="Abrir matriz {nombre} en Matriz inversa"').tooltip(
+            ui.button("Inversa", icon="arrow_forward", color=None, on_click=lambda: panel.al_invertir(nombre)).classes(
+                "boton-discreto min-h-[44px] px-3 flex-shrink-0"
+            ).props(f'no-caps ripple=false aria-label="Abrir matriz {nombre} en Matriz inversa"').tooltip(
                 f"Envía una copia de la matriz {nombre} a Matriz inversa para calcular su inversa."
             )
         boton = ui.button(icon="delete", on_click=partial(panel.eliminar_matriz, nombre), color=None).classes(
