@@ -18,22 +18,22 @@ class MixinCapturaTransformaciones:
             ui.label("Dimensiones A (m×n):").classes("text-sm font-bold texto-secundario")
             with ui.row().classes("gap-1 items-center"):
                 ui.label("m=").classes("text-sm texto-secundario")
-                self.boton_quitar_fila = ui.button(icon="remove", on_click=partial(self._ajustar_filas, -1), color=None).classes("boton-icono w-7 h-7 p-0").props('ripple=false aria-label="Reducir filas m"')
-                self.boton_agregar_fila = ui.button(icon="add", on_click=partial(self._ajustar_filas, 1), color=None).classes("boton-icono w-7 h-7 p-0").props('ripple=false aria-label="Aumentar filas m"')
+                self.boton_quitar_fila = ui.button(icon="remove", on_click=partial(self._ajustar_filas, -1), color=None).classes("boton-icono p-0").props('ripple=false aria-label="Reducir filas m"')
+                self.boton_agregar_fila = ui.button(icon="add", on_click=partial(self._ajustar_filas, 1), color=None).classes("boton-icono p-0").props('ripple=false aria-label="Aumentar filas m"')
             with ui.row().classes("gap-1 items-center"):
                 ui.label("n=").classes("text-sm texto-secundario")
-                self.boton_quitar_columna = ui.button(icon="remove", on_click=partial(self._ajustar_columnas, -1), color=None).classes("boton-icono w-7 h-7 p-0").props('ripple=false aria-label="Reducir columnas n"')
-                self.boton_agregar_columna = ui.button(icon="add", on_click=partial(self._ajustar_columnas, 1), color=None).classes("boton-icono w-7 h-7 p-0").props('ripple=false aria-label="Aumentar columnas n"')
+                self.boton_quitar_columna = ui.button(icon="remove", on_click=partial(self._ajustar_columnas, -1), color=None).classes("boton-icono p-0").props('ripple=false aria-label="Reducir columnas n"')
+                self.boton_agregar_columna = ui.button(icon="add", on_click=partial(self._ajustar_columnas, 1), color=None).classes("boton-icono p-0").props('ripple=false aria-label="Aumentar columnas n"')
         self._actualizar_botones_tamano()
 
     def _construir_panel_a(self):
         with ui.column().classes("w-full panel-tarjeta p-4 mb-4"):
-            ui.label("Matriz A de la transformacion").classes("font-bold texto-principal mb-3")
+            ui.label("Matriz A de la transformación").classes("font-bold texto-principal mb-3")
             ui.html(
                 '<p class="text-xs texto-secundario mb-2">'
                 "Ingresa la matriz A tal que T(x) = Ax. "
-                "Filas m = dimension del codominio R<sup>m</sup>, "
-                "columnas n = dimension del dominio R<sup>n</sup>.</p>"
+                "Filas m = dimensión del codominio ℝ<sup>m</sup>, "
+                "columnas n = dimensión del dominio ℝ<sup>n</sup>.</p>"
             )
             self.contenedor_coeficientes = ui.column().classes("modelos-captura")
             self._generar_cuadricula()
