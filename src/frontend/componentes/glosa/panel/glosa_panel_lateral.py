@@ -40,7 +40,9 @@ class PanelLateralGlosaMixin(FocoGlosaMixin, EnvioGlosaMixin):
     def construir_panel_lateral(self) -> None:
         """Construye la estructura del panel lateral accesible."""
         with ui.element("aside").classes("glosa-panel-lateral flex flex-col no-wrap").props(
-            'id="glosa-panel-lateral" tabindex="-1" role="complementary" aria-label="Glosa, asistente de álgebra lineal" data-glosa-conservar'
+            'id="glosa-panel-lateral" tabindex="-1" role="complementary" '
+            'aria-label="Glosa, asistente de álgebra lineal, métodos numéricos y sistemas de numeración" '
+            'data-glosa-conservar'
         ):
             construir_cabecera_lateral(self.limpiar_chat)
             self.area_chat = construir_bitacora_lateral()
