@@ -150,4 +150,3 @@ class VistaOperacionesMatrices(MixinResultadosOperacionesMatrices, MixinContexto
             ).props('ripple=false')
         self.panel_captura_matrices.al_invertir = self._navegar_a_inversa
         self.panel_captura_matrices.construir(ui.column().classes('captura-matrices-lista'))
-        self._renderizar_panel_expresion()
