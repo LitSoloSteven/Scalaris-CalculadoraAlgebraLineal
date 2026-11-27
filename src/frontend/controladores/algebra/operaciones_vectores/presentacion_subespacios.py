@@ -5,24 +5,16 @@ from collections.abc import Mapping
 from fractions import Fraction
 import re
 
-from src.backend.modelos.escalares.conversion_fracciones import (
-    texto_entero_exacto,
-    texto_fraccion_exacta,
-)
+from src.backend.modelos.escalares.conversion_fracciones import texto_entero_exacto, texto_fraccion_exacta
 from src.backend.modelos.matriz import Matriz
 from src.frontend.nucleo.textos.textos_espacios_subespacios import (
-    CRITERIOS_TEOREMA_GENERADORES,
-    MENSAJE_CALCULO_NO_VERIFICADO,
-    MODO_GENERADORES,
-    NOTA_DIMENSION_SUPERIOR,
-    SUBTITULO_SUBESPACIO_CERO,
-    VEREDICTO_SUBESPACIO_CERO,
-    superindice_dimension,
-    texto_herencia_axiomas,
-    texto_veredicto_subespacio,
+    CRITERIOS_TEOREMA_GENERADORES, MENSAJE_CALCULO_NO_VERIFICADO, MODO_GENERADORES,
+    NOTA_DIMENSION_SUPERIOR, SUBTITULO_SUBESPACIO_CERO, VEREDICTO_SUBESPACIO_CERO,
+    superindice_dimension, texto_herencia_axiomas, texto_veredicto_subespacio,
 )
 
 _CODIGOS_INTERNOS = frozenset({"VERIFICACION_INCONSISTENTE", "ERROR_INTERNO"})
+_PATRON_COLUMNA_CERO = re.compile(r"\bcolumna original (\d+)\b")
 
 
 def presentar_resultado_subespacio(
@@ -163,13 +155,16 @@ def serializar_pasos(pasos: tuple) -> tuple[dict, ...]:
     )
 
 
+def _detalle_comprobacion(texto: object) -> str:
+    return _PATRON_COLUMNA_CERO.sub(lambda m: f"columna original {int(m.group(1)) + 1}", limpiar_texto(texto))
+
 def serializar_comprobaciones(comprobaciones: tuple[Mapping, ...]) -> tuple[dict, ...]:
     """Serializa las verificaciones exactas devueltas por el motor."""
     return tuple(
         {
             "tipo": str(elemento.get("tipo", "")),
             "coincide": bool(elemento.get("coincide", False)),
-            "detalle": limpiar_texto(elemento.get("detalle", "")),
+            "detalle": _detalle_comprobacion(elemento.get("detalle", "")),
             "detalle_latex": str(elemento.get("detalle_latex") or ""),
             "fila": elemento.get("fila"),
             "indice": elemento.get("indice"),

@@ -9,26 +9,14 @@ from src.frontend.componentes.exportacion_pdf.montaje.integracion import region_
 from src.frontend.componentes.reproductor_pasos.formato.cuerpos import renderizar_latex
 from src.frontend.componentes.reproductor_pasos.interfaz.reproductor import ReproductorPasos
 from src.frontend.nucleo.textos.textos_espacios_subespacios import (
-    MODO_RESTRICCIONES,
-    NOMBRES_MODOS,
-    NOTA_GENERA_AMBIENTE,
-    SUBTITULO_CONJUNTO_VACIO,
-    SUBTITULO_SUBESPACIO_CERO,
-    SUBTITULO_TEOREMA_CRITERIOS,
-    SUBTITULO_TEOREMA_RESTRICCIONES_AFIN,
-    SUBTITULO_TEOREMA_RESTRICCIONES_HOMOGENEO,
-    SUBTITULO_TEOREMA_RESTRICCIONES_VACIO,
-    TITULO_TEOREMA_CRITERIOS,
-    TITULO_VERIFICACION_MOTOR,
-    VEREDICTO_CONJUNTO_VACIO,
-    VEREDICTO_SUBESPACIO_CERO,
+    MODO_RESTRICCIONES, NOMBRES_MODOS, NOTA_GENERA_AMBIENTE, SUBTITULO_CONJUNTO_VACIO,
+    SUBTITULO_SUBESPACIO_CERO, SUBTITULO_TEOREMA_CRITERIOS, SUBTITULO_TEOREMA_RESTRICCIONES_AFIN,
+    SUBTITULO_TEOREMA_RESTRICCIONES_HOMOGENEO, SUBTITULO_TEOREMA_RESTRICCIONES_VACIO,
+    TITULO_TEOREMA_CRITERIOS, TITULO_VERIFICACION_MOTOR, VEREDICTO_CONJUNTO_VACIO,
+    VEREDICTO_SUBESPACIO_CERO, superindice_dimension,
 )
-from src.frontend.vistas.algebra.operaciones_vectores.panel.pasos_restricciones import (
-    renderizar_verificacion_motor,
-)
-from src.frontend.vistas.algebra.operaciones_vectores.panel.pasos_subespacios import (
-    crear_reproductor_subespacios,
-)
+from src.frontend.vistas.algebra.operaciones_vectores.panel.pasos_restricciones import renderizar_verificacion_motor
+from src.frontend.vistas.algebra.operaciones_vectores.panel.pasos_subespacios import crear_reproductor_subespacios
 from src.frontend.vistas.geometria.figuras.figura_subespacios import preparar_figura_subespacio
 
 _CLASES_ESTADO = {
@@ -82,7 +70,7 @@ def _renderizar_bloques_complementarios(
 
 
 def _metricas_resultado(resultado: dict) -> list[tuple[str, object]]:
-    ambiente = f"ℝ^{resultado['dimension_ambiente']}"
+    ambiente = f"ℝ{superindice_dimension(resultado['dimension_ambiente'])}"
     if resultado.get("modo") != MODO_RESTRICCIONES:
         return [
             ("Rango", resultado["rango"]),
@@ -198,6 +186,16 @@ def _mostrar_bloque_afin(resultado: dict) -> None:
     _mostrar_familia_parametrica(resultado.get("familia_parametrica"), "Familia afín p + ker(A)")
 
 
+def _formatear_etiqueta_unicode(etiqueta: str) -> str:
+    base, separador, subindice = etiqueta.partition("_")
+    if separador and subindice.isdigit():
+        return f"{base}{subindice.translate(_SUBINDICES)}"
+    return etiqueta
+
+
+_SUBINDICES = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
+
+
 def _mostrar_familia_parametrica(familia: dict | None, titulo: str) -> None:
     if not familia:
         return
@@ -205,13 +203,15 @@ def _mostrar_familia_parametrica(familia: dict | None, titulo: str) -> None:
     with ui.column().classes("subespacios-formula gap-1"):
         if familia.get("latex"):
             renderizar_latex(familia["latex"], vigilar_region=True)
-        ui.label(familia["texto"]).classes("subespacios-numero texto-secundario text-sm select-text")
+        else:
+            ui.label(familia["texto"]).classes("subespacios-numero texto-secundario text-sm select-text")
 
 
 def _mostrar_vector_base(etiqueta: str, vector: tuple[str, ...]) -> None:
+    etiqueta_visible = _formatear_etiqueta_unicode(etiqueta)
     with ui.row().classes("w-full items-center gap-2 no-wrap"):
-        etiqueta_ui = ui.label(etiqueta).classes("subespacios-etiqueta font-semibold texto-principal")
-        etiqueta_ui.props.update({"title": etiqueta})
+        etiqueta_ui = ui.label(etiqueta_visible).classes("subespacios-etiqueta font-semibold texto-principal")
+        etiqueta_ui.props.update({"title": etiqueta_visible})
         ui.label(f"= ({', '.join(vector)})").classes("subespacios-numero texto-principal select-text min-w-0")
 
 
@@ -224,7 +224,8 @@ def _mostrar_dependencias(dependencias: tuple[dict, ...]) -> None:
     for dependencia in dependencias:
         if dependencia.get("respaldada") and dependencia.get("latex"):
             renderizar_latex(dependencia["latex"], vigilar_region=True)
-        ui.label(dependencia["texto"]).classes("subespacios-numero texto-secundario text-sm select-text")
+        else:
+            ui.label(dependencia["texto"]).classes("subespacios-numero texto-secundario text-sm select-text")
 
 
 def _subtitulo_criterios(resultado: dict) -> str:
