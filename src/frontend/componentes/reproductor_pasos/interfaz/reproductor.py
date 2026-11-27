@@ -144,7 +144,7 @@ class ReproductorPasos:
             )
             return
         self.explicacion.set_content(
-            f'<span id="{identificador}" class="texto-secundario text-sm leading-relaxed"></span>'
+            f'<span id="{identificador}" class="texto-secundario text-sm leading-relaxed">{contenido}</span>'
         )
         llamada = (
             f"if(window.scalaris && window.scalaris.pasos) window.scalaris.pasos.revelar({json.dumps(identificador)}, "

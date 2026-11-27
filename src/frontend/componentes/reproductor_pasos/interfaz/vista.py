@@ -84,10 +84,10 @@ def _construir_cabecera(reproductor: ReproductorPasos) -> None:
 def _construir_descripcion(reproductor: ReproductorPasos) -> None:
     """Crea la fila de descripcion, explicacion y boton de Glosa."""
     with ui.row().classes('w-full justify-between items-start gap-2'):
-        with ui.column().classes('flex-1 gap-1'):
-            reproductor.descripcion = ui.html('').classes('font-semibold texto-principal text-sm')
-            reproductor.explicacion = ui.html('').classes('w-full')
-        reproductor.contenedor_glosa = ui.row()
+        with ui.column().classes('flex-1 min-w-0 gap-1'):
+            reproductor.descripcion = ui.html('').classes('font-semibold texto-principal text-sm break-words w-full')
+            reproductor.explicacion = ui.html('').classes('w-full min-w-0 break-words')
+        reproductor.contenedor_glosa = ui.row().classes('shrink-0')
 
 
 def _construir_cuerpo(reproductor: ReproductorPasos) -> None:
