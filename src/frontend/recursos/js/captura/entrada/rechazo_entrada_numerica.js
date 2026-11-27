@@ -4,6 +4,7 @@
     window.scalaris = window.scalaris || {};
     const animaciones = new WeakMap();
     const identificadorAviso = 'captura-aviso-numerico';
+    const selectoresCambioModo = ['[role="tab"]', '[role="radio"]', '[role="option"]', '.selector-opciones-boton'];
     let entradaRechazada = null;
     let temporizador = null;
 
@@ -90,7 +91,7 @@
         if (document.body) prepararAviso();
         else document.addEventListener('DOMContentLoaded', prepararAviso, { once: true });
         document.addEventListener('click', evento => {
-            if (evento.target?.closest?.('[role="tab"], [role="radio"], [role="option"], .selector-opciones-boton')) limpiar();
+            if (selectoresCambioModo.some(selector => evento.target?.closest?.(selector))) limpiar();
         });
         window.scalaris.rechazoNumerico = { rechazar, limpiar };
     }
