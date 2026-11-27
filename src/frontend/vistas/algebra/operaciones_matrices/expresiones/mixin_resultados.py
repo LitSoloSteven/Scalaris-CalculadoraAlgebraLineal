@@ -42,17 +42,6 @@ class MixinResultadosOperacionesMatrices:
             self.restablecer_resultados()
             notificar('Ingresa una expresión para evaluar.', type='warning')
             return
-        vacia = self._matriz_usada_vacia(expresion)
-        if vacia:
-            self.restablecer_resultados()
-            mensaje = f'La matriz {vacia} está vacía. Ingresa al menos un valor antes de evaluar.'
-            with self.contenedor_resultados:
-                self.contenedor_resultados.classes(remove='items-center justify-center', add='items-start justify-start')
-                renderizar_aviso_resultado(mensaje, 'close', 'items-center gap-2 px-4 py-2 distintivo-error mb-4 w-fit')
-            notificar(mensaje, type='warning')
-            ubicar_celda_matriz(vacia, 0, 0)
-            return
-
         if getattr(self, "_calculando", False):
             return
         self._calculando = True
@@ -89,6 +78,10 @@ class MixinResultadosOperacionesMatrices:
         if version != self._version_solicitud or self.entrada_expresion.value != expresion:
             self.restablecer_resultados()
             return
+        vacia = self._matriz_usada_vacia(expresion)
+        if vacia:
+            self._mostrar_matriz_vacia(vacia)
+            return
 
         captura = self._capturar_evaluacion()
         calculo = await ejecutar_calculo_vigente(
@@ -105,6 +98,15 @@ class MixinResultadosOperacionesMatrices:
 
         self._presentar_evaluacion(respuesta, captura['matrices'])
         ui.run_javascript('if(window.scalaris && window.scalaris.renderizarMathJax) window.scalaris.renderizarMathJax();')
+
+    def _mostrar_matriz_vacia(self, nombre: str) -> None:
+        self.restablecer_resultados()
+        self.contenedor_resultados.clear()
+        mensaje = f'La matriz {nombre} está vacía. Ingresa al menos un valor antes de evaluar.'
+        with self.contenedor_resultados:
+            self.contenedor_resultados.classes(remove='items-center justify-center', add='items-start justify-start')
+            renderizar_aviso_resultado(mensaje, 'close', 'items-center gap-2 px-4 py-2 distintivo-error mb-4 w-fit')
+        ubicar_celda_matriz(nombre, 0, 0)
 
     def _presentar_evaluacion(self, respuesta: dict, matrices: dict) -> None:
         self.contenedor_resultados.clear()
