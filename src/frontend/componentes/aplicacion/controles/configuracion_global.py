@@ -24,16 +24,20 @@ def _renderizar_bloque_temas() -> None:
             'role="radiogroup" aria-label="Tema de la interfaz"'
         ):
             for etiqueta, id_tema in TEMAS_DISPONIBLES:
-                with ui.button(color=None).classes("configuracion-opcion-tema").props(
-                    f'flat no-caps ripple=false role="menuitemradio" aria-checked="false" '
-                    f'data-tema-opcion="{id_tema}"'
-                ):
-                    ui.html(
-                        f'<div class="tema-muestra tema-muestra-{id_tema}" aria-hidden="true"></div>',
-                        tag="span",
-                    ).classes("shrink-0 flex items-center")
-                    ui.label(etiqueta).classes("flex-1 text-left")
-                    ui.html(_MARCA_ACTIVA_SVG)
+                _renderizar_opcion_tema(etiqueta, id_tema)
+
+
+def _renderizar_opcion_tema(etiqueta: str, id_tema: str) -> None:
+    with ui.button(color=None).classes("configuracion-opcion-tema").props(
+        f'flat no-caps ripple=false role="menuitemradio" aria-checked="false" '
+        f'data-tema-opcion="{id_tema}"'
+    ):
+        ui.html(
+            f'<div class="tema-muestra tema-muestra-{id_tema}" aria-hidden="true"></div>',
+            tag="span",
+        ).classes("shrink-0 flex items-center")
+        ui.label(etiqueta).classes("flex-1 text-left")
+        ui.html(_MARCA_ACTIVA_SVG)
 
 
 def _renderizar_bloque_sonido() -> None:

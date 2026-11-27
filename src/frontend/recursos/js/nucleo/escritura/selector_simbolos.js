@@ -292,5 +292,5 @@
 
     document.addEventListener('focusin', evento => { if (perfil(evento.target)) ultimoCampo = evento.target; });
     document.addEventListener('keydown', atajo);
-    if (typeof window !== 'undefined') (window.scalaris = window.scalaris || {}).selectorSimbolos = { abrir };
+    window.scalaris.selectorSimbolos = { abrir };
 }
