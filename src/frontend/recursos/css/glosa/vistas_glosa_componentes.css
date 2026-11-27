@@ -121,9 +121,10 @@
 }
 
 .glosa-boton-explicacion {
-    width: 32px !important;
-    height: 32px !important;
-    min-width: 32px !important;
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
     flex-shrink: 0;
     padding: 0 !important;
     color: var(--text-sec) !important;
@@ -206,9 +207,10 @@ html[data-entrada="teclado"] .glosa-boton-explicacion::after {
 .glosa-foco-explicacion-cerrar {
     color: var(--text-sec) !important;
     flex-shrink: 0;
-    width: 24px !important;
-    height: 24px !important;
-    min-height: 24px !important;
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
     padding: 0 !important;
 }
 

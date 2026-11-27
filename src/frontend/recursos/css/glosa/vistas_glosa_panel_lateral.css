@@ -140,11 +140,26 @@ html[data-glosa="abierto"] .glosa-boton-flotante {
         left: 0;
         right: 0;
         bottom: var(--glosa-kb, 0px);
+        z-index: var(--z-fab);
         height: min(92dvh, 800px);
+        max-height: calc(100dvh - var(--space-4) - var(--glosa-kb, 0px));
         border-radius: var(--radius-card) var(--radius-card) 0 0;
         transform: translateY(100%);
         opacity: 0;
         visibility: hidden;
+    }
+
+    .glosa-fondo-modal {
+        z-index: calc(var(--z-fab) - 1);
+    }
+
+    html[data-glosa="abierto"] .q-header {
+        z-index: 0 !important;
+    }
+
+    html[data-glosa="abierto"] .q-page-container {
+        position: relative;
+        z-index: var(--z-dock) !important;
     }
 
     html[data-glosa="abierto"] .glosa-panel-lateral {
