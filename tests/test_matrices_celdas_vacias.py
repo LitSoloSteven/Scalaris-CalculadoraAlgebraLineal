@@ -10,6 +10,7 @@ from tests.comun_construccion_vistas import construir_pagina
 def test_celda_vacia_solo_bloquea_el_operando_utilizado(monkeypatch):
     """Señala la coordenada incompleta y recupera el cálculo con un cero explícito."""
     async def comprobar(vista, cliente):
+        """Ejercita la evaluación desde la vista montada con su botón real."""
         vista.panel_captura_matrices.cargar_datos({'A': [['2', '']], 'B': [['']]})
         vista.entrada_expresion.set_value('A+A')
         boton = next(elemento for elemento in cliente.elements.values()
