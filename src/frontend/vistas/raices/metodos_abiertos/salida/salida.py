@@ -4,7 +4,9 @@ from collections.abc import Callable
 from nicegui import ui
 
 from src.frontend.componentes.reproductor_pasos import ReproductorPasos
+from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto
 from src.frontend.controladores.raices.metodos_abiertos.pasos import construir_secuencia
+from .contexto import opciones_glosa
 from .procedimiento import renderizar_iteracion, renderizar_resumen_paso
 from .resumen import mostrar_resumen
 from .tabla import TablaIteraciones
@@ -13,8 +15,9 @@ from .tabla import TablaIteraciones
 class SalidaMetodosAbiertos:
     """Mantiene sincronizadas la tabla, el reproductor y la gráfica activa."""
 
-    def __init__(self, actualizar_figura: Callable[[dict | None], None]):
+    def __init__(self, actualizar_figura: Callable[[dict | None], None], vista=None):
         self._actualizar_figura = actualizar_figura
+        self.vista = vista
         self.resultado = None
         self.fila_activa = None
         self.reproductor = None
@@ -37,9 +40,10 @@ class SalidaMetodosAbiertos:
 
     def _crear_reproductor(self, datos: dict, contenedor) -> None:
         pasos, grupos = construir_secuencia(datos)
+        opciones = {"titulo": "Procedimiento de métodos abiertos", "sin_movimiento": True}
+        opciones.update(opciones_glosa(self, datos, pasos))
         self.reproductor = ReproductorPasos(
-            pasos, grupos, self._renderizar_paso, "metodos-abiertos",
-            {"titulo": "Procedimiento de métodos abiertos", "sin_movimiento": True},
+            pasos, grupos, self._renderizar_paso, "metodos-abiertos", opciones,
         )
         with contenedor:
             self.reproductor.construir()
@@ -58,6 +62,14 @@ class SalidaMetodosAbiertos:
         self.tabla.sincronizar(self.fila_activa)
         with contenedor:
             self._renderizar_contenido(paso)
+        self._sincronizar_glosa()
+
+    def _sincronizar_glosa(self) -> None:
+        panel = getattr(self.vista, "panel_ia", None)
+        if panel is not None and not getattr(self.vista, "_cerrada", False):
+            panel.limpiar_foco_explicacion()
+            panel.limpiar_contexto()
+            actualizar_contexto(self.vista)
 
     def _renderizar_contenido(self, paso) -> None:
         if paso.cuerpo is None:
@@ -81,3 +93,4 @@ class SalidaMetodosAbiertos:
         contenedor_reproductor.clear()
         self.resultado = self.fila_activa = self.reproductor = None
         self.tabla.limpiar()
+        self._sincronizar_glosa()

@@ -42,7 +42,12 @@ class TablaIteraciones:
         self.tabla = ui.table(
             columns=columnas, rows=filas_tabla, row_key="clave", pagination=15,
             selection="single", on_select=self._seleccionar,
-        ).classes("metodos-abiertos-tabla w-full")
+        ).classes("metodos-abiertos-tabla w-full").props(
+            'rows-per-page-label="Filas por página:" '
+            'no-data-label="Sin iteraciones disponibles" '
+            ':pagination-label="(inicio, fin, total) => inicio + \'–\' + fin + \' de \' + total" '
+            ':selected-rows-label="n => n === 1 ? \'1 fila seleccionada\' : n + \' filas seleccionadas\'"'
+        )
         self.tabla.add_slot("body", _PLANTILLA_CUERPO)
 
     def _seleccionar(self, evento) -> None:
@@ -67,8 +72,12 @@ class TablaIteraciones:
     def _fila_seleccionada(self, fila: dict | None) -> list[dict]:
         if fila is None:
             return []
-        fila_tabla = next((registro for registro in self.tabla.rows
-                           if str(registro.get("i")) == str(fila.get("i"))), None)
+        objetivo = str(fila.get("i"))
+        fila_tabla = next(
+            (registro for registro in self.tabla.rows
+             if str(registro.get("clave")) == objetivo or str(registro.get("i")) == objetivo),
+            None,
+        )
         return [] if fila_tabla is None else [fila_tabla]
 
     def _cambiar_pagina(self, seleccion, deseada) -> None:
@@ -124,6 +133,7 @@ def _formatear_fila(fila: dict, etiquetas) -> dict:
 
 _PLANTILLA_CUERPO = """
     <q-tr :props="props" class="metodos-abiertos-fila" tabindex="0"
+        :aria-selected="props.selected ? 'true' : 'false'"
         :aria-label="'Mostrar iteración ' + props.row.i"
         @click="props.selected = !props.selected"
         @keydown.enter.prevent.stop="props.selected = !props.selected"
