@@ -1,12 +1,15 @@
 'use strict';
 {
     window.scalaris = window.scalaris || {};
+    window.scalaris.glosa?.destruir?.();
+    let observadorInicial = null;
     window.scalaris.glosa = {
         modo: () => getComputedStyle(document.documentElement).getPropertyValue('--glosa-mode').trim() || 'desplazar',
         estaAbierto: () => document.documentElement.getAttribute('data-glosa') === 'abierto',
         abrir: (opciones = {}) => establecerEstadoGlosa('abierto', opciones),
         cerrar: (opciones = {}) => establecerEstadoGlosa('cerrado', opciones),
-        alternar: (opciones = {}) => establecerEstadoGlosa(window.scalaris.glosa.estaAbierto() ? 'cerrado' : 'abierto', opciones)
+        alternar: (opciones = {}) => establecerEstadoGlosa(window.scalaris.glosa.estaAbierto() ? 'cerrado' : 'abierto', opciones),
+        destruir: () => destruir()
     };
 
     function animarDesplazamiento(objetos, antes, instantaneo, modo, anchos) {
@@ -113,29 +116,29 @@
         document.dispatchEvent(new CustomEvent('scalaris:glosa', { detail: { abierto: nuevoEstado === 'abierto', modo } }));
     }
 
-    document.addEventListener('click', (evento) => {
-        const boton_alternar = evento.target.closest('[data-glosa-alternar]');
-        if (boton_alternar) {
-            const tipo_origen = evento.detail === 0 ? 'teclado' : 'puntero';
-            window.scalaris.glosa.alternar({ origen: tipo_origen, instantaneo: evento.detail === 0, elemento_origen: boton_alternar });
+    function alPulsarDocumento(evento) {
+        const botonAlternar = evento.target.closest?.('[data-glosa-alternar]');
+        if (botonAlternar) {
+            const tipoOrigen = evento.detail === 0 ? 'teclado' : 'puntero';
+            window.scalaris.glosa.alternar({ origen: tipoOrigen, instantaneo: evento.detail === 0, elemento_origen: botonAlternar });
             return;
         }
 
-        const boton_cerrar = evento.target.closest('[data-glosa-cerrar]');
-        if (boton_cerrar) {
-            const tipo_origen = evento.detail === 0 ? 'teclado' : 'puntero';
-            window.scalaris.glosa.cerrar({ origen: tipo_origen, instantaneo: evento.detail === 0, elemento_origen: boton_cerrar });
+        const botonCerrar = evento.target.closest?.('[data-glosa-cerrar]');
+        if (botonCerrar) {
+            const tipoOrigen = evento.detail === 0 ? 'teclado' : 'puntero';
+            window.scalaris.glosa.cerrar({ origen: tipoOrigen, instantaneo: evento.detail === 0, elemento_origen: botonCerrar });
             retrocederHojaGlosa();
             return;
         }
 
-        if (evento.target.closest('.glosa-fondo-modal')) {
+        if (evento.target.closest?.('.glosa-fondo-modal')) {
             window.scalaris.glosa.cerrar();
             retrocederHojaGlosa();
         }
-    });
+    }
 
-    document.addEventListener('keydown', (evento) => {
+    function alPulsarTeclaDocumento(evento) {
         if (evento.key === 'Escape' && !evento.defaultPrevented && !window.scalaris.focoModal.dialogoActivo()) {
             const panelLateral = document.getElementById('glosa-panel-lateral');
             const enPanel = panelLateral && panelLateral.contains(evento.target);
@@ -144,15 +147,19 @@
                 retrocederHojaGlosa();
             }
         }
-    });
+    }
 
-    window.addEventListener('popstate', (evento) => {
+    function alNavegarHistorial(evento) {
         if (window.scalaris.glosa.modo() === 'hoja' && window.scalaris.glosa.estaAbierto()) {
             if (!evento.state || !evento.state.glosa) {
                 window.scalaris.glosa.cerrar();
             }
         }
-    });
+    }
+
+    document.addEventListener('click', alPulsarDocumento, true);
+    document.addEventListener('keydown', alPulsarTeclaDocumento);
+    window.addEventListener('popstate', alNavegarHistorial);
 
     function desactivarOtros(objetivo) {
         if (!objetivo) return;
@@ -182,16 +189,17 @@
         });
     }
 
-    if (window.visualViewport) {
-        const actualizarTeclado = () => {
-            if (window.scalaris.glosa.estaAbierto() && window.scalaris.glosa.modo() === 'hoja') {
-                const alturaTeclado = window.innerHeight - window.visualViewport.height;
-                const panelLateral = document.getElementById('glosa-panel-lateral');
-                if (panelLateral) {
-                    panelLateral.style.setProperty('--glosa-kb', Math.max(0, alturaTeclado) + 'px');
-                }
+    const actualizarTeclado = () => {
+        if (window.scalaris.glosa.estaAbierto() && window.scalaris.glosa.modo() === 'hoja') {
+            const alturaTeclado = window.innerHeight - window.visualViewport.height;
+            const panelLateral = document.getElementById('glosa-panel-lateral');
+            if (panelLateral) {
+                panelLateral.style.setProperty('--glosa-kb', Math.max(0, alturaTeclado) + 'px');
             }
-        };
+        }
+    };
+
+    if (window.visualViewport) {
         window.visualViewport.addEventListener('resize', actualizarTeclado);
         window.visualViewport.addEventListener('scroll', actualizarTeclado);
     }
@@ -217,6 +225,17 @@
     }
     window.addEventListener('resize', actualizarModoPanel);
 
+    function destruir() {
+        observadorInicial?.disconnect();
+        observadorInicial = null;
+        document.removeEventListener?.('click', alPulsarDocumento, true);
+        document.removeEventListener?.('keydown', alPulsarTeclaDocumento);
+        window.removeEventListener?.('popstate', alNavegarHistorial);
+        window.removeEventListener?.('resize', actualizarModoPanel);
+        window.visualViewport?.removeEventListener?.('resize', actualizarTeclado);
+        window.visualViewport?.removeEventListener?.('scroll', actualizarTeclado);
+    }
+
     function inicializarPanelLateral() {
         const panelLateral = document.getElementById('glosa-panel-lateral');
         const botonFlotante = document.querySelector('.glosa-boton-flotante');
@@ -233,11 +252,12 @@
     }
 
     if (!inicializarPanelLateral()) {
-        const observador = new MutationObserver((mutaciones, observadorActivo) => {
+        observadorInicial = new MutationObserver((mutaciones, observadorActivo) => {
             if (inicializarPanelLateral()) {
                 observadorActivo.disconnect();
+                observadorInicial = null;
             }
         });
-        observador.observe(document.documentElement, { childList: true, subtree: true });
+        observadorInicial.observe(document.documentElement, { childList: true, subtree: true });
     }
 }
