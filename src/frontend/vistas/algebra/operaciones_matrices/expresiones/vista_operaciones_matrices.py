@@ -27,6 +27,7 @@ class VistaOperacionesMatrices(MixinResultadosOperacionesMatrices, MixinContexto
         self.panel_captura_matrices = PanelCapturaMatrices()
         self.contenedor_resultados = None
         self.entrada_expresion = None
+        self._celda_invalida = None
         self.reproductor_pasos = None
         self._version_solicitud = 0
 
@@ -58,6 +59,9 @@ class VistaOperacionesMatrices(MixinResultadosOperacionesMatrices, MixinContexto
 
     def _al_cambiar_matriz(self):
         """Notifica al panel de Glosa cuando cambian los datos de las matrices."""
+        if self._celda_invalida is not None and not self._celda_invalida.is_deleted:
+            self._celda_invalida.props(remove='aria-invalid')
+        self._celda_invalida = None
         if self.contenedor_resultados is not None and not self.contenedor_resultados.is_deleted:
             self.restablecer_resultados()
         actualizar_contexto(self)

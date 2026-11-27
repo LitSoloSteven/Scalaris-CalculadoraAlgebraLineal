@@ -78,12 +78,12 @@ class MixinResultadosOperacionesMatrices:
         if version != self._version_solicitud or self.entrada_expresion.value != expresion:
             self.restablecer_resultados()
             return
-        vacia = self._matriz_usada_vacia(expresion)
+        captura = self._capturar_evaluacion()
+        vacia = self._primera_celda_vacia(captura)
         if vacia:
-            self._mostrar_matriz_vacia(vacia)
+            self._mostrar_celda_vacia(*vacia)
             return
 
-        captura = self._capturar_evaluacion()
         calculo = await ejecutar_calculo_vigente(
             self, self._capturar_evaluacion,
             lambda captura: ControladorOperacionesMatrices.procesar_expresion(
@@ -99,14 +99,19 @@ class MixinResultadosOperacionesMatrices:
         self._presentar_evaluacion(respuesta, captura['matrices'])
         ui.run_javascript('if(window.scalaris && window.scalaris.renderizarMathJax) window.scalaris.renderizarMathJax();')
 
-    def _mostrar_matriz_vacia(self, nombre: str) -> None:
+    def _mostrar_celda_vacia(self, nombre: str, fila: int, columna: int) -> None:
         self.restablecer_resultados()
         self.contenedor_resultados.clear()
-        mensaje = f'La matriz {nombre} está vacía. Ingresa al menos un valor antes de evaluar.'
+        mensaje = f'La celda {nombre}[{fila + 1},{columna + 1}] está vacía. Ingresa un número antes de evaluar.'
         with self.contenedor_resultados:
             self.contenedor_resultados.classes(remove='items-center justify-center', add='items-start justify-start')
             renderizar_aviso_resultado(mensaje, 'close', 'items-center gap-2 px-4 py-2 distintivo-error mb-4 w-fit')
-        ubicar_celda_matriz(nombre, 0, 0)
+        self._marcar_celda_invalida(nombre, fila, columna)
+
+    def _marcar_celda_invalida(self, nombre: str, fila: int, columna: int) -> None:
+        self._celda_invalida = self.panel_captura_matrices.matrices[nombre]['entradas'][fila][columna]
+        self._celda_invalida.props('aria-invalid=true')
+        ubicar_celda_matriz(nombre, fila, columna)
 
     def _presentar_evaluacion(self, respuesta: dict, matrices: dict) -> None:
         self.contenedor_resultados.clear()
@@ -132,14 +137,17 @@ class MixinResultadosOperacionesMatrices:
         return {'expresion': self.entrada_expresion.value,
                 'matrices': self.panel_captura_matrices.obtener_datos_crudos()}
 
-    def _matriz_usada_vacia(self, expresion: str) -> str | None:
-        usadas = re.findall(r'(?<![A-Za-z0-9_^])([A-Z])(?![A-Za-z0-9_])', expresion or '')
+    def _primera_celda_vacia(self, captura: dict) -> tuple[str, int, int] | None:
+        usadas = re.findall(r'(?<![A-Za-z0-9_^])([A-Z])(?![A-Za-z0-9_])', captura['expresion'])
+        matrices = captura['matrices']
         for nombre in dict.fromkeys(usadas):
-            matriz = self.panel_captura_matrices.matrices.get(nombre)
-            if not matriz:
-                continue
-            if all(not str(celda.value or '').strip() for fila in matriz['entradas'] for celda in fila):
-                return nombre
+            datos = matrices.get(nombre, {}).get('datos', ())
+            vacia = next(((nombre, fila, columna)
+                          for fila, valores in enumerate(datos)
+                          for columna, valor in enumerate(valores)
+                          if valor is None or not str(valor).strip()), None)
+            if vacia is not None:
+                return vacia
         return None
 
     def _renderizar_transferencias(self, respuesta: dict, matrices: dict) -> None:
@@ -169,7 +177,7 @@ class MixinResultadosOperacionesMatrices:
                                       'items-center gap-2 px-4 py-2 distintivo-error mb-4 w-fit')
             coincidencia = re.search(r'Matriz ([A-Z]), celda \[(\d+),(\d+)\]', mensaje)
             if coincidencia:
-                ubicar_celda_matriz(coincidencia.group(1), int(coincidencia.group(2)) - 1, int(coincidencia.group(3)) - 1)
+                self._marcar_celda_invalida(coincidencia.group(1), int(coincidencia.group(2)) - 1, int(coincidencia.group(3)) - 1)
         else:
             renderizar_aviso_resultado(respuesta.get("mensaje", "Éxito"), 'check',
                                       'items-center gap-2 px-4 py-2 distintivo-exito mb-6 w-fit')
