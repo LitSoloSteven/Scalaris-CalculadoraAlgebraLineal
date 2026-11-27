@@ -17,6 +17,7 @@ def montar_contenido(vista):
     return montar_estructura_metodos_raices(
         "Métodos cerrados", "Resuelve f(x) = 0 en un intervalo con Bisección o Regla falsa.",
         partial(_montar_captura, vista), partial(_montar_grafica, vista),
+        partial(_montar_resultados_busqueda, vista),
     )
 
 
@@ -44,6 +45,9 @@ def _montar_estados_entrada(vista) -> EstadosEntrada:
 
 def _montar_grafica(vista) -> None:
     vista.grafica.construir()
+
+
+def _montar_resultados_busqueda(vista) -> None:
     region = ui.column().classes("w-full min-w-0 gap-4").props('role=region aria-label="Resultados de la búsqueda"')
     with region.bind_visibility_from(vista.modos, "value", backward=lambda modo: modo == MODO_BUSQUEDA):
         vista.exploracion.construir_resultados()
