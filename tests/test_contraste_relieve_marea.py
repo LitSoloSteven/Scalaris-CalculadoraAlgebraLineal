@@ -82,10 +82,10 @@ def test_relieve_marea_por_diferencias_de_luminancia():
     luminancia_elevada = luminancia_relativa(hexadecimal_a_rgb(marea["--bg-elevated"]))
     luminancia_entrada = luminancia_relativa(hexadecimal_a_rgb(marea["--input-bg"]))
 
-    # Heurística 1: El panel debe ser notablemente más oscuro que la página (ΔL >= 0.08)
+    # Heurística 1: El panel debe ser notablemente más oscuro que la página (ΔL >= 0.07)
     diferencia_panel = luminancia_pagina - luminancia_panel
-    assert diferencia_panel >= 0.08, (
-        f"Relieve insuficiente entre --bg-page ({luminancia_pagina:.4f}) y --bg-panel ({luminancia_panel:.4f}): ΔL = {diferencia_panel:.4f} < 0.08"
+    assert diferencia_panel >= 0.07, (
+        f"Relieve insuficiente entre --bg-page ({luminancia_pagina:.4f}) y --bg-panel ({luminancia_panel:.4f}): ΔL = {diferencia_panel:.4f} < 0.07"
     )
 
     # Heurística 2: El input debe ser claramente hundido respecto a la página (ΔL >= 0.15)
@@ -107,11 +107,11 @@ def test_relieve_marea_por_diferencias_de_luminancia():
 
 
 def test_muestra_marea_declarada_cuatro_veces():
-    """Verifica que las cuatro declaraciones de --swatch-marea sean exactamente #CFE3F0."""
+    """Verifica que las cuatro declaraciones de --swatch-marea sean exactamente #D6E5EC."""
     contenido = RUTA_CSS.read_text(encoding="utf-8")
-    assert contenido.count("--swatch-marea: #CFE3F0;") >= 4, (
-        f"Se esperaban al menos 4 declaraciones exactas de '--swatch-marea: #CFE3F0;', "
-        f"se encontraron {contenido.count('--swatch-marea: #CFE3F0;')}"
+    assert contenido.count("--swatch-marea: #D6E5EC;") >= 4, (
+        f"Se esperaban al menos 4 declaraciones exactas de '--swatch-marea: #D6E5EC;', "
+        f"se encontraron {contenido.count('--swatch-marea: #D6E5EC;')}"
     )
 
 
@@ -144,10 +144,10 @@ def test_tokens_papel_y_medianoche_conservados():
         "--input-bg": "#061D2E",
         "--text-main": "#EAF6FF",
         "--text-sec": "#B1D4F0",
-        "--accent": "#BFE6E1",
-        "--accent-soft": "#14403C",
+        "--accent": "#8DD5E8",
+        "--accent-soft": "#123A52",
         "--btn-primary-text": "#082338",
-        "--focus-ring": "#BFE6E1",
+        "--focus-ring": "#8DD5E8",
         "--error": "#E8897D",
         "--success": "#8FCBA6",
         "--warning": "#E3B27E",

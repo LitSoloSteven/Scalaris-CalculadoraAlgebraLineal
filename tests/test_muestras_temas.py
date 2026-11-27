@@ -9,7 +9,7 @@ RUTA_CSS = Path("src/frontend/recursos/css/base/tokens.css")
 
 MUESTRAS_ESPERADAS = {
     "--swatch-papel": "#F2F0EB",
-    "--swatch-marea": "#CFE3F0",
+    "--swatch-marea": "#D6E5EC",
     "--swatch-medianoche": "#082338",
 }
 
