@@ -1,6 +1,7 @@
 """Núcleo compartido para gestión de caché, límites y animación en cuadrículas de matriz."""
 from __future__ import annotations
 
+import asyncio
 import json
 from dataclasses import dataclass
 from typing import Any, Callable, Awaitable
@@ -123,7 +124,7 @@ async def _animar_cuadricula(accion: str, selector_destino: str, nombre_matriz: 
     if accion == "Entrada":
         codigo = f"return Promise.resolve(window.Vue?.nextTick?.()).then(() => {expresion});"
     try:
-        await ui.run_javascript(codigo)
+        await asyncio.wait_for(ui.run_javascript(codigo), timeout=1.5)
     except Exception:
         pass
 
@@ -181,7 +182,10 @@ async def ejecutar_transicion_cuadricula(
 
 async def _restaurar_celdas_transicion(selector: str) -> None:
     try:
-        await ui.run_javascript(f"window.scalaris?.cuadricula?.restaurarCeldas(document.querySelectorAll({json.dumps(selector)}));")
+        await asyncio.wait_for(
+            ui.run_javascript(f"window.scalaris?.cuadricula?.restaurarCeldas(document.querySelectorAll({json.dumps(selector)}));"),
+            timeout=1.5,
+        )
     except Exception:
         pass
 

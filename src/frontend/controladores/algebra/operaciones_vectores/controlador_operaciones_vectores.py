@@ -111,7 +111,7 @@ class ControladorOperacionesVectores:
             escalar = parsear_escalar_capturado(datos.get("escalar", "0"))
             vector = construir_vector_desde_diccionario(datos.get("vector", {}))
             resolutor = ResolutorOperacionesVectores()
-            resultado = resolutor.multiplicar_escalar(escalar, vector, nombre="v", nombre_resultado="w")
+            resultado = resolutor.multiplicar_escalar(escalar, vector, nombre="u", nombre_resultado="w")
 
             for paso in resultado.get("pasos", []):
                 paso.pop("matriz", None)

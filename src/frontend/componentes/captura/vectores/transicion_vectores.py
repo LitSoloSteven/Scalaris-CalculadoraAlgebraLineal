@@ -41,10 +41,14 @@ class MixinTransicionVectores:
             return
         indice = indice_cambio_dimension(self.dimension, nueva_dimension)
         selector = f"#{self.contenedor.html_id} input[data-geometria-indice='{indice}']" if self.contenedor else ""
-        await ejecutar_transicion_cuadricula(
-            vars(self), selectores_cambio_dimension(selector, delta), partial(self._aplicar_dimension_vectorial, nueva_dimension),
-            self._botones_transicion_vectores(), self._actualizar_botones_vectores,
-        )
+        try:
+            await ejecutar_transicion_cuadricula(
+                vars(self), selectores_cambio_dimension(selector, delta), partial(self._aplicar_dimension_vectorial, nueva_dimension),
+                self._botones_transicion_vectores(), self._actualizar_botones_vectores,
+            )
+        finally:
+            vars(self)['_transicion_activa'] = False
+            self._actualizar_botones_vectores()
 
     def _aplicar_dimension_vectorial(self, dimension: int) -> None:
         self.dimension = dimension
