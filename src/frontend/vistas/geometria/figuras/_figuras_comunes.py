@@ -44,6 +44,7 @@ def disposicion_3d(fig, *, rango_ejes: list[float], color_fuente: str, revision:
         margin=dict(l=44, r=16, t=30, b=56),
         legend=dict(orientation='h', x=0.5, xanchor='center', y=0, yanchor='top'),
         scene=dict(
+            camera=dict(eye=dict(x=1.55, y=1.55, z=1.55)),
             xaxis=dict(backgroundcolor=COLOR_TRANSPARENTE, gridcolor=COLOR_CUADRICULA, range=rango_ejes),
             yaxis=dict(backgroundcolor=COLOR_TRANSPARENTE, gridcolor=COLOR_CUADRICULA, range=rango_ejes),
             zaxis=dict(backgroundcolor=COLOR_TRANSPARENTE, gridcolor=COLOR_CUADRICULA, range=rango_ejes),
