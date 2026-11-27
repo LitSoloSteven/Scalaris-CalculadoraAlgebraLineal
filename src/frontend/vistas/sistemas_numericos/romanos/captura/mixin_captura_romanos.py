@@ -10,10 +10,10 @@ class MixinCapturaRomanos:
 
     def _construir_ejemplos_rapidos(self) -> None:
         """Construye los botones de ejemplos rápidos preconfigurados."""
-        with ui.row().classes("w-full items-center gap-3 flex-wrap"):
+        with ui.column().classes("w-full gap-2"):
             with ui.row().classes("items-center gap-1.5 texto-secundario"):
                 ui.icon("bolt", size="xs").classes("texto-acento")
-                ui.label("Ejemplos rápidos:").classes("text-xs font-semibold tracking-wider uppercase")
+                ui.label("Ejemplos rápidos:").classes("text-xs font-semibold")
 
             with ui.row().classes("gap-2.5 flex-wrap"):
                 self.sugerencia_ejemplo("XIV + IX", "XIV", "IX", "suma")
@@ -23,30 +23,30 @@ class MixinCapturaRomanos:
     def _construir_campos_entrada(self) -> None:
         """Construye los campos de operandos y la etiqueta de operación."""
         with ui.column().classes("w-full gap-1"):
-            with ui.row().classes("w-full items-center gap-3 flex-nowrap"):
+            with ui.row().classes("w-full items-center gap-3 numericos-operandos-fila flex-wrap sm:flex-nowrap"):
                 self.entrada_a = ui.input(placeholder="Operando A (ej: XIV)").classes(
-                    "flex-1 matriz-entrada numericos-entrada text-center"
-                ).classes("numericos-operando")
-                self.entrada_a.props('autocomplete="off" spellcheck="false"')
+                    "flex-1 matriz-entrada numericos-entrada text-center numericos-operando"
+                )
+                self.entrada_a.props('autocomplete="off" spellcheck="false" aria-label="Operando romano A"')
                 habilitar_simbolos(self.entrada_a, "romano")
 
                 self.etiqueta_signo = ui.label("+").classes("text-2xl font-bold texto-secundario flex-shrink-0")
 
                 self.entrada_b = ui.input(placeholder="Operando B (ej: IX)").classes(
-                    "flex-1 matriz-entrada numericos-entrada text-center"
-                ).classes("numericos-operando")
-                self.entrada_b.props('autocomplete="off" spellcheck="false"')
+                    "flex-1 matriz-entrada numericos-entrada text-center numericos-operando"
+                )
+                self.entrada_b.props('autocomplete="off" spellcheck="false" aria-label="Operando romano B"')
                 habilitar_simbolos(self.entrada_b, "romano")
 
-            self.etiqueta_error = ui.label("").classes("fuente-pequena").classes("numericos-error").props('role="alert"')
+            self.etiqueta_error = ui.label("").classes("fuente-pequena numericos-error").props('role="alert"')
 
     def sugerencia_ejemplo(self, etiqueta: str, operando_a: str, operando_b: str, operacion: str):
         """Crea un botón estilizado de ejemplo rápido."""
         return ui.button(
             etiqueta, on_click=lambda: self.cargar_ejemplo(operando_a, operando_b, operacion), color=None
         ).classes(
-            "px-3.5 py-1.5 rounded-lg border texto-principal font-mono text-xs font-bold tracking-wide cursor-pointer"
-        ).classes("numericos-ejemplo").props("no-caps flat ripple=false")
+            "boton-discreto numericos-ejemplo rounded-lg border texto-principal font-mono text-xs font-bold tracking-wide cursor-pointer"
+        ).props("no-caps flat ripple=false")
 
     def cargar_ejemplo(self, operando_a: str, operando_b: str, operacion: str) -> None:
         """Carga los operandos y la operación del ejemplo seleccionado."""
@@ -81,7 +81,12 @@ class MixinCapturaRomanos:
             valor = (entrada.value or "").strip().upper()
             invalida = bool(mensaje and ((token is not None and valor == token) or (getattr(error, "codigo", None) == "ENTRADA_VACIA" and not valor)))
             if invalida:
-                entrada._props["error-message"] = mensaje
-                entrada.props("error")
+                entrada.props(
+                    f'error hide-bottom-space aria-invalid=true aria-describedby={self.etiqueta_error.html_id}',
+                    remove="error-message",
+                )
             else:
-                entrada.props(remove="error error-message")
+                entrada.props(
+                    "aria-invalid=false",
+                    remove="error error-message hide-bottom-space aria-describedby",
+                )

@@ -52,36 +52,52 @@ class VistaCalculadoraRomana(MixinLimpiezaRomanos, MixinResultadoRomano, MixinCo
         self.panel_ia = PanelIA(self)
         crear_estructura_aplicacion(self, ruta_activa=ruta_de("romanos"))
 
-        with ui.column().classes("w-full max-w-4xl mx-auto items-center q-pa-md mt-6 vista-raiz"):
-            with ui.column().classes("w-full panel-tarjeta p-6 gap-6"):
-                ui.label("Números romanos").classes("text-2xl font-bold texto-principal")
+        with ui.column().classes("w-full max-w-6xl mx-auto q-pa-md mt-6 vista-raiz disposicion-herramienta"):
+            with ui.element("div").classes("disposicion-captura-fila"):
+                with ui.column().classes("w-full panel-tarjeta p-6 gap-5"):
+                    ui.html("Números romanos", tag="h1").classes("text-2xl font-bold texto-principal m-0")
+                    self._construir_campos_entrada()
+                    self.contenedor_sugerencias = ui.column().classes("w-full mt-1")
+                    with ui.row().classes("w-full gap-4 mt-1"):
+                        crear_boton_limpieza(self, lambda: not self.boton_calcular.is_deleted,
+                                              lambda: [self.entrada_a, self.entrada_b])
+                        self.boton_calcular = ui.button(
+                            "Calcular", on_click=self._operar_desde_control, color=None
+                        ).classes("boton-principal flex-[2] py-3 text-lg font-bold").props("no-caps")
 
-                with (
-                    ui.row().classes("w-full items-center gap-3"),
-                    ui.tabs().classes("pestanas-controles pestanas-metodo pestanas-anchas w-full") as self.pestanas_operacion,
-                ):
+                self._construir_panel_auxiliar()
+
+            with ui.column().classes("disposicion-resultados gap-6"):
+                self.contenedor_resultado = ui.column().classes("w-full gap-6")
+                self.contenedor_exportacion_pdf = self.contenedor_resultado
+                with self.contenedor_resultado:
+                    ui.label("Ingresa dos operandos romanos y pulsa Calcular.").props('role="status"')
+
+        self._conectar_controles()
+        self.panel_ia.construir()
+
+    def _construir_panel_auxiliar(self) -> None:
+        """Construye los selectores de operación, ejemplos y referencia romana."""
+        with ui.column().classes("w-full panel-tarjeta p-6 gap-5"):
+            with ui.column().classes("w-full gap-2"):
+                ui.label("Operación").classes("text-sm font-semibold texto-secundario")
+                with ui.tabs().classes(
+                    "pestanas-controles pestanas-metodo pestanas-anchas numericos-pestanas w-full"
+                ).props('no-caps aria-label="Operación romana"') as self.pestanas_operacion:
                     ui.tab("suma", label="Suma")
                     ui.tab("resta", label="Resta")
                     ui.tab("multiplicacion", label="Multiplicación")
 
-                self._construir_ejemplos_rapidos()
-                self._construir_campos_entrada()
+            self._construir_ejemplos_rapidos()
 
-                self.contenedor_sugerencias = ui.column().classes("w-full mt-2")
-                with ui.row().classes('w-full gap-4 mt-2'):
-                    crear_boton_limpieza(self, lambda: not self.boton_calcular.is_deleted,
-                                          lambda: [self.entrada_a, self.entrada_b])
-                    self.boton_calcular = ui.button(
-                        "Calcular", on_click=self._operar_desde_control, color=None
-                    ).classes("boton-principal flex-[2] py-3 text-lg font-bold")
-
-            self.contenedor_resultado = ui.column().classes("w-full gap-6 mt-6")
-            self.contenedor_exportacion_pdf = self.contenedor_resultado
-            with self.contenedor_resultado:
-                ui.label("Ingresa dos operandos romanos y pulsa Calcular.").props('role="status"')
-
-        self._conectar_controles()
-        self.panel_ia.construir()
+            with ui.column().classes("w-full gap-1 numericos-referencia"):
+                ui.label("Referencia de símbolos").classes("text-xs font-semibold texto-secundario")
+                ui.label("I = 1 · V = 5 · X = 10 · L = 50 · C = 100 · D = 500 · M = 1000").classes(
+                    "text-sm font-mono texto-principal"
+                )
+                ui.label("Rango válido: I a MMMCMXCIX (1 a 3999). En multiplicación el segundo operando usa un solo símbolo.").classes(
+                    "text-xs texto-secundario"
+                )
 
     def _conectar_controles(self):
         self.pestanas_operacion.on_value_change(self.actualizar_signo)
