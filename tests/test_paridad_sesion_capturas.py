@@ -14,10 +14,16 @@ def test_captura_y_resultado_conservan_disposicion_sin_previa_ni_historial(monke
     """Retirar los paneles no altera el cálculo exacto ni la invalidación al editar."""
     async def comprobar(vista, cliente):
         """Monta los dos paneles principales y comprueba sus estados antes y después de editar."""
-        paneles = [elemento for elemento in cliente.elements.values()
-                   if 'disposicion-dividida' in elemento._classes]
-        assert len(paneles) == 1
-        assert len(paneles[0].default_slot.children) == 2
+        filas_captura = [elemento for elemento in cliente.elements.values()
+                         if 'disposicion-captura-fila' in elemento._classes]
+        salidas = [elemento for elemento in cliente.elements.values()
+                   if 'disposicion-resultados' in elemento._classes]
+        assert len(filas_captura) == len(salidas) == 1
+        captura, salida = filas_captura[0], salidas[0]
+        assert len(captura.default_slot.children) == 2
+        assert captura.parent_slot is salida.parent_slot
+        zonas = captura.parent_slot.children
+        assert zonas.index(captura) < zonas.index(salida)
         expansiones = [elemento._props.get('label') for elemento in cliente.elements.values()
                        if isinstance(elemento, ui.expansion)]
         assert textos.MODELOS_VISTA_PREVIA not in expansiones
