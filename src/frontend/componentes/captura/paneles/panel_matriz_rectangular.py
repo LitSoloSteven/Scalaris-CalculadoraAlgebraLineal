@@ -65,7 +65,7 @@ class PanelMatrizRectangular(AccionesMatrizRectangular):
                 for delta, icono, accion in CAPTURA_RECTANGULAR_ACCIONES:
                     nombre = f"{accion} {etiqueta.lower()}"
                     boton = ui.button(icon=icono, color=None, on_click=partial(self.redimensionar, eje, delta)).props(
-                        f'ripple=false aria-label="{nombre}"').classes("boton-icono w-8 h-8 p-0 flex-shrink-0").tooltip(nombre)
+                        f'ripple=false aria-label="{nombre}"').classes("boton-icono p-0 flex-shrink-0").tooltip(nombre)
                     botones.append(boton)
                 self.controles[eje] = botones
 
@@ -101,6 +101,10 @@ class PanelMatrizRectangular(AccionesMatrizRectangular):
     def obtener_datos_matriz(self) -> list[list[str]]:
         """Devuelve las celdas actuales, interpretando las vacías como cero."""
         return [[self.cache.get((fila, columna), "0") or "0" for columna in range(self.columnas)] for fila in range(self.filas)]
+
+    def obtener_datos_crudos(self) -> list[list[str]]:
+        """Devuelve el texto capturado por celda sin sustituir vacíos por cero."""
+        return [[self.cache.get((fila, columna), "") for columna in range(self.columnas)] for fila in range(self.filas)]
 
     def cargar_matriz(self, datos: list[list[str]]) -> None:
         """Carga datos rectangulares, rellenando huecos y limitando sus dimensiones."""

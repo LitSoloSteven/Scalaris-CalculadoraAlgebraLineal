@@ -88,13 +88,13 @@ class PanelMatrizCuadrada:
             self.boton_reducir = ui.button(
                 icon="remove", color=None, on_click=lambda: self.redimensionar(-1)
             ).props('ripple=false aria-label="Quitar fila y columna"').classes(
-                "boton-icono w-8 h-8 p-0 flex-shrink-0"
+                "boton-icono p-0 flex-shrink-0"
             ).tooltip("Quitar fila y columna")
             self.etiqueta_dimension = ui.label(str(self.dimension)).classes("font-bold w-6 text-center texto-principal")
             self.boton_aumentar = ui.button(
                 icon="add", color=None, on_click=lambda: self.redimensionar(+1)
             ).props('ripple=false aria-label="Añadir fila y columna"').classes(
-                "boton-icono w-8 h-8 p-0 flex-shrink-0"
+                "boton-icono p-0 flex-shrink-0"
             ).tooltip("Añadir fila y columna")
             self._actualizar_botones()
 
@@ -185,14 +185,21 @@ class PanelMatrizCuadrada:
             for r in range(self.dimension)
         ]
 
-    def cargar_matriz(self, datos: list[list[str]]) -> None:
+    def cargar_matriz(self, datos: list[list[str]], *, conservar_ceros: bool = False) -> None:
         """Carga una matriz externa adaptando la dimensión n."""
         if not datos or not datos[0]:
             return
         nuevo_n = min(max(len(datos), DIMENSION_MINIMA), DIMENSION_MAXIMA_INVERSA)
         self.cache.clear()
         datos_recortados = preparar_matriz_numerica([fila[:nuevo_n] for fila in datos[:nuevo_n]])
-        self.cache.update(cache_matriz_desde_datos(datos_recortados))
+        if conservar_ceros:
+            self.cache.update({
+                (r, c): str(valor).strip()
+                for r, fila in enumerate(datos_recortados)
+                for c, valor in enumerate(fila) if str(valor).strip()
+            })
+        else:
+            self.cache.update(cache_matriz_desde_datos(datos_recortados))
         self.dimension = nuevo_n
         self._publicar_matriz()
 
