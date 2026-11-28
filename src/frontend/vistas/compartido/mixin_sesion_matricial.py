@@ -32,7 +32,7 @@ class MixinSesionMatricial:
     def _renderizar_columna_herramientas(self) -> None:
         """Compone teclado, vista previa e historial con los controles de la sesion."""
         with ui.column().classes('disposicion-panel sesion-panel-herramientas'):
-            with ui.tabs().classes('pestanas-controles w-full').props('dense no-caps') as self.pestanas_herramientas:
+            with ui.tabs().classes('pestanas-controles w-full sesion-pestanas-herramientas').props('dense no-caps') as self.pestanas_herramientas:
                 ui.tab('teclado', label='Teclado')
                 ui.tab('vista_previa', label='Vista previa')
                 ui.tab('historial', label='Historial')

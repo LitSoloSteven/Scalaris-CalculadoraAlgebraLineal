@@ -95,13 +95,13 @@ class VistaSistemasLineales(
             with ui.tab_panels(self.pestanas_modo, value='Matriz').classes(
                 'w-full p-0 overflow-hidden panel-tarjeta sistemas-panel-captura'
             ):
-                with ui.tab_panel('Matriz').classes('p-6'):
+                with ui.tab_panel('Matriz').classes('p-5'):
                     self.casilla_homogeneo = ui.checkbox("Sistema homogéneo Ax = 0", value=False,
                                                        on_change=lambda evento: cambiar_modo_homogeneo(self, evento.value))
                     self._crear_sincronizacion_ecuaciones()
                     self.cuadricula.construir_contenedor_cuadricula()
 
-                with ui.tab_panel('Ecuaciones').classes('p-6'):
+                with ui.tab_panel('Ecuaciones').classes('p-5'):
                     self._renderizar_panel_ecuaciones()
 
             with ui.row().classes('w-full mt-6 gap-4'):

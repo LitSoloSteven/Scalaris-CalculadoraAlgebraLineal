@@ -26,6 +26,17 @@
 .sesion-paneles-compartidos .q-tab-panel,
 .sesion-paneles-compartidos .q-tab-panels { min-width: 0; max-width: 100%; }
 
+.sesion-pestanas-herramientas .q-tabs__content { display: flex; width: 100%; }
+.sesion-pestanas-herramientas .q-tab { flex: 1 1 0%; min-width: 0; padding: var(--space-1) var(--space-2) !important; min-height: 44px !important; }
+.sesion-pestanas-herramientas .q-tab__label { white-space: normal; text-align: center; line-height: 1.2; overflow-wrap: break-word; }
+
+.sistemas-panel-captura .cuadricula-area-desplazamiento {
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: var(--space-1) 0 !important;
+}
+
 @container sesion-matricial (max-width: 20rem) {
     .sesion-vista { padding-inline: var(--space-2) !important; }
     .sesion-vista .sesion-panel-herramientas .panel-tarjeta { padding: var(--space-2); }
