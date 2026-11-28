@@ -58,6 +58,10 @@
     max-width: 100%;
 }
 
+.geometria-captura-centrada .vectores-captura-cabecera {
+    min-height: 44px;
+}
+
 .geometria-captura-centrada .vectores-captura-desplazamiento {
     width: 100%;
     overflow-x: auto;

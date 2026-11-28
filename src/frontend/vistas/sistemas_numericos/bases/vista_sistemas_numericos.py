@@ -74,8 +74,10 @@ class VistaSistemasNumericos(MixinLimpiezaBases, MixinInteraccionSistemasNumeric
             self._renderizar_entrada_valor()
 
             with ui.row().classes('w-full gap-4 mt-1 flex-wrap numericos-acciones-base'):
-                crear_boton_limpieza(self, lambda: not self.boton_convertir.is_deleted,
-                                      lambda: [self.entrada_valor])
+                crear_boton_limpieza(
+                    self, lambda: not self.boton_convertir.is_deleted,
+                    lambda: [self.entrada_valor], campo_foco=self.entrada_valor,
+                )
                 self.boton_convertir = ui.button(
                     'Convertir', on_click=self._convertir_boton, color=None
                 ).classes('boton-principal flex-[2] min-w-[140px] py-3 text-lg font-bold whitespace-nowrap').props('no-caps')
