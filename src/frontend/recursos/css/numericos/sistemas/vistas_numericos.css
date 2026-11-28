@@ -51,6 +51,11 @@
   min-height: 120px;
   opacity: 0;
 }
+@media (max-width: 767px) {
+  .numericos-acciones-base {
+    padding-inline-end: var(--space-5);
+  }
+}
 @media (max-width: 420px) {
   .numericos-operandos-fila {
     flex-wrap: wrap;
