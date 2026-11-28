@@ -29,7 +29,8 @@
 
 .geometria-captura-centrada .cuadricula-area-desplazamiento {
     width: 100%;
-    align-items: center;
+    min-width: 0;
+    align-items: safe center;
 }
 
 .geometria-captura-centrada .vectores-captura-lista {
@@ -44,26 +45,44 @@
 }
 
 .geometria-captura-centrada .vectores-captura-tarjeta {
-    flex: 0 1 13.5rem;
+    flex: 1 1 min(100%, 13.5rem);
     width: auto;
     min-width: min(100%, 11.5rem);
-    max-width: 100%;
+    max-width: 24rem;
+    align-items: stretch;
 }
 
 .geometria-captura-centrada .vectores-captura-tarjeta-fila {
-    flex-basis: 100%;
+    flex: 1 1 100%;
     width: 100%;
+    max-width: 100%;
 }
 
 .geometria-captura-centrada .vectores-captura-desplazamiento {
     width: 100%;
     overflow-x: auto;
     overscroll-behavior-x: contain;
-    align-items: center;
+    align-items: safe center;
+}
+
+.geometria-captura-centrada .vectores-captura-celdas {
+    width: 100%;
+    min-width: min-content;
 }
 
 .geometria-captura-centrada .vectores-captura-columna {
     flex-direction: column;
+    align-items: stretch;
+}
+
+.geometria-captura-centrada .vectores-captura-columna .cuadricula-celda {
+    width: 100%;
+    min-width: min(100%, var(--cell-w));
+}
+
+.geometria-captura-centrada .vectores-captura-fila .cuadricula-celda {
+    flex: 1 0 var(--cell-w);
+    min-width: var(--cell-w);
 }
 
 .geometria-acciones {

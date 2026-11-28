@@ -13,6 +13,11 @@
     min-width: 0;
 }
 
+.matriz-entrada .q-field__inner,
+.matriz-entrada .q-field__control-container {
+    min-width: 0;
+}
+
 .cuadricula-celda {
     width: var(--cell-w);
     min-width: 0;
@@ -267,9 +272,9 @@ html[data-entrada="teclado"] .selector-controles .q-select__dropdown-icon {
     color: var(--btn-primary-text) !important;
 }
 
-.cuadricula-desplazamiento { max-height: 60dvh; overscroll-behavior-x: contain; }
+.cuadricula-desplazamiento { max-height: 60dvh; min-width: 0; max-width: 100%; align-items: stretch; overscroll-behavior-x: contain; }
 .cuadricula-cabecera-fija, .cuadricula-contenido { width: 100%; min-width: min-content; }
-.cuadricula-contenido { padding: var(--space-1); }
+.cuadricula-contenido { padding: var(--space-1); align-items: stretch; }
 .cuadricula-cabecera-fija { position: sticky; top: 0; padding-inline: var(--space-1); }
 .cuadricula-contenido > :is(.q-row, .nicegui-row, [data-cuadricula-fila], [data-matriz-fila]) { width: 100%; min-width: min-content; }
 .cuadricula-cabecera-fija .cuadricula-celda,
