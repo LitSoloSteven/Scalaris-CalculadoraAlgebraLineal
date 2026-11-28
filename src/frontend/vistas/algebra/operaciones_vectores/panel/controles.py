@@ -63,17 +63,17 @@ def _construir_capturas(vista):
 
 
 def _construir_panel_guia() -> None:
-    """Presenta orientación auxiliar de captura y navegación para la columna derecha."""
-    with ui.column().classes("disposicion-panel panel-tarjeta p-6 gap-3"):
-        ui.label("Guía rápida de captura").classes("text-lg font-bold texto-principal")
+    """Presenta ayuda compacta de símbolos y controles para la columna derecha."""
+    with ui.column().classes("disposicion-panel panel-tarjeta p-5 gap-3"):
+        ui.label("Ayuda de captura").classes("text-lg font-bold texto-principal")
         ui.label(
-            "Ajusta la dimensión compartida n con − y + y alterna entre columna (n×1) y fila (1×n) cuando la operación lo permita."
+            "Dimensión n: botones − y + · Orientación: columna (n×1) o fila (1×n)."
         ).classes("text-sm texto-secundario")
         ui.label(
-            "Puedes pegar columnas o filas desde Excel o un editor de texto y navegar entre celdas con las flechas del teclado."
+            "Pegado rápido: pega filas o columnas desde Excel o texto y muévete con las flechas."
         ).classes("text-sm texto-secundario")
         ui.label(
-            "Cuando las dimensiones estén entre 2 y 3, podrás abrir tus vectores directamente en el Visualizador geométrico."
+            "Visualizador: disponible cuando las dimensiones estén entre 2 y 3."
         ).classes("text-sm texto-secundario")
 
 
