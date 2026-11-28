@@ -6,7 +6,7 @@ from nicegui import ui
 from src.frontend.componentes.aplicacion.base.sonido import notificar
 from src.backend.utilidades.captura.estado_captura import captura_vacia
 from src.frontend.componentes.captura.ecuaciones.limpieza_captura import crear_boton_limpieza
-from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
+from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos, renderizar_boton_simbolos
 
 from src.frontend.componentes.glosa.panel.panel_ia import PanelIA
 from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
@@ -97,14 +97,19 @@ class VistaOperacionesMatrices(MixinResultadosOperacionesMatrices, MixinContexto
     def _renderizar_panel_expresion(self) -> None:
         """Renderiza la entrada de la expresión matemática y el botón Evaluar."""
         with ui.column().classes('panel-tarjeta matrices-panel-expresion'):
-            ui.label('Expresión matemática').classes('text-lg font-bold texto-principal')
+            with ui.row().classes('w-full justify-between items-center gap-2 flex-wrap'):
+                ui.label('Expresión matemática').classes('text-lg font-bold texto-principal')
+                renderizar_boton_simbolos()
             self.entrada_expresion = ui.input(
-                placeholder='Ej. A + B * C'
-            ).classes('matriz-entrada w-full text-xl py-2').props(
+                placeholder=''
+            ).classes('matriz-entrada matrices-campo-expresion w-full text-xl').props(
                 'borderless autocomplete="new-password" aria-label="Expresión matemática"'
             )
             habilitar_simbolos(self.entrada_expresion, "matriz")
             self.entrada_expresion.on_value_change(lambda _: self._al_cambiar_matriz())
+            ui.label(
+                'Operadores disponibles: +, -, *, ^T (transpuesta), ^-1 (inversa) y producto por escalar con *.'
+            ).classes('text-xs texto-secundario matrices-referencia-operadores')
 
             with ui.row().classes('w-full gap-4'):
                 crear_boton_limpieza(self, lambda: not self.contenedor_resultados.is_deleted,
@@ -126,14 +131,16 @@ class VistaOperacionesMatrices(MixinResultadosOperacionesMatrices, MixinContexto
             self.contenedor_transferencia = ui.column().classes('w-full')
             with ui.row().classes('w-full justify-between items-center mb-2 gap-4 flex-wrap'):
                 ui.label('Matrices').classes('text-2xl font-bold texto-principal').props('role="heading" aria-level="1"')
+                ui.button('Añadir matriz', icon='add', color=None, on_click=self.panel_captura_matrices.agregar_matriz).classes(
+                    'boton-discreto'
+                ).props('ripple=false')
 
             with ui.element('div').classes('disposicion-captura-fila mb-2'):
                 with ui.column().classes('disposicion-panel matrices-panel-captura'):
                     self._renderizar_panel_captura()
 
-                with ui.column().classes('disposicion-panel gap-4'):
+                with ui.column().classes('disposicion-panel'):
                     self._renderizar_panel_expresion()
-                    self._renderizar_ayuda_expresion()
 
             self.contenedor_resultados = ui.column().classes(
                 'disposicion-resultados panel-tarjeta p-6 items-center justify-center min-h-[280px]'
@@ -144,16 +151,7 @@ class VistaOperacionesMatrices(MixinResultadosOperacionesMatrices, MixinContexto
         recibir_matriz(token_transferencia, "matrices", self.panel_captura_matrices.cargar_matriz_a,
                        self.contenedor_transferencia)
 
-    def _renderizar_ayuda_expresion(self) -> None:
-        with ui.column().classes('panel-tarjeta p-4 gap-1'):
-            ui.label('Sintaxis rápida').classes('text-sm font-bold texto-principal')
-            ui.label('Usa +, -, *, ^T (transpuesta), ^-1 o escalares como 2*A.').classes('text-xs texto-secundario')
-
     def _renderizar_panel_captura(self) -> None:
-        """Sitúa la acción de añadir sobre la lista y separa el panel de expresión."""
-        with ui.row().classes('matrices-acciones-lista'):
-            ui.button('Añadir matriz', icon='add', color=None, on_click=self.panel_captura_matrices.agregar_matriz).classes(
-                'boton-discreto'
-            ).props('ripple=false')
+        """Monta las tarjetas de matrices directamente al inicio de la columna de captura."""
         self.panel_captura_matrices.al_invertir = self._navegar_a_inversa
         self.panel_captura_matrices.construir(ui.column().classes('captura-matrices-lista'))

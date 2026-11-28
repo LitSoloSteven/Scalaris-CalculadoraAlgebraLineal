@@ -7,11 +7,6 @@
     width: 100%;
 }
 
-.matrices-acciones-lista {
-    width: 100%;
-    justify-content: flex-end;
-}
-
 .captura-matriz,
 .matrices-panel-expresion {
     width: 100%;
@@ -76,18 +71,22 @@
 }
 
 .captura-matriz-cuadricula .cuadricula-contenido {
-    gap: var(--space-4);
+    gap: var(--space-3);
+    width: 100%;
     min-width: max-content;
     max-width: none;
 }
 
 .captura-matriz .cuadricula-celda {
-    flex: none;
+    flex: 1 0 var(--cell-w);
+    width: auto;
     min-width: var(--cell-w);
     max-width: none;
 }
 
 .captura-matriz-cuadricula [data-cuadricula-fila] {
+    width: 100%;
+    min-width: max-content;
     gap: var(--space-2);
     margin-bottom: 0;
     max-width: none;
@@ -95,6 +94,20 @@
 
 .matrices-panel-expresion .q-field {
     min-width: 0;
+}
+
+.matrices-campo-expresion .q-field__control {
+    min-height: 56px;
+    padding: var(--space-3) var(--space-4) !important;
+}
+
+.matrices-campo-expresion .q-field__native,
+.matrices-campo-expresion .q-field__input {
+    text-align: start !important;
+}
+
+.matrices-referencia-operadores {
+    overflow-wrap: anywhere;
 }
 
 @container (max-width: 24rem) {
