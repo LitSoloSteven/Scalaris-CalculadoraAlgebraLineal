@@ -113,7 +113,7 @@ class VistaOperacionesVectores(MixinResultadosVectores):
             ui.element('div').classes('vectores-marco w-full'),
             ui.column().classes("w-full max-w-7xl mx-auto p-6 mt-4 vista-raiz disposicion-herramienta vectores-vista"),
         ):
-            ui.label("Vectores").classes("text-2xl font-bold texto-principal").props('role="heading" aria-level="1"')
+            ui.html("Vectores", tag="h1").classes("text-2xl font-bold texto-principal m-0")
             controles.construir_panel_izquierdo(self)
             with ui.column().classes("disposicion-resultados panel-tarjeta p-6 min-h-[280px] bg-[var(--bg-page)]") as self.panel_resultados:
                 self.renderizar_estado_vacio()
