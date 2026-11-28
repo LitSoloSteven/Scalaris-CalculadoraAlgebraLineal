@@ -74,6 +74,7 @@ def _verificar_estado_vacio_inicial(vista) -> None:
 def test_rutas_activas_sin_placeholders_ni_ejemplos(monkeypatch, _catalogo_completo, herramienta, parametros):
     """Todas las herramientas activas abren sin placeholders ni controles de ejemplo."""
     async def comprobar(vista, cliente):
+        """Valida campos, controles de ejemplo y estado inicial vacio en la vista."""
         _sin_placeholder_en_campos(cliente)
         _sin_controles_de_ejemplo(cliente)
         _verificar_estado_vacio_inicial(vista)
@@ -84,6 +85,7 @@ def test_rutas_activas_sin_placeholders_ni_ejemplos(monkeypatch, _catalogo_compl
 def test_portada_y_dialogo_simbolos_sin_placeholders(monkeypatch):
     """La portada y la plantilla de simbolos omiten placeholders de muestra."""
     async def comprobar(_vista, cliente):
+        """Valida que la portada no contenga placeholders en campos."""
         _sin_placeholder_en_campos(cliente)
 
     asyncio.run(construir_pagina(monkeypatch, "inicio", comprobar))
@@ -95,12 +97,14 @@ def test_portada_y_dialogo_simbolos_sin_placeholders(monkeypatch):
 def test_bases_y_romanos_muestran_rotulos_persistentes(monkeypatch):
     """Los campos numericos conservan etiquetas visibles asociadas fuera del placeholder."""
     async def comprobar_bases(vista, cliente):
+        """Verifica etiqueta persistente y nombre accesible en Bases."""
         etiquetas = [el for el in cliente.elements.values() if el._props.get("id") == "bases-etiqueta-entrada"]
         assert len(etiquetas) == 1
         assert vista.entrada_valor._props.get("aria-labelledby") == "bases-etiqueta-entrada"
         assert vista.entrada_valor._props.get("aria-label") == "Número de entrada"
 
     async def comprobar_romanos(vista, cliente):
+        """Verifica etiquetas persistentes y nombres accesibles en Romanos."""
         etiqueta_a = [el for el in cliente.elements.values() if el._props.get("id") == "romanos-etiqueta-a"]
         etiqueta_b = [el for el in cliente.elements.values() if el._props.get("id") == "romanos-etiqueta-b"]
         assert len(etiqueta_a) == 1 and len(etiqueta_b) == 1
@@ -184,12 +188,14 @@ def test_numericos_configuran_retorno_de_foco_al_limpiar(monkeypatch, herramient
     original = limpieza_captura.crear_boton_limpieza
 
     def capturar_llamada(*args, **kwargs):
+        """Registra el campo de retorno de foco enviado al control de limpieza."""
         registrado["campo_foco"] = kwargs.get("campo_foco")
         return original(*args, **kwargs)
 
     monkeypatch.setattr(modulo, "crear_boton_limpieza", capturar_llamada)
 
     async def comprobar(vista, _cliente):
+        """Verifica que campo_foco apunte al primer campo esperado de la vista."""
         assert registrado["campo_foco"] is getattr(vista, atributo_esperado)
 
     asyncio.run(construir_pagina(monkeypatch, herramienta, comprobar))
