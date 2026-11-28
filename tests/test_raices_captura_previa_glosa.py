@@ -5,6 +5,7 @@ from nicegui import ui
 import pytest
 
 from src.frontend.controladores.raices.metodos_cerrados.adaptadores import BISECCION, REGLA_FALSA
+from src.frontend.nucleo import banderas
 from tests.comun_construccion_vistas import construir_pagina
 from tests.test_metodos_cerrados_calculo import captura_ejercicio, montar_vista
 
@@ -106,7 +107,7 @@ def test_metodos_abiertos_salida_visual_y_superficie_grafica(monkeypatch):
 @pytest.mark.parametrize("dock,nav", [("1", "1"), ("0", "1"), ("0", "0")])
 def test_metodos_abiertos_glosa_lateral_y_clasico_con_foco(monkeypatch, dock, nav):
     """Glosa abre por acción explícita, conserva contexto y devuelve el foco al cerrar."""
-    monkeypatch.setenv("SCALARIS_DOCK", dock)
+    monkeypatch.setattr(banderas, "panel_lateral_habilitado", lambda: dock == "1")
     monkeypatch.setenv("SCALARIS_NAV", nav)
     js_emitido = []
     consultas = []

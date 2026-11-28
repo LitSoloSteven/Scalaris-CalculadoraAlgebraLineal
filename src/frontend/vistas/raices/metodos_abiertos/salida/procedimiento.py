@@ -59,18 +59,25 @@ def renderizar_iteracion(fila: dict, resultado: dict) -> None:
         ui.label("Esta iteración terminó al detectar una condición numérica.").classes("text-sm")
 
 
+_TERMINOS_COMUNES = (("x_n", "xₙ", ".6g"), ("f_x_n", "f(xₙ)", ".6g"))
+_TERMINOS_METODO = {
+    "newton": (_TERMINOS_COMUNES[0], _TERMINOS_COMUNES[1], ("derivada", "f'(xₙ)", ".6g")),
+    "secante": (
+        ("x_anterior", "xₙ₋₁", ".6g"),
+        _TERMINOS_COMUNES[0],
+        ("f_x_anterior", "f(xₙ₋₁)", ".6g"),
+        _TERMINOS_COMUNES[1],
+    ),
+}
+
+
 def _mostrar_terminos_iteracion(fila: dict, metodo: str | None) -> None:
-    terminos = []
-    if metodo == "secante" and fila.get("x_anterior") is not None:
-        terminos.append(("xₙ₋₁", f"{fila['x_anterior']:.6g}"))
-    if fila.get("x_n") is not None:
-        terminos.append(("xₙ", f"{fila['x_n']:.6g}"))
-    if fila.get("f_x_n") is not None:
-        terminos.append(("f(xₙ)", f"{fila['f_x_n']:.6g}"))
-    if metodo == "newton" and fila.get("derivada") is not None:
-        terminos.append(("f'(xₙ)", f"{fila['derivada']:.6g}"))
-    if metodo == "secante" and fila.get("f_x_anterior") is not None:
-        terminos.append(("f(xₙ₋₁)", f"{fila['f_x_anterior']:.6g}"))
+    campos = _TERMINOS_METODO.get(metodo or "", _TERMINOS_COMUNES)
+    terminos = [
+        (etiqueta, f"{fila[clave]:{formato}}")
+        for clave, etiqueta, formato in campos
+        if fila.get(clave) is not None
+    ]
     if fila.get("x_siguiente") is not None:
         terminos.append(("→ xₙ₊₁", f"{fila['x_siguiente']:.8g}"))
     if terminos:
