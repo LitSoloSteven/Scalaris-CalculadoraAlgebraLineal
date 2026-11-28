@@ -40,7 +40,11 @@ def renderizar_plantilla(nombre: str, valores: dict[str, Any]) -> str:
 def renderizar_tabla(encabezados: tuple[str, ...], filas: list[str], pie: str = "") -> str:
     """Compone filas y pie ya renderizados; escapa cada título de columna."""
     titulos = "".join(f"<th scope='col'>{escape(titulo)}</th>" for titulo in encabezados)
-    return _leer_plantilla("tabla").substitute(encabezados=titulos, filas="".join(filas), pie=pie)
+    contenido = "".join(filas) if filas else (
+        f'<tr><td colspan="{max(1, len(encabezados))}" class="tabla-resultados-vacia">'
+        'Este cálculo no generó filas para mostrar.</td></tr>'
+    )
+    return _leer_plantilla("tabla").substitute(encabezados=titulos, filas=contenido, pie=pie)
 
 
 def renderizar_lectura(tabla: str, lectura: str) -> str:

@@ -29,12 +29,6 @@
     color: var(--text-main);
 }
 
-.pdf-tabla-entrada {
-    max-width: 100%;
-    overflow-x: auto;
-    font-variant-numeric: tabular-nums;
-}
-
 .pdf-secuencia > [data-pdf-captura] {
     padding-bottom: var(--space-4);
 }
@@ -42,7 +36,6 @@
 .pdf-tabla-entrada td {
     padding: var(--space-2) var(--space-4);
     text-align: center;
-    overflow-wrap: anywhere;
 }
 
 .pdf-error {

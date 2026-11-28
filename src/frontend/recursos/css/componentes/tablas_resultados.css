@@ -14,10 +14,13 @@
     color: var(--text-main);
 }
 
-:is(.tabla-resultados .q-table, .inversa-tabla, .numericos-tabla, .iterativos-tabla, .pdf-tabla-entrada table) {
+:is(.tabla-resultados .q-table, .inversa-tabla, .numericos-tabla, .iterativos-tabla) {
     min-inline-size: 100%;
     border-collapse: separate;
     border-spacing: 0;
+}
+
+:is(.tabla-resultados, .inversa-tabla, .numericos-tabla, .iterativos-tabla, .pdf-tabla-entrada) {
     font-variant-numeric: tabular-nums;
 }
 
@@ -42,12 +45,12 @@
     background: var(--bg-elevated);
 }
 
-.tabla-resultados .q-table :is(th, td):not(.q-table--col-auto-width) {
+:is(.tabla-resultados .q-table, .numericos-tabla) :is(th, td):not(.q-table--col-auto-width, [colspan]) {
     min-inline-size: 8ch;
     max-inline-size: 26ch;
 }
 
-.tabla-resultados .q-table :is(.text-left, .tabla-resultados-vacia) { text-align: start; }
+:is(.tabla-resultados .q-table .text-left, .numericos-tabla .tabla-resultados-vacia) { text-align: start; }
 .tabla-resultados .q-table__middle { overflow: auto; }
 .tabla-resultados .q-table__bottom { flex-wrap: wrap; }
 .tabla-resultados .q-table__bottom, .tabla-resultados .q-table__bottom .q-field__native { color: var(--text-main); }
