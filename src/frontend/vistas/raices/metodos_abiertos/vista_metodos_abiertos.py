@@ -3,7 +3,7 @@ from nicegui import ui
 
 from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
 from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
-from src.frontend.componentes.aplicacion.controles.selector_opciones import SelectorOpciones
+from src.frontend.componentes.aplicacion.controles.selector_opciones import SelectorOpciones, estilizar_desplegable
 from src.frontend.componentes.captura.ecuaciones.limpieza_captura import crear_boton_limpieza
 from src.frontend.componentes.glosa.panel.panel_ia import PanelIA
 from src.frontend.componentes.raices.captura.campo_funcion_real import crear_campo_funcion
@@ -231,9 +231,10 @@ def _construir_acciones(vista: VistaMetodosAbiertos) -> None:
             campo_foco=vista.expresion,
         )
         vista.limpieza.boton.classes(remove="flex-1 py-3", add="metodos-raices-limpieza")
-        vista.selector_ejemplos = ui.select(
-            _EJEMPLOS, label="Ejemplos", on_change=vista.cargar_ejemplo,
-        ).classes("selector-controles metodos-raices-ejemplos min-w-56")
+        vista.selector_ejemplos = estilizar_desplegable(
+            ui.select(_EJEMPLOS, label="Ejemplos", on_change=vista.cargar_ejemplo),
+            "metodos-raices-ejemplos min-w-56",
+        )
 
 
 def _vincular_ciclo_vida(vista: VistaMetodosAbiertos) -> None:

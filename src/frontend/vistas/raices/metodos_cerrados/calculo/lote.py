@@ -9,6 +9,7 @@ from src.backend.resolutores.raices.biseccion.lote.limites_resolucion_multiple i
     MAXIMO_CANDIDATOS_MULTIPLE, MAXIMO_EVALUACIONES_MULTIPLE,
 )
 from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
+from src.frontend.componentes.aplicacion.controles.selector_opciones import estilizar_desplegable
 from src.frontend.controladores.raices.biseccion.ejecucion.resolucion_multiple import resolver_lote as resolver_biseccion
 from src.frontend.controladores.raices.compartido.ejecucion.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
 from src.frontend.controladores.raices.compartido.exploracion.exploracion_raices import LONGITUD_CAMPO_EXPLORACION, presentar_candidato
@@ -223,14 +224,17 @@ class LoteMetodosCerrados:
 
 def _montar_controles(lote: LoteMetodosCerrados) -> None:
     with ui.column().classes("w-full") as lote.campos_biseccion:
-        lote.selector_uno = ui.select({}, label="Candidato para resolver").classes("w-full matriz-entrada")
+        lote.selector_uno = estilizar_desplegable(
+            ui.select({}, label="Candidato para resolver"), "w-full matriz-entrada",
+        )
         lote.control_examen = crear_control_examen_lote()
         with ui.row().classes("w-full gap-3"):
             lote.boton_uno = _boton("Resolver candidato", partial(lote._resolver, True, False))
             lote.boton_todos = _boton("Resolver todos", partial(lote._resolver, True, True))
     with ui.column().classes("w-full") as lote.campos_regla_falsa:
-        lote.selector_multiple = ui.select({}, value=[], multiple=True, label="Candidatos del lote").classes(
-            "w-full matriz-entrada").props(f":max-values={MAXIMO_CANDIDATOS_MULTIPLE}")
+        lote.selector_multiple = estilizar_desplegable(
+            ui.select({}, value=[], multiple=True, label="Candidatos del lote"), "w-full matriz-entrada",
+        ).props(f":max-values={MAXIMO_CANDIDATOS_MULTIPLE}")
         lote.presupuesto = ui.input("Presupuesto de evaluaciones", value=str(MAXIMO_EVALUACIONES_MULTIPLE)).classes(
             "w-full matriz-entrada").props(f"inputmode=numeric maxlength={LONGITUD_CAMPO_EXPLORACION}")
         habilitar_simbolos(lote.presupuesto, "entero")
