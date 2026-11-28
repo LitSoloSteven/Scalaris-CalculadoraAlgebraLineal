@@ -12,7 +12,7 @@ def crear_entradas_vector(contenedor: Any, cantidad: int, identificador: str) ->
     contenedor.clear()
     with contenedor, ui.column().classes("cuadricula-contenido w-full"), ui.row().classes("gap-2 no-wrap w-full"):
         for indice in range(cantidad):
-            entrada = ui.input(value=valores[indice] if indice < len(valores) else "", placeholder="", label=f"d{indice + 1}").classes("matriz-entrada cuadricula-celda text-center")
+            entrada = ui.input(value=valores[indice] if indice < len(valores) else "", label=f"d{indice + 1}").classes("matriz-entrada cuadricula-celda text-center")
             entrada.props(propiedades_celda_accesible(0, indice, identificador_matriz=identificador))
             etiqueta = f"Demanda final sector {indice + 1}" if identificador == "d" else f"Componente {identificador}{indice + 1}"
             entrada.props(f'aria-label="{etiqueta}"')
@@ -46,15 +46,3 @@ def llenar_entradas(entradas: list[Any], valores: list[str]) -> None:
         cargados[indice] = valor
     for entrada, valor in zip(entradas, cargados):
         entrada.value = valor
-
-
-def construir_ejemplos(ejemplos: list[dict], cargar: Any, titulo: str) -> None:
-    """Monta botones de ejemplos internos; cargar recibe el diccionario seleccionado."""
-    from functools import partial
-    with ui.column().classes("w-full panel-tarjeta p-4 mb-4"):
-        ui.label(titulo).classes("font-bold texto-principal mb-2 text-sm uppercase tracking-wide")
-        with ui.row().classes("gap-2 flex-wrap"):
-            for ejemplo in ejemplos:
-                ui.button(ejemplo["nombre"], on_click=partial(cargar, ejemplo), color=None).classes(
-                    "boton-discreto text-xs min-h-[44px] py-2 px-3"
-                ).props("ripple=false").tooltip(ejemplo["descripcion"])
