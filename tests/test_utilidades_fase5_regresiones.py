@@ -120,16 +120,16 @@ def test_regla_falsa_error_expone_role_alert(monkeypatch):
 
 
 def test_metodos_abiertos_paginacion_espanol_ejemplos_titulo_y_glosa(monkeypatch):
-    """Métodos abiertos localiza paginación, reinicia Ejemplos, cambia título y conecta Glosa."""
+    """Métodos abiertos localiza paginación, inicia sin ejemplos, cambia título y conecta Glosa."""
     async def _comprobar(vista, _):
         assert vista.panel_ia is not None
+        assert not hasattr(vista, "selector_ejemplos")
         assert vista.obtener_contexto_ia().herramienta == "metodos_abiertos"
         assert sugerir(vista.obtener_senales_ia(), limite=3)
 
-        vista.selector_ejemplos.set_value("n1")
+        vista.expresion.set_value("x^3 - x - 2")
         assert vista.expresion.value == "x^3 - x - 2"
         vista.metodo.set_value("secante")
-        assert vista.selector_ejemplos.value is None
 
         vista.x0.set_value("1")
         vista.x1.set_value("2")
