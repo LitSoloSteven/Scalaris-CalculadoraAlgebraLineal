@@ -31,7 +31,7 @@ def _leer_css(ruta: str) -> str:
 def test_css_expande_cuadriculas_y_distribuye_tarjetas():
     """Las hojas compartidas y modulares aplican ancho util, pestanas iguales y filas adaptables."""
     entradas = _leer_css("componentes/componentes_entradas.css")
-    assert ".cuadricula-cabecera-fija, .cuadricula-contenido { width: 100%; min-width: max-content; }" in entradas
+    assert ".cuadricula-cabecera-fija, .cuadricula-contenido { width: 100%; min-width: min-content; }" in entradas
     assert "flex: 1 0 var(--cell-w);" in bloque_css(entradas, ".cuadricula-cabecera-fija .cuadricula-celda,")
 
     sesion = _leer_css("algebra/espacios/vistas_sesion_matricial.css")
