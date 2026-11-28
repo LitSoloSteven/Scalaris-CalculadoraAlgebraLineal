@@ -98,7 +98,7 @@ def _renderizar_barra_contextual(
     al_alternar_ia: Any = None,
 ) -> None:
     """Renderiza la botonera contextual con la sección del acceso activo."""
-    with ui.element("a").classes("navegacion-accion navegacion-inicio").props(
+    with ui.element("a").classes("navegacion-inicio").props(
         f'href="{RUTA_INICIO}" aria-label="Inicio"'
     ).tooltip("Inicio"):
         _renderizar_marca_inicio()
@@ -119,8 +119,8 @@ def _renderizar_barra_contextual(
 def _renderizar_marca_inicio() -> None:
     """Renderiza las variantes de logotipo por tema dentro del acceso a inicio."""
     ui.html(
-        '<img src="/assets/LogoOscuro.png" alt="" width="28" height="28" class="navegacion-inicio-logotipo marca-logotipo-oscuro" />'
-        '<img src="/assets/LogoClaro.png" alt="" width="28" height="28" class="navegacion-inicio-logotipo marca-logotipo-claro" />',
+        '<img src="/assets/LogoOscuro.png" alt="" width="32" height="32" class="navegacion-inicio-logotipo marca-logotipo-oscuro" />'
+        '<img src="/assets/LogoClaro.png" alt="" width="32" height="32" class="navegacion-inicio-logotipo marca-logotipo-claro" />',
         tag="span",
     ).classes("navegacion-inicio-marca").props('aria-hidden="true"')
 

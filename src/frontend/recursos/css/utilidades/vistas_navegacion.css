@@ -102,7 +102,9 @@
 }
 
 html[data-entrada="teclado"] .navegacion-accion,
-html[data-entrada="teclado"] .navegacion-accion::after {
+html[data-entrada="teclado"] .navegacion-accion::after,
+html[data-entrada="teclado"] .navegacion-inicio,
+html[data-entrada="teclado"] .navegacion-inicio-marca {
     transition: none !important;
 }
 
@@ -115,14 +117,18 @@ html[data-entrada="teclado"] .navegacion-accion::after {
 }
 
 .navegacion-inicio {
-    padding: 0 var(--space-2);
-    width: 44px;
-    justify-content: center;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px; min-height: 44px; padding: 0;
+    border: none; border-radius: var(--radius-pill); background: transparent; box-shadow: none;
+    text-decoration: none; transition: transform var(--dur-release) var(--ease-std);
 }
-
+.navegacion-inicio:active { transform: scale(0.97); transition-duration: var(--dur-press); }
 .navegacion-inicio:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
-.navegacion-inicio-marca { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; }
-.navegacion-inicio-logotipo { width: 28px; height: 28px; aspect-ratio: 1 / 1; object-fit: contain; }
+.navegacion-inicio-marca { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; transition: transform var(--dur-state) var(--ease-std); }
+.navegacion-inicio-logotipo { width: 32px; height: 32px; aspect-ratio: 1 / 1; object-fit: contain; }
+@media (hover: hover) and (pointer: fine) {
+    .navegacion-inicio:hover .navegacion-inicio-marca { transform: scale(1.06); }
+}
 
 .navegacion-separador {
     width: 1px;
@@ -251,6 +257,9 @@ html[data-entrada="teclado"] .navegacion-accion::after {
     .navegacion-accion,
     .navegacion-accion::after,
     .navegacion-accion:active,
+    .navegacion-inicio,
+    .navegacion-inicio:active,
+    .navegacion-inicio-marca,
     .navegacion-capsula,
     .navegacion-cabecera {
         transition: none !important;
