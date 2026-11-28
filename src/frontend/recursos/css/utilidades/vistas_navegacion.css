@@ -46,6 +46,12 @@
     flex-shrink: 0;
 }
 
+.navegacion-tema {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
 .navegacion-centro {
     display: flex;
     align-items: center;

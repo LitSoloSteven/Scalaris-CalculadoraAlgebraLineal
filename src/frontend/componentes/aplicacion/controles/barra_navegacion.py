@@ -39,9 +39,25 @@ def crear_barra_navegacion(interfaz_activa=None, ruta_activa: str = "/", clave_a
             if not contextual:
                 _renderizar_barra_plana(interfaz_activa, ruta_activa, al_alternar_ia)
             else:
-                _renderizar_barra_contextual(clave_activa)
+                _renderizar_barra_contextual(clave_activa, interfaz_activa, al_alternar_ia)
 
     _registrar_navegacion_reciente(ruta_activa, clave_activa=clave_activa, centrar=contextual)
+
+
+def _renderizar_boton_glosa_clasico(interfaz_activa: Any, al_alternar_ia: Any = None) -> None:
+    """Renderiza el acceso a Glosa cuando el panel lateral esta inactivo."""
+    def alternar_ia():
+        """Alterna el panel del asistente desde el control de navegacion."""
+        if interfaz_activa and hasattr(interfaz_activa, "panel_ia"):
+            interfaz_activa.panel_ia.alternar()
+
+    with ui.button(on_click=al_alternar_ia or alternar_ia, color=None).classes(
+        "boton-icono p-0 texto-principal"
+    ).props(
+        'flat ripple=false aria-label="Glosa" aria-controls="ia-panel-clasico" '
+        'aria-expanded="false" data-glosa-clasico-alternar'
+    ).tooltip("Glosa"):
+        ui.html(icono_svg("tutor_ia"))
 
 
 def _renderizar_logotipo() -> None:
@@ -70,21 +86,17 @@ def _renderizar_barra_plana(interfaz_activa: Any, ruta_activa: str, al_alternar_
                 ui.html(icono_svg(herramienta.icono))
 
         if not banderas.panel_lateral_habilitado():
-            def alternar_ia():
-                """Alterna el panel del asistente desde el control de navegación."""
-                if interfaz_activa and hasattr(interfaz_activa, "panel_ia"):
-                    interfaz_activa.panel_ia.alternar()
-
-            with ui.button(on_click=al_alternar_ia or alternar_ia, color=None).classes(
-                "boton-icono p-0 texto-principal"
-            ).props('flat ripple=false aria-label="Glosa"').tooltip("Glosa"):
-                ui.html(icono_svg("tutor_ia"))
+            _renderizar_boton_glosa_clasico(interfaz_activa, al_alternar_ia)
 
         ui.element("div").classes("navegacion-separador")
         renderizar_boton_configuracion()
 
 
-def _renderizar_barra_contextual(clave_activa: str | None) -> None:
+def _renderizar_barra_contextual(
+    clave_activa: str | None,
+    interfaz_activa: Any = None,
+    al_alternar_ia: Any = None,
+) -> None:
     """Renderiza la botonera contextual con la sección del acceso activo."""
     with ui.element("a").classes("navegacion-accion navegacion-inicio").props(
         f'href="{RUTA_INICIO}" aria-label="Inicio"'
@@ -97,6 +109,10 @@ def _renderizar_barra_contextual(clave_activa: str | None) -> None:
             _renderizar_seccion(seccion, clave_activa)
 
     with ui.element("div").classes("tema-boton-selector navegacion-tema"):
+        if not banderas.panel_lateral_habilitado() and (
+            al_alternar_ia is not None or (interfaz_activa is not None and hasattr(interfaz_activa, "panel_ia"))
+        ):
+            _renderizar_boton_glosa_clasico(interfaz_activa, al_alternar_ia)
         renderizar_boton_configuracion()
 
 
