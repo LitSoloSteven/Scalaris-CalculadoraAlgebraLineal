@@ -27,7 +27,7 @@ class SalidaMetodosAbiertos:
         """Presenta el resultado y crea el reproductor de su procedimiento."""
         self.resultado = datos
         with contenedor_resultados:
-            mostrar_resumen(datos)
+            mostrar_resumen(datos, panel_ia=getattr(self.vista, "panel_ia", None))
             if datos.get("iteraciones"):
                 self._mostrar_tabla(datos)
         self._crear_reproductor(datos, contenedor_reproductor)

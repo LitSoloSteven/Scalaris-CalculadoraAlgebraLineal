@@ -66,8 +66,9 @@ class PanelVistaPrevia:
             ).props("ripple=false")
         self.estado = ui.label(_MENSAJE_INICIAL).classes(
             "texto-secundario").props("role=status aria-live=polite aria-busy=false")
-        self.grafica = ui.plotly(crear_figura_vacia()).classes("metodos-abiertos-grafica w-full").props(
-            'role=img aria-label="Gráfica previa de la función con las aproximaciones del método"')
+        with ui.element("div").classes("metodos-raices-grafica-superficie metodos-abiertos-grafica-superficie"):
+            self.grafica = ui.plotly(crear_figura_vacia()).classes("metodos-abiertos-grafica w-full").props(
+                'role=img aria-label="Gráfica previa de la función con las aproximaciones del método"')
         self.grafica.on("plotly_afterplot", js_handler="() => window.scalaris?.sincronizarTemaPlotly?.()")
         self.grafica.on("plotly_relayout", self._encuadrar, js_handler=(
             f"datos => emit({{...datos, identidad: document.getElementById('{self.grafica.html_id}')?.layout?.meta}})"
@@ -127,7 +128,7 @@ class PanelVistaPrevia:
             None, self._actualizar, self.disponible, ANTIRREBOTE_VISTA_PREVIA_SEGUNDOS)
 
     async def actualizar(self) -> None:
-        """Calcula inmediatamente la vista previa al cargar un ejemplo o iniciar pruebas."""
+        """Calcula inmediatamente la vista previa al restaurar un ejercicio o iniciar pruebas."""
         self._invalidar()
         if self.disponible():
             self.tarea = asyncio.current_task()
