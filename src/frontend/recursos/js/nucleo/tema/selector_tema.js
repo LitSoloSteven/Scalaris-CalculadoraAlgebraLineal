@@ -13,8 +13,8 @@
     }
 
     function moverFocoTema(evento) {
-        if (evento.defaultPrevented || !['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(evento.key)) return;
-        const origen = evento.target.closest?.(selectorOpcion);
+        if (!['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(evento?.key) || evento.defaultPrevented) return;
+        const origen = evento.target?.closest?.(selectorOpcion);
         const menu = origen?.closest(selectorMenuConfiguracion);
         if (!menu) return;
         const opciones = Array.from(menu.querySelectorAll(selectorOpcion));
