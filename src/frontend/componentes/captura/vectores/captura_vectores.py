@@ -206,7 +206,6 @@ class PanelCapturaVectores(MixinTransicionVectores):
                     )
                     ui.input(
                         value=valor,
-                        placeholder="",
                         on_change=lambda evento, indice=i, nombre_matriz=nombre: self._al_cambiar_celda_vector(nombre_matriz, indice, evento.value),
                     ).classes("matriz-entrada cuadricula-celda").props(propiedades)
 

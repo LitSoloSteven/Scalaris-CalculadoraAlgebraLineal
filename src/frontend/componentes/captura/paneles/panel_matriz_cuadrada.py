@@ -126,7 +126,6 @@ class PanelMatrizCuadrada:
         propiedades = propiedades_celda_accesible(r, c, identificador_matriz=IDENTIFICADOR_MATRIZ, nombre_campo=f"{IDENTIFICADOR_MATRIZ}_r{r}c{c}")
         return ui.input(
             value=valor,
-            placeholder="",
             on_change=lambda evento, fil=r, columna=c: self._al_cambiar_celda(fil, columna, evento.value),
         ).classes(f"matriz-entrada {clase_tam}").props(propiedades)
 

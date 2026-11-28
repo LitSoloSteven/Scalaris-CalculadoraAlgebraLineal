@@ -229,7 +229,7 @@ def _crear_entradas_fila(fila: int, columnas: int, identificador: str, valores: 
     entradas = []
     with ui.row().classes("items-center gap-2 no-wrap w-full").props(f'data-matriz-fila="{fila}"'):
         for columna in range(columnas):
-            entrada = ui.input(value=valores.get((fila, columna), ""), placeholder="").classes("matriz-entrada cuadricula-celda text-center")
+            entrada = ui.input(value=valores.get((fila, columna), "")).classes("matriz-entrada cuadricula-celda text-center")
             entrada.props(propiedades_celda_accesible(fila, columna, identificador_matriz=identificador))
             entradas.append(entrada)
     return entradas
