@@ -15,7 +15,10 @@
       if (!region.matches(clase)) continue;
       region.tabIndex = 0;
       region.setAttribute('role', 'region');
-      if (!region.hasAttribute('aria-label')) region.setAttribute('aria-label', nombre);
+      const nombreEspecifico = region.closest('[data-nombre-tabla]')?.dataset.nombreTabla;
+      if (!region.hasAttribute('aria-label')) {
+        region.setAttribute('aria-label', nombreEspecifico || nombre);
+      }
       return;
     }
   }

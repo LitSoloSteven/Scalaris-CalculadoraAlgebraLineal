@@ -1,7 +1,10 @@
 """Paginación en servidor y formato de la página visible de la traza."""
 from nicegui import ui
 
-from src.frontend.componentes.raices.resultados.tabla_iteraciones import PaginacionIteraciones
+from src.frontend.componentes.raices.resultados.tabla_iteraciones import (
+    PaginacionIteraciones,
+    presentar_tabla_iteraciones,
+)
 from src.frontend.controladores.raices.biseccion.presentacion.presentacion import COLUMNAS, filas_tabla
 from src.frontend.controladores.raices.biseccion.salidas.salidas_biseccion import COLUMNAS_EXAMEN, datos_examen
 
@@ -12,8 +15,9 @@ def mostrar_tabla(respuesta: dict, examen: ui.switch | ui.checkbox | None = None
         ui.label("Tabla de iteraciones").classes("text-xl font-bold")
         ui.label("Ancho: b−a. Cota: (b−a)/2 en x, si f es continua. Residuo: |f(c)|. Error relativo: |(cᵢ−cᵢ₋₁)/cᵢ|·100%; no aplica en la primera fila o si cᵢ=0.").classes("text-sm texto-secundario")
         precision = ui.switch("Inspeccionar valores internos (hasta 17 cifras)")
-        with ui.element("div").classes("biseccion-tabla w-full").props('tabindex=0 role=region aria-label="Tabla de iteraciones con desplazamiento horizontal"'):
-            tabla = ui.table(columns=[], rows=[], row_key="i", pagination=0).classes("w-full").props("hide-bottom")
+        with ui.element("div").classes("biseccion-tabla w-full"):
+            tabla = ui.table(columns=[], rows=[], row_key="i", pagination=0)
+            presentar_tabla_iteraciones(tabla, paginacion_propia=True)
         preparar = lambda inicio, fin: _preparar_pagina(respuesta, precision, examen, inicio, fin)
         preferencias = (precision,) if examen is None else (precision, examen)
         paginacion = PaginacionIteraciones(tabla, len(respuesta["iteraciones"]), preparar, preferencias)
