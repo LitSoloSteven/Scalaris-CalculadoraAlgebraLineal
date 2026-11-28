@@ -47,13 +47,10 @@ class VistaLeontief(MixinGlosaModelos, MixinLimpiezaModelos, MixinCalculoLeontie
 
             with ui.element("div").classes("disposicion-captura-fila mb-2"):
                 with ui.column().classes("disposicion-panel gap-4"):
-                    self._construir_ejemplos()
-                    self._construir_selector_tamano()
-                    self._construir_panel_c()
+                    self._construir_captura_modelo()
                     self._crear_accion_principal()
 
                 with ui.column().classes("disposicion-panel gap-4"):
-                    self._construir_panel_d()
                     self._construir_panel_sectores()
                     self.contenedor_herramientas = ui.column().classes("w-full min-w-0 gap-3")
 
