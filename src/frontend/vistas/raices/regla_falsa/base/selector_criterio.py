@@ -1,14 +1,18 @@
 """Selector de condición con un parámetro visible y borradores independientes."""
 from nicegui import ui
 
+from src.frontend.componentes.aplicacion.controles.selector_opciones import estilizar_desplegable
 from src.frontend.controladores.raices.biseccion.captura.catalogo_criterios import CRITERIOS, condicion_criterio
 from src.frontend.controladores.raices.regla_falsa.captura.configuracion_ampliada import criterio_capturado
 
 
 def construir_selector(vista) -> None:
     """Monta los criterios del dominio sin estimar iteraciones ni alterar la precisión visual."""
-    vista.criterio = ui.select({tipo: datos[0] for tipo, datos in CRITERIOS.items()},
-                               value="residuo", label="Criterio de parada").classes("w-full matriz-entrada")
+    vista.criterio = estilizar_desplegable(
+        ui.select({tipo: datos[0] for tipo, datos in CRITERIOS.items()},
+                  value="residuo", label="Criterio de parada"),
+        "w-full matriz-entrada",
+    )
     vista.parametros_criterio = {"residuo": vista.tolerancia}
     vista.tolerancia.bind_visibility_from(vista.criterio, "value", backward=lambda tipo: tipo == "residuo")
     for tipo, (_, etiqueta, inicial) in CRITERIOS.items():

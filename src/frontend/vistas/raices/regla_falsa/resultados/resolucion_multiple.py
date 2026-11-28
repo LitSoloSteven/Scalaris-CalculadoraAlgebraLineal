@@ -5,6 +5,7 @@ import logging
 from nicegui import ui
 
 from src.backend.resolutores.raices.biseccion.lote.limites_resolucion_multiple import MAXIMO_CANDIDATOS_MULTIPLE, MAXIMO_EVALUACIONES_MULTIPLE
+from src.frontend.componentes.aplicacion.controles.selector_opciones import estilizar_desplegable
 from src.frontend.controladores.raices.compartido.ejecucion.coordinacion_trabajos_raices import CoordinadorTrabajosRaices
 from src.frontend.controladores.raices.compartido.exploracion.exploracion_raices import LONGITUD_CAMPO_EXPLORACION, presentar_candidato
 from src.frontend.controladores.raices.regla_falsa.ejecucion.resolucion_multiple import resolver_lote
@@ -51,8 +52,9 @@ class PanelResolucionMultiple:
     def _montar_selector(self, opciones: dict) -> None:
         self.contenedor_selector.clear()
         with self.contenedor_selector:
-            selector = self.selector = ui.select(opciones, value=[], multiple=True, label="Candidatos del lote").classes(
-                "w-full matriz-entrada").props(f":max-values={MAXIMO_CANDIDATOS_MULTIPLE}")
+            selector = self.selector = estilizar_desplegable(
+                ui.select(opciones, value=[], multiple=True, label="Candidatos del lote"), "w-full matriz-entrada",
+            ).props(f":max-values={MAXIMO_CANDIDATOS_MULTIPLE}")
         selector.set_enabled(bool(opciones))
         selector.on_value_change(lambda: self.invalidar() if self.selector is selector else None)
 
