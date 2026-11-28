@@ -7,7 +7,7 @@ AYUDA_METODOS = {
     METODO_INICIAL: 'Cada ecuación usa los valores del vector anterior.',
     METODO_SECUENCIAL: 'Cada ecuación usa los valores ya actualizados en el mismo barrido y los anteriores para las incógnitas restantes.',
 }
-ESTADO_INICIAL = 'Escribe un sistema o carga el ejemplo.'
+ESTADO_INICIAL = 'Escribe un sistema y sus parámetros para calcular.'
 ESTADO_EDICION = 'Resuelve el sistema para actualizar el resultado.'
 ESTADO_CALCULO = 'Calculando las iteraciones de {metodo}…'
 EJEMPLO_CARGADO = 'Ejemplo cargado. Con sus parámetros iniciales, Jacobi alcanza la tolerancia en 6 barridos y Gauss-Seidel en 4.'

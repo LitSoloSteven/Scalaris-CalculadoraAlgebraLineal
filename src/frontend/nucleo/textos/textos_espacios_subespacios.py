@@ -22,11 +22,28 @@ AYUDA_MODOS = {
 }
 
 TITULO_PAGINA = "Espacios y subespacios"
-ESTADO_INICIAL = "Escribe los generadores o carga el ejemplo para analizar el subespacio."
+ESTADO_INICIAL = "Escribe los generadores para analizar el subespacio."
 ESTADO_INICIAL_MODOS = {
     MODO_GENERADORES: ESTADO_INICIAL,
-    MODO_RESTRICCIONES: "Escribe las ecuaciones de restricción o carga el ejemplo para analizar el conjunto.",
-    MODO_PERSONALIZADO: "Completa el conjunto y las operaciones o carga un ejemplo.",
+    MODO_RESTRICCIONES: "Escribe las ecuaciones o la matriz de restricción para analizar el conjunto.",
+    MODO_PERSONALIZADO: "Completa el conjunto y las operaciones para verificar los axiomas.",
+}
+AYUDA_SIMBOLOS_MODOS: dict[str, tuple[tuple[str, str], ...]] = {
+    MODO_GENERADORES: (
+        ("v₁, v₂", "Vectores columna en ℝⁿ"),
+        ("0", "Introduce ceros explícitos por componente"),
+        ("1/2", "Acepta enteros y fracciones exactas"),
+    ),
+    MODO_RESTRICCIONES: (
+        ("Ax = b", "Sistema en matriz aumentada o ecuaciones"),
+        ("x1, x2", "Variables por columna según ℝⁿ"),
+        ("0x1 = 0", "Fija dimensión sin restricciones no nulas"),
+    ),
+    MODO_PERSONALIZADO: (
+        ("W ⊂ ℝⁿ", "Conjunto definido por generadores o restricciones"),
+        ("u ⊕ v", "Suma personalizada coordenada a coordenada"),
+        ("c ⊙ u", "Producto por escalar con exponentes enteros"),
+    ),
 }
 ESTADO_EDICION = "Analiza el conjunto para actualizar el resultado."
 ESTADO_CALCULO = "Analizando el conjunto generado…"
@@ -89,15 +106,15 @@ ESTADO_CRITERIO_NO_CUMPLE = "No cumple"
 ESTADO_CRITERIO_VACUO = "Se cumple vacuamente"
 
 MENSAJE_CAPTURA_VACIA = (
-    "Escribe valores numéricos en los generadores, carga el ejemplo o introduce 0 "
+    "Escribe valores numéricos en los generadores o introduce 0 "
     "de forma explícita para analizar el subespacio cero."
 )
 MENSAJE_RESTRICCIONES_VACIAS = (
-    "Escribe valores numéricos en la matriz aumentada, carga el ejemplo o introduce 0 "
+    "Escribe valores numéricos en la matriz aumentada o introduce 0 "
     "de forma explícita para analizar las restricciones."
 )
 MENSAJE_ECUACIONES_VACIAS = (
-    "Escribe al menos una ecuación de restricción o carga el ejemplo para analizar el conjunto."
+    "Escribe al menos una ecuación de restricción para analizar el conjunto."
 )
 MENSAJE_SOLO_CONSTANTES = (
     "Incluye al menos una variable o escribe 0x1 para fijar la dimensión, por ejemplo 0x1 = 0 o 0x1 = 1."
