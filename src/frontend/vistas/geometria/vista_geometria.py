@@ -79,14 +79,17 @@ class VistaGeometria(MixinLimpiezaGeometria, MixinControlesGeometria, MixinEscen
             ui.html(herramienta_por_identificador('visualizador').nombre, tag='h1').classes(
                 'text-2xl font-bold texto-principal'
             )
-            with ui.element('div').classes('disposicion-captura-fila'):
-                self.contenedor_controles = ui.column().classes('geometria-contenedor')
+            with (
+                ui.element('div').classes('disposicion-captura-fila'),
+                ui.column().classes('geometria-captura-bloque'),
+            ):
+                self.contenedor_controles = ui.column().classes('geometria-contenedor geometria-captura-centrada')
                 self._construir_panel_auxiliar()
             self._construir_panel_salida()
 
     def _construir_panel_auxiliar(self):
         with ui.column().classes('geometria-contenedor'):
-            with ui.row().classes('w-full items-center gap-4'):
+            with ui.row().classes('w-full items-center gap-4 geometria-acciones'):
                 crear_boton_limpieza(
                     self, lambda: not self.contenedor_controles.is_deleted,
                     lambda: [self.contenedor_controles],
