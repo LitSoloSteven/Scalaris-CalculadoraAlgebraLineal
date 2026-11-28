@@ -21,15 +21,16 @@ def _renderizar_bloque_temas() -> None:
     with ui.element("div").classes("configuracion-bloque"):
         ui.label("Tema").classes("configuracion-subtitulo")
         with ui.element("div").classes("configuracion-temas").props(
-            'role="radiogroup" aria-label="Tema de la interfaz"'
+            'role="menu" aria-label="Tema de la interfaz" data-menu-temas-configuracion'
         ):
             for etiqueta, id_tema in TEMAS_DISPONIBLES:
                 _renderizar_opcion_tema(etiqueta, id_tema)
 
 
 def _renderizar_opcion_tema(etiqueta: str, id_tema: str) -> None:
+    tabulacion = "0" if id_tema == "papel" else "-1"
     with ui.button(color=None).classes("configuracion-opcion-tema").props(
-        f'flat no-caps ripple=false role="menuitemradio" aria-checked="false" '
+        f'flat no-caps ripple=false role="menuitemradio" aria-checked="false" tabindex="{tabulacion}" '
         f'data-tema-opcion="{id_tema}"'
     ):
         ui.html(
