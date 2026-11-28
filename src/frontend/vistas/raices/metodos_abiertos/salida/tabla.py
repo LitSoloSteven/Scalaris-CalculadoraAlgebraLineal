@@ -3,6 +3,11 @@ from collections.abc import Callable
 
 from nicegui import ui
 
+from src.frontend.componentes.raices.resultados.tabla_iteraciones import (
+    FILAS_POR_PAGINA,
+    columnas_iteraciones,
+    presentar_tabla_iteraciones,
+)
 from src.frontend.controladores.raices.compartido.formato.formato_numerico_raices import numero
 
 
@@ -17,8 +22,6 @@ class TablaIteraciones:
 
     def mostrar(self, filas: tuple, metodo: str) -> None:
         """Construye la tabla para la traza que devolvió el motor."""
-        if not filas:
-            return
         etiquetas = _etiquetas_columnas(metodo)
         filas_visibles = _preparar_filas_visibles(filas, metodo, etiquetas)
         filas_tabla = self._preparar_filas_tabla(filas_visibles, etiquetas)
@@ -35,19 +38,15 @@ class TablaIteraciones:
         return filas_tabla
 
     def _crear_tabla(self, etiquetas, filas_tabla) -> None:
-        columnas = [{"name": campo, "label": texto, "field": campo, "align": "left"}
-                    for campo, texto in etiquetas]
-        ui.label("Selecciona una fila para ver sus puntos en la gráfica.").classes(
-            "text-sm texto-secundario")
+        if filas_tabla:
+            ui.label("Selecciona una fila para ver sus puntos en la gráfica.").classes(
+                "text-sm texto-secundario")
         self.tabla = ui.table(
-            columns=columnas, rows=filas_tabla, row_key="clave", pagination=15,
+            columns=columnas_iteraciones(etiquetas), rows=filas_tabla,
+            row_key="clave", pagination=FILAS_POR_PAGINA,
             selection="single", on_select=self._seleccionar,
-        ).classes("metodos-abiertos-tabla w-full").props(
-            'rows-per-page-label="Filas por página:" '
-            'no-data-label="Sin iteraciones disponibles" '
-            ':pagination-label="(inicio, fin, total) => inicio + \'–\' + fin + \' de \' + total" '
-            ':selected-rows-label="n => n === 1 ? \'1 fila seleccionada\' : n + \' filas seleccionadas\'"'
         )
+        presentar_tabla_iteraciones(self.tabla)
         self.tabla.add_slot("body", _PLANTILLA_CUERPO)
 
     def _seleccionar(self, evento) -> None:
@@ -86,7 +85,7 @@ class TablaIteraciones:
         indice = next((posicion for posicion, registro in enumerate(self.tabla.rows)
                        if str(registro.get("clave")) == deseada[0]), None)
         paginacion = self.tabla.pagination
-        por_pagina = paginacion.get("rowsPerPage", 15)
+        por_pagina = paginacion.get("rowsPerPage", FILAS_POR_PAGINA)
         if indice is not None and por_pagina:
             pagina = indice // por_pagina + 1
             if paginacion.get("page", 1) != pagina:
@@ -139,7 +138,8 @@ _PLANTILLA_CUERPO = """
         @keydown.enter.prevent.stop="props.selected = !props.selected"
         @keydown.space.prevent.stop="props.selected = !props.selected">
         <q-td auto-width>
-            <q-checkbox v-model="props.selected" dense @click.stop />
+            <q-checkbox v-model="props.selected" dense
+                :aria-label="'Ver iteración ' + props.row.i" @click.stop />
         </q-td>
         <q-td v-for="col in props.cols" :key="col.name" :props="props">
             {{ col.value }}

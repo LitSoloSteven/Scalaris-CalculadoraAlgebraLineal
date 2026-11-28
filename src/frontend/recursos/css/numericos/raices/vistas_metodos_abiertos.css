@@ -104,46 +104,6 @@
 }
 .metodos-abiertos-grafica-superficie { min-width: 0; }
 .metodos-abiertos-grafica { min-width: 0; }
-.q-table__container { max-width: 100%; }
-.metodos-abiertos-tabla {
-  background: var(--bg-panel) !important;
-  color: var(--text-main) !important;
-  border-radius: var(--radius-card) !important;
-  overflow: hidden;
-}
-.metodos-abiertos-tabla.q-table__container,
-.metodos-abiertos-tabla .q-table__container {
-  border-radius: var(--radius-card) !important;
-  overflow: hidden;
-}
-.metodos-abiertos-tabla .q-table,
-.metodos-abiertos-tabla .q-table__bottom { background: var(--bg-panel) !important; color: var(--text-main) !important; }
-.metodos-abiertos-tabla .q-table { border-collapse: separate; border-spacing: 0; }
-.metodos-abiertos-tabla .q-table thead tr { background: var(--bg-elevated); }
-.metodos-abiertos-tabla .q-table th {
-  color: var(--text-main);
-  font-weight: 600;
-  border-bottom: 2px solid color-mix(in srgb, var(--accent) 38%, transparent);
-}
-.metodos-abiertos-tabla .q-table th,
-.metodos-abiertos-tabla .q-table td {
-  border-right: 1px solid color-mix(in srgb, var(--text-sec) 16%, transparent);
-  border-bottom: 1px solid color-mix(in srgb, var(--text-sec) 16%, transparent);
-  padding: var(--space-3);
-}
-.metodos-abiertos-tabla .q-table th:last-child,
-.metodos-abiertos-tabla .q-table td:last-child { border-right: 0; }
-.metodos-abiertos-tabla .q-table tbody tr { transition: background-color var(--dur-state) var(--ease-std); }
-.metodos-abiertos-tabla .q-table tbody tr:nth-child(even) { background: var(--bg-elevated); }
-.metodos-abiertos-fila { cursor: pointer; }
-.metodos-abiertos-fila:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: -2px; }
-.metodos-abiertos-tabla .q-table tbody tr.q-tr--selected,
-.metodos-abiertos-tabla .q-table tbody tr[aria-selected="true"] {
-  background: color-mix(in srgb, var(--accent) 16%, var(--bg-panel));
-  box-shadow: inset 3px 0 0 var(--accent);
-}
-.q-table th, .q-table td { white-space: nowrap; }
-.q-table__middle { overflow-x: auto; }
 :is(.metodos-abiertos-entrada, .metodos-raices-encabezado, .metodos-raices-captura, .metodos-raices-previa) {
   animation: entradaSuave var(--dur-press) var(--ease-std) both;
 }
@@ -152,9 +112,6 @@
 .metodos-abiertos-entrada-3,
 .metodos-raices-previa { animation-delay: calc(2 * var(--stagger-step)); }
 .metodos-abiertos-entrada-4 { animation-delay: calc(3 * var(--stagger-step)); }
-@media (hover: hover) and (pointer: fine) {
-  .metodos-abiertos-fila:not(.q-tr--selected):hover { background: var(--hub-card-active-bg); }
-}
 @media (max-width: 700px) {
   .metodos-abiertos-resumen { padding: var(--space-4) !important; }
   .metodos-abiertos-resumen-cuerpo { align-items: stretch; }
