@@ -100,24 +100,25 @@ class VistaOperacionesMatrices(MixinResultadosOperacionesMatrices, MixinContexto
             with ui.row().classes('w-full justify-between items-center gap-2 flex-wrap'):
                 ui.label('Expresión matemática').classes('text-lg font-bold texto-principal')
                 renderizar_boton_simbolos()
-            self.entrada_expresion = ui.input(
-                placeholder=''
-            ).classes('matriz-entrada matrices-campo-expresion w-full text-xl').props(
-                'borderless autocomplete="new-password" aria-label="Expresión matemática"'
-            )
-            habilitar_simbolos(self.entrada_expresion, "matriz")
-            self.entrada_expresion.on_value_change(lambda _: self._al_cambiar_matriz())
-            ui.label(
-                'Operadores disponibles: +, -, *, ^T (transpuesta), ^-1 (inversa) y producto por escalar con *.'
-            ).classes('text-xs texto-secundario matrices-referencia-operadores')
+            with ui.column().classes('w-full min-w-0 gap-4'):
+                self.entrada_expresion = ui.input(
+                    placeholder=''
+                ).classes('matriz-entrada matrices-campo-expresion w-full text-xl').props(
+                    'borderless autocomplete="new-password" aria-label="Expresión matemática"'
+                )
+                habilitar_simbolos(self.entrada_expresion, "matriz")
+                self.entrada_expresion.on_value_change(lambda _: self._al_cambiar_matriz())
+                ui.label(
+                    'Operadores disponibles: +, -, *, ^T (transpuesta), ^-1 (inversa) y producto por escalar con *.'
+                ).classes('text-xs texto-secundario matrices-referencia-operadores')
 
-            with ui.row().classes('w-full gap-4'):
-                crear_boton_limpieza(self, lambda: not self.contenedor_resultados.is_deleted,
-                                      lambda: [self.panel_captura_matrices.contenedor, self.entrada_expresion])
-                ui.button(
-                    'Evaluar', icon='calculate',
-                    on_click=lambda evento: self.evaluar_expresion(evento.sender), color=None,
-                ).classes('boton-principal flex-[2] py-3').props('ripple=false')
+                with ui.row().classes('w-full gap-4'):
+                    crear_boton_limpieza(self, lambda: not self.contenedor_resultados.is_deleted,
+                                          lambda: [self.panel_captura_matrices.contenedor, self.entrada_expresion])
+                    ui.button(
+                        'Evaluar', icon='calculate',
+                        on_click=lambda evento: self.evaluar_expresion(evento.sender), color=None,
+                    ).classes('boton-principal flex-[2] py-3').props('ripple=false')
 
     def construir(self, token_transferencia: str = ''):
         """Construye los paneles de captura, expresión y resultados."""

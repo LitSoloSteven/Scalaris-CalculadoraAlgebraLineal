@@ -53,7 +53,7 @@ def _construir_tarjeta_vector(instancia: PanelCapturaVectores, nombre: str) -> N
     vector = instancia.vectores[nombre]
     nombre_html = _formatear_nombre_vector(nombre)
     with ui.column().classes("panel-tarjeta p-4 items-center vectores-captura-tarjeta") as tarjeta:
-        vector["tarjeta"] = tarjeta
+        instancia._tarjetas[nombre] = tarjeta
         with ui.row().classes("w-full justify-between items-center mb-2 no-wrap vectores-captura-cabecera"):
             vector["etiqueta_dimension"] = ui.html(
                 f'{nombre_html} <span class="separador-punto">·</span> {instancia.dimension}&times;1'
@@ -105,6 +105,7 @@ class PanelCapturaVectores(MixinTransicionVectores):
         self.etiqueta_fija_primer_vector = etiqueta_fija_primer_vector
         self.vectores: dict[str, dict[str, Any]] = {}
         self._botones_eliminar_vectores: dict[str, Any] = {}
+        self._tarjetas: dict[str, Any] = {}
         self.dimension = 3
         self.contenedor: ui.column | None = None
         self.contenedor_cabecera: ui.row | None = None
@@ -183,7 +184,7 @@ class PanelCapturaVectores(MixinTransicionVectores):
         vector = self.vectores[nombre]
         if not vector["contenedor"]:
             return
-        tarjeta = vector.get("tarjeta")
+        tarjeta = self._tarjetas.get(nombre)
         if tarjeta is not None and not tarjeta.is_deleted:
             if vector["orientacion"] == "fila":
                 tarjeta.classes(add="vectores-captura-tarjeta-fila")
@@ -221,6 +222,7 @@ class PanelCapturaVectores(MixinTransicionVectores):
             return
         self.contenedor.clear()
         self._botones_eliminar_vectores.clear()
+        self._tarjetas.clear()
         with (
             self.contenedor,
             ui.row().classes("w-full flex-wrap gap-4 items-start vectores-captura-lista"),
