@@ -23,13 +23,20 @@ class CuerpoLatex:
         return self.latex
 
 
-def renderizar_latex(latex: str, *, vigilar_region: bool = False, componer: bool = True) -> str:
+def renderizar_latex(
+    latex: str,
+    *,
+    vigilar_region: bool = False,
+    componer: bool = True,
+    etiqueta_accesible: str | None = None,
+) -> str:
     """Inserta el bloque LaTeX y devuelve su ID, con composición opcional."""
     identificador = f"reproductor-matematicas-{next(_CONTADOR_IDENTIFICADOR)}"
     contenido = html.escape(latex)
+    etiqueta = html.escape(etiqueta_accesible or MATEMATICAS_DESPLAZAMIENTO, quote=True)
     ui.html(
         f'<div id="{identificador}" class="matematicas-desplazamiento matematicas-etiqueta" '
-        f'tabindex="0" role="region" aria-label="{MATEMATICAS_DESPLAZAMIENTO}">$$ {contenido} $$</div>'
+        f'tabindex="0" role="region" aria-label="{etiqueta}">$$ {contenido} $$</div>'
     )
     if not componer:
         return identificador

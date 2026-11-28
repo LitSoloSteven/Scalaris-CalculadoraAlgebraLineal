@@ -25,6 +25,7 @@ from src.frontend.controladores.algebra.operaciones_vectores.presentacion_restri
 from src.frontend.controladores.algebra.operaciones_vectores.presentacion_subespacios import (
     presentar_resultado_subespacio,
 )
+from src.frontend.nucleo.textos.textos_espacio_vectorial import MODO_PERSONALIZADO
 from src.frontend.nucleo.textos.textos_espacios_subespacios import (
     EJEMPLO_GENERADORES,
     MENSAJE_CAPTURA_VACIA,
@@ -40,7 +41,12 @@ _PATRON_COMPONENTE = re.compile(r"^vectores\.(.+)\.datos\[(\d+)\]$")
 
 def normalizar_modo_subespacios(modo: object) -> str:
     """Devuelve el modo admitido por Espacios y subespacios o generadores por defecto."""
-    return modo if isinstance(modo, str) and modo in NOMBRES_MODOS else MODO_GENERADORES
+    if isinstance(modo, str):
+        if modo == "operaciones":
+            return MODO_PERSONALIZADO
+        if modo in NOMBRES_MODOS:
+            return modo
+    return MODO_GENERADORES
 
 
 def ejemplo_generadores() -> dict[str, list[str]]:

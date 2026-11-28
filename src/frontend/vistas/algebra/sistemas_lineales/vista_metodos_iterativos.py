@@ -5,6 +5,8 @@ from nicegui import ui
 
 from src.frontend.componentes.aplicacion.base.sonido import emitir_sonido
 from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
+from src.frontend.componentes.aplicacion.controles.selector_opciones import estilizar_desplegable
+from src.frontend.componentes.captura.ecuaciones.limpieza_captura import crear_boton_limpieza
 from src.frontend.componentes.glosa.panel.panel_ia import PanelIA
 from src.frontend.componentes.resultados.acciones.avisos_resultado import MENSAJE_ERROR_INESPERADO
 from src.frontend.controladores.algebra.sistemas_lineales.resolucion.contexto_iterativos import (
@@ -52,18 +54,21 @@ class VistaMetodosIterativos:
         """Monta la navegación, los controles de captura y la región de resultados."""
         crear_estructura_aplicacion(self, ruta_activa=ruta_de('metodos_iterativos'))
         ui.context.client.on_delete(self._cerrar)
-        with ui.column().classes('vista-raiz iterativos-raiz w-full max-w-7xl mx-auto mt-4'):
+        with ui.column().classes('vista-raiz iterativos-raiz disposicion-herramienta w-full max-w-7xl mx-auto mt-4'):
             self._construir_selector()
-            with ui.column().classes('w-full min-w-0 panel-tarjeta iterativos-panel'):
+            with ui.column().classes('w-full min-w-0 gap-4'):
                 self.captura.construir()
                 self._construir_acciones()
-            with ui.column().classes('w-full min-w-0 panel-tarjeta iterativos-panel'):
+            with ui.column().classes('disposicion-resultados w-full min-w-0 panel-tarjeta iterativos-panel'):
                 ui.label('Resultado').classes('text-xl font-semibold texto-principal')
                 self.estado = ui.label(ESTADO_INICIAL).classes('texto-secundario').props('role=status aria-live=polite')
-                self.selector_decimales = ui.select(
-                    OPCIONES_DECIMALES, value=DECIMALES_INICIALES, label='Decimales de presentación',
-                    on_change=self._cambiar_decimales,
-                ).classes('w-full max-w-xs').props('outlined dense')
+                self.selector_decimales = estilizar_desplegable(
+                    ui.select(
+                        OPCIONES_DECIMALES, value=DECIMALES_INICIALES, label='Decimales de presentación',
+                        on_change=self._cambiar_decimales,
+                    ),
+                    'w-full max-w-xs',
+                ).props('dense')
                 self.selector_decimales.set_visibility(False)
                 self.contenedor_resultados = ui.column().classes('w-full min-w-0')
         self.panel_ia.construir()
@@ -97,13 +102,19 @@ class VistaMetodosIterativos:
         ui.page_title(f'{nombre} | Scalaris')
 
     def _construir_acciones(self) -> None:
-        with ui.row().classes('w-full items-center flex-wrap'):
-            ui.button('Cargar ejemplo', on_click=lambda: self.captura.restablecer(True), color=None).classes(
-                'boton-discreto').props('ripple=false')
-            ui.button('Limpiar', on_click=lambda: self.captura.restablecer(), color=None).classes(
-                'boton-discreto').props('ripple=false')
+        with ui.row().classes('w-full items-center gap-4 flex-wrap'):
+            crear_boton_limpieza(self, lambda: not self.contenedor_resultados.is_deleted, self.captura.campos_entrada)
             self.boton_resolver = ui.button('Resolver', on_click=self.resolver, color=None).classes(
-                'boton-principal').props('ripple=false aria-label=Resolver')
+                'boton-principal flex-[2] py-3').props('ripple=false aria-label=Resolver')
+
+    def esta_completamente_vacio(self) -> bool:
+        """Indica si el sistema y los parámetros conservan su estado inicial."""
+        return self.captura.esta_vacia()
+
+    def limpiar_todo(self) -> None:
+        """Vacía la captura iterativa, restablece parámetros y retira el resultado."""
+        self.captura.restablecer(False)
+        self.estado.set_text(ESTADO_INICIAL)
 
     def editar(self) -> None:
         """Invalida el cálculo anterior y devuelve el control para resolver de nuevo."""

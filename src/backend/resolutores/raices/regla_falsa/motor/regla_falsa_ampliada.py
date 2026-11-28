@@ -21,7 +21,9 @@ def resolver_regla_falsa_configurada(configuracion: ConfiguracionReglaFalsa) -> 
     resultado = resolver_intervalo_regla_falsa(preparado, criterio, cero)
     metrica = metrica_regla_falsa(criterio, resultado.iteraciones[-1]) if resultado.iteraciones else None
     cumplimiento = "NO_APLICA" if metrica is None else "NO_CUMPLIDO"
-    if resultado.motivo_parada == MOTIVOS_CRITERIO[criterio.tipo]:
+    if resultado.motivo_parada in ("raiz_en_extremo", "raiz_en_aproximacion"):
+        cumplimiento = "NO_APLICA"
+    elif resultado.motivo_parada == MOTIVOS_CRITERIO[criterio.tipo]:
         cumplimiento = "CONTEO_COMPLETADO" if criterio.tipo == "iteraciones" else "CUMPLIDO"
     if resultado.codigo_diagnostico == "LIMITE_ITERACIONES":
         resultado = replace(resultado, mensaje="Se alcanzo el limite global sin cumplir el criterio solicitado.")

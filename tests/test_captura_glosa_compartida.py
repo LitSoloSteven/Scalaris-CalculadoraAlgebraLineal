@@ -22,7 +22,8 @@ def test_entrada_glosa_conserva_texto_clases_y_envio(clasico):
     try:
         with cliente:
             (_construir_pie_clasico if clasico else construir_pie_lateral)(panel)
-        assert panel.campo_entrada._props['placeholder'] == ('Pregunta algo...' if clasico else 'Pregunta algo sobre tu ejercicio...')
+        assert panel.campo_entrada._props['label'] == ('Pregunta algo...' if clasico else 'Pregunta algo sobre tu ejercicio...')
+        assert 'placeholder' not in panel.campo_entrada._props
         assert 'glosa-campo-entrada' in panel.campo_entrada._classes
         assert ('matriz-entrada' if clasico else 'glosa-entrada') in panel.campo_entrada._classes
         boton = next(elemento for elemento in cliente.elements.values() if isinstance(elemento, ui.button))

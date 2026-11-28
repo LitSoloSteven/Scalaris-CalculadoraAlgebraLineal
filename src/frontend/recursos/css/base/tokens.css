@@ -64,10 +64,10 @@
     --glosa-w: clamp(360px, 32vw, 440px);
     --glosa-reserve: calc(var(--glosa-w) + 32px);
     --fab-reserve: 88px;
-    --cell-w: calc(10ch + 2 * var(--space-2));
+    --cell-w: clamp(4.25rem, 6.5vw, 5.25rem);
     --scrim: color-mix(in srgb, var(--text-main) 28%, transparent);
     --swatch-papel: #F2F0EB;
-    --swatch-marea: #CFE3F0;
+    --swatch-marea: #D6E5EC;
     --swatch-medianoche: #082338;
     --hub-card-active-bg: color-mix(in srgb, var(--accent) 12%, var(--bg-elevated));
 
@@ -154,10 +154,10 @@ body {
     --elev-inset: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
 
     --fab-reserve: 88px;
-    --cell-w: calc(10ch + 2 * var(--space-2));
+    --cell-w: clamp(4.25rem, 6.5vw, 5.25rem);
     --scrim: color-mix(in srgb, var(--text-main) 28%, transparent);
     --swatch-papel: #F2F0EB;
-    --swatch-marea: #CFE3F0;
+    --swatch-marea: #D6E5EC;
     --swatch-medianoche: #082338;
     --hub-card-active-bg: color-mix(in srgb, var(--accent) 12%, var(--bg-elevated));
 
@@ -175,11 +175,11 @@ body {
     --q-info: var(--accent);
     color-scheme: light;
 
-    --bg-page: #CFE3F0;
-    --bg-panel: #BDD5E6;
-    --bg-elevated: #E4F0F8;
-    --bg-calc-btn: #D6E7F3;
-    --input-bg: #A9C6DB;
+    --bg-page: #D6E5EC;
+    --bg-panel: #C7DCE7;
+    --bg-elevated: #EDF5F8;
+    --bg-calc-btn: #E1EEF4;
+    --input-bg: #B5CFDE;
 
     --text-main: #0B1F33;
     --text-sec: #1F3A52;
@@ -190,12 +190,12 @@ body {
     --shadow-dark: rgba(28, 66, 96, 0.22);
     --shadow-light: rgba(255, 255, 255, 0.95);
 
-    --accent: #0B403B;
-    --accent-soft: #C2DEE8;
+    --accent: #24546E;
+    --accent-soft: #D0E4EE;
     --accent-glow: var(--accent-soft);
     --btn-primary-bg: var(--accent);
-    --btn-primary-text: #E4F0F8;
-    --focus-ring: #0B403B;
+    --btn-primary-text: #EDF5F8;
+    --focus-ring: #24546E;
 
     --error: #7A1F18;
     --badge-err-bg: #F6DED9;
@@ -214,10 +214,10 @@ body {
     --elev-inset: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
 
     --fab-reserve: 88px;
-    --cell-w: calc(10ch + 2 * var(--space-2));
+    --cell-w: clamp(4.25rem, 6.5vw, 5.25rem);
     --scrim: color-mix(in srgb, var(--text-main) 28%, transparent);
     --swatch-papel: #F2F0EB;
-    --swatch-marea: #CFE3F0;
+    --swatch-marea: #D6E5EC;
     --swatch-medianoche: #082338;
     --hub-card-active-bg: color-mix(in srgb, var(--accent) 12%, var(--bg-elevated));
 
@@ -250,12 +250,12 @@ body {
     --shadow-dark: rgba(0, 0, 0, 0.35);
     --shadow-light: rgba(255, 255, 255, 0.03);
 
-    --accent: #BFE6E1;
-    --accent-soft: #14403C;
+    --accent: #8DD5E8;
+    --accent-soft: #123A52;
     --accent-glow: var(--accent-soft);
     --btn-primary-bg: var(--accent);
     --btn-primary-text: #082338;
-    --focus-ring: #BFE6E1;
+    --focus-ring: #8DD5E8;
 
     --error: #E8897D;
     --badge-err-bg: #4A2523;
@@ -274,10 +274,10 @@ body {
     --elev-inset: inset 2px 2px 6px rgba(0, 0, 0, 0.45), inset -1px -1px 3px rgba(255, 255, 255, 0.04);
 
     --fab-reserve: 88px;
-    --cell-w: calc(10ch + 2 * var(--space-2));
+    --cell-w: clamp(4.25rem, 6.5vw, 5.25rem);
     --scrim: color-mix(in srgb, var(--input-bg) 60%, transparent);
     --swatch-papel: #F2F0EB;
-    --swatch-marea: #CFE3F0;
+    --swatch-marea: #D6E5EC;
     --swatch-medianoche: #082338;
     --hub-card-active-bg: color-mix(in srgb, var(--accent) 12%, var(--bg-elevated));
 

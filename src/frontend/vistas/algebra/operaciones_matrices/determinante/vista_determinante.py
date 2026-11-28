@@ -12,7 +12,6 @@ from src.frontend.componentes.resultados.acciones.transferencia import recibir_m
 from src.frontend.controladores.algebra.operaciones_matrices.determinante.contexto_determinante import obtener_contexto_determinante, obtener_senales_determinante
 from src.frontend.componentes.captura.nucleo.cuadricula_base import ubicar_celda_matriz
 from src.frontend.controladores.algebra.operaciones_matrices.determinante.vista_previa_determinante import preparar_presentacion_determinante
-from src.frontend.controladores.compartido.sesion.sesion_matricial import invalidar_resultado, actualizar_contexto
 from src.frontend.navegacion import ruta_de
 from src.frontend.vistas.compartido.mixin_sesion_matricial import MixinSesionMatricial
 from src.frontend.vistas.compartido.vista_previa_matricial import actualizar_vista_previa
@@ -48,21 +47,24 @@ class VistaDeterminante(ResultadosDeterminante, MixinSesionMatricial):
         self.calculadora.inyectar_recursos_cliente()
         ui.add_head_html('<link rel="stylesheet" href="/assets/css/algebra/matrices/vistas_determinantes.css">')
         with (ui.element('div').classes('determinantes-marco w-full'),
-              ui.column().classes('vista-raiz sesion-vista sesion-paneles-compartidos determinantes-vista w-full max-w-7xl mx-auto p-6 gap-4')):
-            self.contenedor_transferencia = ui.column().classes('w-full')
-            ui.label(textos.DETERMINANTES_TITULO).classes('determinantes-titulo text-2xl font-bold texto-principal')
+              ui.column().classes('vista-raiz sesion-vista sesion-paneles-compartidos disposicion-herramienta determinantes-vista w-full max-w-7xl mx-auto p-6 gap-4')):
+            self.contenedor_transferencia = ui.column().classes('w-full empty:hidden')
+            ui.label(textos.DETERMINANTES_TITULO).classes('determinantes-titulo text-2xl font-bold texto-principal').props('role="heading" aria-level="1"')
             ui.label(textos.DETERMINANTES_DESCRIPCION).classes('texto-secundario')
-            with ui.element('div').classes('disposicion-dividida'):
+            with ui.element('div').classes('disposicion-captura-fila'):
                 self._construir_captura()
                 self._renderizar_columna_herramientas()
-            self.contenedor_resultados = ui.column().classes('panel-tarjeta p-6 w-full min-w-0')
+            self.contenedor_resultados = ui.column().classes('disposicion-resultados panel-tarjeta p-6 w-full min-w-0')
             self.resultados = self.contenedor_resultados
             self.panel_matriz.al_cambiar_datos = self._al_cambiar_matriz
         self.panel_ia = PanelIA(self)
         self.panel_ia.construir()
         self._al_cambiar_matriz()
-        recibir_matriz(token_transferencia, "determinantes", self.panel_matriz.cargar_matriz,
-                       self.contenedor_transferencia)
+        recibir_matriz(
+            token_transferencia, "determinantes",
+            lambda datos: self.panel_matriz.cargar_matriz(datos, conservar_ceros=True),
+            self.contenedor_transferencia,
+        )
 
     def _construir_captura(self) -> None:
         with ui.column().classes('disposicion-panel'):
@@ -87,10 +89,7 @@ class VistaDeterminante(ResultadosDeterminante, MixinSesionMatricial):
         self.recomendacion.actualizar_eleccion()
 
     def _invalidar_resultado(self) -> None:
-        invalidar_resultado(self)
-        if hasattr(self, 'panel_ia'):
-            self.panel_ia.limpiar_foco_explicacion()
-        actualizar_contexto(self)
+        self._invalidar_resultado_y_transferencia()
         self.contenedor_resultados.clear()
         with self.contenedor_resultados:
             ui.label(textos.DETERMINANTES_ORIENTACION).props('role=status')

@@ -110,7 +110,7 @@ def test_ejemplo_criterio_activo_y_extremos_canonicos(monkeypatch, metodo):
     async def comprobar():
         """Activa el manejador del formulario con extremos invertidos."""
         async with montar_vista(monkeypatch, metodo) as (vista, cliente):
-            vista.captura.ejemplos.set_value("Raíz de 2")
+            vista.cargar_captura(captura_ejercicio("x^2 - 2", "1", "2", "radianes"))
             assert vista.capturar()["expresion"] == "x^2 - 2"
             assert vista.ultimo_resultado is None
             vista.cargar_captura({"extremo_izquierdo": "2", "extremo_derecho": "1",

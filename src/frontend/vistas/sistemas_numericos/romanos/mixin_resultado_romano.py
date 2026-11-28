@@ -20,17 +20,17 @@ class MixinResultadoRomano:
         with ui.column().classes("w-full panel-tarjeta p-6 rounded-2xl gap-4").props('data-pdf-captura=romanos-resultado'):
             with ui.row().classes("w-full justify-between items-center"):
                 with ui.row().classes("items-center gap-2"):
-                    ui.label("RESULTADO DE LA OPERACIÓN").classes("text-xs font-bold tracking-widest texto-secundario")
-                    ui.label(presentacion.nombre.upper()).classes(
-                        "text-[10px] font-extrabold px-2.5 py-0.5 rounded border"
-                    ).classes("numericos-resultado")
+                    ui.label("Resultado de la operación").classes("text-xs font-bold tracking-wide texto-secundario")
+                    ui.label(presentacion.nombre).classes(
+                        "text-xs font-bold px-2.5 py-0.5 rounded border numericos-resultado"
+                    )
                 ui.button(
                     icon="content_copy",
                     on_click=lambda: self.copiar(resultado_romano),
                     color=None,
-                ).classes("boton-icono w-9 h-9 p-0 texto-secundario").props(
-                    'flat round aria-label="Copiar resultado romano"'
-                ).tooltip("Copiar resultado romano")
+                ).classes("boton-icono p-0 texto-secundario").props(
+                    'flat round aria-label="Copiar resultado romano" title="Copiar resultado romano"'
+                )
 
             with ui.row().classes("w-full items-center justify-center gap-4 py-4 flex-wrap text-center"):
                 ui.label(presentacion.operandos[0]).classes("text-3xl md:text-4xl font-extrabold texto-secundario font-mono")

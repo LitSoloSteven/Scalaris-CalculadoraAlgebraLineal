@@ -16,6 +16,8 @@ def test_calculo_completo_monta_resultado_y_contexto_vigente(vista_vectorial_mon
     """La captura real llega al controlador, al reproductor y al contexto sin fallos."""
     vista = vista_vectorial_montada
     vista.pestanas.set_value(operacion)
+    if operacion == "escalar":
+        vista.entrada_escalar.set_value("2")
     for vector in vista.panel_vectorial.vectores.values():
         vector["celdas"] = {0: "1/3", 1: "2", 2: "-3"}
     asyncio.run(ejecutar_calculo_en_panel(vista))

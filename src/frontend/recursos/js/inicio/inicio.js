@@ -42,6 +42,10 @@
             [1, recorrido("translate(2px, -1px)")],
             [3, recorrido("translateX(1px)")],
         ],
+        metodos_iterativos: [
+            [0, recorrido("rotate(-28deg)")],
+            [1, recorrido("translate(-2px, 2px)")],
+        ],
         leontief: [
             [0, recorrido("rotate(-12deg)")],
             [1, recorrido("scaleX(0.45)")],
@@ -62,6 +66,10 @@
             [1, recorrido("translate(3px, -3px)")],
         ],
         vectores: [[0, recorrido("translateX(-1px) scaleX(1.42)")]],
+        espacios_subespacios: [
+            [1, recorrido("scale(1.12)")],
+            [2, recorrido("scale(1.45)")],
+        ],
         transformaciones: [
             [0, recorrido("skewX(-34deg)")],
             [1, recorrido("translateX(2px) skewY(-14deg)")],

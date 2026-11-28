@@ -2,6 +2,7 @@
 from nicegui import ui
 
 from src.backend.resolutores.raices.biseccion.contratos.contrato_biseccion import D_MAXIMO, LIMITE_ITERACIONES_MAXIMO
+from src.frontend.componentes.aplicacion.controles.selector_opciones import estilizar_desplegable
 from src.frontend.controladores.raices.biseccion.captura.catalogo_criterios import CRITERIOS
 from src.frontend.controladores.raices.biseccion.captura.captura_criterio import texto_condicion, texto_estimacion
 
@@ -17,8 +18,11 @@ def construir_selector(vista) -> None:
 
 
 def _construir_campos(vista) -> None:
-    vista.criterio = ui.select({tipo: datos[0] for tipo, datos in CRITERIOS.items()},
-                               value="decimales", label="Criterio de parada").classes("w-full matriz-entrada")
+    vista.criterio = estilizar_desplegable(
+        ui.select({tipo: datos[0] for tipo, datos in CRITERIOS.items()},
+                  value="decimales", label="Criterio de parada"),
+        "w-full matriz-entrada",
+    )
     vista.parametros_criterio = {}
     with ui.column().classes("w-full gap-1"):
         for tipo, (_, etiqueta, inicial) in CRITERIOS.items():

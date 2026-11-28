@@ -11,17 +11,41 @@ from .figura_base import crear_figura_vacia
 from .puntos_iniciales import agregar_puntos_iniciales
 
 
+def rango_ventana_resultado(resultado: dict | None, paso=None) -> tuple[float, float] | None:
+    """Devuelve el encuadre horizontal calculado alrededor de las aproximaciones del resultado."""
+    return _rango_abscisas(resultado, paso) if resultado else None
+
+
 def crear_figura_metodos_abiertos(
-    muestra: dict | None, resultado: dict | None, paso=None, *, mostrar_raiz: bool = True,
+    muestra: dict | None,
+    resultado: dict | None,
+    paso=None,
+    *,
+    mostrar_raiz: bool = True,
+    opciones_vista: dict | None = None,
 ) -> go.Figure:
     """Dibuja puntos iniciales y la construcción correspondiente al paso activo."""
+    vista = opciones_vista or {}
     respuesta = muestra if muestra and muestra.get("estado") == "EXITO" else None
     figura = crear_figura_previa(respuesta) if respuesta else crear_figura_vacia()
     if resultado:
         _dibujar_resultado(figura, resultado, paso, mostrar_raiz)
-        _ajustar_ventana(figura, resultado, paso)
+    _aplicar_encuadre_figura(figura, resultado, paso, vista)
     aplicar_colores_figura(figura, "papel")
     return figura
+
+
+def _aplicar_encuadre_figura(figura, resultado: dict | None, paso, vista: dict) -> None:
+    rango_camara = vista.get("rango_camara")
+    revision_vista = vista.get("revision_vista")
+    if rango_camara is not None:
+        _aplicar_camara_usuario(figura, rango_camara, revision_vista)
+    elif resultado:
+        _ajustar_ventana(figura, resultado, paso, revision_vista)
+    elif revision_vista is not None:
+        figura.update_layout(uirevision=revision_vista)
+    if vista.get("identidad") is not None:
+        figura.update_layout(meta=vista["identidad"])
 
 
 def _dibujar_resultado(figura, resultado: dict, paso, mostrar_raiz: bool) -> None:
@@ -127,7 +151,12 @@ def _etiqueta_x(indice: int) -> str:
     return f"x{digitos}"
 
 
-def _ajustar_ventana(figura, resultado: dict | None, paso) -> None:
+def _ajustar_ventana(
+    figura,
+    resultado: dict | None,
+    paso,
+    revision_vista: str | None = None,
+) -> None:
     """Encuadra la función alrededor de las aproximaciones y la raíz objetivo."""
     if not resultado:
         return
@@ -137,9 +166,31 @@ def _ajustar_ventana(figura, resultado: dict | None, paso) -> None:
     rango_y = _rango_ordenadas(figura, rango_x)
     indice = paso.get("i", "inicio") if isinstance(paso, dict) else "inicio"
     revision = f"metodos-abiertos:{resultado.get('metodo')}:{indice}:{rango_x[0]:.12g}:{rango_x[1]:.12g}"
+    if revision_vista is not None:
+        revision = f"{revision}:{revision_vista}"
     figura.update_layout(uirevision=revision)
     figura.update_xaxes(range=list(rango_x), autorange=False)
     figura.update_yaxes(range=list(rango_y), autorange=False)
+
+
+def _aplicar_camara_usuario(
+    figura,
+    rango_camara: tuple[float, float],
+    revision_vista: str | None,
+) -> None:
+    """Conserva el rango X explorado por la persona usuaria sin sobreescribirlo."""
+    valores_y = []
+    for traza in figura.data:
+        abscisas = list(traza.x) if traza.x is not None else []
+        ordenadas = list(traza.y) if traza.y is not None else []
+        valores_y.extend(_ordenadas_en_rango(abscisas, ordenadas, rango_camara))
+    figura.update_xaxes(range=list(rango_camara), autorange=False)
+    if valores_y:
+        figura.update_yaxes(range=list(_rango_ordenadas(figura, rango_camara)), autorange=False)
+    else:
+        figura.update_yaxes(autorange=True)
+    if revision_vista is not None:
+        figura.update_layout(uirevision=revision_vista)
 
 
 def _rango_abscisas(resultado: dict, paso) -> tuple[float, float] | None:

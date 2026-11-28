@@ -46,7 +46,9 @@
 
   function origenDelControl(origen) {
     if (Number.isFinite(origen?.x) && Number.isFinite(origen?.y)) return origen;
-    return revelado.centroDe(document.querySelector('[aria-label="Seleccionar Tema"]'));
+    return revelado.centroDe(
+      document.querySelector('[data-selector-tema-boton], [aria-label="Seleccionar tema"], [aria-label="Seleccionar Tema"]')
+    );
   }
 
   function movimientoDisponible() {

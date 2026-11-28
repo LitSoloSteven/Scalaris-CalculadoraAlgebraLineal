@@ -44,7 +44,13 @@
         panel.setAttribute('data-ejemplo-completado', '');
         const mensaje = panel.dataset?.ejemploMensaje || 'Se eliminó x de la segunda fila.';
         const estado = panel.querySelector('[data-ejemplo-estado]');
-        if (estado) estado.textContent = mensaje;
+        if (!estado) return;
+        if (estado.textContent === mensaje && typeof requestAnimationFrame === 'function') {
+            estado.textContent = '';
+            requestAnimationFrame(() => { estado.textContent = mensaje; });
+            return;
+        }
+        estado.textContent = mensaje;
     }
 
     function detener(estado, mostrar = false) {

@@ -71,6 +71,7 @@ def ejecutar() -> None:
     secreto = resolver_secreto_almacenamiento(os.environ)
     ui.run(
         title="Scalaris",
+        language="es",
         favicon=str(DIRECTORIO_RECURSOS / "LogoOscuro.png"),
         storage_secret=secreto,
         reconnect_timeout=PDF_PLAZO_CAPTURA_SEGUNDOS,

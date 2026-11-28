@@ -18,6 +18,8 @@ def test_pagina_muestra_vista_previa_y_tabla_paginada(monkeypatch):
         assert vista.tolerancia.value == "1e-6"
         assert vista.limite.value == "100"
         assert not vista.x1.visible
+        vista.expresion.set_value("x^3 - x - 2")
+        vista.x0.set_value("1.5")
         await vista.previa.actualizar()
         assert vista.previa.respuesta["estado"] == "EXITO"
         assert len(vista.grafica.figure.data) == 1
@@ -37,6 +39,7 @@ def test_secante_publica_su_recta_al_recorrer_las_iteraciones(monkeypatch):
     async def comprobar(vista, cliente):
         """Selecciona Secante y abre la primera iteración registrada."""
         vista.metodo.set_value("secante")
+        vista.expresion.set_value("x^3 - x - 2")
         vista.x0.set_value("1")
         vista.x1.set_value("2")
         vista.calcular()

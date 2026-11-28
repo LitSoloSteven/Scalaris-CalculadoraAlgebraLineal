@@ -140,11 +140,26 @@ html[data-glosa="abierto"] .glosa-boton-flotante {
         left: 0;
         right: 0;
         bottom: var(--glosa-kb, 0px);
+        z-index: var(--z-fab);
         height: min(92dvh, 800px);
+        max-height: calc(100dvh - var(--space-4) - var(--glosa-kb, 0px));
         border-radius: var(--radius-card) var(--radius-card) 0 0;
         transform: translateY(100%);
         opacity: 0;
         visibility: hidden;
+    }
+
+    .glosa-fondo-modal {
+        z-index: calc(var(--z-fab) - 1);
+    }
+
+    html[data-glosa="abierto"] .q-header {
+        z-index: 0 !important;
+    }
+
+    html[data-glosa="abierto"] .q-page-container {
+        position: relative;
+        z-index: var(--z-dock) !important;
     }
 
     html[data-glosa="abierto"] .glosa-panel-lateral {
@@ -209,6 +224,7 @@ html[data-glosa="abierto"]:not([data-glosa-listo])::after {
     border: none !important;
     border-radius: var(--radius-input) !important;
     box-shadow: var(--elev-inset) !important;
+    padding: var(--space-1) var(--space-3) !important;
 }
 
 .glosa-entrada .q-field__control:before,
@@ -239,12 +255,14 @@ html[data-glosa="abierto"]:not([data-glosa-listo])::after {
     color: var(--input-text) !important;
     -webkit-text-fill-color: var(--input-text) !important;
     text-align: left !important;
+    padding-top: calc(var(--space-6) + var(--space-1)) !important;
+    padding-bottom: var(--space-2) !important;
 }
 
-.glosa-entrada textarea::placeholder {
+.glosa-entrada .q-field__label {
     color: var(--text-sec) !important;
-    -webkit-text-fill-color: var(--text-sec) !important;
     opacity: 1 !important;
+    top: var(--space-4);
 }
 
 @media (prefers-reduced-motion: reduce) {

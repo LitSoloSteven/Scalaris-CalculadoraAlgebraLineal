@@ -2,13 +2,11 @@
 'use strict';
 
 try {
-  if (window.matchMedia('(min-width: 1024px)').matches) {
+  const enInicio = typeof location !== 'undefined' && location.pathname === '/' &&
+    !/(?:^|[?&])glosa=1(?:&|$)/.test(location.search || '');
+  if (!enInicio && window.matchMedia('(min-width: 1024px)').matches) {
     const estado = localStorage.getItem('scalaris:glosa');
-    if (estado === 'abierto') {
-      document.documentElement.setAttribute('data-glosa', 'abierto');
-    } else {
-      document.documentElement.setAttribute('data-glosa', 'cerrado');
-    }
+    document.documentElement.setAttribute('data-glosa', estado === 'abierto' ? 'abierto' : 'cerrado');
   } else {
     document.documentElement.setAttribute('data-glosa', 'cerrado');
   }

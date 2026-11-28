@@ -5,10 +5,11 @@ from src.backend.resolutores.raices.compartido.limites_raices import LONGITUD_MA
 from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
 
 
-def crear_campo_funcion(*, valor: str = "", ejemplo: str | None = "Ejemplo: x^2 - 2") -> ui.input:
+def crear_campo_funcion(*, valor: str = "", ejemplo: str | None = None) -> ui.input:
     """Monta el campo compartido y el acceso a los símbolos."""
     etiqueta = "Función f(x)"
-    campo = ui.input(etiqueta, value=valor, placeholder=ejemplo).classes("matriz-entrada w-full")
+    entrada = ui.input(etiqueta, value=valor) if ejemplo is None else ui.input(etiqueta, value=valor, placeholder=ejemplo)
+    campo = entrada.classes("matriz-entrada w-full")
     ayuda = f"atajos-funcion-{campo.id}"
     campo.props(
         f'maxlength={LONGITUD_MAXIMA_EXPRESION} autocomplete=off spellcheck=false bottom-slots '

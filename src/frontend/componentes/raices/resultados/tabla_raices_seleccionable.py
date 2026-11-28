@@ -5,7 +5,10 @@ from dataclasses import dataclass
 
 from nicegui import ui
 
-from src.frontend.componentes.raices.resultados.tabla_iteraciones import PaginacionIteraciones
+from src.frontend.componentes.raices.resultados.tabla_iteraciones import (
+    PaginacionIteraciones,
+    presentar_tabla_iteraciones,
+)
 
 
 @dataclass(frozen=True)
@@ -34,9 +37,10 @@ class TablaRaicesSeleccionable:
         ui.label(self.formato.descripcion).classes("text-sm texto-secundario")
         self.precision = ui.switch("Mostrar 17 cifras")
         with ui.element("div").classes(f"{self.formato.clase_region} w-full").props(
-                f'tabindex=0 role=region aria-label="{self.formato.nombre_region}"'):
+                f'data-nombre-tabla="{self.formato.nombre_region}"'):
             self.tabla = ui.table(columns=[], rows=[], row_key="i", pagination=0, selection="single",
-                                  on_select=self._elegir).classes("w-full").props("hide-bottom")
+                                  on_select=self._elegir)
+            presentar_tabla_iteraciones(self.tabla, paginacion_propia=True)
             with self.tabla.add_slot("body-selection"):
                 ui.element("q-checkbox").props(
                     ':model-value="props.selected" :aria-label="\'Ver iteración \' + props.row.i" '

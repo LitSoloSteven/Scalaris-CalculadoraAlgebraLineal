@@ -54,7 +54,13 @@ def test_intervalo_en_grados_amplia_rango_por_defecto_y_permite_ajustarlo(monkey
     async def comprobar():
         """Encuadra una solución en grados después de preparar la curva inicial."""
         async with montar_vista(monkeypatch, REGLA_FALSA) as (vista, _):
-            vista.captura.ejemplos.set_value("Seno en grados")
+            vista.cargar_captura({
+                "expresion": "2sin(x) - 1",
+                "extremo_izquierdo": "0",
+                "extremo_derecho": "60",
+                "unidad_angular": "grados",
+                "limite_iteraciones": "100",
+            })
             await vista.grafica.tarea
             assert tuple(vista.grafica.nodo.figure.layout.xaxis.range) == (-10, 10)
             await vista.resolver()

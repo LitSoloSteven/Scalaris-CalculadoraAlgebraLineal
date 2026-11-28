@@ -230,13 +230,10 @@
         const dialogo = plantilla.content.firstElementChild.cloneNode(true);
         document.body.append(dialogo);
         controles = {
-            dialogo,
-            cuerpo: dialogo.querySelector('.simbolos-cuerpo'),
+            dialogo, cuerpo: dialogo.querySelector('.simbolos-cuerpo'),
             busqueda: dialogo.querySelector('input[type="search"]'),
-            grupo: dialogo.querySelector('select'),
-            lista: dialogo.querySelector('.simbolos-lista'),
-            estado: dialogo.querySelector('[role="status"]'),
-            mas: dialogo.querySelector('[data-mas-simbolos]'),
+            grupo: dialogo.querySelector('select'), lista: dialogo.querySelector('.simbolos-lista'),
+            estado: dialogo.querySelector('[role="status"]'), mas: dialogo.querySelector('[data-mas-simbolos]'),
             copia: dialogo.querySelector('[data-copia-simbolo]'),
         };
         controles.busqueda.addEventListener('input', reiniciarResultados);
@@ -293,8 +290,7 @@
         if (!evento.repeat) insertar(entrada, guardarSeleccion(evento.target), entrada.campos.funcion);
     }
 
-    document.addEventListener('focusin', evento => {
-        if (perfil(evento.target)) ultimoCampo = evento.target;
-    });
+    document.addEventListener('focusin', evento => { if (perfil(evento.target)) ultimoCampo = evento.target; });
     document.addEventListener('keydown', atajo);
+    window.scalaris.selectorSimbolos = { abrir };
 }

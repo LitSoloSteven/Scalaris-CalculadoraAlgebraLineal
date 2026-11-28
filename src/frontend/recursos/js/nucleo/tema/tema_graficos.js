@@ -14,14 +14,31 @@
         return graficos[rol][tema];
     }
 
+    function coloresTraza(traza, tema, graficos) {
+        const cambios = {};
+        for (const [ruta, rol] of Object.entries(traza.meta?.scalaris_colores || {})) {
+            const color = colorRol(rol, tema, graficos);
+            cambios[ruta] = ruta === 'colorscale' ? [[0, color], [1, color]] : color;
+        }
+        return cambios;
+    }
+
+    function coloresTrazas(trazas, tema, graficos) {
+        const cambios = {};
+        for (const [indice, traza] of trazas.entries()) {
+            for (const [ruta, valor] of Object.entries(coloresTraza(traza, tema, graficos))) {
+                const valores = cambios[ruta] ??= Array(trazas.length).fill(undefined);
+                valores[indice] = valor;
+            }
+        }
+        return cambios;
+    }
+
     async function actualizarTrazas(figura, biblioteca, tema, graficos) {
         if (!biblioteca.restyle) return;
         for (const [indice, traza] of (figura.data || []).entries()) {
-            const cambios = {};
-            for (const [ruta, rol] of Object.entries(traza.meta?.scalaris_colores || {})) {
-                const color = colorRol(rol, tema, graficos);
-                cambios[ruta] = ruta === 'colorscale' ? [[[0, color], [1, color]]] : color;
-            }
+            const cambios = coloresTraza(traza, tema, graficos);
+            if (cambios.colorscale) cambios.colorscale = [cambios.colorscale];
             if (Object.keys(cambios).length) await biblioteca.restyle(figura, cambios, [indice]);
         }
     }
@@ -41,9 +58,13 @@
     async function actualizarFigura(figura, tema, graficos) {
         if (!figura.isConnected || !figura._fullLayout) return;
         const biblioteca = bibliotecaFigura(figura);
-        if (!biblioteca?.relayout) return;
-        await biblioteca.relayout(figura, coloresEjes(tema, graficos));
-        await actualizarTrazas(figura, biblioteca, tema, graficos);
+        const ejes = coloresEjes(tema, graficos);
+        if (biblioteca?.update) {
+            await biblioteca.update(figura, coloresTrazas(figura.data || [], tema, graficos), ejes);
+        } else if (biblioteca?.relayout) {
+            await biblioteca.relayout(figura, ejes);
+            await actualizarTrazas(figura, biblioteca, tema, graficos);
+        }
     }
 
     function programarFigura(figura, tema, graficos) {

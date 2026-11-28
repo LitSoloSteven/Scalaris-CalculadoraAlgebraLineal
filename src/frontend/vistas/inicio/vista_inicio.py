@@ -4,7 +4,6 @@ import html
 
 from nicegui import Client, ui
 
-from src.frontend.componentes.aplicacion.controles.control_sonido import renderizar_control_sonido
 from src.frontend.componentes.aplicacion.base.iconos import icono_svg
 from src.frontend.componentes.glosa.panel.panel_ia import PanelIA
 from src.frontend.componentes.aplicacion.controles.selector_tema import renderizar_boton_tema
@@ -39,7 +38,6 @@ def _renderizar_cabecera() -> None:
             _texto("span", "Scalaris")
             _texto("abbr", "UAM", "inicio-universidad").props('title="Universidad Americana"')
         with ui.element("div").classes("inicio-controles"):
-            renderizar_control_sonido()
             with ui.element("div").classes("inicio-tema"):
                 renderizar_boton_tema(mostrar_nombre=True)
 
@@ -100,10 +98,14 @@ class VistaInicio:
         enlace = html.escape(estado.enlace, quote=True)
         with ui.element("section").classes("inicio-presentacion").props('aria-labelledby="inicio-titulo"'):
             with ui.element("div"):
-                ui.html("Álgebra lineal,<br><em>paso a paso.</em>", tag="h1").classes("inicio-titulo").props(
+                ui.html("Álgebra y cálculo numérico,<br><em>paso a paso.</em>", tag="h1").classes("inicio-titulo").props(
                     'id="inicio-titulo"'
                 )
-                _texto("p", "Resuelve ejercicios y visualiza qué ocurre en cada paso.", "inicio-descripcion")
+                _texto(
+                    "p",
+                    "Resuelve álgebra lineal, métodos numéricos y sistemas de numeración viendo qué ocurre en cada paso.",
+                    "inicio-descripcion",
+                )
                 with ui.element("a").classes("inicio-destacado").props(f'href="{enlace}"') as enlace_destacado:
                     self._texto_destacado = _texto("span", estado.texto_destacado)
                     _flecha()

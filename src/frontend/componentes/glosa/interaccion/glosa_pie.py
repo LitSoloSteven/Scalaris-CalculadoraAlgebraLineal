@@ -25,7 +25,7 @@ def construir_pie_lateral(instancia: Any) -> None:
         construir_entrada_glosa(instancia, EstiloEntradaGlosa(
             clases_contenedor="w-full items-end gap-2 no-wrap mt-2",
             clases_campo="flex-1 glosa-entrada glosa-campo-entrada",
-            clases_boton="boton-principal w-10 h-10 p-0 mb-1 flex-shrink-0 glosa-boton-enviar",
+            clases_boton="boton-principal w-11 h-11 p-0 mb-1 flex-shrink-0 glosa-boton-enviar",
             texto_ayuda="Pregunta algo sobre tu ejercicio...",
             etiqueta_envio="Enviar",
         ))
@@ -75,9 +75,9 @@ def _renderizar_pildora_activa(instancia: Any, contexto: Any, habilitado: bool) 
             ui.label(etiqueta).classes("glosa-contexto-etiqueta truncate text-xs font-semibold").tooltip(etiqueta)
 
         with ui.row().classes("items-center gap-3 flex-shrink-0"):
-            ui.switch(value=habilitado, on_change=instancia._alternar_contexto).props(
-                'dense size=sm aria-label="Incluir el contexto del ejercicio"'
-            ).tooltip("Activar/desactivar contexto")
+            ui.switch("Auto-adjuntar", value=habilitado, on_change=instancia._alternar_contexto).classes(
+                "text-xs"
+            ).props('dense size=sm aria-label="Incluir el contexto del ejercicio"').tooltip("Activar/desactivar contexto")
 
 
 def construir_boton_y_fondo() -> None:

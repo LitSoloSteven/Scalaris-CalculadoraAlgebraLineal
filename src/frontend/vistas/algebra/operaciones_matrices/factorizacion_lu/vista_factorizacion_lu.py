@@ -11,7 +11,6 @@ from src.frontend.componentes.captura.paneles.panel_matriz_rectangular import Pa
 from src.frontend.componentes.resultados.acciones.transferencia import recibir_matriz
 from src.frontend.controladores.algebra.operaciones_matrices.factorizacion_lu.vista_previa_factorizacion_lu import preparar_presentacion_factorizacion_lu
 from src.frontend.controladores.algebra.operaciones_matrices.factorizacion_lu.contexto_factorizacion_lu import obtener_contexto_ia, obtener_senales_ia
-from src.frontend.controladores.compartido.sesion.sesion_matricial import invalidar_resultado, actualizar_contexto
 from src.frontend.navegacion import ruta_de
 from src.frontend.vistas.compartido.mixin_sesion_matricial import MixinSesionMatricial
 from src.frontend.vistas.compartido.vista_previa_matricial import actualizar_vista_previa
@@ -39,14 +38,14 @@ class VistaFactorizacionLU(ResultadosFactorizacionLU, MixinSesionMatricial):
         self.calculadora.inyectar_recursos_cliente()
         ui.add_head_html('<link rel="stylesheet" href="/assets/css/algebra/matrices/vistas_factorizacion_lu.css">')
         with (ui.element('div').classes('factorizacion-lu-marco w-full'),
-              ui.column().classes('vista-raiz sesion-vista sesion-paneles-compartidos factorizacion-lu-vista w-full max-w-7xl mx-auto p-6 gap-4')):
-            self.contenedor_transferencia = ui.column().classes('w-full')
-            ui.label(textos.LU_TITULO).classes('text-2xl font-bold texto-principal')
+              ui.column().classes('vista-raiz sesion-vista sesion-paneles-compartidos disposicion-herramienta factorizacion-lu-vista w-full max-w-7xl mx-auto p-6 gap-4')):
+            self.contenedor_transferencia = ui.column().classes('w-full empty:hidden')
+            ui.label(textos.LU_TITULO).classes('text-2xl font-bold texto-principal').props('role="heading" aria-level="1"')
             ui.label(textos.LU_DESCRIPCION).classes('texto-secundario')
-            with ui.element('div').classes('disposicion-dividida'):
+            with ui.element('div').classes('disposicion-captura-fila'):
                 self._construir_captura()
                 self._renderizar_columna_herramientas()
-            self.contenedor_resultados = ui.column().classes('panel-tarjeta p-6 w-full min-w-0')
+            self.contenedor_resultados = ui.column().classes('disposicion-resultados panel-tarjeta p-6 w-full min-w-0')
             self.panel_matriz.al_cambiar_datos = self._al_cambiar_matriz
         self.panel_ia = PanelIA(self)
         self.panel_ia.construir()
@@ -65,10 +64,7 @@ class VistaFactorizacionLU(ResultadosFactorizacionLU, MixinSesionMatricial):
                     'boton-principal flex-[2] py-3').props('ripple=false')
 
     def _al_cambiar_matriz(self) -> None:
-        invalidar_resultado(self)
-        if hasattr(self, 'panel_ia'):
-            self.panel_ia.limpiar_foco_explicacion()
-        actualizar_contexto(self)
+        self._invalidar_resultado_y_transferencia()
         self._programar_vista_previa()
         self._restablecer_resultados()
 

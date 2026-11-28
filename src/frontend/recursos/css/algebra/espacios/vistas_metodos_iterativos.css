@@ -3,40 +3,68 @@
     padding: clamp(var(--space-3), 3vw, var(--space-6));
 }
 
+.iterativos-tarjeta-captura {
+    padding: clamp(var(--space-4), 2.5vw, var(--space-5));
+    gap: var(--space-3);
+}
+
+.iterativos-columna-sistema .cuadricula-area-desplazamiento {
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: var(--space-1) 0 !important;
+}
+
 .iterativos-parametros .q-field:not(.q-field--error) .q-field__bottom {
     color: var(--text-sec);
 }
 
-.iterativos-panel .cuadricula-area-desplazamiento {
+.iterativos-parametros .q-field {
+    width: 100%;
+    max-width: none;
+}
+
+.iterativos-parametros .vectores-captura-lista {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
     min-width: 0;
 }
 
-.iterativos-desplazamiento {
-    max-width: 100%;
-    overflow: auto;
+.iterativos-parametros .vectores-captura-tarjeta {
+    width: 100%;
+    min-width: 0;
+    padding: var(--space-2) 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    align-items: stretch;
 }
 
-.iterativos-desplazamiento:focus-visible {
-    outline: 2px solid var(--focus-ring);
-    outline-offset: 2px;
+.iterativos-parametros .vectores-captura-celdas.vectores-captura-columna {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    width: 100%;
+    padding: var(--space-1) 0;
+    gap: var(--space-2);
 }
 
-.iterativos-tabla {
-    border-collapse: collapse;
-    font-variant-numeric: tabular-nums;
-    text-align: start;
+.iterativos-parametros .vectores-captura-celdas .cuadricula-celda {
+    width: 100%;
+    min-width: 0;
+}
+
+.iterativos-columna-sistema .cuadricula-area-desplazamiento {
+    min-width: 0;
 }
 
 .iterativos-tabla :is(th, td) {
-    border-block-end: 1px solid var(--border-input);
-    padding: var(--space-2) var(--space-3);
-    min-width: 8ch;
-    text-align: start;
+    min-inline-size: 8ch;
+    max-inline-size: 26ch;
 }
 
-.iterativos-tabla td .iterativos-numero {
-    max-width: 24ch;
-}
+.iterativos-tabla th:first-child { text-align: start; }
 
 .iterativos-numero {
     max-width: 100%;

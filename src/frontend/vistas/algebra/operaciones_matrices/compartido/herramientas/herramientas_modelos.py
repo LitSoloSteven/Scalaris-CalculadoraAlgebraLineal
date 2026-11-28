@@ -16,7 +16,8 @@ class MixinHerramientasModelos:
     def _construir_herramientas_modelo(self) -> None:
         self.historial = []
         self.tarea_vista_previa = None
-        with self.contenedor_resultados.parent_slot.parent:
+        destino = getattr(self, "contenedor_herramientas", None) or self.contenedor_resultados.parent_slot.parent
+        with destino:
             with ui.expansion(textos.MODELOS_VISTA_PREVIA, icon="visibility").classes("w-full panel-tarjeta"):
                 self.contenedor_vista_previa = ui.column().classes("w-full min-w-0")
             with ui.expansion(textos.MODELOS_HISTORIAL, icon="history").classes("w-full panel-tarjeta"):

@@ -1,4 +1,4 @@
-"""Exportación de cálculos reales y retiro de copias en las vistas algebraicas."""
+"""Exportación de cálculos reales y acciones disponibles en las vistas algebraicas."""
 import asyncio
 
 import pytest
@@ -24,8 +24,14 @@ def _comprobar_regiones(control):
     return claves
 
 
+def _comprobar_copia(botones, herramienta):
+    copias = [boton for boton in botones if boton.text in (textos.RESULTADO_COPIAR, 'Copiar A⁻¹')]
+    assert len(copias) == (1 if herramienta == 'inversa' else 0)
+    assert all(boton.visible for boton in copias)
+
+
 @pytest.mark.parametrize('herramienta', HERRAMIENTAS)
-def test_calculo_real_exportable_sin_copia_y_edicion_lo_retira(monkeypatch, herramienta):
+def test_calculo_real_exportable_y_edicion_lo_retira(monkeypatch, herramienta):
     """Cada herramienta ofrece un único PDF vigente y regiones independientes registradas."""
     async def comprobar(vista, cliente):
         """Verifica marcado, documento real e invalidación desde la captura montada."""
@@ -33,7 +39,7 @@ def test_calculo_real_exportable_sin_copia_y_edicion_lo_retira(monkeypatch, herr
         control = vista.actualizar_exportacion_pdf.__self__
         botones = [elemento for elemento in cliente.elements.values() if isinstance(elemento, ui.button)]
         assert sum(boton.text == textos.PDF_EXPORTAR and boton.visible for boton in botones) == 1
-        assert not any(boton.text in ('Copiar resultado', 'Copiar A⁻¹') for boton in botones)
+        _comprobar_copia(botones, herramienta)
         assert control.enlace.vigente(control.resultado)
         assert control.enlace.comprobar(control.enlace.testigo(), control.resultado)
         claves = _comprobar_regiones(control)

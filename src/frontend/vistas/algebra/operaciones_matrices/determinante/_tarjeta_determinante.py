@@ -15,7 +15,10 @@ def mostrar_tarjeta_determinante(resultado: dict) -> None:
         ui.label(textos.DETERMINANTES_ESTADO_NULO if singular else
                  textos.DETERMINANTES_ESTADO_NO_NULO).classes("font-bold").props('role="status"')
     _mostrar_metricas(resultado)
-    renderizar_latex(r"\det(A) = " + numero_a_latex(resultado["determinante"]))
+    with ui.column().classes("panel-tarjeta w-full p-5 mb-4 items-center justify-center"):
+        ui.label("Valor del determinante").classes("text-sm font-semibold texto-secundario")
+        with ui.element("div").classes("text-2xl font-bold w-full text-center"):
+            renderizar_latex(r"\det(A) = " + numero_a_latex(resultado["determinante"]))
     if singular:
         ui.label(textos.DETERMINANTES_AVISO_SINGULAR).classes("texto-secundario").props('role="status"')
 

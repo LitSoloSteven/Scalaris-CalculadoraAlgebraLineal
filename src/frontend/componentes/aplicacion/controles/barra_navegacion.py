@@ -9,7 +9,7 @@ from nicegui import ui
 
 from src.frontend.nucleo import banderas
 from src.frontend.componentes.aplicacion.base.iconos import icono_svg
-from src.frontend.componentes.aplicacion.controles.selector_tema import renderizar_boton_tema
+from src.frontend.componentes.aplicacion.controles.configuracion_global import renderizar_boton_configuracion
 from src.frontend.navegacion import (
     RUTA_INICIO,
     ORDEN_NAVEGACION_PLANA,
@@ -33,14 +33,31 @@ def crear_barra_navegacion(interfaz_activa=None, ruta_activa: str = "/", clave_a
     contextual = banderas.navegacion_actualizada()
 
     with ui.header().classes("navegacion-cabecera").props("reveal"):
-        _renderizar_logotipo()
+        if not contextual:
+            _renderizar_logotipo()
         with ui.element("div").classes("panel-tarjeta navegacion-capsula pointer-events-auto"):
             if not contextual:
                 _renderizar_barra_plana(interfaz_activa, ruta_activa, al_alternar_ia)
             else:
-                _renderizar_barra_contextual(clave_activa)
+                _renderizar_barra_contextual(clave_activa, interfaz_activa, al_alternar_ia)
 
     _registrar_navegacion_reciente(ruta_activa, clave_activa=clave_activa, centrar=contextual)
+
+
+def _renderizar_boton_glosa_clasico(interfaz_activa: Any, al_alternar_ia: Any = None) -> None:
+    """Renderiza el acceso a Glosa cuando el panel lateral esta inactivo."""
+    def alternar_ia():
+        """Alterna el panel del asistente desde el control de navegacion."""
+        if interfaz_activa and hasattr(interfaz_activa, "panel_ia"):
+            interfaz_activa.panel_ia.alternar()
+
+    with ui.button(on_click=al_alternar_ia or alternar_ia, color=None).classes(
+        "boton-icono p-0 texto-principal"
+    ).props(
+        'flat ripple=false aria-label="Glosa" aria-controls="ia-panel-clasico" '
+        'aria-expanded="false" data-glosa-clasico-alternar'
+    ).tooltip("Glosa"):
+        ui.html(icono_svg("tutor_ia"))
 
 
 def _renderizar_logotipo() -> None:
@@ -58,7 +75,7 @@ def _renderizar_logotipo() -> None:
 
 def _renderizar_barra_plana(interfaz_activa: Any, ruta_activa: str, al_alternar_ia=None) -> None:
     """Renderiza la botonera lineal de herramientas en modo clásico."""
-    with ui.row().classes("items-center gap-4"):
+    with ui.row().classes("items-center gap-4 navegacion-plana-fila"):
         for identificador_herramienta in ORDEN_NAVEGACION_PLANA:
             herramienta = herramienta_por_identificador(identificador_herramienta)
             esta_activa = (ruta_activa == herramienta.ruta)
@@ -69,26 +86,22 @@ def _renderizar_barra_plana(interfaz_activa: Any, ruta_activa: str, al_alternar_
                 ui.html(icono_svg(herramienta.icono))
 
         if not banderas.panel_lateral_habilitado():
-            def alternar_ia():
-                """Alterna el panel del asistente desde el control de navegación."""
-                if interfaz_activa and hasattr(interfaz_activa, "panel_ia"):
-                    interfaz_activa.panel_ia.alternar()
-
-            with ui.button(on_click=al_alternar_ia or alternar_ia, color=None).classes(
-                "boton-icono p-0 texto-principal"
-            ).props('flat ripple=false aria-label="Glosa"').tooltip("Glosa"):
-                ui.html(icono_svg("tutor_ia"))
+            _renderizar_boton_glosa_clasico(interfaz_activa, al_alternar_ia)
 
         ui.element("div").classes("navegacion-separador")
-        renderizar_boton_tema()
+        renderizar_boton_configuracion()
 
 
-def _renderizar_barra_contextual(clave_activa: str | None) -> None:
+def _renderizar_barra_contextual(
+    clave_activa: str | None,
+    interfaz_activa: Any = None,
+    al_alternar_ia: Any = None,
+) -> None:
     """Renderiza la botonera contextual con la sección del acceso activo."""
-    with ui.element("a").classes("navegacion-accion navegacion-inicio").props(
-        f'href="{RUTA_INICIO}" aria-label="Inicio" title="Inicio"'
+    with ui.element("a").classes("navegacion-inicio").props(
+        f'href="{RUTA_INICIO}" aria-label="Inicio"'
     ).tooltip("Inicio"):
-        ui.html(icono_svg("inicio"))
+        _renderizar_marca_inicio()
 
     seccion = seccion_por_clave(clave_activa)
     with ui.element("div").classes("navegacion-centro"):
@@ -96,7 +109,20 @@ def _renderizar_barra_contextual(clave_activa: str | None) -> None:
             _renderizar_seccion(seccion, clave_activa)
 
     with ui.element("div").classes("tema-boton-selector navegacion-tema"):
-        renderizar_boton_tema()
+        if not banderas.panel_lateral_habilitado() and (
+            al_alternar_ia is not None or (interfaz_activa is not None and hasattr(interfaz_activa, "panel_ia"))
+        ):
+            _renderizar_boton_glosa_clasico(interfaz_activa, al_alternar_ia)
+        renderizar_boton_configuracion()
+
+
+def _renderizar_marca_inicio() -> None:
+    """Renderiza las variantes de logotipo por tema dentro del acceso a inicio."""
+    ui.html(
+        '<img src="/assets/LogoOscuro.png" alt="" width="32" height="32" class="navegacion-inicio-logotipo marca-logotipo-oscuro" />'
+        '<img src="/assets/LogoClaro.png" alt="" width="32" height="32" class="navegacion-inicio-logotipo marca-logotipo-claro" />',
+        tag="span",
+    ).classes("navegacion-inicio-marca").props('aria-hidden="true"')
 
 
 def _renderizar_seccion(seccion: SeccionInicio, clave_activa: str | None) -> None:
@@ -132,7 +158,7 @@ def _renderizar_acceso(elemento: ElementoNavegacion, clave_activa: str | None) -
     esta_activa = (elemento.clave == clave_activa)
     etiqueta = _ETIQUETAS_CONTEXTUALES.get(elemento.clave, elemento.etiqueta)
     clases_elemento = "navegacion-accion navegacion-elemento" + (" navegacion-activa" if esta_activa else "")
-    propiedades_elemento = f'href="{enlace_elemento_navegacion(elemento)}" aria-label="{etiqueta}" title="{etiqueta}"'
+    propiedades_elemento = f'href="{enlace_elemento_navegacion(elemento)}" aria-label="{etiqueta}"'
     if esta_activa:
         propiedades_elemento += ' aria-current="page"'
     with ui.element("a").classes(clases_elemento).props(propiedades_elemento).tooltip(etiqueta):

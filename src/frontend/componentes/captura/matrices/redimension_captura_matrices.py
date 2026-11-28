@@ -10,7 +10,7 @@ def crear_celda_matriz(panel: Any, nombre: str, coordenada: tuple[int, int]) -> 
     valor = panel.matrices[nombre]['cache'].get(coordenada, '')
     propiedades = propiedades_celda_accesible(fila, columna, identificador_matriz=nombre,
                                               nombre_campo=f'{nombre}_r{fila}c{columna}')
-    return ui.input(value=valor, placeholder='', on_change=lambda evento: panel._al_cambiar_celda(
+    return ui.input(value=valor, on_change=lambda evento: panel._al_cambiar_celda(
         nombre, fila, columna, evento.value)).classes(panel.clases_celda).props(propiedades)
 
 

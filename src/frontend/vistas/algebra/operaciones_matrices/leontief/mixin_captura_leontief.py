@@ -13,33 +13,34 @@ from src.frontend.componentes.captura.matrices.captura_modelos import crear_entr
 class MixinCapturaLeontief:
     """Compone los campos y sus dimensiones sin reglas matemáticas."""
 
-    def _construir_selector_tamano(self):
-        with ui.row().classes("w-full items-center gap-3 mb-2"):
-            ui.label("Tamaño n×n:").classes("text-sm font-bold texto-secundario")
-            self.boton_reducir = ui.button(icon="remove", on_click=partial(self._ajustar_tamano, -1), color=None).classes("boton-icono w-7 h-7 p-0").props('ripple=false aria-label="Reducir dimension"')
-            self.boton_aumentar = ui.button(icon="add", on_click=partial(self._ajustar_tamano, 1), color=None).classes("boton-icono w-7 h-7 p-0").props('ripple=false aria-label="Aumentar dimension"')
-        self._actualizar_botones_tamano()
-
-    def _construir_panel_c(self):
-        with ui.column().classes("w-full panel-tarjeta p-4 mb-4"):
-            ui.label("Matriz de coeficientes técnicos C").classes("font-bold texto-principal mb-3")
+    def _construir_captura_modelo(self):
+        """Integra dimensiones, coeficientes C y demanda final d en una sola tarjeta."""
+        with ui.column().classes("w-full panel-tarjeta p-5 gap-4"):
+            with ui.row().classes("modelos-captura-cabecera w-full"):
+                ui.label("Matriz de coeficientes técnicos C").classes("font-bold texto-principal")
+                self._construir_selector_tamano()
             ui.html(
-                '<p class="text-xs texto-secundario mb-2">Cada c<sub>ij</sub> indica la fracción de la producción del sector '
+                '<p class="text-xs texto-secundario">Cada c<sub>ij</sub> indica la fracción de la producción del sector '
                 "<i>i</i> que consume el sector <i>j</i> por unidad producida.</p>"
             )
             self.contenedor_coeficientes = ui.column().classes("modelos-captura")
             self._generar_cuadricula()
+            with ui.column().classes("w-full min-w-0 gap-3 modelos-bloque-relacionado"):
+                ui.label("Vector de demanda final d").classes("font-bold texto-principal")
+                self.contenedor_demanda = ui.column().classes("modelos-captura")
+                self._generar_entradas_demanda()
 
-    def _construir_panel_d(self):
-        with ui.column().classes("w-full panel-tarjeta p-4 mb-4"):
-            ui.label("Vector de demanda final d").classes("font-bold texto-principal mb-3")
-            self.contenedor_demanda = ui.column().classes("modelos-captura")
-            self._generar_entradas_demanda()
+    def _construir_selector_tamano(self):
+        with ui.row().classes("items-center gap-2"):
+            ui.label("Sectores:").classes("text-sm font-bold texto-secundario")
+            self.boton_reducir = ui.button(icon="remove", on_click=partial(self._ajustar_tamano, -1), color=None).classes("boton-icono p-0").props('ripple=false aria-label="Reducir dimensión"')
+            self.etiqueta_sectores = ui.label(f"{self.numero_sectores} × {self.numero_sectores}").classes("font-bold text-sm texto-principal etiqueta-dimensiones")
+            self.boton_aumentar = ui.button(icon="add", on_click=partial(self._ajustar_tamano, 1), color=None).classes("boton-icono p-0").props('ripple=false aria-label="Aumentar dimensión"')
+        self._actualizar_botones_tamano()
 
     def _construir_panel_sectores(self):
-        with ui.column().classes("w-full panel-tarjeta p-4"):
-            ui.label("Nombres de sectores (opcional)").classes("font-bold texto-principal mb-3 text-sm")
-            self.contenedor_sectores = ui.column().classes("w-full")
+        with ui.expansion("Nombres de sectores (opcional)", icon="label").classes("w-full panel-tarjeta"):
+            self.contenedor_sectores = ui.column().classes("w-full pt-2")
             self._generar_entradas_sectores()
 
     async def _ajustar_tamano(self, delta: int):
@@ -56,6 +57,8 @@ class MixinCapturaLeontief:
         )
 
     def _actualizar_botones_tamano(self):
+        if getattr(self, "etiqueta_sectores", None) is not None:
+            self.etiqueta_sectores.set_text(f"{self.numero_sectores} × {self.numero_sectores}")
         actualizar_estados_botones_dimension(self.boton_reducir, self.boton_aumentar, self.numero_sectores,
                                             DIMENSION_MINIMA_LEONTIEF, DIMENSION_MAXIMA_MODELOS)
 

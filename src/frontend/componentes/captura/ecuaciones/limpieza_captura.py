@@ -52,10 +52,10 @@ class LimpiezaCaptura:
         ui.add_head_html('<link rel="stylesheet" href="/assets/css/componentes/limpieza_captura.css">')
         ui.context.slot.parent.classes('limpieza-acciones')
         self._contenedor_captura = ui.context.client.content
-        self.boton = ui.button(icon='delete', on_click=self.confirmar, color=None).classes(
+        self.boton = ui.button(LIMPIAR, icon='delete', on_click=self.confirmar, color=None).classes(
             'boton-discreto flex-1 py-3'
         ).style('flex-shrink: 0;').props(
-            f'ripple=false data-sonido-omitir id="boton-limpiar-principal" aria-label="{LIMPIAR}"'
+            f'no-caps ripple=false data-sonido-omitir id="boton-limpiar-principal" aria-label="{LIMPIAR}"'
         )
         with self.boton:
             ui.tooltip(LIMPIAR).props('target="#boton-limpiar-principal"')

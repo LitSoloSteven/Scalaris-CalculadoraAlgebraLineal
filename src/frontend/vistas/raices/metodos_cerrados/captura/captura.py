@@ -3,28 +3,31 @@ from nicegui import ui
 
 from src.backend.resolutores.raices.compartido.limites_raices import LIMITE_ITERACIONES_DEFECTO
 from src.backend.resolutores.raices.compartido.unidades_angulares import UNIDADES_ANGULARES, UNIDAD_ANGULAR_DEFECTO
-from src.frontend.componentes.raices.captura.campo_funcion_real import crear_campo_funcion
+from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
+from src.frontend.componentes.aplicacion.controles.selector_opciones import SelectorOpciones, estilizar_desplegable
 from src.frontend.componentes.captura.ecuaciones.limpieza_captura import crear_boton_limpieza
+from src.frontend.componentes.raices.captura.campo_funcion_real import crear_campo_funcion
 from src.frontend.componentes.raices.captura.modos_captura_raices import MODO_BUSQUEDA, MODO_INTERVALO, construir_modos, region_modo
 from src.frontend.componentes.raices.captura.previa_expresion_raices import PreviaExpresion
-from src.frontend.componentes.aplicacion.controles.selector_opciones import SelectorOpciones
-from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
 from src.frontend.controladores.raices.biseccion.captura.captura_criterio import texto_estimacion
 from src.frontend.controladores.raices.biseccion.captura.catalogo_criterios import CRITERIOS
 from src.frontend.controladores.raices.biseccion.captura.metadatos_expresion import sensible_a_unidad
-from src.frontend.controladores.raices.metodos_cerrados.adaptadores import (
-    BISECCION, METODOS, REGLA_FALSA, captura_del_metodo, criterio_inicial, guia_parada, parametros_iniciales,
+from src.frontend.controladores.raices.compartido.formato.rango_exploracion_raices import (
+    LONGITUD_CAMPO_GRAFICA,
+    RANGO_GRAFICA_DEFECTO,
+    rango_grafica,
 )
-from src.frontend.controladores.raices.compartido.formato.rango_exploracion_raices import LONGITUD_CAMPO_GRAFICA, RANGO_GRAFICA_DEFECTO, rango_grafica
-from src.frontend.vistas.raices.biseccion.captura.acciones_captura import construir_ayuda
-from src.frontend.vistas.raices.biseccion.captura.ejemplos import EJEMPLOS as EJEMPLOS_BISECCION
+from src.frontend.controladores.raices.metodos_cerrados.adaptadores import (
+    BISECCION,
+    METODOS,
+    captura_del_metodo,
+    criterio_inicial,
+    guia_parada,
+    parametros_iniciales,
+)
 from src.frontend.vistas.raices.biseccion.captura.estado_captura import transaccion
-from src.frontend.vistas.raices.regla_falsa.captura.ejemplos import EJEMPLOS as EJEMPLOS_REGLA_FALSA
+from .ayuda_cerrados import REQUISITOS_METODO, construir_secciones_secundarias
 
-_EJEMPLOS = {
-    BISECCION: {nombre: datos for grupo in EJEMPLOS_BISECCION.values() for nombre, datos in grupo},
-    REGLA_FALSA: dict(EJEMPLOS_REGLA_FALSA),
-}
 _CAMPOS = {
     "expresion": "expresion", "extremo_izquierdo": "inferior", "extremo_derecho": "superior",
     "unidad_angular": "unidad", "limite_iteraciones": "limite",
@@ -39,6 +42,7 @@ class CapturaMetodosCerrados:
         self.vista = vista
         self._metodo = metodo
         self._cargando_captura = False
+        self._ayuda_montada = False
         self._preferencias = {}
         self._cero_preferido = None
 
@@ -47,20 +51,30 @@ class CapturaMetodosCerrados:
         with ui.element("form").classes("w-full column gap-3").on("submit.prevent", self.vista.enviar):
             opciones = tuple((metodo, nombre, nombre) for metodo, nombre in METODOS.items())
             self.metodo = SelectorOpciones(opciones, self._metodo, self._cambiar_metodo, "Método de resolución")
-            self.expresion = crear_campo_funcion()
+            self.requisito_metodo = ui.label(REQUISITOS_METODO[self._metodo]).classes(
+                "metodos-raices-requisito text-sm texto-principal"
+            )
+            self.expresion = crear_campo_funcion(ejemplo=None)
             self.previa_expresion = PreviaExpresion()
-            self.unidad = ui.select({valor: valor.capitalize() for valor in UNIDADES_ANGULARES},
-                                    value=UNIDAD_ANGULAR_DEFECTO,
-                                    label="Unidad trigonométrica").classes("matriz-entrada min-w-0 w-full")
+            self.unidad = estilizar_desplegable(
+                ui.select(
+                    {valor: valor.capitalize() for valor in UNIDADES_ANGULARES},
+                    value=UNIDAD_ANGULAR_DEFECTO,
+                    label="Unidad trigonométrica",
+                ),
+                "matriz-entrada min-w-0 w-full",
+            )
             self.unidad.set_visibility(False)
             construir_modos(self.vista, "Tarea de métodos cerrados")
             with region_modo(self.vista, MODO_INTERVALO):
                 self._construir_extremos()
+                self.contenedor_continuidad = ui.column().classes("w-full min-w-0 gap-2")
             with region_modo(self.vista, MODO_BUSQUEDA):
                 self.vista.exploracion.construir_campos()
             self._construir_parada()
             self._construir_acciones()
-            self._construir_opciones()
+            self.contenedor_estado = ui.column().classes("w-full min-w-0 gap-1")
+            construir_secciones_secundarias(self, _campo)
         self._conectar()
         self.actualizar_guia()
 
@@ -76,8 +90,10 @@ class CapturaMetodosCerrados:
 
     def _construir_parada(self) -> None:
         with ui.row().classes("metodos-raices-campos w-full"):
-            self.criterio = ui.select(_ETIQUETAS_CRITERIO, value=criterio_inicial(self._metodo),
-                                      label="Criterio de parada").classes("matriz-entrada min-w-0")
+            self.criterio = estilizar_desplegable(
+                ui.select(_ETIQUETAS_CRITERIO, value=criterio_inicial(self._metodo), label="Criterio de parada"),
+                "matriz-entrada min-w-0",
+            )
             iniciales = parametros_iniciales(self._metodo)
             self.parametros_criterio = {}
             for tipo, (_, etiqueta, _) in CRITERIOS.items():
@@ -99,19 +115,6 @@ class CapturaMetodosCerrados:
             limpieza = crear_boton_limpieza(self.vista, lambda: not self.expresion.is_deleted,
                                             animar=False, campo_foco=self.expresion)
             limpieza.boton.classes(add="metodos-raices-limpieza", remove="flex-1 py-3")
-            self.ejemplos = ui.select(list(_EJEMPLOS[self._metodo]), label="Ejemplos",
-                                      on_change=self._cargar_ejemplo).classes(
-                                          "selector-controles metodos-raices-ejemplos min-w-56")
-
-    def _construir_opciones(self) -> None:
-        with ui.expansion("Avanzado").classes("w-full"):
-            with ui.row().classes("metodos-raices-campos w-full"):
-                self.limite = _campo("Límite de iteraciones", str(LIMITE_ITERACIONES_DEFECTO), "entero")
-                minimo, maximo = RANGO_GRAFICA_DEFECTO
-                self.minimo = _campo("Mínimo de la gráfica", str(minimo))
-                self.maximo = _campo("Máximo de la gráfica", str(maximo))
-        with ui.expansion("Sintaxis y continuidad").classes("w-full"):
-            construir_ayuda()
 
     def _conectar(self) -> None:
         self.expresion.on_value_change(self._actualizar_unidad)
@@ -197,6 +200,7 @@ class CapturaMetodosCerrados:
         parametros = {tipo: campo.value for tipo, campo in self.parametros_criterio.items()}
         self._preferencias[self._metodo] = self.criterio.value, parametros, self.limite.value
         self._metodo = evento.value
+        self.requisito_metodo.set_text(REQUISITOS_METODO[self._metodo])
         opcion, parametros, limite = self._preferencias.get(
             self._metodo, (criterio_inicial(self._metodo), parametros_iniciales(self._metodo), str(LIMITE_ITERACIONES_DEFECTO)))
         with transaccion(self):
@@ -204,14 +208,8 @@ class CapturaMetodosCerrados:
             for tipo, valor in parametros.items():
                 self.parametros_criterio[tipo].set_value(valor)
             self.limite.set_value(limite)
-            self.ejemplos.set_options(list(_EJEMPLOS[self._metodo]), value=None)
             self._cero_preferido = None
         self._editar()
-
-    def _cargar_ejemplo(self, evento) -> None:
-        datos = _EJEMPLOS[self._metodo].get(evento.value)
-        if datos is not None:
-            self.vista.aplicar_intervalo(datos)
 
     def _editar_ejercicio(self) -> None:
         if not self._cargando_captura:
@@ -246,7 +244,6 @@ def captura_vacia(captura: CapturaMetodosCerrados) -> bool:
 
 def limpiar_captura(captura: CapturaMetodosCerrados) -> None:
     """Retira la función y los extremos sin modificar las preferencias de parada."""
-    captura.ejemplos.set_value(None)
     captura.restaurar(dict.fromkeys(("expresion", "extremo_izquierdo", "extremo_derecho"), ""))
     captura.definir_rango(RANGO_GRAFICA_DEFECTO, sincronizar=False)
 

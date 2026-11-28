@@ -1,12 +1,3 @@
-.metodos-cerrados-tabla {
-  min-width: 0;
-  overflow-x: auto;
-}
-.metodos-cerrados-tabla .q-table th,
-.metodos-cerrados-tabla .q-table td {
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
-}
 .metodos-raices-resultados :is(.biseccion-numero, .regla-falsa-numero) {
   overflow-wrap: anywhere;
   font-variant-numeric: tabular-nums;
@@ -26,3 +17,24 @@
 .metodos-raices-resultados .regla-falsa-metricas {
   grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
 }
+.metodos-cerrados-continuidad {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-input);
+  background: var(--bg-elevated);
+  border-left: 3px solid var(--accent);
+}
+.metodos-cerrados-continuidad:empty {
+  display: none;
+  padding: 0;
+  border: 0;
+}
+.metodos-cerrados-secundarias {
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border-input);
+}
+.metodos-cerrados-ayuda-grupo {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-input);
+  background: var(--bg-panel);
+}
+.metodos-cerrados-ayuda-titulo { letter-spacing: 0.01em; }

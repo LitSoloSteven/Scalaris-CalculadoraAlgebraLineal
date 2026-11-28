@@ -43,32 +43,34 @@ class VistaTransformaciones(MixinAplicacionTransformacion, MixinGlosaModelos, Mi
         """Construye los controles y contenedores de la vista."""
         PanelCapturaMatrices.inyectar_recursos_cliente()
         crear_estructura_aplicacion(self, ruta_activa=ruta_de("transformaciones"))
-        with ui.column().classes("w-full max-w-7xl mx-auto p-6 mt-4 vista-raiz min-w-0"):
-            self.contenedor_transferencia = ui.column().classes('w-full')
-            ui.label(textos.TITULO).classes("text-2xl font-bold texto-principal")
+        with ui.column().classes("w-full max-w-7xl mx-auto p-6 mt-4 vista-raiz disposicion-herramienta min-w-0"):
+            self.contenedor_transferencia = ui.column().classes('w-full empty:hidden')
+            ui.label(textos.TITULO).classes("text-2xl font-bold texto-principal").props('role="heading" aria-level="1"')
             ui.label(textos.DESCRIPCION).classes("texto-secundario")
             ui.label(textos.AVISO_ACADEMICO).classes("texto-secundario text-sm")
             self._construir_selector_modo()
-            with ui.element("div").classes("disposicion-dividida mb-8"):
+            with ui.element("div").classes("disposicion-captura-fila mb-2"):
                 self._construir_captura()
-                with ui.column().classes("disposicion-panel min-w-0"):
-                    self.contenedor_resultados = ui.column().classes(
-                        "w-full panel-tarjeta p-6 min-w-0 min-h-[400px]"
-                    ).props('id="resultados-transformaciones"')
-                    self._restablecer_resultados()
+                self._construir_columna_auxiliar()
+            self.contenedor_resultados = ui.column().classes(
+                "disposicion-resultados panel-tarjeta p-6 min-w-0 min-h-[280px]"
+            ).props('id="resultados-transformaciones"')
+            self._restablecer_resultados()
         self._conectar_modelo()
         recibir_matriz_modelo(self, token_transferencia)
 
     def _construir_captura(self) -> None:
         with ui.column().classes("disposicion-panel min-w-0"):
-            self._construir_ejemplos()
-            self._construir_selector_tamano()
             self._construir_panel_a()
+            self._crear_accion_principal()
+
+    def _construir_columna_auxiliar(self) -> None:
+        with ui.column().classes("disposicion-panel min-w-0 gap-4"):
             region = ui.column().classes("w-full min-w-0")
             with self.selector_modo.asociar_contenido(textos.MODO_ANALISIS, region):
                 self._construir_panel_variables()
             self._construir_panel_aplicacion()
-            self._crear_accion_principal()
+            self.contenedor_herramientas = ui.column().classes("w-full min-w-0 gap-3")
 
     def _crear_accion_principal(self):
         """Construye crear accion principal conservando el orden de los elementos."""

@@ -5,6 +5,7 @@ from collections.abc import Callable
 
 from nicegui import ui
 
+from src.frontend.componentes.aplicacion.controles.selector_opciones import SelectorOpciones
 from src.frontend.controladores.algebra.operaciones_vectores.ejemplos_espacio_vectorial import (
     EJEMPLOS_OPERACIONES, terminos_ejemplo,
 )
@@ -38,20 +39,9 @@ class CapturaOperacionesPersonalizadas:
         return self._conjuntos[self._modo_conjunto]
 
     def construir(self) -> None:
-        """Monta la definición, el selector de ejemplos y los editores de términos."""
-        self._selector_conjunto = ui.select(
-            {modo: NOMBRES_MODOS[modo] for modo in self._conjuntos},
-            label="Definición del conjunto", value=self._modo_conjunto,
-            on_change=lambda evento: self._cambiar_conjunto(evento.value),
-        ).classes("w-full min-w-0").props("outlined dense")
-        for modo, conjunto in self._conjuntos.items():
-            with ui.column().classes("w-full min-w-0") as self._selectores_conjunto[modo]:
-                conjunto.construir()
-        self._actualizar_conjuntos()
-        ejemplos = list(EJEMPLOS_OPERACIONES)
-        self._selector_ejemplo = ui.select(
-            ejemplos, label="Ejemplo de operaciones", value=ejemplos[0],
-        ).classes("w-full min-w-0").props("outlined dense")
+        """Monta la definición del conjunto y los editores de términos."""
+        self._construir_selector_conjunto()
+        self._selector_ejemplo = None
         ui.label(
             "Escribe coeficientes racionales y un exponente entero no negativo por variable, separados por espacios."
         ).classes("texto-secundario text-sm")
@@ -60,6 +50,24 @@ class CapturaOperacionesPersonalizadas:
         }
         self._ajustar_operaciones()
         self._aviso = ui.label().classes("texto-secundario subespacios-numero").props("role=status aria-live=polite")
+
+    def _construir_selector_conjunto(self) -> None:
+        ui.label("Definición del conjunto").classes("text-sm font-semibold texto-principal")
+        opciones = tuple(
+            (modo, NOMBRES_MODOS[modo], f"Definición del conjunto: {NOMBRES_MODOS[modo]}")
+            for modo in self._conjuntos
+        )
+        self._selector_conjunto = SelectorOpciones(
+            opciones, self._modo_conjunto,
+            lambda evento: self._cambiar_conjunto(evento.value),
+            "Definición del conjunto",
+        )
+        for modo, conjunto in self._conjuntos.items():
+            with ui.column().classes("w-full min-w-0") as contenedor:
+                conjunto.construir()
+            self._selectores_conjunto[modo] = contenedor
+            self._selector_conjunto.asociar_contenido(modo, contenedor)
+        self._actualizar_conjuntos()
 
     def obtener(self) -> dict:
         """Devuelve una instantánea del conjunto activo y las dos operaciones."""
@@ -84,9 +92,10 @@ class CapturaOperacionesPersonalizadas:
         if self._aviso is not None:
             self._aviso.set_text(_mensaje_localizado(diagnostico))
 
-    def cargar_ejemplo(self) -> None:
-        """Carga en el editor el ejercicio seleccionado y conserva su carácter editable."""
-        ejemplo = EJEMPLOS_OPERACIONES[self._selector_ejemplo.value]
+    def cargar_ejemplo(self, nombre: str | None = None) -> None:
+        """Carga en el editor un ejercicio indicado por clave sin exponer muestras en interfaz."""
+        clave = nombre if nombre in EJEMPLOS_OPERACIONES else next(iter(EJEMPLOS_OPERACIONES))
+        ejemplo = EJEMPLOS_OPERACIONES[clave]
         self._sincronizando = True
         try:
             if ejemplo.ecuaciones:
@@ -111,6 +120,12 @@ class CapturaOperacionesPersonalizadas:
         finally:
             self._sincronizando = False
         self._editar()
+
+    def esta_vacia(self) -> bool:
+        """Indica si tanto el conjunto como ambas operaciones carecen de entradas."""
+        return self.conjunto.esta_vacia() and all(
+            not coordenada for editor in self._operaciones.values() for coordenada in editor.obtener()
+        )
 
     def _cargar_ecuaciones_ejemplo(self, dimension: int, ecuaciones: str) -> None:
         self._cambiar_conjunto(MODO_RESTRICCIONES)

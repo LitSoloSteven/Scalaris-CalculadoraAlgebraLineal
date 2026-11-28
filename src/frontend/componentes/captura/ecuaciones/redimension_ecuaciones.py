@@ -8,7 +8,7 @@ from src.frontend.componentes.captura.nucleo.redimension_rectangular import actu
 def crear_coeficiente(cuadricula: Any, fila: int, columna: int) -> ui.input:
     """Crea un coeficiente con valor exacto, coordenadas y nombre accesible."""
     propiedades = propiedades_celda_accesible(fila, columna, nombre_campo=f'r{fila}c{columna}')
-    celda = ui.input(value=cuadricula._cache_coeficientes.get((fila, columna), ''), placeholder='',
+    celda = ui.input(value=cuadricula._cache_coeficientes.get((fila, columna), ''),
                      on_change=lambda evento: cuadricula._actualizar_celda(False, fila, columna, evento.value))
     return celda.classes('matriz-entrada cuadricula-celda').props(propiedades)
 
@@ -20,7 +20,7 @@ def crear_fila_ecuaciones(cuadricula: Any, indice: int) -> None:
         ui.label('=').classes('w-8 text-center matematicas-etiqueta text-xl flex-shrink-0')
         valor = '0' if cuadricula.modo_homogeneo else cuadricula._cache_independientes.get(indice, '')
         propiedades = propiedades_celda_accesible(indice, cuadricula.columnas, nombre_campo=f'r{indice}cb')
-        independiente = ui.input(value=valor, placeholder='', on_change=lambda evento: cuadricula._actualizar_celda(
+        independiente = ui.input(value=valor, on_change=lambda evento: cuadricula._actualizar_celda(
             True, indice, 0, evento.value)).classes('matriz-entrada cuadricula-celda').props(propiedades)
         if cuadricula.modo_homogeneo:
             independiente.props('readonly')

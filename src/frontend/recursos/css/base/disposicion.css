@@ -15,7 +15,7 @@
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: var(--space-8);
+    gap: var(--space-5);
     width: 100%;
 }
 
@@ -29,9 +29,65 @@
         flex-direction: row;
     }
 
-    .disposicion-panel {
-        width: 50%;
+    .disposicion-dividida > .disposicion-panel {
         flex: 1 1 0%;
+        width: auto;
+    }
+}
+
+.disposicion-herramienta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    width: 100%;
+    min-width: 0;
+}
+
+.disposicion-captura-fila {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: var(--space-5);
+    width: 100%;
+    min-width: 0;
+}
+
+.disposicion-captura-fila > * {
+    width: 100%;
+    min-width: 0;
+}
+
+@container (min-width: 944px) {
+    .disposicion-captura-fila {
+        grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    }
+
+    .disposicion-captura-fila:has(> :only-child) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.disposicion-resultados {
+    width: 100%;
+    min-width: 0;
+}
+
+.vista-raiz:not(.inicio-raiz) {
+    padding: var(--space-4) !important;
+    margin-top: var(--space-2) !important;
+}
+
+@media (max-width: 640px) {
+    .q-page,
+    .nicegui-content {
+        padding: var(--space-2) !important;
+        gap: var(--space-2) !important;
+    }
+
+    .vista-raiz:not(.inicio-raiz) {
+        margin-top: 0 !important;
+        padding: var(--space-2) var(--space-3) !important;
+        gap: var(--space-4) !important;
     }
 }
 
@@ -53,7 +109,7 @@
     max-width: 100%;
 }
 
-@media (max-width: 280px) {
+@media (max-width: 360px) {
     .vista-raiz,
     .vista-raiz .panel-tarjeta {
         padding-inline: var(--space-2) !important;

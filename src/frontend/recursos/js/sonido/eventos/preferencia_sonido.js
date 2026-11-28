@@ -8,12 +8,16 @@
     let silenciado = false;
 
     function sincronizarControles() {
+        const etiqueta = silenciado ? 'Activar sonidos' : 'Silenciar sonidos';
         document.querySelectorAll(selector).forEach(boton => {
             boton.setAttribute('aria-pressed', String(silenciado));
-            boton.setAttribute('title', silenciado ? 'Activar sonidos' : 'Silenciar sonidos');
+            boton.setAttribute('title', etiqueta);
+            boton.setAttribute('aria-label', etiqueta);
             boton.querySelectorAll('[data-sonido-icono]').forEach(icono => {
                 icono.hidden = (icono.getAttribute('data-sonido-icono') === 'activo') === silenciado;
             });
+            const estado = boton.querySelector?.('[data-sonido-estado]');
+            if (estado) estado.textContent = silenciado ? 'Silenciados' : 'Activados';
         });
     }
 

@@ -23,17 +23,30 @@ def titulo_configurado(respuesta: dict, ampliado: dict | None) -> str:
     return _TITULOS.get(respuesta["motivo_parada"], titulo_estado(respuesta))
 
 
-def datos_criterio(ampliado: dict) -> tuple[tuple[str, str], ...]:
+def datos_criterio(ampliado: dict, respuesta: dict | None = None) -> tuple[tuple[str, str], ...]:
     """Presenta condición, unidad, umbral y métrica de la autoridad de ejecución."""
     criterio = ampliado["criterio"]
     tipo = criterio["tipo"]
     unidad = CriterioParada(**criterio).unidad
     metrica = ampliado["metrica_final"]
+    cumplimiento = _texto_cumplimiento(ampliado, respuesta)
     return (("Criterio aplicado", CRITERIOS[tipo][0]),
             ("Condición", condicion_criterio(tipo, criterio["parametro"])),
             ("Unidad de la métrica", unidad), ("Umbral", numero(ampliado["umbral"], True)),
             ("Métrica final", "No aplica: sin dato evaluable en esta fila." if metrica is None else numero(metrica, True)),
-            ("Cumplimiento", _CUMPLIMIENTOS[ampliado["cumplimiento"]]))
+            ("Cumplimiento", cumplimiento))
+
+
+def _texto_cumplimiento(ampliado: dict, respuesta: dict | None) -> str:
+    if respuesta is not None and _es_cero_evaluado(respuesta):
+        return "Raíz exacta evaluada (residuo 0)"
+    return _CUMPLIMIENTOS[ampliado["cumplimiento"]]
+
+
+def _es_cero_evaluado(respuesta: dict) -> bool:
+    return respuesta.get("estado") == "EXITO" and respuesta.get("motivo_parada") in (
+        "raiz_en_extremo", "raiz_en_aproximacion", "raiz_exacta",
+    )
 
 
 def metricas_configuradas(respuesta: dict, ampliado: dict | None) -> tuple:
@@ -41,7 +54,7 @@ def metricas_configuradas(respuesta: dict, ampliado: dict | None) -> tuple:
     datos = metricas_resumen(respuesta)
     if ampliado is None:
         return datos
-    return tuple(par for par in datos if par[0] != "Tolerancia de residuo") + datos_criterio(ampliado)
+    return tuple(par for par in datos if par[0] != "Tolerancia de residuo") + datos_criterio(ampliado, respuesta)
 
 
 def descripcion_captura(captura: dict) -> str:
@@ -54,6 +67,8 @@ def descripcion_captura(captura: dict) -> str:
 
 def etiqueta_configurada(respuesta: dict, ampliado: dict | None) -> str:
     """Distingue ausencia de valor y conteo provisional sin alterar el estado matemático."""
+    if _es_cero_evaluado(respuesta):
+        return etiqueta_aproximacion(respuesta)
     if respuesta.get("aproximacion") is not None and ampliado and ampliado["criterio"]["tipo"] == "iteraciones":
         return "Aproximación provisional"
     return etiqueta_aproximacion(respuesta)

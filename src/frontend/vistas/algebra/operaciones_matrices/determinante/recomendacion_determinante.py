@@ -79,8 +79,9 @@ class RecomendacionDeterminante:
             mensaje = (self.respuesta or {}).get('mensaje', textos.DETERMINANTES_RECOMENDACION_ERROR)
             self._mostrar_mensaje(mensaje, error=True)
             return
+        justificacion = self.respuesta['justificacion'].replace(' 1 ceros', ' 1 cero')
         self._mostrar_mensaje(textos.DETERMINANTES_RECOMENDACION.format(
-            nombre=self.respuesta['nombre_legible'], justificacion=self.respuesta['justificacion']))
+            nombre=self.respuesta['nombre_legible'], justificacion=justificacion))
         with self.mensajes:
             ui.label(self.respuesta['limites_cofactores']).classes('texto-secundario text-sm w-full')
 

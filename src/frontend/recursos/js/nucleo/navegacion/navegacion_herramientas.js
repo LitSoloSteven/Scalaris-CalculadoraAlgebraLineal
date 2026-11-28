@@ -30,9 +30,15 @@
         if (listas.has(lista)) return;
         listas.add(lista);
         lista.addEventListener('scroll', () => actualizarBordes(lista), { passive: true });
+        let fotograma = 0;
         const observador = new ResizeObserver(() => {
-            mostrarEnlace(lista.querySelector('[aria-current="page"]'));
-            actualizarBordes(lista);
+            if (fotograma) return;
+            fotograma = requestAnimationFrame(() => {
+                fotograma = 0;
+                if (!lista.isConnected) return;
+                mostrarEnlace(lista.querySelector('[aria-current="page"]'));
+                actualizarBordes(lista);
+            });
         });
         observador.observe(lista);
         document.fonts.ready.then(centrarActivo);

@@ -12,10 +12,18 @@
         (usarEntrada && entrada && window.scalaris.focoModal.esEnfocable(entrada) ? entrada : panel).focus();
     }
 
+    function primerEnfocableVisible() {
+        if (typeof document.querySelectorAll !== 'function') return null;
+        return Array.from(document.querySelectorAll('main a[href], main button, header a[href], header button'))
+            .find(window.scalaris.focoModal.esEnfocable) || null;
+    }
+
     function cerrar(panel) {
         const origenValido = elementoOrigen && elementoOrigen.isConnected &&
             (!panel || !panel.contains(elementoOrigen)) && window.scalaris.focoModal.esEnfocable(elementoOrigen);
-        const destino = origenValido ? elementoOrigen : document.querySelector('.glosa-boton-flotante');
+        const flotante = document.querySelector('.glosa-boton-flotante');
+        const flotanteValido = flotante && window.scalaris.focoModal.esEnfocable(flotante) ? flotante : null;
+        const destino = origenValido ? elementoOrigen : (flotanteValido || primerEnfocableVisible());
         elementoOrigen = null;
         if (destino) destino.focus();
     }

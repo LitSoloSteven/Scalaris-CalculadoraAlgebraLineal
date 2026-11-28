@@ -1,6 +1,7 @@
 """Núcleo compartido para gestión de caché, límites y animación en cuadrículas de matriz."""
 from __future__ import annotations
 
+import asyncio
 import json
 from dataclasses import dataclass
 from typing import Any, Callable, Awaitable
@@ -24,13 +25,15 @@ def sincronizar_cache_celdas(entradas: list[list[Any]], cache: dict) -> None:
                 cache[(fila, columna)] = celda.value
 
 
-def cache_matriz_desde_datos(datos: list[list[str]]) -> dict[tuple[int, int], str]:
-    """Construye el caché de captura omitiendo las cadenas vacías y los ceros."""
+def cache_matriz_desde_datos(
+    datos: list[list[str]], *, conservar_ceros: bool = False,
+) -> dict[tuple[int, int], str]:
+    """Construye el caché sin cadenas vacías y conserva los ceros explícitos si se solicita."""
     cache = {}
     for fila, valores in enumerate(datos):
         for columna, valor in enumerate(valores):
             texto = str(valor).strip()
-            if texto and texto != "0":
+            if texto and (conservar_ceros or texto != "0"):
                 cache[(fila, columna)] = texto
     return cache
 
@@ -123,7 +126,7 @@ async def _animar_cuadricula(accion: str, selector_destino: str, nombre_matriz: 
     if accion == "Entrada":
         codigo = f"return Promise.resolve(window.Vue?.nextTick?.()).then(() => {expresion});"
     try:
-        await ui.run_javascript(codigo)
+        await asyncio.wait_for(ui.run_javascript(codigo), timeout=1.5)
     except Exception:
         pass
 
@@ -181,7 +184,10 @@ async def ejecutar_transicion_cuadricula(
 
 async def _restaurar_celdas_transicion(selector: str) -> None:
     try:
-        await ui.run_javascript(f"window.scalaris?.cuadricula?.restaurarCeldas(document.querySelectorAll({json.dumps(selector)}));")
+        await asyncio.wait_for(
+            ui.run_javascript(f"window.scalaris?.cuadricula?.restaurarCeldas(document.querySelectorAll({json.dumps(selector)}));"),
+            timeout=1.5,
+        )
     except Exception:
         pass
 
@@ -213,7 +219,7 @@ def crear_entradas_matriz(contenedor: Any, dimensiones: tuple[int, int], identif
                for entrada in contenedor.descendants() if isinstance(entrada, ui.input)}
     entradas = []
     contenedor.clear()
-    with contenedor:
+    with contenedor, ui.column().classes("cuadricula-contenido w-full"):
         for fila in range(dimensiones[0]):
             entradas.append(_crear_entradas_fila(fila, dimensiones[1], identificador, valores))
     return entradas
@@ -221,9 +227,9 @@ def crear_entradas_matriz(contenedor: Any, dimensiones: tuple[int, int], identif
 
 def _crear_entradas_fila(fila: int, columnas: int, identificador: str, valores: dict) -> list[Any]:
     entradas = []
-    with ui.row().classes("gap-1 flex-nowrap"):
+    with ui.row().classes("items-center gap-2 no-wrap w-full").props(f'data-matriz-fila="{fila}"'):
         for columna in range(columnas):
-            entrada = ui.input(value=valores.get((fila, columna), ""), placeholder="0").classes("matriz-entrada w-16 text-center shrink-0")
+            entrada = ui.input(value=valores.get((fila, columna), "")).classes("matriz-entrada cuadricula-celda text-center")
             entrada.props(propiedades_celda_accesible(fila, columna, identificador_matriz=identificador))
             entradas.append(entrada)
     return entradas

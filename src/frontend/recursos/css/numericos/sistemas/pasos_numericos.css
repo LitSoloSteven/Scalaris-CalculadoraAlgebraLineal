@@ -12,7 +12,6 @@
 .numericos-acento { color: var(--accent); }
 .numericos-numero { overflow-wrap: anywhere; }
 .numericos-contenedor { min-width: 0; }
-.numericos-fila-activa { background-color: var(--accent-glow); }
 
 .numericos-valor {
     background: var(--bg-elevated);
@@ -26,17 +25,11 @@
 }
 
 .numericos-desplazamiento {
-    overflow-x: auto;
     width: 100%;
-    min-width: 0;
-    margin-block: 0.5rem;
+    margin-block: var(--space-2);
 }
 
-.numericos-tabla { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
-.numericos-tabla th, .numericos-tabla td { padding: 0.5rem; text-align: center; }
-.numericos-tabla th { color: var(--text-sec); }
-.numericos-tabla td { border-bottom: 1px solid var(--border-input); }
-.numericos-tabla thead, .numericos-tabla tfoot { background: var(--bg-elevated); }
+.numericos-tabla tfoot { background: var(--bg-elevated); }
 .numericos-negrita { font-weight: 700; }
 .numericos-tabla .numericos-subtotal { text-align: right; color: var(--text-sec); }
 .numericos-residuo-activo {

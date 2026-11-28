@@ -17,7 +17,8 @@ def adaptar_traza(resultado: dict) -> tuple[tuple, tuple]:
     fases, posiciones = agrupar_determinante(resultado)
     pasos = tuple(PasoReproductor(
         indice=indice, tipo=paso["tipo"], descripcion=paso["descripcion"],
-        explicacion=paso["explicacion"], cuerpo=paso, indice_grupo=posiciones[indice],
+        explicacion=paso["explicacion"].replace(" 1 ceros", " 1 cero"),
+        cuerpo=paso, indice_grupo=posiciones[indice],
         etiqueta_tipo="Menor" if paso["tipo"] == "menor" else None,
         meta_explicar={**construir_meta_determinante(resultado["traza"], indice),
                        "operacion": limpiar_latex_plano(paso["descripcion"])},

@@ -132,5 +132,5 @@ def renderizar_capsula_foco(texto: str, al_quitar: Callable) -> ui.element:
         ui.label(texto).classes("glosa-foco-explicacion-texto")
         ui.button(icon="close", color=None, on_click=al_quitar).classes(
             "glosa-foco-explicacion-cerrar"
-        ).props('round flat size=xs ripple=false aria-label="Quitar foco"').tooltip("Quitar foco")
+        ).props('round flat ripple=false aria-label="Quitar foco"').tooltip("Quitar foco")
     return capsula

@@ -6,13 +6,13 @@ from tests.comun_estilos import analizar_tokens, hexadecimal_a_rgb, razon_contra
 RUTA_CSS = Path("src/frontend/recursos/css/base/tokens.css")
 
 HEXADECIMALES_MAREA_ESPERADOS = {
-    "--bg-page": "#CFE3F0",
-    "--bg-panel": "#BDD5E6",
-    "--bg-elevated": "#E4F0F8",
-    "--bg-calc-btn": "#D6E7F3",
-    "--input-bg": "#A9C6DB",
-    "--accent-soft": "#C2DEE8",
-    "--btn-primary-text": "#E4F0F8",
+    "--bg-page": "#D6E5EC",
+    "--bg-panel": "#C7DCE7",
+    "--bg-elevated": "#EDF5F8",
+    "--bg-calc-btn": "#E1EEF4",
+    "--input-bg": "#B5CFDE",
+    "--accent-soft": "#D0E4EE",
+    "--btn-primary-text": "#EDF5F8",
 }
 
 SOMBRAS_MAREA_ESPERADAS = {
@@ -41,8 +41,8 @@ MEDIANOCHE_ESPERADA = {
     "--input-bg": "#061D2E",
     "--text-main": "#EAF6FF",
     "--text-sec": "#B1D4F0",
-    "--accent": "#BFE6E1",
-    "--accent-soft": "#14403C",
+    "--accent": "#8DD5E8",
+    "--accent-soft": "#123A52",
     "--btn-primary-text": "#082338",
 }
 

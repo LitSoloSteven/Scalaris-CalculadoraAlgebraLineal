@@ -28,8 +28,7 @@ def _abrir_vista(monkeypatch):
 
 
 def _cargar(vista, indice):
-    vista.captura._selector_ejemplo.set_value(tuple(EJEMPLOS_OPERACIONES)[indice])
-    vista.captura.cargar_ejemplo()
+    vista.captura.cargar_ejemplo(tuple(EJEMPLOS_OPERACIONES)[indice])
 
 
 @pytest.mark.parametrize(("indice", "codigo", "cantidad"), [

@@ -8,7 +8,7 @@ from src.frontend.controladores.raices.biseccion.presentacion.presentacion_crite
 from src.frontend.controladores.raices.metodos_cerrados.adaptadores import BISECCION, METODOS
 from src.frontend.controladores.raices.regla_falsa.presentacion.presentacion_ampliada import descripcion_captura, titulo_configurado
 from src.frontend.controladores.compartido.sesion.sesion_matricial import registrar_calculo
-from src.frontend.vistas.raices.biseccion.captura.acciones_captura import desplegable
+from src.frontend.componentes.raices.captura.estructura_metodos_raices import crear_seccion_plegable
 
 
 class AccionesMetodosCerrados:
@@ -22,7 +22,12 @@ class AccionesMetodosCerrados:
 
     def construir(self) -> None:
         """Monta los recientes en una sección operable con teclado."""
-        with desplegable("Recientes de esta sesión"):
+        self.seccion = crear_seccion_plegable(
+            "Recientes de esta sesión",
+            icono="history",
+            subtitulo="Sin cálculos guardados",
+        )
+        with self.seccion:
             self._recientes = ui.column().classes("w-full min-w-0 gap-2")
         self._mostrar_recientes()
 
@@ -53,9 +58,15 @@ class AccionesMetodosCerrados:
         self._examenes[metodo] = activo
 
     def _mostrar_recientes(self) -> None:
+        total = sum(len(registros) for registros in self._historial.values())
+        if getattr(self, "seccion", None) is not None and not self.seccion.is_deleted:
+            subtitulo = "Sin cálculos guardados" if not total else (
+                "1 cálculo guardado" if total == 1 else f"{total} cálculos guardados"
+            )
+            self.seccion.props(f'caption="{subtitulo}"')
         self._recientes.clear()
         with self._recientes:
-            if not any(self._historial.values()):
+            if not total:
                 ui.label("Los cálculos con aproximación o filas válidas aparecerán aquí.").classes(
                     "text-sm texto-secundario")
             for metodo, registros in self._historial.items():

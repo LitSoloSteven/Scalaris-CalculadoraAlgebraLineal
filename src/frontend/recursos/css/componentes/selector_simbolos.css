@@ -72,6 +72,13 @@
     font-size: var(--fs-small);
 }
 
+.simbolos-ayuda {
+    display: block;
+    margin-top: var(--space-1);
+    color: var(--text-sec);
+    font-size: var(--fs-small);
+}
+
 .simbolos-filtros :is(input, select),
 .simbolos-copia input {
     display: block;

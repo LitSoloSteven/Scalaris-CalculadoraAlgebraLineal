@@ -10,7 +10,7 @@ def disposicion_2d(fig, *, rango_ejes: list[float], color_fuente: str, revision:
         paper_bgcolor=COLOR_TRANSPARENTE,
         plot_bgcolor=COLOR_TRANSPARENTE,
         font=dict(color=color_fuente, family='Space Grotesk, sans-serif'),
-        margin=dict(l=20, r=20, t=20, b=20),
+        margin=dict(l=44, r=20, t=44, b=56),
         xaxis=dict(
             gridcolor=COLOR_CUADRICULA,
             zerolinecolor=COLOR_CERO,
@@ -27,10 +27,10 @@ def disposicion_2d(fig, *, rango_ejes: list[float], color_fuente: str, revision:
         uirevision=revision,
         legend=dict(
             orientation='h',
-            yanchor='bottom',
-            y=1.02,
-            xanchor='right',
-            x=1,
+            yanchor='top',
+            y=-0.16,
+            xanchor='center',
+            x=0.5,
         ),
     )
 
@@ -41,8 +41,10 @@ def disposicion_3d(fig, *, rango_ejes: list[float], color_fuente: str, revision:
         paper_bgcolor=COLOR_TRANSPARENTE,
         plot_bgcolor=COLOR_TRANSPARENTE,
         font=dict(color=color_fuente, family='Space Grotesk, sans-serif'),
-        margin=dict(l=0, r=0, t=0, b=0),
+        margin=dict(l=44, r=16, t=30, b=56),
+        legend=dict(orientation='h', x=0.5, xanchor='center', y=0, yanchor='top'),
         scene=dict(
+            camera=dict(eye=dict(x=1.55, y=1.55, z=1.55)),
             xaxis=dict(backgroundcolor=COLOR_TRANSPARENTE, gridcolor=COLOR_CUADRICULA, range=rango_ejes),
             yaxis=dict(backgroundcolor=COLOR_TRANSPARENTE, gridcolor=COLOR_CUADRICULA, range=rango_ejes),
             zaxis=dict(backgroundcolor=COLOR_TRANSPARENTE, gridcolor=COLOR_CUADRICULA, range=rango_ejes),

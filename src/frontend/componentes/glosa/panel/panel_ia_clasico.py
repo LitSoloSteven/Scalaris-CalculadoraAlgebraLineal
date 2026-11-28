@@ -12,7 +12,13 @@ def construir_panel_clasico(instancia: Any) -> None:
     instancia.superposicion = ui.element("div").classes("ia-panel-superposicion")
     instancia.superposicion.on("click", instancia.alternar)
 
-    instancia.contenedor_panel = ui.column().classes("no-wrap ia-panel-superficie ia-panel-tarjeta")
+    instancia.contenedor_panel = ui.column().classes("no-wrap ia-panel-superficie ia-panel-tarjeta").props(
+        'id="ia-panel-clasico" tabindex="-1" role="dialog" aria-modal="true" aria-label="Glosa" aria-hidden="true"'
+    )
+    instancia.contenedor_panel.on(
+        "keydown.escape",
+        lambda _evento: instancia.alternar() if getattr(instancia, "esta_abierto", False) else None,
+    )
     with instancia.contenedor_panel:
         _construir_cabecera_clasico(instancia)
         instancia.area_chat = ui.column().classes("w-full flex-1 p-4 overflow-y-auto gap-2").props(
@@ -64,14 +70,47 @@ def actualizar_visibilidad_clasico(instancia: Any) -> None:
     """Aplica las clases y visibilidad modal según el estado abierto/cerrado."""
     if not instancia.contenedor_panel or not instancia.superposicion:
         return
-    if instancia.esta_abierto:
+    previo = getattr(instancia, "_clasico_abierto_previo", None)
+    abierto = bool(instancia.esta_abierto)
+    instancia._clasico_abierto_previo = abierto
+    if abierto:
         instancia.contenedor_panel.classes(remove="translate-x-[calc(100%+32px)] opacity-0 invisible pointer-events-none")
         instancia.contenedor_panel.classes(add="translate-x-0 opacity-100 visible pointer-events-auto")
+        instancia.contenedor_panel.props('aria-hidden="false"')
         instancia.superposicion.classes(remove="opacity-0 pointer-events-none").classes(add="opacity-100 pointer-events-auto")
+        if previo is not True:
+            _sincronizar_foco_clasico(True)
     else:
         instancia.contenedor_panel.classes(remove="translate-x-0 opacity-100 visible pointer-events-auto")
         instancia.contenedor_panel.classes(add="translate-x-[calc(100%+32px)] opacity-0 invisible pointer-events-none")
+        instancia.contenedor_panel.props('aria-hidden="true"')
         instancia.superposicion.classes(remove="opacity-100 pointer-events-auto").classes(add="opacity-0 pointer-events-none")
+        if previo is True:
+            _sincronizar_foco_clasico(False)
+
+
+def _sincronizar_foco_clasico(abierto: bool) -> None:
+    codigo = (
+        "const panel = document.getElementById('ia-panel-clasico');"
+        "const disparador = document.querySelector('[data-glosa-clasico-alternar]');"
+        "if (disparador) disparador.setAttribute('aria-expanded', 'true');"
+        "const activo = document.activeElement;"
+        "if (panel && activo && !panel.contains(activo)) panel._origenGlosa = activo;"
+        "const destino = panel?.querySelector('textarea, input, button') || panel;"
+        "if (destino && typeof destino.focus === 'function') destino.focus();"
+    ) if abierto else (
+        "const panel = document.getElementById('ia-panel-clasico');"
+        "const disparador = document.querySelector('[data-glosa-clasico-alternar]');"
+        "if (disparador) disparador.setAttribute('aria-expanded', 'false');"
+        "const origen = panel?._origenGlosa;"
+        "if (panel) panel._origenGlosa = null;"
+        "const destino = (origen && origen.isConnected && typeof origen.focus === 'function') ? origen : disparador;"
+        "if (destino && typeof destino.focus === 'function') destino.focus();"
+    )
+    try:
+        ui.run_javascript(codigo)
+    except RuntimeError:
+        return
 
 
 def renderizar_chat_clasico(instancia: Any) -> None:

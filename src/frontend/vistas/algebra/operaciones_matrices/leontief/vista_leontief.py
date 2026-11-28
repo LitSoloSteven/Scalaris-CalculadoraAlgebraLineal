@@ -37,29 +37,27 @@ class VistaLeontief(MixinGlosaModelos, MixinLimpiezaModelos, MixinCalculoLeontie
         herramienta = herramienta_por_identificador(self.herramienta_modelo)
         crear_estructura_aplicacion(self, ruta_activa=herramienta.ruta)
 
-        with ui.column().classes("w-full max-w-7xl mx-auto p-6 mt-4 vista-raiz"):
-            self.contenedor_transferencia = ui.column().classes('w-full')
-            with ui.row().classes("w-full items-center gap-3 mb-6"):
+        with ui.column().classes("w-full max-w-7xl mx-auto p-6 mt-4 vista-raiz disposicion-herramienta"):
+            self.contenedor_transferencia = ui.column().classes('w-full empty:hidden')
+            with ui.row().classes("w-full items-center gap-3 mb-2"):
                 ui.html(icono_svg(herramienta.icono)).classes("w-8 h-8 texto-acento")
                 with ui.column().classes("gap-0"):
-                    ui.label("Modelo de Leontief").classes("text-2xl font-bold texto-principal")
+                    ui.label("Modelo de Leontief").classes("text-2xl font-bold texto-principal").props('role="heading" aria-level="1"')
                     ui.label("Insumo-Producto · x = (I - C)^(-1) d").classes("text-sm texto-secundario")
 
-            with ui.element("div").classes("disposicion-dividida mb-8"):
-                with ui.column().classes("disposicion-panel"):
-                    self._construir_ejemplos()
-                    self._construir_selector_tamano()
-                    self._construir_panel_c()
-                    self._construir_panel_d()
-                    self._construir_panel_sectores()
-
+            with ui.element("div").classes("disposicion-captura-fila mb-2"):
+                with ui.column().classes("disposicion-panel gap-4"):
+                    self._construir_captura_modelo()
                     self._crear_accion_principal()
 
-                with ui.column().classes("disposicion-panel"):
-                    self.contenedor_resultados = ui.column().classes(
-                        "w-full panel-tarjeta p-6 items-center justify-center min-h-[400px]"
-                    ).props('id="resultados-leontief"')
-                    self._restablecer_resultados()
+                with ui.column().classes("disposicion-panel gap-4"):
+                    self._construir_panel_sectores()
+                    self.contenedor_herramientas = ui.column().classes("w-full min-w-0 gap-3")
+
+            self.contenedor_resultados = ui.column().classes(
+                "disposicion-resultados panel-tarjeta p-6 items-center justify-center min-h-[280px]"
+            ).props('id="resultados-leontief"')
+            self._restablecer_resultados()
         self._conectar_modelo()
         recibir_matriz_modelo(self, token_transferencia)
 

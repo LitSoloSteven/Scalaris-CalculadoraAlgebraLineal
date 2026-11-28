@@ -19,9 +19,38 @@
 }
 
 .subespacios-raiz .vectores-captura-lista {
-    flex-direction: column;
-    align-items: stretch;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 10.5rem), 1fr));
+    align-items: start;
+    gap: var(--space-4);
+    width: 100%;
     min-width: 0;
+}
+
+.subespacios-raiz .disposicion-captura-fila {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+@container (min-width: 1024px) {
+    .subespacios-raiz .disposicion-captura-fila {
+        grid-template-columns: minmax(0, 1.65fr) minmax(0, 0.75fr);
+    }
+}
+
+.subespacios-ayuda-lista {
+    border-top: 1px solid var(--border-input);
+    padding-top: var(--space-3);
+}
+
+.subespacios-ayuda-simbolo {
+    background: var(--bg-elevated);
+    color: var(--accent);
+    border: 1px solid var(--border-input);
+    border-radius: var(--radius-badge);
+    padding: 2px var(--space-2);
+    font-size: var(--fs-small);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
 }
 
 .subespacios-raiz .vectores-captura-tarjeta,
@@ -44,8 +73,10 @@
 
 .subespacios-raiz .vectores-captura-desplazamiento {
     overflow-x: auto;
+    overflow-y: visible;
     overscroll-behavior-x: contain;
     align-items: center;
+    padding-block: var(--space-1);
 }
 
 .subespacios-raiz .vectores-captura-celdas {
@@ -139,7 +170,7 @@
 .subespacios-figura {
     width: 100%;
     min-width: 0;
-    height: clamp(260px, 42dvh, 420px);
+    height: clamp(280px, 44dvh, 420px);
     overflow-x: auto;
 }
 

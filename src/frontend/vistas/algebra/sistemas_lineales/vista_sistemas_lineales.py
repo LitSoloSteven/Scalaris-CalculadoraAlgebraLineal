@@ -57,16 +57,16 @@ class VistaSistemasLineales(
         self.cuadricula.al_cambiar_datos = self._al_cambiar_cuadricula
         self.calculadora.inyectar_recursos_cliente()
 
-        with ui.column().classes('w-full max-w-7xl mx-auto p-6 mt-4 vista-raiz sesion-vista'):
-            self.contenedor_transferencia = ui.column().classes('w-full')
+        with ui.column().classes('w-full max-w-7xl mx-auto p-6 mt-4 vista-raiz sesion-vista disposicion-herramienta'):
+            self.contenedor_transferencia = ui.column().classes('w-full empty:hidden')
             self._renderizar_selectores()
 
-            with ui.element('div').classes('disposicion-dividida mb-8'):
+            with ui.element('div').classes('disposicion-captura-fila mb-2'):
                 self._renderizar_columna_edicion()
                 self._renderizar_columna_herramientas()
 
             self.contenedor_resultados = ui.column().classes(
-                'w-full panel-tarjeta p-6 items-center justify-center min-h-[400px]'
+                'disposicion-resultados panel-tarjeta p-6 items-center justify-center min-h-[400px]'
             ).props('id="sistemas-resultados"')
             self.restablecer_resultados()
             self.actualizar_botones_sincronizacion()
@@ -76,7 +76,7 @@ class VistaSistemasLineales(
 
     def _renderizar_selectores(self) -> None:
         """Renderiza tabs de modo (Matriz/Ecuaciones) y método (Gauss/Gauss-Jordan)."""
-        with ui.row().classes('w-full justify-between items-center mb-8 gap-4 flex-wrap'):
+        with ui.row().classes('w-full justify-between items-center mb-2 gap-4 flex-wrap'):
             with ui.tabs().classes('pestanas-controles sistemas-pestanas-modo').props('dense no-caps') as self.pestanas_modo:
                 ui.tab('Matriz', icon='grid_4x4')
                 ui.tab('Ecuaciones', icon='functions')
@@ -95,13 +95,13 @@ class VistaSistemasLineales(
             with ui.tab_panels(self.pestanas_modo, value='Matriz').classes(
                 'w-full p-0 overflow-hidden panel-tarjeta sistemas-panel-captura'
             ):
-                with ui.tab_panel('Matriz').classes('p-6'):
+                with ui.tab_panel('Matriz').classes('p-5'):
                     self.casilla_homogeneo = ui.checkbox("Sistema homogéneo Ax = 0", value=False,
                                                        on_change=lambda evento: cambiar_modo_homogeneo(self, evento.value))
                     self._crear_sincronizacion_ecuaciones()
                     self.cuadricula.construir_contenedor_cuadricula()
 
-                with ui.tab_panel('Ecuaciones').classes('p-6'):
+                with ui.tab_panel('Ecuaciones').classes('p-5'):
                     self._renderizar_panel_ecuaciones()
 
             with ui.row().classes('w-full mt-6 gap-4'):

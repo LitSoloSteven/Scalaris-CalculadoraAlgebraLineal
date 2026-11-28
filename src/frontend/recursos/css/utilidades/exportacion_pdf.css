@@ -29,12 +29,6 @@
     color: var(--text-main);
 }
 
-.pdf-tabla-entrada {
-    max-width: 100%;
-    overflow-x: auto;
-    font-variant-numeric: tabular-nums;
-}
-
 .pdf-secuencia > [data-pdf-captura] {
     padding-bottom: var(--space-4);
 }
@@ -42,7 +36,6 @@
 .pdf-tabla-entrada td {
     padding: var(--space-2) var(--space-4);
     text-align: center;
-    overflow-wrap: anywhere;
 }
 
 .pdf-error {
@@ -51,20 +44,19 @@
 
 .pdf-control {
     flex-shrink: 0;
+    min-height: 44px;
     max-width: 100%;
     white-space: normal;
 }
 
 .pdf-control:focus-visible {
-    outline: var(--space-1) solid var(--accent);
-    outline-offset: var(--space-1);
-    transform: none !important;
-    transition: none !important;
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
 }
 
 .pdf-portada .q-field:focus-within {
-    outline: var(--space-1) solid var(--accent);
-    outline-offset: var(--space-1);
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
 }
 
 .pdf-indicador {

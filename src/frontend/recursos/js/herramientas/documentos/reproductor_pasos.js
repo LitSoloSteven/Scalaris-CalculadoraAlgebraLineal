@@ -7,12 +7,6 @@
     revelar: function (identificador, texto) {
       var elemento = document.getElementById(identificador);
       if (!elemento) return;
-      var permitido = window.scalaris.movimiento && window.scalaris.movimiento.permitido ?
-        window.scalaris.movimiento.permitido() : true;
-      if (permitido && window.scalaris.efectoMaquinaEscribir) {
-        window.scalaris.efectoMaquinaEscribir(identificador, texto);
-        return;
-      }
       elemento.textContent = texto;
     },
     destellar: function (identificador) {

@@ -2,6 +2,7 @@
 from nicegui import ui
 
 from src.backend.resolutores.raices.compartido.unidades_angulares import UNIDADES_ANGULARES
+from src.frontend.componentes.aplicacion.controles.selector_opciones import estilizar_desplegable
 from src.frontend.componentes.raices.captura.campo_funcion_real import crear_campo_funcion
 from .estado_captura import PREFERENCIAS_INICIALES
 from src.frontend.vistas.raices.regla_falsa.base.modos_captura import MODO_INTERVALO, construir_modos, region_modo
@@ -11,10 +12,11 @@ from src.frontend.vistas.raices.regla_falsa.base.selector_criterio import constr
 def construir_captura(vista) -> None:
     """Monta expresión, extremos y preferencias sin interpretar los valores introducidos."""
     vista.expresion = crear_campo_funcion()
-    vista.unidad_angular = ui.select(
-        {unidad: unidad.capitalize() for unidad in UNIDADES_ANGULARES},
-        value=PREFERENCIAS_INICIALES["unidad_angular"], label="Unidad trigonométrica",
-    ).classes("w-full matriz-entrada")
+    vista.unidad_angular = estilizar_desplegable(
+        ui.select({unidad: unidad.capitalize() for unidad in UNIDADES_ANGULARES},
+                  value=PREFERENCIAS_INICIALES["unidad_angular"], label="Unidad trigonométrica"),
+        "w-full matriz-entrada",
+    )
     construir_modos(vista)
     _construir_parada(vista)
     with region_modo(vista, MODO_INTERVALO):

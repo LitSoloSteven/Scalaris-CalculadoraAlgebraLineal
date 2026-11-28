@@ -20,10 +20,19 @@ class MixinSesionMatricial:
         """Programa la vista previa cancelable de la captura actual."""
         programar_vista_previa(self)
 
+    def _invalidar_resultado_y_transferencia(self) -> None:
+        invalidar_resultado(self)
+        transferencia = getattr(self, 'contenedor_transferencia', None)
+        if transferencia is not None and not transferencia.is_deleted:
+            transferencia.clear()
+        if hasattr(self, 'panel_ia'):
+            self.panel_ia.limpiar_foco_explicacion()
+        actualizar_contexto(self)
+
     def _renderizar_columna_herramientas(self) -> None:
         """Compone teclado, vista previa e historial con los controles de la sesion."""
         with ui.column().classes('disposicion-panel sesion-panel-herramientas'):
-            with ui.tabs().classes('pestanas-controles w-full').props('dense no-caps') as self.pestanas_herramientas:
+            with ui.tabs().classes('pestanas-controles w-full sesion-pestanas-herramientas').props('dense no-caps') as self.pestanas_herramientas:
                 ui.tab('teclado', label='Teclado')
                 ui.tab('vista_previa', label='Vista previa')
                 ui.tab('historial', label='Historial')

@@ -78,15 +78,10 @@ html[data-entrada="teclado"] .biseccion-pestanas .q-tab { transform: none; trans
   font-weight: 600;
   overflow-wrap: anywhere;
 }
-.biseccion-numero, .biseccion-tolerancia, .biseccion-tabla {
+.biseccion-numero, .biseccion-tolerancia {
   font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
 }
-.biseccion-tabla { overflow-x: auto; }
-.biseccion-tabla .q-table__container { background: var(--bg-elevated); color: var(--text-main); }
-.biseccion-tabla .q-table { min-width: 1120px; }
-.biseccion-tabla .q-table__middle { overflow: visible; }
-.biseccion-tabla .q-table__bottom { flex-wrap: wrap; }
 .biseccion-grafica { min-height: 340px; }
 .biseccion-marco-grafico { position: relative; isolation: isolate; }
 .biseccion-recorte-banda { position: absolute; overflow: hidden; pointer-events: none; }

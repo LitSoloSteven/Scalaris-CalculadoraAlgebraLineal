@@ -79,8 +79,7 @@ class SalidaMetodosCerrados:
         )
         if velocidad is not None:
             self.reproductor.velocidad = velocidad
-        if respuesta.get("iteraciones") or datos["metodo"] != BISECCION:
-            self._montar_tabla(datos)
+        self._montar_tabla(datos)
         with self.vista.contenedor_procedimiento:
             self.reproductor.construir()
 

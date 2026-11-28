@@ -6,6 +6,30 @@ from src.backend.utilidades.validacion.reglas_dominio import BASES_NUMERICAS, va
 from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto, notificar_edicion
 
 
+_REFERENCIA_DIGITOS = {
+    'decimal': 'Dígitos válidos en decimal: 0–9 (signo opcional −).',
+    'binario': 'Dígitos válidos en binario: 0 y 1 (prefijo opcional 0b, signo opcional −).',
+    'octal': 'Dígitos válidos en octal: 0–7 (prefijo opcional 0o, signo opcional −).',
+    'hexadecimal': 'Dígitos válidos en hexadecimal: 0–9 y A–F (prefijo opcional 0x, signo opcional −).',
+}
+
+
+async def _leer_portapapeles_cliente() -> dict:
+    """Lee el portapapeles del navegador y distingue vacío de rechazo de permisos."""
+    script = (
+        "(async () => { try { "
+        "if (!navigator.clipboard?.readText) return {estado: 'error'}; "
+        "const texto = await navigator.clipboard.readText(); "
+        "return texto && texto.trim() ? {estado: 'ok', texto: texto.trim()} : {estado: 'vacio'}; "
+        "} catch { return {estado: 'error'}; } })()"
+    )
+    resultado = await ui.run_javascript(script, timeout=3.0)
+    if isinstance(resultado, str):
+        limpio = resultado.strip()
+        return {'estado': 'ok', 'texto': limpio} if limpio else {'estado': 'vacio'}
+    return resultado if isinstance(resultado, dict) else {'estado': 'error'}
+
+
 class MixinInteraccionSistemasNumericos:
     """Maneja cambios de base, portapapeles, eventos de entrada y desincronización visual."""
 
@@ -14,7 +38,7 @@ class MixinInteraccionSistemasNumericos:
             return
         self.base_activa = evento.value
         notificar_edicion(self)
-        self._actualizar_ejemplos()
+        self._actualizar_referencia_digitos()
         actualizar_contexto(self)
         if hasattr(self, 'entrada_valor'):
             try:
@@ -48,22 +72,10 @@ class MixinInteraccionSistemasNumericos:
             except RuntimeError:
                 pass
 
-    def _actualizar_ejemplos(self):
-        self.contenedor_ejemplos.clear()
-        ejemplos = {
-            'hexadecimal': ['FF', '1A', 'A5'],
-            'decimal': ['255', '42', '128'],
-            'binario': ['11111111', '101010', '10000000'],
-            'octal': ['377', '52', '200']
-        }.get(self.base_activa, [])
-
-        with self.contenedor_ejemplos:
-            for ejemplo in ejemplos:
-                ui.button(
-                    ejemplo,
-                    on_click=lambda evento, valor=ejemplo: self._establecer_entrada(valor),
-                    color=None
-                ).classes('boton-discreto py-0 px-3 min-h-0 text-xs font-mono').props('ripple=false')
+    def _actualizar_referencia_digitos(self):
+        referencia = getattr(self, 'etiqueta_referencia_digitos', None)
+        if referencia is not None:
+            referencia.set_text(_REFERENCIA_DIGITOS.get(self.base_activa, ''))
 
     def _establecer_entrada(self, valor):
         self.entrada_valor.set_value(valor)
@@ -71,11 +83,20 @@ class MixinInteraccionSistemasNumericos:
 
     async def _pegar_portapapeles(self):
         try:
-            valor = await ui.run_javascript('navigator.clipboard.readText()', timeout=15)
-            if valor:
-                self._establecer_entrada(valor.strip())
+            resultado = await _leer_portapapeles_cliente()
         except Exception:
-            self.etiqueta_error.text = "Error al pegar: permiso denegado o portapapeles vacío."
+            resultado = {'estado': 'error'}
+        estado = resultado.get('estado')
+        if estado == 'ok':
+            self._establecer_entrada(resultado['texto'])
+            return
+        mensaje = (
+            'El portapapeles está vacío. Copia un número o escríbelo directamente.'
+            if estado == 'vacio'
+            else 'No pudimos leer el portapapeles. Pega con Ctrl+V o escribe el número.'
+        )
+        self.etiqueta_error.text = mensaje
+        notificar(mensaje, type='warning')
 
     async def _copiar_resultado(self, identificador_base, boton):
         valor = self.resultados.get(identificador_base, '').replace(' ', '')

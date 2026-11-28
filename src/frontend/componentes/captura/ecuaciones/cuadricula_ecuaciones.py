@@ -39,10 +39,10 @@ def _construir_botones_tamanos(cuadricula: Any) -> None:
     with ui.column().classes("gap-2 mt-12 items-center justify-center mr-2"):
         cuadricula.boton_agregar_fila = ui.button(
             icon="add", on_click=partial(cuadricula.ajustar_tamano, incremento_filas=1), color=None
-        ).classes("boton-icono w-8 h-8 p-0 flex-shrink-0").props('ripple=false aria-label="Añadir Ecuacion"').tooltip("Añadir Ecuacion")
+        ).classes("boton-icono p-0 flex-shrink-0").props('ripple=false aria-label="Añadir Ecuacion"').tooltip("Añadir Ecuacion")
         cuadricula.boton_quitar_fila = ui.button(
             icon="remove", on_click=partial(cuadricula.ajustar_tamano, incremento_filas=-1), color=None
-        ).classes("boton-icono w-8 h-8 p-0 flex-shrink-0").props('ripple=false aria-label="Quitar Ecuacion"').tooltip("Quitar Ecuacion")
+        ).classes("boton-icono p-0 flex-shrink-0").props('ripple=false aria-label="Quitar Ecuacion"').tooltip("Quitar Ecuacion")
 
 
 def _construir_botones_variables(cuadricula: Any) -> None:
@@ -50,10 +50,10 @@ def _construir_botones_variables(cuadricula: Any) -> None:
     with ui.row().classes("w-full justify-center gap-2 mt-4"):
         cuadricula.boton_agregar_columna = ui.button(
             icon="add", on_click=partial(cuadricula.ajustar_tamano, incremento_columnas=1), color=None
-        ).classes("boton-icono w-8 h-8 p-0 flex-shrink-0").props('ripple=false aria-label="Añadir Variable"').tooltip("Añadir Variable")
+        ).classes("boton-icono p-0 flex-shrink-0").props('ripple=false aria-label="Añadir Variable"').tooltip("Añadir Variable")
         cuadricula.boton_quitar_columna = ui.button(
             icon="remove", on_click=partial(cuadricula.ajustar_tamano, incremento_columnas=-1), color=None
-        ).classes("boton-icono w-8 h-8 p-0 flex-shrink-0").props('ripple=false aria-label="Quitar Variable"').tooltip("Quitar Variable")
+        ).classes("boton-icono p-0 flex-shrink-0").props('ripple=false aria-label="Quitar Variable"').tooltip("Quitar Variable")
 
 
 def _renderizar_fila_entradas(cuadricula: CuadriculaEcuaciones, i: int) -> None:

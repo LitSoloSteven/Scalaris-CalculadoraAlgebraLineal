@@ -6,11 +6,13 @@ import asyncio
 import json
 import logging
 import html
+import re
 
 from ._cuerpo_reproductor_matrices import renderizar_cuerpo_matrices
 
 from nicegui import ui
 from src.frontend.componentes.aplicacion.base.sonido import notificar
+from src.frontend.componentes.captura.nucleo.cuadricula_base import ubicar_celda_matriz
 from src.frontend.componentes.resultados.acciones.avisos_resultado import mostrar_error_inesperado, renderizar_aviso_resultado
 from src.frontend.componentes.glosa.interaccion.glosa_foco import crear_accion_explicacion
 from src.frontend.componentes.exportacion_pdf.montaje.integracion import region_pdf, completar_exportacion, identificador_raiz
@@ -40,7 +42,6 @@ class MixinResultadosOperacionesMatrices:
             self.restablecer_resultados()
             notificar('Ingresa una expresión para evaluar.', type='warning')
             return
-
         if getattr(self, "_calculando", False):
             return
         self._calculando = True
@@ -77,8 +78,12 @@ class MixinResultadosOperacionesMatrices:
         if version != self._version_solicitud or self.entrada_expresion.value != expresion:
             self.restablecer_resultados()
             return
-
         captura = self._capturar_evaluacion()
+        vacia = self._primera_celda_vacia(captura)
+        if vacia:
+            self._mostrar_celda_vacia(*vacia)
+            return
+
         calculo = await ejecutar_calculo_vigente(
             self, self._capturar_evaluacion,
             lambda captura: ControladorOperacionesMatrices.procesar_expresion(
@@ -93,6 +98,20 @@ class MixinResultadosOperacionesMatrices:
 
         self._presentar_evaluacion(respuesta, captura['matrices'])
         ui.run_javascript('if(window.scalaris && window.scalaris.renderizarMathJax) window.scalaris.renderizarMathJax();')
+
+    def _mostrar_celda_vacia(self, nombre: str, fila: int, columna: int) -> None:
+        self.restablecer_resultados()
+        self.contenedor_resultados.clear()
+        mensaje = f'La celda {nombre}[{fila + 1},{columna + 1}] está vacía. Ingresa un número antes de evaluar.'
+        with self.contenedor_resultados:
+            self.contenedor_resultados.classes(remove='items-center justify-center', add='items-start justify-start')
+            renderizar_aviso_resultado(mensaje, 'close', 'items-center gap-2 px-4 py-2 distintivo-error mb-4 w-fit')
+        self._marcar_celda_invalida(nombre, fila, columna)
+
+    def _marcar_celda_invalida(self, nombre: str, fila: int, columna: int) -> None:
+        self._celda_invalida = self.panel_captura_matrices.matrices[nombre]['entradas'][fila][columna]
+        self._celda_invalida.props('aria-invalid=true')
+        ubicar_celda_matriz(nombre, fila, columna)
 
     def _presentar_evaluacion(self, respuesta: dict, matrices: dict) -> None:
         self.contenedor_resultados.clear()
@@ -118,10 +137,25 @@ class MixinResultadosOperacionesMatrices:
         return {'expresion': self.entrada_expresion.value,
                 'matrices': self.panel_captura_matrices.obtener_datos_crudos()}
 
+    def _primera_celda_vacia(self, captura: dict) -> tuple[str, int, int] | None:
+        usadas = re.findall(r'(?<![A-Za-z0-9_^])([A-Z])(?![A-Za-z0-9_])', captura['expresion'])
+        matrices = captura['matrices']
+        for nombre in dict.fromkeys(usadas):
+            datos = matrices.get(nombre, {}).get('datos', ())
+            vacia = next(((nombre, fila, columna)
+                          for fila, valores in enumerate(datos)
+                          for columna, valor in enumerate(valores)
+                          if valor is None or not str(valor).strip()), None)
+            if vacia is not None:
+                return vacia
+        return None
+
     def _renderizar_transferencias(self, respuesta: dict, matrices: dict) -> None:
         if respuesta.get('estado') != 'EXITO':
             return
-        for nombre, matriz in matrices.items():
+        usadas = set(re.findall(r'(?<![A-Za-z0-9_^])([A-Z])(?![A-Za-z0-9_])', self.entrada_expresion.value or ''))
+        candidatas = {nombre: matriz for nombre, matriz in matrices.items() if nombre in usadas} or matrices
+        for nombre, matriz in candidatas.items():
             ui.label(textos.TRANSFERENCIA_MATRIZ_CAPTURADA.format(nombre=nombre)).classes(
                 'font-semibold texto-principal')
             renderizar_acciones_matriz('matrices', matriz['datos'])
@@ -138,8 +172,12 @@ class MixinResultadosOperacionesMatrices:
     def _renderizar_estado_y_sugerencias(self, respuesta: dict):
         """Presenta el estado recibido y las sugerencias contextuales de Glosa."""
         if respuesta.get("estado") == "ERROR":
-            renderizar_aviso_resultado(respuesta.get("mensaje", "Error desconocido"), 'close',
+            mensaje = respuesta.get("mensaje", "Error desconocido")
+            renderizar_aviso_resultado(mensaje, 'close',
                                       'items-center gap-2 px-4 py-2 distintivo-error mb-4 w-fit')
+            coincidencia = re.search(r'Matriz ([A-Z]), celda \[(\d+),(\d+)\]', mensaje)
+            if coincidencia:
+                self._marcar_celda_invalida(coincidencia.group(1), int(coincidencia.group(2)) - 1, int(coincidencia.group(3)) - 1)
         else:
             renderizar_aviso_resultado(respuesta.get("mensaje", "Éxito"), 'check',
                                       'items-center gap-2 px-4 py-2 distintivo-exito mb-6 w-fit')

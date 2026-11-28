@@ -15,10 +15,21 @@
   min-height: 20px;
   overflow-wrap: anywhere;
 }
-.numericos-ejemplo {
-  background: var(--bg-panel);
-  border-color: var(--border-input);
-  box-shadow: var(--elev-2);
+.numericos-pestanas .q-tab {
+  padding-inline: var(--space-2) !important;
+  min-width: 0;
+}
+.numericos-pestanas .q-tab__label {
+  white-space: normal;
+  line-height: 1.2;
+  text-transform: none;
+  overflow-wrap: anywhere;
+}
+.numericos-referencia {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius-input);
+  padding: var(--space-3);
 }
 .numericos-resultado {
   background: var(--bg-elevated);
@@ -31,6 +42,25 @@
 .numericos-tarjeta-conversion {
   min-height: 120px;
   opacity: 0;
+}
+@media (max-width: 767px) {
+  .numericos-acciones-base {
+    padding-inline-end: var(--space-5);
+  }
+}
+@media (max-width: 420px) {
+  .numericos-operandos-fila {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .numericos-operandos-fila > div {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+  .numericos-operandos-fila .q-field {
+    flex: 1 1 100%;
+    width: 100%;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .numericos-tarjeta-conversion { transform: none; }

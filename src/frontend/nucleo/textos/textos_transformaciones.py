@@ -12,8 +12,7 @@ OPCIONES_OBJETO = (
 TITULO = "Transformaciones lineales"
 DESCRIPCION = "Aplica una matriz o explora su núcleo, imagen, rango y nulidad."
 AVISO_ACADEMICO = (
-    "Alcance académico pendiente de confirmación: el calendario de P5 contempla "
-    "aplicaciones matriciales y la rúbrica menciona subespacios. Aquí puedes explorar ambos contenidos."
+    "Explora la aplicación matricial sobre vectores o puntos y el análisis de núcleo, imagen, rango y nulidad."
 )
 CONVENCION = (
     "Las coordenadas se interpretan respecto al origen y se multiplican como un vector columna: "

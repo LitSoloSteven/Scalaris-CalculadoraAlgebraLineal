@@ -5,11 +5,13 @@ import asyncio
 import logging
 from nicegui import ui
 
+from src.frontend.componentes.captura.ecuaciones.limpieza_captura import crear_boton_limpieza
 from src.frontend.componentes.glosa.panel.panel_ia import PanelIA
 from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.aplicacion.base.tareas import lanzar_tarea
 from src.frontend.nucleo.constantes import ANTIRREBOTE_GEOMETRIA_SEGUNDOS
-from src.frontend.navegacion import ruta_de
+from src.frontend.navegacion import herramienta_por_identificador, ruta_de
+from src.frontend.nucleo.textos.textos import LIMPIEZA_VISUALIZAR
 from src.frontend.controladores.compartido.sesion.sesion_matricial import actualizar_contexto, notificar_edicion
 from src.frontend.vistas.geometria.controles.mixin_controles import MixinControlesGeometria
 from src.frontend.vistas.geometria.controles.limpieza_geometria import MixinLimpiezaGeometria
@@ -72,22 +74,37 @@ class VistaGeometria(MixinLimpiezaGeometria, MixinControlesGeometria, MixinEscen
     def _construir_contenedores(self):
         with (
             ui.column().classes('w-full max-w-7xl mx-auto p-6 mt-4 vista-raiz geometria-raiz'),
-            ui.element('div').classes('disposicion-dividida'),
+            ui.element('div').classes('disposicion-herramienta'),
         ):
-            self._construir_panel_entrada()
+            ui.html(herramienta_por_identificador('visualizador').nombre, tag='h1').classes(
+                'text-2xl font-bold texto-principal'
+            )
+            with (
+                ui.element('div').classes('disposicion-captura-fila'),
+                ui.column().classes('geometria-captura-bloque'),
+            ):
+                self.contenedor_controles = ui.column().classes('geometria-contenedor geometria-captura-centrada')
+                self._construir_panel_auxiliar()
             self._construir_panel_salida()
 
-    def _construir_panel_entrada(self):
-        with ui.column().classes('disposicion-panel p-6 bg-[var(--bg-page)] geometria-panel'):
-            self.contenedor_controles = ui.column().classes('geometria-contenedor')
+    def _construir_panel_auxiliar(self):
+        with ui.column().classes('geometria-contenedor'):
+            with ui.row().classes('w-full items-center gap-4 geometria-acciones'):
+                crear_boton_limpieza(
+                    self, lambda: not self.contenedor_controles.is_deleted,
+                    lambda: [self.contenedor_controles],
+                )
+                ui.button(LIMPIEZA_VISUALIZAR, on_click=self._visualizar_captura, color=None).classes(
+                    'boton-principal flex-[2] py-3'
+                ).props('ripple=false')
+            self.contenedor_deslizador = ui.column().classes('geometria-contenedor')
 
     def _construir_panel_salida(self):
-        with ui.column().classes('disposicion-panel p-6 bg-[var(--bg-page)] geometria-panel') as salida:
+        with ui.column().classes('disposicion-resultados geometria-panel') as salida:
             self.contenedor_exportacion_pdf = salida
             self.contenedor_estado = ui.column().classes('geometria-contenedor')
             self.contenedor_figura = ui.column().classes('geometria-contenedor').props(
                 'data-pdf-captura=visualizador-figura data-pdf-motor=plotly')
-            self.contenedor_deslizador = ui.column().classes('geometria-contenedor')
             self.contenedor_resumen = ui.column().classes('geometria-contenedor')
             self.contenedor_acciones_pdf = ui.column().classes('geometria-contenedor')
 

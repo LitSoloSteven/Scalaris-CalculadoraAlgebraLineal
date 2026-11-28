@@ -10,10 +10,98 @@
     width: 100%;
 }
 
+.geometria-captura-bloque {
+    width: 100%;
+    max-width: 56rem;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+    min-width: 0;
+}
+
+.geometria-captura-centrada {
+    width: 100%;
+    align-items: center;
+    --cell-w: clamp(5.25rem, 8.5vw, 7rem);
+}
+
+.geometria-captura-centrada .cuadricula-area-desplazamiento {
+    width: 100%;
+    min-width: 0;
+    align-items: safe center;
+}
+
+.geometria-captura-centrada .vectores-captura-lista {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: var(--space-4);
+    width: 100%;
+    min-width: 0;
+}
+
+.geometria-captura-centrada .vectores-captura-tarjeta {
+    flex: 1 1 min(100%, 13.5rem);
+    width: auto;
+    min-width: min(100%, 11.5rem);
+    max-width: 24rem;
+    align-items: stretch;
+}
+
+.geometria-captura-centrada .vectores-captura-tarjeta-fila {
+    flex: 1 1 100%;
+    width: 100%;
+    max-width: 100%;
+}
+
+.geometria-captura-centrada .vectores-captura-cabecera {
+    min-height: 44px;
+}
+
+.geometria-captura-centrada .vectores-captura-desplazamiento {
+    width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    align-items: safe center;
+}
+
+.geometria-captura-centrada .vectores-captura-celdas {
+    width: 100%;
+    min-width: min-content;
+}
+
+.geometria-captura-centrada .vectores-captura-columna {
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.geometria-captura-centrada .vectores-captura-columna .cuadricula-celda {
+    width: 100%;
+    min-width: min(100%, var(--cell-w));
+}
+
+.geometria-captura-centrada .vectores-captura-fila .cuadricula-celda {
+    flex: 1 0 var(--cell-w);
+    min-width: var(--cell-w);
+}
+
+.geometria-acciones {
+    width: 100%;
+    max-width: 36rem;
+    margin-inline: auto;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+}
+
 .geometria-figura {
     min-width: 0;
     width: 100%;
-    height: 400px;
+    height: clamp(300px, 100cqw, 400px);
     overflow-x: auto;
 }
 

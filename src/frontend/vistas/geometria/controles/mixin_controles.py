@@ -2,8 +2,6 @@
 from __future__ import annotations
 
 from nicegui import ui
-from src.frontend.componentes.captura.ecuaciones.limpieza_captura import crear_boton_limpieza
-from src.frontend.nucleo.textos.textos import LIMPIEZA_VISUALIZAR
 from src.backend.geometria.preparacion.transferencia import LIMITES_VECTORES_ESCENA
 from src.frontend.componentes.captura.ecuaciones.cuadricula_ecuaciones import CuadriculaEcuaciones
 from src.frontend.controladores.geometria.base.captura import construir_carga_sistema, construir_carga_vectores
@@ -26,12 +24,6 @@ class MixinControlesGeometria:
         if constructor:
             with self.contenedor_controles:
                 constructor()
-                with ui.row().classes('w-full gap-4 mt-6'):
-                    crear_boton_limpieza(self, lambda: not self.contenedor_controles.is_deleted,
-                                          lambda: [self.contenedor_controles])
-                    ui.button(LIMPIEZA_VISUALIZAR, on_click=self._visualizar_captura, color=None).classes(
-                        'boton-principal flex-[2] py-3'
-                    ).props('ripple=false')
 
     def _construir_controles_rectas(self):
         self.cuadricula = CuadriculaEcuaciones(filas_iniciales=2, columnas_iniciales=2)
