@@ -151,6 +151,7 @@
     border-radius: var(--radius-input) !important;
     box-shadow: var(--elev-inset) !important;
     min-height: 44px;
+    padding: var(--space-1) var(--space-3) !important;
 }
 
 .selector-controles .q-field__control:before,
@@ -167,8 +168,28 @@
     text-align: center;
 }
 
+.selector-controles.q-field--labeled .q-field__native,
+.selector-controles.q-field--labeled .q-field__input {
+    justify-content: flex-start;
+    text-align: start !important;
+    font-size: var(--fs-body);
+    font-weight: 500;
+}
+
+.selector-controles .q-field__label {
+    color: var(--text-sec) !important;
+}
+
+.selector-controles.q-field--highlighted .q-field__label {
+    color: var(--accent) !important;
+}
+
 .selector-controles .q-field__marginal .q-icon {
     color: var(--text-sec) !important;
+}
+
+.selector-controles .q-select__dropdown-icon {
+    transition: transform var(--dur-state) var(--ease-std);
 }
 
 .selector-controles.q-field--focused .q-field__control {
@@ -185,6 +206,13 @@
 .selector-menu .q-item {
     color: var(--text-main) !important;
     border-radius: var(--radius-input) !important;
+    min-height: 44px;
+    padding: var(--space-2) var(--space-3);
+}
+
+.selector-menu .q-item__label {
+    white-space: normal;
+    overflow-wrap: anywhere;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -193,13 +221,28 @@
     }
 }
 
+.selector-menu .q-item:focus-visible,
 .selector-menu .q-item.q-manual-focusable--focused {
     background: var(--accent-soft) !important;
+    outline: 2px solid var(--focus-ring);
+    outline-offset: -2px;
 }
 
 .selector-menu .q-item--active {
+    background: var(--accent-soft) !important;
     color: var(--accent) !important;
     font-weight: 700;
+    box-shadow: inset 3px 0 0 var(--accent);
+}
+
+html[data-entrada="teclado"] .selector-controles .q-select__dropdown-icon {
+    transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .selector-controles .q-select__dropdown-icon {
+        transition: none !important;
+    }
 }
 
 .casilla-controles .q-checkbox__label {

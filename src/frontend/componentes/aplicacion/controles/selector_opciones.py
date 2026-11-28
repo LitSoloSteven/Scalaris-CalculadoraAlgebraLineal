@@ -74,3 +74,9 @@ class SelectorOpciones(ValueElement):
         contenedor.props.update({'role': 'region', 'aria-labelledby': boton.html_id})
         boton.props['aria-controls'] = contenedor.html_id
         return contenedor.bind_visibility_from(self, 'value', backward=lambda actual: actual == valor)
+
+
+def estilizar_desplegable(selector: ui.select, clases_extra: str = '') -> ui.select:
+    """Aplica al desplegable nativo el lenguaje visual, foco y menú de Scalaris."""
+    clases = f'selector-controles {clases_extra}'.strip()
+    return selector.classes(clases).props('popup-content-class="selector-menu"')
