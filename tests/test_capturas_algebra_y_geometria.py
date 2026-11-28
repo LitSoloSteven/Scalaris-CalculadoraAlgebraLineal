@@ -70,6 +70,7 @@ def test_css_expande_cuadriculas_y_distribuye_tarjetas():
 def test_vistas_fase_dos_sin_placeholders_ni_controles_de_ejemplo(monkeypatch, _rutas_completas, herramienta, parametros):
     """Ninguna vista de Fase 2 expone placeholders de muestra ni botones o selectores de ejemplo."""
     async def comprobar(_vista, cliente):
+        """Recorre controles de entrada, botones y selectores buscando muestras o placeholders."""
         for elemento in cliente.elements.values():
             if isinstance(elemento, ui.input):
                 placeholder = str(elemento._props.get("placeholder") or "")
@@ -87,6 +88,7 @@ def test_vistas_fase_dos_sin_placeholders_ni_controles_de_ejemplo(monkeypatch, _
 def test_matrices_separa_anadir_matriz_y_limpia_expresion(monkeypatch):
     """El boton Anadir matriz precede a la fila dividida y la columna captura abre con Matriz A."""
     async def comprobar(vista, cliente):
+        """Comprueba disposicion de Anadir matriz, campo de expresion y estado vacio."""
         fila = next(el for el in cliente.elements.values() if "disposicion-captura-fila" in el._classes)
         assert len(fila.default_slot.children) == 2
         botones_anadir = [el for el in cliente.elements.values() if isinstance(el, ui.button) and el.text == "Añadir matriz"]
@@ -101,6 +103,7 @@ def test_matrices_separa_anadir_matriz_y_limpia_expresion(monkeypatch):
 def test_iterativos_limpieza_comun_y_disposicion(monkeypatch, _rutas_completas):
     """Iterativos separa el selector sobre la fila dividida y limpia captura, resultado y Glosa."""
     async def comprobar(vista, cliente):
+        """Verifica orden del selector, parametros y flujo completo de limpieza."""
         fila = next(el for el in cliente.elements.values() if "disposicion-captura-fila" in el._classes)
         assert vista.captura.selector not in list(fila.descendants())
         parametros = list(fila.default_slot.children[1].descendants())
@@ -135,6 +138,7 @@ def test_modelos_ocultan_nombres_en_desplegables(monkeypatch):
     """Leontief y Transformaciones mueven los nombres opcionales a secciones expansion."""
     for herramienta in ("leontief", "transformaciones"):
         async def comprobar(vista, cliente):
+            """Comprueba que existan secciones expansion para nombres opcionales."""
             expansiones = [el for el in cliente.elements.values() if isinstance(el, ui.expansion)]
             etiquetas = [el._props.get("label", "") for el in expansiones]
             assert any("opcional" in etiqueta.lower() for etiqueta in etiquetas)
@@ -145,10 +149,11 @@ def test_modelos_ocultan_nombres_en_desplegables(monkeypatch):
 def test_vectores_escalar_vacio_y_orientacion_fila(monkeypatch):
     """Operaciones con vectores inicia escalar vacio y alterna la clase de fila completa."""
     async def comprobar(vista, _cliente):
+        """Comprueba escalar inicial vacio y alternancia de clase fila completa."""
         assert vista.valor_escalar == ""
         assert vista.esta_completamente_vacio()
         panel = vista.panel_suma_resta
-        tarjeta = panel.vectores["u"]["tarjeta"]
+        tarjeta = panel._tarjetas["u"]
         assert "vectores-captura-tarjeta-fila" not in tarjeta._classes
         panel.alternar_orientacion("u")
         assert "vectores-captura-tarjeta-fila" in tarjeta._classes
@@ -162,6 +167,7 @@ def test_vectores_escalar_vacio_y_orientacion_fila(monkeypatch):
 def test_subespacios_ayuda_compacta_limpieza_y_orden(monkeypatch, _rutas_completas, modo):
     """Espacios y subespacios usa ayuda compacta, limpieza comun y conserva el orden vectorial."""
     async def comprobar(vista, cliente):
+        """Comprueba ayuda compacta, orden vectorial y limpieza comun en cada modo."""
         simbolos = [el for el in cliente.elements.values() if "subespacios-ayuda-simbolo" in el._classes]
         assert len(simbolos) >= 3
         botones = [el for el in cliente.elements.values() if el._props.get("id") == "boton-limpiar-principal"]
@@ -198,6 +204,7 @@ def test_subespacios_ayuda_compacta_limpieza_y_orden(monkeypatch, _rutas_complet
 def test_visualizador_centra_captura_sobre_acciones(monkeypatch, escena):
     """Las tres escenas agrupan la captura arriba y las acciones debajo dentro del bloque centrado."""
     async def comprobar(vista, cliente):
+        """Comprueba orden de controles centrados sobre acciones en cada escena."""
         bloque = next(el for el in cliente.elements.values() if "geometria-captura-bloque" in el._classes)
         hijos = bloque.default_slot.children
         assert vista.contenedor_controles is hijos[0]

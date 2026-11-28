@@ -8,6 +8,14 @@ from tests.comun_exportacion_pdf import PORTADA, crear_captura
 from tests.comun_exportacion_algebra import construir_algebra, regiones_control
 
 
+def _cargar_operacion_vectorial(vista, operacion, datos):
+    vista.pestanas.set_value(operacion)
+    if operacion == 'escalar':
+        vista.entrada_escalar.set_value('2')
+    for vector, valores in zip(vista.panel_vectorial.vectores.values(), datos):
+        vector['celdas'] = dict(enumerate(valores))
+
+
 @pytest.mark.parametrize('operacion,datos,estado', [
     ('suma_resta', [['1', '2', '3'], ['3', '2', '1']], 'EXITO'),
     ('escalar', [['1', '2', '3']], 'EXITO'),
@@ -21,9 +29,7 @@ def test_operaciones_vectoriales_no_capturan_regiones_vacias(monkeypatch, operac
     """Coeficientes ausentes, independencia y errores conservan regiones y acciones correctas."""
     async def comprobar(vista, cliente):
         """Calcula cada operación y valida el documento desde su marcado real."""
-        vista.pestanas.set_value(operacion)
-        for vector, valores in zip(vista.panel_vectorial.vectores.values(), datos):
-            vector['celdas'] = dict(enumerate(valores))
+        _cargar_operacion_vectorial(vista, operacion, datos)
         await vista.calcular()
         assert vista.resultado_actual['estado'] == estado
         if estado == 'ERROR':
