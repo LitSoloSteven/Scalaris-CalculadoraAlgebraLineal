@@ -49,11 +49,7 @@ class CapturaMetodosCerrados:
             self.metodo = SelectorOpciones(opciones, self._metodo, self._cambiar_metodo, "Método de resolución")
             self.expresion = crear_campo_funcion()
             self.previa_expresion = PreviaExpresion()
-            self.unidad = estilizar_desplegable(
-                ui.select({valor: valor.capitalize() for valor in UNIDADES_ANGULARES},
-                          value=UNIDAD_ANGULAR_DEFECTO, label="Unidad trigonométrica"),
-                "matriz-entrada min-w-0 w-full",
-            )
+            self.unidad = estilizar_desplegable(ui.select({valor: valor.capitalize() for valor in UNIDADES_ANGULARES}, value=UNIDAD_ANGULAR_DEFECTO, label="Unidad trigonométrica"), "matriz-entrada min-w-0 w-full")
             self.unidad.set_visibility(False)
             construir_modos(self.vista, "Tarea de métodos cerrados")
             with region_modo(self.vista, MODO_INTERVALO):
@@ -78,10 +74,7 @@ class CapturaMetodosCerrados:
 
     def _construir_parada(self) -> None:
         with ui.row().classes("metodos-raices-campos w-full"):
-            self.criterio = estilizar_desplegable(
-                ui.select(_ETIQUETAS_CRITERIO, value=criterio_inicial(self._metodo), label="Criterio de parada"),
-                "matriz-entrada min-w-0",
-            )
+            self.criterio = estilizar_desplegable(ui.select(_ETIQUETAS_CRITERIO, value=criterio_inicial(self._metodo), label="Criterio de parada"), "matriz-entrada min-w-0")
             iniciales = parametros_iniciales(self._metodo)
             self.parametros_criterio = {}
             for tipo, (_, etiqueta, _) in CRITERIOS.items():
@@ -103,10 +96,7 @@ class CapturaMetodosCerrados:
             limpieza = crear_boton_limpieza(self.vista, lambda: not self.expresion.is_deleted,
                                             animar=False, campo_foco=self.expresion)
             limpieza.boton.classes(add="metodos-raices-limpieza", remove="flex-1 py-3")
-            self.ejemplos = estilizar_desplegable(
-                ui.select(list(_EJEMPLOS[self._metodo]), label="Ejemplos", on_change=self._cargar_ejemplo),
-                "metodos-raices-ejemplos min-w-56",
-            )
+            self.ejemplos = estilizar_desplegable(ui.select(list(_EJEMPLOS[self._metodo]), label="Ejemplos", on_change=self._cargar_ejemplo), "metodos-raices-ejemplos min-w-56")
 
     def _construir_opciones(self) -> None:
         with ui.expansion("Avanzado").classes("w-full"):
