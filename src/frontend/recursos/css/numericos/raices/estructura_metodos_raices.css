@@ -18,18 +18,65 @@
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
 }
-.metodos-raices-ejemplos { align-self: center; }
-.metodos-raices-ejemplos .q-field__control,
-.metodos-raices-ejemplos .q-field__marginal,
-.metodos-raices-ejemplos .q-field__native {
-  height: 44px;
-  min-height: 44px;
-}
-.metodos-raices-ejemplos .q-field__label { margin-inline-start: var(--space-2); }
 .metodos-raices-campos { flex-wrap: wrap; }
 .metodos-raices-campos .q-field { flex: 1 1 12rem; }
 .metodos-raices-resultados { gap: var(--space-5); }
 
+.previa-formula-bloque {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-input);
+  background: var(--bg-elevated);
+  border-left: 3px solid var(--accent);
+}
+.previa-formula-matematica:empty,
+.previa-formula-estado:empty { display: none; }
+.previa-formula-matematica .matematicas-desplazamiento { padding-block: var(--space-1); }
+
+.metodos-raices-grafica-superficie {
+  width: 100%;
+  min-width: 0;
+  padding: var(--space-2);
+  border-radius: var(--radius-input);
+  background: var(--bg-elevated);
+  box-shadow: var(--elev-1);
+}
+
+.metodos-raices-requisito {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-input);
+  background: var(--bg-elevated);
+  border-left: 3px solid var(--accent);
+  overflow-wrap: anywhere;
+}
+
+.metodos-raices-plegable {
+  background: var(--bg-elevated);
+  border-radius: var(--radius-input);
+  box-shadow: var(--elev-1);
+  overflow: hidden;
+}
+.metodos-raices-plegable-cabecera {
+  min-height: 44px;
+  color: var(--text-main);
+  font-weight: 600;
+}
+.metodos-raices-plegable .q-item:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: -2px;
+}
+
 @media (max-width: 700px) {
   .metodos-raices-campos .q-field { flex-basis: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .metodos-raices-plegable,
+  .metodos-raices-grafica-superficie {
+    transition: none !important;
+  }
+}
+
+html[data-entrada="teclado"] .metodos-raices-plegable,
+html[data-entrada="teclado"] .metodos-raices-grafica-superficie {
+  transition: none !important;
 }
