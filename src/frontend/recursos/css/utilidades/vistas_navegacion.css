@@ -114,6 +114,10 @@ html[data-entrada="teclado"] .navegacion-accion::after {
     justify-content: center;
 }
 
+.navegacion-inicio:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+.navegacion-inicio-marca { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; }
+.navegacion-inicio-logotipo { width: 28px; height: 28px; aspect-ratio: 1 / 1; object-fit: contain; }
+
 .navegacion-separador {
     width: 1px;
     height: 24px;

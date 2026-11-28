@@ -33,7 +33,8 @@ def crear_barra_navegacion(interfaz_activa=None, ruta_activa: str = "/", clave_a
     contextual = banderas.navegacion_actualizada()
 
     with ui.header().classes("navegacion-cabecera").props("reveal"):
-        _renderizar_logotipo()
+        if not contextual:
+            _renderizar_logotipo()
         with ui.element("div").classes("panel-tarjeta navegacion-capsula pointer-events-auto"):
             if not contextual:
                 _renderizar_barra_plana(interfaz_activa, ruta_activa, al_alternar_ia)
@@ -88,7 +89,7 @@ def _renderizar_barra_contextual(clave_activa: str | None) -> None:
     with ui.element("a").classes("navegacion-accion navegacion-inicio").props(
         f'href="{RUTA_INICIO}" aria-label="Inicio"'
     ).tooltip("Inicio"):
-        ui.html(icono_svg("inicio"))
+        _renderizar_marca_inicio()
 
     seccion = seccion_por_clave(clave_activa)
     with ui.element("div").classes("navegacion-centro"):
@@ -97,6 +98,15 @@ def _renderizar_barra_contextual(clave_activa: str | None) -> None:
 
     with ui.element("div").classes("tema-boton-selector navegacion-tema"):
         renderizar_boton_configuracion()
+
+
+def _renderizar_marca_inicio() -> None:
+    """Renderiza las variantes de logotipo por tema dentro del acceso a inicio."""
+    ui.html(
+        '<img src="/assets/LogoOscuro.png" alt="" width="28" height="28" class="navegacion-inicio-logotipo marca-logotipo-oscuro" />'
+        '<img src="/assets/LogoClaro.png" alt="" width="28" height="28" class="navegacion-inicio-logotipo marca-logotipo-claro" />',
+        tag="span",
+    ).classes("navegacion-inicio-marca").props('aria-hidden="true"')
 
 
 def _renderizar_seccion(seccion: SeccionInicio, clave_activa: str | None) -> None:
