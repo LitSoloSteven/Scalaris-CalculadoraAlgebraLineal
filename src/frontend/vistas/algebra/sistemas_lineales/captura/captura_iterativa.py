@@ -38,6 +38,44 @@ def _localizar_celda_matriz(cuadricula: CuadriculaEcuaciones, campo: str, fila: 
     return cuadricula.entradas_coeficientes[fila - 1][columna - 1] if columna else None
 
 
+def _campos_captura_iterativa(captura) -> list:
+    entradas = [celda for fila in captura.cuadricula.entradas_coeficientes for celda in fila]
+    entradas.extend(captura.cuadricula.entradas_independientes)
+    entradas.extend(captura.ecuaciones.entradas)
+    entradas.extend(captura._campos_vector())
+    return [*entradas, captura.tolerancia, captura.maximo]
+
+
+def _es_captura_iterativa_vacia(captura) -> bool:
+    celdas = captura.vector.vectores[_NOMBRE_INICIO]['celdas']
+    vector_en_cero = all((valor or '').strip() in ('', '0') for valor in celdas.values())
+    tolerancia_igual = (captura.tolerancia.value or '').strip() == TOLERANCIA_INICIAL
+    maximo_igual = (captura.maximo.value or '').strip() == MAXIMO_INICIAL
+    return (
+        captura.cuadricula.esta_completamente_vacio()
+        and not (captura.ecuaciones.value or '').strip()
+        and vector_en_cero and tolerancia_igual and maximo_igual
+    )
+
+
+def _construir_disposicion_iterativa(captura) -> None:
+    with ui.tabs(value='matriz').classes('pestanas-controles sistemas-pestanas-modo').props('dense no-caps') as captura.selector:
+        ui.tab('matriz', label='Matriz', icon='grid_4x4')
+        ui.tab('ecuaciones', label='Ecuaciones', icon='functions')
+    with ui.element('div').classes('disposicion-captura-fila'):
+        with ui.column().classes('disposicion-panel iterativos-columna-sistema panel-tarjeta iterativos-tarjeta-captura'):
+            with ui.column().classes('w-full min-w-0') as captura.panel_matriz:
+                captura.etiqueta_variables = ui.label().classes('iterativos-numero texto-secundario text-sm')
+                captura.cuadricula.construir_contenedor_cuadricula()
+            captura.ecuaciones = EditorEcuaciones(captura.cuadricula.filas, captura._editar_ecuaciones)
+            captura.ecuaciones.set_visibility(False)
+            captura.aviso = ui.label().classes('iterativos-numero texto-secundario').props('role=status aria-live=polite')
+            captura.ejemplo = ui.label(EJEMPLO_CARGADO).classes('text-sm texto-secundario').props('role=status')
+            captura.ejemplo.set_visibility(False)
+        with ui.column().classes('disposicion-panel iterativos-parametros panel-tarjeta iterativos-tarjeta-captura'):
+            captura._construir_parametros()
+
+
 class CapturaIterativa:
     """Monta la captura y sincroniza las dos representaciones sin perder borradores inválidos."""
 
@@ -56,21 +94,7 @@ class CapturaIterativa:
         """Monta los controles y los vincula a la revisión de la captura."""
         self.cuadricula.inyectar_recursos_cliente()
         self.vector.inyectar_recursos_cliente()
-        with ui.element('div').classes('disposicion-captura-fila'):
-            with ui.column().classes('disposicion-panel'):
-                with ui.tabs(value='matriz').classes('pestanas-controles sistemas-pestanas-modo').props('dense no-caps') as self.selector:
-                    ui.tab('matriz', label='Matriz', icon='grid_4x4')
-                    ui.tab('ecuaciones', label='Ecuaciones', icon='functions')
-                with ui.column().classes('w-full min-w-0') as self.panel_matriz:
-                    self.etiqueta_variables = ui.label().classes('iterativos-numero texto-secundario text-sm')
-                    self.cuadricula.construir_contenedor_cuadricula()
-                self.ecuaciones = EditorEcuaciones(self.cuadricula.filas, self._editar_ecuaciones)
-                self.ecuaciones.set_visibility(False)
-                self.aviso = ui.label().classes('iterativos-numero texto-secundario').props('role=status aria-live=polite')
-                self.ejemplo = ui.label(EJEMPLO_CARGADO).classes('text-sm texto-secundario').props('role=status')
-                self.ejemplo.set_visibility(False)
-            with ui.column().classes('disposicion-panel iterativos-parametros'):
-                self._construir_parametros()
+        _construir_disposicion_iterativa(self)
         self.cuadricula.al_cambiar_dimension = self._cambiar_dimension
         self.cuadricula.al_cambiar_datos = self._editar
         self.vector.al_cambiar_datos = self._editar
@@ -81,10 +105,18 @@ class CapturaIterativa:
         self.vector.construir(ui.column().classes('w-full min-w-0'))
         self.vector.contenedor_cabecera.set_visibility(False)
         self._ajustar_inicio(self.variables, reiniciar=True)
-        self.tolerancia = ui.input('Tolerancia', value=TOLERANCIA_INICIAL, on_change=lambda: self._editar()).classes('w-full max-w-xs').props(
+        self.tolerancia = ui.input('Tolerancia', value=TOLERANCIA_INICIAL, on_change=lambda: self._editar()).classes('w-full').props(
             'outlined data-solo-numerico=true')
-        self.maximo = ui.input('Máximo de iteraciones', value=MAXIMO_INICIAL, on_change=lambda: self._editar()).classes('w-full max-w-xs').props(
+        self.maximo = ui.input('Máximo de iteraciones', value=MAXIMO_INICIAL, on_change=lambda: self._editar()).classes('w-full').props(
             f'outlined inputmode=numeric hint="De 1 a {MAXIMO_ITERACIONES_ITERATIVO}"')
+
+    def esta_vacia(self) -> bool:
+        """Indica si el sistema y los parámetros conservan su estado inicial."""
+        return _es_captura_iterativa_vacia(self)
+
+    def campos_entrada(self) -> list:
+        """Devuelve las entradas montadas para acompañar transiciones visuales."""
+        return _campos_captura_iterativa(self)
 
     def cambiar_modo(self, destino: str) -> None:
         """Convierte la fuente solo si es válida y devuelve el foco lógico al modo anterior si falla."""

@@ -3,11 +3,59 @@
     padding: clamp(var(--space-3), 3vw, var(--space-6));
 }
 
+.iterativos-tarjeta-captura {
+    padding: clamp(var(--space-4), 2.5vw, var(--space-5));
+    gap: var(--space-3);
+}
+
+.iterativos-columna-sistema .cuadricula-area-desplazamiento {
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: var(--space-1) 0 !important;
+}
+
 .iterativos-parametros .q-field:not(.q-field--error) .q-field__bottom {
     color: var(--text-sec);
 }
 
-.iterativos-panel .cuadricula-area-desplazamiento {
+.iterativos-parametros .q-field {
+    width: 100%;
+    max-width: none;
+}
+
+.iterativos-parametros .vectores-captura-lista {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+}
+
+.iterativos-parametros .vectores-captura-tarjeta {
+    width: 100%;
+    min-width: 0;
+    padding: var(--space-2) 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    align-items: stretch;
+}
+
+.iterativos-parametros .vectores-captura-celdas.vectores-captura-columna {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    width: 100%;
+    padding: var(--space-1) 0;
+    gap: var(--space-2);
+}
+
+.iterativos-parametros .vectores-captura-celdas .cuadricula-celda {
+    width: 100%;
+    min-width: 0;
+}
+
+.iterativos-columna-sistema .cuadricula-area-desplazamiento {
     min-width: 0;
 }
 
