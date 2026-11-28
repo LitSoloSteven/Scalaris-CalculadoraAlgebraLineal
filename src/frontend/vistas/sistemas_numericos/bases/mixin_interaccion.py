@@ -12,12 +12,6 @@ _REFERENCIA_DIGITOS = {
     'octal': 'Dígitos válidos en octal: 0–7 (prefijo opcional 0o, signo opcional −).',
     'hexadecimal': 'Dígitos válidos en hexadecimal: 0–9 y A–F (prefijo opcional 0x, signo opcional −).',
 }
-_EJEMPLOS_BASE = {
-    'hexadecimal': ('FF', '1A', 'A5'),
-    'decimal': ('255', '42', '128'),
-    'binario': ('11111111', '101010', '10000000'),
-    'octal': ('377', '52', '200'),
-}
 
 
 async def _leer_portapapeles_cliente() -> dict:
@@ -44,7 +38,7 @@ class MixinInteraccionSistemasNumericos:
             return
         self.base_activa = evento.value
         notificar_edicion(self)
-        self._actualizar_ejemplos()
+        self._actualizar_referencia_digitos()
         actualizar_contexto(self)
         if hasattr(self, 'entrada_valor'):
             try:
@@ -78,18 +72,10 @@ class MixinInteraccionSistemasNumericos:
             except RuntimeError:
                 pass
 
-    def _actualizar_ejemplos(self):
+    def _actualizar_referencia_digitos(self):
         referencia = getattr(self, 'etiqueta_referencia_digitos', None)
         if referencia is not None:
             referencia.set_text(_REFERENCIA_DIGITOS.get(self.base_activa, ''))
-        self.contenedor_ejemplos.clear()
-        with self.contenedor_ejemplos:
-            for ejemplo in _EJEMPLOS_BASE.get(self.base_activa, ()):
-                ui.button(
-                    ejemplo,
-                    on_click=lambda evento, valor=ejemplo: self._establecer_entrada(valor),
-                    color=None
-                ).classes('boton-discreto numericos-ejemplo text-xs font-mono').props('no-caps ripple=false')
 
     def _establecer_entrada(self, valor):
         self.entrada_valor.set_value(valor)

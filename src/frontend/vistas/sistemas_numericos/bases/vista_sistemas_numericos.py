@@ -32,11 +32,17 @@ class VistaSistemasNumericos(MixinLimpiezaBases, MixinInteraccionSistemasNumeric
     def _renderizar_entrada_valor(self) -> None:
         """Renderiza el campo de entrada numérico y botón de pegar."""
         with ui.column().classes('w-full gap-1'):
+            ui.label('Número de entrada').classes('text-sm font-semibold texto-secundario').props(
+                'id="bases-etiqueta-entrada"'
+            )
             with ui.row().classes('w-full relative'):
-                self.entrada_valor = ui.input(placeholder='0').classes(
+                self.entrada_valor = ui.input().classes(
                     'w-full matriz-entrada numericos-entrada numericos-entrada-base'
                 )
-                self.entrada_valor.props('autocomplete="off" spellcheck="false" aria-label="Número de entrada"')
+                self.entrada_valor.props(
+                    'autocomplete="off" spellcheck="false" aria-label="Número de entrada" '
+                    'aria-labelledby="bases-etiqueta-entrada"'
+                )
                 habilitar_simbolos(self.entrada_valor, "base")
                 self.entrada_valor.on_value_change(self._notificar_entrada)
                 self.entrada_valor.on('keydown.enter', self._convertir_boton)
@@ -77,7 +83,7 @@ class VistaSistemasNumericos(MixinLimpiezaBases, MixinInteraccionSistemasNumeric
             self.contenedor_sugerencias = ui.column().classes('w-full mt-1')
 
     def _renderizar_panel_auxiliar(self) -> None:
-        """Renderiza la columna auxiliar con base destino, dígitos válidos y ejemplos."""
+        """Renderiza la columna auxiliar con base destino, dígitos válidos y bits."""
         with ui.column().classes('w-full panel-tarjeta p-6 gap-5'):
             with ui.column().classes('w-full gap-2'):
                 ui.label('Base destino').classes('text-sm font-semibold texto-secundario')
@@ -93,10 +99,6 @@ class VistaSistemasNumericos(MixinLimpiezaBases, MixinInteraccionSistemasNumeric
             with ui.column().classes('w-full gap-1 numericos-referencia'):
                 ui.label('Referencia de dígitos').classes('text-xs font-semibold texto-secundario')
                 self.etiqueta_referencia_digitos = ui.label('').classes('text-sm texto-principal')
-
-            with ui.column().classes('w-full gap-2'):
-                ui.label('Ejemplos rápidos:').classes('text-sm texto-secundario')
-                self.contenedor_ejemplos = ui.row().classes('gap-2 flex-wrap')
 
             with ui.row().classes('w-full justify-between items-center gap-2 flex-wrap'):
                 self.etiqueta_bits = ui.label('').classes('text-sm font-mono texto-secundario font-bold')
@@ -134,7 +136,7 @@ class VistaSistemasNumericos(MixinLimpiezaBases, MixinInteraccionSistemasNumeric
         self.pestanas_destino.set_value('todas')
 
         self.panel_ia.construir()
-        self._actualizar_ejemplos()
+        self._actualizar_referencia_digitos()
 
     def obtener_contexto_ia(self):
         """Devuelve el contexto de entrada y el resultado vigente para el asistente."""
