@@ -4,8 +4,30 @@
   padding: var(--space-5) !important;
 }
 .metodos-abiertos-resumen-cabecera { min-width: 0; }
+.metodos-abiertos-metodo-etiqueta {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-badge);
+  background: var(--bg-elevated);
+  color: var(--text-sec);
+  font-weight: 600;
+}
+.metodos-abiertos-distintivo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-badge);
+}
 .metodos-abiertos-resumen-cuerpo { justify-content: space-between; }
-.metodos-abiertos-raiz-bloque { flex: 1 1 12rem; }
+.metodos-abiertos-raiz-bloque {
+  flex: 1 1 12rem;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-input);
+  background: var(--bg-elevated);
+  border-left: 3px solid var(--accent);
+}
 .metodos-abiertos-raiz {
   color: var(--accent) !important;
   font-size: clamp(2rem, 6vw, 3rem);
@@ -29,6 +51,9 @@
   border-radius: var(--radius-input);
   background: var(--bg-elevated);
 }
+.metodos-abiertos-metrica-destacada {
+  border-left: 3px solid var(--accent);
+}
 .metodos-abiertos-metrica-valor {
   font-size: 1.125rem;
   font-weight: 600;
@@ -36,11 +61,48 @@
   overflow-wrap: anywhere;
 }
 .metodos-abiertos-mensaje { font-weight: 600; }
+.metodos-abiertos-aviso {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-input);
+  background: var(--badge-warn-bg);
+  color: var(--badge-warn-text);
+}
+.metodos-abiertos-terminos { min-width: 0; }
+.metodos-abiertos-termino {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-badge);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-input);
+  font-variant-numeric: tabular-nums;
+  max-width: 100%;
+}
+.metodos-abiertos-termino-simbolo {
+  color: var(--text-sec);
+  font-weight: 600;
+}
+.metodos-abiertos-termino-valor {
+  color: var(--text-main);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.metodos-abiertos-termino-destacado {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+.metodos-abiertos-termino-destacado .metodos-abiertos-termino-simbolo,
+.metodos-abiertos-termino-destacado .metodos-abiertos-termino-valor {
+  color: var(--accent);
+  font-weight: 700;
+}
 .metodos-abiertos-derivada {
   padding-top: var(--space-3);
   border-top: 1px solid color-mix(in srgb, var(--text-sec) 18%, transparent);
   overflow-x: auto;
 }
+.metodos-abiertos-grafica-superficie { min-width: 0; }
 .metodos-abiertos-grafica { min-width: 0; }
 .q-table__container { max-width: 100%; }
 .metodos-abiertos-tabla {
@@ -78,6 +140,7 @@
 .metodos-abiertos-tabla .q-table tbody tr.q-tr--selected,
 .metodos-abiertos-tabla .q-table tbody tr[aria-selected="true"] {
   background: color-mix(in srgb, var(--accent) 16%, var(--bg-panel));
+  box-shadow: inset 3px 0 0 var(--accent);
 }
 .q-table th, .q-table td { white-space: nowrap; }
 .q-table__middle { overflow-x: auto; }
