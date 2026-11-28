@@ -73,20 +73,20 @@
 .captura-matriz-cuadricula .cuadricula-contenido {
     gap: var(--space-3);
     width: 100%;
-    min-width: max-content;
+    min-width: min-content;
     max-width: none;
 }
 
 .captura-matriz .cuadricula-celda {
     flex: 1 0 var(--cell-w);
-    width: auto;
+    width: var(--cell-w);
     min-width: var(--cell-w);
     max-width: none;
 }
 
 .captura-matriz-cuadricula [data-cuadricula-fila] {
     width: 100%;
-    min-width: max-content;
+    min-width: min-content;
     gap: var(--space-2);
     margin-bottom: 0;
     max-width: none;

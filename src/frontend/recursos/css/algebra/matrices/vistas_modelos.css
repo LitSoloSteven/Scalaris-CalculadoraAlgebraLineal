@@ -8,7 +8,7 @@
 }
 .modelos-captura .cuadricula-contenido {
   width: 100%;
-  min-width: max-content;
+  min-width: min-content;
 }
 .modelos-captura-cabecera {
   display: flex;

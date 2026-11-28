@@ -61,6 +61,8 @@
     color: var(--input-text) !important;
     -webkit-text-fill-color: var(--input-text) !important;
     text-align: center !important;
+    min-width: 0 !important;
+    width: 100%;
 }
 
 .matriz-entrada input::placeholder,
@@ -266,11 +268,11 @@ html[data-entrada="teclado"] .selector-controles .q-select__dropdown-icon {
 }
 
 .cuadricula-desplazamiento { max-height: 60dvh; overscroll-behavior-x: contain; }
-.cuadricula-cabecera-fija, .cuadricula-contenido { width: 100%; min-width: max-content; }
+.cuadricula-cabecera-fija, .cuadricula-contenido { width: 100%; min-width: min-content; }
 .cuadricula-contenido { padding: var(--space-1); }
 .cuadricula-cabecera-fija { position: sticky; top: 0; padding-inline: var(--space-1); }
-.cuadricula-contenido > :is(.q-row, .nicegui-row, [data-cuadricula-fila], [data-matriz-fila]) { width: 100%; min-width: max-content; }
+.cuadricula-contenido > :is(.q-row, .nicegui-row, [data-cuadricula-fila], [data-matriz-fila]) { width: 100%; min-width: min-content; }
 .cuadricula-cabecera-fija .cuadricula-celda,
-.cuadricula-contenido .cuadricula-celda { flex: 1 0 var(--cell-w); width: auto; min-width: var(--cell-w); }
-.cuadricula-contenido .cuadricula-celda-compacta { flex: 1 0 calc(8ch + 2 * var(--space-2)); width: auto; min-width: calc(8ch + 2 * var(--space-2)); }
+.cuadricula-contenido .cuadricula-celda { flex: 1 0 var(--cell-w); width: var(--cell-w); min-width: var(--cell-w); }
+.cuadricula-contenido .cuadricula-celda-compacta { flex: 1 0 calc(8ch + 2 * var(--space-2)); width: calc(8ch + 2 * var(--space-2)); min-width: calc(8ch + 2 * var(--space-2)); }
 .cuadricula-fila-sin-ajuste { flex-wrap: nowrap; }
