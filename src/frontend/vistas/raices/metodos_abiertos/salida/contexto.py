@@ -55,7 +55,7 @@ def construir_senales(vista) -> Senales:
         estado = "exito"
     else:
         estado = "error"
-        if estado_motor in ("DERIVADA_NULA", "DENOMINADOR_NULO", "DIVERGENCIA"):
+        if estado_motor in ("DERIVADA_NULA", "DENOMINADOR_NULO", "DIVERGENCIA", "LIMITE_ITERACIONES"):
             banderas.add(estado_motor.lower())
     return Senales(herramienta="metodos_abiertos", estado=estado, banderas=frozenset(banderas))
 
