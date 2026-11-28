@@ -61,8 +61,6 @@ class VistaTransformaciones(MixinAplicacionTransformacion, MixinGlosaModelos, Mi
 
     def _construir_captura(self) -> None:
         with ui.column().classes("disposicion-panel min-w-0"):
-            self._construir_ejemplos()
-            self._construir_selector_tamano()
             self._construir_panel_a()
             self._crear_accion_principal()
 

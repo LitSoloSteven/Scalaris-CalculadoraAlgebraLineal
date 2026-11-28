@@ -14,23 +14,26 @@ class MixinCapturaTransformaciones:
     """Compone los campos y sus dimensiones sin reglas matemáticas."""
 
     def _construir_selector_tamano(self):
-        with ui.row().classes("w-full items-center gap-3 mb-2 flex-wrap"):
-            ui.label("Dimensiones A (m×n):").classes("text-sm font-bold texto-secundario")
+        with ui.row().classes("items-center gap-3 flex-wrap"):
             with ui.row().classes("gap-1 items-center"):
-                ui.label("m=").classes("text-sm texto-secundario")
+                ui.label("m (ℝᵐ):").classes("text-sm font-bold texto-secundario")
                 self.boton_quitar_fila = ui.button(icon="remove", on_click=partial(self._ajustar_filas, -1), color=None).classes("boton-icono p-0").props('ripple=false aria-label="Reducir filas m"')
+                self.etiqueta_filas = ui.label(str(self.filas)).classes("font-bold text-sm w-5 text-center texto-principal etiqueta-dimensiones")
                 self.boton_agregar_fila = ui.button(icon="add", on_click=partial(self._ajustar_filas, 1), color=None).classes("boton-icono p-0").props('ripple=false aria-label="Aumentar filas m"')
             with ui.row().classes("gap-1 items-center"):
-                ui.label("n=").classes("text-sm texto-secundario")
+                ui.label("n (ℝⁿ):").classes("text-sm font-bold texto-secundario")
                 self.boton_quitar_columna = ui.button(icon="remove", on_click=partial(self._ajustar_columnas, -1), color=None).classes("boton-icono p-0").props('ripple=false aria-label="Reducir columnas n"')
+                self.etiqueta_columnas = ui.label(str(self.columnas)).classes("font-bold text-sm w-5 text-center texto-principal etiqueta-dimensiones")
                 self.boton_agregar_columna = ui.button(icon="add", on_click=partial(self._ajustar_columnas, 1), color=None).classes("boton-icono p-0").props('ripple=false aria-label="Aumentar columnas n"')
         self._actualizar_botones_tamano()
 
     def _construir_panel_a(self):
-        with ui.column().classes("w-full panel-tarjeta p-4 mb-4"):
-            ui.label("Matriz A de la transformación").classes("font-bold texto-principal mb-3")
+        with ui.column().classes("w-full panel-tarjeta p-5 gap-3 mb-4"):
+            with ui.row().classes("modelos-captura-cabecera w-full"):
+                ui.label("Matriz A de la transformación").classes("font-bold texto-principal")
+                self._construir_selector_tamano()
             ui.html(
-                '<p class="text-xs texto-secundario mb-2">'
+                '<p class="text-xs texto-secundario">'
                 "Ingresa la matriz A tal que T(x) = Ax. "
                 "Filas m = dimensión del codominio ℝ<sup>m</sup>, "
                 "columnas n = dimensión del dominio ℝ<sup>n</sup>.</p>"
@@ -39,9 +42,8 @@ class MixinCapturaTransformaciones:
             self._generar_cuadricula()
 
     def _construir_panel_variables(self):
-        with ui.column().classes("w-full panel-tarjeta p-4"):
-            ui.label("Nombres de variables (opcional)").classes("font-bold texto-principal mb-2 text-sm")
-            self.contenedor_variables = ui.column().classes("w-full")
+        with ui.expansion("Nombres de variables (opcional)", icon="label").classes("w-full panel-tarjeta"):
+            self.contenedor_variables = ui.column().classes("w-full pt-2")
             self._generar_entradas_variables()
 
 
@@ -68,6 +70,10 @@ class MixinCapturaTransformaciones:
         )
 
     def _actualizar_botones_tamano(self):
+        if getattr(self, "etiqueta_filas", None) is not None:
+            self.etiqueta_filas.set_text(str(self.filas))
+        if getattr(self, "etiqueta_columnas", None) is not None:
+            self.etiqueta_columnas.set_text(str(self.columnas))
         actualizar_estados_botones_dimension(self.boton_quitar_fila, self.boton_agregar_fila, self.filas, DIMENSION_MINIMA, DIMENSION_MAXIMA_MODELOS)
         actualizar_estados_botones_dimension(self.boton_quitar_columna, self.boton_agregar_columna, self.columnas, DIMENSION_MINIMA, DIMENSION_MAXIMA_MODELOS)
 
