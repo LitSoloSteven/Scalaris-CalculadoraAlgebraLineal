@@ -80,7 +80,7 @@ class VistaCalculadoraRomana(MixinLimpiezaRomanos, MixinResultadoRomano, MixinCo
                 ).classes("boton-principal flex-[2] py-3 text-lg font-bold").props("no-caps")
 
     def _construir_panel_auxiliar(self) -> None:
-        """Construye los selectores de operación, ejemplos y referencia romana."""
+        """Construye los selectores de operación y la referencia romana."""
         with ui.column().classes("w-full panel-tarjeta p-6 gap-5"):
             with ui.column().classes("w-full gap-2"):
                 ui.label("Operación").classes("text-sm font-semibold texto-secundario")
@@ -90,8 +90,6 @@ class VistaCalculadoraRomana(MixinLimpiezaRomanos, MixinResultadoRomano, MixinCo
                     ui.tab("suma", label="Suma")
                     ui.tab("resta", label="Resta")
                     ui.tab("multiplicacion", label="Multiplicación")
-
-            self._construir_ejemplos_rapidos()
 
             with ui.column().classes("w-full gap-1 numericos-referencia"):
                 ui.label("Referencia de símbolos").classes("text-xs font-semibold texto-secundario")
