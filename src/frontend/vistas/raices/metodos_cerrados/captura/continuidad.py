@@ -27,7 +27,9 @@ class ContinuidadMetodosCerrados:
 
     def construir(self) -> None:
         """Monta un diagnóstico que se actualiza con los extremos manuales."""
-        self.region = ui.column().classes("w-full min-w-0 gap-1").props("role=status aria-live=polite")
+        self.region = ui.column().classes("metodos-cerrados-continuidad w-full min-w-0 gap-1").props(
+            "role=status aria-live=polite"
+        )
         self.actualizar()
 
     def actualizar(self) -> None:

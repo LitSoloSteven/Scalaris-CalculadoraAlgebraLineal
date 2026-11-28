@@ -23,11 +23,14 @@ def montar_contenido(vista):
 
 def _montar_captura(vista) -> None:
     vista.captura.construir()
-    vista.estado = ui.label(MENSAJE_INICIAL).classes("text-sm texto-secundario").props("role=status")
-    vista.estado.bind_visibility_from(vista.modos, "value", backward=lambda modo: modo == MODO_INTERVALO)
-    vista.estados_entrada = _montar_estados_entrada(vista)
-    vista.continuidad.construir()
-    vista.acciones.construir()
+    with vista.captura.contenedor_estado:
+        vista.estado = ui.label(MENSAJE_INICIAL).classes("text-sm texto-secundario").props("role=status")
+        vista.estado.bind_visibility_from(vista.modos, "value", backward=lambda modo: modo == MODO_INTERVALO)
+        vista.estados_entrada = _montar_estados_entrada(vista)
+    with vista.captura.contenedor_continuidad:
+        vista.continuidad.construir()
+    with vista.captura.contenedor_historial:
+        vista.acciones.construir()
 
 
 def _montar_estados_entrada(vista) -> EstadosEntrada:
