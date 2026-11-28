@@ -85,8 +85,9 @@ def montar_panel_grafica(al_ajustar, al_restablecer, al_relayout, mensaje_inicia
             restablecer = ui.button("Restablecer vista", color=None, on_click=al_restablecer).classes(
                 "boton-discreto").props("ripple=false")
     estado = ui.label(mensaje_inicial).classes("text-sm texto-secundario").props("role=status aria-live=polite")
-    nodo = ui.plotly(crear_base(MUESTRA_VACIA)).classes("w-full min-w-0").props(
-        'role=img aria-label="Gráfica de la función, el intervalo y la iteración activa"')
+    with ui.element("div").classes("metodos-raices-grafica-superficie"):
+        nodo = ui.plotly(crear_base(MUESTRA_VACIA)).classes("w-full min-w-0").props(
+            'role=img aria-label="Gráfica de la función, el intervalo y la iteración activa"')
     nodo.on("plotly_afterplot", js_handler="() => window.scalaris?.sincronizarTemaPlotly?.()")
     nodo.on("plotly_relayout", al_relayout, js_handler=(
         f"datos => emit({{...datos, identidad: document.getElementById('{nodo.html_id}')?.layout?.meta}})"
