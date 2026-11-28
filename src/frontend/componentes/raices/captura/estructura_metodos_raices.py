@@ -41,3 +41,14 @@ def montar_estructura_metodos_raices(
             procedimiento = ui.column().classes("w-full min-w-0")
 
     return RegionesSolucionRaices(resultados, procedimiento)
+
+
+def crear_seccion_plegable(titulo: str, *, icono: str = "expand_more", subtitulo: str = "") -> ui.expansion:
+    """Crea una sección plegable con las superficies comunes de raíces."""
+    seccion = ui.expansion(
+        titulo,
+        caption=subtitulo or None,
+        icon=icono,
+        value=False,
+    ).classes("metodos-raices-plegable w-full")
+    return seccion.props('header-class="metodos-raices-plegable-cabecera"')
