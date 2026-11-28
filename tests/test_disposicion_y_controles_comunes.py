@@ -95,9 +95,7 @@ def test_operaciones_personalizadas_usa_selector_comun_y_desplegable_estilizado(
         captura._selector_conjunto.set_value("generadores")
         assert captura._modo_conjunto == "generadores"
         assert captura._selectores_conjunto["generadores"].visible
-        assert "selector-controles" in captura._selector_ejemplo.classes
-        assert captura._selector_ejemplo._props.get("popup-content-class") == "selector-menu"
-        assert "outlined" not in captura._selector_ejemplo._props
+        assert captura._selector_ejemplo is None
 
     asyncio.run(construir_pagina(monkeypatch, "espacios_subespacios", _comprobar, {"modo": MODO_PERSONALIZADO}))
 
