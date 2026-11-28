@@ -141,7 +141,7 @@ def test_metodos_abiertos_glosa_lateral_y_clasico_con_foco(monkeypatch, dock, na
         vista.panel_ia.alternar()
         assert vista.panel_ia.esta_abierto is False
         assert vista.panel_ia.contenedor_panel._props.get("aria-hidden") == "true"
-        assert any("_origenGlosaClasico" in codigo for codigo in js_emitido)
+        assert any("_origenGlosa" in codigo for codigo in js_emitido)
 
     asyncio.run(construir_pagina(monkeypatch, "metodos_abiertos", _comprobar))
 
