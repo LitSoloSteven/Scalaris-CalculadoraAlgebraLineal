@@ -219,7 +219,7 @@ def crear_entradas_matriz(contenedor: Any, dimensiones: tuple[int, int], identif
                for entrada in contenedor.descendants() if isinstance(entrada, ui.input)}
     entradas = []
     contenedor.clear()
-    with contenedor:
+    with contenedor, ui.column().classes("cuadricula-contenido w-full"):
         for fila in range(dimensiones[0]):
             entradas.append(_crear_entradas_fila(fila, dimensiones[1], identificador, valores))
     return entradas
@@ -227,9 +227,9 @@ def crear_entradas_matriz(contenedor: Any, dimensiones: tuple[int, int], identif
 
 def _crear_entradas_fila(fila: int, columnas: int, identificador: str, valores: dict) -> list[Any]:
     entradas = []
-    with ui.row().classes("gap-1 flex-nowrap"):
+    with ui.row().classes("items-center gap-2 no-wrap w-full").props(f'data-matriz-fila="{fila}"'):
         for columna in range(columnas):
-            entrada = ui.input(value=valores.get((fila, columna), ""), placeholder="0").classes("matriz-entrada w-16 text-center shrink-0")
+            entrada = ui.input(value=valores.get((fila, columna), ""), placeholder="").classes("matriz-entrada cuadricula-celda text-center")
             entrada.props(propiedades_celda_accesible(fila, columna, identificador_matriz=identificador))
             entradas.append(entrada)
     return entradas

@@ -265,22 +265,12 @@ html[data-entrada="teclado"] .selector-controles .q-select__dropdown-icon {
     color: var(--btn-primary-text) !important;
 }
 
-.cuadricula-desplazamiento {
-    max-height: 60dvh;
-    overscroll-behavior-x: contain;
-}
-
-.cuadricula-contenido {
-    min-width: max-content;
-    padding: var(--space-1);
-}
-
-.cuadricula-cabecera-fija {
-    position: sticky;
-    top: 0;
-    min-width: max-content;
-}
-
-.cuadricula-fila-sin-ajuste {
-    flex-wrap: nowrap;
-}
+.cuadricula-desplazamiento { max-height: 60dvh; overscroll-behavior-x: contain; }
+.cuadricula-cabecera-fija, .cuadricula-contenido { width: 100%; min-width: max-content; }
+.cuadricula-contenido { padding: var(--space-1); }
+.cuadricula-cabecera-fija { position: sticky; top: 0; padding-inline: var(--space-1); }
+.cuadricula-contenido > :is(.q-row, .nicegui-row, [data-cuadricula-fila], [data-matriz-fila]) { width: 100%; min-width: max-content; }
+.cuadricula-cabecera-fija .cuadricula-celda,
+.cuadricula-contenido .cuadricula-celda { flex: 1 0 var(--cell-w); width: auto; min-width: var(--cell-w); }
+.cuadricula-contenido .cuadricula-celda-compacta { flex: 1 0 calc(8ch + 2 * var(--space-2)); width: auto; min-width: calc(8ch + 2 * var(--space-2)); }
+.cuadricula-fila-sin-ajuste { flex-wrap: nowrap; }

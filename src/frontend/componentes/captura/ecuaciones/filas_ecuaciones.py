@@ -39,7 +39,7 @@ def _crear_entrada(indice: int, valor: str, al_editar: Callable) -> ui.input:
     with ui.row().classes('w-full items-center gap-3 no-wrap mb-3'):
         ui.label(f'{numero}.').classes('font-bold texto-secundario w-6 text-right shrink-0').props('aria-hidden=true')
         return ui.input(
-            value=valor, placeholder=f'Ej. 2x + 3y = {indice * 2 + 4}', on_change=al_editar,
+            value=valor, placeholder='', on_change=al_editar,
         ).classes('matriz-entrada flex-1 min-w-0').props(
             f'borderless autocomplete="new-password" name="eq{indice}" data-ecuaciones-indice="{indice}" '
             f'aria-label="Ecuación {numero}" maxlength={MAXIMO_CARACTERES_ECUACIONES}'
