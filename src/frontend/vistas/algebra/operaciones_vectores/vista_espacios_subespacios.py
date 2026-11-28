@@ -8,6 +8,7 @@ from nicegui import ui
 from src.frontend.componentes.aplicacion.base.sonido import emitir_sonido
 from src.frontend.componentes.aplicacion.controles.estructura_aplicacion import crear_estructura_aplicacion
 from src.frontend.componentes.aplicacion.controles.selector_opciones import SelectorOpciones
+from src.frontend.componentes.captura.ecuaciones.limpieza_captura import crear_boton_limpieza
 from src.frontend.componentes.glosa.panel.panel_ia import PanelIA
 from src.frontend.componentes.resultados.acciones.avisos_resultado import MENSAJE_ERROR_INESPERADO
 from src.frontend.controladores.algebra.operaciones_vectores.contexto_subespacios import (
@@ -24,7 +25,7 @@ from src.frontend.controladores.compartido.sesion.sesion_matricial import actual
 from src.frontend.navegacion import ruta_de
 from src.frontend.nucleo.textos.textos_espacio_vectorial import MODO_PERSONALIZADO
 from src.frontend.nucleo.textos.textos_espacios_subespacios import (
-    AYUDA_MODOS, ESTADO_CALCULO_MODOS, ESTADO_EDICION, ESTADO_INICIAL_MODOS,
+    AYUDA_MODOS, AYUDA_SIMBOLOS_MODOS, ESTADO_CALCULO_MODOS, ESTADO_EDICION, ESTADO_INICIAL_MODOS,
     MODO_GENERADORES, MODO_RESTRICCIONES, NOMBRES_MODOS, TITULO_PAGINA,
 )
 from src.frontend.vistas.algebra.operaciones_vectores.panel.captura_generadores import CapturaGeneradores
@@ -69,6 +70,29 @@ def _sonido_resultado(resultado: dict) -> str:
     return "exito" if veredicto else "aviso"
 
 
+def _renderizar_simbolos_ayuda(contenedor: ui.column | None, modo: str) -> None:
+    if contenedor is None or contenedor.is_deleted:
+        return
+    contenedor.clear()
+    with contenedor:
+        for simbolo, descripcion in AYUDA_SIMBOLOS_MODOS[modo]:
+            with ui.row().classes("w-full items-start gap-2 no-wrap"):
+                ui.label(simbolo).classes("subespacios-ayuda-simbolo shrink-0")
+                ui.label(descripcion).classes("texto-secundario text-xs min-w-0")
+
+
+async def _tema_actual_cliente(cliente) -> str:
+    if cliente is None or cliente.is_deleted or not cliente.has_socket_connection:
+        return "papel"
+    try:
+        valor = await cliente.run_javascript(
+            "document.documentElement.getAttribute('data-tema') || 'papel'", timeout=2.0
+        )
+        return valor if valor in ("papel", "marea", "medianoche") else "papel"
+    except Exception:
+        return "papel"
+
+
 class VistaEspaciosSubespacios:
     """Orquesta los modos de captura, el análisis vigente y la presentación."""
 
@@ -87,6 +111,7 @@ class VistaEspaciosSubespacios:
         self.panel_ia = PanelIA(self)
         self.selector_modo = None
         self.ayuda = None
+        self.contenedor_simbolos = None
         self._contenedores_captura = {}
         self.boton_analizar = None
         self.estado = None
@@ -134,21 +159,18 @@ class VistaEspaciosSubespacios:
                 with ui.column().classes("w-full min-w-0") as self._contenedores_captura[modo]:
                     captura.construir()
             self._actualizar_visibilidad_modos()
-            with ui.row().classes("w-full items-center flex-wrap gap-2 mt-2"):
-                ui.button("Limpiar", on_click=self._limpiar_activo, color=None).classes(
-                    "boton-discreto"
-                ).props("ripple=false")
+            with ui.row().classes("w-full items-center flex-wrap gap-4 mt-2"):
+                crear_boton_limpieza(self, lambda: not self.contenedor_resultados.is_deleted, self._campos_captura)
                 self.boton_analizar = ui.button(
                     "Analizar", on_click=self.analizar, color=None
-                ).classes("boton-principal").props("ripple=false aria-label=Analizar")
+                ).classes("boton-principal flex-[2] py-3").props("ripple=false aria-label=Analizar")
 
     def _construir_panel_auxiliar(self) -> None:
         with ui.column().classes("disposicion-panel panel-tarjeta subespacios-panel gap-3"):
-            ui.label("Guía del modo activo").classes("text-lg font-semibold texto-principal")
+            ui.label("Ayuda del modo activo").classes("text-lg font-semibold texto-principal")
             self.ayuda = ui.label(AYUDA_MODOS[self.modo]).classes("texto-secundario text-sm")
-            ui.button("Cargar ejemplo", on_click=self._cargar_ejemplo_activo, color=None).classes(
-                "boton-discreto w-fit"
-            ).props("ripple=false")
+            self.contenedor_simbolos = ui.column().classes("w-full min-w-0 gap-2 subespacios-ayuda-lista")
+            _renderizar_simbolos_ayuda(self.contenedor_simbolos, self.modo)
 
     def _construir_panel_resultados(self) -> None:
         with ui.column().classes("disposicion-resultados panel-tarjeta subespacios-panel"):
@@ -169,6 +191,7 @@ class VistaEspaciosSubespacios:
         self._actualizar_visibilidad_modos()
         if self.ayuda is not None:
             self.ayuda.set_text(AYUDA_MODOS[self.modo])
+        _renderizar_simbolos_ayuda(self.contenedor_simbolos, self.modo)
         self._retirar_resultado()
         if self.boton_analizar is not None and not self.boton_analizar.is_deleted:
             self.boton_analizar.props("loading=false")
@@ -176,11 +199,15 @@ class VistaEspaciosSubespacios:
             self.estado.set_text(ESTADO_INICIAL_MODOS[self.modo])
         actualizar_contexto(self)
 
-    def _cargar_ejemplo_activo(self) -> None:
-        self.captura.cargar_ejemplo()
+    def esta_completamente_vacio(self) -> bool:
+        """Indica si la captura del modo activo carece de valores ingresados."""
+        return self.captura.esta_vacia()
 
-    def _limpiar_activo(self) -> None:
+    def limpiar_todo(self) -> None:
+        """Vacía el modo activo y retira resultados y contexto previos."""
         self.captura.limpiar()
+        if self.estado is not None and not self.estado.is_deleted:
+            self.estado.set_text(ESTADO_INICIAL_MODOS[self.modo])
 
     def editar(self) -> None:
         """Retira resultados obsoletos al cambiar cualquier dato de entrada."""
@@ -206,7 +233,7 @@ class VistaEspaciosSubespacios:
             calcular = analizar_espacio_desde_captura if self.modo == MODO_PERSONALIZADO else analizar_subespacio_desde_captura
             respuesta = await ejecutar_calculo_vigente(self, self.captura.obtener, calcular)
             if respuesta is not None:
-                tema = "" if self.modo == MODO_PERSONALIZADO else await self._tema_actual()
+                tema = "" if self.modo == MODO_PERSONALIZADO else await _tema_actual_cliente(self._cliente)
                 if self._identificador_calculo == solicitud and not self.contenedor_resultados.is_deleted:
                     self._publicar(respuesta[0], respuesta[1], tema)
         except Exception as error:
@@ -221,18 +248,6 @@ class VistaEspaciosSubespacios:
             self._retirar_resultado()
             self.estado.set_text(MENSAJE_ERROR_INESPERADO)
             emitir_sonido("error")
-
-    async def _tema_actual(self) -> str:
-        cliente = self._cliente
-        if cliente is None or cliente.is_deleted or not cliente.has_socket_connection:
-            return "papel"
-        try:
-            valor = await cliente.run_javascript(
-                "document.documentElement.getAttribute('data-tema') || 'papel'", timeout=2.0
-            )
-            return valor if valor in ("papel", "marea", "medianoche") else "papel"
-        except Exception:
-            return "papel"
 
     def _publicar(self, resultado: dict, huella: str, tema: str) -> None:
         self.estado.set_text("")

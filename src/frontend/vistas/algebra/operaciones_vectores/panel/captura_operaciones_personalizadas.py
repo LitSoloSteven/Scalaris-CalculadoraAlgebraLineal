@@ -5,7 +5,7 @@ from collections.abc import Callable
 
 from nicegui import ui
 
-from src.frontend.componentes.aplicacion.controles.selector_opciones import SelectorOpciones, estilizar_desplegable
+from src.frontend.componentes.aplicacion.controles.selector_opciones import SelectorOpciones
 from src.frontend.controladores.algebra.operaciones_vectores.ejemplos_espacio_vectorial import (
     EJEMPLOS_OPERACIONES, terminos_ejemplo,
 )
@@ -39,13 +39,9 @@ class CapturaOperacionesPersonalizadas:
         return self._conjuntos[self._modo_conjunto]
 
     def construir(self) -> None:
-        """Monta la definición, el selector de ejemplos y los editores de términos."""
+        """Monta la definición del conjunto y los editores de términos."""
         self._construir_selector_conjunto()
-        ejemplos = list(EJEMPLOS_OPERACIONES)
-        self._selector_ejemplo = estilizar_desplegable(
-            ui.select(ejemplos, label="Ejemplo de operaciones", value=ejemplos[0]),
-            "w-full min-w-0",
-        ).props("dense")
+        self._selector_ejemplo = None
         ui.label(
             "Escribe coeficientes racionales y un exponente entero no negativo por variable, separados por espacios."
         ).classes("texto-secundario text-sm")
@@ -96,9 +92,10 @@ class CapturaOperacionesPersonalizadas:
         if self._aviso is not None:
             self._aviso.set_text(_mensaje_localizado(diagnostico))
 
-    def cargar_ejemplo(self) -> None:
-        """Carga en el editor el ejercicio seleccionado y conserva su carácter editable."""
-        ejemplo = EJEMPLOS_OPERACIONES[self._selector_ejemplo.value]
+    def cargar_ejemplo(self, nombre: str | None = None) -> None:
+        """Carga en el editor un ejercicio indicado por clave sin exponer muestras en interfaz."""
+        clave = nombre if nombre in EJEMPLOS_OPERACIONES else next(iter(EJEMPLOS_OPERACIONES))
+        ejemplo = EJEMPLOS_OPERACIONES[clave]
         self._sincronizando = True
         try:
             if ejemplo.ecuaciones:
@@ -123,6 +120,12 @@ class CapturaOperacionesPersonalizadas:
         finally:
             self._sincronizando = False
         self._editar()
+
+    def esta_vacia(self) -> bool:
+        """Indica si tanto el conjunto como ambas operaciones carecen de entradas."""
+        return self.conjunto.esta_vacia() and all(
+            not coordenada for editor in self._operaciones.values() for coordenada in editor.obtener()
+        )
 
     def _cargar_ecuaciones_ejemplo(self, dimension: int, ecuaciones: str) -> None:
         self._cambiar_conjunto(MODO_RESTRICCIONES)

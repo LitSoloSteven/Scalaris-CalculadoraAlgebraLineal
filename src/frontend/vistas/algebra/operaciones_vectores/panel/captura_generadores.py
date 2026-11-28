@@ -6,6 +6,7 @@ from collections.abc import Callable
 from nicegui import ui
 
 from src.backend.constantes import DIMENSION_MAXIMA_VECTORES, DIMENSION_MINIMA
+from src.backend.utilidades.captura.estado_captura import captura_vacia
 from src.frontend.componentes.captura.nucleo.cuadricula_base import (
     actualizar_estados_botones_dimension,
 )
@@ -103,6 +104,11 @@ class CapturaGeneradores:
         finally:
             self._sincronizando = False
         self._finalizar_cambio_programatico(False)
+
+    def esta_vacia(self) -> bool:
+        """Indica si ningún generador contiene texto ingresado."""
+        valores = (valor for vector in self.panel.vectores.values() for valor in vector["celdas"].values())
+        return captura_vacia(valores, considerar_cero=False)
 
     def _finalizar_cambio_programatico(self, marcar_ejemplo: bool) -> None:
         self.marcar_diagnostico(None)
