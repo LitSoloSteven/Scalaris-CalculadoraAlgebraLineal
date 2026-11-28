@@ -5,6 +5,7 @@ import logging
 from nicegui import ui
 
 from src.backend.resolutores.raices.biseccion.lote.limites_resolucion_multiple import MAXIMO_CANDIDATOS_MULTIPLE
+from src.frontend.componentes.aplicacion.controles.selector_opciones import estilizar_desplegable
 from src.frontend.controladores.raices.biseccion.adaptadores.exploracion import presentar_candidato
 from src.frontend.controladores.raices.biseccion.ejecucion.resolucion_multiple import resolver_lote
 from src.frontend.controladores.raices.biseccion.captura.vigencia_panel import invalidar_panel
@@ -40,7 +41,9 @@ class PanelResolucionMultiple:
             ui.label("Resolver candidatos").classes("text-xl font-semibold texto-principal")
             ui.label(f"Usa el criterio y el límite actuales para resolver uno o hasta {MAXIMO_CANDIDATOS_MULTIPLE} candidatos aptos. "
                      "Abre un resultado para consultar sus iteraciones.").classes("text-sm texto-secundario")
-            self.selector = ui.select({}, label="Candidato para resolver").classes("w-full matriz-entrada")
+            self.selector = estilizar_desplegable(
+                ui.select({}, label="Candidato para resolver"), "w-full matriz-entrada",
+            )
             self.intervalo = ui.label().classes("biseccion-numero texto-secundario")
             with ui.row().classes("w-full gap-3"):
                 self.boton_uno = ui.button("Resolver candidato", color=None, on_click=self._enviar_uno).classes(
