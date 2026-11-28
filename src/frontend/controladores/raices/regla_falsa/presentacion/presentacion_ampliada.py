@@ -38,15 +38,15 @@ def datos_criterio(ampliado: dict, respuesta: dict | None = None) -> tuple[tuple
 
 
 def _texto_cumplimiento(ampliado: dict, respuesta: dict | None) -> str:
-    codigo = ampliado["cumplimiento"]
-    if (
-        respuesta is not None
-        and respuesta.get("estado") == "EXITO"
-        and respuesta.get("motivo_parada") == "raiz_exacta"
-        and codigo == "NO_CUMPLIDO"
-    ):
+    if respuesta is not None and _es_cero_evaluado(respuesta):
         return "Raíz exacta evaluada (residuo 0)"
-    return _CUMPLIMIENTOS[codigo]
+    return _CUMPLIMIENTOS[ampliado["cumplimiento"]]
+
+
+def _es_cero_evaluado(respuesta: dict) -> bool:
+    return respuesta.get("estado") == "EXITO" and respuesta.get("motivo_parada") in (
+        "raiz_en_extremo", "raiz_en_aproximacion", "raiz_exacta",
+    )
 
 
 def metricas_configuradas(respuesta: dict, ampliado: dict | None) -> tuple:
@@ -67,6 +67,8 @@ def descripcion_captura(captura: dict) -> str:
 
 def etiqueta_configurada(respuesta: dict, ampliado: dict | None) -> str:
     """Distingue ausencia de valor y conteo provisional sin alterar el estado matemático."""
+    if _es_cero_evaluado(respuesta):
+        return etiqueta_aproximacion(respuesta)
     if respuesta.get("aproximacion") is not None and ampliado and ampliado["criterio"]["tipo"] == "iteraciones":
         return "Aproximación provisional"
     return etiqueta_aproximacion(respuesta)
