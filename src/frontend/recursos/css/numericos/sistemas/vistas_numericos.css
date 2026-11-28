@@ -19,6 +19,7 @@
   background: var(--bg-panel);
   border-color: var(--border-input);
   box-shadow: var(--elev-2);
+  min-width: 44px;
   min-height: 44px;
   padding-inline: var(--space-3);
 }
