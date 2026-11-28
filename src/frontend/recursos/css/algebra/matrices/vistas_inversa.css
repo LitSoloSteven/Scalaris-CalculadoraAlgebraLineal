@@ -10,6 +10,12 @@
     font-size: var(--fs-small);
 }
 
+.inversa-tabla th,
+.inversa-tabla td {
+    min-inline-size: 7ch;
+    max-inline-size: 26ch;
+}
+
 .inversa-tabla thead th {
     position: sticky;
     top: 0;
@@ -52,11 +58,6 @@
     background: var(--badge-suc-bg);
     color: var(--badge-suc-text);
     font-weight: 700;
-}
-
-.inversa-tabla :is(td, th) {
-    min-inline-size: 7ch;
-    max-inline-size: 26ch;
 }
 
 .inversa-fraccion {

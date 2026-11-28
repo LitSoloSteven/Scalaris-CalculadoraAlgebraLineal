@@ -1,6 +1,5 @@
-(function () {
-  'use strict';
-
+'use strict';
+{
   const regiones = new Map([
     ['.tabla-resultados .q-table__middle', 'Tabla de iteraciones'],
     ['.inversa-desplazamiento', 'Tabla de matriz'],
@@ -45,4 +44,4 @@
   } else {
     iniciar();
   }
-})();
+}
