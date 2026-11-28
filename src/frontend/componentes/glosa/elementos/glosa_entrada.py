@@ -20,9 +20,12 @@ class EstiloEntradaGlosa:
 def construir_entrada_glosa(instancia: Any, estilo: EstiloEntradaGlosa) -> None:
     """Construye el campo y vincula Enter y el botón al mismo envío del panel."""
     with ui.row().classes(estilo.clases_contenedor):
-        instancia.campo_entrada = ui.textarea(placeholder=estilo.texto_ayuda).classes(
+        instancia.campo_entrada = ui.textarea(label=estilo.texto_ayuda).classes(
             estilo.clases_campo
-        ).props(f"borderless autogrow maxlength={MAXIMO_CARACTERES_MENSAJE} data-simbolos=texto")
+        ).props(
+            f'borderless autogrow stack-label maxlength={MAXIMO_CARACTERES_MENSAJE} '
+            f'data-simbolos=texto aria-label="{estilo.texto_ayuda}"'
+        )
         instancia.campo_entrada.on("keydown.enter.prevent.exact", instancia.enviar_mensaje)
         ui.button(icon="send", on_click=instancia.enviar_mensaje, color=None).classes(
             estilo.clases_boton

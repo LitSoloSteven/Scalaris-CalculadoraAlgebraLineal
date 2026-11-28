@@ -256,9 +256,8 @@ html[data-glosa="abierto"]:not([data-glosa-listo])::after {
     text-align: left !important;
 }
 
-.glosa-entrada textarea::placeholder {
+.glosa-entrada .q-field__label {
     color: var(--text-sec) !important;
-    -webkit-text-fill-color: var(--text-sec) !important;
     opacity: 1 !important;
 }
 
