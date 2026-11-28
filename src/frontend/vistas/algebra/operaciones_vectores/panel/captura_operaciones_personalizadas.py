@@ -5,6 +5,7 @@ from collections.abc import Callable
 
 from nicegui import ui
 
+from src.frontend.componentes.aplicacion.controles.selector_opciones import SelectorOpciones, estilizar_desplegable
 from src.frontend.controladores.algebra.operaciones_vectores.ejemplos_espacio_vectorial import (
     EJEMPLOS_OPERACIONES, terminos_ejemplo,
 )
@@ -39,19 +40,12 @@ class CapturaOperacionesPersonalizadas:
 
     def construir(self) -> None:
         """Monta la definición, el selector de ejemplos y los editores de términos."""
-        self._selector_conjunto = ui.select(
-            {modo: NOMBRES_MODOS[modo] for modo in self._conjuntos},
-            label="Definición del conjunto", value=self._modo_conjunto,
-            on_change=lambda evento: self._cambiar_conjunto(evento.value),
-        ).classes("w-full min-w-0").props("outlined dense")
-        for modo, conjunto in self._conjuntos.items():
-            with ui.column().classes("w-full min-w-0") as self._selectores_conjunto[modo]:
-                conjunto.construir()
-        self._actualizar_conjuntos()
+        self._construir_selector_conjunto()
         ejemplos = list(EJEMPLOS_OPERACIONES)
-        self._selector_ejemplo = ui.select(
-            ejemplos, label="Ejemplo de operaciones", value=ejemplos[0],
-        ).classes("w-full min-w-0").props("outlined dense")
+        self._selector_ejemplo = estilizar_desplegable(
+            ui.select(ejemplos, label="Ejemplo de operaciones", value=ejemplos[0]),
+            "w-full min-w-0",
+        ).props("dense")
         ui.label(
             "Escribe coeficientes racionales y un exponente entero no negativo por variable, separados por espacios."
         ).classes("texto-secundario text-sm")
@@ -60,6 +54,24 @@ class CapturaOperacionesPersonalizadas:
         }
         self._ajustar_operaciones()
         self._aviso = ui.label().classes("texto-secundario subespacios-numero").props("role=status aria-live=polite")
+
+    def _construir_selector_conjunto(self) -> None:
+        ui.label("Definición del conjunto").classes("text-sm font-semibold texto-principal")
+        opciones = tuple(
+            (modo, NOMBRES_MODOS[modo], f"Definición del conjunto: {NOMBRES_MODOS[modo]}")
+            for modo in self._conjuntos
+        )
+        self._selector_conjunto = SelectorOpciones(
+            opciones, self._modo_conjunto,
+            lambda evento: self._cambiar_conjunto(evento.value),
+            "Definición del conjunto",
+        )
+        for modo, conjunto in self._conjuntos.items():
+            with ui.column().classes("w-full min-w-0") as contenedor:
+                conjunto.construir()
+            self._selectores_conjunto[modo] = contenedor
+            self._selector_conjunto.asociar_contenido(modo, contenedor)
+        self._actualizar_conjuntos()
 
     def obtener(self) -> dict:
         """Devuelve una instantánea del conjunto activo y las dos operaciones."""
