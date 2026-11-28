@@ -101,9 +101,7 @@ class VistaOperacionesMatrices(MixinResultadosOperacionesMatrices, MixinContexto
                 ui.label('Expresión matemática').classes('text-lg font-bold texto-principal')
                 renderizar_boton_simbolos()
             with ui.column().classes('w-full min-w-0 gap-4'):
-                self.entrada_expresion = ui.input(
-                    placeholder=''
-                ).classes('matriz-entrada matrices-campo-expresion w-full text-xl').props(
+                self.entrada_expresion = ui.input().classes('matriz-entrada matrices-campo-expresion w-full text-xl').props(
                     'borderless autocomplete="new-password" aria-label="Expresión matemática"'
                 )
                 habilitar_simbolos(self.entrada_expresion, "matriz")
