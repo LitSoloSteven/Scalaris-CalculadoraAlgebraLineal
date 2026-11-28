@@ -52,7 +52,8 @@ def _construir_tarjeta_vector(instancia: PanelCapturaVectores, nombre: str) -> N
     """Construye la tarjeta contenedora y cabecera de un vector individual."""
     vector = instancia.vectores[nombre]
     nombre_html = _formatear_nombre_vector(nombre)
-    with ui.column().classes("panel-tarjeta p-4 min-w-[140px] items-center vectores-captura-tarjeta"):
+    with ui.column().classes("panel-tarjeta p-4 items-center vectores-captura-tarjeta") as tarjeta:
+        vector["tarjeta"] = tarjeta
         with ui.row().classes("w-full justify-between items-center mb-2 no-wrap vectores-captura-cabecera"):
             vector["etiqueta_dimension"] = ui.html(
                 f'{nombre_html} <span class="separador-punto">·</span> {instancia.dimension}&times;1'
@@ -182,6 +183,12 @@ class PanelCapturaVectores(MixinTransicionVectores):
         vector = self.vectores[nombre]
         if not vector["contenedor"]:
             return
+        tarjeta = vector.get("tarjeta")
+        if tarjeta is not None and not tarjeta.is_deleted:
+            if vector["orientacion"] == "fila":
+                tarjeta.classes(add="vectores-captura-tarjeta-fila")
+            else:
+                tarjeta.classes(remove="vectores-captura-tarjeta-fila")
         vector["contenedor"].clear()
         nombre_html = _formatear_nombre_vector(nombre)
         texto_dimension = f"{self.dimension}&times;1" if vector["orientacion"] == "columna" else f"1&times;{self.dimension}"

@@ -36,7 +36,7 @@ class VistaOperacionesVectores(MixinResultadosVectores):
         self._huella_resultado = None
         self.operacion_suma_resta = "suma"
         self.orientacion_estricta = False
-        self.valor_escalar = "2"
+        self.valor_escalar = ""
         self._revision_calculo = 0
         self._montada = True
         self._calculando = False
