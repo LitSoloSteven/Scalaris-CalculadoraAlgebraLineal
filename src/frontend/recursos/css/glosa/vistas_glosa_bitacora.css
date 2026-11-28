@@ -49,6 +49,10 @@
     min-width: 0;
 }
 
+.glosa-campo-entrada.matriz-entrada .q-field__native {
+    text-align: left !important;
+}
+
 .glosa-boton-enviar {
     border-radius: 12px !important;
 }

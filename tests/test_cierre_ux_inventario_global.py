@@ -148,3 +148,48 @@ def test_estilos_de_captura_aseguran_autoajuste_y_scroll_interno():
     geometria = Path("src/frontend/recursos/css/algebra/espacios/vistas_geometria.css").read_text(encoding="utf-8")
     assert "align-items: safe center;" in bloque_css(geometria, ".geometria-captura-centrada .cuadricula-area-desplazamiento {")
     assert "flex: 1 1 min(100%, 13.5rem);" in bloque_css(geometria, ".geometria-captura-centrada .vectores-captura-tarjeta {")
+    assert "min-height: 44px;" in bloque_css(geometria, ".geometria-captura-centrada .vectores-captura-cabecera {")
+
+
+def test_estilos_de_tablas_y_glosa_contienen_desbordamiento():
+    """Las tablas de raices y campos de Glosa contienen desplazamiento y separan el rotulo."""
+    tablas = Path("src/frontend/recursos/css/componentes/tablas_resultados.css").read_text(encoding="utf-8")
+    assert "inline-size: 100%;" in bloque_css(tablas, ".tabla-resultados {")
+    bloque_tabla_media = bloque_css(tablas, ".tabla-resultados .q-table__middle {")
+    assert "inline-size: 100%;" in bloque_tabla_media
+    assert "overscroll-behavior-x: contain;" in bloque_tabla_media
+
+    glosa_lateral = Path("src/frontend/recursos/css/glosa/vistas_glosa_panel_lateral.css").read_text(encoding="utf-8")
+    assert "padding: var(--space-1) var(--space-3) !important;" in bloque_css(glosa_lateral, ".glosa-entrada .q-field__control {")
+    assert "padding-top:" in bloque_css(glosa_lateral, ".glosa-entrada .q-field__native,")
+
+    glosa_bitacora = Path("src/frontend/recursos/css/glosa/vistas_glosa_bitacora.css").read_text(encoding="utf-8")
+    assert "text-align: left !important;" in bloque_css(glosa_bitacora, ".glosa-campo-entrada.matriz-entrada .q-field__native {")
+
+
+@pytest.mark.parametrize(
+    ("herramienta", "modulo_vista", "atributo_esperado"),
+    [
+        ("bases", "src.frontend.vistas.sistemas_numericos.bases.vista_sistemas_numericos", "entrada_valor"),
+        ("romanos", "src.frontend.vistas.sistemas_numericos.romanos.vista_calculadora_romana", "entrada_a"),
+    ],
+)
+def test_numericos_configuran_retorno_de_foco_al_limpiar(monkeypatch, herramienta, modulo_vista, atributo_esperado):
+    """El boton de limpieza en Bases y Romanos apunta al primer campo de entrada al confirmar."""
+    import importlib
+    from src.frontend.componentes.captura.ecuaciones import limpieza_captura
+
+    registrado = {}
+    modulo = importlib.import_module(modulo_vista)
+    original = limpieza_captura.crear_boton_limpieza
+
+    def capturar_llamada(*args, **kwargs):
+        registrado["campo_foco"] = kwargs.get("campo_foco")
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(modulo, "crear_boton_limpieza", capturar_llamada)
+
+    async def comprobar(vista, _cliente):
+        assert registrado["campo_foco"] is getattr(vista, atributo_esperado)
+
+    asyncio.run(construir_pagina(monkeypatch, herramienta, comprobar))
