@@ -7,7 +7,6 @@ from src.frontend.componentes.aplicacion.base.simbolos import habilitar_simbolos
 from src.frontend.componentes.aplicacion.controles.selector_opciones import SelectorOpciones, estilizar_desplegable
 from src.frontend.componentes.captura.ecuaciones.limpieza_captura import crear_boton_limpieza
 from src.frontend.componentes.raices.captura.campo_funcion_real import crear_campo_funcion
-from src.frontend.componentes.raices.captura.estructura_metodos_raices import crear_seccion_plegable
 from src.frontend.componentes.raices.captura.modos_captura_raices import MODO_BUSQUEDA, MODO_INTERVALO, construir_modos, region_modo
 from src.frontend.componentes.raices.captura.previa_expresion_raices import PreviaExpresion
 from src.frontend.controladores.raices.biseccion.captura.captura_criterio import texto_estimacion
@@ -27,7 +26,7 @@ from src.frontend.controladores.raices.metodos_cerrados.adaptadores import (
     parametros_iniciales,
 )
 from src.frontend.vistas.raices.biseccion.captura.estado_captura import transaccion
-from .ayuda_cerrados import REQUISITOS_METODO, construir_ayuda_cerrados
+from .ayuda_cerrados import REQUISITOS_METODO, construir_secciones_secundarias
 
 _CAMPOS = {
     "expresion": "expresion", "extremo_izquierdo": "inferior", "extremo_derecho": "superior",
@@ -75,7 +74,7 @@ class CapturaMetodosCerrados:
             self._construir_parada()
             self._construir_acciones()
             self.contenedor_estado = ui.column().classes("w-full min-w-0 gap-1")
-            self._construir_opciones()
+            construir_secciones_secundarias(self, _campo)
         self._conectar()
         self.actualizar_guia()
 
@@ -116,36 +115,6 @@ class CapturaMetodosCerrados:
             limpieza = crear_boton_limpieza(self.vista, lambda: not self.expresion.is_deleted,
                                             animar=False, campo_foco=self.expresion)
             limpieza.boton.classes(add="metodos-raices-limpieza", remove="flex-1 py-3")
-
-    def _construir_opciones(self) -> None:
-        with ui.column().classes("metodos-cerrados-secundarias w-full min-w-0 gap-3"):
-            self.seccion_avanzado = crear_seccion_plegable(
-                "Avanzado",
-                icono="tune",
-                subtitulo="Límite de iteraciones y rango de la gráfica",
-            )
-            with self.seccion_avanzado:
-                with ui.row().classes("metodos-raices-campos w-full"):
-                    self.limite = _campo("Límite de iteraciones", str(LIMITE_ITERACIONES_DEFECTO), "entero")
-                    minimo, maximo = RANGO_GRAFICA_DEFECTO
-                    self.minimo = _campo("Mínimo de la gráfica", str(minimo))
-                    self.maximo = _campo("Máximo de la gráfica", str(maximo))
-            self.seccion_sintaxis = crear_seccion_plegable(
-                "Sintaxis y continuidad",
-                icono="menu_book",
-                subtitulo="Funciones admitidas y criterio del intervalo",
-            )
-            self._montar_sintaxis_bajo_demanda()
-            self.contenedor_historial = ui.column().classes("w-full min-w-0")
-
-    def _montar_sintaxis_bajo_demanda(self) -> None:
-        def _al_abrir(evento) -> None:
-            if evento.value and not self._ayuda_montada and not self.seccion_sintaxis.is_deleted:
-                self._ayuda_montada = True
-                with self.seccion_sintaxis:
-                    construir_ayuda_cerrados()
-
-        self.seccion_sintaxis.on_value_change(_al_abrir)
 
     def _conectar(self) -> None:
         self.expresion.on_value_change(self._actualizar_unidad)
