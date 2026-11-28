@@ -4,6 +4,10 @@
     max-inline-size: 100%;
 }
 
+.tabla-resultados {
+    inline-size: 100%;
+}
+
 :is(.inversa-desplazamiento, .numericos-desplazamiento, .iterativos-desplazamiento, .pdf-tabla-entrada) {
     overflow: auto;
 }
@@ -51,7 +55,13 @@
 }
 
 :is(.tabla-resultados .q-table .text-left, .numericos-tabla .tabla-resultados-vacia) { text-align: start; }
-.tabla-resultados .q-table__middle { overflow: auto; }
+.tabla-resultados .q-table__middle {
+    inline-size: 100%;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    overflow: auto;
+    overscroll-behavior-x: contain;
+}
 .tabla-resultados .q-table__bottom { flex-wrap: wrap; }
 .tabla-resultados .q-table__bottom, .tabla-resultados .q-table__bottom .q-field__native { color: var(--text-main); }
 

@@ -1,9 +1,11 @@
-.metodos-raices-vista { font-family: inherit; }
+.metodos-raices-vista { font-family: inherit; min-width: 0; max-width: 100%; }
 .metodos-raices-captura,
 .metodos-raices-previa {
   background: var(--bg-panel) !important;
   color: var(--text-main);
   border-radius: var(--radius-card) !important;
+  min-width: 0;
+  max-width: 100%;
 }
 .metodos-raices-vista .q-btn { min-height: 44px; }
 .metodos-raices-acciones.limpieza-acciones { flex-wrap: wrap; align-items: center; }
@@ -20,7 +22,7 @@
 }
 .metodos-raices-campos { flex-wrap: wrap; }
 .metodos-raices-campos .q-field { flex: 1 1 12rem; }
-.metodos-raices-resultados { gap: var(--space-5); }
+.metodos-raices-resultados { gap: var(--space-5); min-width: 0; max-width: 100%; }
 
 .previa-formula-bloque {
   padding: var(--space-2) var(--space-3);
